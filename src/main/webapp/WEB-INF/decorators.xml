@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<decorators defaultdir="/layout">
+	<!--  
+	<decorator name="admin" page="twoColumnLayout.jsp">
+        <pattern>/transys/admin/**</pattern>
+    </decorator>
+    <decorator name="admin" page="twoColumnLayout.jsp">
+        <pattern>/transys/hr/**</pattern>
+    </decorator>
+    <decorator name="operator" page="twoColumnLayout.jsp">
+    	<pattern>/transys/operator/**</pattern>
+    </decorator>
+    <decorator name="reportuser" page="twoColumnLayout.jsp">
+    	<pattern>/transys/reportuser/**</pattern>
+    </decorator>
+    <decorator name="blank" page="blankLayout.jsp">
+    	<pattern>/transys/blank/**</pattern>
+    </decorator>
+    <decorator name="billbatchdate" page="blankLayout.jsp">
+        <pattern>/transys/billbatch/**</pattern>
+    </decorator>
+    -->
+    <decorator name="customer" page="singleColumnLayout.jsp">
+        <pattern>/transys/customer/**</pattern>
+    </decorator>
+    <decorator name="home" page="singleColumnLayout.jsp">
+        <pattern>/transys/**</pattern>
+    </decorator>
+</decorators> 
