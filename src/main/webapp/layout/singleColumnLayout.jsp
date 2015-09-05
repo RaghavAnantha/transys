@@ -15,7 +15,7 @@
 		<td height="75px"><jsp:include page="header.jsp" /></td>
 	</tr>
 	<tr>
-		<td height="25px"><%--<jsp:include page="topMenu.jsp" /></td>--%>
+		<td height="25px"><jsp:include page="topMenu.jsp" /></td>
 	</tr>
 	<tr>
 		<td valign="top"><jsp:include page="/common/messages.jsp" /> <decorator:body />

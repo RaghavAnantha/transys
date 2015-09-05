@@ -114,9 +114,11 @@ if (menuTree!=null) {
 <%
 	MenuTree menuTree = (MenuTree) session.getAttribute("menuTree");
 	BusinessObject bo = new BusinessObject();
-	bo.setAction("transys/customer");
 	bo.setId(1l);
+	bo.setObjectName("Customer");
+	bo.setAction("transys/customer");
 	bo.setUrl("transys/customer");
+	bo.setObjectHierarchy("/1/");
 	List<BusinessObject> businessObjects = new ArrayList<BusinessObject>();
  	businessObjects.add(bo);
      //List<BusinessObject> businessObjects2 = MenuHelper.getMenuForLevel(menuTree2, 2);

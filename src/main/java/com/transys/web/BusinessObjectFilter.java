@@ -48,10 +48,18 @@ public class BusinessObjectFilter implements Filter {
 	}
 	
 	private BusinessObject mockBO() {
+		/*
+		 insert  into `business_object`(`ID`,`ACTION`,`DISPLAY_TAG`,`OBJECT_LEVEL`,`OBJECT_NAME`,`URL`,`created_at`,`created_by`,`modified_at`,`modified_by`,`status`,`display_order`,`hidden`,`parent_id`,`hierarchy`,`url_context`) 
+		 values (1,'/home/home.do','LUTransport',1,'LUTransport','/home/home.do',NULL,NULL,NULL,NULL,1,1,0,NULL,'/1/',NULL),
+		 (110,'/operator/tripsheet/list.do?rst=1','Trip Sheet',2,'Trip Sheet','/operator/tripsheet/home.do,/operator/tripsheet/list.do,/operator/tripsheet/create.do,/operator/tripsheet/save.do,/operator/tripsheet/ajax.do',NULL,NULL,NULL,NULL,1,2,0,1,'/1/110/',NULL),
+		 */
 		BusinessObject bo = new BusinessObject();
-		bo.setAction("transys/customer");
 		bo.setId(1l);
+		bo.setObjectName("Customer");
+		bo.setAction("transys/customer");
 		bo.setUrl("transys/customer");
+		bo.setObjectHierarchy("/1/");
+		
 		return bo;
 	}
 	
