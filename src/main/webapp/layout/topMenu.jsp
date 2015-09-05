@@ -1,8 +1,8 @@
 <%@ include file="/common/taglibs.jsp" %>
-<%@page import="com.transys.model.BusinessObject,
-			    com.transys.model.menu.*,
-			    java.util.List,
-			    java.util.ArrayList"%>
+<%@page import="java.util.List,
+			    java.util.ArrayList,
+			    com.transys.model.BusinessObject,
+			    com.transys.model.menu.*"%>
 <c:if test="${sessionScope.userInfo.role.id == 1}">
 <div style="width:100%" id="navigation" class="navmenu">
 <%
@@ -39,7 +39,7 @@ if (menuTree!=null) {
 				cssClass="";
 			}
 			BusinessObject bo2=null;
-    		java.util.List<BusinessObject> submenus = MenuHelper.getMenuForParent(menuTree, businessObject.getId());
+    		List<BusinessObject> submenus = MenuHelper.getMenuForParent(menuTree, businessObject.getId());
     		if (submenus!=null && submenus.size()>0) {
     			bo2 = submenus.get(0);
     		}
@@ -89,7 +89,7 @@ if (menuTree!=null) {
 				cssClass="";
 			}
 			BusinessObject bo2=null;
-    		java.util.List<BusinessObject> submenus = MenuHelper.getMenuForParent(menuTree2, businessObject.getId());
+    		List<BusinessObject> submenus = MenuHelper.getMenuForParent(menuTree2, businessObject.getId());
     		if (submenus!=null && submenus.size()>0) {
     			bo2 = submenus.get(0);
     		}
@@ -139,7 +139,7 @@ if (menuTree!=null) {
 				cssClass="";
 			}
 			BusinessObject bo2=null;
-    		java.util.List<BusinessObject> submenus = MenuHelper.getMenuForParent(menuTree, businessObject.getId());
+    		List<BusinessObject> submenus = MenuHelper.getMenuForParent(menuTree, businessObject.getId());
     		if (submenus!=null && submenus.size()>0) {
     			bo2 = submenus.get(0);
     		}
