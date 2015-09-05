@@ -1,14 +1,12 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@include file="/common/taglibs.jsp"%>
+
+<%@page import="org.springframework.security.web.WebAttributes"%>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <html>
 <head>
 
-
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Login</title>
 
 <link rel="stylesheet" type="text/css" href="/resources/css/bootstrap.min.css"  />
@@ -19,7 +17,25 @@
 </head>
 <body>
 <div class="wrapper">
-    <form:form class="form-signin">       
+
+<!-- URL for Spring Security Validation, should post form details to /login -->
+<c:url value="/login" var="loginUrl"/>
+
+    <form:form class="form-signin" action="${loginUrl}" method="post">  
+		
+		<%
+			if (session.getAttribute(WebAttributes.AUTHENTICATION_EXCEPTION) != null) {
+			%>
+				<div class="errorMessage" align="center">
+				 <br />
+				 <h4>Authentication Failed!</h4>
+				 <%session.removeAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);%>
+				</div>
+			<br/>
+			<%		
+			}
+		%>  
+		
       <h2 class="form-signin-heading">Login</h2>
       <input type="text" class="form-control" name="username" placeholder="Username" required="" autofocus="" />
       <br />
