@@ -1,0 +1,34 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+		http://www.springframework.org/schema/security
+		http://www.springframework.org/schema/security/spring-security.xsd">
+
+	<security:http>
+	
+		<!-- Login & Resources page should be accessible to all -->
+		<security:intercept-url pattern="/transys/login/login.jsp" access="isAnonymous()" />
+		<security:intercept-url pattern="/**/resources" access="isAnonymous()" />
+		
+		<!-- Rest all pages currently are accessible by Role-User -->
+		<security:intercept-url pattern="/transys/home.jsp" access="hasRole('USER')" />
+		
+		<!-- Controls the login page authentication through Spring -->
+ 		<security:form-login login-page='/transys/login/login.jsp' default-target-url='/transys/home.jsp'/>
+		<!-- <security:logout /> -->
+	</security:http>
+
+	<security:authentication-manager>
+		<security:authentication-provider>
+		<!-- TODO: Provider will change to DAO -->
+			<security:user-service>
+				<security:user name="hema" password="sjhema" authorities="ROLE_USER, ROLE_ADMIN" />
+				<security:user name="bharat" password="bharatl" authorities="ROLE_USER, ROLE_ADMIN" />
+				<security:user name="raghav" password="raghavp" authorities="ROLE_USER, ROLE_ADMIN" />
+			</security:user-service>
+		</security:authentication-provider>
+	</security:authentication-manager>
+
+</beans>
