@@ -9,14 +9,14 @@
 	<security:http>
 	
 		<!-- Login & Resources page should be accessible to all -->
-		<security:intercept-url pattern="/transys/login/login.jsp" access="isAnonymous()" />
+		<security:intercept-url pattern="/**/login/" access="isAnonymous()" />
 		<security:intercept-url pattern="/**/resources" access="isAnonymous()" />
 		
 		<!-- Rest all pages currently are accessible by Role-User -->
-		<security:intercept-url pattern="/transys/home.jsp" access="hasRole('USER')" />
+		<security:intercept-url pattern="/**/home" access="hasRole('USER')" />
 		
 		<!-- Controls the login page authentication through Spring -->
- 		<security:form-login login-page='/transys/login/login.jsp' default-target-url='/transys/home.jsp'/>
+ 		<security:form-login login-page='/transysapp/login' default-target-url='/transysapp/home'/>
 		<!-- <security:logout /> -->
 	</security:http>
 
