@@ -8,7 +8,6 @@
 	String hierarchy ="";
 	if (currentBo!=null) {
 		hierarchy = currentBo.getObjectHierarchy();
-		System.out.println(hierarchy);
 		String[] boData = hierarchy.split("/");
 		List<BusinessObject> businessObjects = MenuHelper.getMenuForParent(menuTree, Long.parseLong(boData[2]));
 		if (businessObjects!=null) {

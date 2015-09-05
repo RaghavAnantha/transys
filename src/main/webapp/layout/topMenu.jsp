@@ -8,9 +8,9 @@
 <%
     MenuTree menuTree = (MenuTree) session.getAttribute("menuTree");
 	BusinessObject bo = new BusinessObject();
-	bo.setAction("transys/customer");
+	bo.setAction("customer");
 	bo.setId(1l);
-	bo.setUrl("transys/customer");
+	bo.setUrl("customer");
 	List<BusinessObject> businessObjects = new ArrayList<BusinessObject>();
 	businessObjects.add(bo);
     //List<BusinessObject> businessObjects = MenuHelper.getMenuForLevel(menuTree, 2);
@@ -60,9 +60,9 @@ if (menuTree!=null) {
 <%
     MenuTree menuTree2 = (MenuTree) session.getAttribute("menuTree");
  	BusinessObject bot = new BusinessObject();
- 	bot.setAction("transys/customer");
+ 	bot.setAction("customer");
  	bot.setId(1l);
- 	bot.setUrl("transys/customer");
+ 	bot.setUrl("customer");
  	List<BusinessObject> businessObjects2 = new ArrayList<BusinessObject>();
  	businessObjects2.add(bot);
      //List<BusinessObject> businessObjects2 = MenuHelper.getMenuForLevel(menuTree2, 2);
@@ -116,8 +116,8 @@ if (menuTree!=null) {
 	BusinessObject bo = new BusinessObject();
 	bo.setId(1l);
 	bo.setObjectName("Customer");
-	bo.setAction("transys/customer");
-	bo.setUrl("transys/customer");
+	bo.setAction("customer");
+	bo.setUrl("customer");
 	bo.setObjectHierarchy("/1/");
 	List<BusinessObject> businessObjects = new ArrayList<BusinessObject>();
  	businessObjects.add(bo);
