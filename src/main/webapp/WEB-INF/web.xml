@@ -7,14 +7,13 @@
  
 	<display-name>Transys</display-name>
 
-	<!--
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
 		<param-value>
-			/WEB-INF/transys-servlet.xml
+			 classpath*:/applicationContext-*.xml
 		</param-value>
 	</context-param>
-	-->
+	
 	<filter>
     	<filter-name>sitemesh</filter-name>
     	<filter-class>com.opensymphony.sitemesh.webapp.SiteMeshFilter</filter-class>
@@ -24,14 +23,13 @@
     	<url-pattern>*.jsp</url-pattern>
     	<dispatcher>FORWARD</dispatcher>
   	</filter-mapping>
-	<!--  
 	<listener>
-		<listener-class>
+		<!--<listener-class>
 			org.springframework.web.context.ContextLoaderListener
-		</listener-class>
-		<listener-class>com.primovision.lutransport.web.ExtendedContextLoaderListener</listener-class>
+		</listener-class> -->
+		<listener-class>com.transys.web.ExtendedContextLoaderListener</listener-class>
 	</listener>
-	-->
+	
 	<servlet>
 		<servlet-name>transys</servlet-name>
 		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>

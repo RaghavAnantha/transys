@@ -10,7 +10,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-//import javax.validation.ValidationException;
+import javax.validation.ValidationException;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -121,9 +121,9 @@ public abstract class CRUDController<T extends BaseModel> extends BaseController
 	public String view(ModelMap model, HttpServletRequest request) {
 		setupUpdate(model, request);
 		return urlContext + "/view";
-	}
+	}*/
 
-	@RequestMapping(method = RequestMethod.POST, value = "/save.do")
+	//@RequestMapping(method = RequestMethod.POST, value = "/save.do")
 	public String save(HttpServletRequest request,
 			@ModelAttribute("modelObject") T entity,
 			BindingResult bindingResult, ModelMap model) {
@@ -136,18 +136,19 @@ public abstract class CRUDController<T extends BaseModel> extends BaseController
 		}
 		// return to form if we had errors
 		if (bindingResult.hasErrors()) {
-			setupCreate(model, request);
-			return urlContext + "/form";
+			//setupCreate(model, request);
+			//return urlContext + "/form";
+			return "customer/form";
 		}
-		beforeSave(request, entity, model);
+		//beforeSave(request, entity, model);
 		// merge into datasource
-		genericDAO.saveOrUpdate(entity);
-		cleanUp(request);
+		//genericDAO.saveOrUpdate(entity);
+		//cleanUp(request);
 		// return to list
-		return "redirect:/" + urlContext + "/list.do";
+		return "redirect:/" + urlContext + "/list";
 	}
 
-	@RequestMapping(method = RequestMethod.POST, value = "/bulkdelete.do")
+	/*@RequestMapping(method = RequestMethod.POST, value = "/bulkdelete.do")
 	public String bulkdelete(@RequestParam("id") String[] id) {
 		if (id != null) {
 			for (int i = 0; i < id.length; i++) {

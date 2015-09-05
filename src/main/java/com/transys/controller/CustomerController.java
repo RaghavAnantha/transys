@@ -40,6 +40,29 @@ public class CustomerController extends CRUDController<Customer> {
 		return "customer/form";
 	}
 	
+	@RequestMapping(value = "/customer", method = RequestMethod.POST)
+	public String save(HttpServletRequest request, @ModelAttribute("modelObject") Customer entity,
+			BindingResult bindingResult, ModelMap model) {
+		if(entity.getState() == null)
+			bindingResult.rejectValue("state", "error.select.option", null, null);
+		if(entity.getCity() == null)
+			bindingResult.rejectValue("city", "typeMismatch.java.lang.String", null, null);
+		//server side verification
+		if(entity.getZipcode() != null){
+			if(entity.getZipcode().toString().length() < 5)
+			bindingResult.rejectValue("zipcode", "typeMismatch.java.lang.Integer", null, null);
+		}
+		if(!StringUtils.isEmpty(entity.getPhone())){
+			if(entity.getPhone().length() < 12)
+				bindingResult.rejectValue("phone", "typeMismatch.java.lang.String", null, null);
+		}
+		if(!StringUtils.isEmpty(entity.getFax())){
+			if(entity.getFax().length() < 12)
+				bindingResult.rejectValue("fax", "typeMismatch.java.lang.String", null, null);
+		}
+		return super.save(request, entity, bindingResult, model);
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * @see com.primovision.lutransport.controller.CRUDController#setupCreate(org.springframework.ui.ModelMap, javax.servlet.http.HttpServletRequest)

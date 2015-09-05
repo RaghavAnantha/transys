@@ -55,25 +55,25 @@ public class BaseController {
 
 	public GenericDAO getGenericDAO() {
 		return genericDAO;
-	}
+	}*/
 
 	@Autowired
-	protected Validator validator;*/
+	protected Validator validator;
 
 	/**
 	 * @return the validator
 	 */
-	/*public Validator getValidator() {
+	public Validator getValidator() {
 		return validator;
-	}*/
+	}
 
 	/**
 	 * @param validator
 	 *            the validator to set
 	 */
-	/*public void setValidator(Validator validator) {
+	public void setValidator(Validator validator) {
 		this.validator = validator;
-	}*/
+	}
 
 	// Set up any custom editors, adds a custom one for java.sql.date by default
 	@InitBinder

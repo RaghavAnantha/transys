@@ -43,7 +43,7 @@ function formatFax(){
 }
 </script>
 <br/>
-<form:form action="save.do" name="typeForm" commandName="modelObject"
+<form:form action="customer" name="typeForm" commandName="modelObject"
 	method="post">
 	<form:hidden path="id" id="id" />
 	<table id="form-table" width="100%" cellspacing="1" cellpadding="5">
