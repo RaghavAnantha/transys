@@ -13,9 +13,12 @@
 		
 		//List<BusinessObject> businessObjects = MenuHelper.getMenuForParent(menuTree, Long.parseLong(boData[2]));
 		BusinessObject bo = new BusinessObject();
-		bo.setAction("customer");
 		bo.setId(1l);
+		bo.setObjectName("Customer");
+		bo.setAction("customer");
 		bo.setUrl("customer");
+		bo.setObjectHierarchy("/1/");
+		bo.setHidden(0);
 		List<BusinessObject> businessObjects = new ArrayList<BusinessObject>();
 		businessObjects.add(bo);
 
@@ -36,7 +39,16 @@
 				</a>
 					<%
                     	BusinessObject businessObject = (BusinessObject)pageContext.getAttribute("item");
-                		List<BusinessObject> submenus = MenuHelper.getMenuForParent(menuTree, businessObject.getId());
+                		//List<BusinessObject> submenus = MenuHelper.getMenuForParent(menuTree, businessObject.getId());
+                		BusinessObject bos = new BusinessObject();
+						bos.setId(1l);
+						bos.setObjectName("Add Customer");
+						bos.setAction("customer");
+						bos.setUrl("customer");
+						bos.setObjectHierarchy("/1/");
+						bos.setHidden(0);
+						List<BusinessObject> submenus = new ArrayList<BusinessObject>();
+						submenus.add(bos);
 						if (submenus!=null && submenus.size()>0) {
                     %>
                     <ul class="categoryitems">
