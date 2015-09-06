@@ -20,7 +20,7 @@
         <pattern>/transys/billbatch/**</pattern>
     </decorator>
     -->
-    <decorator name="customer" page="twoColumnLayout.jsp">
+    <decorator name="customer" page="singleColumnLayout.jsp">
         <pattern>/transys/customer/**</pattern>
     </decorator>
     <decorator name="order" page="singleColumnLayout.jsp">

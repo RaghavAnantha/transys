@@ -2,7 +2,7 @@
 <h3>
 	<transys:label code="Manage Customer" />
 </h3>
-<form:form action="search.do" method="get" name="searchForm">
+<form:form action="transysapp/customer" method="get" name="searchForm">
 	<table width="100%" id="form-table">
 		<tr class="table-heading">
 			<td colspan="4"><b><transys:label code="Search Customer" /></b></td>

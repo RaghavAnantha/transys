@@ -1,6 +1,8 @@
 package com.transys.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -35,7 +37,50 @@ public class CustomerController extends CRUDController<Customer> {
 	}
 	
 	@RequestMapping(value = "/customer", method = RequestMethod.GET)
-	public String displayHome(HttpServletRequest request, ModelMap model) {
+	public String displaySearch(HttpServletRequest request, ModelMap model) {
+		setupList(model, request);
+		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
+		criteria.getSearchMap().put("id!",0l);
+		
+		return "customer/list";
+	}
+	
+	@Override
+	public void setupCreate(ModelMap model, HttpServletRequest request) {
+		Map criterias = new HashMap();
+		List<Customer> customerList = mockCustomerList();
+		model.addAttribute("customer", customerList);
+		//model.addAttribute("customer",genericDAO.executeSimpleQuery("select obj from Customer obj where obj.id!=0 order by obj.name asc"));
+		//model.addAttribute("customerIds",genericDAO.executeSimpleQuery("select obj from Customer obj where obj.customerNameID is not null order by obj.customerNameID asc"));
+      //model.addAttribute("state", genericDAO.findByCriteria(State.class, criterias, "name", false));
+		
+	}
+	
+	@Override
+	public void setupList(ModelMap model, HttpServletRequest request) {
+		populateSearchCriteria(request, request.getParameterMap());
+		model.addAttribute("list", mockCustomerList());
+		setupCreate(model, request);
+	}
+	
+	private List<Customer> mockCustomerList() {
+		List<Customer> customerList = new ArrayList<Customer>();
+		Customer customer = new Customer();
+		customer.setId(0l);
+		customer.setName("Aberdeen construction");
+		
+		State state = new State();
+		state.setCode("IL");
+		state.setName("Illinois");
+		customer.setState(state);
+		
+		customerList.add(customer);
+		
+		return customerList;
+	}
+	
+	@RequestMapping(value = "/customer/add", method = RequestMethod.GET)
+	public String displayAdd(HttpServletRequest request, ModelMap model) {
 		model.addAttribute("modelObject", new Customer());
 		return "customer/form";
 	}

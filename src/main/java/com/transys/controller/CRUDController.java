@@ -211,23 +211,23 @@ public abstract class CRUDController<T extends BaseModel> extends BaseController
 				}
 			}
 		}
-	}
+	}*/
 
 	public void setupCreate(ModelMap model, HttpServletRequest request) {
 		// Default is no implementation
 	}
 
-	public void setupUpdate(ModelMap model, HttpServletRequest request) {
+	/*public void setupUpdate(ModelMap model, HttpServletRequest request) {
 		setupCreate(model, request);
-	}
+	}*/
 
 	public void setupList(ModelMap model, HttpServletRequest request) {
 		populateSearchCriteria(request, request.getParameterMap());
-		List<StaticData> statuses = listStaticData("ENTITY_STATUS");
-		model.addAttribute("statuses", statuses);
+		//List<StaticData> statuses = listStaticData("ENTITY_STATUS");
+		//model.addAttribute("statuses", statuses);
 	}
 
-	public void cleanUp(HttpServletRequest request) {
+	/*public void cleanUp(HttpServletRequest request) {
 
 	}
 

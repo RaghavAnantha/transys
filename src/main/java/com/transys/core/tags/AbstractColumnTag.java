@@ -312,8 +312,8 @@ public abstract class AbstractColumnTag extends TagSupport implements IColumnTag
 	    String locale = (String) pageContext.getSession().getAttribute("lang");
 	    if (locale == null || locale.equals(""))
 		locale = "en_US";
-	    objBuf.append(CacheUtil.getText("messageResourceCache", "label_" + strTxt + "_" + locale));
-	    // objBuf.append(strTxt);
+	    //objBuf.append(CacheUtil.getText("messageResourceCache", "label_" + strTxt + "_" + locale));
+	     objBuf.append(strTxt);
 	    objBuf.append("</th>");
 	    // Write created HTML to output stream.
 	    this.pageContext.getOut().print(objBuf.toString());
