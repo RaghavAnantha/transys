@@ -9,7 +9,7 @@
 <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
 <div class="container-fluid">
     <div class="navbar-header">
-      <a class="navbar-brand" href="/transysapp/home">Transysy</a>
+      <a class="navbar-brand" href="/transysapp/home">Transys</a>
     </div>
     <div>
       <ul class="nav navbar-nav">
@@ -21,15 +21,14 @@
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li><a href="#"><transys:label
-						code="Welcome" /> <c:if test="${sessionScope.userInfo==null}">
-						<b><transys:label code="Bharat!" /></b>
-					</c:if> <c:if test="${sessionScope.userInfo!=null}">
-						<b>${sessionScope.userInfo.firstName}
-							${sessionScope.userInfo.lastName}!</b>
+						code="Welcome" /> <c:if test="${userInfo==null}">
+						<b><transys:label code="Guest!" /></b>
+					</c:if> <c:if test="${userInfo!=null}">
+						<b>${userInfo.name}!</b>
 						<br />
 						<span style="font-size: 10px"><transys:label
 								code="Last Login" /> : <fmt:formatDate
-								value="${sessionScope.userInfo.lastLoginDate}"
+								value="${userInfo.lastLoginDate}"
 								pattern="MM-dd-yyyy HH:mm:ss" /></span>
 					</c:if></a></li>			
         <li><c:if test="${sessionScope.userInfo !=null}"><a href="${ctx}/j_spring_security_logout">Logout</a>

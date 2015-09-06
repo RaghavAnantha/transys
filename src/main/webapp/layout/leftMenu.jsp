@@ -1,5 +1,6 @@
 <%@include file="/common/taglibs.jsp"%>
 <%@page import="java.util.List,
+				java.util.ArrayList,
 				com.transys.model.BusinessObject,
 				com.transys.model.menu.*"%>
 <%
@@ -9,7 +10,15 @@
 	if (currentBo!=null) {
 		hierarchy = currentBo.getObjectHierarchy();
 		String[] boData = hierarchy.split("/");
-		List<BusinessObject> businessObjects = MenuHelper.getMenuForParent(menuTree, Long.parseLong(boData[2]));
+		
+		//List<BusinessObject> businessObjects = MenuHelper.getMenuForParent(menuTree, Long.parseLong(boData[2]));
+		BusinessObject bo = new BusinessObject();
+		bo.setAction("customer");
+		bo.setId(1l);
+		bo.setUrl("customer");
+		List<BusinessObject> businessObjects = new ArrayList<BusinessObject>();
+		businessObjects.add(bo);
+
 		if (businessObjects!=null) {
 %>
 
