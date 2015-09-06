@@ -50,6 +50,7 @@ public class CustomerController extends CRUDController<Customer> {
 		Map criterias = new HashMap();
 		List<Customer> customerList = mockCustomerList();
 		model.addAttribute("customer", customerList);
+		model.addAttribute("customerIds", customerList);
 		//model.addAttribute("customer",genericDAO.executeSimpleQuery("select obj from Customer obj where obj.id!=0 order by obj.name asc"));
 		//model.addAttribute("customerIds",genericDAO.executeSimpleQuery("select obj from Customer obj where obj.customerNameID is not null order by obj.customerNameID asc"));
       //model.addAttribute("state", genericDAO.findByCriteria(State.class, criterias, "name", false));
@@ -67,6 +68,7 @@ public class CustomerController extends CRUDController<Customer> {
 		List<Customer> customerList = new ArrayList<Customer>();
 		Customer customer = new Customer();
 		customer.setId(0l);
+		customer.setCustomerNameID("Aberdeen_1");
 		customer.setName("Aberdeen construction");
 		
 		State state = new State();

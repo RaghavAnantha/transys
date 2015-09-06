@@ -54,7 +54,8 @@
 	<transys:datatable urlContext="transysapp/customer" deletable="true"
 		editable="true" insertable="true" baseObjects="${list}"
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
-		pagingLink="search.do" multipleDelete="false" searcheable="false" exportPdf="true">
+		pagingLink="search.do" multipleDelete="false" searcheable="false" 
+		exportPdf="true" exportXls="true">
 		<transys:textcolumn headerText="Name" dataField="name" />
 		<transys:textcolumn headerText="Customer ID" dataField="customerNameID" />
 		<transys:textcolumn headerText="Address Line1" dataField="address" />

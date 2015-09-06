@@ -811,14 +811,16 @@ public final class Datatable extends BodyTagSupport {
 			if (editable) {
 				String url = "/"+urlContext+"/edit.do";
 				//if (authenticationService.hasUserPermission(user, url)) {
-					objOut.println("<th width=\"30\">"+CacheUtil.getText("messageResourceCache","label_Edit_"+locale)+"</th>");
+					//objOut.println("<th width=\"30\">"+CacheUtil.getText("messageResourceCache","label_Edit_"+locale)+"</th>");
+					objOut.println("<th width=\"30\">"+"EDIT"+"</th>");
 					additionalColumn++;
 				//}
 			}
 			if (deletable) {
 				String url = "/"+urlContext+"/delete.do";
 				//if (authenticationService.hasUserPermission(user, url)){
-					objOut.println("<th  width=\"30\">"+CacheUtil.getText("messageResourceCache","label_Delete_"+locale)+"</th>");
+					//objOut.println("<th  width=\"30\">"+CacheUtil.getText("messageResourceCache","label_Delete_"+locale)+"</th>");
+					objOut.println("<th  width=\"30\">"+"DELETE"+"</th>");
 					additionalColumn++;
 				//}
 			}
