@@ -7,6 +7,11 @@ body {
   margin-top: 10px;
 }
 
+td {
+	
+	padding: 10px !important
+}
+
 .form-signin {
   max-width: 380px;
   padding: 15px 35px 45px;

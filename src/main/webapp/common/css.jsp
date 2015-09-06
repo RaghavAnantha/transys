@@ -2,3 +2,5 @@
 <link type="text/css" href="${ctx}/css/jquery.multiselect.css" rel="stylesheet" />
 <link href="${ctx}/css/style.css" type="text/css" rel="stylesheet"/>
 <link type="text/css" href="${ctx}/css/messages.css" rel="stylesheet" />
+<link type="text/css" href="${ctx}/css/bootstrap.min.css" rel="stylesheet" />
+<link type="text/css" href="${ctx}/css/main.css" rel="stylesheet" />
