@@ -26,4 +26,49 @@
 			<value>Messages</value>
 		</property>
 	</bean>
+	
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"
+		destroy-method="close">
+		<property name="driverClass" value="com.mysql.jdbc.Driver" />
+		<property name="jdbcUrl" value="jdbc:mysql://localhost:3306/lutransport" />
+		<property name="user" value="root"/>
+	    <property name="password" value=""/>	
+	    <property name="initialPoolSize" value="20"/>
+	    <property name="minPoolSize" value="20"/>
+	    <property name="maxPoolSize" value="500"/>
+	    <property name="acquireIncrement" value="5"/><!-- Determines how many connections at a time c3p0 will try to acquire when the pool is exhausted -->
+	    <property name="maxStatementsPerConnection" value="0" /><!-- The size of c3p0's PreparedStatement cache. Zero means statement caching is turned off. -->
+	    <property name="maxIdleTime" value="1000" />
+	    <property name="preferredTestQuery" value="SELECT 1;" />
+	    <property name="idleConnectionTestPeriod" value="60" />
+	    <property name="maxConnectionAge" value="14400" /><!-- To recreate connection after 4 hrs in order to prevent socket closing by DB server -->
+	    <property name="acquireRetryAttempts" value="10"/>
+	</bean>
+	
+		<bean id="entityManagerFactory"
+		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="jpaVendorAdapter">
+			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+				<property name="showSql" value="true" />
+				<property name="generateDdl" value="true" />				
+				<property name="databasePlatform" value="com.transys.core.util.CustomDialect" />
+			</bean>
+		</property>
+		 <property name="persistenceXmlLocation" value="classpath:/persistence.xml"></property>
+		<property name="jpaProperties">
+			<bean
+				class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+				<property name="location">
+					<value>classpath:hibernate.properties</value>
+				</property>
+			</bean>
+		</property>
+	</bean>
+
+	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+		<property name="entityManagerFactory" ref="entityManagerFactory" />
+	</bean>
+
+	<tx:annotation-driven />
 </beans>
