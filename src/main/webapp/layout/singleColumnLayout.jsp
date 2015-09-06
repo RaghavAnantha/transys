@@ -4,18 +4,17 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
-<title>Transys</title>
+<title>Trans - Reporting System</title>
 <%@include file="/common/css.jsp"%>
 <%@include file="/common/scripts.jsp"%>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 <decorator:head/>
 </head>
 <body dir="${dir}">
 <table width="100%" cellpadding="0" cellspacing="0" style="height:100%;min-height:100%" border="0">
+	
 	<tr>
-		<td height="75px"><jsp:include page="header.jsp" /></td>
-	</tr>
-	<tr>
-		<td height="25px"><jsp:include page="topMenu.jsp" /></td>
+		<td height="52px"><jsp:include page="topMenu1.jsp" /></td>
 	</tr>
 	<tr>
 		<td valign="top"><jsp:include page="/common/messages.jsp" /> <decorator:body />
