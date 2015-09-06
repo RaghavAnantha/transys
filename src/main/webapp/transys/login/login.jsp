@@ -16,8 +16,8 @@
 
 </head>
 <body>
-<div class="wrapper">
-
+<div class="container-fluid text-center">
+	<h2>Welcome to Transys</h2>
 <!-- URL for Spring Security Validation, should post form details to /login -->
 <c:url value="/login" var="loginUrl"/>
 

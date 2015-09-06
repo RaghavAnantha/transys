@@ -20,10 +20,16 @@
         <pattern>/transys/billbatch/**</pattern>
     </decorator>
     -->
-    <decorator name="customer" page="singleColumnLayout.jsp">
+    <decorator name="customer" page="twoColumnLayout.jsp">
         <pattern>/transys/customer/**</pattern>
     </decorator>
+    <decorator name="order" page="singleColumnLayout.jsp">
+        <pattern>/transys/order/**</pattern>
+    </decorator>
+    <decorator name="login" page="singleColumnLayoutLogin.jsp">
+        <pattern>/transys/login/**</pattern>
+    </decorator>
     <decorator name="home" page="singleColumnLayout.jsp">
-        <pattern>/transys/**</pattern>
+        <pattern>/transys/home*</pattern>
     </decorator>
 </decorators> 

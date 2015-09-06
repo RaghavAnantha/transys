@@ -7,17 +7,15 @@
 <title>Transys</title>
 <%@include file="/common/css.jsp"%>
 <%@include file="/common/scripts.jsp"%>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 <decorator:head/>
 </head>
 <body dir="${dir}">
 <table width="100%" cellpadding="0" cellspacing="0" style="height:100%;min-height:100%" border="0">
-	
 	<tr>
-		<td height="52px"><jsp:include page="topMenu1.jsp" /></td>
+		<td height="25px"><%--<jsp:include page="topMenu.jsp" /></td>--%>
 	</tr>
 	<tr>
-		<td valign="top"><jsp:include page="/common/messages.jsp" /> <decorator:body />
+		<td valign="top"> <decorator:body />
 		</td>
 	</tr>
 	<tr>
