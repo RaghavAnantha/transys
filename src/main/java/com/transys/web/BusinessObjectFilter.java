@@ -42,8 +42,9 @@ public class BusinessObjectFilter implements Filter {
 		BusinessObject bo = mockBO();
 		((HttpServletRequest)request).getSession().setAttribute("curObj", bo);
 		
-		MenuTree menuTree = mockMenuTree(bo);
-		((HttpServletRequest)request).getSession().setAttribute("menuTree", menuTree);
+		//MenuTree menuTree = mockMenuTree(bo);
+		//((HttpServletRequest)request).getSession().setAttribute("menuTree", menuTree);
+		
 		chain.doFilter(request, response);
 	}
 	
@@ -63,12 +64,12 @@ public class BusinessObjectFilter implements Filter {
 		return bo;
 	}
 	
-	private MenuTree mockMenuTree(BusinessObject bo) {
+	/*private MenuTree mockMenuTree(BusinessObject bo) {
 		List<BusinessObject> businessObjects = new ArrayList<BusinessObject>();
 		businessObjects.add(bo);
 		MenuTree menuTree = MenuHelper.getMenuTree(businessObjects);
 		return menuTree;
-	}
+	}*/
 
 	@Override
 	public void init(FilterConfig arg0) throws ServletException {
