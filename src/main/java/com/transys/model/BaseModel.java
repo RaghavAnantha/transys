@@ -25,8 +25,8 @@ public interface BaseModel extends Serializable {
 
     void setModifiedAt(Date modifiedAt);
 
-    Integer getStatus();
+    Integer getDeleteFlag();
 
-    void setStatus(Integer status);
+    void setDeleteFlag(Integer deleteFlag);
 
 }

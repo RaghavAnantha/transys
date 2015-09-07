@@ -23,8 +23,8 @@ public abstract class AbstractBaseModel implements BaseModel {
 	@Column(name="modified_by")
 	protected Long modifiedBy;
 	
-	@Column(name="status")
-	protected Integer status=1;
+	@Column(name="delete_flag")
+	protected Integer deleteFlag=1;
 	
 	@Column(name="created_at")
 	protected Date createdAt = Calendar.getInstance().getTime();
@@ -53,8 +53,8 @@ public abstract class AbstractBaseModel implements BaseModel {
 		this.modifiedAt = modifiedAt;
 	}
 
-	public Integer getStatus() {
-		return status;
+	public Integer getDeleteFlag() {
+		return deleteFlag;
 	}
 
 	@Override
@@ -99,8 +99,8 @@ public abstract class AbstractBaseModel implements BaseModel {
 		this.modifiedBy = modifiedBy;
 	}
 
-	public void setStatus(Integer status) {
-		this.status = status;
+	public void setDeleteFlag(Integer deleteFlag) {
+		this.deleteFlag = deleteFlag;
 	}
 
 	public Long getId() {

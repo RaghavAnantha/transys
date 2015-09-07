@@ -17,59 +17,150 @@ public class Customer extends AbstractBaseModel {
 	@NotEmpty
 	/*private String name;*/
 	@Size(max=40)
-	@Column(name="name")
-	private String name;
 	
-	@Column(name="customer_name_id")
-	private String customerNameID;
+	@Column(name="id")
+	private String customerID;
+	
+	@Column(name="company_name")
+	private String companyName;
+	
+	@Column(name="contact_name")
+	private String contactName;
+	
+	@Column(name="type")
+	private String type;
+	
+	@Column(name="status")
+	private String status;
+	
+	@Column(name="notes")
+	private String notes;
+
+	// Billing Info
+	@Column(name="chargeCompany")
+	private String chargeCompany;
+
+	// Billing Details
+	@Column(name="phone")
+	private String phone;
+	
+	@Column(name="alt_phone_1")
+	private String altPhone1;
+	
+	@Column(name="alt_phone_1")
+	private String altPhone2;
 	
 	@NotEmpty
-	@Column(name="address")
-	private String address;
+	@Column(name="billing_address_line1")
+	private String billingAddressLine1;
 	
-	@Column(name="address2")
-	private String address2;
+	@Column(name="billing_address_line2")
+	private String billingAddressLine2;
 	
 	@NotEmpty
 	@Column(name="city")
 	private String city;
 	
-    @ManyToOne
-	@JoinColumn(name="state")
+	@Column(name="delete_flag")
+	private String deleteFlag;
+	
+//    @ManyToOne
+//	@JoinColumn(name="state")
 	 private State state;
 	
 	@NotNull 
 	@Column(name="zipcode")
 	private String zipcode;
 	
-	@Column(name="phone")
-	private String phone;
-	
 	@Column(name="fax")
 	private String fax;
 
-	public String getName() {
-		return name;
+	public String getCompanyName() {
+		return companyName;
+	}
+	
+	public void setCompanyName(String name) {
+		this.companyName = name;
+	}
+	
+	public String getContactName() {
+		return contactName;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public String getCustomerID() {
+		return customerID;
 	}
 
-	public String getAddress() {
-		return address;
+	public void setCustomerID(String customerID) {
+		this.customerID = customerID;
 	}
 
-	public void setAddress(String address) {
-		this.address = address;
+	public String getType() {
+		return type;
 	}
 
-	public String getAddress2() {
-		return address2;
+	public void setType(String type) {
+		this.type = type;
 	}
 
-	public void setAddress2(String address2) {
-		this.address2 = address2;
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	
+	public String getNotes() {
+		return notes;
+	}
+
+	public void setNotes(String notes) {
+		this.notes = notes;
+	}
+
+	public String getChargeCompany() {
+		return chargeCompany;
+	}
+
+	public void setChargeCompany(String chargeCompany) {
+		this.chargeCompany = chargeCompany;
+	}
+
+	public String getAltPhone1() {
+		return altPhone1;
+	}
+
+	public void setAltPhone1(String altPhone1) {
+		this.altPhone1 = altPhone1;
+	}
+
+	public String getAltPhone2() {
+		return altPhone2;
+	}
+
+	public void setAltPhone2(String altPhone2) {
+		this.altPhone2 = altPhone2;
+	}
+
+	public String getBillingAddressLine1() {
+		return billingAddressLine1;
+	}
+
+	public void setBillingAddressLine1(String billingAddressLine1) {
+		this.billingAddressLine1 = billingAddressLine1;
+	}
+
+	public String getBillingAddressLine2() {
+		return billingAddressLine2;
+	}
+
+	public void setBillingAddressLine2(String billingAddressLine2) {
+		this.billingAddressLine2 = billingAddressLine2;
+	}
+
+	public void setContactName(String name) {
+		this.contactName = name;
 	}
 
 	public String getCity() {
@@ -111,14 +202,5 @@ public class Customer extends AbstractBaseModel {
 	public void setFax(String fax) {
 		this.fax = fax;
 	}
-	
-	public void setCustomerNameID(String customerNameID) {
-		this.customerNameID = customerNameID;
-	}
-	
-	public String getCustomerNameID() {
-		return customerNameID;
-	}
-	
-	
+
 }
