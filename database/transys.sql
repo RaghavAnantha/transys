@@ -18,6 +18,9 @@
 --
 -- Table structure for table `business_object`
 --
+CREATE DATABASE /*!32312 IF NOT EXISTS*/`transys` /*!40100 DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci */;
+
+USE `transys`;
 
 DROP TABLE IF EXISTS `business_object`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
