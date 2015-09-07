@@ -6,18 +6,18 @@
 <title>Insert title here</title>
 </head>
 <body>
-<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+<nav class="navbar navbar-inverse navbar-fixed-top navheight" role="navigation">
 <div class="container-fluid">
     <div class="navbar-header">
-      <a class="navbar-brand" href="/transysapp/home">Transys</a>
+      <a class="navbar-brand active" href="/transysapp/home">Transys</a>
     </div>
     <div>
       <ul class="nav navbar-nav">
-        <li class="active"><a href="/transysapp/order">Orders</a></li>
-        <li><a href="#">Permits</a></li> 
-        <li ><a href="/transysapp/customer">Customers</a></li> 
-        <li><a href="#">Reports</a></li>
-        <li><a href="#">Master Data</a></li>
+        <li id="orderPage"><a href="/transysapp/order">Orders</a></li>
+        <li id="permitPage"><a href="#">Permits</a></li> 
+        <li id="customerPage"><a href="/transysapp/customer">Customers</a></li> 
+        <li id="reportPage"><a href="#">Reports</a></li>
+        <li id="masterDataPage"><a href="#">Master Data</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li><a href="#"><transys:label
@@ -38,4 +38,28 @@
   </div>
   </nav>
 </body>
+
+<script type="text/javascript">
+
+$(function() {
+	var loc = window.location.href;	   
+	      if (loc.match('/order')) { 
+	        $('#orderPage').addClass("active"); 
+	        }	  
+	      else if(loc.match('/permit')){
+	    	  $('#permitPage').addClass("active");  
+	      }
+	      else if(loc.match('/customer')){
+	    	  $('#customerPage').addClass("active");  
+	      }
+	      else if(loc.match('/reports')){
+	    	  $('#reportPage').addClass("active");  
+	      }
+	      else if(loc.match('/master')){
+	    	  $('#masterDataPage').addClass("active");  
+	      }
+	});
+
+
+</script>
 </html>

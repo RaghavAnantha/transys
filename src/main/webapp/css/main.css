@@ -9,7 +9,15 @@ body {
 
 td {
 	
-	padding: 10px !important
+	padding: 10px !important;
+}
+.navheight {
+	height:54px !important;
+}
+
+.tab-color {
+	
+	background-color: white;
 }
 
 .form-signin {

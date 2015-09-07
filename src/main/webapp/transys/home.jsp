@@ -1,3 +1,9 @@
-<%@page language="java" %>
-<br/>
-Welcome to Transys homepage!
+<%@page language="java"%>
+<br />
+<body>
+
+	<div class="container-fluid text-center">
+		<h1 text>Welcome to Transys home</h1>
+	</div>
+
+</body>

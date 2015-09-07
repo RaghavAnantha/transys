@@ -431,8 +431,8 @@ p {
 }
 
 table tr th {
-	background: #858585;
-	color: #fff;
+	background: none;
+	color: black;
 }
 
 .tablerow {
