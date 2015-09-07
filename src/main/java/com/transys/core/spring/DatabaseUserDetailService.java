@@ -32,7 +32,7 @@ public class DatabaseUserDetailService implements UserDetailsService {
 			grantedAuthorties.add(new SimpleGrantedAuthority("ROLE_"
 					+ user.getRole().getName().toUpperCase()));
 			return new User(username, user.getPassword(),
-					(user.getStatus() == 1), true, true, true,
+					(user.getDeleteFlag() == 1), true, true, true,
 					grantedAuthorties);
 		} else {
 			throw new UsernameNotFoundException("Invalid user");

@@ -18,9 +18,6 @@ public class Customer extends AbstractBaseModel {
 	/*private String name;*/
 	@Size(max=40)
 	
-	@Column(name="id")
-	private String customerID;
-	
 	@Column(name="company_name")
 	private String companyName;
 	
@@ -47,7 +44,7 @@ public class Customer extends AbstractBaseModel {
 	@Column(name="alt_phone_1")
 	private String altPhone1;
 	
-	@Column(name="alt_phone_1")
+	@Column(name="alt_phone_2")
 	private String altPhone2;
 	
 	@NotEmpty
@@ -60,9 +57,6 @@ public class Customer extends AbstractBaseModel {
 	@NotEmpty
 	@Column(name="city")
 	private String city;
-	
-	@Column(name="delete_flag")
-	private String deleteFlag;
 	
 //    @ManyToOne
 //	@JoinColumn(name="state")
@@ -85,14 +79,6 @@ public class Customer extends AbstractBaseModel {
 	
 	public String getContactName() {
 		return contactName;
-	}
-
-	public String getCustomerID() {
-		return customerID;
-	}
-
-	public void setCustomerID(String customerID) {
-		this.customerID = customerID;
 	}
 
 	public String getType() {

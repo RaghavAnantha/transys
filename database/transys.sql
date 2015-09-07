@@ -18,6 +18,7 @@
 --
 -- Table structure for table `business_object`
 --
+
 CREATE DATABASE /*!32312 IF NOT EXISTS*/`transys` /*!40100 DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci */;
 
 USE `transys`;
@@ -42,11 +43,21 @@ CREATE TABLE `business_object` (
   `parent_id` bigint(20) DEFAULT NULL,
   `hierarchy` varchar(255) DEFAULT NULL,
   `url_context` varchar(255) DEFAULT NULL,
+  `delete_flag` int(11) DEFAULT NULL,
   PRIMARY KEY (`ID`),
   KEY `FKF1A8A89E816B01E9` (`parent_id`),
   CONSTRAINT `FKF1A8A89E816B01E9` FOREIGN KEY (`parent_id`) REFERENCES `business_object` (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `business_object`
+--
+
+LOCK TABLES `business_object` WRITE;
+/*!40000 ALTER TABLE `business_object` DISABLE KEYS */;
+/*!40000 ALTER TABLE `business_object` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `customer`
@@ -61,7 +72,7 @@ CREATE TABLE `customer` (
   `created_by` bigint(20) DEFAULT NULL,
   `modified_at` datetime DEFAULT NULL,
   `modified_by` bigint(20) DEFAULT NULL,
-  `status` varchar(11) DEFAULT NULL,
+  `status` varchar(11) COLLATE utf8_unicode_ci DEFAULT NULL,
   `billing_address_line1` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `type` int(11) DEFAULT NULL,
   `notes` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -84,6 +95,15 @@ CREATE TABLE `customer` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `customer`
+--
+
+LOCK TABLES `customer` WRITE;
+/*!40000 ALTER TABLE `customer` DISABLE KEYS */;
+/*!40000 ALTER TABLE `customer` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `role`
 --
 
@@ -99,9 +119,20 @@ CREATE TABLE `role` (
   `default_flag` int(11) DEFAULT NULL,
   `name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `theme` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `delete_flag` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `role`
+--
+
+LOCK TABLES `role` WRITE;
+/*!40000 ALTER TABLE `role` DISABLE KEYS */;
+INSERT INTO `role` VALUES (1,NULL,NULL,NULL,NULL,1,'ADMIN',NULL,NULL),(2,NULL,NULL,NULL,NULL,1,'OPERATOR',NULL,NULL),(3,NULL,NULL,NULL,NULL,1,'REPORTUSER',NULL,NULL),(4,'2012-03-16 01:43:40',1,NULL,NULL,1,'DATA ENTRY_BILLING',NULL,NULL),(5,'2012-03-16 14:25:34',1,NULL,NULL,1,'TEST',NULL,NULL);
+/*!40000 ALTER TABLE `role` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `role_privilege`
@@ -120,6 +151,7 @@ CREATE TABLE `role_privilege` (
   `permission_type` int(11) DEFAULT NULL,
   `business_object_id` bigint(20) DEFAULT NULL,
   `role_id` bigint(20) DEFAULT NULL,
+  `delete_flag` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `FK45FBD6283F28F717` (`role_id`),
   KEY `FK45FBD628708FFC58` (`business_object_id`),
@@ -127,6 +159,44 @@ CREATE TABLE `role_privilege` (
   CONSTRAINT `FK45FBD628708FFC58` FOREIGN KEY (`business_object_id`) REFERENCES `business_object` (`ID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=719 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `role_privilege`
+--
+
+LOCK TABLES `role_privilege` WRITE;
+/*!40000 ALTER TABLE `role_privilege` DISABLE KEYS */;
+/*!40000 ALTER TABLE `role_privilege` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `state`
+--
+
+DROP TABLE IF EXISTS `state`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `state` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `created_at` datetime DEFAULT NULL,
+  `created_by` bigint(20) DEFAULT NULL,
+  `delete_flag` int(11) DEFAULT NULL,
+  `modified_at` datetime DEFAULT NULL,
+  `modified_by` bigint(20) DEFAULT NULL,
+  `code` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `state`
+--
+
+LOCK TABLES `state` WRITE;
+/*!40000 ALTER TABLE `state` DISABLE KEYS */;
+/*!40000 ALTER TABLE `state` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `user_info`
@@ -141,7 +211,6 @@ CREATE TABLE `user_info` (
   `created_by` bigint(20) DEFAULT NULL,
   `modified_at` datetime DEFAULT NULL,
   `modified_by` bigint(20) DEFAULT NULL,
-  `default_flag` int(11) DEFAULT NULL,
   `account_status` int(11) DEFAULT NULL,
   `agree_terms` tinyint(4) DEFAULT NULL,
   `email` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -157,11 +226,22 @@ CREATE TABLE `user_info` (
   `username` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `role_id` bigint(20) DEFAULT NULL,
   `bill_batch_date` datetime DEFAULT NULL,
+  `delete_flag` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `FK1437D8A23F28F717` (`role_id`),
   CONSTRAINT `FK1437D8A23F28F717` FOREIGN KEY (`role_id`) REFERENCES `role` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `user_info`
+--
+
+LOCK TABLES `user_info` WRITE;
+/*!40000 ALTER TABLE `user_info` DISABLE KEYS */;
+INSERT INTO `user_info` VALUES (1,NULL,NULL,NULL,NULL,1,NULL,NULL,'admin','2012-04-19 05:14:20','admin',NULL,NULL,'admin','admin',NULL,NULL,'admin',1,NULL,1);
+/*!40000 ALTER TABLE `user_info` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `user_role`
@@ -186,6 +266,15 @@ CREATE TABLE `user_role` (
   CONSTRAINT `FK143BF46AE453BAF7` FOREIGN KEY (`user_id`) REFERENCES `user_info` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `user_role`
+--
+
+LOCK TABLES `user_role` WRITE;
+/*!40000 ALTER TABLE `user_role` DISABLE KEYS */;
+/*!40000 ALTER TABLE `user_role` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -196,4 +285,4 @@ CREATE TABLE `user_role` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-09-07 15:23:00
+-- Dump completed on 2015-09-07 16:25:57
