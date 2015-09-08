@@ -196,19 +196,16 @@ public abstract class CRUDController<T extends BaseModel> extends BaseController
 	protected void beforeSave(HttpServletRequest request,
 			@ModelAttribute("modelObject") T entity, ModelMap model) {
 		if (entity instanceof AbstractBaseModel) {
-			if (((AbstractBaseModel) entity).getId() == null) {
-				((AbstractBaseModel) entity).setCreatedAt(Calendar
-						.getInstance().getTime());
-				if (((AbstractBaseModel) entity).getCreatedBy()==null) {
-					((AbstractBaseModel) entity).setCreatedBy(getUser(request)
-							.getId());
+			AbstractBaseModel baseModel = (AbstractBaseModel) entity;
+			if (baseModel.getId() == null) {
+				baseModel.setCreatedAt(Calendar.getInstance().getTime());
+				if (baseModel.getCreatedBy()==null) {
+					baseModel.setCreatedBy(getUser(request).getId());
 				}
 			} else {
-				((AbstractBaseModel) entity).setModifiedAt(Calendar
-						.getInstance().getTime());
-				if (((AbstractBaseModel) entity).getModifiedBy()==null) {
-					((AbstractBaseModel) entity).setModifiedBy(getUser(request)
-							.getId());
+				baseModel.setModifiedAt(Calendar.getInstance().getTime());
+				if (baseModel.getModifiedBy()==null) {
+					baseModel.setModifiedBy(getUser(request).getId());
 				}
 			}
 		}
