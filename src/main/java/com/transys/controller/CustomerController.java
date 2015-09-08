@@ -37,7 +37,29 @@ public class CustomerController extends CRUDController<Customer> {
 	}
 	
 	@RequestMapping(value = "/customer", method = RequestMethod.GET)
+	public String search(HttpServletRequest request, ModelMap model) {
+		if (request.getParameterMap().size() == 0) {
+			return displaySearch(request, model);
+		} else {
+			return executeSearch(request, model);
+		}
+	}
+	
 	public String displaySearch(HttpServletRequest request, ModelMap model) {
+		List<Customer> customerList = new ArrayList<Customer>();
+		model.addAttribute("customer", customerList);
+		model.addAttribute("customerIds", customerList);
+		
+		populateSearchCriteria(request, request.getParameterMap());
+		
+		/*setupList(model, request);
+		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
+		criteria.getSearchMap().put("id!",0l);*/
+		
+		return "customer/list";
+	}
+	
+	public String executeSearch(HttpServletRequest request, ModelMap model) {
 		setupList(model, request);
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		criteria.getSearchMap().put("id!",0l);
@@ -68,22 +90,39 @@ public class CustomerController extends CRUDController<Customer> {
 		List<Customer> customerList = new ArrayList<Customer>();
 		Customer customer = new Customer();
 		customer.setId(0l);
-		customer.setCustomerNameID("Aberdeen_1");
-		customer.setName("Aberdeen construction");
+		customer.setCompanyName("Aberdeen construction");
 		
 		State state = new State();
 		state.setCode("IL");
 		state.setName("Illinois");
-		customer.setState(state);
+		//customer.setState(state);
+		customer.setState("IL");
+		
 		
 		customerList.add(customer);
 		
 		return customerList;
 	}
 	
+	private List<State> mockStateList() {
+		List<State> stateList = new ArrayList<State>();
+		
+		State state = new State();
+		state.setId(1l);
+		state.setCode("IL");
+		state.setName("Illinois");
+		
+		
+		stateList.add(state);
+		
+		return stateList;
+	}
+	
 	@RequestMapping(value = "/customer/add", method = RequestMethod.GET)
 	public String displayAdd(HttpServletRequest request, ModelMap model) {
 		model.addAttribute("modelObject", new Customer());
+		List<State> stateList = mockStateList();
+		model.addAttribute("state", stateList);
 		return "customer/form";
 	}
 	

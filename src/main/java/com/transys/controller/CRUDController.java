@@ -140,12 +140,13 @@ public abstract class CRUDController<T extends BaseModel> extends BaseController
 			//return urlContext + "/form";
 			return "customer/form";
 		}
-		//beforeSave(request, entity, model);
+		beforeSave(request, entity, model);
 		// merge into datasource
-		//genericDAO.saveOrUpdate(entity);
-		//cleanUp(request);
+		genericDAO.saveOrUpdate(entity);
+		cleanUp(request);
 		// return to list
-		return "redirect:/" + urlContext + "/list";
+		//return "redirect:/" + urlContext + "/list";
+		return "redirect:/" + "transysapp/customer/add";
 	}
 
 	/*@RequestMapping(method = RequestMethod.POST, value = "/bulkdelete.do")
@@ -190,7 +191,7 @@ public abstract class CRUDController<T extends BaseModel> extends BaseController
 		} else {
 			return genericDAO.getById(getEntityClass(), Long.parseLong(pk));
 		}
-	}
+	}*/
 
 	protected void beforeSave(HttpServletRequest request,
 			@ModelAttribute("modelObject") T entity, ModelMap model) {
@@ -211,7 +212,7 @@ public abstract class CRUDController<T extends BaseModel> extends BaseController
 				}
 			}
 		}
-	}*/
+	}
 
 	public void setupCreate(ModelMap model, HttpServletRequest request) {
 		// Default is no implementation
@@ -227,11 +228,11 @@ public abstract class CRUDController<T extends BaseModel> extends BaseController
 		//model.addAttribute("statuses", statuses);
 	}
 
-	/*public void cleanUp(HttpServletRequest request) {
+	public void cleanUp(HttpServletRequest request) {
 
 	}
 
-	@RequestMapping(method = { RequestMethod.GET, RequestMethod.POST }, value = "/export.do")
+	/*@RequestMapping(method = { RequestMethod.GET, RequestMethod.POST }, value = "/export.do")
 	public void export(ModelMap model, HttpServletRequest request,
 			HttpServletResponse response, @RequestParam("type") String type,
 			Object objectDAO, Class clazz) {

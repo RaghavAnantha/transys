@@ -43,7 +43,7 @@ function formatFax(){
 }
 </script>
 <br/>
-<form:form action="customer" name="typeForm" commandName="modelObject"
+<form:form action="/transysapp/customer" name="typeForm" commandName="modelObject"
 	method="post">
 	<form:hidden path="id" id="id" />
 	<table id="form-table" width="100%" cellspacing="1" cellpadding="5">
@@ -53,26 +53,26 @@ function formatFax(){
 		<tr>
 			<td class="form-left"><transys:label code="Name" /><span class="errorMessage">*</span></td>
 			<td align="${left}">
-				<form:input path="name" cssClass="flat" style="min-width:350px; max-width:350px"  />
-			 	<br><form:errors path="name" cssClass="errorMessage" />
+				<form:input path="companyName" cssClass="flat" style="min-width:350px; max-width:350px"  />
+			 	<br><form:errors path="companyName" cssClass="errorMessage" />
 			</td>
 			
 			<td class="form-left"><transys:label code="Customer ID" /></td>
 			<td align="${left}">
-				<form:input path="customerNameID" cssClass="flat" style="min-width:200px; max-width:200px" />
+				<form:input path="id" cssClass="flat" style="min-width:200px; max-width:200px" />
 			 	
 			</td>
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Address Line1"/><span	class="errorMessage"></span></td>
 			<td align="${left}">
-				<form:input path="address" cssClass="flat" style="min-width:200px; max-width:200px"/>
-				 <br><form:errors path="address" cssClass="errorMessage" />
+				<form:input path="billingAddressLine1" cssClass="flat" style="min-width:200px; max-width:200px"/>
+				 <br><form:errors path="billingAddressLine1" cssClass="errorMessage" />
 			</td>
 			<td class="form-left"><transys:label code="Address Line2"/></td>
 			<td align="${left}">
-				<form:input path="address2" cssClass="flat" style="min-width:200px; max-width:200px"/>
-				 <br><form:errors path="address2" cssClass="errorMessage" />
+				<form:input path="billingAddressLine2" cssClass="flat" style="min-width:200px; max-width:200px"/>
+				 <br><form:errors path="billingAddressLine2" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>

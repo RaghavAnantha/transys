@@ -60,7 +60,9 @@ public class Customer extends AbstractBaseModel {
 	
 //    @ManyToOne
 //	@JoinColumn(name="state")
-	 private State state;
+	 //private State state;
+	
+	private String state;
 	
 	@NotNull 
 	@Column(name="zipcode")
@@ -68,7 +70,7 @@ public class Customer extends AbstractBaseModel {
 	
 	@Column(name="fax")
 	private String fax;
-
+	
 	public String getCompanyName() {
 		return companyName;
 	}
@@ -157,11 +159,19 @@ public class Customer extends AbstractBaseModel {
 		this.city = city;
 	}
 
-	public State getState() {
+	/*public State getState() {
 		return state;
 	}
 
 	public void setState(State state) {
+		this.state = state;
+	}*/
+	
+	public String getState() {
+		return state;
+	}
+
+	public void setState(String state) {
 		this.state = state;
 	}
 
