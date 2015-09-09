@@ -43,8 +43,7 @@ function formatFax(){
 }
 </script>
 <br/>
-<form:form action="/transysapp/customer" name="typeForm" commandName="modelObject"
-	method="post">
+<form:form action="/transysapp/customer" name="typeForm" commandName="modelObject" method="post">
 	<form:hidden path="id" id="id" />
 	<table id="form-table" width="100%" cellspacing="1" cellpadding="5">
 		<tr class="table-heading">

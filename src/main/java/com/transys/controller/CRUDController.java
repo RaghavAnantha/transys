@@ -84,6 +84,12 @@ public abstract class CRUDController<T extends BaseModel> extends BaseController
 	protected String getPkParam() {
 		return "id";
 	}
+	
+	@RequestMapping(method = RequestMethod.GET, value = "/edit.do")
+	public String edit2(ModelMap model, HttpServletRequest request) {
+		setupUpdate(model, request);
+		return urlContext + "/form";
+	}
 
 	/*
 	@RequestMapping(method = RequestMethod.GET, value = "/list.do")
@@ -215,9 +221,9 @@ public abstract class CRUDController<T extends BaseModel> extends BaseController
 		// Default is no implementation
 	}
 
-	/*public void setupUpdate(ModelMap model, HttpServletRequest request) {
+	public void setupUpdate(ModelMap model, HttpServletRequest request) {
 		setupCreate(model, request);
-	}*/
+	}
 
 	public void setupList(ModelMap model, HttpServletRequest request) {
 		populateSearchCriteria(request, request.getParameterMap());

@@ -2,7 +2,7 @@
 <h3>
 	<transys:label code="Manage Customer" />
 </h3>
-<form:form action="transysapp/customer" method="get" name="searchForm">
+<form:form action="customer" method="get" name="searchForm">
 	<table width="100%" id="form-table">
 		<tr class="table-heading">
 			<td colspan="4"><b><transys:label code="Search Customer" /></b></td>
@@ -16,20 +16,20 @@
 				value="${sessionScope.searchCriteria.searchMap.lastName}" /></td>
 	 --%>	
 	 <td align="${left}" class="first"><transys:label code="Name"/></td>
-			<td align="${left}"><select id="customer" name="id" style="min-width:350px; max-width:350px">
+			<td align="${left}"><select id="companyName" name="companyName" style="min-width:350px; max-width:350px">
 				<option value="">------<transys:label code="Please Select"/>------</option>
 				<c:forEach items="${customer}" var="customer">
 					<c:set var="selected" value=""/>
-					<c:if test="${sessionScope.searchCriteria.searchMap['id'] == customer.id}">
+					<c:if test="${sessionScope.searchCriteria.searchMap['companyName'] == customer.companyName}">
 						<c:set var="selected" value="selected"/>
 					</c:if>
-						<option value="${customer.id}" ${selected}>${customer.companyName}</option>
+						<option value="${customer.companyName}" ${selected}>${customer.companyName}</option>
 				</c:forEach>
 			</select>
 			</td>
 			
 			<td align="${left}" class="first"><transys:label code="Customer ID"/></td>
-			<td align="${left}"><select id="customerId" name="customerNameID" style="min-width:200px; max-width:200px">
+			<td align="${left}"><select id="customerId" name="id" style="min-width:200px; max-width:200px">
 				<option value="">------<transys:label code="Please Select"/>------</option>
 				<c:forEach items="${customerIds}" var="customerId">
 					<c:set var="selected" value=""/>
@@ -61,7 +61,7 @@
 		<transys:textcolumn headerText="Address Line1" dataField="billingAddressLine1" />
 		<transys:textcolumn headerText="Address Line2" dataField="billingAddressLine2" />
 		<transys:textcolumn headerText="City" dataField="city" />
-		<transys:textcolumn headerText="State" dataField="state.name" />
+		<transys:textcolumn headerText="State" dataField="state" />
 		<transys:textcolumn headerText="Zipcode" dataField="zipcode" />
 		<transys:textcolumn headerText="Phone" dataField="phone" />
 		<transys:textcolumn headerText="Fax" dataField="fax" />

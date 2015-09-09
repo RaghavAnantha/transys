@@ -46,11 +46,12 @@ public class CustomerController extends CRUDController<Customer> {
 	}
 	
 	public String displaySearch(HttpServletRequest request, ModelMap model) {
-		List<Customer> customerList = new ArrayList<Customer>();
+		/*List<Customer> customerList = new ArrayList<Customer>();
 		model.addAttribute("customer", customerList);
-		model.addAttribute("customerIds", customerList);
+		model.addAttribute("customerIds", customerList);*/
+		setupList(model, request);
 		
-		populateSearchCriteria(request, request.getParameterMap());
+		//populateSearchCriteria(request, request.getParameterMap());
 		
 		/*setupList(model, request);
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
@@ -64,10 +65,12 @@ public class CustomerController extends CRUDController<Customer> {
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		criteria.getSearchMap().put("id!",0l);
 		
+		model.addAttribute("list", genericDAO.search(getEntityClass(), criteria,"company_name",null,null));
+		
 		return "customer/list";
 	}
 	
-	@Override
+	/*@Override
 	public void setupCreate(ModelMap model, HttpServletRequest request) {
 		Map criterias = new HashMap();
 		List<Customer> customerList = mockCustomerList();
@@ -77,12 +80,21 @@ public class CustomerController extends CRUDController<Customer> {
 		//model.addAttribute("customerIds",genericDAO.executeSimpleQuery("select obj from Customer obj where obj.customerNameID is not null order by obj.customerNameID asc"));
       //model.addAttribute("state", genericDAO.findByCriteria(State.class, criterias, "name", false));
 		
+	}*/
+	
+	@Override
+	public void setupCreate(ModelMap model, HttpServletRequest request) {
+		//List<Customer> customerList = mockCustomerList();
+		//Map criterias = new HashMap();
+		model.addAttribute("customer",genericDAO.executeSimpleQuery("select obj from Customer obj where obj.id!=0 order by obj.companyName asc"));
+		model.addAttribute("customerIds",genericDAO.executeSimpleQuery("select obj from Customer obj where obj.id is not null order by obj.id asc"));
+      //model.addAttribute("state", genericDAO.findByCriteria(State.class, criterias, "name", false));
 	}
 	
 	@Override
 	public void setupList(ModelMap model, HttpServletRequest request) {
 		populateSearchCriteria(request, request.getParameterMap());
-		model.addAttribute("list", mockCustomerList());
+		//model.addAttribute("list", mockCustomerList());
 		setupCreate(model, request);
 	}
 	
@@ -95,9 +107,8 @@ public class CustomerController extends CRUDController<Customer> {
 		State state = new State();
 		state.setCode("IL");
 		state.setName("Illinois");
-		//customer.setState(state);
-		customer.setState("IL");
-		
+		customer.setState(state);
+		//customer.setState("IL");
 		
 		customerList.add(customer);
 		
