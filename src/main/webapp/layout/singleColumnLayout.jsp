@@ -7,12 +7,10 @@
 <title>Transys</title>
 <%@include file="/common/css.jsp"%>
 <%@include file="/common/scripts.jsp"%>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 <decorator:head/>
 </head>
 <body dir="${dir}">
-<table width="100%" cellpadding="0" cellspacing="0" style="height:100%;min-height:100%" border="0">
-	
+<table width="100%" cellpadding="0" cellspacing="0" style="height:100%;min-height:100%" border="0">	
 	<tr>
 		<td height="55px"><jsp:include page="topMenu1.jsp" /></td>
 	</tr>

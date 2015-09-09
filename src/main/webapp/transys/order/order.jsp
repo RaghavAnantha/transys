@@ -10,38 +10,38 @@
 		<li><a href="#orders" data-toggle="tab">Orders</a></li>
 		<li><a href="#orderReports" data-toggle="tab">Orders Report</a></li>
 	</ul>
-
+	
+	
 	<div class="tab-content tab-color">
+
 		<div id="orders" class="tab-pane">
 			<h3 style="margin-top: 0px !important">Manage Orders</h3>
 			<form>
 				<table>
 					<tr>
-						<td><transys:label code="Order#: " /></td>
-						<td><select class="form-control">
+						<td><transys:label code="Order#:" /></td>
+						<td><select class="form-control input-sm">
 								<option>awqq</option>
 								<option>adajnwj</option>
 								<option>najbwja</option>
 								<option>nawja</option>
 						</select></td>
 						<td><transys:label code="Order Status: " /></td>
-						<td><select class="form-control">
+						<td><select class="form-control input-sm">
 								<option>awqq</option>
 								<option>adajnwj</option>
 								<option>najbwja</option>
 								<option>nawja</option>
 						</select></td>
-					</tr>
-					<tr>
 						<td><transys:label code="Customer: " /></td>
-						<td><select class="form-control">
+						<td><select class="form-control input-sm">
 								<option>awqq</option>
 								<option>adajnwj</option>
 								<option>najbwja</option>
 								<option>nawja</option>
 						</select></td>
 						<td><transys:label code="Delivery Address: " /></td>
-						<td><select class="form-control">
+						<td><select class="form-control input-sm">
 								<option>awqq</option>
 								<option>adajnwj</option>
 								<option>najbwja</option>
@@ -51,110 +51,79 @@
 					</tr>
 					<tr>
 						<td><transys:label code="Phone Number: " /></td>
-						<td><select class="form-control">
+						<td><select class="form-control input-sm">
 								<option>awqq</option>
 								<option>adajnwj</option>
 								<option>najbwja</option>
 								<option>nawja</option>
 						</select></td>
-
-					</tr>
-					<tr>
 						<td><transys:label code="Dumpster Size: " /></td>
-						<td><select class="form-control">
+						<td><select class="form-control input-sm">
 								<option>awqq</option>
 								<option>adajnwj</option>
 								<option>najbwja</option>
 								<option>nawja</option>
 						</select></td>
 						<td><transys:label code="Dumpster#: " /></td>
-						<td><select class="form-control">
+						<td><select class="form-control input-sm">
 								<option>awqq</option>
 								<option>adajnwj</option>
 								<option>najbwja</option>
 								<option>nawja</option>
 						</select></td>
-
 					</tr>
 					<tr>
 						<td><transys:label code="Delivery Date From: " /></td>
-						<td><select class="form-control">
+						<td><select class="form-control input-sm">
 								<option>awqq</option>
 								<option>adajnwj</option>
 								<option>najbwja</option>
 								<option>nawja</option>
 						</select></td>
 						<td><transys:label code="Delivery Date To: " /></td>
-						<td><select class="form-control">
+						<td><select class="form-control input-sm">
 								<option>awqq</option>
 								<option>adajnwj</option>
 								<option>najbwja</option>
 								<option>nawja</option>
 						</select></td>
-
-					</tr>
-					<tr>
 						<td><transys:label code="Pickup Date From: " /></td>
-						<td><select class="form-control">
+						<td><select class="form-control input-sm">
 								<option>awqq</option>
 								<option>adajnwj</option>
 								<option>najbwja</option>
 								<option>nawja</option>
 						</select></td>
 						<td><transys:label code="Pickup Date To: " /></td>
-						<td><select class="form-control">
+						<td><select class="form-control input-sm">
 								<option>awqq</option>
 								<option>adajnwj</option>
 								<option>najbwja</option>
 								<option>nawja</option>
 						</select></td>
-
 					</tr>
 					<tr>
 						<td></td>
-						<td><Button type="button" class="btn btn-primary">Search</button></td>
+						<td><Button type="button" class="btn btn-primary btn-sm">Search</button></td>
 					</tr>
 					<tr>
-						<td><Button type="button" class="btn btn-primary">Add
-								New Order</button></td>
+						<td><Button id="AddNewOrder" type="button"
+								class="btn btn-primary btn-sm"  data-toggle="modal"
+								data-target="#AddEdit" data-backdrop="static">Add New
+								Order</Button></td>
 					</tr>
 				</table>
 			</form>
-<div class="container-fluid">
-			<table class="table table-striped">
-					<tr>
-						<th>Order#</th>
-						<th>Customer</th>
-						<th>Contact</th>
-						<th>Phone</th>
-						<th>Delivery Address</th>
-						<th>City</th>
-						<th>Dumpster Size</th>
-						<th>Dumpster#</th>
-						<th>Delivery Date</th>
-						<th>Pickup Date</th>
-						<th>Dumpster Price</th>
-						<th>Permit Fee</th>
-						<th>City Fee</th>
-						<th>Overwt. Fee</th>
-						<th>Addintl Fee</th>
-						<th>Total Amount</th>
-						<th>Status</th>
-						<th>E</th>
-						<th>P</th>
-					</tr>		
-				</table>
-</div>
-
-
 		</div>
+
+
 		<div id="orderReports" class="tab-pane">
 
 			<h3 style="margin-top: 0px !important">Orders Report</h3>
 			<table>
 				<tr>
 					<td>Company Name:</td>
-					<td><select class="form-control">
+					<td><select class="form-control input-sm">
 							<option>awqq</option>
 							<option>adajnwj</option>
 							<option>najbwja</option>
@@ -163,14 +132,14 @@
 				</tr>
 				<tr>
 					<td>Order Date From:</td>
-					<td><select class="form-control">
+					<td><select class="form-control input-sm">
 							<option>awqq</option>
 							<option>adajnwj</option>
 							<option>najbwja</option>
 							<option>nawja</option>
 					</select></td>
 					<td>Order Date To:</td>
-					<td><select class="form-control">
+					<td><select class="form-control input-sm">
 							<option>awqq</option>
 							<option>adajnwj</option>
 							<option>najbwja</option>
@@ -179,14 +148,14 @@
 				</tr>
 				<tr>
 					<td>Contact Name:</td>
-					<td><select class="form-control">
+					<td><select class="form-control input-sm">
 							<option>awqqa</option>
 							<option>adajnwj</option>
 							<option>najbwja</option>
 							<option>nawja</option>
 					</select></td>
 					<td>Order Status:</td>
-					<td><select class="form-control">
+					<td><select class="form-control input-sm">
 							<option>Open</option>
 							<option>adajnwj</option>
 							<option>najbwja</option>
@@ -195,7 +164,7 @@
 				</tr>
 				<tr>
 					<td>Phone Number:</td>
-					<td><select class="form-control">
+					<td><select class="form-control input-sm">
 							<option>awqq</option>
 							<option>adajnwj</option>
 							<option>najbwja</option>
@@ -204,25 +173,25 @@
 				</tr>
 				<tr>
 					<td></td>
-					<td><Button type="button" class="btn btn-primary">Preview</button>
+					<td><Button type="button" class="btn btn-primary btn-sm">Preview</button>
 					</td>
 				</tr>
 			</table>
 		</div>
 
-
-
-
-
-
-
-
 	</div>
+<script type="text/javascript">
 
+function activaTab(tab){
+	    $('.nav-tabs a[href="#' + tab + '"]').tab('show');
+};
 
+activaTab('orders');
+   
 
-
-
-
+</script>
 </body>
+
+
+
 </html>
