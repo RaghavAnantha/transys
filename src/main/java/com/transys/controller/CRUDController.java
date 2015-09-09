@@ -142,9 +142,9 @@ public abstract class CRUDController<T extends BaseModel> extends BaseController
 		}
 		// return to form if we had errors
 		if (bindingResult.hasErrors()) {
-			//setupCreate(model, request);
+			setupCreate2(model, request);
 			//return urlContext + "/form";
-			return "customer/form";
+			return "customer/customer";
 		}
 		beforeSave(request, entity, model);
 		// merge into datasource
@@ -152,7 +152,7 @@ public abstract class CRUDController<T extends BaseModel> extends BaseController
 		cleanUp(request);
 		// return to list
 		//return "redirect:/" + urlContext + "/list";
-		return "redirect:/" + "transysapp/customer/add";
+		return "redirect:/" + "transysapp/customer";
 	}
 
 	/*@RequestMapping(method = RequestMethod.POST, value = "/bulkdelete.do")
@@ -218,6 +218,10 @@ public abstract class CRUDController<T extends BaseModel> extends BaseController
 	}
 
 	public void setupCreate(ModelMap model, HttpServletRequest request) {
+		// Default is no implementation
+	}
+	
+	public void setupCreate2(ModelMap model, HttpServletRequest request) {
 		// Default is no implementation
 	}
 
