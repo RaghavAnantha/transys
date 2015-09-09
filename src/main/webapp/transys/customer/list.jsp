@@ -2,7 +2,7 @@
 <h3>
 	<transys:label code="Manage Customer" />
 </h3>
-<form:form action="customer" method="get" name="searchForm">
+<form:form action="list.do" method="get" name="searchForm">
 	<table width="100%" id="form-table">
 		<tr class="table-heading">
 			<td colspan="4"><b><transys:label code="Search Customer" /></b></td>
@@ -51,7 +51,7 @@
 </form:form>
 <br />
 <form:form name="delete.do" id="serviceForm">
-	<transys:datatable urlContext="transysapp/customer" deletable="true"
+	<transys:datatable urlContext="customer" deletable="true"
 		editable="true" insertable="true" baseObjects="${list}"
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
 		pagingLink="search.do" multipleDelete="false" searcheable="false" 

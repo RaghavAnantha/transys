@@ -7,19 +7,19 @@
 		http://www.springframework.org/schema/security/spring-security.xsd">
 		
 	<bean id="authenticationSuccessHandler" class="com.transys.core.AuthenticationSuccessHandler">
-		<property name="defaultTargetUrl" value='/transysapp/home' /> 
+		<property name="defaultTargetUrl" value='/home.do' /> 
 	</bean>  
 
 	<security:http>
 		<!-- Login & Resources page should be accessible to all -->
-		<security:intercept-url pattern="/**/login/*" access="isAnonymous()" />
+		<security:intercept-url pattern="/**/login.do" access="isAnonymous()" />
 		<security:intercept-url pattern="/resources/**" access="isAnonymous()" />
 		
 		<!-- Rest all pages currently are accessible by Role-Admin -->
-		<security:intercept-url pattern="/**/home" access="hasRole('ADMIN')" />
+		<security:intercept-url pattern="/**/home.do" access="hasRole('ADMIN')" />
 		
 		<!-- Controls the login page authentication through Spring -->
- 		<security:form-login login-page='/transysapp/login' authentication-success-handler-ref="authenticationSuccessHandler"/>
+ 		<security:form-login login-page='/login.do' authentication-success-handler-ref="authenticationSuccessHandler"/>
  		
  		<!-- <security:logout /> -->
 	</security:http>

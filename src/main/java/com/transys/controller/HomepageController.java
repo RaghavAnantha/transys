@@ -16,7 +16,7 @@ import com.transys.model.User;
 @SuppressWarnings("unchecked")
 public class HomepageController extends GenericController {
 
-	@RequestMapping("/home")
+	@RequestMapping("/home.do")
 	public String displayMainpage(HttpServletRequest request) {
 		/*User user = getUserInfo(request);
 		MenuTree menuTree = (MenuTree)request.getSession().getAttribute("menuTree");

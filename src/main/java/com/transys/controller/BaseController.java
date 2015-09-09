@@ -11,10 +11,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
-
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.ui.Model;
@@ -28,18 +26,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.support.ByteArrayMultipartFileEditor;
 
 //import com.google.gson.Gson;
-
-import com.transys.model.SearchCriteria;
-import com.transys.model.User;
-
 import com.transys.core.dao.GenericDAO;
-/*
-
-import com.primovision.lutransport.model.Language;
-import com.primovision.lutransport.model.StaticData;
-
-import com.primovision.lutransport.service.AuditService;
-*/
+//import com.transys.model.Language;
+import com.transys.model.SearchCriteria;
+//import com.transys.model.StaticData;
+import com.transys.model.User;
+//import com.transys.service.AuditService;
 
 @SuppressWarnings("unchecked")
 public class BaseController {
@@ -48,9 +40,31 @@ public class BaseController {
 
 	protected static Logger log = LogManager.getLogger("com.transys.controller");
 
-	/*@Autowired
-	private AuditService auditService;*/
-	
+	//@Autowired
+	//private AuditService auditService;
+
+	protected String urlContext;
+
+	public String getUrlContext() {
+		return urlContext;
+	}
+
+	public void setUrlContext(String urlContext) {
+		this.urlContext = urlContext;
+	}
+
+	// Set up any custom editors, adds a custom one for java.sql.date by default
+	@InitBinder
+	public void initBinder(WebDataBinder binder) {
+		SimpleDateFormat dateFormat = new SimpleDateFormat(
+				"yyyy-MM-dd HH:mm:ss");
+		dateFormat.setLenient(false);
+		binder.registerCustomEditor(Date.class, new CustomDateEditor(
+				dateFormat, false));
+		binder.registerCustomEditor(byte[].class,
+				new ByteArrayMultipartFileEditor());
+	}
+
 	@Autowired
 	protected GenericDAO genericDAO;
 
@@ -76,35 +90,11 @@ public class BaseController {
 		this.validator = validator;
 	}
 
-	// Set up any custom editors, adds a custom one for java.sql.date by default
-	@InitBinder
-	public void initBinder(WebDataBinder binder) {
-		SimpleDateFormat dateFormat = new SimpleDateFormat(
-				"yyyy-MM-dd HH:mm:ss");
-		dateFormat.setLenient(false);
-		binder.registerCustomEditor(Date.class, new CustomDateEditor(
-				dateFormat, false));
-		binder.registerCustomEditor(byte[].class,
-				new ByteArrayMultipartFileEditor());
-	}
-	
-	protected String urlContext;
-
-	public String getUrlContext() {
-		return urlContext;
-	}
-
-	public void setUrlContext(String urlContext) {
-		this.urlContext = urlContext;
-	}
-
-	
 	protected User getUser(HttpServletRequest request) {
 		return (User) request.getSession().getAttribute("userInfo");
 	}
 
-	/*
-	protected List<StaticData> listStaticData(String staticDataType) {
+	/*protected List<StaticData> listStaticData(String staticDataType) {
 		Map criteria = new HashMap();
 		criteria.put("dataType", staticDataType);
 		return genericDAO.findByCriteria(StaticData.class, criteria);
@@ -124,8 +114,11 @@ public class BaseController {
 		}
 	}*/
 
-	protected void populateSearchCriteria(HttpServletRequest request, Map<String, String[]> params) {
-		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
+	protected void populateSearchCriteria(HttpServletRequest request,
+			Map<String, String[]> params) {
+
+		SearchCriteria criteria = (SearchCriteria) request.getSession()
+				.getAttribute("searchCriteria");
 		if (criteria == null) {
 			criteria = new SearchCriteria();
 			criteria.setPageSize(25);
@@ -143,7 +136,7 @@ public class BaseController {
 			}
 		}
 		criteria.setRequestParams(params);
-		if (params != null && params.size() > 0) {
+		if (params != null && params.size()>0) {
 			Map parameters = new HashMap();
 			if (params.get("pageSize") != null) {
 				criteria.setPageSize(Integer.parseInt(params.get("pageSize")[0]));
@@ -153,16 +146,18 @@ public class BaseController {
 				criteria.setPage(Integer.parseInt(request.getParameter("p")));
 			} else {
 				if (params.get("queryString") != null) {
-					parameters.put(params.get("searchBy")[0], params.get("queryString")[0]);
-				} else {
-					Object[] keys = params.keySet().toArray();
-					for (int i = 0; i < keys.length; i++) {
-						if (params.get(keys[i]) != null) {
-							if (!"rst".equalsIgnoreCase(keys[i].toString()))
-								parameters.put(keys[i], params.get(keys[i])[0]);
+						parameters.put(params.get("searchBy")[0],
+								params.get("queryString")[0]);
+					} else {
+						Object[] keys = params.keySet().toArray();
+						for (int i = 0; i < keys.length; i++) {
+							if (params.get(keys[i]) != null) {
+								if (!"rst".equalsIgnoreCase(keys[i].toString()))
+									parameters.put(keys[i],
+											params.get(keys[i])[0]);
+							}
 						}
 					}
-				}
 				
 				criteria.setPage(0);
 				criteria.setSearchMap(parameters);
@@ -179,7 +174,11 @@ public class BaseController {
 			String value = null;
 			while (it.hasNext()) {
 				key = it.next();
-				value = (String) criteria.getSearchMap().get(key);
+				Object obj = criteria.getSearchMap().get(key);
+				if (obj instanceof String) {
+					value = (String) criteria.getSearchMap().get(key);
+				}
+				//value = (String) criteria.getSearchMap().get(key);
 				if (!StringUtils.isEmpty(value)) {
 					buffer.append(key + ":" + value).append(" ");
 				}
@@ -190,9 +189,8 @@ public class BaseController {
 
 	/*public void writeActivityLog(String activityType, String details) {
 		auditService.writeActivityLog(urlContext, activityType, details);
-	}*/
+	}
 	
-	/*
 	@RequestMapping(method = { RequestMethod.GET, RequestMethod.POST }, value = "/ajax.do")
 	public @ResponseBody
 	String ajaxRequest(HttpServletRequest request,

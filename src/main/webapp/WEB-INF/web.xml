@@ -30,7 +30,7 @@
   	</filter-mapping>
   	<filter-mapping>
     	<filter-name>BusinessObjectFilter</filter-name>
-    	<url-pattern>*</url-pattern>
+    	<url-pattern>*.do</url-pattern>
   	</filter-mapping>
 	<listener>
 		<!--<listener-class>
@@ -46,7 +46,7 @@
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>transys</servlet-name>
-		<url-pattern>/transysapp/*</url-pattern>
+		<url-pattern>*.do</url-pattern>
 	</servlet-mapping>
 
 	<filter>
@@ -61,6 +61,6 @@
 	</filter-mapping>
 
 	<welcome-file-list>
-		<welcome-file>/transys/login/login.jsp</welcome-file>
+		<welcome-file></welcome-file>
 	</welcome-file-list>
 </web-app>

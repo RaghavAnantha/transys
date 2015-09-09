@@ -43,7 +43,7 @@ function formatFax(){
 }
 </script>
 <br/>
-<form:form action="/transysapp/customer" name="typeForm" commandName="modelObject" method="post">
+<form:form action="save.do" name="typeForm" commandName="modelObject" method="post">
 	<form:hidden path="id" id="id" />
 	<table id="form-table" width="100%" cellspacing="1" cellpadding="5">
 		<tr class="table-heading">
@@ -112,17 +112,14 @@ function formatFax(){
 			</td>
 		</tr>
 	   
-
 		<tr><td colspan="2"></td></tr>
 		<tr>
 			<td>&nbsp;</td>
-			<td align="${left}" colspan="2"><input type="submit"
-				name="create" id="create" onclick=""
-				value="<transys:label code="Save"/>" class="flat" /> <input
-				type="reset" id="resetBtn" value="<transys:label code="Reset"/>"
-				class="flat" /> <input type="button" id="cancelBtn"
-				value="<transys:label code="Cancel"/>" class="flat"
-				onClick="location.href='list.do'" /></td>
+			<td align="${left}" colspan="2">
+				<input type="submit" name="create" id="create" onclick="" value="<transys:label code="Save"/>" class="flat" /> 
+				<input type="reset" id="resetBtn" value="<transys:label code="Reset"/> "class="flat" /> 
+				<input type="button" id="cancelBtn" value="<transys:label code="Cancel"/>" class="flat" onClick="location.href='list.do'" />
+			</td>
 		</tr>
 	</table>
 </form:form>

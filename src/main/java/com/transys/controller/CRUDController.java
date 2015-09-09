@@ -26,25 +26,22 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.support.ByteArrayMultipartFileEditor;
 
-import com.transys.model.BaseModel;
+import com.transys.core.util.MimeUtil;
 import com.transys.model.AbstractBaseModel;
-
-//import com.primovision.lutransport.core.util.MimeUtil;
-
+import com.transys.model.BaseModel;
 import com.transys.model.SearchCriteria;
-//import com.primovision.lutransport.model.StaticData;
-//import com.primovision.lutransport.service.DynamicReportService;
+//import com.transys.model.StaticData;
+import com.transys.service.DynamicReportService;
 
 @SuppressWarnings("unchecked")
 public abstract class CRUDController<T extends BaseModel> extends BaseController {
 	
-	/*
 	@Autowired
 	protected DynamicReportService dynamicReportService;
 
 	public void setDynamicReportService(DynamicReportService dynamicReportService) {
 		this.dynamicReportService = dynamicReportService;
-	}*/
+	}
 
 	protected String urlContext;
 
@@ -84,19 +81,11 @@ public abstract class CRUDController<T extends BaseModel> extends BaseController
 	protected String getPkParam() {
 		return "id";
 	}
-	
-	@RequestMapping(method = RequestMethod.GET, value = "/edit.do")
-	public String edit2(ModelMap model, HttpServletRequest request) {
-		setupUpdate(model, request);
-		return urlContext + "/form";
-	}
 
-	/*
 	@RequestMapping(method = RequestMethod.GET, value = "/list.do")
 	public String list(ModelMap model, HttpServletRequest request) {
 		setupList(model, request);
-		SearchCriteria criteria = (SearchCriteria) request.getSession()
-				.getAttribute("searchCriteria");
+		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		criteria.setPageSize(25);
 		model.addAttribute("list",genericDAO.search(getEntityClass(), criteria));
 		return urlContext + "/list";
@@ -111,8 +100,7 @@ public abstract class CRUDController<T extends BaseModel> extends BaseController
 	@RequestMapping(method = { RequestMethod.GET, RequestMethod.POST }, value = "/search.do")
 	public String search2(ModelMap model, HttpServletRequest request) {
 		setupList(model, request);
-		SearchCriteria criteria = (SearchCriteria) request.getSession()
-				.getAttribute("searchCriteria");
+		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		model.addAttribute("list",genericDAO.search(getEntityClass(), criteria));
 		return urlContext + "/list";
 	}
@@ -127,13 +115,12 @@ public abstract class CRUDController<T extends BaseModel> extends BaseController
 	public String view(ModelMap model, HttpServletRequest request) {
 		setupUpdate(model, request);
 		return urlContext + "/view";
-	}*/
+	}
 
-	//@RequestMapping(method = RequestMethod.POST, value = "/save.do")
+	@RequestMapping(method = RequestMethod.POST, value = "/save.do")
 	public String save(HttpServletRequest request,
 			@ModelAttribute("modelObject") T entity,
 			BindingResult bindingResult, ModelMap model) {
-		// validate entity
 		try {
 			getValidator().validate(entity, bindingResult);
 		} catch (ValidationException e) {
@@ -142,20 +129,17 @@ public abstract class CRUDController<T extends BaseModel> extends BaseController
 		}
 		// return to form if we had errors
 		if (bindingResult.hasErrors()) {
-			setupCreate2(model, request);
-			//return urlContext + "/form";
-			return "customer/customer";
+			setupCreate(model, request);
+			return urlContext + "/form";
 		}
 		beforeSave(request, entity, model);
-		// merge into datasource
 		genericDAO.saveOrUpdate(entity);
 		cleanUp(request);
 		// return to list
-		//return "redirect:/" + urlContext + "/list";
-		return "redirect:/" + "transysapp/customer";
+		return "redirect:/" + urlContext + "/list.do";
 	}
 
-	/*@RequestMapping(method = RequestMethod.POST, value = "/bulkdelete.do")
+	@RequestMapping(method = RequestMethod.POST, value = "/bulkdelete.do")
 	public String bulkdelete(@RequestParam("id") String[] id) {
 		if (id != null) {
 			for (int i = 0; i < id.length; i++) {
@@ -197,7 +181,7 @@ public abstract class CRUDController<T extends BaseModel> extends BaseController
 		} else {
 			return genericDAO.getById(getEntityClass(), Long.parseLong(pk));
 		}
-	}*/
+	}
 
 	protected void beforeSave(HttpServletRequest request,
 			@ModelAttribute("modelObject") T entity, ModelMap model) {
@@ -220,10 +204,6 @@ public abstract class CRUDController<T extends BaseModel> extends BaseController
 	public void setupCreate(ModelMap model, HttpServletRequest request) {
 		// Default is no implementation
 	}
-	
-	public void setupCreate2(ModelMap model, HttpServletRequest request) {
-		// Default is no implementation
-	}
 
 	public void setupUpdate(ModelMap model, HttpServletRequest request) {
 		setupCreate(model, request);
@@ -239,7 +219,7 @@ public abstract class CRUDController<T extends BaseModel> extends BaseController
 
 	}
 
-	/*@RequestMapping(method = { RequestMethod.GET, RequestMethod.POST }, value = "/export.do")
+	@RequestMapping(method = { RequestMethod.GET, RequestMethod.POST }, value = "/export.do")
 	public void export(ModelMap model, HttpServletRequest request,
 			HttpServletResponse response, @RequestParam("type") String type,
 			Object objectDAO, Class clazz) {
@@ -269,7 +249,7 @@ public abstract class CRUDController<T extends BaseModel> extends BaseController
 			e.printStackTrace();
 			log.warn("Unable to create file :" + e);
 		}
-	}*/
+	}
 
 	// Set up any custom editors, adds a custom one for java.sql.date by default
 

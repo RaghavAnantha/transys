@@ -9,13 +9,13 @@
 <nav class="navbar navbar-inverse navbar-fixed-top navheight" role="navigation">
 <div class="container-fluid">
     <div class="navbar-header">
-      <a class="navbar-brand active" href="/transysapp/home">Transys</a>
+      <a class="navbar-brand active" href="/home.do">Transys</a>
     </div>
     <div>
       <ul class="nav navbar-nav">
-        <li id="orderPage"><a href="/transysapp/order">Orders</a></li>
+        <li id="orderPage"><a href="/order/order.do">Orders</a></li>
         <li id="permitPage"><a href="#">Permits</a></li> 
-        <li id="customerPage"><a href="/transysapp/customer/main">Customers</a></li> 
+        <li id="customerPage"><a href="/customer/search.do">Customers</a></li> 
         <li id="reportPage"><a href="#">Reports</a></li>
         <li id="masterDataPage"><a href="#">Master Data</a></li>
       </ul>
