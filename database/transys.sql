@@ -15,13 +15,47 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
---
--- Table structure for table `business_object`
---
-
 CREATE DATABASE /*!32312 IF NOT EXISTS*/`transys` /*!40100 DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci */;
 
 USE `transys`;
+
+--
+-- Table structure for table `address`
+--
+
+DROP TABLE IF EXISTS `address`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `address` (
+  `id` bigint(20) NOT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `created_by` bigint(20) DEFAULT NULL,
+  `modified_at` datetime DEFAULT NULL,
+  `modified_by` bigint(20) DEFAULT NULL,
+  `custID` int(11) NOT NULL,
+  `line1` varchar(150) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `line2` varchar(150) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `city` varchar(150) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `state` varchar(150) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `zip` varchar(12) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `delete_flag` int(11) DEFAULT '1',
+  PRIMARY KEY (`id`),
+  KEY `customerAddressRef_idx` (`custID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `address`
+--
+
+LOCK TABLES `address` WRITE;
+/*!40000 ALTER TABLE `address` DISABLE KEYS */;
+/*!40000 ALTER TABLE `address` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `business_object`
+--
 
 DROP TABLE IF EXISTS `business_object`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -83,15 +117,16 @@ CREATE TABLE `customer` (
   `contact_name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `phone` varchar(45) COLLATE utf8_unicode_ci DEFAULT NULL,
   `zipcode` varchar(45) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `state` varchar(5) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `state` bigint(20) DEFAULT NULL,
   `email` varchar(45) COLLATE utf8_unicode_ci DEFAULT NULL,
   `alt_phone_1` varchar(45) COLLATE utf8_unicode_ci DEFAULT NULL,
   `alt_phone_2` varchar(45) COLLATE utf8_unicode_ci DEFAULT NULL,
   `chargeCompany` int(11) DEFAULT '1',
-  `delete_flag` int(11) NOT NULL DEFAULT '0',
+  `delete_flag` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
-  KEY `FK_fvq6be0iquj59i5x3d51959b5` (`state`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+  KEY `FK_fvq6be0iquj59i5x3d51959b5` (`state`),
+  CONSTRAINT `stateRef` FOREIGN KEY (`state`) REFERENCES `state` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -101,6 +136,89 @@ CREATE TABLE `customer` (
 LOCK TABLES `customer` WRITE;
 /*!40000 ALTER TABLE `customer` DISABLE KEYS */;
 /*!40000 ALTER TABLE `customer` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `dumpsterInfo`
+--
+
+DROP TABLE IF EXISTS `dumpsterInfo`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `dumpsterInfo` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `dumpsterSize` varchar(5) DEFAULT NULL,
+  `dumpsterPrice` double DEFAULT NULL,
+  `maxWeight` int(20) DEFAULT NULL,
+  `overWeightPrice` double DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `created_by` bigint(20) DEFAULT NULL,
+  `modified_at` datetime DEFAULT NULL,
+  `modified_by` bigint(20) DEFAULT NULL,
+  `delete_flag` int(11) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `dumpsterInfo`
+--
+
+LOCK TABLES `dumpsterInfo` WRITE;
+/*!40000 ALTER TABLE `dumpsterInfo` DISABLE KEYS */;
+/*!40000 ALTER TABLE `dumpsterInfo` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `order`
+--
+
+DROP TABLE IF EXISTS `order`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `order` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `custID` bigint(11) NOT NULL,
+  `deliverycontactname` varchar(150) DEFAULT NULL,
+  `deliverycontactphone1` varchar(25) DEFAULT NULL,
+  `deliverycontactphone2` varchar(25) DEFAULT NULL,
+  `deliverydate` datetime DEFAULT NULL,
+  `deliveryHour1` decimal(18,0) DEFAULT NULL,
+  `deliveryMin1` int(2) DEFAULT '0',
+  `deliveryAMPM1` varchar(2) DEFAULT NULL,
+  `deliveryHour2` decimal(18,0) DEFAULT NULL,
+  `deliveryMin2` int(2) DEFAULT '0',
+  `deliveryAMPM2` varchar(2) DEFAULT NULL,
+  `deliveryAddress` bigint(20) DEFAULT NULL,
+  `dumpsterLocation` varchar(50) DEFAULT NULL,
+  `dumpsterSize` varchar(5) DEFAULT NULL,
+  `typeOfMaterial` varchar(50) DEFAULT NULL,
+  `dumpsterPrice` double DEFAULT NULL,
+  `cityFee` double DEFAULT NULL,
+  `additionalFees` double DEFAULT NULL,
+  `methodOfPayment` varchar(50) DEFAULT NULL,
+  `referenceNum` varchar(50) DEFAULT NULL,
+  `notes` int(11) DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `created_by` bigint(20) DEFAULT NULL,
+  `modified_at` datetime DEFAULT NULL,
+  `modified_by` bigint(20) DEFAULT NULL,
+  `delete_flag` int(11) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`),
+  KEY `key1_idx` (`custID`),
+  KEY `deliveryAddressRef_idx` (`deliveryAddress`),
+  CONSTRAINT `customerRef` FOREIGN KEY (`custID`) REFERENCES `customer` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `deliveryAddressRef` FOREIGN KEY (`deliveryAddress`) REFERENCES `address` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `order`
+--
+
+LOCK TABLES `order` WRITE;
+/*!40000 ALTER TABLE `order` DISABLE KEYS */;
+/*!40000 ALTER TABLE `order` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -157,7 +275,7 @@ CREATE TABLE `role_privilege` (
   KEY `FK45FBD628708FFC58` (`business_object_id`),
   CONSTRAINT `FK45FBD6283F28F717` FOREIGN KEY (`role_id`) REFERENCES `role` (`id`),
   CONSTRAINT `FK45FBD628708FFC58` FOREIGN KEY (`business_object_id`) REFERENCES `business_object` (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=719 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -180,10 +298,10 @@ CREATE TABLE `state` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `created_at` datetime DEFAULT NULL,
   `created_by` bigint(20) DEFAULT NULL,
-  `delete_flag` int(11) DEFAULT NULL,
+  `delete_flag` int(11) DEFAULT '1',
   `modified_at` datetime DEFAULT NULL,
   `modified_by` bigint(20) DEFAULT NULL,
-  `code` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `code` varchar(5) COLLATE utf8_unicode_ci DEFAULT NULL,
   `name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -226,11 +344,11 @@ CREATE TABLE `user_info` (
   `username` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `role_id` bigint(20) DEFAULT NULL,
   `bill_batch_date` datetime DEFAULT NULL,
-  `delete_flag` int(11) DEFAULT NULL,
+  `delete_flag` int(11) DEFAULT '1',
   PRIMARY KEY (`id`),
   KEY `FK1437D8A23F28F717` (`role_id`),
   CONSTRAINT `FK1437D8A23F28F717` FOREIGN KEY (`role_id`) REFERENCES `role` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -242,39 +360,6 @@ LOCK TABLES `user_info` WRITE;
 INSERT INTO `user_info` VALUES (1,NULL,NULL,NULL,NULL,1,NULL,NULL,'admin','2012-04-19 05:14:20','admin',NULL,NULL,'admin','admin',NULL,NULL,'admin',1,NULL,1);
 /*!40000 ALTER TABLE `user_info` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `user_role`
---
-
-DROP TABLE IF EXISTS `user_role`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `user_role` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `created_at` datetime DEFAULT NULL,
-  `created_by` bigint(20) DEFAULT NULL,
-  `modified_at` datetime DEFAULT NULL,
-  `modified_by` bigint(20) DEFAULT NULL,
-  `default_flag` int(11) DEFAULT NULL,
-  `role_id` bigint(20) DEFAULT NULL,
-  `user_id` bigint(20) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `FK143BF46A3F28F717` (`role_id`),
-  KEY `FK143BF46AE453BAF7` (`user_id`),
-  CONSTRAINT `FK143BF46A3F28F717` FOREIGN KEY (`role_id`) REFERENCES `role` (`id`),
-  CONSTRAINT `FK143BF46AE453BAF7` FOREIGN KEY (`user_id`) REFERENCES `user_info` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `user_role`
---
-
-LOCK TABLES `user_role` WRITE;
-/*!40000 ALTER TABLE `user_role` DISABLE KEYS */;
-/*!40000 ALTER TABLE `user_role` ENABLE KEYS */;
-UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -285,4 +370,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-09-07 16:25:57
+-- Dump completed on 2015-09-09  9:20:30

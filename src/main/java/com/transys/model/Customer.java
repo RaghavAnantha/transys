@@ -58,9 +58,9 @@ public class Customer extends AbstractBaseModel {
 	@Column(name="city")
 	private String city;
 	
-//    @ManyToOne
-//	@JoinColumn(name="state")
-	 private State state;
+   @ManyToOne
+	@JoinColumn(name="state")
+	private State state;
 	
 	@NotNull 
 	@Column(name="zipcode")

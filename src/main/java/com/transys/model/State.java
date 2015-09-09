@@ -1,15 +1,19 @@
 package com.transys.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
 @Entity
 @Table(name="state")
 public class State extends AbstractBaseModel{
+	
+	@Column(name="name")
 	private String name;
 	
+	@Column(name="code")
 	private String code;
-
+	
 	public String getName() {
 		return name;
 	}
