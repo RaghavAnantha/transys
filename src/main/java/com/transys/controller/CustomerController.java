@@ -36,6 +36,12 @@ public class CustomerController extends CRUDController<Customer> {
 		binder.registerCustomEditor(State.class, new AbstractModelEditor(State.class));
 	}
 	
+	@RequestMapping(value = "/customer/main", method = RequestMethod.GET)
+	public String main(HttpServletRequest request, ModelMap model) {
+		setupList(model, request);
+		return "customer/customer";
+	}
+	
 	@RequestMapping(value = "/customer", method = RequestMethod.GET)
 	public String search(HttpServletRequest request, ModelMap model) {
 		if (request.getParameterMap().size() == 0) {
@@ -57,7 +63,8 @@ public class CustomerController extends CRUDController<Customer> {
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		criteria.getSearchMap().put("id!",0l);*/
 		
-		return "customer/customer";
+		//return "customer/customer";
+		return "customer/list";
 	}
 	
 	public String executeSearch(HttpServletRequest request, ModelMap model) {
