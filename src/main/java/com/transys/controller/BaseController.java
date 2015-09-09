@@ -30,12 +30,14 @@ import org.springframework.web.multipart.support.ByteArrayMultipartFileEditor;
 //import com.google.gson.Gson;
 
 import com.transys.model.SearchCriteria;
+import com.transys.model.User;
 
+import com.transys.core.dao.GenericDAO;
 /*
-import com.primovision.lutransport.core.dao.GenericDAO;
+
 import com.primovision.lutransport.model.Language;
 import com.primovision.lutransport.model.StaticData;
-import com.primovision.lutransport.model.User;
+
 import com.primovision.lutransport.service.AuditService;
 */
 
@@ -49,13 +51,12 @@ public class BaseController {
 	/*@Autowired
 	private AuditService auditService;*/
 	
-	/*
 	@Autowired
 	protected GenericDAO genericDAO;
 
 	public GenericDAO getGenericDAO() {
 		return genericDAO;
-	}*/
+	}
 
 	@Autowired
 	protected Validator validator;
@@ -97,11 +98,12 @@ public class BaseController {
 		this.urlContext = urlContext;
 	}
 
-	/*
+	
 	protected User getUser(HttpServletRequest request) {
 		return (User) request.getSession().getAttribute("userInfo");
 	}
 
+	/*
 	protected List<StaticData> listStaticData(String staticDataType) {
 		Map criteria = new HashMap();
 		criteria.put("dataType", staticDataType);
@@ -122,11 +124,8 @@ public class BaseController {
 		}
 	}*/
 
-	protected void populateSearchCriteria(HttpServletRequest request,
-			Map<String, String[]> params) {
-
-		SearchCriteria criteria = (SearchCriteria) request.getSession()
-				.getAttribute("searchCriteria");
+	protected void populateSearchCriteria(HttpServletRequest request, Map<String, String[]> params) {
+		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		if (criteria == null) {
 			criteria = new SearchCriteria();
 			criteria.setPageSize(25);
@@ -144,7 +143,7 @@ public class BaseController {
 			}
 		}
 		criteria.setRequestParams(params);
-		if (params != null && params.size()>0) {
+		if (params != null && params.size() > 0) {
 			Map parameters = new HashMap();
 			if (params.get("pageSize") != null) {
 				criteria.setPageSize(Integer.parseInt(params.get("pageSize")[0]));
@@ -153,21 +152,18 @@ public class BaseController {
 					&& request.getParameter("p") != null) {
 				criteria.setPage(Integer.parseInt(request.getParameter("p")));
 			} else {
-				if (params.size() > 0) {
-					if (params.get("queryString") != null) {
-						parameters.put(params.get("searchBy")[0],
-								params.get("queryString")[0]);
-					} else {
-						Object[] keys = params.keySet().toArray();
-						for (int i = 0; i < keys.length; i++) {
-							if (params.get(keys[i]) != null) {
-								if (!"rst".equalsIgnoreCase(keys[i].toString()))
-									parameters.put(keys[i],
-											params.get(keys[i])[0]);
-							}
+				if (params.get("queryString") != null) {
+					parameters.put(params.get("searchBy")[0], params.get("queryString")[0]);
+				} else {
+					Object[] keys = params.keySet().toArray();
+					for (int i = 0; i < keys.length; i++) {
+						if (params.get(keys[i]) != null) {
+							if (!"rst".equalsIgnoreCase(keys[i].toString()))
+								parameters.put(keys[i], params.get(keys[i])[0]);
 						}
 					}
 				}
+				
 				criteria.setPage(0);
 				criteria.setSearchMap(parameters);
 			}

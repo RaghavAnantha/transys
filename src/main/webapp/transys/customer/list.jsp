@@ -23,7 +23,7 @@
 					<c:if test="${sessionScope.searchCriteria.searchMap['id'] == customer.id}">
 						<c:set var="selected" value="selected"/>
 					</c:if>
-						<option value="${customer.id}" ${selected}>${customer.name}</option>
+						<option value="${customer.id}" ${selected}>${customer.companyName}</option>
 				</c:forEach>
 			</select>
 			</td>
@@ -33,10 +33,10 @@
 				<option value="">------<transys:label code="Please Select"/>------</option>
 				<c:forEach items="${customerIds}" var="customerId">
 					<c:set var="selected" value=""/>
-					<c:if test="${sessionScope.searchCriteria.searchMap['customerNameID'] == customerId.customerNameID}">
+					<c:if test="${sessionScope.searchCriteria.searchMap['id'] == customerId.id}">
 						<c:set var="selected" value="selected"/>
 					</c:if>
-						<option value="${customerId.customerNameID}" ${selected}>${customerId.customerNameID}</option>
+						<option value="${customerId.id}" ${selected}>${customerId.id}</option>
 				</c:forEach>
 			</select>
 			</td>
@@ -56,15 +56,16 @@
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
 		pagingLink="search.do" multipleDelete="false" searcheable="false" 
 		exportPdf="true" exportXls="true">
-		<transys:textcolumn headerText="Name" dataField="name" />
-		<transys:textcolumn headerText="Customer ID" dataField="customerNameID" />
-		<transys:textcolumn headerText="Address Line1" dataField="address" />
-		<transys:textcolumn headerText="Address Line2" dataField="address2" />
+		<transys:textcolumn headerText="Name" dataField="companyName" />
+		<transys:textcolumn headerText="Customer ID" dataField="id" />
+		<transys:textcolumn headerText="Address Line1" dataField="billingAddressLine1" />
+		<transys:textcolumn headerText="Address Line2" dataField="billingAddressLine2" />
 		<transys:textcolumn headerText="City" dataField="city" />
 		<transys:textcolumn headerText="State" dataField="state.name" />
 		<transys:textcolumn headerText="Zipcode" dataField="zipcode" />
 		<transys:textcolumn headerText="Phone" dataField="phone" />
 		<transys:textcolumn headerText="Fax" dataField="fax" />
+		
 	</transys:datatable>
 	<%session.setAttribute("columnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
 </form:form>

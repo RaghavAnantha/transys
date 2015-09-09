@@ -15,8 +15,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 
-//import com.transys.core.dao.GenericDAO;
-//import com.transys.dao.admin.UserDAO;
+import com.transys.core.dao.GenericDAO;
+import com.transys.dao.admin.UserDAO;
 import com.transys.model.BusinessObject;
 import com.transys.model.Role;
 import com.transys.model.User;
@@ -24,7 +24,6 @@ import com.transys.model.menu.MenuHelper;
 import com.transys.model.menu.MenuTree;
 
 public class AuthenticationSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
-	/*
 	@Autowired
 	private GenericDAO genericDAO;
 
@@ -37,7 +36,7 @@ public class AuthenticationSuccessHandler extends SavedRequestAwareAuthenticatio
 
 	public void setUserDAO(UserDAO userDAO) {
 		this.userDAO = userDAO;
-	}*/
+	}
 
 	public AuthenticationSuccessHandler() {
 		super();
@@ -53,16 +52,16 @@ public class AuthenticationSuccessHandler extends SavedRequestAwareAuthenticatio
 			HttpServletResponse response, Authentication auth)
 			throws IOException, ServletException {
 		UserDetails userDetails = (UserDetails) auth.getPrincipal();
-		//User user = userDAO.getUserByName(userDetails.getUsername());
-		User user = mockUser(userDetails);
+		User user = userDAO.getUserByName(userDetails.getUsername());
+		//User user = mockUser(userDetails);
 		
-		Timestamp currTime = new Timestamp(Calendar.getInstance()
-				.getTimeInMillis());
+		Timestamp currTime = new Timestamp(Calendar.getInstance().getTimeInMillis());
 		user.setLastLoginDate(currTime);
-		Role role = user.getRole();
+		genericDAO.saveOrUpdate(user);
 		
-		// request.getSession().setAttribute("theme", role.getTheme());
-		//genericDAO.saveOrUpdate(user);
+		//Role role = user.getRole();
+		//request.getSession().setAttribute("theme", role.getTheme());
+		
 		request.getSession().setAttribute("userInfo", user);
 		/*StringBuffer query = new StringBuffer(
 				"select distinct bo from BusinessObject bo, RolePrivilege rp where rp.businessObject.id=bo.id and rp.role.id="
