@@ -139,7 +139,7 @@ public abstract class CRUDController<T extends BaseModel> extends BaseController
 		cleanUp(request);
 		// return to list
 		//return "redirect:/" + urlContext + "/list.do";
-		model.addAttribute("activeTab", "customerReports");
+		model.addAttribute("activeTab", "manageCustomer");
 		//return urlContext + "/list";
 		return urlContext + "/customer";
 	}
