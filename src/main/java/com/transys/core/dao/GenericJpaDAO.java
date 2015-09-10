@@ -349,7 +349,7 @@ public class GenericJpaDAO implements GenericDAO {
 
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
 	public <T extends BaseModel> void delete(T entity) {
-		entityManager.remove(entityManager.merge(entity));
+		entityManager.remove(entity);
 	}
 
 	@Override
