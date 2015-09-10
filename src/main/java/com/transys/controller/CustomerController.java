@@ -53,7 +53,9 @@ public class CustomerController extends CRUDController<Customer> {
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		criteria.getSearchMap().put("id!",0l);
 		model.addAttribute("list",genericDAO.search(getEntityClass(), criteria,"companyName",null,null));
-		return urlContext + "/list";
+		model.addAttribute("activeTab", "manageCustomer");
+		//return urlContext + "/list";
+		return urlContext + "/customer";
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/main.do")

@@ -108,7 +108,9 @@ public abstract class CRUDController<T extends BaseModel> extends BaseController
 	@RequestMapping(method = RequestMethod.GET, value = "/edit.do")
 	public String edit2(ModelMap model, HttpServletRequest request) {
 		setupUpdate(model, request);
-		return urlContext + "/form";
+		model.addAttribute("activeTab", "customerReports");
+		//return urlContext + "/form";
+		return urlContext + "/customer";
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/view.do")
@@ -136,7 +138,10 @@ public abstract class CRUDController<T extends BaseModel> extends BaseController
 		genericDAO.saveOrUpdate(entity);
 		cleanUp(request);
 		// return to list
-		return "redirect:/" + urlContext + "/list.do";
+		//return "redirect:/" + urlContext + "/list.do";
+		model.addAttribute("activeTab", "customerReports");
+		//return urlContext + "/list";
+		return urlContext + "/customer";
 	}
 
 	@RequestMapping(method = RequestMethod.POST, value = "/bulkdelete.do")
