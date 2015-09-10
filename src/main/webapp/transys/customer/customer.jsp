@@ -19,6 +19,24 @@
 			<%@include file="form.jsp"%>
 		</div>
 	</div>
+	
+	<div class="modal fade" id="myModal" role="dialog">
+				<div class="modal-dialog" style="width:90% !important">
+					<div class="modal-content">
+						<div class="modal-header">		
+							<h4 class="modal-title">Add Customers</h4>
+						</div>
+						<div class="modal-body"> 
+						</div>
+						<div class="modal-footer">
+								<button type="button" class="btn btn-default"
+									data-dismiss="modal">Close</button>
+							</div>
+					</div>
+				</div>
+	</div>	
+	
+	
 
 <script type="text/javascript">
 	function showTab(tab){
@@ -40,6 +58,16 @@
 	    $this.tab('show');
 	    return false;
 	});
+	
+	$("#myModal").on("show.bs.modal", function(e) {
+	    var link = $(e.relatedTarget);
+	    $(this).find(".modal-body").load(link.attr("href"));
+	});	
+	
+	$("#myModal").on('hide', function () {
+        window.location.reload();
+    });
+	
 </script>
 
 </body>
