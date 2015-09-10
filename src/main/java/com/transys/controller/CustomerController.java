@@ -12,6 +12,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.transys.controller.CRUDController;
 import com.transys.controller.editor.AbstractModelEditor;
@@ -53,6 +54,16 @@ public class CustomerController extends CRUDController<Customer> {
 		criteria.getSearchMap().put("id!",0l);
 		model.addAttribute("list",genericDAO.search(getEntityClass(), criteria,"companyName",null,null));
 		return urlContext + "/list";
+	}
+	
+	@RequestMapping(method = RequestMethod.GET, value = "/main.do")
+	public String displayMain(ModelMap model, HttpServletRequest request) {
+		setupList(model, request);
+		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
+		criteria.getSearchMap().put("id!",0l);
+		model.addAttribute("list", genericDAO.search(getEntityClass(), criteria, "companyName", null, null));
+		model.addAttribute("activeTab", "manageCustomer");
+		return urlContext + "/customer";
 	}
 	
 	@Override

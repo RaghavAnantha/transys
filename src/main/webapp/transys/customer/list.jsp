@@ -1,7 +1,5 @@
 <%@include file="/common/taglibs.jsp"%>
-<h3>
-	<transys:label code="Manage Customer" />
-</h3>
+<br/>
 <form:form action="list.do" method="get" name="searchForm">
 	<table width="100%" id="form-table">
 		<tr class="table-heading">
