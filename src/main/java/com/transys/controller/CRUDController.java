@@ -108,9 +108,9 @@ public abstract class CRUDController<T extends BaseModel> extends BaseController
 	@RequestMapping(method = RequestMethod.GET, value = "/edit.do")
 	public String edit2(ModelMap model, HttpServletRequest request) {
 		setupUpdate(model, request);
-		model.addAttribute("activeTab", "customerReports");
+		//model.addAttribute("activeTab", "customerReports");
 		//return urlContext + "/form";
-		return urlContext + "/customer";
+		return urlContext + "/form";
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/view.do")
@@ -139,9 +139,22 @@ public abstract class CRUDController<T extends BaseModel> extends BaseController
 		cleanUp(request);
 		// return to list
 		//return "redirect:/" + urlContext + "/list.do";
+		//model.addAttribute("activeTab", "manageCustomer");
+		//return urlContext + "/list";
+		//return urlContext + "/customer";
+		
+		
+		setupList(model, request);
+		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
+		criteria.getSearchMap().put("id!",0l);
+		//TODO: Fix me 
+		criteria.getSearchMap().remove("_csrf");
+		model.addAttribute("list",genericDAO.search(getEntityClass(), criteria,"companyName",null,null));
 		model.addAttribute("activeTab", "manageCustomer");
 		//return urlContext + "/list";
 		return urlContext + "/customer";
+		
+		
 	}
 
 	@RequestMapping(method = RequestMethod.POST, value = "/bulkdelete.do")

@@ -62,10 +62,12 @@
 	$("#myModal").on("show.bs.modal", function(e) {
 	    var link = $(e.relatedTarget);
 	    $(this).find(".modal-body").load(link.attr("href"));
+	    
 	});	
 	
-	$("#myModal").on('hide', function () {
-        window.location.reload();
+	$("#myModal").on('hidden.bs.modal', function () {
+		var url = "/customer/main.do"
+		window.location.href = url;
     });
 	
 </script>

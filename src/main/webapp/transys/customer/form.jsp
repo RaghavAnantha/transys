@@ -116,9 +116,9 @@ function formatFax(){
 		<tr>
 			<td>&nbsp;</td>
 			<td align="${left}" colspan="2">
-				<input type="submit" name="create" id="create" onclick="" value="<transys:label code="Save"/>" class="flat" /> 
+				<input type="submit"  id="create" onclick="return true" value="<transys:label code="Save"/>" class="flat" /> 
 				<input type="reset" id="resetBtn" value="<transys:label code="Reset"/> "class="flat" /> 
-				<input type="button" id="cancelBtn" value="<transys:label code="Cancel"/>" class="flat" onClick="location.href='list.do'" />
+				<input type="button" id="cancelBtn" value="<transys:label code="Cancel"/>" class="flat" onClick="location.href='main.do'" />
 			</td>
 		</tr>
 	</table>
