@@ -1,10 +1,8 @@
 <%@include file="/common/taglibs.jsp"%>
 <br/>
+<h3 style="margin-top:-15px; !important">Manage Customers</h3>
 <form:form action="list.do" method="get" name="searchForm">
 	<table width="100%" id="form-table">
-		<tr class="table-heading">
-			<td colspan="4"><b><transys:label code="Search Customer" /></b></td>
-		</tr>
 		<tr>
 			<%-- <td align="${left}" class="first"><transys:label code="First Name" /></td>
 			<td align="${left}"><input name="firstName" type="text"
@@ -13,8 +11,8 @@
 			<td align="${left}"><input name="lastName" type="text"
 				value="${sessionScope.searchCriteria.searchMap.lastName}" /></td>
 	 --%>	
-	 <td align="${left}" class="first"><transys:label code="Name"/></td>
-			<td align="${left}"><select id="companyName" name="companyName" style="min-width:350px; max-width:350px">
+	 <td align="${left}" class="form-left"><transys:label code="Company Name"/></td>
+			<td align="${left}" class="wide"><select class="flat form-control input-sm" id="companyName" name="companyName" style="width:175px">
 				<option value="">------<transys:label code="Please Select"/>------</option>
 				<c:forEach items="${customer}" var="customer">
 					<c:set var="selected" value=""/>
@@ -26,8 +24,8 @@
 			</select>
 			</td>
 			
-			<td align="${left}" class="first"><transys:label code="Customer ID"/></td>
-			<td align="${left}"><select id="customerId" name="id" style="min-width:200px; max-width:200px">
+			<td align="${left}" class="form-left"><transys:label code="Customer ID"/></td>
+			<td align="${left}"><select class="flat form-control input-sm" id="customerId" name="id" style="width:175px">
 				<option value="">------<transys:label code="Please Select"/>------</option>
 				<c:forEach items="${customerIds}" var="customerId">
 					<c:set var="selected" value=""/>
@@ -41,13 +39,12 @@
 	 </tr>
 		<tr>
 			<td align="${left}"></td>
-			<td align="${left}"><input type="button"
+			<td align="${left}"><input type="button" class="btn btn-primary btn-sm"
 				onclick="document.forms['searchForm'].submit();"
 				value="<transys:label code="Search"/>" /></td>
 		</tr>
 	</table>
 </form:form>
-<br />
 <form:form name="delete.do" id="serviceForm">
 	<transys:datatable urlContext="customer" deletable="true"
 		editable="true" insertable="true" baseObjects="${list}"

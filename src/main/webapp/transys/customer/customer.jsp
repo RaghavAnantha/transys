@@ -7,31 +7,43 @@
 </head>
 <body>
 	<ul class="nav nav-tabs" id="customer_tabs">
-		<li><a href="#manageCustomer" data-toggle="tab">Manage Customer</a></li>
-		<li><a href="#customerReports" data-toggle="tab">Customer Reports</a></li>
+		<li><a href="#manageCustomer" data-toggle="tab" >Customers</a></li>
+		<li><a href="#customerReports" data-toggle="tab" >Customer Reports</a></li>
 	</ul>
-
 	<div class="tab-content tab-color">
 		<div id="manageCustomer" class="tab-pane">
 			<%@include file="list.jsp"%>
 		</div>
 		<div id="customerReports" class="tab-pane">
-			<%@include file="form.jsp"%>
+			<br/>
+			<ul class="nav nav-tabs" id="customer_tabs">
+				<li><a href="#customerList" data-toggle="tab" class="active">Customer List</a></li>
+				<li><a href="#customerOrderReports" data-toggle="tab">Customer Order Reports</a></li>
+			</ul>
 		</div>
 	</div>
+	
+	<div class="tab-content tab-color">
+	<div id="customerList" class="tab-pane">
+			<p>PlaceHolder for customer List</p>
+	</div>
+	<div id="customerOrderReports" class="tab-pane">
+			<p>PlaceHolder for customer Order Reports</p>
+	</div>
+	
+	</div>
+	
 	
 	<div class="modal fade" id="myModal" role="dialog">
 				<div class="modal-dialog" style="width:90% !important">
 					<div class="modal-content">
 						<div class="modal-header">		
-							<h4 class="modal-title">Add Customers</h4>
+							<h4 class="modal-title">Add/Edit Customers</h4>
+							<div id="validations" style="color:red"></div>
 						</div>
-						<div class="modal-body"> 
+						<div class="modal-body" style="background-color: #EAEAF3;"> 
+						
 						</div>
-						<div class="modal-footer">
-								<button type="button" class="btn btn-default"
-									data-dismiss="modal">Close</button>
-							</div>
 					</div>
 				</div>
 	</div>	
@@ -40,7 +52,7 @@
 
 <script type="text/javascript">
 	function showTab(tab){
-		    $('.nav-tabs a[href="#' + tab + '"]').tab('show');
+		    $('.nav-tabs a[href="#' + tab + '"]').tab('show');		    
 	};
 	
 	//showTab('manageCustomer');
@@ -65,10 +77,22 @@
 	    
 	});	
 	
-	$("#myModal").on('hidden.bs.modal', function () {
-		var url = "/customer/main.do"
-		window.location.href = url;
-    });
+	
+	
+	function validations() {
+		
+		if ($("#typeForm").find('input[id="companyName"]').val().length == 0 || 
+				$("#typeForm").find('input[id="billingAddressLine1"]').val().length ==0 ||
+				$("#typeForm").find('input[id="city"]').val().length ==0
+				
+			) {	
+			$("#validations").html("Please fill out the required fields Name, Address Line 1 and City");
+			return false;		
+		}
+		
+		return true;
+	};
+	
 	
 </script>
 

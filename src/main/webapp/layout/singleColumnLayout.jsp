@@ -10,7 +10,7 @@
 <decorator:head/>
 </head>
 <body dir="${dir}">
-<table width="100%" cellpadding="0" cellspacing="0" style="height:100%;min-height:100%" border="0">	
+<table class="table">	
 	<tr>
 		<td height="55px"><jsp:include page="topMenu1.jsp" /></td>
 	</tr>

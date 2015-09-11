@@ -9,6 +9,22 @@ html, body {
 	min-height:100%;
 	
 }
+.wide {
+	width:250px;
+}
+.tab-color {
+	background-color: #EAEAF3 !important;
+}
+.border {
+	border-color: red !important;
+}
+select {
+	
+	width: auto !important;
+    height: 22px !important;
+}
+}
+
 body {
 	background: #ffffff;
 	margin: 0px auto;
@@ -637,12 +653,15 @@ a.nivo-prevNav {
 	color:red;
 }
 .form-left {
-	font-weight: bold;
-	width: 150px;
+	width: 130px;
 	margin: 0px auto;
 	text-align: left;
-	background: #eaeaea;
+	font-size: 13px;
 }
+
+.table th, .table td { 
+     border-top: none !important; 
+ }
 
 .page {
 	margin: auto;
@@ -777,8 +796,7 @@ a.nivo-prevNav {
 	font-size:110%;
 	margin:0px auto;
 	text-align:left;
-	background:#ffffff;
-	border:1px solid #5C91D5;
+	background:#EAEAF3;
 }
 
 /* table Style */
@@ -791,4 +809,7 @@ a.nivo-prevNav {
 
 /* uppercase */
 .flat {
+	outline:0px !important;
+	border: 1px solid;
+    border-radius: 3px;
 }
