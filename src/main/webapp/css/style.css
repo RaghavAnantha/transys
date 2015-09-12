@@ -1,4 +1,4 @@
-@charset "utf-8";
+datepicker@charset "utf-8";
 /* CSS Document */
 .sidediv {
 	width: 17%;
@@ -602,24 +602,22 @@ a.nivo-prevNav {
 }
 
 .datagrid {
-	font-size: 100%;
+	font-size: 12px;
 	margin: 0px auto;
 	background: #ffffff;
-	border: 1px solid #5C91D5;
-	text-transform: uppercase;
 }
 
 .datagrid th,.datagrid td {
 	border-right: 1px solid #fff;
 	height: 20px;
 	padding-left: 5px;
-	color: #686868;
+	color: black;
 	background-color: #f7f7f7;
 	vertical-align: middle
 }
 
 .datagrid th {
-	background-color: #5C91D5;
+	background-color: #337AB7;
 	color: #fff;
 }
 
@@ -657,6 +655,7 @@ a.nivo-prevNav {
 	margin: 0px auto;
 	text-align: left;
 	font-size: 13px;
+	font-weight: bold;
 }
 
 .table th, .table td { 
@@ -691,7 +690,7 @@ a.nivo-prevNav {
 	color: #61bbde;
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 12px;
-	height: 10px;
+	height: 25px;
 }
 .footer a {
     color: #ffffff;
@@ -810,6 +809,6 @@ a.nivo-prevNav {
 /* uppercase */
 .flat {
 	outline:0px !important;
-	border: 1px solid;
+	border: 1px solid #EAE8E8;
     border-radius: 3px;
 }

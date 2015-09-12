@@ -10,7 +10,7 @@
 		<li><a href="#manageCustomer" data-toggle="tab" >Customers</a></li>
 		<li><a href="#customerReports" data-toggle="tab" >Customer Reports</a></li>
 	</ul>
-	<div class="tab-content tab-color">
+	<div class="tab-content" style="background-color: white;">
 		<div id="manageCustomer" class="tab-pane">
 			<%@include file="list.jsp"%>
 		</div>
@@ -41,9 +41,21 @@
 							<h4 class="modal-title">Add/Edit Customers</h4>
 							<div id="validations" style="color:red"></div>
 						</div>
-						<div class="modal-body" style="background-color: #EAEAF3;"> 
-						
+						<div class="modal-body"> 
+						<ul class="nav nav-tabs" id="customer_tabs">
+							<li><a href="#billingInfo" data-toggle="tab" >Billing Info</a></li>
+							<li><a href="#deliveryAddress" data-toggle="tab" >Delivery Addresses</a></li>
+						</ul>
+					<div class="tab-content">
+						<div id="billingInfo" class="tab-pane">
+							
 						</div>
+						<div id="deliveryAddress" class="tab-pane">
+							
+						</div>
+
+					</div>
+				</div>
 					</div>
 				</div>
 	</div>	
@@ -73,7 +85,8 @@
 	
 	$("#myModal").on("show.bs.modal", function(e) {
 	    var link = $(e.relatedTarget);
-	    $(this).find(".modal-body").load(link.attr("href"));
+	    $(this).find("#billingInfo").load(link.attr("href"));
+	    
 	    
 	});	
 	
@@ -81,13 +94,20 @@
 	
 	function validations() {
 		
-		if ($("#typeForm").find('input[id="companyName"]').val().length == 0 || 
-				$("#typeForm").find('input[id="billingAddressLine1"]').val().length ==0 ||
-				$("#typeForm").find('input[id="city"]').val().length ==0
-				
-			) {	
-			$("#validations").html("Please fill out the required fields Name, Address Line 1 and City");
-			return false;		
+		var ids = ["companyName", "billingAddressLine1", "city"];
+		var bool = false
+		
+		for (var i= 0; i<ids.length; i++) {	
+		
+		if ($("#typeForm").find('input[id="'+ids[i] +'"]').val().length == 0 ) {	
+			
+			$("#typeForm").find('input[id="'+ids[i] +'"]').addClass("border");
+			bool = true;
+		}
+		
+			//$("#validations").html("Please fill out the required fields Name, Address Line 1 and City");			
+		} if (bool){
+			return false;
 		}
 		
 		return true;

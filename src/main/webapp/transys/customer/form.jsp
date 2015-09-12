@@ -54,7 +54,6 @@ function formatFax(){
 			<td align="${left}">
 				<form:input path="companyName" cssClass="flat"  />
 			 	<br><form:errors path="companyName" cssClass="errorMessage" />
-			 	<div id="val"></div>
 			</td>
 			
 			<td class="form-left"><transys:label code="Customer ID" /></td>
@@ -64,7 +63,7 @@ function formatFax(){
 			</td>
 		</tr>
 		<tr>
-			<td class="form-left"><transys:label code="Address Line1"/><span class="errorMessage"></span></td>
+			<td class="form-left"><transys:label code="Address Line1"/><span class="errorMessage">*</span></td>
 			<td align="${left}">
 				<form:input path="billingAddressLine1" cssClass="flat"/>
 				 <br><form:errors path="billingAddressLine1" cssClass="errorMessage" />
@@ -76,7 +75,7 @@ function formatFax(){
 			</td>
 		</tr>
 		<tr>
-			<td class="form-left"><transys:label code="City" /><span class="errorMessage"></span></td>
+			<td class="form-left"><transys:label code="City" /><span class="errorMessage">*</span></td>
 			<td align="${left}">
 				<form:input cssClass="flat" path="city" />
 				<br><form:errors path="city" cssClass="errorMessage" />

@@ -848,7 +848,7 @@ public final class Datatable extends BodyTagSupport {
 			if (insertable) {
 				String url = "/"+urlContext+"/create.do";
 				//if (authenticationService.hasUserPermission(user, url))
-					objOut.write("<a href=\""+pageContext.getAttribute("ctx")+"/"+urlContext+"/create.do\" data-backdrop=\"static\" data-remote=\"false\" data-toggle=\"modal\" data-target=\"#myModal\"><img src=\""+pageContext.getAttribute("resourceCtx")+"/images/add.png\" border=\"0\" title=\"Add\" class=\"toolbarButton\"/></a>&nbsp;");
+					objOut.write("<a href=\""+pageContext.getAttribute("ctx")+"/"+urlContext+"/create.do\" data-backdrop=\"static\" data-remote=\"false\" data-toggle=\"modal\" data-target=\"#myModal\"><img src=\""+pageContext.getAttribute("resourceCtx")+"/images/addnew.png\" border=\"0\" title=\"Add\" class=\"toolbarButton\"/></a>&nbsp;");
 			}
 			if (multipleDelete) {
 				String url = "/"+urlContext+"/bulkdelete.do";
