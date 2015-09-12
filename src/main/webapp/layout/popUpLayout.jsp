@@ -10,11 +10,7 @@
 <decorator:head/>
 </head>
 <body dir="${dir}">
-<table width="100%" cellpadding="0" cellspacing="0" style="height:100%;min-height:100%" border="0">	
-	<tr>
-		<td valign="top"><jsp:include page="/common/messages.jsp" /> <decorator:body />
-		</td>
-	</tr>
-</table>
+
+		<decorator:body />
 </body>
 </html>

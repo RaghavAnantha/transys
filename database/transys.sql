@@ -32,15 +32,18 @@ CREATE TABLE `address` (
   `created_by` bigint(20) DEFAULT NULL,
   `modified_at` datetime DEFAULT NULL,
   `modified_by` bigint(20) DEFAULT NULL,
-  `custID` int(11) NOT NULL,
+  `custID` bigint(20) NOT NULL,
   `line1` varchar(150) COLLATE utf8_unicode_ci DEFAULT NULL,
   `line2` varchar(150) COLLATE utf8_unicode_ci DEFAULT NULL,
   `city` varchar(150) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `state` varchar(150) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `state` bigint(20) DEFAULT NULL,
   `zip` varchar(12) COLLATE utf8_unicode_ci DEFAULT NULL,
   `delete_flag` int(11) DEFAULT '1',
   PRIMARY KEY (`id`),
-  KEY `customerAddressRef_idx` (`custID`)
+  KEY `customerAddressRef_idx` (`custID`),
+  KEY `stateRef_idx` (`state`),
+  CONSTRAINT `addressStateRef` FOREIGN KEY (`state`) REFERENCES `state` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `customerDeliveryAddressRef` FOREIGN KEY (`custID`) REFERENCES `customer` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -126,7 +129,7 @@ CREATE TABLE `customer` (
   PRIMARY KEY (`id`),
   KEY `FK_fvq6be0iquj59i5x3d51959b5` (`state`),
   CONSTRAINT `stateRef` FOREIGN KEY (`state`) REFERENCES `state` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -135,6 +138,7 @@ CREATE TABLE `customer` (
 
 LOCK TABLES `customer` WRITE;
 /*!40000 ALTER TABLE `customer` DISABLE KEYS */;
+INSERT INTO `customer` VALUES (5,'2015-09-10 21:22:45',1,NULL,NULL,NULL,'adf',NULL,NULL,'sdfdsf','df','Raghav','1234567890',NULL,'1234567890','34',4,NULL,NULL,NULL,NULL,1);
 /*!40000 ALTER TABLE `customer` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -170,6 +174,47 @@ LOCK TABLES `dumpsterInfo` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `employee`
+--
+
+DROP TABLE IF EXISTS `employee`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `employee` (
+  `id` bigint(20) NOT NULL,
+  `fname` varchar(50) DEFAULT NULL,
+  `lname` varchar(50) DEFAULT NULL,
+  `jobTitle` varchar(100) DEFAULT NULL,
+  `address` tinytext,
+  `city` varchar(50) DEFAULT NULL,
+  `state` varchar(50) DEFAULT NULL,
+  `zip` varchar(12) DEFAULT NULL,
+  `phone` varchar(20) DEFAULT NULL,
+  `email` varchar(150) DEFAULT NULL,
+  `hiredate` datetime DEFAULT NULL,
+  `leavedate` datetime DEFAULT NULL,
+  `comments` longtext,
+  `username` varchar(50) DEFAULT NULL,
+  `password` varchar(12) DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `created_by` bigint(20) DEFAULT NULL,
+  `modified_at` datetime DEFAULT NULL,
+  `modified_by` bigint(20) DEFAULT NULL,
+  `delete_flag` int(11) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `employee`
+--
+
+LOCK TABLES `employee` WRITE;
+/*!40000 ALTER TABLE `employee` DISABLE KEYS */;
+/*!40000 ALTER TABLE `employee` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `order`
 --
 
@@ -179,36 +224,42 @@ DROP TABLE IF EXISTS `order`;
 CREATE TABLE `order` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `custID` bigint(11) NOT NULL,
-  `deliverycontactname` varchar(150) DEFAULT NULL,
-  `deliverycontactphone1` varchar(25) DEFAULT NULL,
-  `deliverycontactphone2` varchar(25) DEFAULT NULL,
-  `deliverydate` datetime DEFAULT NULL,
-  `deliveryHour1` decimal(18,0) DEFAULT NULL,
-  `deliveryMin1` int(2) DEFAULT '0',
-  `deliveryAMPM1` varchar(2) DEFAULT NULL,
-  `deliveryHour2` decimal(18,0) DEFAULT NULL,
-  `deliveryMin2` int(2) DEFAULT '0',
-  `deliveryAMPM2` varchar(2) DEFAULT NULL,
+  `deliveryContactName` varchar(150) DEFAULT NULL,
+  `deliveryContactPhone1` varchar(25) DEFAULT NULL,
+  `deliveryContactPhone2` varchar(25) DEFAULT NULL,
+  `deliveryDate` datetime DEFAULT NULL,
+  `deliveryTimeFrom` datetime DEFAULT NULL,
   `deliveryAddress` bigint(20) DEFAULT NULL,
   `dumpsterLocation` varchar(50) DEFAULT NULL,
   `dumpsterSize` varchar(5) DEFAULT NULL,
   `typeOfMaterial` varchar(50) DEFAULT NULL,
-  `dumpsterPrice` double DEFAULT NULL,
-  `cityFee` double DEFAULT NULL,
-  `additionalFees` double DEFAULT NULL,
-  `methodOfPayment` varchar(50) DEFAULT NULL,
-  `referenceNum` varchar(50) DEFAULT NULL,
+  `paymentInfo` bigint(20) DEFAULT NULL,
   `notes` int(11) DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   `created_by` bigint(20) DEFAULT NULL,
   `modified_at` datetime DEFAULT NULL,
   `modified_by` bigint(20) DEFAULT NULL,
   `delete_flag` int(11) NOT NULL DEFAULT '1',
+  `weightInfo` bigint(20) DEFAULT '0',
+  `dumpsterNum` varchar(20) DEFAULT NULL,
+  `driverInfo` bigint(20) DEFAULT NULL,
+  `pickupDate` datetime DEFAULT NULL,
+  `orderStatus` bigint(20) DEFAULT NULL,
+  `permits` bigint(20) DEFAULT NULL,
+  `deliveryTimeTo` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `key1_idx` (`custID`),
   KEY `deliveryAddressRef_idx` (`deliveryAddress`),
+  KEY `orderStatusRef_idx` (`orderStatus`),
+  KEY `driverInfoRef_idx` (`driverInfo`),
+  KEY `weightInfoRef_idx` (`weightInfo`),
+  KEY `paymentInfoRef_idx` (`paymentInfo`),
   CONSTRAINT `customerRef` FOREIGN KEY (`custID`) REFERENCES `customer` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `deliveryAddressRef` FOREIGN KEY (`deliveryAddress`) REFERENCES `address` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `deliveryAddressRef` FOREIGN KEY (`deliveryAddress`) REFERENCES `address` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `driverInfoRef` FOREIGN KEY (`driverInfo`) REFERENCES `orderDriverInfo` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `orderStatusRef` FOREIGN KEY (`orderStatus`) REFERENCES `orderStatus` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `paymentInfoRef` FOREIGN KEY (`paymentInfo`) REFERENCES `orderPaymentInfo` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `weightInfoRef` FOREIGN KEY (`weightInfo`) REFERENCES `orderWeightInfo` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -219,6 +270,294 @@ CREATE TABLE `order` (
 LOCK TABLES `order` WRITE;
 /*!40000 ALTER TABLE `order` DISABLE KEYS */;
 /*!40000 ALTER TABLE `order` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `orderDriverInfo`
+--
+
+DROP TABLE IF EXISTS `orderDriverInfo`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `orderDriverInfo` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `orderID` bigint(20) NOT NULL,
+  `pickUpDriver` bigint(20) NOT NULL,
+  `dropOffDriver` bigint(20) NOT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `created_by` bigint(20) DEFAULT NULL,
+  `modified_at` datetime DEFAULT NULL,
+  `modified_by` bigint(20) DEFAULT NULL,
+  `delete_flag` int(11) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `orderDriverInfo`
+--
+
+LOCK TABLES `orderDriverInfo` WRITE;
+/*!40000 ALTER TABLE `orderDriverInfo` DISABLE KEYS */;
+/*!40000 ALTER TABLE `orderDriverInfo` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `orderNotes`
+--
+
+DROP TABLE IF EXISTS `orderNotes`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `orderNotes` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `orderID` bigint(11) NOT NULL,
+  `notes` int(11) DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `created_by` bigint(20) DEFAULT NULL,
+  `modified_at` datetime DEFAULT NULL,
+  `modified_by` bigint(20) DEFAULT NULL,
+  `delete_flag` int(11) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`),
+  KEY `orderNotesOrderRef_idx` (`orderID`),
+  CONSTRAINT `orderNotesOrderRef` FOREIGN KEY (`orderID`) REFERENCES `order` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `orderNotes`
+--
+
+LOCK TABLES `orderNotes` WRITE;
+/*!40000 ALTER TABLE `orderNotes` DISABLE KEYS */;
+/*!40000 ALTER TABLE `orderNotes` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `orderPaymentInfo`
+--
+
+DROP TABLE IF EXISTS `orderPaymentInfo`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `orderPaymentInfo` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `orderID` bigint(20) NOT NULL,
+  `dumpsterPrice` double DEFAULT NULL,
+  `cityFee` double DEFAULT NULL,
+  `additionalFee` double DEFAULT NULL,
+  `methodOfPayment` varchar(50) DEFAULT NULL,
+  `reference` varchar(50) DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `created_by` bigint(20) DEFAULT NULL,
+  `modified_at` datetime DEFAULT NULL,
+  `modified_by` bigint(20) DEFAULT NULL,
+  `delete_flag` int(11) NOT NULL DEFAULT '1',
+  `additionalFees` double DEFAULT NULL,
+  `modeOfPayment` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `orderPaymentInfo`
+--
+
+LOCK TABLES `orderPaymentInfo` WRITE;
+/*!40000 ALTER TABLE `orderPaymentInfo` DISABLE KEYS */;
+/*!40000 ALTER TABLE `orderPaymentInfo` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `orderPermits`
+--
+
+DROP TABLE IF EXISTS `orderPermits`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `orderPermits` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `orderID` bigint(20) NOT NULL,
+  `permitID` bigint(20) NOT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `created_by` bigint(20) DEFAULT NULL,
+  `modified_at` datetime DEFAULT NULL,
+  `modified_by` bigint(20) DEFAULT NULL,
+  `delete_flag` int(11) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`),
+  KEY `orderPermitRef_idx` (`orderID`),
+  KEY `permitRef_idx` (`permitID`),
+  CONSTRAINT `orderPermitRef` FOREIGN KEY (`orderID`) REFERENCES `order` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `permitRef` FOREIGN KEY (`permitID`) REFERENCES `permit` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `orderPermits`
+--
+
+LOCK TABLES `orderPermits` WRITE;
+/*!40000 ALTER TABLE `orderPermits` DISABLE KEYS */;
+/*!40000 ALTER TABLE `orderPermits` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `orderStatus`
+--
+
+DROP TABLE IF EXISTS `orderStatus`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `orderStatus` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `status` varchar(20) NOT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `created_by` bigint(20) DEFAULT NULL,
+  `modified_at` datetime DEFAULT NULL,
+  `modified_by` bigint(20) DEFAULT NULL,
+  `delete_flag` int(11) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `orderStatus`
+--
+
+LOCK TABLES `orderStatus` WRITE;
+/*!40000 ALTER TABLE `orderStatus` DISABLE KEYS */;
+/*!40000 ALTER TABLE `orderStatus` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `orderWeightInfo`
+--
+
+DROP TABLE IF EXISTS `orderWeightInfo`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `orderWeightInfo` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `orderID` bigint(20) NOT NULL,
+  `grossWeight` double DEFAULT NULL,
+  `netWeight` double DEFAULT NULL,
+  `tare` double DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `created_by` bigint(20) DEFAULT NULL,
+  `modified_at` datetime DEFAULT NULL,
+  `modified_by` bigint(20) DEFAULT NULL,
+  `delete_flag` int(11) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `orderWeightInfo`
+--
+
+LOCK TABLES `orderWeightInfo` WRITE;
+/*!40000 ALTER TABLE `orderWeightInfo` DISABLE KEYS */;
+/*!40000 ALTER TABLE `orderWeightInfo` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `permit`
+--
+
+DROP TABLE IF EXISTS `permit`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `permit` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `type` bigint(20) NOT NULL,
+  `class` varchar(1) DEFAULT NULL,
+  `number` varchar(15) DEFAULT NULL,
+  `fee` varchar(12) DEFAULT NULL,
+  `startDate` datetime DEFAULT NULL,
+  `endDate` datetime DEFAULT NULL,
+  `address` varchar(200) NOT NULL,
+  `street` varchar(75) DEFAULT NULL,
+  `locationType` varchar(12) DEFAULT NULL,
+  `status` bigint(20) NOT NULL,
+  `comments` mediumtext,
+  `created_at` datetime DEFAULT NULL,
+  `created_by` bigint(20) DEFAULT NULL,
+  `modified_at` datetime DEFAULT NULL,
+  `modified_by` bigint(20) DEFAULT NULL,
+  `delete_flag` int(11) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`),
+  KEY `permitStatusRef_idx` (`status`),
+  KEY `permitTypeRef_idx` (`type`),
+  CONSTRAINT `permitStatusRef` FOREIGN KEY (`status`) REFERENCES `permitStatus` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `permitTypeRef` FOREIGN KEY (`type`) REFERENCES `permitType` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `permit`
+--
+
+LOCK TABLES `permit` WRITE;
+/*!40000 ALTER TABLE `permit` DISABLE KEYS */;
+/*!40000 ALTER TABLE `permit` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `permitStatus`
+--
+
+DROP TABLE IF EXISTS `permitStatus`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `permitStatus` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `status` varchar(15) NOT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `created_by` bigint(20) DEFAULT NULL,
+  `modified_at` datetime DEFAULT NULL,
+  `modified_by` bigint(20) DEFAULT NULL,
+  `delete_flag` int(11) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `permitStatus`
+--
+
+LOCK TABLES `permitStatus` WRITE;
+/*!40000 ALTER TABLE `permitStatus` DISABLE KEYS */;
+/*!40000 ALTER TABLE `permitStatus` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `permitType`
+--
+
+DROP TABLE IF EXISTS `permitType`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `permitType` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `permitType` varchar(15) NOT NULL,
+  `daysAllowed` int(3) DEFAULT '0',
+  `created_at` datetime DEFAULT NULL,
+  `created_by` bigint(20) DEFAULT NULL,
+  `modified_at` datetime DEFAULT NULL,
+  `modified_by` bigint(20) DEFAULT NULL,
+  `delete_flag` int(11) NOT NULL DEFAULT '1',
+  `type` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `permitType`
+--
+
+LOCK TABLES `permitType` WRITE;
+/*!40000 ALTER TABLE `permitType` DISABLE KEYS */;
+/*!40000 ALTER TABLE `permitType` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -304,7 +643,7 @@ CREATE TABLE `state` (
   `code` varchar(5) COLLATE utf8_unicode_ci DEFAULT NULL,
   `name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -313,6 +652,7 @@ CREATE TABLE `state` (
 
 LOCK TABLES `state` WRITE;
 /*!40000 ALTER TABLE `state` DISABLE KEYS */;
+INSERT INTO `state` VALUES (1,NULL,NULL,1,NULL,NULL,'IL','Illinois'),(2,NULL,NULL,1,NULL,NULL,'WI','Wisconsin'),(3,NULL,NULL,1,NULL,NULL,'IN','Indiana'),(4,NULL,NULL,1,NULL,NULL,'MI','Michigan'),(5,NULL,NULL,1,NULL,NULL,'OH','Ohio');
 /*!40000 ALTER TABLE `state` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -357,7 +697,7 @@ CREATE TABLE `user_info` (
 
 LOCK TABLES `user_info` WRITE;
 /*!40000 ALTER TABLE `user_info` DISABLE KEYS */;
-INSERT INTO `user_info` VALUES (1,NULL,NULL,NULL,NULL,1,NULL,NULL,'admin','2012-04-19 05:14:20','admin',NULL,NULL,'admin','admin',NULL,NULL,'admin',1,NULL,1);
+INSERT INTO `user_info` VALUES (1,NULL,NULL,NULL,NULL,1,NULL,NULL,'admin','2015-09-10 21:32:56','admin',NULL,NULL,'admin','admin',NULL,NULL,'admin',1,NULL,1);
 /*!40000 ALTER TABLE `user_info` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -370,4 +710,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-09-09  9:20:30
+-- Dump completed on 2015-09-11  8:42:26
