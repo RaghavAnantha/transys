@@ -86,7 +86,7 @@
 	$("#myModal").on("show.bs.modal", function(e) {
 	    var link = $(e.relatedTarget);
 	    $(this).find("#billingInfo").load(link.attr("href"));
-	    
+	    $('.nav-tabs a[href="#billingInfo"]').tab('show');
 	    
 	});	
 	
