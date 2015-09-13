@@ -14,7 +14,7 @@
     <div>
       <ul class="nav navbar-nav">
         <li id="orderPage"><a href="/order/order.do">Orders</a></li>
-        <li id="permitPage"><a href="#">Permits</a></li> 
+        <li id="permitPage"><a href="/permit/main.do">Permits</a></li> 
         <li id="customerPage"><a href="/customer/main.do">Customers</a></li> 
         <li id="reportPage"><a href="#">Reports</a></li>
         <li id="masterDataPage"><a href="#">Master Data</a></li>
