@@ -1,19 +1,24 @@
 package com.transys.model;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="order")
+@Table(name="trans_order")
 public class Order extends AbstractBaseModel {
 
 	// TODO: Do we need table size restriction here?
 	
 	/******** Customer Info ************/
+	@ManyToOne
 	@JoinColumn(name="custID") 
-	private Customer customerID;
+	private Customer customer;
 	
 	/******** Delivery Info ************/
 	@Column(name="deliverycontactname")
@@ -26,27 +31,27 @@ public class Order extends AbstractBaseModel {
 	private String deliveryContactPhone2;
 	
 	@Column(name="deliverydate")
-	private String deliveryDate;
+	private Date deliveryDate;
 	
 	@Column(name="deliveryTimeFrom")
-	private String deliveryTimeFrom;
+	private Date deliveryTimeFrom;
 	
 	@Column(name="deliveryTimeTo")
-	private String deliveryTimeTo;
+	private Date deliveryTimeTo;
 	
+	@ManyToOne
 	@JoinColumn(name="deliveryAddress")
 	private Address deliveryAddress;
 	
-	//
 	@Column(name="typeOfMaterial")
 	private String typeOfMaterial;
 	
 	@Column(name="pickupDate")
-	private String pickupDate;
+	private Date pickupDate;
 	
 	/******** Permits Info ************/
-	@JoinColumn(name="permits")
-	private OrderPermits permits;	
+	/*@JoinColumn(name="permits")
+	private OrderPermits permits;*/
 
 	/******** Dumpster Info ************/
 	@Column(name="dumpsterLocation")
@@ -59,31 +64,32 @@ public class Order extends AbstractBaseModel {
 	private String dumpsterNum;
 	
 	/******** Payment Info ************/
-	@JoinColumn(name="paymentInfo")
-	private OrderPaymentInfo paymentInfo;
+	/*@JoinColumn(name="paymentInfo")
+	private OrderPaymentInfo paymentInfo;*/
 	
 	/******** Weight Info ************/
-	@JoinColumn(name="weightInfo")
-	private OrderWeightInfo weightInfo;
+	/*@JoinColumn(name="weightInfo")
+	private OrderWeightInfo weightInfo;*/
 	
 	/******** Driver Info ************/
-	@JoinColumn(name="driverInfo")
-	private OrderDriverInfo driverInfo;
+	/*@JoinColumn(name="driverInfo")
+	private OrderDriverInfo driverInfo;*/
 
 	/******** Order Status ************/
+	@ManyToOne
 	@JoinColumn(name="orderStatus") //Enum?
-	private OrderStatus status;
+	private OrderStatus orderStatus;
 	
 	/******** Order Notes ************/
-	@JoinColumn(name="notes")
-	private OrderNotes notes;
+	/*@JoinColumn(name="notes")
+	private OrderNotes notes;*/
 
-	public Customer getCustomerID() {
-		return customerID;
+	public Customer getCustomer() {
+		return customer;
 	}
 
-	public void setCustomerID(Customer customerID) {
-		this.customerID = customerID;
+	public void setCustomer(Customer customer) {
+		this.customer = customer;
 	}
 
 	public String getDeliveryContactName() {
@@ -110,27 +116,27 @@ public class Order extends AbstractBaseModel {
 		this.deliveryContactPhone2 = deliveryContactPhone2;
 	}
 
-	public String getDeliveryDate() {
+	public Date getDeliveryDate() {
 		return deliveryDate;
 	}
 
-	public void setDeliveryDate(String deliveryDate) {
+	public void setDeliveryDate(Date deliveryDate) {
 		this.deliveryDate = deliveryDate;
 	}
 
-	public String getDeliveryTimeFrom() {
+	public Date getDeliveryTimeFrom() {
 		return deliveryTimeFrom;
 	}
 
-	public void setDeliveryTimeFrom(String deliveryTimeFrom) {
+	public void setDeliveryTimeFrom(Date deliveryTimeFrom) {
 		this.deliveryTimeFrom = deliveryTimeFrom;
 	}
 
-	public String getDeliveryTimeTo() {
+	public Date getDeliveryTimeTo() {
 		return deliveryTimeTo;
 	}
 
-	public void setDeliveryTimeTo(String deliveryTimeTo) {
+	public void setDeliveryTimeTo(Date deliveryTimeTo) {
 		this.deliveryTimeTo = deliveryTimeTo;
 	}
 
@@ -150,21 +156,21 @@ public class Order extends AbstractBaseModel {
 		this.typeOfMaterial = typeOfMaterial;
 	}
 
-	public String getPickupDate() {
+	public Date getPickupDate() {
 		return pickupDate;
 	}
 
-	public void setPickupDate(String pickupDate) {
+	public void setPickupDate(Date pickupDate) {
 		this.pickupDate = pickupDate;
 	}
 
-	public OrderPermits getPermits() {
+	/*public OrderPermits getPermits() {
 		return permits;
 	}
 
 	public void setPermits(OrderPermits permits) {
 		this.permits = permits;
-	}
+	}*/
 
 	public String getDumpsterLocation() {
 		return dumpsterLocation;
@@ -190,7 +196,7 @@ public class Order extends AbstractBaseModel {
 		this.dumpsterNum = dumpsterNum;
 	}
 
-	public OrderPaymentInfo getPaymentInfo() {
+	/*public OrderPaymentInfo getPaymentInfo() {
 		return paymentInfo;
 	}
 
@@ -212,22 +218,21 @@ public class Order extends AbstractBaseModel {
 
 	public void setDriverInfo(OrderDriverInfo driverInfo) {
 		this.driverInfo = driverInfo;
+	}*/
+
+	public OrderStatus getOrderStatus() {
+		return orderStatus;
 	}
 
-	public OrderStatus getStatus() {
-		return status;
+	public void setOrderStatus(OrderStatus status) {
+		this.orderStatus = status;
 	}
 
-	public void setStatus(OrderStatus status) {
-		this.status = status;
-	}
-
-	public OrderNotes getNotes() {
+	/*public OrderNotes getNotes() {
 		return notes;
 	}
 
 	public void setNotes(OrderNotes notes) {
 		this.notes = notes;
-	}
-	
+	}*/
 }

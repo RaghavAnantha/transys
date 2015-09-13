@@ -3,195 +3,98 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
+<title>Orders</title>
 </head>
 <body>
-	<ul class="nav nav-tabs" id="brands_tabs">
-		<li><a href="#orders" data-toggle="tab">Orders</a></li>
-		<li><a href="#orderReports" data-toggle="tab">Orders Report</a></li>
+	<ul class="nav nav-tabs" id="order_main_tabs">
+		<li><a href="#manageOrder" data-toggle="tab" >Orders</a></li>
+		<li><a href="#orderReports" data-toggle="tab" >Order Reports</a></li>
 	</ul>
-	
-	
-	<div class="tab-content tab-color">
-
-		<div id="orders" class="tab-pane">
-			<h3 style="margin-top: 0px !important">Manage Orders</h3>
-			<form>
-				<table>
-					<tr>
-						<td><transys:label code="Order#:" /></td>
-						<td><select class="form-control input-sm">
-								<option>awqq</option>
-								<option>adajnwj</option>
-								<option>najbwja</option>
-								<option>nawja</option>
-						</select></td>
-						<td><transys:label code="Order Status: " /></td>
-						<td><select class="form-control input-sm">
-								<option>awqq</option>
-								<option>adajnwj</option>
-								<option>najbwja</option>
-								<option>nawja</option>
-						</select></td>
-						<td><transys:label code="Customer: " /></td>
-						<td><select class="form-control input-sm">
-								<option>awqq</option>
-								<option>adajnwj</option>
-								<option>najbwja</option>
-								<option>nawja</option>
-						</select></td>
-						<td><transys:label code="Delivery Address: " /></td>
-						<td><select class="form-control input-sm">
-								<option>awqq</option>
-								<option>adajnwj</option>
-								<option>najbwja</option>
-								<option>nawja</option>
-						</select></td>
-
-					</tr>
-					<tr>
-						<td><transys:label code="Phone Number: " /></td>
-						<td><select class="form-control input-sm">
-								<option>awqq</option>
-								<option>adajnwj</option>
-								<option>najbwja</option>
-								<option>nawja</option>
-						</select></td>
-						<td><transys:label code="Dumpster Size: " /></td>
-						<td><select class="form-control input-sm">
-								<option>awqq</option>
-								<option>adajnwj</option>
-								<option>najbwja</option>
-								<option>nawja</option>
-						</select></td>
-						<td><transys:label code="Dumpster#: " /></td>
-						<td><select class="form-control input-sm">
-								<option>awqq</option>
-								<option>adajnwj</option>
-								<option>najbwja</option>
-								<option>nawja</option>
-						</select></td>
-					</tr>
-					<tr>
-						<td><transys:label code="Delivery Date From: " /></td>
-						<td><select class="form-control input-sm">
-								<option>awqq</option>
-								<option>adajnwj</option>
-								<option>najbwja</option>
-								<option>nawja</option>
-						</select></td>
-						<td><transys:label code="Delivery Date To: " /></td>
-						<td><select class="form-control input-sm">
-								<option>awqq</option>
-								<option>adajnwj</option>
-								<option>najbwja</option>
-								<option>nawja</option>
-						</select></td>
-						<td><transys:label code="Pickup Date From: " /></td>
-						<td><select class="form-control input-sm">
-								<option>awqq</option>
-								<option>adajnwj</option>
-								<option>najbwja</option>
-								<option>nawja</option>
-						</select></td>
-						<td><transys:label code="Pickup Date To: " /></td>
-						<td><select class="form-control input-sm">
-								<option>awqq</option>
-								<option>adajnwj</option>
-								<option>najbwja</option>
-								<option>nawja</option>
-						</select></td>
-					</tr>
-					<tr>
-						<td></td>
-						<td><Button type="button" class="btn btn-primary btn-sm">Search</button></td>
-					</tr>
-					<tr>
-						<td><Button id="AddNewOrder" type="button"
-								class="btn btn-primary btn-sm"  data-toggle="modal"
-								data-target="#AddEdit" data-backdrop="static">Add New
-								Order</Button></td>
-					</tr>
-				</table>
-			</form>
+	<div class="tab-content" style="background-color: white;">
+		<div id="manageOrder" class="tab-pane">
+			<%@include file="list.jsp"%>
 		</div>
-
-
 		<div id="orderReports" class="tab-pane">
-
-			<h3 style="margin-top: 0px !important">Orders Report</h3>
-			<table>
-				<tr>
-					<td>Company Name:</td>
-					<td><select class="form-control input-sm">
-							<option>awqq</option>
-							<option>adajnwj</option>
-							<option>najbwja</option>
-							<option>nawja</option>
-					</select></td>
-				</tr>
-				<tr>
-					<td>Order Date From:</td>
-					<td><select class="form-control input-sm">
-							<option>awqq</option>
-							<option>adajnwj</option>
-							<option>najbwja</option>
-							<option>nawja</option>
-					</select></td>
-					<td>Order Date To:</td>
-					<td><select class="form-control input-sm">
-							<option>awqq</option>
-							<option>adajnwj</option>
-							<option>najbwja</option>
-							<option>nawja</option>
-					</select></td>
-				</tr>
-				<tr>
-					<td>Contact Name:</td>
-					<td><select class="form-control input-sm">
-							<option>awqqa</option>
-							<option>adajnwj</option>
-							<option>najbwja</option>
-							<option>nawja</option>
-					</select></td>
-					<td>Order Status:</td>
-					<td><select class="form-control input-sm">
-							<option>Open</option>
-							<option>adajnwj</option>
-							<option>najbwja</option>
-							<option>nawja</option>
-					</select>
-				</tr>
-				<tr>
-					<td>Phone Number:</td>
-					<td><select class="form-control input-sm">
-							<option>awqq</option>
-							<option>adajnwj</option>
-							<option>najbwja</option>
-							<option>nawja</option>
-					</select></td>
-				</tr>
-				<tr>
-					<td></td>
-					<td><Button type="button" class="btn btn-primary btn-sm">Preview</button>
-					</td>
-				</tr>
-			</table>
+			<br/>
+			<p>Placeholder for order reports</p>
 		</div>
-
 	</div>
+
+	<div class="modal fade" id="editModal" role="dialog">
+		<div class="modal-dialog" style="width:90% !important">
+			<div class="modal-content">
+				<div class="modal-header">		
+					<h4 class="modal-title">Add/Edit Orders</h4>
+					<div id="validations" style="color:red"></div>
+				</div>
+				<div class="modal-body"> 
+					<ul class="nav nav-tabs" id="order_edit_tabs">
+						<li><a href="#orderDetails" data-toggle="tab" >Order Details</a></li>
+						<li><a href="#dropOff" data-toggle="tab" >Drop-Off</a></li>
+						<li><a href="#pickup" data-toggle="tab" >Pickup</a></li>
+						<li><a href="#notes" data-toggle="tab" >Notes</a></li>
+					</ul>
+					<div class="tab-content">
+						<div id="orderDetails" class="tab-pane">
+							<%@include file="form.jsp"%>
+						</div>
+						<div id="dropOff" class="tab-pane">
+						</div>
+						<div id="pickup" class="tab-pane">
+						</div>
+						<div id="notes" class="tab-pane">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>	
+	
 <script type="text/javascript">
-
-function activaTab(tab){
-	    $('.nav-tabs a[href="#' + tab + '"]').tab('show');
-};
-
-activaTab('orders');
-   
-
+	function showTab(tab){
+		$('.nav-tabs a[href="#' + tab + '"]').tab('show');
+	};
+	
+	showTab('${activeTab}');
+	
+	$('[data-toggle="tabajax"]').click(function(e) {
+	    var $this = $(this),
+	        loadurl = $this.attr('href'),
+	        targ = $this.attr('data-target');
+	
+	    $.get(loadurl, function(data) {
+	        $(targ).html(data);
+	    });
+	
+	    $this.tab('show');
+	    return false;
+	});
+	
+	$("#editModal").on("show.bs.modal", function(e) {
+	    var link = $(e.relatedTarget);
+	    $(this).find("#orderDetails").load(link.attr("href"));
+	    $('.nav-tabs a[href="#orderDetails"]').tab('show');
+	});	
+	
+	function validate() {
+		var ids = ["companyName", "billingAddressLine1", "city"];
+		var valid = false
+		
+		for (var i= 0; i<ids.length; i++) {	
+			if ($("#typeForm").find('input[id="'+ids[i] +'"]').val().length == 0 ) {	
+				$("#typeForm").find('input[id="'+ids[i] +'"]').addClass("border");
+				valid = true;
+			}
+			
+			//$("#validations").html("Please fill out the required fields Name, Address Line 1 and City");			
+			} if (bool){
+				return false;
+			}
+		
+		return true;
+	};
+	
 </script>
+
 </body>
-
-
-
 </html>

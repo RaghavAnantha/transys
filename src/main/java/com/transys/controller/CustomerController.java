@@ -51,7 +51,7 @@ public class CustomerController extends CRUDController<Customer> {
 	public String list(ModelMap model, HttpServletRequest request) {
 		setupList(model, request);
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
-		criteria.getSearchMap().put("id!",0l);
+		//criteria.getSearchMap().put("id!",0l);
 		model.addAttribute("list",genericDAO.search(getEntityClass(), criteria,"companyName",null,null));
 		model.addAttribute("activeTab", "manageCustomer");
 		//return urlContext + "/list";
@@ -60,9 +60,11 @@ public class CustomerController extends CRUDController<Customer> {
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/main.do")
 	public String displayMain(ModelMap model, HttpServletRequest request) {
+		request.getSession().removeAttribute("searchCriteria");
 		setupList(model, request);
+		
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
-		criteria.getSearchMap().put("id!",0l);
+		//criteria.getSearchMap().put("id!",0l);
 		model.addAttribute("list", genericDAO.search(getEntityClass(), criteria, "companyName", null, null));
 		model.addAttribute("activeTab", "manageCustomer");
 		return urlContext + "/customer";

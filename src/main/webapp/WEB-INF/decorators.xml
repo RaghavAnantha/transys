@@ -22,6 +22,7 @@
     -->
     <decorator name="popUp" page="popUpLayout.jsp">
         <pattern>/transys/customer/form.jsp</pattern>
+        <pattern>/transys/order/form.jsp</pattern>
     </decorator>
    <decorator name="customer" page="singleColumnLayout.jsp">
         <pattern>/transys/customer/**</pattern>
