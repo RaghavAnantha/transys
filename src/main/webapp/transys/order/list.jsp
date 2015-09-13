@@ -184,6 +184,21 @@
 		pagingLink="search.do" multipleDelete="false" searcheable="false"
 		exportPdf="true" exportXls="true">
 		<transys:textcolumn headerText="Order #" dataField="id" />
+		<transys:textcolumn headerText="Customer" dataField="customer.companyName" />
+		<transys:textcolumn headerText="Contact" dataField="deliveryContactName" />
+		<transys:textcolumn headerText="Phone" dataField="deliveryContactPhone1" />
+		<transys:textcolumn headerText="Delivery Address" dataField="deliveryAddress.line1" />
+		<transys:textcolumn headerText="City" dataField="deliveryAddress.city" />
+		<transys:textcolumn headerText="Dumpster Size" dataField="dumpsterSize" />
+		<transys:textcolumn headerText="Dmpstr #" dataField="dumpsterNum" />
+		<transys:textcolumn headerText="Delivery Date" dataField="deliveryDate" />
+		<transys:textcolumn headerText="Pickup Date" dataField="pickupDate" />
+		<!--<transys:textcolumn headerText="Dmpstr Price" dataField="id" />
+		<transys:textcolumn headerText="Permit Fee" dataField="id" />
+		<transys:textcolumn headerText="City Fee" dataField="id" />
+		<transys:textcolumn headerText="OvrWt Fee" dataField="id" />
+		<transys:textcolumn headerText="Addnl Fee" dataField="id" />
+		<transys:textcolumn headerText="Total Amount" dataField="id" />-->
 		<transys:textcolumn headerText="Status" dataField="orderStatus.status" />
 	</transys:datatable>
 	<%session.setAttribute("columnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
