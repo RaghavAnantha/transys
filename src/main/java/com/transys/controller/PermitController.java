@@ -1,20 +1,23 @@
 package com.transys.controller;
 
+import java.lang.reflect.ParameterizedType;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.hssf.record.formula.functions.T;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.transys.controller.editor.AbstractModelEditor;
 import com.transys.model.Address;
-import com.transys.model.BaseModel;
 import com.transys.model.Customer;
 import com.transys.model.Order;
 import com.transys.model.OrderPermits;
@@ -24,8 +27,8 @@ import com.transys.model.PermitStatus;
 import com.transys.model.PermitType;
 import com.transys.model.SearchCriteria;
 import com.transys.model.State;
-import com.transys.view.PermitView;
 
+@SuppressWarnings("unchecked")
 @Controller
 @RequestMapping("/permit")
 public class PermitController extends CRUDController<Permit> {
@@ -84,5 +87,20 @@ public class PermitController extends CRUDController<Permit> {
 		// TODO: Remove
 		model.addAttribute("state", genericDAO.findByCriteria(State.class, criterias, "name", false));
 	}
+	
+	@Override
+	protected Class getEntityClass() {
+		//return (Class<T>) ((ParameterizedType)OrderPermits.class.).getActualTypeArguments()[0];
+		return OrderPermits.class;
+	}
+
+	/*@RequestMapping(method = RequestMethod.POST, value = "/save.do")
+	public String save(HttpServletRequest request,
+			@ModelAttribute("modelObject") OrderPermits entity,
+			BindingResult bindingResult, ModelMap model) {
+		
+		return super.save(request, (OrderPermits)entity,  bindingResult, model);
+		
+	}*/
 	
 }

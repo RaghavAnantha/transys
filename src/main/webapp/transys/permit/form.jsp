@@ -52,27 +52,94 @@ function formatFax(){
 		<tr>
 			<td class="form-left"><transys:label code="Permit Number" /><span class="errorMessage">*</span></td>
 			<td align="${left}">
-				<form:input path="number" cssClass="flat" style="min-width:350px; max-width:350px"  />
-			 	<br><form:errors path="number" cssClass="errorMessage" />
+				<form:input path="permit.number" cssClass="flat" style="min-width:350px; max-width:350px"  />
+			 	<br><form:errors path="permit.number" cssClass="errorMessage" />
 			</td>
 			
-			<td class="form-left"><transys:label code="Permit Class" /></td>
+			<td class="form-left"><transys:label code="Order Number" /></td>
 			<td align="${left}">
-				<form:input path="class" cssClass="flat" style="min-width:350px; max-width:350px"  />
-			 	<br><form:errors path="class" cssClass="errorMessage" />
+				<form:input path="order.id" cssClass="flat" style="min-width:350px; max-width:350px"  />
+			 	<br><form:errors path="order.id" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>
-			<td class="form-left"><transys:label code="Status" /><span class="errorMessage">*</span></td>
+			<td class="form-left"><transys:label code="Customer Name" /><span class="errorMessage">*</span></td>
 			<td align="${left}">
-				<form:input path="status" cssClass="flat" style="min-width:350px; max-width:350px"  />
-			 	<br><form:errors path="status" cssClass="errorMessage" />
+				<form:input path="permit.customer.companyName" cssClass="flat" style="min-width:350px; max-width:350px"  />
+			 	<br><form:errors path="permit.customer.companyName" cssClass="errorMessage" />
+			</td>
+		</tr>
+		<tr>
+			<td class="form-left"><transys:label code="Delivery Address" /><span class="errorMessage">*</span></td>
+			<td align="${left}">
+				<form:input path="permit.deliveryAddress.line1" cssClass="flat" style="min-width:350px; max-width:350px"  />
+			 	<br><form:errors path="permit.deliveryAddress.line1" cssClass="errorMessage" />
 			</td>
 			
-			<td class="form-left"><transys:label code="Permit Class" /></td>
+			<td class="form-left"><transys:label code="Delivery Street" /></td>
 			<td align="${left}">
-				<form:input path="class" cssClass="flat" style="min-width:350px; max-width:350px"  />
-			 	<br><form:errors path="class" cssClass="errorMessage" />
+				<form:input path="permit.deliveryAddress.line2" cssClass="flat" style="min-width:350px; max-width:350px"  />
+			 	<br><form:errors path="permit.deliveryAddress.line2" cssClass="errorMessage" />
+			</td>
+		</tr>
+		<tr>
+			<td class="form-left"><transys:label code="Permit Address" /><span class="errorMessage">*</span></td>
+			<td align="${left}">
+				<form:input path="permit.permitAddress" cssClass="flat" style="min-width:350px; max-width:350px"  />
+			 	<br><form:errors path="permit.permitAddress" cssClass="errorMessage" />
+			</td>
+			
+			<%-- <td class="form-left"><transys:label code="Permit Street" /></td>
+			<td align="${left}">
+				<form:input path="permit.permitStreet" cssClass="flat" style="min-width:350px; max-width:350px"  />
+			 	<br><form:errors path="permit.permitStreet" cssClass="errorMessage" />
+			</td> --%>
+		</tr>
+		<tr>
+			<td class="form-left"><transys:label code="LocationType" /><span class="errorMessage">*</span></td>
+			<td align="${left}">
+				<form:input path="permit.locationType.locationType" cssClass="flat" style="min-width:350px; max-width:350px"  />
+			 	<br><form:errors path="permit.locationType.locationType" cssClass="errorMessage" />
+			</td>
+		</tr>
+		<tr>
+			<td class="form-left"><transys:label code="Permit Class" /><span class="errorMessage">*</span></td>
+			<td align="${left}">
+				<form:input path="permit.permitClass.permitClass" cssClass="flat" style="min-width:350px; max-width:350px"  />
+			 	<br><form:errors path="permit.permitClass.permitClass" cssClass="errorMessage" />
+			</td>
+			
+			<td class="form-left"><transys:label code="Permit Type" /></td>
+			<td align="${left}">
+				<form:input path="permit.type.type" cssClass="flat" style="min-width:350px; max-width:350px"  />
+			 	<br><form:errors path="permit.type.type" cssClass="errorMessage" />
+			</td>
+		</tr>
+		<tr>
+			<td class="form-left"><transys:label code="Start Date" /><span class="errorMessage">*</span></td>
+			<td align="${left}">
+				<form:input path="permit.startDate" cssClass="flat" style="min-width:350px; max-width:350px"  />
+			 	<br><form:errors path="permit.startDate" cssClass="errorMessage" />
+			</td>
+			
+			<%-- <td class="form-left"><transys:label code="End Date" /></td>
+			<td align="${left}">
+				<form:input path="permit.endDate" cssClass="flat" style="min-width:350px; max-width:350px"  />
+			 	<br><form:errors path="permit.endDate" cssClass="errorMessage" />
+			</td> --%>
+		</tr>
+		<tr>
+		<td class="form-left"><transys:label code="Permit Fee" /><span class="errorMessage">*</span></td>
+			<td align="${left}">
+				<form:input path="permit.fee" cssClass="flat" style="min-width:350px; max-width:350px"  />
+			 	<br><form:errors path="permit.fee" cssClass="errorMessage" />
+			</td>
+		</tr>
+		<tr>
+		<td class="form-left"><transys:label code="Parking Meter" /><span class="errorMessage">*</span></td>
+			<td align="${left}">
+				<form:input path="permit.parkingMeter" cssClass="flat" style="min-width:350px; max-width:350px"  />
+			 	<br><form:errors path="permit.parkingMeter" cssClass="errorMessage" />
 			</td>
 		</tr>
 	   
