@@ -6,6 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -15,8 +16,9 @@ public class Order extends AbstractBaseModel {
 	// TODO: Do we need table size restriction here?
 	
 	/******** Customer Info ************/
-	/*@JoinColumn(name="custID") 
-	private Customer customerID;*/
+	@ManyToOne
+	@JoinColumn(name="custID") 
+	private Customer customer;
 	
 	/******** Delivery Info ************/
 	@Column(name="deliverycontactname")
@@ -37,8 +39,9 @@ public class Order extends AbstractBaseModel {
 	@Column(name="deliveryTimeTo")
 	private Date deliveryTimeTo;
 	
-	/*@JoinColumn(name="deliveryAddress")
-	private Address deliveryAddress;*/
+	@ManyToOne
+	@JoinColumn(name="deliveryAddress")
+	private Address deliveryAddress;
 	
 	@Column(name="typeOfMaterial")
 	private String typeOfMaterial;
@@ -81,13 +84,13 @@ public class Order extends AbstractBaseModel {
 	/*@JoinColumn(name="notes")
 	private OrderNotes notes;*/
 
-	/*public Customer getCustomerID() {
-		return customerID;
+	public Customer getCustomer() {
+		return customer;
 	}
 
-	public void setCustomerID(Customer customerID) {
-		this.customerID = customerID;
-	}*/
+	public void setCustomer(Customer customer) {
+		this.customer = customer;
+	}
 
 	public String getDeliveryContactName() {
 		return deliveryContactName;
@@ -137,13 +140,13 @@ public class Order extends AbstractBaseModel {
 		this.deliveryTimeTo = deliveryTimeTo;
 	}
 
-	/*public Address getDeliveryAddress() {
+	public Address getDeliveryAddress() {
 		return deliveryAddress;
 	}
 
 	public void setDeliveryAddress(Address deliveryAddress) {
 		this.deliveryAddress = deliveryAddress;
-	}*/
+	}
 
 	public String getTypeOfMaterial() {
 		return typeOfMaterial;
