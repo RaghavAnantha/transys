@@ -56,10 +56,11 @@ public class OrderController extends CRUDController<Order> {
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/main.do")
 	public String displayMain(ModelMap model, HttpServletRequest request) {
+		request.getSession().removeAttribute("searchCriteria");
 		setupList(model, request);
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		//criteria.getSearchMap().put("id!",0l);
-		model.addAttribute("list", genericDAO.search(getEntityClass(), criteria, "customerID", null, null));
+		model.addAttribute("list", genericDAO.search(getEntityClass(), criteria, "id", null, null));
 		model.addAttribute("activeTab", "manageOrder");
 		return urlContext + "/order";
 	}
