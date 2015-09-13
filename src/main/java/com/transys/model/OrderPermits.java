@@ -1,19 +1,36 @@
 package com.transys.model;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
 @Table(name="orderPermits")
 public class OrderPermits extends AbstractBaseModel {
 
+	@ManyToOne
 	@JoinColumn(name="orderID")
-	private Order orderID;
+	private Order order;
 	
+	@ManyToOne
 	@JoinColumn(name="permitID")
-	private Permit permitID;
-	
+	private Permit permit;
+
+	public Order getOrder() {
+		return order;
+	}
+
+	public void setOrder(Order order) {
+		this.order = order;
+	}
+
+	public Permit getPermit() {
+		return permit;
+	}
+
+	public void setPermit(Permit permit) {
+		this.permit = permit;
+	}
 	
 }

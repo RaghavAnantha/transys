@@ -17,6 +17,7 @@ import com.transys.model.Address;
 import com.transys.model.BaseModel;
 import com.transys.model.Customer;
 import com.transys.model.Order;
+import com.transys.model.OrderPermits;
 import com.transys.model.Permit;
 import com.transys.model.PermitClass;
 import com.transys.model.PermitStatus;
@@ -42,11 +43,20 @@ public class PermitController extends CRUDController<Permit> {
 	public String displayMain(ModelMap model, HttpServletRequest request) {
 		setupList(model, request);
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
-		criteria.getSearchMap().put("id!",0l);
+//		criteria.getSearchMap().put("id!",0l);
 //		model.addAttribute("list", createViewObjects(genericDAO.search(getEntityClass(), criteria, "number", null, null)));
-		model.addAttribute("list", genericDAO.search(getEntityClass(), criteria, "number", null, null));
+		model.addAttribute("list", genericDAO.search(OrderPermits.class, criteria, "id", null, null));
 		model.addAttribute("activeTab", "managePermit");
 		return urlContext + "/permit";
+	}
+	
+	@RequestMapping(method = RequestMethod.GET, value = "/list.do")
+	public String list(ModelMap model, HttpServletRequest request) {
+		setupList(model, request);
+		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
+		criteria.setPageSize(25);
+		model.addAttribute("list",genericDAO.search(OrderPermits.class, criteria));
+		return urlContext + "/list";
 	}
 	
 	/*
