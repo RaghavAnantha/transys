@@ -275,6 +275,36 @@ INSERT INTO `transys`.`trans_order`(`id`, `custID`, `deliveryContactName`, `deli
 UNLOCK TABLES;
 
 --
+-- Table structure for table `locationType`
+--
+
+DROP TABLE IF EXISTS `locationType`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `locationType` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `locationType` varchar(20) NOT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `created_by` bigint(20) DEFAULT NULL,
+  `modified_at` datetime DEFAULT NULL,
+  `modified_by` bigint(20) DEFAULT NULL,
+  `delete_flag` int(11) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `locationType`
+--
+
+LOCK TABLES `locationType` WRITE;
+/*!40000 ALTER TABLE `locationType` DISABLE KEYS */;
+INSERT INTO `locationType` VALUES (1,'Alley',NULL,NULL,NULL,NULL,1),(2,'Curb',NULL,NULL,NULL,NULL,1),(3,'Drive',NULL,NULL,NULL,NULL,1);
+/*!40000 ALTER TABLE `locationType` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
+--
 -- Table structure for table `orderDriverInfo`
 --
 
@@ -473,14 +503,12 @@ DROP TABLE IF EXISTS `permit`;
 CREATE TABLE `permit` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `type` bigint(20) NOT NULL,
-  `class` varchar(1) DEFAULT NULL,
+  `class` bigint(20) DEFAULT NULL,
   `number` varchar(15) DEFAULT NULL,
   `fee` varchar(12) DEFAULT NULL,
   `startDate` datetime DEFAULT NULL,
-  `endDate` datetime DEFAULT NULL,
-  `address` varchar(200) NOT NULL,
-  `street` varchar(75) DEFAULT NULL,
-  `locationType` varchar(12) DEFAULT NULL,
+  `permitAddress` varchar(100) DEFAULT NULL,
+  `locationType` bigint(20) DEFAULT NULL,
   `status` bigint(20) NOT NULL,
   `comments` mediumtext,
   `created_at` datetime DEFAULT NULL,
@@ -488,12 +516,24 @@ CREATE TABLE `permit` (
   `modified_at` datetime DEFAULT NULL,
   `modified_by` bigint(20) DEFAULT NULL,
   `delete_flag` int(11) NOT NULL DEFAULT '1',
+  `customerID` bigint(20) DEFAULT NULL,
+  `deliveryAddress` bigint(20) DEFAULT NULL,
+  `parkingMeter` varchar(3) DEFAULT NULL,
+  `customer` tinyblob,
   PRIMARY KEY (`id`),
   KEY `permitStatusRef_idx` (`status`),
+  KEY `customerPermitRef_idx` (`customerID`),
+  KEY `deliveryAddressPermitRef_idx` (`deliveryAddress`),
+  KEY `locationTypeRef_idx` (`locationType`),
+  KEY `permitClassRef_idx` (`class`),
   KEY `permitTypeRef_idx` (`type`),
+  CONSTRAINT `customerPermitRef` FOREIGN KEY (`customerID`) REFERENCES `customer` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `deliveryAddressPermitRef` FOREIGN KEY (`deliveryAddress`) REFERENCES `address` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `locationTypeRef` FOREIGN KEY (`locationType`) REFERENCES `locationType` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `permitClassRef` FOREIGN KEY (`class`) REFERENCES `permitClass` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `permitStatusRef` FOREIGN KEY (`status`) REFERENCES `permitStatus` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `permitTypeRef` FOREIGN KEY (`type`) REFERENCES `permitType` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -502,7 +542,38 @@ CREATE TABLE `permit` (
 
 LOCK TABLES `permit` WRITE;
 /*!40000 ALTER TABLE `permit` DISABLE KEYS */;
+INSERT INTO `permit` VALUES (1,1,1,'1234','50',NULL,'1301-11W',1,2,'Test',NULL,NULL,NULL,NULL,1,5,1,NULL,NULL);
 /*!40000 ALTER TABLE `permit` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `permitClass`
+--
+
+DROP TABLE IF EXISTS `permitClass`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `permitClass` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `class` varchar(20) NOT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `created_by` bigint(20) DEFAULT NULL,
+  `modified_at` datetime DEFAULT NULL,
+  `modified_by` bigint(20) DEFAULT NULL,
+  `delete_flag` int(11) NOT NULL DEFAULT '1',
+  `permitClass` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `permitClass`
+--
+
+LOCK TABLES `permitClass` WRITE;
+/*!40000 ALTER TABLE `permitClass` DISABLE KEYS */;
+INSERT INTO `permitClass` VALUES (1,'CLASS A',NULL,NULL,NULL,NULL,1,NULL),(2,'CLASS B',NULL,NULL,NULL,NULL,1,NULL),(3,'DRIVE',NULL,NULL,NULL,NULL,1,NULL);
+/*!40000 ALTER TABLE `permitClass` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -530,8 +601,11 @@ CREATE TABLE `permitStatus` (
 
 LOCK TABLES `permitStatus` WRITE;
 /*!40000 ALTER TABLE `permitStatus` DISABLE KEYS */;
+INSERT INTO `permitStatus` VALUES (1,'Pending',NULL,NULL,NULL,NULL,1),(2,'Available',NULL,NULL,NULL,NULL,1),(3,'Assigned',NULL,NULL,NULL,NULL,1),(4,'Expired',NULL,NULL,NULL,NULL,1);
 /*!40000 ALTER TABLE `permitStatus` ENABLE KEYS */;
 UNLOCK TABLES;
+
+
 
 --
 -- Table structure for table `permitType`
@@ -542,16 +616,14 @@ DROP TABLE IF EXISTS `permitType`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `permitType` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `permitType` varchar(15) NOT NULL,
-  `daysAllowed` int(3) DEFAULT '0',
+  `type` varchar(10) NOT NULL,
   `created_at` datetime DEFAULT NULL,
   `created_by` bigint(20) DEFAULT NULL,
   `modified_at` datetime DEFAULT NULL,
   `modified_by` bigint(20) DEFAULT NULL,
   `delete_flag` int(11) NOT NULL DEFAULT '1',
-  `type` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -560,6 +632,7 @@ CREATE TABLE `permitType` (
 
 LOCK TABLES `permitType` WRITE;
 /*!40000 ALTER TABLE `permitType` DISABLE KEYS */;
+INSERT INTO `permitType` VALUES (1,'3 days',NULL,NULL,NULL,NULL,1),(2,'30 days',NULL,NULL,NULL,NULL,1);
 /*!40000 ALTER TABLE `permitType` ENABLE KEYS */;
 UNLOCK TABLES;
 
