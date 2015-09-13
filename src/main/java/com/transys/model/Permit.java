@@ -1,19 +1,28 @@
 package com.transys.model;
 
+import java.sql.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
 @Table(name="permit")
 public class Permit  extends AbstractBaseModel {
 
+	@ManyToOne
+	@JoinColumn(name="customerID")
+	private Customer customer;
+	
+	@ManyToOne
 	@JoinColumn(name="type")
 	private PermitType type;
 	
-	@Column(name="class")
-	private String permitClass;
+	@ManyToOne
+	@JoinColumn(name="class")
+	private PermitClass permitClass;
 	
 	@Column(name="number")
 	private String number;
@@ -22,25 +31,51 @@ public class Permit  extends AbstractBaseModel {
 	private double fee;
 	
 	@Column(name="startDate")
-	private String startDate;
+	private Date startDate;
 	
-	@Column(name="endDate")
-	private String endDate;
+//	private String endDate;
 	
-	@Column(name="address")
-	private String address;
+	@Column(name="permitAddress")
+	private String permitAddress;
 	
-	@Column(name="street")
-	private String street;
+	@ManyToOne
+	@JoinColumn(name="deliveryAddress")
+	private Address deliveryAddress;
 	
-	@Column(name="locationType")
-	private String locationType;
+	@ManyToOne
+	@JoinColumn(name="locationType")
+	private LocationType locationType;
 	
+	@ManyToOne
 	@JoinColumn(name="status")
 	private PermitStatus status;
 	
 	@Column(name="comments")
 	private String comments;
+
+	@Column(name="parkingMeter")
+	private String parkingMeter;
+
+	/*public void setEndDate(String endDate) {
+		
+		if (this.startDate != null) {
+			// TODO: start date + permit type # days
+			this.endDate = this.startDate;
+		}
+		
+	}
+	
+	public String getEndDate() {
+		return this.endDate;
+	}*/
+
+	public Customer getCustomer() {
+		return customer;
+	}
+
+	public void setCustomer(Customer customer) {
+		this.customer = customer;
+	}
 
 	public PermitType getType() {
 		return type;
@@ -50,11 +85,11 @@ public class Permit  extends AbstractBaseModel {
 		this.type = type;
 	}
 
-	public String getPermitClass() {
+	public PermitClass getPermitClass() {
 		return permitClass;
 	}
 
-	public void setPermitClass(String permitClass) {
+	public void setPermitClass(PermitClass permitClass) {
 		this.permitClass = permitClass;
 	}
 
@@ -74,43 +109,35 @@ public class Permit  extends AbstractBaseModel {
 		this.fee = fee;
 	}
 
-	public String getStartDate() {
+	public Date getStartDate() {
 		return startDate;
 	}
 
-	public void setStartDate(String startDate) {
+	public void setStartDate(Date startDate) {
 		this.startDate = startDate;
 	}
 
-	public String getEndDate() {
-		return endDate;
+	public String getPermitAddress() {
+		return permitAddress;
 	}
 
-	public void setEndDate(String endDate) {
-		this.endDate = endDate;
+	public void setPermitAddres(String permitAddres) {
+		this.permitAddress = permitAddres;
 	}
 
-	public String getAddress() {
-		return address;
+	public Address getDeliveryAddress() {
+		return deliveryAddress;
 	}
 
-	public void setAddress(String address) {
-		this.address = address;
+	public void setDeliveryAddress(Address deliveryAddress) {
+		this.deliveryAddress = deliveryAddress;
 	}
 
-	public String getStreet() {
-		return street;
-	}
-
-	public void setStreet(String street) {
-		this.street = street;
-	}
-
-	public String getLocationType() {
+	public LocationType getLocationType() {
 		return locationType;
 	}
 
-	public void setLocationType(String locationType) {
+	public void setLocationType(LocationType locationType) {
 		this.locationType = locationType;
 	}
 
@@ -128,6 +155,14 @@ public class Permit  extends AbstractBaseModel {
 
 	public void setComments(String comments) {
 		this.comments = comments;
+	}
+
+	public String getParkingMeter() {
+		return parkingMeter;
+	}
+
+	public void setParkingMeter(String parkingMeter) {
+		this.parkingMeter = parkingMeter;
 	}
 	
 }

@@ -2,8 +2,11 @@ package com.transys.controller;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.ParameterizedType;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -29,9 +32,11 @@ import org.springframework.web.multipart.support.ByteArrayMultipartFileEditor;
 import com.transys.core.util.MimeUtil;
 import com.transys.model.AbstractBaseModel;
 import com.transys.model.BaseModel;
+import com.transys.model.Permit;
 import com.transys.model.SearchCriteria;
 //import com.transys.model.StaticData;
 import com.transys.service.DynamicReportService;
+import com.transys.view.PermitView;
 
 @SuppressWarnings("unchecked")
 public abstract class CRUDController<T extends BaseModel> extends BaseController {
@@ -77,6 +82,76 @@ public abstract class CRUDController<T extends BaseModel> extends BaseController
 		}
 	}
 
+	/*public <T extends BaseModel> List<T> createViewObjects(List<T> list) {
+
+		ArrayList<T> viewObjects = new ArrayList<T>();
+		
+		try {
+
+			for (T item : list) {
+				String viewClassName = getEntityClass().getName().replace("model", "view") + "View";
+				T viewInstance = (T) Class.forName(viewClassName).newInstance();
+				copyPropertiesFrom(viewInstance, item, null);
+				Class.forName(viewClassName).getMethod("construct").invoke(viewInstance);
+
+				viewObjects.add(viewInstance);
+			}
+			
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		} catch (SecurityException e) {
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		} catch (InstantiationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NoSuchMethodException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return viewObjects;
+	}
+	
+	public static void copyPropertiesFrom(Object to, Object from, ArrayList<String> excludedProperties) {
+
+     Field[] fromProperties = from.getClass().getDeclaredFields();
+     for (Field fromProperty : fromProperties) {
+
+   	  if (excludedProperties != null && excludedProperties.contains(fromProperty.getName()))
+         continue;
+
+   	   Field toParameter;
+			try {
+				toParameter = to.getClass().getGenericSuperclass().getClass().getDeclaredField(fromProperty.getName());
+				toParameter.setAccessible(true);
+				System.out.println("Setting property = " + fromProperty.get(from));
+				toParameter.set(to, fromProperty.get(from));
+				
+			} catch (NoSuchFieldException | SecurityException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalArgumentException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+   	  
+     }
+   }*/
+	
 	// assume the primary key property is going to be the Entity Class plus Seq
 	protected String getPkParam() {
 		return "id";

@@ -2,11 +2,13 @@ package com.transys.core.dao;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -409,6 +411,8 @@ public class GenericJpaDAO implements GenericDAO {
 		}
 		Long recordCount = (Long) entityManager.createQuery(
 				queryCount.toString()).getSingleResult();
+		
+		
 		criteria.setRecordCount(recordCount.intValue());
 		StringBuffer queryStmt = new StringBuffer(" from "
 				+ clazz.getSimpleName() + " p where 1=1 ");
@@ -421,6 +425,7 @@ public class GenericJpaDAO implements GenericDAO {
 				.setMaxResults(criteria.getPageSize())
 				.setFirstResult(criteria.getPage() * criteria.getPageSize())
 				.getResultList();
+		
 	}
 
 	@Override
@@ -803,4 +808,10 @@ public class GenericJpaDAO implements GenericDAO {
 		return entityManager;
 	}
 
-}
+
+	@Override
+	public <T extends BaseModel> List<T> findUniqueByCriteria(Class<T> clazz, Map criterias, String orderField,
+			boolean desc) {
+		List<T> resultSetWithDuplicates = findByCriteria(clazz, criterias, orderField, desc);
+		return resultSetWithDuplicates.parallelStream().distinct().collect(Collectors.toList());
+	}}

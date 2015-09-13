@@ -28,6 +28,8 @@ public interface GenericDAO {
     <T extends BaseModel> List<T> findByCriteria(Class<T> clazz, Map criterias);
 
     <T extends BaseModel> List<T> findByCriteria(Class<T> clazz, Map criterias, String orderField, boolean desc);
+    
+    <T extends BaseModel> List<T> findUniqueByCriteria(Class<T> clazz, Map criterias, String orderField, boolean desc);
 
     <T extends BaseModel> List<T> findByCriteria(Class<T> clazz, Map criterias, boolean orderResult, String orderField, boolean desc,
 	    String groupField);
