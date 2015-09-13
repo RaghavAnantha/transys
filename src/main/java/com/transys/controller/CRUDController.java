@@ -108,8 +108,7 @@ public abstract class CRUDController<T extends BaseModel> extends BaseController
 	@RequestMapping(method = RequestMethod.GET, value = "/edit.do")
 	public String edit2(ModelMap model, HttpServletRequest request) {
 		setupUpdate(model, request);
-		//model.addAttribute("activeTab", "customerReports");
-		//return urlContext + "/form";
+		
 		return urlContext + "/form";
 	}
 
@@ -241,8 +240,7 @@ public abstract class CRUDController<T extends BaseModel> extends BaseController
 	public void export(ModelMap model, HttpServletRequest request,
 			HttpServletResponse response, @RequestParam("type") String type,
 			Object objectDAO, Class clazz) {
-		List columnPropertyList = (List) request.getSession().getAttribute(
-				"columnPropertyList");
+		List columnPropertyList = (List) request.getSession().getAttribute("columnPropertyList");
 		SearchCriteria criteria = (SearchCriteria) request.getSession()
 				.getAttribute("searchCriteria");
 

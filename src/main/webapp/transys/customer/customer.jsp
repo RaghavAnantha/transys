@@ -34,7 +34,7 @@
 	</div>
 	
 	
-	<div class="modal fade" id="myModal" role="dialog">
+	<div class="modal fade" id="editModal" role="dialog">
 				<div class="modal-dialog" style="width:90% !important">
 					<div class="modal-content">
 						<div class="modal-header">		
@@ -83,7 +83,7 @@
 	    return false;
 	});
 	
-	$("#myModal").on("show.bs.modal", function(e) {
+	$("#editModal").on("show.bs.modal", function(e) {
 	    var link = $(e.relatedTarget);
 	    $(this).find("#billingInfo").load(link.attr("href"));
 	    $('.nav-tabs a[href="#billingInfo"]').tab('show');

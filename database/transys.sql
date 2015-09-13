@@ -53,6 +53,7 @@ CREATE TABLE `address` (
 
 LOCK TABLES `address` WRITE;
 /*!40000 ALTER TABLE `address` DISABLE KEYS */;
+INSERT INTO `transys`.`address` (`id`, `custID`, `line1`, `city`, `state`, `zip`) VALUES ('3', '5', 'E Lemon st', 'Chicago', '1', '28262');
 /*!40000 ALTER TABLE `address` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -215,13 +216,13 @@ LOCK TABLES `employee` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `order`
+-- Table structure for table `trans_order`
 --
 
-DROP TABLE IF EXISTS `order`;
+DROP TABLE IF EXISTS `trans_order`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `order` (
+CREATE TABLE `trans_order` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `custID` bigint(11) NOT NULL,
   `deliveryContactName` varchar(150) DEFAULT NULL,
@@ -233,43 +234,46 @@ CREATE TABLE `order` (
   `dumpsterLocation` varchar(50) DEFAULT NULL,
   `dumpsterSize` varchar(5) DEFAULT NULL,
   `typeOfMaterial` varchar(50) DEFAULT NULL,
-  `paymentInfo` bigint(20) DEFAULT NULL,
-  `notes` int(11) DEFAULT NULL,
+  -- `paymentInfo` bigint(20) DEFAULT NULL,
+  -- `notes` int(11) DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   `created_by` bigint(20) DEFAULT NULL,
   `modified_at` datetime DEFAULT NULL,
   `modified_by` bigint(20) DEFAULT NULL,
   `delete_flag` int(11) NOT NULL DEFAULT '1',
-  `weightInfo` bigint(20) DEFAULT '0',
+  -- `weightInfo` bigint(20) DEFAULT '0',
   `dumpsterNum` varchar(20) DEFAULT NULL,
-  `driverInfo` bigint(20) DEFAULT NULL,
+  -- `driverInfo` bigint(20) DEFAULT NULL,
   `pickupDate` datetime DEFAULT NULL,
   `orderStatus` bigint(20) DEFAULT NULL,
-  `permits` bigint(20) DEFAULT NULL,
+  -- `permits` bigint(20) DEFAULT NULL,
   `deliveryTimeTo` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `key1_idx` (`custID`),
   KEY `deliveryAddressRef_idx` (`deliveryAddress`),
   KEY `orderStatusRef_idx` (`orderStatus`),
-  KEY `driverInfoRef_idx` (`driverInfo`),
-  KEY `weightInfoRef_idx` (`weightInfo`),
-  KEY `paymentInfoRef_idx` (`paymentInfo`),
+  -- KEY `driverInfoRef_idx` (`driverInfo`),
+  -- KEY `weightInfoRef_idx` (`weightInfo`),
+  -- KEY `paymentInfoRef_idx` (`paymentInfo`),
   CONSTRAINT `customerRef` FOREIGN KEY (`custID`) REFERENCES `customer` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `deliveryAddressRef` FOREIGN KEY (`deliveryAddress`) REFERENCES `address` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `driverInfoRef` FOREIGN KEY (`driverInfo`) REFERENCES `orderDriverInfo` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `orderStatusRef` FOREIGN KEY (`orderStatus`) REFERENCES `orderStatus` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `paymentInfoRef` FOREIGN KEY (`paymentInfo`) REFERENCES `orderPaymentInfo` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `weightInfoRef` FOREIGN KEY (`weightInfo`) REFERENCES `orderWeightInfo` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  -- CONSTRAINT `driverInfoRef` FOREIGN KEY (`driverInfo`) REFERENCES `orderDriverInfo` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `orderStatusRef` FOREIGN KEY (`orderStatus`) REFERENCES `orderStatus` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  -- CONSTRAINT `paymentInfoRef` FOREIGN KEY (`paymentInfo`) REFERENCES `orderPaymentInfo` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  -- CONSTRAINT `weightInfoRef` FOREIGN KEY (`weightInfo`) REFERENCES `orderWeightInfo` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `order`
+-- Dumping data for table `trans_order`
 --
 
-LOCK TABLES `order` WRITE;
-/*!40000 ALTER TABLE `order` DISABLE KEYS */;
-/*!40000 ALTER TABLE `order` ENABLE KEYS */;
+LOCK TABLES `trans_order` WRITE;
+/*!40000 ALTER TABLE `trans_order` DISABLE KEYS */;
+INSERT INTO `transys`.`trans_order` 
+(`id`, `custID`, `deliveryContactName`, `deliveryContactPhone1`, `deliveryDate`, `deliveryAddress`, `dumpsterLocation`, `dumpsterSize`, `typeOfMaterial`, `dumpsterNum`, `pickupDate`, `orderStatus`) 
+VALUES ('1', '5', 'Raghav', '1234567890', curdate(), '3', 'Street', '10 yd', 'Drywall', '299-87-10', curdate(), '1')	
+/*!40000 ALTER TABLE `trans_order` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -320,7 +324,7 @@ CREATE TABLE `orderNotes` (
   `delete_flag` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   KEY `orderNotesOrderRef_idx` (`orderID`),
-  CONSTRAINT `orderNotesOrderRef` FOREIGN KEY (`orderID`) REFERENCES `order` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `orderNotesOrderRef` FOREIGN KEY (`orderID`) REFERENCES `trans_order` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -387,7 +391,7 @@ CREATE TABLE `orderPermits` (
   PRIMARY KEY (`id`),
   KEY `orderPermitRef_idx` (`orderID`),
   KEY `permitRef_idx` (`permitID`),
-  CONSTRAINT `orderPermitRef` FOREIGN KEY (`orderID`) REFERENCES `order` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `orderPermitRef` FOREIGN KEY (`orderID`) REFERENCES `trans_order` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `permitRef` FOREIGN KEY (`permitID`) REFERENCES `permit` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -426,6 +430,7 @@ CREATE TABLE `orderStatus` (
 
 LOCK TABLES `orderStatus` WRITE;
 /*!40000 ALTER TABLE `orderStatus` DISABLE KEYS */;
+INSERT INTO `transys`.`orderstatus` (`id`, `status`) VALUES ('1', 'Open');
 /*!40000 ALTER TABLE `orderStatus` ENABLE KEYS */;
 UNLOCK TABLES;
 
