@@ -32,6 +32,34 @@ function formatPhone(){
 			 	<br><form:errors path="id" cssClass="errorMessage" />
 			</td>
 		</tr>
+		<tr>
+			<td class="form-left"><transys:label code="Customer" /><span class="errorMessage"></span></td>
+			<td align="${left}">
+				<form:select cssClass="flat form-control input-sm" path="customer"  style="width:175px">
+					<form:option value="">-----------Please Select----------</form:option>
+					<form:options items="${customers}" itemValue="id" itemLabel="companyName" />
+				</form:select> 
+				<br><form:errors path="customer" cssClass="errorMessage" />
+			</td>
+		</tr>
+		<tr bgcolor="white"><td colspan="2" class="form-left"><transys:label code="Delivery Information" /></td></tr>
+		<tr>
+			<td class="form-left"><transys:label code="Delivery Address" /><span class="errorMessage"></span></td>
+			<td align="${left}">
+				<form:select cssClass="flat form-control input-sm" path="customer"  style="width:175px">
+					<form:option value="">-----------Please Select----------</form:option>
+					<form:options items="${deliveryAddresses}" itemValue="id" itemLabel="line1" />
+				</form:select> 
+				<br><form:errors path="customer" cssClass="errorMessage" />
+			</td>
+		</tr>
+		<tr>
+			<td class="form-left"><transys:label code="Contact Name" /><span class="errorMessage">*</span></td>
+			<td align="${left}">
+				<form:input path="deliveryContactName" cssClass="flat"  />
+			 	<br><form:errors path="id" cssClass="errorMessage" />
+			</td>
+		</tr>
 		<tr><td colspan="2"></td></tr>
 		<tr>
 			<td>&nbsp;</td>
