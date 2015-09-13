@@ -2,11 +2,8 @@ package com.transys.controller;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.ParameterizedType;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -32,11 +29,9 @@ import org.springframework.web.multipart.support.ByteArrayMultipartFileEditor;
 import com.transys.core.util.MimeUtil;
 import com.transys.model.AbstractBaseModel;
 import com.transys.model.BaseModel;
-import com.transys.model.Permit;
 import com.transys.model.SearchCriteria;
 //import com.transys.model.StaticData;
 import com.transys.service.DynamicReportService;
-import com.transys.view.PermitView;
 
 @SuppressWarnings("unchecked")
 public abstract class CRUDController<T extends BaseModel> extends BaseController {
