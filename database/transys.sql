@@ -270,9 +270,7 @@ CREATE TABLE `trans_order` (
 
 LOCK TABLES `trans_order` WRITE;
 /*!40000 ALTER TABLE `trans_order` DISABLE KEYS */;
-INSERT INTO `transys`.`trans_order` 
-(`id`, `custID`, `deliveryContactName`, `deliveryContactPhone1`, `deliveryDate`, `deliveryAddress`, `dumpsterLocation`, `dumpsterSize`, `typeOfMaterial`, `dumpsterNum`, `pickupDate`, `orderStatus`) 
-VALUES ('1', '5', 'Raghav', '1234567890', curdate(), '3', 'Street', '10 yd', 'Drywall', '299-87-10', curdate(), '1')	
+INSERT INTO `transys`.`trans_order`(`id`, `custID`, `deliveryContactName`, `deliveryContactPhone1`, `deliveryDate`, `deliveryAddress`, `dumpsterLocation`, `dumpsterSize`, `typeOfMaterial`, `dumpsterNum`, `pickupDate`, `orderStatus`) VALUES ('1', '5', 'Raghav', '1234567890', curdate(), '3', 'Street', '10 yd', 'Drywall', '299-87-10', curdate(), '1');	
 /*!40000 ALTER TABLE `trans_order` ENABLE KEYS */;
 UNLOCK TABLES;
 
