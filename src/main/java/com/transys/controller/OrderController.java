@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import com.transys.controller.CRUDController;
 
 import com.transys.model.Order;
+import com.transys.model.Customer;
+import com.transys.model.Address;
 import com.transys.model.OrderStatus;
 //import com.transys.model.FuelVendor;
 //import com.transys.model.Location;
@@ -40,7 +42,10 @@ public class OrderController extends CRUDController<Order> {
 		Map criterias = new HashMap();
 		model.addAttribute("order",genericDAO.executeSimpleQuery("select obj from Order obj where obj.id!=0 order by obj.id asc"));
 		model.addAttribute("orderIds",genericDAO.executeSimpleQuery("select obj from Order obj where obj.id is not null order by obj.id asc"));
-      model.addAttribute("orderStatuses", genericDAO.findByCriteria(OrderStatus.class, criterias, "status", false));
+		
+		model.addAttribute("orderStatuses", genericDAO.findByCriteria(OrderStatus.class, criterias, "status", false));
+      model.addAttribute("customers", genericDAO.findByCriteria(Customer.class, criterias, "companyName", false));
+      model.addAttribute("deliveryAddresses", genericDAO.findByCriteria(Address.class, criterias, "line1", false));
 	}
 	
 	@Override
