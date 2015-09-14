@@ -75,25 +75,6 @@
 	    $(this).find("#orderDetails").load(link.attr("href"));
 	    $('.nav-tabs a[href="#orderDetails"]').tab('show');
 	});	
-	
-	function validate() {
-		var ids = ["companyName", "billingAddressLine1", "city"];
-		var valid = false
-		
-		for (var i= 0; i<ids.length; i++) {	
-			if ($("#typeForm").find('input[id="'+ids[i] +'"]').val().length == 0 ) {	
-				$("#typeForm").find('input[id="'+ids[i] +'"]').addClass("border");
-				valid = true;
-			}
-			
-			//$("#validations").html("Please fill out the required fields Name, Address Line 1 and City");			
-			} if (bool){
-				return false;
-			}
-		
-		return true;
-	};
-	
 </script>
 
 </body>

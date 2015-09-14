@@ -10,13 +10,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
-
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.transys.controller.CRUDController;
-
+import com.transys.controller.editor.AbstractModelEditor;
 import com.transys.model.Order;
 import com.transys.model.Customer;
 import com.transys.model.Address;
@@ -31,6 +31,12 @@ import com.transys.model.State;
 public class OrderController extends CRUDController<Order> {
 	public OrderController() {
 		setUrlContext("order");
+	}
+	
+	@Override
+	public void initBinder(WebDataBinder binder) {
+		binder.registerCustomEditor(Customer.class, new AbstractModelEditor(Customer.class));
+		binder.registerCustomEditor(Address.class, new AbstractModelEditor(Address.class));
 	}
 	
 	/*
@@ -53,6 +59,8 @@ public class OrderController extends CRUDController<Order> {
 		setupList(model, request);
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		//criteria.getSearchMap().put("id!",0l);
+		//TODO fix me
+		//criteria.getSearchMap().remove("_csrf");
 		model.addAttribute("list",genericDAO.search(getEntityClass(), criteria,"id",null,null));
 		model.addAttribute("activeTab", "manageOrder");
 		//return urlContext + "/list";
