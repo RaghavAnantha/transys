@@ -60,7 +60,7 @@ public class OrderController extends CRUDController<Order> {
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		//criteria.getSearchMap().put("id!",0l);
 		//TODO fix me
-		//criteria.getSearchMap().remove("_csrf");
+		criteria.getSearchMap().remove("_csrf");
 		model.addAttribute("list",genericDAO.search(getEntityClass(), criteria,"id",null,null));
 		model.addAttribute("activeTab", "manageOrder");
 		//return urlContext + "/list";

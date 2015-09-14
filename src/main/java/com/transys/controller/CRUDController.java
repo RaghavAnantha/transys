@@ -77,76 +77,6 @@ public abstract class CRUDController<T extends BaseModel> extends BaseController
 		}
 	}
 
-	/*public <T extends BaseModel> List<T> createViewObjects(List<T> list) {
-
-		ArrayList<T> viewObjects = new ArrayList<T>();
-		
-		try {
-
-			for (T item : list) {
-				String viewClassName = getEntityClass().getName().replace("model", "view") + "View";
-				T viewInstance = (T) Class.forName(viewClassName).newInstance();
-				copyPropertiesFrom(viewInstance, item, null);
-				Class.forName(viewClassName).getMethod("construct").invoke(viewInstance);
-
-				viewObjects.add(viewInstance);
-			}
-			
-		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
-			throw new RuntimeException(e);
-		} catch (SecurityException e) {
-			e.printStackTrace();
-			throw new RuntimeException(e);
-		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (NoSuchMethodException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		return viewObjects;
-	}
-	
-	public static void copyPropertiesFrom(Object to, Object from, ArrayList<String> excludedProperties) {
-
-     Field[] fromProperties = from.getClass().getDeclaredFields();
-     for (Field fromProperty : fromProperties) {
-
-   	  if (excludedProperties != null && excludedProperties.contains(fromProperty.getName()))
-         continue;
-
-   	   Field toParameter;
-			try {
-				toParameter = to.getClass().getGenericSuperclass().getClass().getDeclaredField(fromProperty.getName());
-				toParameter.setAccessible(true);
-				System.out.println("Setting property = " + fromProperty.get(from));
-				toParameter.set(to, fromProperty.get(from));
-				
-			} catch (NoSuchFieldException | SecurityException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IllegalArgumentException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IllegalAccessException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-   	  
-     }
-   }*/
-	
 	// assume the primary key property is going to be the Entity Class plus Seq
 	protected String getPkParam() {
 		return "id";
@@ -206,24 +136,26 @@ public abstract class CRUDController<T extends BaseModel> extends BaseController
 		beforeSave(request, entity, model);
 		genericDAO.saveOrUpdate(entity);
 		cleanUp(request);
-		// return to list
+		
 		//return "redirect:/" + urlContext + "/list.do";
 		//model.addAttribute("activeTab", "manageCustomer");
 		//return urlContext + "/list";
-		//return urlContext + "/customer";
 		
-		
-		setupList(model, request);
-		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
-		criteria.getSearchMap().put("id!",0l);
+		/*SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
+		//criteria.getSearchMap().put("id!",0l);
 		//TODO: Fix me 
-		criteria.getSearchMap().remove("_csrf");
+		criteria.getSearchMap().remove("_csrf");*/
+		
+		/*setupList(model, request);
+		
 		model.addAttribute("list",genericDAO.search(getEntityClass(), criteria,"companyName",null,null));
 		model.addAttribute("activeTab", "manageCustomer");
 		//return urlContext + "/list";
-		return urlContext + "/customer";
+		return urlContext + "/customer";*/
+		//request.getSession().removeAttribute("searchCriteria");
+		//request.getParameterMap().remove("_csrf");
 		
-		
+		return list(model, request);
 	}
 
 	@RequestMapping(method = RequestMethod.POST, value = "/bulkdelete.do")
@@ -344,10 +276,8 @@ public abstract class CRUDController<T extends BaseModel> extends BaseController
 	public void initBinder(WebDataBinder binder) {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		dateFormat.setLenient(false);
-		binder.registerCustomEditor(Date.class, new CustomDateEditor(
-				dateFormat, false));
-		binder.registerCustomEditor(byte[].class,
-				new ByteArrayMultipartFileEditor());
+		binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, false));
+		binder.registerCustomEditor(byte[].class, new ByteArrayMultipartFileEditor());
 	}
 
 }
