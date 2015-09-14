@@ -53,7 +53,7 @@ CREATE TABLE `address` (
 
 LOCK TABLES `address` WRITE;
 /*!40000 ALTER TABLE `address` DISABLE KEYS */;
-INSERT INTO `transys`.`address` (`id`, `custID`, `line1`, `city`, `state`, `zip`) VALUES ('3', '5', 'E Lemon st', 'Chicago', '1', '28262');
+INSERT INTO `address` VALUES (1,NULL,NULL,NULL,NULL,5,'4818W','VAN BUREN','XYZ',1,'3344',1,NULL),(3,NULL,NULL,NULL,NULL,5,'E Lemon st','Lemon st','Chicago',1,'28262',1,NULL);
 /*!40000 ALTER TABLE `address` ENABLE KEYS */;
 UNLOCK TABLES;
 
