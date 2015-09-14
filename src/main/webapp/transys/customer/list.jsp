@@ -121,17 +121,12 @@
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
 		pagingLink="search.do" multipleDelete="false" searcheable="false"
 		exportPdf="true" exportXls="true">
-		<transys:textcolumn headerText="Name" dataField="companyName" />
 		<transys:textcolumn headerText="Customer ID" dataField="id" />
-		<transys:textcolumn headerText="Address Line1"
-			dataField="billingAddressLine1" />
-		<transys:textcolumn headerText="Address Line2"
-			dataField="billingAddressLine2" />
-		<transys:textcolumn headerText="City" dataField="city" />
-		<transys:textcolumn headerText="State" dataField="state.name" />
-		<transys:textcolumn headerText="Zipcode" dataField="zipcode" />
+		<transys:textcolumn headerText="Company Name" dataField="companyName" />
+		<transys:textcolumn headerText="ContactName" dataField="contactName" />
 		<transys:textcolumn headerText="Phone" dataField="phone" />
-		<transys:textcolumn headerText="Fax" dataField="fax" />
+		<transys:textcolumn headerText="Status" dataField="status" />
+
 
 	</transys:datatable>
 	<%session.setAttribute("columnPropertyList", pageContext.getAttribute("columnPropertyList"));%>

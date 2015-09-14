@@ -44,7 +44,7 @@
 						<div class="modal-body"> 
 						<ul class="nav nav-tabs" id="customer_tabs">
 							<li><a href="#billingInfo" data-toggle="tab" >Billing Info</a></li>
-							<li><a href="#deliveryAddress" data-toggle="tab" >Delivery Addresses</a></li>
+							<li><a href="/customer/address.do" data-toggle="tabajax" data-target="#deliveryAddress">Delivery Addresses</a></li>
 						</ul>
 					<div class="tab-content">
 						<div id="billingInfo" class="tab-pane">
@@ -86,6 +86,7 @@
 	$("#editModal").on("show.bs.modal", function(e) {
 	    var link = $(e.relatedTarget);
 	    $(this).find("#billingInfo").load(link.attr("href"));
+	    $(this).find("#deliveryAddress").load(link.attr("href"));
 	    $('.nav-tabs a[href="#billingInfo"]').tab('show');
 	    
 	});	

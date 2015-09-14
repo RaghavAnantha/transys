@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.transys.controller.CRUDController;
 import com.transys.controller.editor.AbstractModelEditor;
+import com.transys.model.Address;
 import com.transys.model.Customer;
 //import com.transys.model.FuelVendor;
 //import com.transys.model.Location;
@@ -44,7 +45,9 @@ public class CustomerController extends CRUDController<Customer> {
 		Map criterias = new HashMap();
 		model.addAttribute("customer",genericDAO.executeSimpleQuery("select obj from Customer obj where obj.id!=0 order by obj.companyName asc"));
 		model.addAttribute("customerIds",genericDAO.executeSimpleQuery("select obj from Customer obj where obj.id is not null order by obj.id asc"));
-      model.addAttribute("state", genericDAO.findByCriteria(State.class, criterias, "name", false));
+		model.addAttribute("deliveryAddress",genericDAO.executeSimpleQuery("select obj from Address obj where obj.id is not null order by obj.id asc"));
+		model.addAttribute("state", genericDAO.findByCriteria(State.class, criterias, "name", false));
+      
 	}
 	
 	@Override
@@ -68,6 +71,17 @@ public class CustomerController extends CRUDController<Customer> {
 		model.addAttribute("list", genericDAO.search(getEntityClass(), criteria, "companyName", null, null));
 		model.addAttribute("activeTab", "manageCustomer");
 		return urlContext + "/customer";
+	}
+	@RequestMapping(method = RequestMethod.GET, value = "/address.do")
+	public String displayDeliveryAddress(ModelMap model, HttpServletRequest request) {
+		request.getSession().removeAttribute("searchCriteria");
+		setupList(model, request);
+		
+		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
+		//criteria.getSearchMap().put("id!",0l);
+		model.addAttribute("list", genericDAO.search(getEntityClass(), criteria, "companyName", null, null));
+		model.addAttribute("activeTab", "deliveryAddress");
+		return urlContext + "/deliveryAddress";
 	}
 	
 	@Override
