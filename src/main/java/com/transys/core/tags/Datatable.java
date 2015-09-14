@@ -867,7 +867,7 @@ public final class Datatable extends BodyTagSupport {
 			String url = "/"+urlContext+"/export.do";
 			//if (authenticationService.hasUserPermission(user, url)) {
 				if (exportPdf) {
-					objOut.write("<a href=\""+pageContext.getAttribute("ctx")+"/"+urlContext+"/export.do?type=pdf\"><img src=\""+pageContext.getAttribute("resourceCtx")+"/images/pdf.png\" border=\"0\" class=\"toolbarButton\"/></a>&nbsp;");
+					objOut.write("<a href=\""+pageContext.getAttribute("ctx")+"/"+urlContext+"/export.do?type=pdf\"><img src=\""+pageContext.getAttribute("resourceCtx")+"/images/pdf.png\" border=\"0\" style=\"padding-left: 36px; \" class=\"toolbarButton\"/></a>&nbsp;");
 				}
 				if (exportXls) {
 					objOut.write("<a href=\""+pageContext.getAttribute("ctx")+"/"+urlContext+"/export.do?type=xls\"><img src=\""+pageContext.getAttribute("resourceCtx")+"/images/excel.png\" border=\"0\" class=\"toolbarButton\"/></a>");
