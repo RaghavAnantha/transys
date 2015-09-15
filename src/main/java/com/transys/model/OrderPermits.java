@@ -33,4 +33,27 @@ public class OrderPermits extends AbstractBaseModel {
 		this.permit = permit;
 	}
 	
+	
+	
+/*	private Set<Permit> permits = new HashSet<Permit>(
+			0);
+	
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "permit")
+	public Set<Permit> getPermits() {
+		return this.permits;
+	}
+
+	public void setPermits(Set<Permit> permit) {
+		this.permits = permit;
+	}
+
+
+	public Long getOrder() {
+		return orderID;
+	}
+
+	public void setOrder(Long orderID) {
+		this.orderID = orderID;
+	}*/
+
 }
