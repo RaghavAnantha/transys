@@ -8,36 +8,35 @@
 <body>
 	<ul class="nav nav-tabs" id="customer_tabs">
 		<li><a href="#manageCustomer" data-toggle="tab">Customers</a></li>
-		<li><a href="#customerReports" data-toggle="tab">Customer
-				Reports</a></li>
+		<li><a href="#customerReports" data-toggle="tab">Customer Reports</a></li>
 	</ul>
 	<div class="tab-content" style="background-color: white;">
 		<div id="manageCustomer" class="tab-pane">
-			<%@include file="list.jsp"%>
+			<c:if test="${mode == 'MANAGE'}">
+				<%@include file="list.jsp"%>
+			</c:if>
+			<c:if test="${mode == 'ADD'}">
+				<%@include file="addEdit.jsp"%>
+			</c:if>
 		</div>
 		<div id="customerReports" class="tab-pane">
 			<br />
 			<ul class="nav nav-tabs" id="customer_tabs">
-				<li><a href="#customerList" data-toggle="tab" class="active">Customer
-						List</a></li>
-				<li><a href="#customerOrderReports" data-toggle="tab">Customer
-						Order Reports</a></li>
+				<li><a href="#customerList" data-toggle="tab" class="active">Customer List</a></li>
+				<li><a href="#customerOrderReports" data-toggle="tab">Customer Order Reports</a></li>
 			</ul>
 
 			<div class="tab-content tab-color">
 				<div id="customerList" class="tab-pane">
-					<p>PlaceHolder for customer List</p>
+					<p>Placeholder for Customer List</p>
 				</div>
 				<div id="customerOrderReports" class="tab-pane">
-					<p>PlaceHolder for customer Order Reports</p>
+					<p>Placeholder for Customer Order Reports</p>
 				</div>
 
 			</div>
 		</div>
 	</div>
-
-
-
 
 	<div class="modal fade" id="editModal" role="dialog">
 		<div class="modal-dialog" style="width: 90% !important">
@@ -63,8 +62,6 @@
 		</div>
 	</div>
 
-
-
 	<script type="text/javascript">
 	function showTab(tab){
 		    $('.nav-tabs a[href="#' + tab + '"]').tab('show');		    
@@ -72,6 +69,7 @@
 	
 	//showTab('manageCustomer');
 	showTab('${activeTab}');
+	showTab('${activeSubTab}');
 	
 	$('[data-toggle="tabajax"]').click(function(e) {
 	    var $this = $(this),
@@ -94,10 +92,7 @@
 	    
 	});	
 	
-	
-	
-	function validations() {
-		
+	function validate() {
 		var ids = ["companyName", "billingAddressLine1", "city"];
 		var bool = false
 		
@@ -116,8 +111,6 @@
 		
 		return true;
 	};
-	
-	
 </script>
 
 </body>

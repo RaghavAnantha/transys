@@ -1,6 +1,5 @@
 <%@include file="/common/taglibs.jsp"%>
 <script type="text/javascript">
-
 function formatPhone(){	
 	var phone = document.getElementById("phone").value;
 	if(phone != ""){
@@ -46,7 +45,7 @@ function formatFax(){
 
 </script>
 <br/>
-<form:form action="save.do" name="typeForm"  commandName="modelObject" method="post" id="typeForm">
+<form:form action="save.do" name="typeForm" commandName="modelObject" method="post" id="typeForm">
 	<form:hidden path="id" id="id" />
 	<table id="form-table" class="table">
 		<tr>
@@ -64,7 +63,7 @@ function formatFax(){
 		</tr>
 		
 		<tr>
-		<td class="form-left"><transys:label code="Status" /></td>
+			<td class="form-left"><transys:label code="Status" /></td>
 			<td align="${left}">
 				<form:select cssClass="flat form-control input-sm" path="status" >
 					<form:option value="">------Please Select--------</form:option>
@@ -165,7 +164,7 @@ function formatFax(){
 		<tr>
 			<td>&nbsp;</td>
 			<td align="${left}" colspan="2">
-				<input type="submit"  id="create" onclick="return validations()" value="<transys:label code="Save"/>" class="flat btn btn-primary btn-sm" /> 
+				<input type="submit" id="create" onclick="return validate()" value="<transys:label code="Save"/>" class="flat btn btn-primary btn-sm" /> 
 				<input type="reset" id="resetBtn" value="<transys:label code="Reset"/> "class="flat btn btn-primary btn-sm" /> 
 				<input type="button" id="cancelBtn" value="<transys:label code="Cancel"/>" class="flat btn btn-primary btn-sm" onClick="location.href='main.do'" />
 			</td>

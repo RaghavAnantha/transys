@@ -295,7 +295,7 @@ public class DynamicReportServiceImpl implements DynamicReportService {
 			}
 			
 			//query = "select companyName,id,billingAddressLine1,billingAddressLine2,city,state.name,zipcode,phone,fax from Customer where companyName like 'Testname' and id like 11";
-			//query = "select companyName from Customer where companyName like 'Testname' and id like 11";
+			//query = "select companyName from Customer where companyName like 'bh' and id like 8";
 			
 			System.out.println("***** Download query is "+query);
 			
