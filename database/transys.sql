@@ -27,7 +27,7 @@ DROP TABLE IF EXISTS `address`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `address` (
-  `id` bigint(20) NOT NULL,
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `created_at` datetime DEFAULT NULL,
   `created_by` bigint(20) DEFAULT NULL,
   `modified_at` datetime DEFAULT NULL,
@@ -65,7 +65,7 @@ DROP TABLE IF EXISTS `business_object`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `business_object` (
-  `ID` bigint(20) NOT NULL,
+  `ID` bigint(20) NOT NULL AUTO_INCREMENT,
   `ACTION` varchar(200) DEFAULT NULL,
   `DISPLAY_TAG` varchar(60) DEFAULT NULL,
   `OBJECT_LEVEL` int(11) DEFAULT NULL,
@@ -182,7 +182,7 @@ DROP TABLE IF EXISTS `employee`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `employee` (
-  `id` bigint(20) NOT NULL,
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `fname` varchar(50) DEFAULT NULL,
   `lname` varchar(50) DEFAULT NULL,
   `jobTitle` varchar(100) DEFAULT NULL,
@@ -519,7 +519,6 @@ CREATE TABLE `permit` (
   `customerID` bigint(20) DEFAULT NULL,
   `deliveryAddress` bigint(20) DEFAULT NULL,
   `parkingMeter` varchar(3) DEFAULT NULL,
-  `customer` tinyblob,
   PRIMARY KEY (`id`),
   KEY `permitStatusRef_idx` (`status`),
   KEY `customerPermitRef_idx` (`customerID`),
@@ -542,7 +541,7 @@ CREATE TABLE `permit` (
 
 LOCK TABLES `permit` WRITE;
 /*!40000 ALTER TABLE `permit` DISABLE KEYS */;
-INSERT INTO `permit` VALUES (1,1,1,'1234','50',NULL,'1301-11W',1,2,'Test',NULL,NULL,NULL,NULL,1,5,1,NULL,NULL);
+INSERT INTO `permit` VALUES (1,1,1,'1234','50',NULL,'1301-11W',1,2,'Test',NULL,NULL,NULL,NULL,1,5,1,NULL);
 /*!40000 ALTER TABLE `permit` ENABLE KEYS */;
 UNLOCK TABLES;
 
