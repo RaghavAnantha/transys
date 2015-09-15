@@ -94,6 +94,7 @@ public abstract class CRUDController<T extends BaseModel> extends BaseController
 	@RequestMapping(method = RequestMethod.GET, value = "/create.do")
 	public String create(ModelMap model, HttpServletRequest request) {
 		setupCreate(model, request);
+		
 		return urlContext + "/form";
 	}
 
@@ -156,6 +157,7 @@ public abstract class CRUDController<T extends BaseModel> extends BaseController
 		//request.getParameterMap().remove("_csrf");
 		
 		return list(model, request);
+		//return saveSuccess(model, request, entity);
 	}
 
 	@RequestMapping(method = RequestMethod.POST, value = "/bulkdelete.do")
@@ -223,6 +225,11 @@ public abstract class CRUDController<T extends BaseModel> extends BaseController
 	public void setupCreate(ModelMap model, HttpServletRequest request) {
 		// Default is no implementation
 	}
+	
+	/*public String saveSuccess(ModelMap model, HttpServletRequest request, T entity) {
+		// Default is no implementation
+		return StringUtils.EMPTY;
+	}*/
 
 	public void setupUpdate(ModelMap model, HttpServletRequest request) {
 		setupCreate(model, request);
@@ -243,8 +250,7 @@ public abstract class CRUDController<T extends BaseModel> extends BaseController
 			HttpServletResponse response, @RequestParam("type") String type,
 			Object objectDAO, Class clazz) {
 		List columnPropertyList = (List) request.getSession().getAttribute("columnPropertyList");
-		SearchCriteria criteria = (SearchCriteria) request.getSession()
-				.getAttribute("searchCriteria");
+		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 
 		response.setContentType(MimeUtil.getContentType(type));
 		if (!type.equals("html"))

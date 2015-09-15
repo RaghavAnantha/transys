@@ -126,8 +126,6 @@
 		<transys:textcolumn headerText="ContactName" dataField="contactName" />
 		<transys:textcolumn headerText="Phone" dataField="phone" />
 		<transys:textcolumn headerText="Status" dataField="status" />
-
-
 	</transys:datatable>
 	<%session.setAttribute("columnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
 </form:form>
