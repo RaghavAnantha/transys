@@ -1,12 +1,15 @@
 package com.transys.model;
 
 import java.util.Date;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -52,6 +55,22 @@ public class Order extends AbstractBaseModel {
 	/******** Permits Info ************/
 	/*@JoinColumn(name="permits")
 	private OrderPermits permits;*/
+
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinTable(
+	        name = "orderPermits",
+	        joinColumns = @JoinColumn(name = "orderID"),
+	        inverseJoinColumns = @JoinColumn(name = "permitID")
+	)
+	private Set<Permit> permits;
+	 
+	public Set<Permit> getPermits() {
+	    return permits;
+	}
+	
+	public void  setPermits(Set<Permit> permits) {
+	    this.permits = permits;
+	}
 
 	/******** Dumpster Info ************/
 	@Column(name="dumpsterLocation")

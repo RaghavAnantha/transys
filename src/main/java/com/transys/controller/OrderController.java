@@ -3,11 +3,11 @@ package com.transys.controller;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ValidationException;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -16,17 +16,19 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.transys.controller.CRUDController;
 import com.transys.controller.editor.AbstractModelEditor;
-import com.transys.model.Order;
-import com.transys.model.Customer;
 import com.transys.model.Address;
+
 import com.transys.model.BaseModel;
+
+import com.transys.model.Customer;
+import com.transys.model.Order;
+
 import com.transys.model.OrderStatus;
+import com.transys.model.Permit;
 //import com.transys.model.FuelVendor;
 //import com.transys.model.Location;
 import com.transys.model.SearchCriteria;
-import com.transys.model.State;
 
 @Controller
 @RequestMapping("/order")
@@ -137,6 +139,7 @@ public class OrderController extends CRUDController<Order> {
 			if(entity.getFax().length() < 12)
 				bindingResult.rejectValue("fax", "typeMismatch.java.lang.String", null, null);
 		}*/
+
 		//return super.save(request, entity, bindingResult, model);
 		
 		
@@ -186,10 +189,12 @@ public class OrderController extends CRUDController<Order> {
 		
 		//return urlContext + "/form";
 		return urlContext + "/order";
+
+		// create permit relationship
+		/*	Map criterias = new HashMap();
+		List<Permit> permits = genericDAO.findByCriteria(Permit.class, criterias, "id", false);
+		entity.setPermits(permits.parallelStream().distinct().collect(Collectors.toSet()));*/
+		
+		//return super.save(request, entity, bindingResult, model);
 	}
 }
-	
-	
-	
-	
-

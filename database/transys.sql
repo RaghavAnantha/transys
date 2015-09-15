@@ -139,7 +139,7 @@ CREATE TABLE `customer` (
 
 LOCK TABLES `customer` WRITE;
 /*!40000 ALTER TABLE `customer` DISABLE KEYS */;
-INSERT INTO `customer` VALUES (5,'2015-09-10 21:22:45',1,NULL,NULL,NULL,'adf',NULL,NULL,'sdfdsf','df','Raghav','1234567890',NULL,'1234567890','34',1,NULL,NULL,NULL,NULL,1);
+INSERT INTO `customer` VALUES (5,'2015-09-10 21:22:45',1,NULL,NULL,NULL,'adf',NULL,NULL,'sdfdsf','df','Raghav','1234567890','Raghav','1234567890','34',4,NULL,NULL,NULL,NULL,1),(6,'2015-09-11 21:05:43',1,NULL,NULL,NULL,'line',NULL,NULL,'line2','Il','Bharat','1234567890','Bharat','1234567890','22323',5,NULL,NULL,NULL,NULL,1);
 /*!40000 ALTER TABLE `customer` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -431,6 +431,7 @@ CREATE TABLE `orderPermits` (
 
 LOCK TABLES `orderPermits` WRITE;
 /*!40000 ALTER TABLE `orderPermits` DISABLE KEYS */;
+INSERT INTO `orderPermits` VALUES (3,1,1,NULL,NULL,NULL,NULL,1);
 /*!40000 ALTER TABLE `orderPermits` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -506,11 +507,11 @@ CREATE TABLE `permit` (
   `type` bigint(20) NOT NULL,
   `class` bigint(20) DEFAULT NULL,
   `number` varchar(15) DEFAULT NULL,
-  `fee` varchar(12) DEFAULT NULL,
+  `fee` varchar(12) DEFAULT 0,
   `startDate` datetime DEFAULT NULL,
   `permitAddress` varchar(100) DEFAULT NULL,
   `locationType` bigint(20) DEFAULT NULL,
-  `status` bigint(20) NOT NULL,
+  `status` bigint(20) NOT NULL DEFAULT '1',
   `comments` mediumtext,
   `created_at` datetime DEFAULT NULL,
   `created_by` bigint(20) DEFAULT NULL,
@@ -518,7 +519,7 @@ CREATE TABLE `permit` (
   `modified_by` bigint(20) DEFAULT NULL,
   `delete_flag` int(11) NOT NULL DEFAULT '1',
   `customerID` bigint(20) DEFAULT NULL,
-  `deliveryAddress` bigint(20) DEFAULT NULL,
+  `deliveryAddress` bigint(20) NOT NULL,
   `parkingMeter` varchar(3) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `permitStatusRef_idx` (`status`),
@@ -542,7 +543,7 @@ CREATE TABLE `permit` (
 
 LOCK TABLES `permit` WRITE;
 /*!40000 ALTER TABLE `permit` DISABLE KEYS */;
-INSERT INTO `permit` VALUES (1,1,1,'1234','50',NULL,'1301-11W',1,2,'Test',NULL,NULL,NULL,NULL,1,5,1,NULL);
+INSERT INTO `permit` VALUES (1,1,1,'1234','50',NULL,'1301-11W',1,2,'Test',NULL,NULL,NULL,NULL,1,5,1,NULL),(9,1,1,'6','0.0',NULL,NULL,1,1,NULL,'2015-09-15 16:25:46',1,NULL,NULL,1,6,1,'yes'),(10,2,2,'9','0.0',NULL,NULL,2,1,NULL,'2015-09-15 16:28:40',1,NULL,NULL,1,6,1,'no'),(11,2,2,'123','0.0',NULL,NULL,2,2,NULL,'2015-09-15 17:18:54',1,NULL,NULL,1,6,1,'yes'),(12,2,2,'12345','0.0',NULL,NULL,2,1,NULL,'2015-09-15 17:23:22',1,NULL,NULL,1,6,1,'ywa'),(13,2,2,'56','0.0',NULL,NULL,2,1,NULL,'2015-09-15 17:28:14',1,NULL,NULL,1,5,1,'yes');
 /*!40000 ALTER TABLE `permit` ENABLE KEYS */;
 UNLOCK TABLES;
 
