@@ -66,7 +66,7 @@ public class CustomerController extends CRUDController<Customer> {
 		return urlContext + "/customer";
 	}
 	
-	@Override
+	//@Override
 	public String saveSuccess(ModelMap model, HttpServletRequest request, Customer entity) {
 		setupCreate(model, request);
 		model.addAttribute("modelObject", entity);
