@@ -212,6 +212,7 @@ CREATE TABLE `employee` (
 
 LOCK TABLES `employee` WRITE;
 /*!40000 ALTER TABLE `employee` DISABLE KEYS */;
+INSERT INTO `transys`.`employee` (`id`, `fname`, `lname`, `address`, `city`, `state`, `zip`) VALUES ('1', 'Raghav', 'Anantha', '123', 'Chicago', '1', '28262');
 /*!40000 ALTER TABLE `employee` ENABLE KEYS */;
 UNLOCK TABLES;
 
