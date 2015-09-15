@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.ValidationException;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
@@ -20,6 +21,7 @@ import com.transys.controller.editor.AbstractModelEditor;
 import com.transys.model.Order;
 import com.transys.model.Customer;
 import com.transys.model.Address;
+import com.transys.model.BaseModel;
 import com.transys.model.OrderStatus;
 //import com.transys.model.FuelVendor;
 //import com.transys.model.Location;
@@ -62,8 +64,24 @@ public class OrderController extends CRUDController<Order> {
 		//TODO fix me
 		criteria.getSearchMap().remove("_csrf");
 		model.addAttribute("list",genericDAO.search(getEntityClass(), criteria,"id",null,null));
-		model.addAttribute("activeTab", "manageOrder");
+		model.addAttribute("activeTab", "manageOrders");
+		//model.addAttribute("activeSubTab", "orderDetails");
+		model.addAttribute("mode", "MANAGE");
+		
 		//return urlContext + "/list";
+		return urlContext + "/order";
+	}
+	
+	@Override
+	public String create(ModelMap model, HttpServletRequest request) {
+		setupCreate(model, request);
+		model.addAttribute("activeTab", "manageOrders");
+		model.addAttribute("mode", "ADD");
+		model.addAttribute("activeSubTab", "orderDetails");
+		//return urlContext + "/form";
+		
+		//model.addAttribute("deliveryAddressModelObject", new Address());
+				
 		return urlContext + "/order";
 	}
 	
@@ -74,7 +92,8 @@ public class OrderController extends CRUDController<Order> {
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		//criteria.getSearchMap().put("id!",0l);
 		model.addAttribute("list", genericDAO.search(getEntityClass(), criteria, "id", null, null));
-		model.addAttribute("activeTab", "manageOrder");
+		model.addAttribute("activeTab", "manageOrders");
+		model.addAttribute("mode", "MANAGE");
 		return urlContext + "/order";
 	}
 	
@@ -98,10 +117,6 @@ public class OrderController extends CRUDController<Order> {
 		setupCreate(model, request);
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see com.primovision.lutransport.controller.CRUDController#save(javax.servlet.http.HttpServletRequest, com.primovision.lutransport.model.BaseModel, org.springframework.validation.BindingResult, org.springframework.ui.ModelMap)
-	 */
 	@Override
 	public String save(HttpServletRequest request, @ModelAttribute("modelObject") Order entity,
 			BindingResult bindingResult, ModelMap model) {
@@ -122,7 +137,55 @@ public class OrderController extends CRUDController<Order> {
 			if(entity.getFax().length() < 12)
 				bindingResult.rejectValue("fax", "typeMismatch.java.lang.String", null, null);
 		}*/
-		return super.save(request, entity, bindingResult, model);
+		//return super.save(request, entity, bindingResult, model);
+		
+		
+		try {
+			getValidator().validate(entity, bindingResult);
+		} catch (ValidationException e) {
+			e.printStackTrace();
+			log.warn("Error in validation :" + e);
+		}
+		// return to form if we had errors
+		if (bindingResult.hasErrors()) {
+			setupCreate(model, request);
+			return urlContext + "/form";
+		}
+		beforeSave(request, entity, model);
+		genericDAO.saveOrUpdate(entity);
+		cleanUp(request);
+		
+		//return "redirect:/" + urlContext + "/list.do";
+		//model.addAttribute("activeTab", "manageCustomer");
+		//return urlContext + "/list";
+		
+		/*SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
+		//criteria.getSearchMap().put("id!",0l);
+		//TODO: Fix me 
+		criteria.getSearchMap().remove("_csrf");*/
+		
+		/*setupList(model, request);
+		
+		model.addAttribute("list",genericDAO.search(getEntityClass(), criteria,"companyName",null,null));
+		model.addAttribute("activeTab", "manageCustomer");
+		//return urlContext + "/list";
+		return urlContext + "/customer";*/
+		//request.getSession().removeAttribute("searchCriteria");
+		//request.getParameterMap().remove("_csrf");
+		
+		//return list(model, request);
+		return saveSuccess(model, request, entity);
+	}
+	
+	public String saveSuccess(ModelMap model, HttpServletRequest request, Order entity) {
+		setupCreate(model, request);
+		model.addAttribute("modelObject", entity);
+		model.addAttribute("activeTab", "manageOrders");
+		model.addAttribute("activeSubTab", "orderDetails");
+		model.addAttribute("mode", "ADD");
+		
+		//return urlContext + "/form";
+		return urlContext + "/order";
 	}
 }
 	
