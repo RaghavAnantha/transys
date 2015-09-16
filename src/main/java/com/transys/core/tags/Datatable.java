@@ -664,7 +664,8 @@ public final class Datatable extends BodyTagSupport {
 					iterCol = null;
 					this.currItem = baseObjects.get(i);
 					if (editColumn!=null)
-						editColumn.setLinkUrl(pageContext.getAttribute("ctx")+"/"+urlContext+"/edit.do?id="+PropertyUtils.getProperty(currItem, "id") + "\" data-backdrop=\"static\" data-remote=\"false\" data-toggle=\"modal\" data-target=\"#editModal");
+						//editColumn.setLinkUrl(pageContext.getAttribute("ctx")+"/"+urlContext+"/edit.do?id="+PropertyUtils.getProperty(currItem, "id") + "\" data-backdrop=\"static\" data-remote=\"false\" data-toggle=\"modal\" data-target=\"#editModal");
+						editColumn.setLinkUrl(pageContext.getAttribute("ctx")+"/"+urlContext+"/edit.do?id="+PropertyUtils.getProperty(currItem, "id"));
 					if (deleteColumn!=null)
 						deleteColumn.setLinkUrl("javascript:confirmDelete('"+pageContext.getAttribute("ctx")+"/"+urlContext+"/delete.do?id="+PropertyUtils.getProperty(currItem, "id")+"');");
 //						deleteColumn.setLinkUrl(pageContext.getAttribute("ctx")+"/"+urlContext+"/delete.do?id="+PropertyUtils.getProperty(currItem, "id"));

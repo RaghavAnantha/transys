@@ -109,6 +109,18 @@ public class OrderController extends CRUDController<Order> {
 		return urlContext + "/order";
 	}
 	
+	@Override
+	public String edit2(ModelMap model, HttpServletRequest request) {
+		setupUpdate(model, request);
+		
+		model.addAttribute("activeTab", "manageOrders");
+		model.addAttribute("mode", "ADD");
+		model.addAttribute("activeSubTab", "orderDetails");
+		
+		//return urlContext + "/form";
+		return urlContext + "/order";
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * @see com.primovision.lutransport.controller.CRUDController#setupList(org.springframework.ui.ModelMap, javax.servlet.http.HttpServletRequest)

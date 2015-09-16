@@ -99,6 +99,30 @@ public class CustomerController extends CRUDController<Customer> {
 		return urlContext + "/customer";
 	}
 	
+	@Override
+	public String edit2(ModelMap model, HttpServletRequest request) {
+		setupUpdate(model, request);
+		
+		model.addAttribute("activeTab", "manageCustomer");
+		model.addAttribute("mode", "ADD");
+		model.addAttribute("activeSubTab", "billing");
+		
+		Customer customerToBeEdited = (Customer)model.get("modelObject");
+		
+		Customer emptyCustomer = new Customer();
+		emptyCustomer.setId(customerToBeEdited.getId());
+		Address address = new Address();
+		address.setCustomer(emptyCustomer);
+		model.addAttribute("deliveryAddressModelObject", address);
+	
+		
+		List<BaseModel> addressList = genericDAO.executeSimpleQuery("select obj from Address obj where obj.customer.id=" +  customerToBeEdited.getId() + " order by obj.id asc");
+		model.addAttribute("deliveryAddressList", addressList);
+		
+		//return urlContext + "/form";
+		return urlContext + "/customer";
+	}
+	
 	@RequestMapping(method = RequestMethod.GET, value = "/main.do")
 	public String displayMain(ModelMap model, HttpServletRequest request) {
 		request.getSession().removeAttribute("searchCriteria");
