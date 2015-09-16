@@ -1,6 +1,6 @@
 <%@include file="/common/taglibs.jsp"%>
 <h4>Add/Edit Orders</h4>
-<ul class="nav nav-tabs" id="customer_tabs">
+<ul class="nav nav-tabs" id="order_edit_tabs">
 	<li><a href="#orderDetails" data-toggle="tab">Order Details</a></li>
 	<li><a href="#dropOff" data-toggle="tab">Drop Off</a></li>
 	<li><a href="#pickup" data-toggle="tab">Pickup</a></li>

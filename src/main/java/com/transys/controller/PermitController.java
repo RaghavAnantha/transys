@@ -57,6 +57,7 @@ public class PermitController extends CRUDController<Permit> {
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/main.do")
 	public String displayMain(ModelMap model, HttpServletRequest request) {
+		request.getSession().removeAttribute("searchCriteria");
 		setupList(model, request);
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 //		criteria.getSearchMap().put("id!",0l);
@@ -64,7 +65,8 @@ public class PermitController extends CRUDController<Permit> {
 		model.addAttribute("list", genericDAO.search(Permit.class, criteria, "id", null, null));
 		// add order# corresponding to this permit in the attribute
 		
-		model.addAttribute("activeTab", "managePermit");
+		model.addAttribute("activeTab", "managePermits");
+		model.addAttribute("mode", "MANAGE");
 		return urlContext + "/permit";
 	}
 	
@@ -77,6 +79,19 @@ public class PermitController extends CRUDController<Permit> {
 		populateSearchCriteria(request, request.getParameterMap());
 		setupCreate(model, request);
 	}	
+	
+	@Override
+	public String create(ModelMap model, HttpServletRequest request) {
+		setupCreate(model, request);
+		model.addAttribute("activeTab", "managePermits");
+		model.addAttribute("mode", "ADD");
+		model.addAttribute("activeSubTab", "permitDetails");
+		//return urlContext + "/form";
+		
+		//model.addAttribute("deliveryAddressModelObject", new Address());
+				
+		return urlContext + "/permit";
+	}
 	
 	@Override
 	public void setupCreate(ModelMap model, HttpServletRequest request) {

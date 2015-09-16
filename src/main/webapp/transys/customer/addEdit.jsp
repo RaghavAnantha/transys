@@ -1,6 +1,6 @@
 <%@include file="/common/taglibs.jsp"%>
 <h4>Add/Edit Customers</h4>
-<ul class="nav nav-tabs" id="customer_tabs">
+<ul class="nav nav-tabs" id="customer_edit_tabs">
 	<li><a href="#billing" data-toggle="tab">Billing Info</a></li>
 	<li><a href="#delivery" data-toggle="tab">Delivery Address</a></li>
 </ul>

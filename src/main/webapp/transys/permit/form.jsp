@@ -20,9 +20,6 @@ function populateDeliveryAddress() {
 <form:form action="save.do" name="typeForm" commandName="modelObject" method="post">
 	<form:hidden path="id" id="id" />
 	<table id="form-table" width="100%" cellspacing="1" cellpadding="5">
-		<tr class="table-heading">
-			<td align="${left}" colspan="4"><b><transys:label code="Add/Edit Permit"/></b></td>
-		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Permit Number" /><span class="errorMessage">*</span></td>
 			<td align="${left}">

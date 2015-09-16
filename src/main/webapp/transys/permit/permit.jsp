@@ -7,48 +7,50 @@
 </head>
 <body>
 	<ul class="nav nav-tabs" id="permit_tabs">
-		<li><a href="#managePermit" data-toggle="tab">Permits</a></li>
+		<li><a href="#managePermits" data-toggle="tab">Permits</a></li>
 		<li><a href="#orderPermitAlert" data-toggle="tab">Order Permits Alert</a></li>
 		<li><a href="#permitsReport" data-toggle="tab">Permits Report</a></li>
 	</ul>
 
-	<div class="tab-content tab-color">
-		<div id="managePermit" class="tab-pane">
-			<%@include file="list.jsp"%>	
+	<div class="tab-content style="background-color: white;"">
+		<div id="managePermits" class="tab-pane">
+			<c:if test="${mode == 'MANAGE'}">
+				<%@include file="list.jsp"%>
+			</c:if>
+			<c:if test="${mode == 'ADD'}">
+				<%@include file="addEdit.jsp"%>
+			</c:if>
+		</div>	
 		</div>
- 		 <div id="orderPermitAlert" class="tab-pane">
-			<%@include file="list.jsp"%>
+ 		<div id="orderPermitAlert" class="tab-pane">
 		</div> 
 		<div id="permitsReport" class="tab-pane">
-			<%@include file="form.jsp"%>
 		</div>
 	</div>
 	
 	<div class="modal fade" id="editModal" role="dialog">
-				<div class="modal-dialog" style="width:90% !important">
-					<div class="modal-content">
-						<div class="modal-header">		
-							<h4 class="modal-title">Add Permit</h4>
-						</div>
-						<div class="modal-body"> 
-						</div>
-						<div class="modal-footer">
-								<button type="button" class="btn btn-default"
-									data-dismiss="modal">Close</button>
-							</div>
-					</div>
+		<div class="modal-dialog" style="width:90% !important">
+			<div class="modal-content">
+				<div class="modal-header">		
+					<h4 class="modal-title">Add Permit</h4>
 				</div>
+				<div class="modal-body"> 
+				</div>
+				<div class="modal-footer">
+						<button type="button" class="btn btn-default"
+							data-dismiss="modal">Close</button>
+					</div>
+			</div>
+		</div>
 	</div>	
 	
-	
-
 <script type="text/javascript">
 	function showTab(tab){
 		    $('.nav-tabs a[href="#' + tab + '"]').tab('show');
 	};
 	
-	//showTab('manageCustomer');
 	showTab('${activeTab}');
+	showTab('${activeSubTab}');
 	
 	$('[data-toggle="tabajax"]').click(function(e) {
 	    var $this = $(this),
@@ -68,12 +70,6 @@
 	    $(this).find(".modal-body").load(link.attr("href"));
 	    
 	});	
-	
-/* 	$("#myModal").on('hidden.bs.modal', function () {
-		var url = "/permit/main.do"
-		window.location.href = url;
-    });
-	 */
 </script>
 
 </body>
