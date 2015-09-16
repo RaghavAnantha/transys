@@ -2,16 +2,16 @@ package com.transys.model;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 @Entity
 @Table(name="trans_order")
@@ -54,14 +54,12 @@ public class Order extends AbstractBaseModel {
 	private Date pickupDate;
 	
 	/******** Permits Info ************/
-	/*@JoinColumn(name="permits")
-	private OrderPermits permits;*/
-
-	@OneToMany(cascade = CascadeType.ALL)
+	@ManyToMany(cascade = CascadeType.ALL)
 	@JoinTable(
-     name = "orderPermits",
-     joinColumns = @JoinColumn(name = "orderID"),
-     inverseJoinColumns = @JoinColumn(name = "permitID")
+	        name = "orderPermits",
+	        joinColumns = @JoinColumn(name = "orderID"),
+	        inverseJoinColumns = @JoinColumn(name = "permitID"),
+	        uniqueConstraints = @UniqueConstraint(columnNames = {"orderID", "permitID"})
 	)
 	private List<Permit> permits;
 	 

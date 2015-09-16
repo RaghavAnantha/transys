@@ -18,12 +18,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.transys.controller.editor.AbstractModelEditor;
 import com.transys.model.Address;
-
-import com.transys.model.BaseModel;
-
 import com.transys.model.Customer;
 import com.transys.model.Order;
-
 import com.transys.model.OrderStatus;
 import com.transys.model.Permit;
 //import com.transys.model.FuelVendor;
@@ -161,7 +157,7 @@ public class OrderController extends CRUDController<Order> {
 																					+ entity.getPermits().get(0).getId()
 																					+ ")");
 		entity.setPermits(permitList);
-		
+
 		genericDAO.saveOrUpdate(entity);
 		cleanUp(request);
 		
