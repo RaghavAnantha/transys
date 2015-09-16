@@ -109,6 +109,15 @@ function validate() {
 			</td>
 		</tr>
 		<tr bgcolor="white"><td colspan="10" class="form-left"><transys:label code="Permit Information" /></td></tr>
+		<c:forEach var="aPermit" varStatus="status" items="${permits}">
+		    <tr>
+		    	<td class="form-left"><transys:label code="Permit${status.index + 1} Class"/><span class="errorMessage">*</span></td>
+		        <td align="${left}">
+					<form:input path="permits[${status.index}].id" cssClass="flat"/>
+				</td>
+		    </tr>
+		</c:forEach>
+
 		<tr bgcolor="white"><td colspan="10" class="form-left"><transys:label code="Scale/Weights Information" /></td></tr>
 		<tr bgcolor="white"><td colspan="10" class="form-left"><transys:label code="Rates/Fees Information" /></td></tr>
 		<tr bgcolor="white"><td colspan="10" class="form-left"><transys:label code="Payment Information" /></td></tr>

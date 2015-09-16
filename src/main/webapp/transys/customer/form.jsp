@@ -95,8 +95,7 @@ function formatFax(){
 			</td>
 			<td class="form-left"><transys:label code="Zipcode" /><span class="errorMessage"></span></td>
 			<td align="${left}">
-				<form:input path="zipcode" cssClass="flat"  maxlength="5"
-					 onkeypress="return onlyNumbers(event, false)"/>
+				<form:input path="zipcode" cssClass="flat"  maxlength="5" onkeypress="return onlyNumbers(event, false)"/>
 			 	<br><form:errors path="zipcode" cssClass="errorMessage" />
 			</td>
 		</tr>
@@ -116,8 +115,8 @@ function formatFax(){
 		<tr>
 		<td class="form-left"><transys:label code="Contact Name" /><span class="errorMessage"></span></td>
 		<td align="${left}">
-				<form:input path="contactName" cssClass="flat" />	 	
-			</td>
+			<form:input path="contactName" cssClass="flat" />	 	
+		</td>
 		<td class="form-left"><transys:label code="Alt Phone1" /></td>
 			<td align="${left}">
 				<form:input path="altPhone1" cssClass="flat"  maxlength="12" 
@@ -148,7 +147,6 @@ function formatFax(){
 					id="fax" onkeypress="return onlyNumbers(event, false)" onblur="return formatFax();"/>
 				 <br><form:errors path="fax" cssClass="errorMessage" />
 			</td>
-		
 		</tr>
 		<tr>
 			<td colspan=10 class="danger" style="font-size: 13px;font-weight: bold;color: white;">Notes/Comments</td>

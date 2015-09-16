@@ -41,6 +41,7 @@ public class OrderController extends CRUDController<Order> {
 	public void initBinder(WebDataBinder binder) {
 		binder.registerCustomEditor(Customer.class, new AbstractModelEditor(Customer.class));
 		binder.registerCustomEditor(Address.class, new AbstractModelEditor(Address.class));
+		binder.registerCustomEditor(Permit.class, new AbstractModelEditor(Permit.class));
 	}
 	
 	/*
@@ -56,6 +57,8 @@ public class OrderController extends CRUDController<Order> {
 		model.addAttribute("orderStatuses", genericDAO.findByCriteria(OrderStatus.class, criterias, "status", false));
       model.addAttribute("customers", genericDAO.findByCriteria(Customer.class, criterias, "companyName", false));
       model.addAttribute("deliveryAddresses", genericDAO.findByCriteria(Address.class, criterias, "line1", false));
+      
+      model.addAttribute("permits",genericDAO.executeSimpleQuery("select obj from Permit obj where obj.id!=0 order by obj.id asc"));
 	}
 	
 	@Override
@@ -141,8 +144,7 @@ public class OrderController extends CRUDController<Order> {
 		}*/
 
 		//return super.save(request, entity, bindingResult, model);
-		
-		
+	
 		try {
 			getValidator().validate(entity, bindingResult);
 		} catch (ValidationException e) {
@@ -155,6 +157,11 @@ public class OrderController extends CRUDController<Order> {
 			return urlContext + "/form";
 		}
 		beforeSave(request, entity, model);
+		List<Permit> permitList = genericDAO.executeSimpleQuery("select obj from Permit obj where obj.id in (" 
+																					+ entity.getPermits().get(0).getId()
+																					+ ")");
+		entity.setPermits(permitList);
+		
 		genericDAO.saveOrUpdate(entity);
 		cleanUp(request);
 		

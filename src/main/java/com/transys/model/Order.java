@@ -1,6 +1,7 @@
 package com.transys.model;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -58,17 +59,17 @@ public class Order extends AbstractBaseModel {
 
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinTable(
-	        name = "orderPermits",
-	        joinColumns = @JoinColumn(name = "orderID"),
-	        inverseJoinColumns = @JoinColumn(name = "permitID")
+     name = "orderPermits",
+     joinColumns = @JoinColumn(name = "orderID"),
+     inverseJoinColumns = @JoinColumn(name = "permitID")
 	)
-	private Set<Permit> permits;
+	private List<Permit> permits;
 	 
-	public Set<Permit> getPermits() {
-	    return permits;
+	public List<Permit> getPermits() {
+		return permits;
 	}
 	
-	public void  setPermits(Set<Permit> permits) {
+	public void  setPermits(List<Permit> permits) {
 	    this.permits = permits;
 	}
 
