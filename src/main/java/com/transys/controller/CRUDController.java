@@ -87,6 +87,8 @@ public abstract class CRUDController<T extends BaseModel> extends BaseController
 		setupList(model, request);
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		criteria.setPageSize(25);
+		//TODO: Fix me 
+		criteria.getSearchMap().remove("_csrf");
 		model.addAttribute("list",genericDAO.search(getEntityClass(), criteria));
 		return urlContext + "/list";
 	}
@@ -129,11 +131,18 @@ public abstract class CRUDController<T extends BaseModel> extends BaseController
 			e.printStackTrace();
 			log.warn("Error in validation :" + e);
 		}
+		
+		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
+		criteria.getSearchMap().put("id!",0l);
+		//TODO: Fix me 
+		criteria.getSearchMap().remove("_csrf");
+		
 		// return to form if we had errors
 		if (bindingResult.hasErrors()) {
 			setupCreate(model, request);
 			return urlContext + "/form";
 		}
+		
 		beforeSave(request, entity, model);
 		genericDAO.saveOrUpdate(entity);
 		cleanUp(request);
