@@ -18,6 +18,7 @@ import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.ClassUtils;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -125,10 +126,13 @@ public abstract class CRUDController<T extends BaseModel> extends BaseController
 	public String save(HttpServletRequest request,
 			@ModelAttribute("modelObject") T entity,
 			BindingResult bindingResult, ModelMap model) {
+		
+		System.out.println("While saving permit");
 		try {
 			getValidator().validate(entity, bindingResult);
 		} catch (ValidationException e) {
 			e.printStackTrace();
+			System.out.println("Error in validation " + e);
 			log.warn("Error in validation :" + e);
 		}
 		
@@ -139,10 +143,17 @@ public abstract class CRUDController<T extends BaseModel> extends BaseController
 		
 		// return to form if we had errors
 		if (bindingResult.hasErrors()) {
+			System.out.println(">>>>>>>>>>>>>>>>> Has errors! ");
+			List<ObjectError> errors = bindingResult.getAllErrors();
+			for(ObjectError e : errors) {
+				System.out.println(e.getDefaultMessage());
+			}
+			
 			setupCreate(model, request);
 			return urlContext + "/form";
 		}
 		
+		System.out.println("Adding before save ...");
 		beforeSave(request, entity, model);
 		genericDAO.saveOrUpdate(entity);
 		cleanUp(request);
@@ -289,7 +300,7 @@ public abstract class CRUDController<T extends BaseModel> extends BaseController
 	@Override
 	@InitBinder
 	public void initBinder(WebDataBinder binder) {
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat dateFormat = new SimpleDateFormat("mm/dd/yy");
 		dateFormat.setLenient(false);
 		binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, false));
 		binder.registerCustomEditor(byte[].class, new ByteArrayMultipartFileEditor());

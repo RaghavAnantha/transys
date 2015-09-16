@@ -42,6 +42,17 @@ public class PermitController extends CRUDController<Permit> {
 		binder.registerCustomEditor(LocationType.class, new AbstractModelEditor(LocationType.class));
 		binder.registerCustomEditor(PermitClass.class, new AbstractModelEditor(PermitClass.class));
 		binder.registerCustomEditor(PermitType.class, new AbstractModelEditor(PermitType.class));
+		super.initBinder(binder);
+	}
+	
+	@RequestMapping(method = RequestMethod.GET, value = "/customerDeliveryAddress")
+	public String displayCustomerDeliveryAddress(ModelMap model, HttpServletRequest request) {
+		String customer = request.getParameter("customer");
+		System.out.println("Customer requested = " + customer);
+		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
+		criteria.getSearchMap().put("id", Long.parseLong(customer));
+		model.addAttribute("chosenCustomer", genericDAO.search(Customer.class, criteria, "id", null, null));
+		return urlContext + "/permit";
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/main.do")
