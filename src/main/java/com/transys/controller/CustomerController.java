@@ -93,7 +93,7 @@ public class CustomerController extends CRUDController<Customer> {
 		criteria.getSearchMap().remove("_csrf");
 		model.addAttribute("list",genericDAO.search(getEntityClass(), criteria,"companyName",null,null));
 		model.addAttribute("activeTab", "manageCustomer");
-		model.addAttribute("activeSubTab", "billing");
+		//model.addAttribute("activeSubTab", "billing");
 		model.addAttribute("mode", "MANAGE");
 		//return urlContext + "/list";
 		return urlContext + "/customer";

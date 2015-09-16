@@ -6,7 +6,7 @@
 <title>Customers</title>
 </head>
 <body>
-	<ul class="nav nav-tabs" id="customer_tabs">
+	<ul class="nav nav-tabs" id="customer_main_tabs">
 		<li><a href="#manageCustomer" data-toggle="tab">Customers</a></li>
 		<li><a href="#customerReports" data-toggle="tab">Customer Reports</a></li>
 	</ul>
@@ -21,7 +21,7 @@
 		</div>
 		<div id="customerReports" class="tab-pane">
 			<br />
-			<ul class="nav nav-tabs" id="customer_tabs">
+			<ul class="nav nav-tabs" id="customer_reports_tabs">
 				<li><a href="#customerList" data-toggle="tab" class="active">Customer List</a></li>
 				<li><a href="#customerOrderReports" data-toggle="tab">Customer Order Reports</a></li>
 			</ul>
@@ -46,9 +46,8 @@
 					<div id="validations" style="color: red"></div>
 				</div>
 				<div class="modal-body">
-					<ul class="nav nav-tabs" id="customer_tabs">
-						<li><a href="#billingInfo" data-toggle="tab">Billing
-								Info</a></li>
+					<ul class="nav nav-tabs" id="customer_edit_tabs">
+						<li><a href="#billingInfo" data-toggle="tab">Billing Info</a></li>
 						<li><a href="/customer/address.do" data-toggle="tabajax"
 							data-target="#deliveryAddress">Delivery Addresses</a></li>
 					</ul>
@@ -62,12 +61,11 @@
 		</div>
 	</div>
 
-	<script type="text/javascript">
+<script type="text/javascript">
 	function showTab(tab){
 		    $('.nav-tabs a[href="#' + tab + '"]').tab('show');		    
 	};
 	
-	//showTab('manageCustomer');
 	showTab('${activeTab}');
 	showTab('${activeSubTab}');
 	

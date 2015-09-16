@@ -7,12 +7,17 @@
 </head>
 <body>
 	<ul class="nav nav-tabs" id="order_main_tabs">
-		<li><a href="#manageOrder" data-toggle="tab" >Orders</a></li>
+		<li><a href="#manageOrders" data-toggle="tab" >Orders</a></li>
 		<li><a href="#orderReports" data-toggle="tab" >Order Reports</a></li>
 	</ul>
 	<div class="tab-content" style="background-color: white;">
-		<div id="manageOrder" class="tab-pane">
-			<%@include file="list.jsp"%>
+		<div id="manageOrders" class="tab-pane">
+			<c:if test="${mode == 'MANAGE'}">
+				<%@include file="list.jsp"%>
+			</c:if>
+			<c:if test="${mode == 'ADD'}">
+				<%@include file="addEdit.jsp"%>
+			</c:if>
 		</div>
 		<div id="orderReports" class="tab-pane">
 			<br/>
@@ -56,6 +61,7 @@
 	};
 	
 	showTab('${activeTab}');
+	showTab('${activeSubTab}');
 	
 	$('[data-toggle="tabajax"]').click(function(e) {
 	    var $this = $(this),
