@@ -193,12 +193,6 @@
 		<transys:textcolumn headerText="Dmpstr #" dataField="dumpsterNum" />
 		<transys:textcolumn headerText="Delivery Date" dataField="deliveryDate" />
 		<transys:textcolumn headerText="Pickup Date" dataField="pickupDate" />
-		<!--<transys:textcolumn headerText="Dmpstr Price" dataField="id" />
-		<transys:textcolumn headerText="Permit Fee" dataField="id" />
-		<transys:textcolumn headerText="City Fee" dataField="id" />
-		<transys:textcolumn headerText="OvrWt Fee" dataField="id" />
-		<transys:textcolumn headerText="Addnl Fee" dataField="id" />
-		<transys:textcolumn headerText="Total Amount" dataField="id" />-->
 		<transys:textcolumn headerText="Status" dataField="orderStatus.status" />
 	</transys:datatable>
 	<%session.setAttribute("columnPropertyList", pageContext.getAttribute("columnPropertyList"));%>

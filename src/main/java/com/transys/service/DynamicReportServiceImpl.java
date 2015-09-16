@@ -223,23 +223,6 @@ public class DynamicReportServiceImpl implements DynamicReportService {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		List<Field> displayableFieldList = new ArrayList<Field>();
 		try {
-			Field[] fields = entityClass.getDeclaredFields();
-			for (IColumnTag objCol : columnPropertyList) {
-				for (Field field : fields) {
-					if (field.getName().equalsIgnoreCase(objCol.getDataField())) {
-						displayableFieldList.add(field);
-					}
-					if (objCol.getDataField().indexOf(".") != -1
-							&& field.getName()
-									.equalsIgnoreCase(
-											objCol.getDataField().substring(
-													0,
-													objCol.getDataField()
-															.indexOf(".")))) {
-						displayableFieldList.add(field);
-					}
-				}
-			}
 			if (entityClass.getSuperclass() != Object.class) {
 				Field[] superClassfields = entityClass.getSuperclass()
 						.getDeclaredFields();
@@ -260,6 +243,24 @@ public class DynamicReportServiceImpl implements DynamicReportService {
 					}
 				}
 			}
+			Field[] fields = entityClass.getDeclaredFields();
+			for (IColumnTag objCol : columnPropertyList) {
+				for (Field field : fields) {
+					if (field.getName().equalsIgnoreCase(objCol.getDataField())) {
+						displayableFieldList.add(field);
+					}
+					if (objCol.getDataField().indexOf(".") != -1
+							&& field.getName()
+									.equalsIgnoreCase(
+											objCol.getDataField().substring(
+													0,
+													objCol.getDataField()
+															.indexOf(".")))) {
+						displayableFieldList.add(field);
+					}
+				}
+			}
+			
 			String query = "select ";
 			for (int i = 0; i < columnPropertyList.size(); i++) {
 				query += columnPropertyList.get(i).getDataField();
@@ -323,8 +324,7 @@ public class DynamicReportServiceImpl implements DynamicReportService {
 						}
 						else {
 							((Map) obj[i]).put(columnPropertyList.get(j)
-									.getDataField(),
-									((Object[]) objectList.get(i))[j]);
+									.getDataField(), ((Object[]) objectList.get(i))[j]);
 						}
 					}
 				}
