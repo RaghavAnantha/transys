@@ -6,17 +6,17 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.poi.hssf.record.formula.functions.T;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.google.gson.Gson;
 import com.transys.controller.editor.AbstractModelEditor;
 import com.transys.model.Address;
+import com.transys.model.BaseModel;
 import com.transys.model.Customer;
 import com.transys.model.LocationType;
 import com.transys.model.Order;
@@ -46,13 +46,13 @@ public class PermitController extends CRUDController<Permit> {
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/customerDeliveryAddress")
-	public String displayCustomerDeliveryAddress(ModelMap model, HttpServletRequest request) {
+	public @ResponseBody String displayCustomerDeliveryAddress(ModelMap model, HttpServletRequest request) {
 		String customer = request.getParameter("customer");
-		System.out.println("Customer requested = " + customer);
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		criteria.getSearchMap().put("id", Long.parseLong(customer));
-		model.addAttribute("chosenCustomer", genericDAO.search(Customer.class, criteria, "id", null, null));
-		return urlContext + "/permit";
+		BaseModel customerObj = genericDAO.search(Customer.class, criteria, "id", null, null).get(0);
+		String json = (new Gson()).toJson(customerObj);
+		return json;
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/main.do")

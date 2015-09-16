@@ -3,14 +3,14 @@
 
 function populateDeliveryAddress() {
    var customer = document.getElementById("customerSelect").value;
-   alert("data " + customer);/*  */
    //do ajax now
    $.ajax({
   	 url: "customerDeliveryAddress.do?customer=" + customer,
        type: "GET",
        success: function(responseData, textStatus, jqXHR) {
-    	   var ccustomer = ${chosenCustomer}
-           alert("Data for customer id " + ccustomer.id);
+    	   var value = (jQuery.parseJSON(responseData).state.name);
+    	   var newOption = $('<option value="'+ value +'">'+ value +'</option>');
+    	   $('#locationTypeSelect').append(newOption);
        }
    }); 
  }
@@ -36,7 +36,7 @@ function populateDeliveryAddress() {
 		<tr>
 			<td class="form-left"><transys:label code="Customer Name" /><span class="errorMessage">*</span></td>
 			<td align="${left}">
-				<form:select id="customerSelect" cssClass="flat form-control input-sm" path="customer" > <!-- onChange="return populateDeliveryAddress();"> -->
+				<form:select id="customerSelect" cssClass="flat form-control input-sm" path="customer" onChange="return populateDeliveryAddress();"> 
 					<form:option value="">------Please Select--------</form:option>
 					<form:options items="${customer}" itemValue="id" itemLabel="companyName" />
 				</form:select> 
@@ -46,7 +46,7 @@ function populateDeliveryAddress() {
 		<tr>
 			<td class="form-left"><transys:label code="Delivery Address" /><span class="errorMessage">*</span></td>
 			<td align="${left}">
-				<form:input path="deliveryAddress.id" cssClass="flat" style="min-width:350px; max-width:350px"  />
+				<form:input id="deliveryAddressInput" path="deliveryAddress.id" cssClass="flat" style="min-width:350px; max-width:350px"  />
 			 	<br><form:errors path="deliveryAddress.id" cssClass="errorMessage" />
 			</td> 
 			
@@ -72,7 +72,7 @@ function populateDeliveryAddress() {
 		<tr>
 			<td class="form-left"><transys:label code="LocationType" /><span class="errorMessage">*</span></td>
 			<td align="${left}">
-				<form:select cssClass="flat form-control input-sm" path="locationType" >
+				<form:select id="locationTypeSelect" cssClass="flat form-control input-sm" path="locationType" >
 					<form:option value="">------Please Select--------</form:option>
 					<form:options items="${locationType}" itemValue="id" itemLabel="locationType" />
 				</form:select> 
