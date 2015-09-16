@@ -8,7 +8,7 @@ public class LabelUtil {
 	    locale = "en_US";
 	}
 	//return CacheUtil.getText("messageResourceCache", "label_" + code + "_" + locale);
-	return "label_" + code;
+	return  code;
 
     }
 }
