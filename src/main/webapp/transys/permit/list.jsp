@@ -1,10 +1,8 @@
 <%@include file="/common/taglibs.jsp"%>
 <br/>
-<form:form action="list.do" method="get" name="searchForm">
+<h4 style="margin-top: -15px; !important">Manage Orders</h4>
+<form:form action="list.do" method="get" name="searchForm" id="permitSearchForm">
 	<table width="100%" id="form-table">
-		<tr class="table-heading">
-			<td colspan="4"><b><transys:label code="Manage Permits" /></b></td>
-		</tr>
 		<tr>
 		  <td align="${left}" class="first"><transys:label code="Delivery Address #"/></td>
 				<td align="${left}"><select id="deliveryAddress" name="deliveryAddress.line1" style="min-width:350px; max-width:350px">

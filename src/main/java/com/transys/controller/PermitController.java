@@ -94,6 +94,18 @@ public class PermitController extends CRUDController<Permit> {
 	}
 	
 	@Override
+	public String edit2(ModelMap model, HttpServletRequest request) {
+		setupUpdate(model, request);
+		
+		model.addAttribute("activeTab", "managePermits");
+		model.addAttribute("mode", "ADD");
+		model.addAttribute("activeSubTab", "permitDetails");
+		
+		//return urlContext + "/form";
+		return urlContext + "/permit";
+	}
+	
+	@Override
 	public void setupCreate(ModelMap model, HttpServletRequest request) {
 		Map criterias = new HashMap();
 		

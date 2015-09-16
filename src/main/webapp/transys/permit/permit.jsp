@@ -6,7 +6,7 @@
 <title>Permit</title>
 </head>
 <body>
-	<ul class="nav nav-tabs" id="permit_tabs">
+	<ul class="nav nav-tabs" id="permit_main_tabs">
 		<li><a href="#managePermits" data-toggle="tab">Permits</a></li>
 		<li><a href="#orderPermitAlert" data-toggle="tab">Order Permits Alert</a></li>
 		<li><a href="#permitsReport" data-toggle="tab">Permits Report</a></li>
@@ -21,10 +21,13 @@
 				<%@include file="addEdit.jsp"%>
 			</c:if>
 		</div>	
-		</div>
- 		<div id="orderPermitAlert" class="tab-pane">
+		<div id="orderPermitAlert" class="tab-pane">
+ 			<br/>
+			<p>Placeholder for order permit alerts</p>
 		</div> 
 		<div id="permitsReport" class="tab-pane">
+			<br/>
+			<p>Placeholder for permit reports</p>
 		</div>
 	</div>
 	
@@ -37,9 +40,8 @@
 				<div class="modal-body"> 
 				</div>
 				<div class="modal-footer">
-						<button type="button" class="btn btn-default"
-							data-dismiss="modal">Close</button>
-					</div>
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				</div>
 			</div>
 		</div>
 	</div>	
