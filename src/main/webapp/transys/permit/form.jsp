@@ -1,46 +1,20 @@
 <%@include file="/common/taglibs.jsp"%>
 <script type="text/javascript">
-function formatPhone(){
-	var phone = document.getElementById("phone").value;
-	if(phone != ""){
-		if(phone.length < 10){
-			alert("Invalid Phone Number");
-			document.getElementById("phone").value = "";
-			return true;
-		}
-		else{
-			var str = new String(phone);
-			if(!str.match("-")){
-				var p1 = str.substring(0,3);
-				var p2 = str.substring(3,6);
-				var p3 = str.substring(6,10);				
-				var phone = p1 + "-" + p2 + "-" + p3;
-				document.getElementById("phone").value = phone;
-			}
-		}
-	}	
-}
 
-function formatFax(){
-	var fax = document.getElementById("fax").value;
-	if(fax != ""){
-		if(fax.length < 10){
-			alert("Invalid Phone Number");
-			document.getElementById("fax").value = "";
-			return true;
-		}
-		else{
-			var str = new String(fax);
-			if(!str.match("-")){
-				var p1 = str.substring(0,3);
-				var p2 = str.substring(3,6);
-				var p3 = str.substring(6,10);				
-				var fax = p1 + "-" + p2 + "-" + p3;
-				document.getElementById("fax").value = fax;
-			}
-		}
-	}	
-}
+function populateDeliveryAddress() {
+   var customer = document.getElementById("customerSelect").value;
+   alert("data " + customer);/*  */
+   //do ajax now
+   $.ajax({
+  	 url: "customerDeliveryAddress.do?customer=" + customer,
+       type: "GET",
+       success: function(responseData, textStatus, jqXHR) {
+    	   var ccustomer = ${chosenCustomer}
+           alert("Data for customer id " + ccustomer.id);
+       }
+   }); 
+ }
+
 </script>
 <br/>
 <form:form action="save.do" name="typeForm" commandName="modelObject" method="post">
@@ -65,27 +39,27 @@ function formatFax(){
 		<tr>
 			<td class="form-left"><transys:label code="Customer Name" /><span class="errorMessage">*</span></td>
 			<td align="${left}">
-				<form:select cssClass="flat form-control input-sm" path="customer" >
+				<form:select id="customerSelect" cssClass="flat form-control input-sm" path="customer" > <!-- onChange="return populateDeliveryAddress();"> -->
 					<form:option value="">------Please Select--------</form:option>
 					<form:options items="${customer}" itemValue="id" itemLabel="companyName" />
 				</form:select> 
 			 	<br><form:errors path="customer" cssClass="errorMessage" />
 			</td>
 		</tr>
-		<%--<tr>
+		<tr>
 			<td class="form-left"><transys:label code="Delivery Address" /><span class="errorMessage">*</span></td>
 			<td align="${left}">
 				<form:input path="deliveryAddress.id" cssClass="flat" style="min-width:350px; max-width:350px"  />
 			 	<br><form:errors path="deliveryAddress.id" cssClass="errorMessage" />
 			</td> 
 			
-			 <td class="form-left"><transys:label code="Delivery Street" /></td>
+			<%-- <td class="form-left"><transys:label code="Delivery Street" /></td>
 			<td align="${left}">
 				<form:input path="deliveryAddress.id" cssClass="flat" style="min-width:350px; max-width:350px"  />
 			 	<br><form:errors path="deliveryAddress.id" cssClass="errorMessage" />
-			</td>
+			</td> --%>
 		</tr>
-		 <tr>
+		 <%--<tr>
 			<td class="form-left"><transys:label code="Permit Address" /><span class="errorMessage">*</span></td>
 			<td align="${left}">
 				<form:input path="permitAddress" cssClass="flat" style="min-width:350px; max-width:350px"  />
@@ -122,18 +96,18 @@ function formatFax(){
 			<td align="${left}">
 				<form:select cssClass="flat form-control input-sm" path="type" >
 					<form:option value="">------Please Select--------</form:option>
-					<form:options items="${type}" itemValue="id" itemLabel="type" />
+					<form:options items="${permitType}" itemValue="id" itemLabel="type" />
 				</form:select> 
 			 	<br><form:errors path="type" cssClass="errorMessage" />
 			</td>
 		</tr>
 		
-		<%-- <tr>
+		<tr>
 			<td align="${left}" class="form-left"><transys:label
 					code="Start Date" /></td>
 			<td align="${left}" class="wide"><form:input path="startDate" class="flat"
 				id="datepicker7" name="startDate" style="width: 163px" /></td>
-		</tr> --%>
+		</tr>
 		
 		<%-- <tr> 
 			<td class="form-left"><transys:label code="Start Date" /><span class="errorMessage">*</span></td>

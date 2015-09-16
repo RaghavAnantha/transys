@@ -9,6 +9,9 @@ html, body {
 	min-height:100%;
 	
 }
+.danger {	
+	background-color: #337AB7 !important;	
+}
 .wide {
 	width:250px;
 }

@@ -52,51 +52,51 @@ function openWindow(url,title){
 
 $(function() {
 	$( "#datepicker" ).datepicker({
-		dateFormat: 'mm-dd-yy',
+		dateFormat: 'mm/dd/yy',
 		changeMonth: true,
 		changeYear: true,
 		showButtonPanel: true
 	});
 	$( "#datepicker1" ).datepicker({
-		dateFormat: 'mm-dd-yy',
+		dateFormat: 'mm/dd/yy',
 		changeMonth: true,
 		changeYear: true,
 		showButtonPanel: true
 	});
 	$( "#datepicker2" ).datepicker({
-		dateFormat: 'mm-dd-yy',
+		dateFormat: 'mm/dd/yy',
 		changeMonth: true,
 		changeYear: true,
 		showButtonPanel: true
 	});
 	$( "#datepicker3" ).datepicker({
-		dateFormat: 'mm-dd-yy',
+		dateFormat: 'mm/dd/yy',
 		changeMonth: true,
 		changeYear: true,
 		showButtonPanel: true
 	});
 	$( "#datepicker4" ).datepicker({
-		dateFormat: 'mm-dd-yy',
+		dateFormat: 'mm/dd/yy',
 		changeMonth: true,
 		changeYear: true,
 		showButtonPanel: true
 	});
 	
 	$( "#datepicker5" ).datepicker({
-		dateFormat: 'mm-dd-yy',
+		dateFormat: 'mm/dd/yy',
 		changeMonth: true,
 		changeYear: true,
 		showButtonPanel: true
 	});
 	
 	$( "#datepicker6" ).datepicker({
-		dateFormat: 'mm-dd-yy',
+		dateFormat: 'mm/dd/yy',
 		changeMonth: true,
 		changeYear: true,
 		showButtonPanel: true
 	});
 	$( "#datepicker7" ).datepicker({
-		dateFormat: 'mm-dd-yy',
+		dateFormat: 'mm/dd/yy',
 		changeMonth: true,
 		changeYear: true,
 		showButtonPanel: true
