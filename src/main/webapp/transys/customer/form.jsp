@@ -154,8 +154,9 @@ function formatFax(){
 			<td colspan=10 class="danger" style="font-size: 13px;font-weight: bold;color: #337AB7;">Notes/Comments</td>
 		</tr>
 		<tr>
-		<td colspan=10><form:textarea row="5" path="notes" cssClass="flat"	 id="notes" style="width:100%; height:150%;"/>
-				<br><form:errors path="notes" cssClass="errorMessage" />
+		<td colspan=10>
+			<form:textarea row="5" path="notes" cssClass="flat" id="notes" style="width:100%; height:150%;"/>
+			<br><form:errors path="notes" cssClass="errorMessage" />
 		</td>
 		
 		</tr>
