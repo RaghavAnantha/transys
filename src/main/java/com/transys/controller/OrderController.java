@@ -38,6 +38,7 @@ public class OrderController extends CRUDController<Order> {
 		binder.registerCustomEditor(Customer.class, new AbstractModelEditor(Customer.class));
 		binder.registerCustomEditor(Address.class, new AbstractModelEditor(Address.class));
 		binder.registerCustomEditor(Permit.class, new AbstractModelEditor(Permit.class));
+		super.initBinder(binder);
 	}
 	
 	/*
