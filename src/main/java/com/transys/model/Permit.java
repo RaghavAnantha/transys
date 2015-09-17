@@ -8,6 +8,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.apache.commons.lang3.time.DateUtils;
+
 @Entity
 @Table(name="permit")
 public class Permit  extends AbstractBaseModel {
@@ -33,8 +35,6 @@ public class Permit  extends AbstractBaseModel {
 	@Column(name="startDate")
 	private Date startDate;
 	
-//	private String endDate;
-	
 	@Column(name="permitAddress")
 	private String permitAddress;
 	
@@ -56,18 +56,13 @@ public class Permit  extends AbstractBaseModel {
 	@Column(name="parkingMeter")
 	private String parkingMeter;
 
-	/*public void setEndDate(String endDate) {
+	public Date getEndDate() {
+		/*String tokens[] = getType().getType().split("\\s");
+		int noOfDays = new Integer(tokens[0]).intValue();
 		
-		if (this.startDate != null) {
-			// TODO: start date + permit type # days
-			this.endDate = this.startDate;
-		}
-		
+		return DateUtils.addDays(getStartDate(), noOfDays);*/
+		return DateUtils.addDays(new Date(), 3);
 	}
-	
-	public String getEndDate() {
-		return this.endDate;
-	}*/
 
 	public Customer getCustomer() {
 		return customer;
