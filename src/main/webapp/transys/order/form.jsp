@@ -46,7 +46,9 @@ function validate() {
 				 <br><form:errors path="customer" cssClass="errorMessage" />
 			</td>
 		</tr>
-		<tr bgcolor="white"><td colspan="10" class="form-left"><transys:label code="Delivery Information" /></td></tr>
+		<tr>
+			<td colspan=10 class="danger" style="font-size: 13px;font-weight: bold;color: white;">Delivery Information</td>
+		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Delivery Address" /><span class="errorMessage"></span></td>
 			<td align="${left}">
@@ -108,7 +110,9 @@ function validate() {
 				 <br><form:errors path="typeOfMaterial" cssClass="errorMessage" />
 			</td>
 		</tr>
-		<tr bgcolor="white"><td colspan="10" class="form-left"><transys:label code="Permit Information" /></td></tr>
+		<tr>
+			<td colspan=10 class="danger" style="font-size: 13px;font-weight: bold;color: white;">Permit Information</td>
+		</tr>
 		<c:forEach var="aPermit" varStatus="status" items="${permits}">
 		    <tr>
 		    	<td class="form-left"><transys:label code="Permit${status.index + 1} Class"/><span class="errorMessage">*</span></td>
@@ -118,10 +122,18 @@ function validate() {
 		    </tr>
 		</c:forEach>
 
-		<tr bgcolor="white"><td colspan="10" class="form-left"><transys:label code="Scale/Weights Information" /></td></tr>
-		<tr bgcolor="white"><td colspan="10" class="form-left"><transys:label code="Rates/Fees Information" /></td></tr>
-		<tr bgcolor="white"><td colspan="10" class="form-left"><transys:label code="Payment Information" /></td></tr>
-		<tr bgcolor="white"><td colspan="10" class="form-left"><transys:label code="Notes/Comments" /></td></tr>
+		<tr>
+			<td colspan=10 class="danger" style="font-size: 13px;font-weight: bold;color: white;">Scale/Weights Information</td>
+		</tr>
+		<tr>
+			<td colspan=10 class="danger" style="font-size: 13px;font-weight: bold;color: white;">Rates/Fees Information</td>
+		</tr>
+		<tr>
+			<td colspan=10 class="danger" style="font-size: 13px;font-weight: bold;color: white;">Payment Information</td>
+		</tr>
+		<tr>
+			<td colspan=10 class="danger" style="font-size: 13px;font-weight: bold;color: white;">Notes/Comments</td>
+		</tr>
 		<tr><td colspan="2"></td></tr>
 		<tr>
 			<td>&nbsp;</td>
