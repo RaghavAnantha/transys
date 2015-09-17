@@ -178,11 +178,9 @@
 		<transys:textcolumn headerText="PermitType" dataField="type.type" />
 		<transys:textcolumn headerText="PermitClass" dataField="permitClass.permitClass" />
 		<transys:textcolumn headerText="StartDate" dataField="startDate" />
-		<%-- <transys:textcolumn headerText="EndDate" dataField="endDate" /> --%>
 		<transys:textcolumn headerText="CustomerName" dataField="customer.companyName" />
 		<transys:textcolumn headerText="Permit#" dataField="number" />
 		<transys:textcolumn headerText="PermitFee" dataField="fee" />
-		<%-- <transys:textcolumn headerText="Order#" dataField="order.id" /> --%>
 		<transys:textcolumn headerText="PermitAddr#" dataField="permitAddress" />
 		<transys:textcolumn headerText="Status" dataField="status.status" />
 	</transys:datatable>

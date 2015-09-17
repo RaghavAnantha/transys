@@ -28,7 +28,7 @@ public class Permit  extends AbstractBaseModel {
 	private String number;
 	
 	@Column(name="fee")
-	private double fee;
+	private Double fee;
 	
 	@Column(name="startDate")
 	private Date startDate;
