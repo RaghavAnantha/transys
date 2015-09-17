@@ -1,5 +1,6 @@
 package com.transys.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +23,7 @@ import com.transys.controller.editor.AbstractModelEditor;
 import com.transys.model.Address;
 import com.transys.model.BaseModel;
 import com.transys.model.Customer;
+import com.transys.model.MaterialType;
 import com.transys.model.Order;
 import com.transys.model.OrderStatus;
 import com.transys.model.Permit;
@@ -51,14 +53,27 @@ public class OrderController extends CRUDController<Order> {
 	@Override
 	public void setupCreate(ModelMap model, HttpServletRequest request) {
 		Map criterias = new HashMap();
-		model.addAttribute("order",genericDAO.executeSimpleQuery("select obj from Order obj where obj.id!=0 order by obj.id asc"));
-		model.addAttribute("orderIds",genericDAO.executeSimpleQuery("select obj from Order obj where obj.id is not null order by obj.id asc"));
+		model.addAttribute("order", genericDAO.executeSimpleQuery("select obj from Order obj where obj.id!=0 order by obj.id asc"));
+		model.addAttribute("orderIds", genericDAO.executeSimpleQuery("select obj from Order obj where obj.id is not null order by obj.id asc"));
 		
 		model.addAttribute("orderStatuses", genericDAO.findByCriteria(OrderStatus.class, criterias, "status", false));
       model.addAttribute("customers", genericDAO.findByCriteria(Customer.class, criterias, "companyName", false));
       //model.addAttribute("deliveryAddresses", genericDAO.findByCriteria(Address.class, criterias, "line1", false));
       
-      model.addAttribute("permits",genericDAO.executeSimpleQuery("select obj from Permit obj where obj.id!=0 order by obj.id asc"));
+      //model.addAttribute("permits", genericDAO.executeSimpleQuery("select obj from Permit obj where obj.id!=0 order by obj.id asc"));
+      model.addAttribute("permits", genericDAO.findByCriteria(Permit.class, criterias, "id", false));
+      
+      model.addAttribute("dusmpsterSizes", genericDAO.executeSimpleQuery("select obj from DumpsterInfo obj where obj.id!=0 order by obj.id asc"));
+      model.addAttribute("dusmpsterLocationTypes", genericDAO.executeSimpleQuery("select obj from LocationType obj where obj.id!=0 order by obj.id asc"));
+      
+      MaterialType aMaterialType = new MaterialType();
+      aMaterialType.setId(1l);
+      aMaterialType.setType("Drywall/Wood");
+      
+      List<MaterialType> materialTypeList = new ArrayList<MaterialType>();
+      materialTypeList.add(aMaterialType);
+      
+      model.addAttribute("materialTypes", materialTypeList);
 	}
 	
 	@Override
@@ -136,9 +151,17 @@ public class OrderController extends CRUDController<Order> {
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/customerDeliveryAddress")
 	public @ResponseBody String retrieveCustomerDeliveryAddress(ModelMap model, HttpServletRequest request) {
-		String customerId = request.getParameter("customerId");
+		String customerId = request.getParameter("id");
 		List<Address> addressList  = genericDAO.executeSimpleQuery("select obj from Address obj where obj.customer.id=" + customerId);
 		String json = (new Gson()).toJson(addressList);
+		return json;
+	}
+	
+	@RequestMapping(method = RequestMethod.GET, value = "/customerAddress")
+	public @ResponseBody String retrieveCustomerAddress(ModelMap model, HttpServletRequest request) {
+		String customerId = request.getParameter("id");
+		List<Customer> customerList  = genericDAO.executeSimpleQuery("select obj from Customer obj where obj.id=" + customerId);
+		String json = (new Gson()).toJson(customerList.get(0));
 		return json;
 	}
 	
