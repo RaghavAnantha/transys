@@ -61,7 +61,8 @@ public class Permit  extends AbstractBaseModel {
 		int noOfDays = new Integer(tokens[0]).intValue();
 		
 		return DateUtils.addDays(getStartDate(), noOfDays);*/
-		return DateUtils.addDays(new Date(), 3);
+		//return DateUtils.addDays(new Date(), 3);
+		return null;
 	}
 
 	public Customer getCustomer() {
@@ -96,11 +97,11 @@ public class Permit  extends AbstractBaseModel {
 		this.number = number;
 	}
 
-	public double getFee() {
+	public Double getFee() {
 		return fee;
 	}
 
-	public void setFee(double fee) {
+	public void setFee(Double fee) {
 		this.fee = fee;
 	}
 

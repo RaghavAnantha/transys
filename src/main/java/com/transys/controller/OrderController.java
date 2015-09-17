@@ -197,13 +197,17 @@ public class OrderController extends CRUDController<Order> {
 		// return to form if we had errors
 		if (bindingResult.hasErrors()) {
 			setupCreate(model, request);
-			return urlContext + "/form";
+			return urlContext + "/order";
 		}
 		beforeSave(request, entity, model);
 		List<Permit> permitList = genericDAO.executeSimpleQuery("select obj from Permit obj where obj.id in (" 
 																					+ entity.getPermits().get(0).getId()
 																					+ ")");
 		entity.setPermits(permitList);
+		
+		OrderStatus orderStatus = new OrderStatus();
+		orderStatus.setId(1l);
+		entity.setOrderStatus(orderStatus);
 
 		genericDAO.saveOrUpdate(entity);
 		cleanUp(request);

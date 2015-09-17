@@ -55,7 +55,21 @@ function populateCustomerAddress() {
        	type: "GET",
        	success: function(responseData, textStatus, jqXHR) {
     	   	var customer = jQuery.parseJSON(responseData);
-    	   	$('#address').html(customer.billingAddressLine1);
+    	   	
+    	   	var address = customer.billingAddressLine1 + ", " 
+    	   					+ customer.city + ", " + customer.state.name + ", " + customer.zipcode
+    	   	$('#address').html(address);
+    	   	
+    		$('#contact').html(customer.contactName);
+    		$('#fax').html(customer.fax);
+    		
+    		var phone = customer.phone;
+    		var p1 = phone.substring(0,3);
+			var p2 = phone.substring(3,6);
+			var p3 = phone.substring(6,10);				
+			$('#phone').html(p1 + "-" + p2 + "-" + p3);
+    		
+    		//$('#email').html(customer.email);
 		}
 	}); 
 }
@@ -83,8 +97,20 @@ function populateCustomerAddress() {
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Address" /><span class="errorMessage"></span></td>
-			<td align="${left}" id="address">
-				
+			<td align="${left}" id="address"></td>
+		</tr>
+		<tr>
+			<td class="form-left"><transys:label code="Contact" /><span class="errorMessage"></span></td>
+			<td align="${left}" id="contact"></td>
+			<td class="form-left"><transys:label code="Fax"/></td>
+			<td align="${left}" id="fax">
+			</td>
+		</tr>
+		<tr>
+			<td class="form-left"><transys:label code="Phone" /><span class="errorMessage"></span></td>
+			<td align="${left}" id="phone"></td>
+			<td class="form-left"><transys:label code="Email"/></td>
+			<td align="${left}" id="email">
 			</td>
 		</tr>
 		<tr>
@@ -179,15 +205,15 @@ function populateCustomerAddress() {
 			</tr>
 		    <tr>
 		    	<td class="form-left"><transys:label code="Permit${permitDisplayIndex} Valid From"/><span class="errorMessage">*</span></td>
-		        <td align="${left}"><form:input path="permits[${status.index}].startDate" cssClass="flat"/></td>
+		        <td align="${left}">${aPermit.startDate}</td>
 		    </tr>
 		    <tr>
 		    	<td class="form-left"><transys:label code="Permit${permitDisplayIndex} Valid To"/><span class="errorMessage">*</span></td>
-		        <td align="${left}"><form:input path="permits[${status.index}].endDate" cssClass="flat"/></td>
+		        <td align="${left}">${aPermit.endDate}</td>
 		    </tr>
 		    <tr>
 		    	<td class="form-left"><transys:label code="Permit${permitDisplayIndex} Fee"/><span class="errorMessage">*</span></td>
-		        <td align="${left}"><form:input path="permits[${status.index}].fee" cssClass="flat"/></td>
+		        <td align="${left}">${aPermit.fee}</td>
 		    </tr>
 		</c:forEach>
 
