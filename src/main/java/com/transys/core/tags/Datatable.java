@@ -37,6 +37,8 @@ public final class Datatable extends BodyTagSupport {
 	private int width = 100;
 	private boolean supportSorting = false;
 	
+	private boolean editableInScreen;
+	
 	private boolean insertable;
 	private boolean searcheable;
 	private boolean editable;
@@ -225,6 +227,21 @@ public final class Datatable extends BodyTagSupport {
 	public void setMultipleDelete(boolean multipleDelete) {
 		this.multipleDelete = multipleDelete;
 	}
+	
+	/**
+	 * @return the editableInScreen
+	 */
+	public boolean isEditableInScreen() {
+		return editableInScreen;
+	}
+
+	/**
+	 * @param EditableInScreen the EditableInScreen to set
+	 */
+	public void setEditableInScreen(boolean editableInScreen) {
+		this.editableInScreen = editableInScreen;
+	}
+
 
 
 	/**
@@ -663,10 +680,16 @@ public final class Datatable extends BodyTagSupport {
 						objOut.println("<tr>");
 					iterCol = null;
 					this.currItem = baseObjects.get(i);
-					if (editColumn!=null)
+					if (editColumn!=null) {
 						//editColumn.setLinkUrl(pageContext.getAttribute("ctx")+"/"+urlContext+"/edit.do?id="+PropertyUtils.getProperty(currItem, "id") + "\" data-backdrop=\"static\" data-remote=\"false\" data-toggle=\"modal\" data-target=\"#editModal");
-						editColumn.setLinkUrl(pageContext.getAttribute("ctx")+"/"+urlContext+"/edit.do?id="+PropertyUtils.getProperty(currItem, "id"));
-					if (deleteColumn!=null)
+						if(editableInScreen) {
+						editColumn.setLinkUrl("#");
+						}else{
+							editColumn.setLinkUrl(pageContext.getAttribute("ctx")+"/"+urlContext+"/edit.do?id="+PropertyUtils.getProperty(currItem, "id"));
+							
+						}
+					}
+						if (deleteColumn!=null)
 						deleteColumn.setLinkUrl("javascript:confirmDelete('"+pageContext.getAttribute("ctx")+"/"+urlContext+"/delete.do?id="+PropertyUtils.getProperty(currItem, "id")+"');");
 //						deleteColumn.setLinkUrl(pageContext.getAttribute("ctx")+"/"+urlContext+"/delete.do?id="+PropertyUtils.getProperty(currItem, "id"));
 					if (multipleDelete) {
