@@ -12,7 +12,7 @@
 		<li><a href="#permitsReport" data-toggle="tab">Permits Report</a></li>
 	</ul>
 
-	<div class="tab-content style="background-color: white;"">
+	<div class="tab-content" style="background-color: white;">
 		<div id="managePermits" class="tab-pane">
 			<c:if test="${mode == 'MANAGE'}">
 				<%@include file="list.jsp"%>

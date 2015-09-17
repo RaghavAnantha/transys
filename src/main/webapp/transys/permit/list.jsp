@@ -4,8 +4,8 @@
 <form:form action="list.do" method="get" name="searchForm" id="permitSearchForm">
 	<table width="100%" id="form-table">
 		<tr>
-		  <td align="${left}" class="first"><transys:label code="Delivery Address #"/></td>
-				<td align="${left}"><select id="deliveryAddress" name="deliveryAddress.line1" style="min-width:350px; max-width:350px">
+		  <td align="${left}" class="form-left"><transys:label code="Delivery Address #"/></td>
+				<td align="${left}"><select class="flat form-control input-sm" id="deliveryAddress" name="deliveryAddress.line1" style="width: 175px">
 					<option value="">------<transys:label code="Please Select"/>------</option>
 					<c:forEach items="${deliveryAddress}" var="deliveryAddressVar">
 						 <c:set var="selected" value=""/>
@@ -17,8 +17,8 @@
 				</select>
 				</td>
 			
-			<td align="${left}" class="first"><transys:label code="Delivery Street"/></td>
-			<td align="${left}"><select id="deliveryStreet" name="deliveryAddress.line2" style="min-width:200px; max-width:200px">
+			<td align="${left}" class="form-left"><transys:label code="Delivery Street"/></td>
+			<td align="${left}"><select class="flat form-control input-sm" id="deliveryStreet" name="deliveryAddress.line2" style="width: 175px">
 				<option value="">------<transys:label code="Please Select"/>------</option>
 				<c:forEach items="${deliveryAddress}" var="deliveryAddress">
 						<c:set var="selected" value=""/>
@@ -32,8 +32,8 @@
 	 </tr>
 	 
  	 <tr>
-		  <td align="${left}" class="first"><transys:label code="Contact Name"/></td>
-				<td align="${left}"><select id="contactName" name="customer.contactName" style="min-width:350px; max-width:350px">
+		  <td align="${left}" class="form-left"><transys:label code="Contact Name"/></td>
+				<td align="${left}"><select class="flat form-control input-sm" id="contactName" name="customer.contactName" style="width: 175px">
 					<option value="">------<transys:label code="Please Select"/>------</option>
 					<c:forEach items="${customer}" var="customer">
 							<c:set var="selected" value=""/>
@@ -45,8 +45,8 @@
 				</select>
 				</td>
 			
-			<td align="${left}" class="first"><transys:label code="Phone Number"/></td>
-			<td align="${left}"><select id="phoneNum" name="customer.phone" style="min-width:200px; max-width:200px">
+			<td align="${left}" class="form-left"><transys:label code="Phone Number"/></td>
+			<td align="${left}"><select class="flat form-control input-sm" id="phoneNum" name="customer.phone" style="width: 175px">
 				<option value="">------<transys:label code="Please Select"/>------</option>
 				<c:forEach items="${customer}" var="customer">
 						<c:set var="selected" value=""/>
@@ -59,24 +59,24 @@
 			</td>
 	 </tr>
 	 <tr>
-		  <td align="${left}" class="first"><transys:label code="Start Date From"/></td>
+		  <td align="${left}" class="form-left"><transys:label code="Start Date From"/></td>
 		  <td align="${left}" class="wide"><input class="flat" id="datepicker1" name="startDateFrom" style="width: 163px" /></td>
 				
-		  <td align="${left}" class="first"><transys:label code="Start Date To"/></td>
+		  <td align="${left}" class="form-left"><transys:label code="Start Date To"/></td>
 	      <td align="${left}" class="wide"><input class="flat" id="datepicker2" name="startDateTo" style="width: 163px" /></td>
 			
 	 </tr>
 	 <tr>
-		  <td align="${left}" class="first"><transys:label code="End Date From"/></td>
+		  <td align="${left}" class="form-left"><transys:label code="End Date From"/></td>
 		  <td align="${left}" class="wide"><input class="flat" id="datepicker3" name="endDateFrom" style="width: 163px" /></td>
 				
-		  <td align="${left}" class="first"><transys:label code="End Date To"/></td>
+		  <td align="${left}" class="form-left"><transys:label code="End Date To"/></td>
 	      <td align="${left}" class="wide"><input class="flat" id="datepicker4" name="endDateTo" style="width: 163px" /></td>
 			
 	 </tr>
 	 <tr>
-		  <td align="${left}" class="first"><transys:label code="Permit Class"/></td>
-				<td align="${left}"><select id="permitClass" name="permitClass.permitClass" style="min-width:350px; max-width:350px">
+		  <td align="${left}" class="form-left"><transys:label code="Permit Class"/></td>
+				<td align="${left}"><select class="flat form-control input-sm" id="permitClass" name="permitClass.permitClass" style="width: 175px">
 					<option value="">------<transys:label code="Please Select"/>------</option>
 					<c:forEach items="${permitClass}" var="permitClass">
 							<c:set var="selected" value=""/>
@@ -88,8 +88,8 @@
 				</select>
 				</td>
 			
-			<td align="${left}" class="first"><transys:label code="Permit Type"/></td>
-			<td align="${left}"><select id="permitType" name="type.type" style="min-width:200px; max-width:200px">
+			<td align="${left}" class="form-left"><transys:label code="Permit Type"/></td>
+			<td align="${left}"><select class="flat form-control input-sm" id="permitType" name="type.type" style="width: 175px">
 				<option value="">------<transys:label code="Please Select"/>------</option>
 				<c:forEach items="${permitType}" var="permitType">
 						<c:set var="selected" value=""/>
@@ -102,8 +102,8 @@
 			</td>
 	 </tr>
 	 <tr>
-		  <td align="${left}" class="first"><transys:label code="Permit Number"/></td>
-				<td align="${left}"><select id="permitNumber" name="number" style="min-width:350px; max-width:350px">
+		  <td align="${left}" class="form-left"><transys:label code="Permit Number"/></td>
+				<td align="${left}"><select class="flat form-control input-sm" id="permitNumber" name="number" style="width: 175px">
 					<option value="">------<transys:label code="Please Select"/>------</option>
 					<c:forEach items="${permit}" var="permit">
 							<c:set var="selected" value=""/>
@@ -115,8 +115,8 @@
 				</select>
 				</td>
 			
-			<td align="${left}" class="first"><transys:label code="Permit Status"/></td>
-			<td align="${left}"><select id="permitStatus" name="status.status" style="min-width:200px; max-width:200px">
+			<td align="${left}" class="form-left"><transys:label code="Permit Status"/></td>
+			<td align="${left}"><select class="flat form-control input-sm" id="permitStatus" name="status.status" style="width: 175px">
 				<option value="">------<transys:label code="Please Select"/>------</option>
 				<c:forEach items="${permitStatus}" var="permitStatus">
 					<c:set var="selected" value=""/>
@@ -129,8 +129,8 @@
 			</td>
 	 </tr>
 	 <tr>
-		  <td align="${left}" class="first"><transys:label code="Customer Name"/></td>
-				<td align="${left}"><select id="customerName" name="customer.companyName" style="min-width:350px; max-width:350px">
+		  <td align="${left}" class="form-left"><transys:label code="Customer Name"/></td>
+				<td align="${left}"><select class="flat form-control input-sm" id="customerName" name="customer.companyName" style="width: 175px">
 					<option value="">------<transys:label code="Please Select"/>------</option>
 					<c:forEach items="${customer}" var="customer">
 						<c:if test='${not empty customer.companyName}'>
@@ -144,7 +144,7 @@
 				</select>
 				</td>
 			
-			<td align="${left}" class="first"><transys:label code="Order Number"/></td>
+			<td align="${left}" class="form-left"><transys:label code="Order Number"/></td>
 			<%-- <td align="${left}"><select id="orderNumber" name="order.id" style="min-width:200px; max-width:200px">
 				<option value="">------<transys:label code="Please Select"/>------</option>
 				<c:forEach items="${order}" var="order">
@@ -159,14 +159,14 @@
 	 </tr>
 		<tr>
 			<td align="${left}"></td>
-			<td align="${left}"><input type="button"
+			<td align="${left}"><input type="button" class="btn btn-primary btn-sm"
 				onclick="document.forms['searchForm'].submit();"
 				value="<transys:label code="Search"/>" /></td>
 		</tr>
 	</table>
 </form:form>
-<br />
-<form:form name="delete.do" id="serviceForm">
+
+<form:form name="delete.do" id="serviceForm" class="tab-color">
 	<transys:datatable urlContext="permit" deletable="true"
 		editable="true" insertable="true" baseObjects="${list}"
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
