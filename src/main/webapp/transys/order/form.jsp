@@ -24,6 +24,25 @@ function formatPhone() {
 function validate() {
 	return true;
 };
+
+function populateDeliveryAddress() {
+	$('#deliveryAddressSelect').empty();
+	
+	var customerId = $('#customerSelect').val();
+	$.ajax({
+  		url: "customerDeliveryAddress.do?customerId=" + customerId,
+       	type: "GET",
+       	success: function(responseData, textStatus, jqXHR) {
+    	   	var addressList = jQuery.parseJSON(responseData);
+    	   	$.each(addressList, function () {
+    	   	    $("<option />", {
+    	   	        val: this.id,
+    	   	        text: this.line1
+    	   	    }).appendTo('#deliveryAddressSelect');
+    	   	});
+		}
+	}); 
+}
 </script>
 <br/>
 <form:form action="save.do" name="typeForm" commandName="modelObject" method="post" id="typeForm">
@@ -39,7 +58,7 @@ function validate() {
 		<tr>
 			<td class="form-left"><transys:label code="Customer" /><span class="errorMessage"></span></td>
 			<td align="${left}">
-				<form:select cssClass="flat form-control input-sm" path="customer" style="width:175px">
+				<form:select id="customerSelect" cssClass="flat form-control input-sm" style="width:175px" path="customer" onChange="return populateDeliveryAddress();"> 
 					<form:option value="">-----------Please Select----------</form:option>
 					<form:options items="${customers}" itemValue="id" itemLabel="companyName" />
 				</form:select> 
@@ -52,7 +71,7 @@ function validate() {
 		<tr>
 			<td class="form-left"><transys:label code="Delivery Address" /><span class="errorMessage"></span></td>
 			<td align="${left}">
-				<form:select cssClass="flat form-control input-sm" path="deliveryAddress" style="width:175px">
+				<form:select id="deliveryAddressSelect" cssClass="flat form-control input-sm" path="deliveryAddress" style="width:175px">
 					<form:option value="">-----------Please Select----------</form:option>
 					<form:options items="${deliveryAddresses}" itemValue="id" itemLabel="line1" />
 				</form:select> 
@@ -82,7 +101,7 @@ function validate() {
 		<tr>
 			<td class="form-left"><transys:label code="Delivery Date"/><span class="errorMessage">*</span></td>
 			<td align="${left}">
-				<form:input path="deliveryDate" cssClass="flat"/>
+				<form:input path="deliveryDate" cssClass="flat" id="datepicker7" name="deliveryDate"/>
 				 <br><form:errors path="deliveryDate" cssClass="errorMessage" />
 			</td>
 			<td class="form-left"><transys:label code="Delivery Time"/></td>

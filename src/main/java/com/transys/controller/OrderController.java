@@ -15,9 +15,12 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.google.gson.Gson;
 import com.transys.controller.editor.AbstractModelEditor;
 import com.transys.model.Address;
+import com.transys.model.BaseModel;
 import com.transys.model.Customer;
 import com.transys.model.Order;
 import com.transys.model.OrderStatus;
@@ -53,7 +56,7 @@ public class OrderController extends CRUDController<Order> {
 		
 		model.addAttribute("orderStatuses", genericDAO.findByCriteria(OrderStatus.class, criterias, "status", false));
       model.addAttribute("customers", genericDAO.findByCriteria(Customer.class, criterias, "companyName", false));
-      model.addAttribute("deliveryAddresses", genericDAO.findByCriteria(Address.class, criterias, "line1", false));
+      //model.addAttribute("deliveryAddresses", genericDAO.findByCriteria(Address.class, criterias, "line1", false));
       
       model.addAttribute("permits",genericDAO.executeSimpleQuery("select obj from Permit obj where obj.id!=0 order by obj.id asc"));
 	}
@@ -129,6 +132,14 @@ public class OrderController extends CRUDController<Order> {
 	public void setupList(ModelMap model, HttpServletRequest request) {
 		populateSearchCriteria(request, request.getParameterMap());
 		setupCreate(model, request);
+	}
+	
+	@RequestMapping(method = RequestMethod.GET, value = "/customerDeliveryAddress")
+	public @ResponseBody String retrieveCustomerDeliveryAddress(ModelMap model, HttpServletRequest request) {
+		String customerId = request.getParameter("customerId");
+		List<Address> addressList  = genericDAO.executeSimpleQuery("select obj from Address obj where obj.customer.id=" + customerId);
+		String json = (new Gson()).toJson(addressList);
+		return json;
 	}
 	
 	@Override
