@@ -12,15 +12,21 @@ public class DumpsterInfo extends AbstractBaseModel {
 	
 	@Column(name="dumpsterSize")
 	private String dumpsterSize;
+	
+	@Column(name="dumpsterNum")
+	private String dumpsterNum;
+	
+	@Column(name="status")
+	private String status;
 
 	@Column(name="dumpsterPrice")
-	private String dumpsterPrice;
+	private Double dumpsterPrice;
 	
-	@Column(name="maxWeight")
-	private String maxWeight;
+	/*@Column(name="maxWeight")
+	private String maxWeight;*/
 
-	@Column(name="overWeightPrice")
-	private String overWeightPrice;
+	/*@Column(name="overWeightPrice")
+	private String overWeightPrice;*/
 	
 	public String getDumpsterSize() {
 		return dumpsterSize;
@@ -30,28 +36,35 @@ public class DumpsterInfo extends AbstractBaseModel {
 		this.dumpsterSize = dumpsterSize;
 	}
 
-	public String getDumpsterPrice() {
-		return dumpsterPrice;
-	}
-
-	public void setDumpsterPrice(String dumpsterPrice) {
-		this.dumpsterPrice = dumpsterPrice;
-	}
-
-	public String getMaxWeight() {
+	/*public String getMaxWeight() {
 		return maxWeight;
 	}
 
 	public void setMaxWeight(String maxWeight) {
 		this.maxWeight = maxWeight;
+	}*/
+
+	public Double getDumpsterPrice() {
+		return dumpsterPrice;
 	}
 
-	public String getOverWeightPrice() {
-		return overWeightPrice;
+	public void setDumpsterPrice(Double dumpsterPrice) {
+		this.dumpsterPrice = dumpsterPrice;
 	}
 
-	public void setOverWeightPrice(String overWeightPrice) {
-		this.overWeightPrice = overWeightPrice;
+	public String getDumpsterNum() {
+		return dumpsterNum;
 	}
 
+	public void setDumpsterNum(String dumpsterNum) {
+		this.dumpsterNum = dumpsterNum;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
 }
