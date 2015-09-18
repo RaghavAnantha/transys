@@ -514,11 +514,12 @@ DROP TABLE IF EXISTS `permit`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `permit` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `type` bigint(20) NOT NULL,
+  `permitType` bigint(20) NOT NULL,
   `class` bigint(20) DEFAULT NULL,
   `number` varchar(15) DEFAULT NULL,
   `fee` varchar(12) DEFAULT 0,
   `startDate` datetime DEFAULT NULL,
+  `endDate` datetime DEFAULT NULL,
   `permitAddress` varchar(100) DEFAULT NULL,
   `locationType` bigint(20) DEFAULT NULL,
   `status` bigint(20) NOT NULL DEFAULT '1',
@@ -531,19 +532,20 @@ CREATE TABLE `permit` (
   `customerID` bigint(20) DEFAULT NULL,
   `deliveryAddress` bigint(20) NOT NULL,
   `parkingMeter` varchar(3) DEFAULT NULL,
+  `parkingMeterFee` double DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `permitStatusRef_idx` (`status`),
   KEY `customerPermitRef_idx` (`customerID`),
   KEY `deliveryAddressPermitRef_idx` (`deliveryAddress`),
   KEY `locationTypeRef_idx` (`locationType`),
   KEY `permitClassRef_idx` (`class`),
-  KEY `permitTypeRef_idx` (`type`),
+  KEY `permitTypeRef_idx` (`permitType`),
   CONSTRAINT `customerPermitRef` FOREIGN KEY (`customerID`) REFERENCES `customer` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `deliveryAddressPermitRef` FOREIGN KEY (`deliveryAddress`) REFERENCES `address` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `locationTypeRef` FOREIGN KEY (`locationType`) REFERENCES `locationType` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `permitClassRef` FOREIGN KEY (`class`) REFERENCES `permitClass` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `permitStatusRef` FOREIGN KEY (`status`) REFERENCES `permitStatus` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `permitTypeRef` FOREIGN KEY (`type`) REFERENCES `permitType` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `permitTypeRef` FOREIGN KEY (`permitType`) REFERENCES `permitType` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -632,7 +634,7 @@ DROP TABLE IF EXISTS `permitType`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `permitType` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `type` varchar(10) NOT NULL,
+  `permitType` varchar(10) NOT NULL,
   `created_at` datetime DEFAULT NULL,
   `created_by` bigint(20) DEFAULT NULL,
   `modified_at` datetime DEFAULT NULL,
