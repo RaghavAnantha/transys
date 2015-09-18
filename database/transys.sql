@@ -552,7 +552,12 @@ CREATE TABLE `permit` (
 
 LOCK TABLES `permit` WRITE;
 /*!40000 ALTER TABLE `permit` DISABLE KEYS */;
-INSERT INTO `permit` VALUES (1,1,1,'1234','50',curdate(),'1301-11W',1,2,'Test',NULL,NULL,NULL,NULL,1,5,1,NULL),(9,1,1,'6','0.0',curdate(),NULL,1,1,NULL,'2015-09-15 16:25:46',1,NULL,NULL,1,6,1,'yes'),(10,2,2,'9','0.0',curdate(),NULL,2,1,NULL,'2015-09-15 16:28:40',1,NULL,NULL,1,6,1,'no'),(11,2,2,'123','0.0',curdate(),NULL,2,2,NULL,'2015-09-15 17:18:54',1,NULL,NULL,1,6,1,'yes'),(12,2,2,'12345','0.0',curdate(),NULL,2,1,NULL,'2015-09-15 17:23:22',1,NULL,NULL,1,6,1,'ywa'),(13,2,2,'56','0.0',curdate(),NULL,2,1,NULL,'2015-09-15 17:28:14',1,NULL,NULL,1,5,1,'yes');
+INSERT INTO `permit` VALUES (1,1,1,'1234','50',curdate(),'1301-11W',1,2,'Test',NULL,NULL,NULL,NULL,1,5,1,NULL);
+-- ,(9,1,1,'6','0.0',curdate(),NULL,1,1,NULL,'2015-09-15 16:25:46',1,NULL,NULL,1,6,1,'yes')
+-- ,(10,2,2,'9','0.0',curdate(),NULL,2,1,NULL,'2015-09-15 16:28:40',1,NULL,NULL,1,6,1,'no')
+-- ,(11,2,2,'123','0.0',curdate(),NULL,2,2,NULL,'2015-09-15 17:18:54',1,NULL,NULL,1,6,1,'yes')
+-- ,(12,2,2,'12345','0.0',curdate(),NULL,2,1,NULL,'2015-09-15 17:23:22',1,NULL,NULL,1,6,1,'ywa')
+-- ,(13,2,2,'56','0.0',curdate(),NULL,2,1,NULL,'2015-09-15 17:28:14',1,NULL,NULL,1,5,1,'yes');
 /*!40000 ALTER TABLE `permit` ENABLE KEYS */;
 UNLOCK TABLES;
 
