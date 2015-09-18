@@ -2,24 +2,27 @@ package com.transys.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
 @Table(name="orderNotes")
 public class OrderNotes extends AbstractBaseModel {
-
-	@Column(name="orderID")
-	private String orderID;
+	@ManyToOne
+	@JoinColumn(name="orderId") 
+	private Order order;
 
 	@Column(name="notes")
 	private String notes;
-
-	public String getOrderID() {
-		return orderID;
+	
+	public Order getOrder() {
+		return order;
 	}
 
-	public void setOrderID(String orderID) {
-		this.orderID = orderID;
+	public void setOrder(Order order) {
+		this.order = order;
 	}
 
 	public String getNotes() {

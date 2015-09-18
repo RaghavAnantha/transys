@@ -2,77 +2,122 @@ package com.transys.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
 @Table(name="orderPaymentInfo")
 public class OrderPaymentInfo extends AbstractBaseModel {
-
-		@Column(name="orderID")
-		private String orderID;
+		@OneToOne
+		@JoinColumn(name="orderId") 
+		private Order order;
 		
 		@Column(name="dumpsterPrice")
-		private double dumpsterPrice;
+		private Double dumpsterPrice;
 		
+		@Column(name="permitFees")
+		private Double permitFees;
+		  
+		@Column(name="overweightFee")
+		private Double overweightFee;
+		  
 		@Column(name="cityFee")
-		private double cityFee;
+		private Double cityFee;
 		
-		@Column(name="additionalFees")
-		private double additionalFees;
+		@Column(name="additionalFee")
+		private Double additionalFee;
 		
-		@Column(name="modeOfPayment")
-		private String modeOfPayment;
+		@Column(name="totalFees")
+		private Double totalFees;
 		
-		@Column(name="reference")
-		private String reference;
+		@Column(name="paymentMethod")
+		private String paymentMethod;
 		
-		public String getOrderID() {
-			return orderID;
+		@Column(name="ccReferenceNum")
+		private String ccReferenceNum;
+		
+		@Column(name="checkNum")
+		private String checkNum;
+
+		public Order getOrder() {
+			return order;
 		}
 
-		public void setOrderID(String orderID) {
-			this.orderID = orderID;
+		public void setOrder(Order order) {
+			this.order = order;
 		}
 
-		public double getDumpsterPrice() {
+		public Double getDumpsterPrice() {
 			return dumpsterPrice;
 		}
 
-		public void setDumpsterPrice(double dumpsterPrice) {
+		public void setDumpsterPrice(Double dumpsterPrice) {
 			this.dumpsterPrice = dumpsterPrice;
 		}
 
-		public double getCityFee() {
+		public Double getPermitFees() {
+			return permitFees;
+		}
+
+		public void setPermitFees(Double permitFees) {
+			this.permitFees = permitFees;
+		}
+
+		public Double getOverweightFee() {
+			return overweightFee;
+		}
+
+		public void setOverweightFee(Double overweightFee) {
+			this.overweightFee = overweightFee;
+		}
+
+		public Double getCityFee() {
 			return cityFee;
 		}
 
-		public void setCityFee(double cityFee) {
+		public void setCityFee(Double cityFee) {
 			this.cityFee = cityFee;
 		}
 
-		public double getAdditionalFees() {
-			return additionalFees;
+		public Double getAdditionalFee() {
+			return additionalFee;
 		}
 
-		public void setAdditionalFees(double additionalFees) {
-			this.additionalFees = additionalFees;
+		public void setAdditionalFee(Double additionalFee) {
+			this.additionalFee = additionalFee;
 		}
 
-		public String getModeOfPayment() {
-			return modeOfPayment;
+		public Double getTotalFees() {
+			return totalFees;
 		}
 
-		public void setModeOfPayment(String modeOfPayment) {
-			this.modeOfPayment = modeOfPayment;
+		public void setTotalFees(Double totalFees) {
+			this.totalFees = totalFees;
 		}
 
-		public String getReference() {
-			return reference;
+		public String getPaymentMethod() {
+			return paymentMethod;
 		}
 
-		public void setReference(String reference) {
-			this.reference = reference;
+		public void setPaymentMethod(String paymentMethod) {
+			this.paymentMethod = paymentMethod;
 		}
 
-		
+		public String getCcReferenceNum() {
+			return ccReferenceNum;
+		}
+
+		public void setCcReferenceNum(String ccReferenceNum) {
+			this.ccReferenceNum = ccReferenceNum;
+		}
+
+		public String getCheckNum() {
+			return checkNum;
+		}
+
+		public void setCheckNum(String checkNum) {
+			this.checkNum = checkNum;
+		}
 }

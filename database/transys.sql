@@ -355,16 +355,16 @@ DROP TABLE IF EXISTS `orderNotes`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `orderNotes` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `orderID` bigint(11) NOT NULL,
-  `notes` int(11) DEFAULT NULL,
+  `orderId` bigint(20) NOT NULL,
+  `notes` varchar(255) DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   `created_by` bigint(20) DEFAULT NULL,
   `modified_at` datetime DEFAULT NULL,
   `modified_by` bigint(20) DEFAULT NULL,
   `delete_flag` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
-  KEY `orderNotesOrderRef_idx` (`orderID`),
-  CONSTRAINT `orderNotesOrderRef` FOREIGN KEY (`orderID`) REFERENCES `trans_order` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  KEY `orderNotesOrderRef_idx` (`orderId`),
+  CONSTRAINT `orderNotesOrderRef` FOREIGN KEY (`orderId`) REFERENCES `trans_order` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -386,20 +386,23 @@ DROP TABLE IF EXISTS `orderPaymentInfo`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `orderPaymentInfo` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `orderID` bigint(20) NOT NULL,
+  `orderId` bigint(20) NOT NULL,
   `dumpsterPrice` double DEFAULT NULL,
   `cityFee` double DEFAULT NULL,
+  `permitFees` double DEFAULT NULL,
+  `overweightFee` double DEFAULT NULL,
   `additionalFee` double DEFAULT NULL,
-  `methodOfPayment` varchar(50) DEFAULT NULL,
-  `reference` varchar(50) DEFAULT NULL,
+  `paymentMethod` varchar(50) DEFAULT NULL,
+  `ccReferenceNum` varchar(50) DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   `created_by` bigint(20) DEFAULT NULL,
   `modified_at` datetime DEFAULT NULL,
   `modified_by` bigint(20) DEFAULT NULL,
   `delete_flag` int(11) NOT NULL DEFAULT '1',
-  `additionalFees` double DEFAULT NULL,
-  `modeOfPayment` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  `totalFees` double DEFAULT NULL,
+  `checkNum` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `orderPaymentOrderRef` FOREIGN KEY (`orderId`) REFERENCES `trans_order` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -431,7 +434,7 @@ CREATE TABLE `orderPermits` (
   PRIMARY KEY (`id`),
   KEY `orderPermitRef_idx` (`orderID`),
   KEY `permitRef_idx` (`permitID`),
-  CONSTRAINT `orderPermitRef` FOREIGN KEY (`orderID`) REFERENCES `trans_order` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `orderPermitOrderRef` FOREIGN KEY (`orderID`) REFERENCES `trans_order` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `permitRef` FOREIGN KEY (`permitID`) REFERENCES `permit` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
