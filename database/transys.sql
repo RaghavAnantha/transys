@@ -479,37 +479,6 @@ INSERT INTO `transys`.`orderstatus` (`id`, `status`) VALUES ('1', 'Open');
 UNLOCK TABLES;
 
 --
--- Table structure for table `orderWeightInfo`
---
-
-DROP TABLE IF EXISTS `orderWeightInfo`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `orderWeightInfo` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `orderID` bigint(20) NOT NULL,
-  `grossWeight` double DEFAULT NULL,
-  `netWeight` double DEFAULT NULL,
-  `tare` double DEFAULT NULL,
-  `created_at` datetime DEFAULT NULL,
-  `created_by` bigint(20) DEFAULT NULL,
-  `modified_at` datetime DEFAULT NULL,
-  `modified_by` bigint(20) DEFAULT NULL,
-  `delete_flag` int(11) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `orderWeightInfo`
---
-
-LOCK TABLES `orderWeightInfo` WRITE;
-/*!40000 ALTER TABLE `orderWeightInfo` DISABLE KEYS */;
-/*!40000 ALTER TABLE `orderWeightInfo` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `permit`
 --
 
