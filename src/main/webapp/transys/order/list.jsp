@@ -85,7 +85,7 @@
 					<c:forEach items="${dumpsters}" var="aDumpster">
 						<c:set var="selected" value="" />
 						<c:if
-							test="${sessionScope.searchCriteria.searchMap['dumpsterSize'] == anOrder.dumpsterSize}">
+							test="${sessionScope.searchCriteria.searchMap['dumpsterSize'] == aDumpster.dumpsterSize}">
 							<c:set var="selected" value="selected" />
 						</c:if>
 						<option value="${aDumpster.id}" ${selected}>${aDumpster.dumpsterSize}</option>

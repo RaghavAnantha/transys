@@ -33,6 +33,9 @@ function populateCustomerInfo() {
 function populateDeliveryAddress() {
 	$('#deliveryAddressSelect').empty();
 	
+	var firstOption = $('<option value="">'+ "-----------Please Select----------" +'</option>');
+	$('#deliveryAddressSelect').append(firstOption);
+	
 	var customerId = $('#customerSelect').val();
 	$.ajax({
   		url: "customerDeliveryAddress.do?id=" + customerId,
