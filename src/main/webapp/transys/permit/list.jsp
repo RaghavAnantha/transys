@@ -89,14 +89,14 @@
 				</td>
 			
 			<td align="${left}" class="form-left"><transys:label code="Permit Type"/></td>
-			<td align="${left}"><select class="flat form-control input-sm" id="permitType" name="type.type" style="width: 175px">
+			<td align="${left}"><select class="flat form-control input-sm" id="permitType" name="permitType.permitType" style="width: 175px">
 				<option value="">------<transys:label code="Please Select"/>------</option>
 				<c:forEach items="${permitType}" var="permitType">
 						<c:set var="selected" value=""/>
-						<c:if test="${sessionScope.searchCriteria.searchMap['type.type'] == permitType.type}">
+						<c:if test="${sessionScope.searchCriteria.searchMap['permitType.permitType'] == permitType.permitType}">
 							<c:set var="selected" value="selected"/>
 						</c:if>
-							<option value="${permitType.type}" ${selected}>${permitType.type}</option>
+							<option value="${permitType.permitType}" ${selected}>${permitType.permitType}</option>
 				</c:forEach>
 			</select>
 			</td>
@@ -175,9 +175,10 @@
 		<transys:textcolumn headerText="Delivery#" dataField="deliveryAddress.line1" />
 		<transys:textcolumn headerText="DeliveryStreet" dataField="deliveryAddress.line2" />
 		<transys:textcolumn headerText="Locn. Type" dataField="locationType.locationType" />
-		<transys:textcolumn headerText="PermitType" dataField="type.type" />
+		<transys:textcolumn headerText="PermitType" dataField="permitType.permitType" />
 		<transys:textcolumn headerText="PermitClass" dataField="permitClass.permitClass" />
 		<transys:textcolumn headerText="StartDate" dataField="startDate" />
+		<transys:textcolumn headerText="EndDate" dataField="endDate" />
 		<transys:textcolumn headerText="CustomerName" dataField="customer.companyName" />
 		<transys:textcolumn headerText="Permit#" dataField="number" />
 		<transys:textcolumn headerText="PermitFee" dataField="fee" />

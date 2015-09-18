@@ -146,7 +146,7 @@ public abstract class CRUDController<T extends BaseModel> extends BaseController
 			System.out.println(">>>>>>>>>>>>>>>>> Has errors! ");
 			List<ObjectError> errors = bindingResult.getAllErrors();
 			for(ObjectError e : errors) {
-				System.out.println(e.getDefaultMessage());
+				System.out.println(">>>>> " + e.getDefaultMessage());
 			}
 			
 			setupCreate(model, request);
@@ -300,7 +300,7 @@ public abstract class CRUDController<T extends BaseModel> extends BaseController
 	@Override
 	@InitBinder
 	public void initBinder(WebDataBinder binder) {
-		SimpleDateFormat dateFormat = new SimpleDateFormat("mm/dd/yy");
+		SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
 		dateFormat.setLenient(false);
 		binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, false));
 		binder.registerCustomEditor(byte[].class, new ByteArrayMultipartFileEditor());

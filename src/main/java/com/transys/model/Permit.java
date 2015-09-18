@@ -8,8 +8,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import org.apache.commons.lang3.time.DateUtils;
-
 @Entity
 @Table(name="permit")
 public class Permit  extends AbstractBaseModel {
@@ -19,8 +17,8 @@ public class Permit  extends AbstractBaseModel {
 	private Customer customer;
 	
 	@ManyToOne
-	@JoinColumn(name="type")
-	private PermitType type;
+	@JoinColumn(name="permitType")
+	private PermitType permitType;
 	
 	@ManyToOne
 	@JoinColumn(name="class")
@@ -34,6 +32,9 @@ public class Permit  extends AbstractBaseModel {
 	
 	@Column(name="startDate")
 	private Date startDate;
+	
+	@Column(name="endDate")
+	private Date endDate;
 	
 	@Column(name="permitAddress")
 	private String permitAddress;
@@ -55,15 +56,9 @@ public class Permit  extends AbstractBaseModel {
 
 	@Column(name="parkingMeter")
 	private String parkingMeter;
-
-	public Date getEndDate() {
-		/*String tokens[] = getType().getType().split("\\s");
-		int noOfDays = new Integer(tokens[0]).intValue();
-		
-		return DateUtils.addDays(getStartDate(), noOfDays);*/
-		//return DateUtils.addDays(new Date(), 3);
-		return null;
-	}
+	
+	@Column(name="parkingMeterFee")
+	private Double parkingMeterFee;
 
 	public Customer getCustomer() {
 		return customer;
@@ -73,12 +68,12 @@ public class Permit  extends AbstractBaseModel {
 		this.customer = customer;
 	}
 
-	public PermitType getType() {
-		return type;
+	public PermitType getPermitType() {
+		return permitType;
 	}
 
-	public void setType(PermitType type) {
-		this.type = type;
+	public void setPermitType(PermitType permitType) {
+		this.permitType = permitType;
 	}
 
 	public PermitClass getPermitClass() {
@@ -111,6 +106,14 @@ public class Permit  extends AbstractBaseModel {
 
 	public void setStartDate(Date startDate) {
 		this.startDate = startDate;
+	}
+	
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
+	}
+	
+	public Date getEndDate() {
+		return this.endDate;
 	}
 
 	public String getPermitAddress() {
@@ -159,6 +162,14 @@ public class Permit  extends AbstractBaseModel {
 
 	public void setParkingMeter(String parkingMeter) {
 		this.parkingMeter = parkingMeter;
+	}
+	
+	public Double getParkingMeterFee() {
+		return this.parkingMeterFee;
+	}
+
+	public void setParkingMeter(Double parkingMeterFee) {
+		this.parkingMeterFee = parkingMeterFee;
 	}
 	
 }

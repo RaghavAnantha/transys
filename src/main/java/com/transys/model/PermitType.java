@@ -8,15 +8,15 @@ import javax.persistence.Table;
 @Table(name="permitType")
 public class PermitType extends AbstractBaseModel {
 
-	@Column(name="type")
-	private String type;
+	@Column(name="permitType")
+	private String permitType;
 
-	public String getType() {
-		return type;
+	public String getPermitType() {
+		return permitType;
 	}
 
-	public void setType(String type) {
-		this.type = type;
+	public void setPermitType(String permitType) {
+		this.permitType = permitType;
 	}
 	
 	

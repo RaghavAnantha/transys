@@ -56,7 +56,8 @@ public class BaseController {
 	// Set up any custom editors, adds a custom one for java.sql.date by default
 	@InitBinder
 	public void initBinder(WebDataBinder binder) {
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
 		dateFormat.setLenient(false);
 		binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, false));
 		binder.registerCustomEditor(byte[].class, new ByteArrayMultipartFileEditor());
