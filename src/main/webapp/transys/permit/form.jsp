@@ -53,11 +53,10 @@ function populateEndDate() {
 			 	<br><form:errors path="number" cssClass="errorMessage" />
 			</td>
 			
-			<%-- <td class="form-left"><transys:label code="Order Number" /></td>
+			<td class="form-left"><transys:label code="Order Number" /></td>
 			<td align="${left}">
-				<form:input path="order.id" cssClass="flat" style="min-width:350px; max-width:350px"  />
-			 	<br><form:errors path="order.id" cssClass="errorMessage" />
-			</td> --%>
+				<input value="${associatedOrderID.order.id}" cssClass="flat" style="min-width:350px; max-width:350px"  readOnly="true"/>
+			</td>
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Customer Name" /><span class="errorMessage">*</span></td>

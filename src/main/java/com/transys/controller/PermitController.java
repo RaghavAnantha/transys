@@ -29,6 +29,7 @@ import com.transys.model.BaseModel;
 import com.transys.model.Customer;
 import com.transys.model.LocationType;
 import com.transys.model.Order;
+import com.transys.model.OrderPermits;
 import com.transys.model.Permit;
 import com.transys.model.PermitClass;
 import com.transys.model.PermitNotes;
@@ -117,6 +118,10 @@ public class PermitController extends CRUDController<Permit> {
 	
 		List<BaseModel> addressList = genericDAO.executeSimpleQuery("select obj from PermitNotes obj where obj.permit.id=" +  permitToBeEdited.getId() + " order by obj.id asc");
 		model.addAttribute("notesList", addressList);
+		
+		// only in cases of Edit, an order ID can be associated with the permit
+		OrderPermits orderPermitObj = (OrderPermits)genericDAO.executeSimpleQuery("select obj from OrderPermits obj where obj.permit.id=" +  permitToBeEdited.getId() + " order by obj.id desc").get(0);
+		model.addAttribute("associatedOrderID", orderPermitObj);
 	
 		return urlContext + "/permit";
 	}
