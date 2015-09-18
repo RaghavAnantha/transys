@@ -15,6 +15,9 @@ public class DumpsterInfo extends AbstractBaseModel {
 	
 	@Column(name="dumpsterNum")
 	private String dumpsterNum;
+	
+	@Column(name="status")
+	private String status;
 
 	@Column(name="dumpsterPrice")
 	private Double dumpsterPrice;
@@ -55,5 +58,13 @@ public class DumpsterInfo extends AbstractBaseModel {
 
 	public void setDumpsterNum(String dumpsterNum) {
 		this.dumpsterNum = dumpsterNum;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 }

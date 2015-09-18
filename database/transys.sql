@@ -157,6 +157,7 @@ CREATE TABLE `dumpsterInfo` (
   `dumpsterPrice` double DEFAULT NULL,
   -- `maxWeight` int(20) DEFAULT NULL,
   -- `overWeightPrice` double DEFAULT NULL,
+  `status` varchar(25) DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   `created_by` bigint(20) DEFAULT NULL,
   `modified_at` datetime DEFAULT NULL,
