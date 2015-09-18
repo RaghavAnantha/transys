@@ -143,7 +143,7 @@ function populateCustomerAddress() {
 			<td class="form-left"><transys:label code="Phone2"/></td>
 			<td align="${left}">
 				<form:input path="deliveryContactPhone2" cssClass="flat" />
-				 <br><form:errors path="deliveryContactPhone2" cssClass="errorMessage" />
+				<br><form:errors path="deliveryContactPhone2" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>
@@ -173,17 +173,17 @@ function populateCustomerAddress() {
 			<td align="${left}">
 				<form:select id="dumpsterSize" cssClass="flat form-control input-sm" style="width:175px" path="dumpsterSize"> 
 					<form:option value="">-----------Please Select----------</form:option>
-					<form:options items="${dusmpsterSizes}" itemValue="id" itemLabel="dumpsterSize" />
+					<form:options items="${dusmpsters}" itemValue="id" itemLabel="dumpsterSize" />
 				</form:select> 
 			 	<br><form:errors path="dumpsterSize" cssClass="errorMessage" />
 			</td>
 			<td class="form-left"><transys:label code="Material Type"/></td>
 			<td align="${left}">
-				<form:select id="typeOfMaterial" cssClass="flat form-control input-sm" style="width:175px" path="typeOfMaterial"> 
+				<form:select id="materialType" cssClass="flat form-control input-sm" style="width:175px" path="materialType"> 
 					<form:option value="">-----------Please Select----------</form:option>
 					<form:options items="${materialTypes}" itemValue="id" itemLabel="type" />
 				</form:select> 
-				<br><form:errors path="typeOfMaterial" cssClass="errorMessage" />
+				<br><form:errors path="materialType" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>
@@ -219,6 +219,30 @@ function populateCustomerAddress() {
 
 		<tr>
 			<td colspan=10 class="danger" style="font-size: 13px;font-weight: bold;color: white;">Scale/Weights Information</td>
+		</tr>
+		<tr>
+			<td class="form-left"><transys:label code="Gross"/><span class="errorMessage">*</span></td>
+			<td align="${left}">
+				<form:input path="grossWeight" cssClass="flat" />
+				<br><form:errors path="grossWeight" cssClass="errorMessage" />
+			</td>
+			<td class="form-left"><transys:label code="Tare"/><span class="errorMessage">*</span></td>
+			<td align="${left}">
+				<form:input path="tare" cssClass="flat" />
+				<br><form:errors path="tare" cssClass="errorMessage" />
+			</td>
+		</tr>
+		<tr>
+			<td class="form-left"><transys:label code="Net Lb"/><span class="errorMessage">*</span></td>
+			<td align="${left}">
+				<form:input path="netWeightLb" cssClass="flat" />
+				<br><form:errors path="netWeightLb" cssClass="errorMessage" />
+			</td>
+			<td class="form-left"><transys:label code="Net Tonnage"/><span class="errorMessage">*</span></td>
+			<td align="${left}">
+				<form:input path="netWeightTonnage" cssClass="flat" />
+				<br><form:errors path="netWeightTonnage" cssClass="errorMessage" />
+			</td>
 		</tr>
 		<tr>
 			<td colspan=10 class="danger" style="font-size: 13px;font-weight: bold;color: white;">Rates/Fees Information</td>

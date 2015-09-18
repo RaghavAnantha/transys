@@ -44,11 +44,15 @@ public class Order extends AbstractBaseModel {
 	private Date deliveryTimeTo;
 	
 	@ManyToOne
-	@JoinColumn(name="deliveryAddress")
+	@JoinColumn(name="deliveryAddressId")
 	private Address deliveryAddress;
 	
-	@Column(name="typeOfMaterial")
-	private String typeOfMaterial;
+	/*@ManyToOne
+	@JoinColumn(name="materialTypeId") 
+	private MaterialType materialType;*/
+	
+	@Column(name="materialType")
+	private String materialType;
 	
 	@Column(name="pickupDate")
 	private Date pickupDate;
@@ -78,8 +82,12 @@ public class Order extends AbstractBaseModel {
 	@Column(name="dumpsterSize")
 	private String dumpsterSize;
 	
-	@Column(name="dumpsterNum")
-	private String dumpsterNum;
+	@Column(name="dumpsterPrice")
+	private Double dumpsterPrice;
+	
+	@ManyToOne
+	@JoinColumn(name="dumpsterId") 
+	private DumpsterInfo dumpster;
 	
 	/******** Payment Info ************/
 	/*@JoinColumn(name="paymentInfo")
@@ -88,6 +96,18 @@ public class Order extends AbstractBaseModel {
 	/******** Weight Info ************/
 	/*@JoinColumn(name="weightInfo")
 	private OrderWeightInfo weightInfo;*/
+	
+	@Column(name="grossWeight")
+	private Double grossWeight;
+	
+	@Column(name="netWeightLb")
+	private Double netWeightLb;
+	
+	@Column(name="netWeightTonnage")
+	private Double netWeightTonnage;
+	
+	@Column(name="tare")
+	private Double tare;
 	
 	/******** Driver Info ************/
 	/*@JoinColumn(name="driverInfo")
@@ -104,6 +124,38 @@ public class Order extends AbstractBaseModel {
 
 	public Customer getCustomer() {
 		return customer;
+	}
+
+	public Double getGrossWeight() {
+		return grossWeight;
+	}
+
+	public void setGrossWeight(Double grossWeight) {
+		this.grossWeight = grossWeight;
+	}
+
+	public Double getNetWeightLb() {
+		return netWeightLb;
+	}
+
+	public void setNetWeightLb(Double netWeightLb) {
+		this.netWeightLb = netWeightLb;
+	}
+
+	public Double getNetWeightTonnage() {
+		return netWeightTonnage;
+	}
+
+	public void setNetWeightTonnage(Double netWeightTonnage) {
+		this.netWeightTonnage = netWeightTonnage;
+	}
+
+	public Double getTare() {
+		return tare;
+	}
+
+	public void setTare(Double tare) {
+		this.tare = tare;
 	}
 
 	public void setCustomer(Customer customer) {
@@ -166,14 +218,6 @@ public class Order extends AbstractBaseModel {
 		this.deliveryAddress = deliveryAddress;
 	}
 
-	public String getTypeOfMaterial() {
-		return typeOfMaterial;
-	}
-
-	public void setTypeOfMaterial(String typeOfMaterial) {
-		this.typeOfMaterial = typeOfMaterial;
-	}
-
 	public Date getPickupDate() {
 		return pickupDate;
 	}
@@ -206,14 +250,7 @@ public class Order extends AbstractBaseModel {
 		this.dumpsterSize = dumpsterSize;
 	}
 
-	public String getDumpsterNum() {
-		return dumpsterNum;
-	}
-
-	public void setDumpsterNum(String dumpsterNum) {
-		this.dumpsterNum = dumpsterNum;
-	}
-
+	
 	/*public OrderPaymentInfo getPaymentInfo() {
 		return paymentInfo;
 	}
@@ -244,6 +281,38 @@ public class Order extends AbstractBaseModel {
 
 	public void setOrderStatus(OrderStatus status) {
 		this.orderStatus = status;
+	}
+
+	/*public MaterialType getMaterialType() {
+		return materialType;
+	}
+
+	public void setMaterialType(MaterialType materialType) {
+		this.materialType = materialType;
+	}*/
+
+	public Double getDumpsterPrice() {
+		return dumpsterPrice;
+	}
+
+	public void setDumpsterPrice(Double dumpsterPrice) {
+		this.dumpsterPrice = dumpsterPrice;
+	}
+
+	public DumpsterInfo getDumpster() {
+		return dumpster;
+	}
+
+	public void setDumpster(DumpsterInfo dumpster) {
+		this.dumpster = dumpster;
+	}
+
+	public String getMaterialType() {
+		return materialType;
+	}
+
+	public void setMaterialType(String materialType) {
+		this.materialType = materialType;
 	}
 
 	/*public OrderNotes getNotes() {

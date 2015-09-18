@@ -153,9 +153,10 @@ DROP TABLE IF EXISTS `dumpsterInfo`;
 CREATE TABLE `dumpsterInfo` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `dumpsterSize` varchar(5) DEFAULT NULL,
+  `dumpsterNum` varchar(50) DEFAULT NULL,
   `dumpsterPrice` double DEFAULT NULL,
-  `maxWeight` int(20) DEFAULT NULL,
-  `overWeightPrice` double DEFAULT NULL,
+  -- `maxWeight` int(20) DEFAULT NULL,
+  -- `overWeightPrice` double DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   `created_by` bigint(20) DEFAULT NULL,
   `modified_at` datetime DEFAULT NULL,
@@ -232,10 +233,11 @@ CREATE TABLE `trans_order` (
   `deliveryContactPhone2` varchar(25) DEFAULT NULL,
   `deliveryDate` datetime DEFAULT NULL,
   `deliveryTimeFrom` datetime DEFAULT NULL,
-  `deliveryAddress` bigint(20) DEFAULT NULL,
+  `deliveryAddressId` bigint(20) DEFAULT NULL,
   `dumpsterLocation` varchar(50) DEFAULT NULL,
   `dumpsterSize` varchar(5) DEFAULT NULL,
-  `typeOfMaterial` varchar(50) DEFAULT NULL,
+  `materialType` varchar(50) DEFAULT NULL,
+  `dumpsterPrice` double DEFAULT NULL,
   -- `paymentInfo` bigint(20) DEFAULT NULL,
   -- `notes` int(11) DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
@@ -244,7 +246,11 @@ CREATE TABLE `trans_order` (
   `modified_by` bigint(20) DEFAULT NULL,
   `delete_flag` int(11) NOT NULL DEFAULT '1',
   -- `weightInfo` bigint(20) DEFAULT '0',
-  `dumpsterNum` varchar(20) DEFAULT NULL,
+  `grossWeight` double DEFAULT NULL,
+  `netWeightLb` double DEFAULT NULL,
+  `netWeightTonnage` double DEFAULT NULL,
+  `tare` double DEFAULT NULL,
+  `dumpsterId` bigint(20) DEFAULT NULL,
   -- `driverInfo` bigint(20) DEFAULT NULL,
   `pickupDate` datetime DEFAULT NULL,
   `orderStatus` bigint(20) DEFAULT NULL,
@@ -252,18 +258,20 @@ CREATE TABLE `trans_order` (
   `deliveryTimeTo` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `key1_idx` (`custID`),
-  KEY `deliveryAddressRef_idx` (`deliveryAddress`),
+  -- KEY `deliveryAddressRef_idx` (`deliveryAddressId`),
   KEY `orderStatusRef_idx` (`orderStatus`),
   -- KEY `driverInfoRef_idx` (`driverInfo`),
   -- KEY `weightInfoRef_idx` (`weightInfo`),
   -- KEY `paymentInfoRef_idx` (`paymentInfo`),
   CONSTRAINT `customerRef` FOREIGN KEY (`custID`) REFERENCES `customer` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `deliveryAddressRef` FOREIGN KEY (`deliveryAddress`) REFERENCES `address` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  -- CONSTRAINT `maerialTypeRef` FOREIGN KEY (`materialTypeId`) REFERENCES `material_type` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `deliveryAddressRef` FOREIGN KEY (`deliveryAddressId`) REFERENCES `address` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   -- CONSTRAINT `driverInfoRef` FOREIGN KEY (`driverInfo`) REFERENCES `orderDriverInfo` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `orderStatusRef` FOREIGN KEY (`orderStatus`) REFERENCES `orderStatus` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `orderStatusRef` FOREIGN KEY (`orderStatus`) REFERENCES `orderStatus` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   -- CONSTRAINT `paymentInfoRef` FOREIGN KEY (`paymentInfo`) REFERENCES `orderPaymentInfo` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   -- CONSTRAINT `weightInfoRef` FOREIGN KEY (`weightInfo`) REFERENCES `orderWeightInfo` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  CONSTRAINT `dumpsterRef` FOREIGN KEY (`dumpsterId`) REFERENCES `dumpsterInfo` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -272,7 +280,7 @@ CREATE TABLE `trans_order` (
 
 LOCK TABLES `trans_order` WRITE;
 /*!40000 ALTER TABLE `trans_order` DISABLE KEYS */;
-INSERT INTO `transys`.`trans_order`(`id`, `custID`, `deliveryContactName`, `deliveryContactPhone1`, `deliveryDate`, `deliveryAddress`, `dumpsterLocation`, `dumpsterSize`, `typeOfMaterial`, `dumpsterNum`, `pickupDate`, `orderStatus`) VALUES ('1', '5', 'Raghav', '1234567890', curdate(), '3', 'Street', '10 yd', 'Drywall', '299-87-10', curdate(), '1');	
+-- INSERT INTO `transys`.`trans_order`(`id`, `custID`, `deliveryContactName`, `deliveryContactPhone1`, `deliveryDate`, `deliveryAddress`, `dumpsterLocation`, `dumpsterSize`, `typeOfMaterial`, `dumpsterNum`, `pickupDate`, `orderStatus`) VALUES ('1', '5', 'Raghav', '1234567890', curdate(), '3', 'Street', '10 yd', 'Drywall', '299-87-10', curdate(), '1');	
 /*!40000 ALTER TABLE `trans_order` ENABLE KEYS */;
 UNLOCK TABLES;
 
