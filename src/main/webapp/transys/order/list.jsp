@@ -1,4 +1,30 @@
 <%@include file="/common/taglibs.jsp"%>
+<script>
+function populateCustomerDeliveryAddress() {
+	var customerSelect =  $('#customer');
+	var deliveryAddressSelect = $('#deliveryAddress');
+	
+	deliveryAddressSelect.empty();
+	
+	var firstOption = $('<option value="">'+ "-----------Please Select----------" +'</option>');
+	deliveryAddressSelect.append(firstOption);
+	
+	var customerId = customerSelect.val();
+	$.ajax({
+  		url: "customerDeliveryAddress.do?id=" + customerId,
+       	type: "GET",
+       	success: function(responseData, textStatus, jqXHR) {
+    	   	var addressList = jQuery.parseJSON(responseData);
+    	   	$.each(addressList, function () {
+    	   	    $("<option />", {
+    	   	        val: this.id,
+    	   	        text: this.line1
+    	   	    }).appendTo(deliveryAddressSelect);
+    	   	});
+		}
+	}); 
+}
+</script>
 <br />
 <h4 style="margin-top: -15px; !important">Manage Orders</h4>
 <form:form action="list.do" method="get" name="searchForm" id="orderSearchForm">
@@ -35,7 +61,7 @@
 		<tr>
 			<td align="${left}" class="form-left"><transys:label code="Customer" /></td>
 			<td align="${left}" class="wide">
-				<select class="flat form-control input-sm" id="customer" name="customer" style="width: 175px">
+				<select class="flat form-control input-sm" id="customer" name="customer" style="width: 175px" onChange="return populateCustomerDeliveryAddress();">
 					<option value="">------<transys:label code="Please Select" />------</option>
 					<c:forEach items="${customers}" var="aCustomer">
 						<c:set var="selected" value="" />
@@ -80,7 +106,7 @@
 		<tr>
 			<td align="${left}" class="form-left"><transys:label code="Dumpster Size" /></td>
 			<td align="${left}" class="wide">
-				<select class="flat form-control input-sm" id=dumpsterSize name="dumpsterSize" style="width: 175px">
+				<select class="flat form-control input-sm" id="dumpsterSize" name="dumpsterSize" style="width: 175px">
 					<option value="">------<transys:label code="Please Select" />------</option>
 					<c:forEach items="${dumpsters}" var="aDumpster">
 						<c:set var="selected" value="" />
@@ -88,18 +114,18 @@
 							test="${sessionScope.searchCriteria.searchMap['dumpsterSize'] == aDumpster.dumpsterSize}">
 							<c:set var="selected" value="selected" />
 						</c:if>
-						<option value="${aDumpster.id}" ${selected}>${aDumpster.dumpsterSize}</option>
+						<option value="${aDumpster.dumpsterSize}" ${selected}>${aDumpster.dumpsterSize}</option>
 					</c:forEach>
 				</select>
 			</td>
 			<td align="${left}" class="form-left"><transys:label code="Dumpster #" /></td>
 			<td align="${left}">
-				<select class="flat form-control input-sm" id=dumpsterNum name="dumpster" style="width: 175px">
+				<select class="flat form-control input-sm" id="dumpster" name="dumpster" style="width: 175px">
 					<option value="">------<transys:label code="Please Select" />------</option>
 					<c:forEach items="${dumpsters}" var="aDumpster">
 						<c:set var="selected" value="" />
 						<c:if
-							test="${sessionScope.searchCriteria.searchMap['dumpsterNum'] == aDumpster.dumpsterNum}">
+							test="${sessionScope.searchCriteria.searchMap['dumpster'] == aDumpster.id}">
 							<c:set var="selected" value="selected" />
 						</c:if>
 						<option value="${aDumpster.id}" ${selected}>${aDumpster.dumpsterNum}</option>

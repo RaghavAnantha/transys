@@ -23,6 +23,7 @@ import com.transys.controller.editor.AbstractModelEditor;
 import com.transys.model.Address;
 import com.transys.model.BaseModel;
 import com.transys.model.Customer;
+import com.transys.model.LocationType;
 import com.transys.model.MaterialType;
 import com.transys.model.Order;
 import com.transys.model.OrderStatus;
@@ -43,6 +44,7 @@ public class OrderController extends CRUDController<Order> {
 		binder.registerCustomEditor(Customer.class, new AbstractModelEditor(Customer.class));
 		binder.registerCustomEditor(Address.class, new AbstractModelEditor(Address.class));
 		binder.registerCustomEditor(Permit.class, new AbstractModelEditor(Permit.class));
+		binder.registerCustomEditor(LocationType.class, new AbstractModelEditor(LocationType.class));
 		super.initBinder(binder);
 	}
 	
@@ -149,7 +151,7 @@ public class OrderController extends CRUDController<Order> {
 		setupCreate(model, request);
 	}
 	
-	@RequestMapping(method = RequestMethod.GET, value = "/customerDeliveryAddress")
+	@RequestMapping(method = RequestMethod.GET, value = "/customerDeliveryAddress.do")
 	public @ResponseBody String retrieveCustomerDeliveryAddress(ModelMap model, HttpServletRequest request) {
 		String customerId = request.getParameter("id");
 		List<Address> addressList  = genericDAO.executeSimpleQuery("select obj from Address obj where obj.customer.id=" + customerId);
@@ -157,7 +159,7 @@ public class OrderController extends CRUDController<Order> {
 		return json;
 	}
 	
-	@RequestMapping(method = RequestMethod.GET, value = "/customerAddress")
+	@RequestMapping(method = RequestMethod.GET, value = "/customerAddress.do")
 	public @ResponseBody String retrieveCustomerAddress(ModelMap model, HttpServletRequest request) {
 		String customerId = request.getParameter("id");
 		List<Customer> customerList  = genericDAO.executeSimpleQuery("select obj from Customer obj where obj.id=" + customerId);

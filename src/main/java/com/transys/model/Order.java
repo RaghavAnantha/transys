@@ -76,8 +76,9 @@ public class Order extends AbstractBaseModel {
 	}
 
 	/******** Dumpster Info ************/
-	@Column(name="dumpsterLocation")
-	private String dumpsterLocation;
+	@ManyToOne
+	@JoinColumn(name="locationTypeId") 
+	private LocationType dumpsterLocation;
 	
 	@Column(name="dumpsterSize")
 	private String dumpsterSize;
@@ -115,7 +116,7 @@ public class Order extends AbstractBaseModel {
 
 	/******** Order Status ************/
 	@ManyToOne
-	@JoinColumn(name="orderStatus") //Enum?
+	@JoinColumn(name="orderStatusId") //Enum?
 	private OrderStatus orderStatus;
 	
 	/******** Order Notes ************/
@@ -234,18 +235,18 @@ public class Order extends AbstractBaseModel {
 		this.permits = permits;
 	}*/
 
-	public String getDumpsterLocation() {
+	public LocationType getDumpsterLocation() {
 		return dumpsterLocation;
 	}
 
-	public void setDumpsterLocation(String dumpsterLocation) {
+	public void setDumpsterLocation(LocationType dumpsterLocation) {
 		this.dumpsterLocation = dumpsterLocation;
 	}
 
 	public String getDumpsterSize() {
 		return dumpsterSize;
 	}
-
+	
 	public void setDumpsterSize(String dumpsterSize) {
 		this.dumpsterSize = dumpsterSize;
 	}

@@ -31,12 +31,15 @@ function populateCustomerInfo() {
 }
 
 function populateDeliveryAddress() {
-	$('#deliveryAddressSelect').empty();
+	var customerSelect =  $('#customerSelect');
+	var deliveryAddressSelect = $('#deliveryAddressSelect');
+	
+	deliveryAddressSelect.empty();
 	
 	var firstOption = $('<option value="">'+ "-----------Please Select----------" +'</option>');
-	$('#deliveryAddressSelect').append(firstOption);
+	deliveryAddressSelect.append(firstOption);
 	
-	var customerId = $('#customerSelect').val();
+	var customerId = customerSelect.val();
 	$.ajax({
   		url: "customerDeliveryAddress.do?id=" + customerId,
        	type: "GET",
@@ -46,11 +49,12 @@ function populateDeliveryAddress() {
     	   	    $("<option />", {
     	   	        val: this.id,
     	   	        text: this.line1
-    	   	    }).appendTo('#deliveryAddressSelect');
+    	   	    }).appendTo(deliveryAddressSelect);
     	   	});
 		}
 	}); 
 }
+
 function populateCustomerAddress() {
 	var customerId = $('#customerSelect').val();
 	$.ajax({
@@ -164,7 +168,7 @@ function populateCustomerAddress() {
 		<tr>
 			<td class="form-left"><transys:label code="Dumpster Location" /><span class="errorMessage">*</span></td>
 			<td align="${left}">
-				<form:select id="dumpsterLocation" cssClass="flat form-control input-sm" style="width:175px" path="dumpsterLocation"> 
+				<form:select id="dumpsterLocationSelect" cssClass="flat form-control input-sm" style="width:175px" path="dumpsterLocation"> 
 					<form:option value="">-----------Please Select----------</form:option>
 					<form:options items="${dusmpsterLocationTypes}" itemValue="id" itemLabel="locationType" />
 				</form:select> 
@@ -176,7 +180,7 @@ function populateCustomerAddress() {
 			<td align="${left}">
 				<form:select id="dumpsterSize" cssClass="flat form-control input-sm" style="width:175px" path="dumpsterSize"> 
 					<form:option value="">-----------Please Select----------</form:option>
-					<form:options items="${dumpsters}" itemValue="id" itemLabel="dumpsterSize" />
+					<form:options items="${dumpsters}" itemValue="dumpsterSize" itemLabel="dumpsterSize" />
 				</form:select> 
 			 	<br><form:errors path="dumpsterSize" cssClass="errorMessage" />
 			</td>
@@ -200,7 +204,7 @@ function populateCustomerAddress() {
 		    </tr>
 		    <tr>
 		    	<td class="form-left"><transys:label code="Permit${permitDisplayIndex} Type"/><span class="errorMessage">*</span></td>
-		        <td align="${left}"><form:input path="permits[${status.index}].type.type" cssClass="flat"/></td>
+		        <td align="${left}"><form:input path="permits[${status.index}].permitType.permitType" cssClass="flat"/></td>
 		    </tr>
 		    <tr>
 		    	<td class="form-left"><transys:label code="Permit${permitDisplayIndex} Number"/><span class="errorMessage">*</span></td>

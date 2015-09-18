@@ -53,7 +53,7 @@ CREATE TABLE `address` (
 
 LOCK TABLES `address` WRITE;
 /*!40000 ALTER TABLE `address` DISABLE KEYS */;
-INSERT INTO `address` VALUES (1,NULL,NULL,NULL,NULL,5,'4818W','VAN BUREN','XYZ',1,'3344',1),(3,NULL,NULL,NULL,NULL,5,'E Lemon st','Lemon st','Chicago',1,'28262',1);
+INSERT INTO `address` VALUES (1,NULL,NULL,NULL,NULL,5,'4818 W VAN BUREN',NULL,'CHICAGO',1,'3344',1),(3,NULL,NULL,NULL,NULL,5,'1121 E Lemon st',NULL,'Chicago',1,'28262',1);
 /*!40000 ALTER TABLE `address` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -228,14 +228,14 @@ DROP TABLE IF EXISTS `trans_order`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `trans_order` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `custID` bigint(11) NOT NULL,
+  `custID` bigint(20) NOT NULL,
   `deliveryContactName` varchar(150) DEFAULT NULL,
   `deliveryContactPhone1` varchar(25) DEFAULT NULL,
   `deliveryContactPhone2` varchar(25) DEFAULT NULL,
   `deliveryDate` datetime DEFAULT NULL,
   `deliveryTimeFrom` datetime DEFAULT NULL,
   `deliveryAddressId` bigint(20) DEFAULT NULL,
-  `dumpsterLocation` varchar(50) DEFAULT NULL,
+  `locationTypeId` bigint(20) NOT NULL,
   `dumpsterSize` varchar(5) DEFAULT NULL,
   `materialType` varchar(50) DEFAULT NULL,
   `dumpsterPrice` double DEFAULT NULL,
@@ -254,13 +254,13 @@ CREATE TABLE `trans_order` (
   `dumpsterId` bigint(20) DEFAULT NULL,
   -- `driverInfo` bigint(20) DEFAULT NULL,
   `pickupDate` datetime DEFAULT NULL,
-  `orderStatus` bigint(20) DEFAULT NULL,
+  `orderStatusId` bigint(20) NOT NULL,
   -- `permits` bigint(20) DEFAULT NULL,
   `deliveryTimeTo` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `key1_idx` (`custID`),
   -- KEY `deliveryAddressRef_idx` (`deliveryAddressId`),
-  KEY `orderStatusRef_idx` (`orderStatus`),
+  -- KEY `orderStatusRef_idx` (`orderStatusId`),
   -- KEY `driverInfoRef_idx` (`driverInfo`),
   -- KEY `weightInfoRef_idx` (`weightInfo`),
   -- KEY `paymentInfoRef_idx` (`paymentInfo`),
@@ -268,10 +268,11 @@ CREATE TABLE `trans_order` (
   -- CONSTRAINT `maerialTypeRef` FOREIGN KEY (`materialTypeId`) REFERENCES `material_type` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `deliveryAddressRef` FOREIGN KEY (`deliveryAddressId`) REFERENCES `address` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   -- CONSTRAINT `driverInfoRef` FOREIGN KEY (`driverInfo`) REFERENCES `orderDriverInfo` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `orderStatusRef` FOREIGN KEY (`orderStatus`) REFERENCES `orderStatus` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `orderStatusRef` FOREIGN KEY (`orderStatusId`) REFERENCES `orderStatus` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   -- CONSTRAINT `paymentInfoRef` FOREIGN KEY (`paymentInfo`) REFERENCES `orderPaymentInfo` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   -- CONSTRAINT `weightInfoRef` FOREIGN KEY (`weightInfo`) REFERENCES `orderWeightInfo` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-  CONSTRAINT `dumpsterRef` FOREIGN KEY (`dumpsterId`) REFERENCES `dumpsterInfo` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `dumpsterRef` FOREIGN KEY (`dumpsterId`) REFERENCES `dumpsterInfo` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `dumpsterLocationRef` FOREIGN KEY (`locationTypeId`) REFERENCES `locationType` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
   ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -281,7 +282,7 @@ CREATE TABLE `trans_order` (
 
 LOCK TABLES `trans_order` WRITE;
 /*!40000 ALTER TABLE `trans_order` DISABLE KEYS */;
--- INSERT INTO `transys`.`trans_order`(`id`, `custID`, `deliveryContactName`, `deliveryContactPhone1`, `deliveryDate`, `deliveryAddress`, `dumpsterLocation`, `dumpsterSize`, `typeOfMaterial`, `dumpsterNum`, `pickupDate`, `orderStatus`) VALUES ('1', '5', 'Raghav', '1234567890', curdate(), '3', 'Street', '10 yd', 'Drywall', '299-87-10', curdate(), '1');	
+INSERT INTO `transys`.`trans_order` (`id`, `custID`, `deliveryContactName`, `deliveryContactPhone1`, `deliveryContactPhone2`, `deliveryDate`, `deliveryTimeFrom`, `deliveryAddressId`, `locationTypeId`, `dumpsterSize`, `materialType`, `dumpsterPrice`, `created_at`, `delete_flag`, `grossWeight`, `netWeightLb`, `netWeightTonnage`, `tare`, `dumpsterId`, `pickupDate`, `orderStatusId`, `deliveryTimeTo`) VALUES (1, 5, 'Raghav', '1234567890', '1234567890', curdate(), curdate(), 3, 1, '20 yd', 'Drywall', '50.0', curdate(), 1, '10.0', '10.0', '10.0', '10.0', 2, curdate(), 1, curdate());
 /*!40000 ALTER TABLE `trans_order` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -555,7 +556,8 @@ CREATE TABLE `permit` (
 
 LOCK TABLES `permit` WRITE;
 /*!40000 ALTER TABLE `permit` DISABLE KEYS */;
-INSERT INTO `permit` VALUES (1,1,1,'1234','50',curdate(),'1301-11W',1,2,'Test',NULL,NULL,NULL,NULL,1,5,1,NULL);
+INSERT INTO `transys`.`permit` (`id`, `permitType`, `class`, `number`, `fee`, `startDate`, `endDate`, `permitAddress`, `locationType`, `status`, `created_at`, `delete_flag`, `customerID`, `deliveryAddress`) VALUES (1, '1', '1', '1301-11W', '50', curdate(), curdate()+3, '4818W VAN BUREN', '1', '1', curdate(), '1', '5', '1');
+-- INSERT INTO `permit` VALUES (1,1,1,'1234','50',curdate(),'1301-11W',1,2,'Test',NULL,NULL,NULL,NULL,1,5,1,NULL);
 -- ,(9,1,1,'6','0.0',curdate(),NULL,1,1,NULL,'2015-09-15 16:25:46',1,NULL,NULL,1,6,1,'yes')
 -- ,(10,2,2,'9','0.0',curdate(),NULL,2,1,NULL,'2015-09-15 16:28:40',1,NULL,NULL,1,6,1,'no')
 -- ,(11,2,2,'123','0.0',curdate(),NULL,2,2,NULL,'2015-09-15 17:18:54',1,NULL,NULL,1,6,1,'yes')
