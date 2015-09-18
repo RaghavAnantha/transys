@@ -10,6 +10,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
@@ -60,10 +62,10 @@ public class Order extends AbstractBaseModel {
 	/******** Permits Info ************/
 	@ManyToMany(cascade = CascadeType.ALL)
 	@JoinTable(
-	        name = "orderPermits",
-	        joinColumns = @JoinColumn(name = "orderID"),
-	        inverseJoinColumns = @JoinColumn(name = "permitID"),
-	        uniqueConstraints = @UniqueConstraint(columnNames = {"orderID", "permitID"})
+     name = "orderPermits",
+     joinColumns = @JoinColumn(name = "orderID"),
+     inverseJoinColumns = @JoinColumn(name = "permitID"),
+     uniqueConstraints = @UniqueConstraint(columnNames = {"orderID", "permitID"})
 	)
 	private List<Permit> permits;
 	 
@@ -74,6 +76,38 @@ public class Order extends AbstractBaseModel {
 	public void  setPermits(List<Permit> permits) {
 	    this.permits = permits;
 	}
+	
+	/******** Notes Info ************/
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinTable(
+     name = "orderNotes",
+     joinColumns = @JoinColumn(name = "orderId")
+	)
+	private List<OrderNotes> orderNotes;
+	 
+	public List<OrderNotes> getOrderNotes() {
+		return orderNotes;
+	}
+	
+	public void setOrderNotes(List<OrderNotes> orderNotes) {
+		this.orderNotes = orderNotes;
+	}
+	
+	/******** Order payment info ************/
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinTable(
+     name = "orderPaymentInfo",
+     joinColumns = @JoinColumn(name = "orderId")
+	)
+	private OrderPaymentInfo orderPaymentInfo;
+	
+	public OrderPaymentInfo getOrderPaymentInfo() {
+		return orderPaymentInfo;
+	}
+
+	public void setOrderPaymentInfo(OrderPaymentInfo orderPaymentInfo) {
+		this.orderPaymentInfo = orderPaymentInfo;
+	}
 
 	/******** Dumpster Info ************/
 	@ManyToOne
@@ -82,9 +116,6 @@ public class Order extends AbstractBaseModel {
 	
 	@Column(name="dumpsterSize")
 	private String dumpsterSize;
-	
-	@Column(name="dumpsterPrice")
-	private Double dumpsterPrice;
 	
 	@ManyToOne
 	@JoinColumn(name="dumpsterId") 
@@ -291,14 +322,6 @@ public class Order extends AbstractBaseModel {
 	public void setMaterialType(MaterialType materialType) {
 		this.materialType = materialType;
 	}*/
-
-	public Double getDumpsterPrice() {
-		return dumpsterPrice;
-	}
-
-	public void setDumpsterPrice(Double dumpsterPrice) {
-		this.dumpsterPrice = dumpsterPrice;
-	}
 
 	public DumpsterInfo getDumpster() {
 		return dumpster;

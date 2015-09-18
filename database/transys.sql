@@ -238,7 +238,7 @@ CREATE TABLE `trans_order` (
   `locationTypeId` bigint(20) NOT NULL,
   `dumpsterSize` varchar(5) DEFAULT NULL,
   `materialType` varchar(50) DEFAULT NULL,
-  `dumpsterPrice` double DEFAULT NULL,
+  -- `dumpsterPrice` double DEFAULT NULL,
   -- `paymentInfo` bigint(20) DEFAULT NULL,
   -- `notes` int(11) DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
@@ -282,7 +282,7 @@ CREATE TABLE `trans_order` (
 
 LOCK TABLES `trans_order` WRITE;
 /*!40000 ALTER TABLE `trans_order` DISABLE KEYS */;
-INSERT INTO `transys`.`trans_order` (`id`, `custID`, `deliveryContactName`, `deliveryContactPhone1`, `deliveryContactPhone2`, `deliveryDate`, `deliveryTimeFrom`, `deliveryAddressId`, `locationTypeId`, `dumpsterSize`, `materialType`, `dumpsterPrice`, `created_at`, `delete_flag`, `grossWeight`, `netWeightLb`, `netWeightTonnage`, `tare`, `dumpsterId`, `pickupDate`, `orderStatusId`, `deliveryTimeTo`) VALUES (1, 5, 'Raghav', '1234567890', '1234567890', curdate(), curdate(), 3, 1, '20 yd', 'Drywall', '50.0', curdate(), 1, '10.0', '10.0', '10.0', '10.0', 2, curdate(), 1, curdate());
+INSERT INTO `transys`.`trans_order` (`id`, `custID`, `deliveryContactName`, `deliveryContactPhone1`, `deliveryContactPhone2`, `deliveryDate`, `deliveryTimeFrom`, `deliveryAddressId`, `locationTypeId`, `dumpsterSize`, `materialType`, `created_at`, `delete_flag`, `grossWeight`, `netWeightLb`, `netWeightTonnage`, `tare`, `dumpsterId`, `pickupDate`, `orderStatusId`, `deliveryTimeTo`) VALUES (1, 5, 'Raghav', '1234567890', '1234567890', curdate(), curdate(), 3, 1, '20 yd', 'Drywall', curdate(), 1, '10.0', '10.0', '10.0', '10.0', 2, curdate(), 1, curdate());
 /*!40000 ALTER TABLE `trans_order` ENABLE KEYS */;
 UNLOCK TABLES;
 

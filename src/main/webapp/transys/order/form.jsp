@@ -255,10 +255,73 @@ function populateCustomerAddress() {
 			<td colspan=10 class="danger" style="font-size: 13px;font-weight: bold;color: white;">Rates/Fees Information</td>
 		</tr>
 		<tr>
+			<td class="form-left"><transys:label code="Dumpster Price"/><span class="errorMessage">*</span></td>
+			<td align="${left}">
+				<form:input path="orderPaymentInfo.dumpsterPrice" cssClass="flat" />
+				<br><form:errors path="orderPaymentInfo.dumpsterPrice" cssClass="errorMessage" />
+			</td>
+			<td class="form-left"><transys:label code="City Fee"/><span class="errorMessage">*</span></td>
+			<td align="${left}">
+				<form:input path="orderPaymentInfo.cityFee" cssClass="flat" />
+				<br><form:errors path="orderPaymentInfo.cityFee" cssClass="errorMessage" />
+			</td>
+		</tr>
+		<tr>
+			<td class="form-left"><transys:label code="Permit Fee"/><span class="errorMessage">*</span></td>
+			<td align="${left}">
+				<form:input path="orderPaymentInfo.permitFees" cssClass="flat" />
+				<br><form:errors path="orderPaymentInfo.permitFees" cssClass="errorMessage" />
+			</td>
+			<td class="form-left"><transys:label code="Overweight Fee"/><span class="errorMessage">*</span></td>
+			<td align="${left}">
+				<form:input path="orderPaymentInfo.overweightFee" cssClass="flat" />
+				<br><form:errors path="orderPaymentInfo.overweightFee" cssClass="errorMessage" />
+			</td>
+		</tr>
+		<tr>
+			<td class="form-left"><transys:label code="Additional Fee"/><span class="errorMessage">*</span></td>
+			<td align="${left}">
+				<form:input path="orderPaymentInfo.additionalFee" cssClass="flat" />
+				<br><form:errors path="orderPaymentInfo.additionalFee" cssClass="errorMessage" />
+			</td>
+		</tr>
+		<tr>
+			<td class="form-left"><transys:label code="Total Fees"/><span class="errorMessage">*</span></td>
+			<td align="${left}">
+				<form:input path="orderPaymentInfo.totalFees" cssClass="flat" />
+				<br><form:errors path="orderPaymentInfo.totalFees" cssClass="errorMessage" />
+			</td>
+		</tr>
+		<tr>
 			<td colspan=10 class="danger" style="font-size: 13px;font-weight: bold;color: white;">Payment Information</td>
 		</tr>
 		<tr>
+			<td class="form-left"><transys:label code="Payment Method"/><span class="errorMessage">*</span></td>
+			<td align="${left}">
+				<form:input path="orderPaymentInfo.paymentMethod" cssClass="flat" />
+				<br><form:errors path="orderPaymentInfo.paymentMethod" cssClass="errorMessage" />
+			</td>
+		</tr>
+		<tr>
+			<td class="form-left"><transys:label code="CC Refernce #"/><span class="errorMessage">*</span></td>
+			<td align="${left}">
+				<form:input path="orderPaymentInfo.ccReferenceNum" cssClass="flat" />
+				<br><form:errors path="orderPaymentInfo.ccReferenceNum" cssClass="errorMessage" />
+			</td>
+			<td class="form-left"><transys:label code="Check #"/><span class="errorMessage">*</span></td>
+			<td align="${left}">
+				<form:input path="orderPaymentInfo.checkNum" cssClass="flat" />
+				<br><form:errors path="orderPaymentInfo.checkNum" cssClass="errorMessage" />
+			</td>
+		</tr>
+		<tr>
 			<td colspan=10 class="danger" style="font-size: 13px;font-weight: bold;color: white;">Notes/Comments</td>
+		</tr>
+		<tr>
+			<td colspan=10>
+				<form:textarea row="5" path="orderNotes[0].notes" cssClass="flat" id="notes" style="width:100%; height:150%;"/>
+				<br><form:errors path="orderNotes[0].notes" cssClass="errorMessage" />
+			</td>
 		</tr>
 		<tr><td colspan="2"></td></tr>
 		<tr>
