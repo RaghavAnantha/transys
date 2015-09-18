@@ -173,7 +173,7 @@ function populateCustomerAddress() {
 			<td align="${left}">
 				<form:select id="dumpsterSize" cssClass="flat form-control input-sm" style="width:175px" path="dumpsterSize"> 
 					<form:option value="">-----------Please Select----------</form:option>
-					<form:options items="${dusmpsters}" itemValue="id" itemLabel="dumpsterSize" />
+					<form:options items="${dumpsters}" itemValue="id" itemLabel="dumpsterSize" />
 				</form:select> 
 			 	<br><form:errors path="dumpsterSize" cssClass="errorMessage" />
 			</td>

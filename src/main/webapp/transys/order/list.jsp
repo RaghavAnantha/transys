@@ -82,19 +82,19 @@
 			<td align="${left}" class="wide">
 				<select class="flat form-control input-sm" id=dumpsterSize name="dumpsterSize" style="width: 175px">
 					<option value="">------<transys:label code="Please Select" />------</option>
-					<c:forEach items="${order}" var="anOrder">
+					<c:forEach items="${dumpsters}" var="aDumpster">
 						<c:set var="selected" value="" />
 						<c:if
 							test="${sessionScope.searchCriteria.searchMap['dumpsterSize'] == anOrder.dumpsterSize}">
 							<c:set var="selected" value="selected" />
 						</c:if>
-						<option value="${anOrder.dumpsterSize}" ${selected}>${anOrder.dumpsterSize}</option>
+						<option value="${aDumpster.id}" ${selected}>${aDumpster.dumpsterSize}</option>
 					</c:forEach>
 				</select>
 			</td>
 			<td align="${left}" class="form-left"><transys:label code="Dumpster #" /></td>
 			<td align="${left}">
-				<select class="flat form-control input-sm" id=dumpsterNum name="dumpsterNum" style="width: 175px">
+				<select class="flat form-control input-sm" id=dumpsterNum name="dumpster" style="width: 175px">
 					<option value="">------<transys:label code="Please Select" />------</option>
 					<c:forEach items="${dumpsters}" var="aDumpster">
 						<c:set var="selected" value="" />

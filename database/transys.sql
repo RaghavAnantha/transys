@@ -172,7 +172,7 @@ CREATE TABLE `dumpsterInfo` (
 
 LOCK TABLES `dumpsterInfo` WRITE;
 /*!40000 ALTER TABLE `dumpsterInfo` DISABLE KEYS */;
-INSERT INTO `transys`.`dumpsterInfo` (`id`, `dumpsterSize`, `dumpsterPrice`) VALUES ('2', '20 yd', '20');
+INSERT INTO `transys`.`dumpsterInfo` (`id`, `dumpsterSize`, `dumpsterNum`, `dumpsterPrice`) VALUES ('2', '20 yd', '20W-113-21', '20');
 /*!40000 ALTER TABLE `dumpsterInfo` ENABLE KEYS */;
 UNLOCK TABLES;
 
