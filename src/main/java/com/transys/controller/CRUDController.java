@@ -127,7 +127,6 @@ public abstract class CRUDController<T extends BaseModel> extends BaseController
 			@ModelAttribute("modelObject") T entity,
 			BindingResult bindingResult, ModelMap model) {
 		
-		System.out.println("While saving permit");
 		try {
 			getValidator().validate(entity, bindingResult);
 		} catch (ValidationException e) {
@@ -143,17 +142,15 @@ public abstract class CRUDController<T extends BaseModel> extends BaseController
 		
 		// return to form if we had errors
 		if (bindingResult.hasErrors()) {
-			System.out.println(">>>>>>>>>>>>>>>>> Has errors! ");
 			List<ObjectError> errors = bindingResult.getAllErrors();
 			for(ObjectError e : errors) {
-				System.out.println(">>>>> " + e.getDefaultMessage());
+				System.out.println("Error: " + e.getDefaultMessage());
 			}
 			
 			setupCreate(model, request);
 			return urlContext + "/form";
 		}
 		
-		System.out.println("Adding before save ...");
 		beforeSave(request, entity, model);
 		genericDAO.saveOrUpdate(entity);
 		cleanUp(request);

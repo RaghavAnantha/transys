@@ -770,6 +770,38 @@ INSERT INTO `user_info` VALUES (1,NULL,NULL,NULL,NULL,1,NULL,NULL,'admin','2015-
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
+--
+-- Table structure for table `permitNotes`
+--
+
+DROP TABLE IF EXISTS `permitNotes`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `permitNotes` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `permitID` bigint(20) NOT NULL,
+  `notes` varchar(250) DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `created_by` bigint(20) DEFAULT NULL,
+  `modified_at` datetime DEFAULT NULL,
+  `modified_by` bigint(20) DEFAULT NULL,
+  `delete_flag` int(11) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`),
+  KEY `permitNotesRef` (`permitID`),
+  CONSTRAINT `permitNotesRef` FOREIGN KEY (`permitID`) REFERENCES `permit` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `permitNotes`
+--
+
+LOCK TABLES `permitNotes` WRITE;
+/*!40000 ALTER TABLE `permitNotes` DISABLE KEYS */;
+/*!40000 ALTER TABLE `permitNotes` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
 /*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;

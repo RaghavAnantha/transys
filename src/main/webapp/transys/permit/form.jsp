@@ -2,7 +2,13 @@
 <script type="text/javascript">
 
 function populateDeliveryAddress() {
-	$('#deliveryAddressSelect').empty();
+	
+	var deliveryAddressSelect = $('#deliveryAddressSelect');
+	deliveryAddressSelect.empty();
+	
+	var firstOption = $('<option value="">'+ "-----------Please Select----------" +'</option>');
+	deliveryAddressSelect.append(firstOption);
+	
 	var customerId = $('#customerSelect').val();
 	$.ajax({
   		url: "customerDeliveryAddress.do?customerId=" + customerId,
@@ -13,7 +19,7 @@ function populateDeliveryAddress() {
     	   	    $("<option />", {
     	   	        val: this.id,
     	   	        text: this.line1 + ", " + this.line2
-    	   	    }).appendTo('#deliveryAddressSelect');
+    	   	    }).appendTo(deliveryAddressSelect);
     	   	});
 		}
 	}); 
@@ -29,7 +35,6 @@ function populateEndDate() {
 	  		url: "calculatePermitEndDate.do?startDate=" + startDateValue + "&permitType=" + permitTypeValue,
 	       	type: "GET",
 	       	success: function(responseData, textStatus, jqXHR) {
-	    	   	/* var addressList = jQuery.parseJSON(responseData); */
 	    	   	$('#endDateInput').val(responseData);
 			}
 		});
@@ -74,12 +79,6 @@ function populateEndDate() {
 				<%-- <form:input id="deliveryAddressInput" path="deliveryAddress.id" cssClass="flat" style="min-width:350px; max-width:350px"  /> --%>
 			 	<br><form:errors path="deliveryAddress" cssClass="errorMessage" />
 			</td> 
-			
-			<%-- <td class="form-left"><transys:label code="Delivery Street" /></td>
-			<td align="${left}">
-				<form:input path="deliveryAddress.id" cssClass="flat" style="min-width:350px; max-width:350px"  />
-			 	<br><form:errors path="deliveryAddress.id" cssClass="errorMessage" />
-			</td> --%>
 		</tr>
 		 <%--<tr>
 			<td class="form-left"><transys:label code="Permit Address" /><span class="errorMessage">*</span></td>
@@ -132,7 +131,7 @@ function populateEndDate() {
 				
 			<td class="form-left"><transys:label code="End Date" /></td>
 			<td align="${left}">
-				<form:input id="endDateInput" path="endDate" value="09/02/2015" cssClass="flat" style="min-width:350px; max-width:350px" disabled="true" />
+				<form:input id="endDateInput" path="endDate" cssClass="flat" style="min-width:350px; max-width:350px" readonly="true" />
 			 	<br><form:errors path="endDate" cssClass="errorMessage" />
 			</td>
 		</tr>

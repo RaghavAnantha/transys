@@ -2,12 +2,14 @@ package com.transys.controller;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.ValidationException;
 
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.stereotype.Controller;
@@ -21,12 +23,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.google.gson.Gson;
 import com.transys.controller.editor.AbstractModelEditor;
+import com.transys.model.AbstractBaseModel;
 import com.transys.model.Address;
+import com.transys.model.BaseModel;
 import com.transys.model.Customer;
 import com.transys.model.LocationType;
 import com.transys.model.Order;
 import com.transys.model.Permit;
 import com.transys.model.PermitClass;
+import com.transys.model.PermitNotes;
 import com.transys.model.PermitStatus;
 import com.transys.model.PermitType;
 import com.transys.model.SearchCriteria;
@@ -47,6 +52,7 @@ public class PermitController extends CRUDController<Permit> {
 		binder.registerCustomEditor(PermitClass.class, new AbstractModelEditor(PermitClass.class));
 		binder.registerCustomEditor(PermitType.class, new AbstractModelEditor(PermitType.class));
 		binder.registerCustomEditor(Address.class, new AbstractModelEditor(Address.class));
+		binder.registerCustomEditor(PermitNotes.class, new AbstractModelEditor(PermitNotes.class));
 		super.initBinder(binder);
 	}
 	
@@ -62,6 +68,11 @@ public class PermitController extends CRUDController<Permit> {
 		
 		model.addAttribute("activeTab", "managePermits");
 		model.addAttribute("mode", "MANAGE");
+		return urlContext + "/permit";
+	}
+	
+	@RequestMapping(method = RequestMethod.GET, value = "/notes.do")
+	public String displayNotes(ModelMap model, HttpServletRequest request) {
 		return urlContext + "/permit";
 	}
 	
@@ -83,7 +94,7 @@ public class PermitController extends CRUDController<Permit> {
 		model.addAttribute("activeSubTab", "permitDetails");
 		//return urlContext + "/form";
 		
-		//model.addAttribute("deliveryAddressModelObject", new Address());
+		model.addAttribute("notesModelObject", new PermitNotes());
 				
 		return urlContext + "/permit";
 	}
@@ -95,8 +106,18 @@ public class PermitController extends CRUDController<Permit> {
 		model.addAttribute("activeTab", "managePermits");
 		model.addAttribute("mode", "ADD");
 		model.addAttribute("activeSubTab", "permitDetails");
+
+		Permit permitToBeEdited = (Permit)model.get("modelObject");
 		
-		//return urlContext + "/form";
+		Permit emptyPermit = new Permit();
+		emptyPermit.setId(permitToBeEdited.getId());
+		PermitNotes notes = new PermitNotes();
+		notes.setPermit(emptyPermit);
+		model.addAttribute("notesModelObject", notes);
+	
+		List<BaseModel> addressList = genericDAO.executeSimpleQuery("select obj from PermitNotes obj where obj.permit.id=" +  permitToBeEdited.getId() + " order by obj.id asc");
+		model.addAttribute("notesList", addressList);
+	
 		return urlContext + "/permit";
 	}
 	
@@ -113,6 +134,43 @@ public class PermitController extends CRUDController<Permit> {
 		model.addAttribute("permitType", genericDAO.findByCriteria(PermitType.class, criterias, "permitType", false));
 		model.addAttribute("permitStatus", genericDAO.findByCriteria(PermitStatus.class, criterias, "status", false));
 		model.addAttribute("permit", genericDAO.findByCriteria(Permit.class, criterias, "id", false));
+	}
+	
+	@RequestMapping(method = RequestMethod.POST, value = "/save.do")
+	public String save(HttpServletRequest request,
+			@ModelAttribute("modelObject") Permit entity,
+			BindingResult bindingResult, ModelMap model) {
+		
+			String status = "Pending";
+			if (entity.getNumber() != null && entity.getNumber().length() > 0) {
+				status = "Available";
+			} 
+			
+			System.out.println("Setting Permit Status to " + status);
+			PermitStatus permitStatus = (PermitStatus)genericDAO.executeSimpleQuery("select obj from PermitStatus obj where obj.status='" + status + "'").get(0);
+			entity.setStatus(permitStatus);
+			
+			super.save(request, entity, bindingResult, model);
+			
+			return saveSuccess(model, request, entity);
+	}
+	
+	public String saveSuccess(ModelMap model, HttpServletRequest request, Permit entity) {
+		setupCreate(model, request);
+		model.addAttribute("modelObject", entity);
+		model.addAttribute("activeTab", "managePermits");
+		model.addAttribute("activeSubTab", "permitNotes");
+		model.addAttribute("mode", "ADD");
+		
+		Permit permit = new Permit();
+		permit.setId(entity.getId());
+		PermitNotes notes = new PermitNotes();
+		notes.setPermit(permit);
+		model.addAttribute("notesModelObject", notes);
+		List<BaseModel> notesList = genericDAO.executeSimpleQuery("select obj from PermitNotes obj where obj.permit.id=" +  entity.getId() + " order by obj.id asc");
+		model.addAttribute("notesList", notesList);
+		//return urlContext + "/form";
+		return urlContext + "/permit";
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/customerDeliveryAddress")
@@ -145,5 +203,48 @@ public class PermitController extends CRUDController<Permit> {
 		} else {
 			return null;
 		}
+	}
+	
+	@RequestMapping(method = RequestMethod.POST, value = "/savePermitNotes.do")
+	public String savePermitNotes(HttpServletRequest request,
+			@ModelAttribute("notesModelObject") PermitNotes entity,
+			BindingResult bindingResult, ModelMap model) {
+		try {
+			getValidator().validate(entity, bindingResult);
+		} catch (ValidationException e) {
+			e.printStackTrace();
+			log.warn("Error in validation :" + e);
+		}
+		// return to form if we had errors
+		if (bindingResult.hasErrors()) {
+			setupCreate(model, request);
+			return urlContext + "/form";
+		}
+		//beforeSave(request, entity, model);
+		if (entity instanceof AbstractBaseModel) {
+			AbstractBaseModel baseModel = (AbstractBaseModel) entity;
+			if (baseModel.getId() == null) {
+				baseModel.setCreatedAt(Calendar.getInstance().getTime());
+				if (baseModel.getCreatedBy()==null) {
+					baseModel.setCreatedBy(getUser(request).getId());
+				}
+			} else {
+				baseModel.setModifiedAt(Calendar.getInstance().getTime());
+				if (baseModel.getModifiedBy()==null) {
+					baseModel.setModifiedBy(getUser(request).getId());
+				}
+			}
+		}
+		
+		genericDAO.saveOrUpdate(entity);
+		cleanUp(request);
+
+		setupCreate(model, request);
+		//model.addAttribute("modelObject", entity);
+		/*model.addAttribute("activeTab", "managePermits");
+		model.addAttribute("activeSubTab", "permitNotes");
+		model.addAttribute("mode", "ADD");*/
+		
+		return urlContext + "/list";
 	}
 }

@@ -9,5 +9,6 @@
 		<%@include file="form.jsp"%>
 	</div>
 	<div id="permitNotes" class="tab-pane">
+		<%@include file="notes.jsp"%>
 	</div>
 </div>
