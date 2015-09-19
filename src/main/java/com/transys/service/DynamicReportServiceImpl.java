@@ -532,8 +532,7 @@ public class DynamicReportServiceImpl implements DynamicReportService {
 			List datas, Map params, String type, HttpServletRequest request) {
 		try {// @@@@@@@@@@@@@@@@@ 1
 			System.out.println("-----------------------");
-			JasperPrint jp = getJasperPrintFromFile(reportName, datas, params,
-					request);
+			JasperPrint jp = getJasperPrintFromFile(reportName, datas, params, request);
 			ByteArrayOutputStream out = getStreamByType(type, jp, request);
 			return out;
 		} catch (Exception ex) {
@@ -545,14 +544,15 @@ public class DynamicReportServiceImpl implements DynamicReportService {
 	public JasperPrint getJasperPrintFromFile(String reportName, List datas,
 			Map params, HttpServletRequest request) {
 		try {// @@@@@@@@@@@@@@@@@ 2
-			File reportFile = new File(request.getSession().getServletContext()
-					.getRealPath("/reports/" + reportName + ".jasper"));
-			JasperReport jasperReport = (JasperReport) JRLoader
-					.loadObject(reportFile.getPath());// ***********
+			File reportFile = new File(request.getSession().getServletContext().getRealPath("/reports/" + reportName + ".jasper"));
+			JasperReport jasperReport = (JasperReport) JRLoader.loadObject(reportFile);
+			//JasperReport jasperReport = (JasperReport) JRLoader.loadObject(reportFile.getPath());
+			
+			// ***********
 			JasperPrint jp = null;
 			if (datas != null) {
-				JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(
-						datas);
+				//JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(datas);
+				JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(datas, false);
 				jp = JasperFillManager.fillReport(jasperReport, params,
 						dataSource);
 			} else
@@ -650,7 +650,7 @@ public class DynamicReportServiceImpl implements DynamicReportService {
 		report.setOddRowBackgroundStyle(oddRowStyle);
 		report.setPrintBackgroundOnOddRows(true);
 		report.setUseFullPageWidth(true); // make columns to fill the page width
-		report.setWhenResourceMissing(JasperReport.WHEN_RESOURCE_MISSING_TYPE_NULL);
+		//report.setWhenResourceMissing(JasperReport.WHEN_RESOURCE_MISSING_TYPE_NULL);
 		report.setPageSizeAndOrientation(Page.Page_A4_Landscape());
 
 		Style atStyle = new StyleBuilder(true).setFont(Font.COMIC_SANS_SMALL)

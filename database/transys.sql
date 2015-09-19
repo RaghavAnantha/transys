@@ -140,7 +140,7 @@ CREATE TABLE `customer` (
 
 LOCK TABLES `customer` WRITE;
 /*!40000 ALTER TABLE `customer` DISABLE KEYS */;
-INSERT INTO `customer` VALUES (5,'2015-09-10 21:22:45',1,NULL,NULL,NULL,'2324 N Camelback Rd',NULL,NULL,NULL,'Chicago','Raghav','1234567890','Raghav','1234567890','28262',5,NULL,NULL,NULL,NULL,1),(6,'2015-09-11 21:05:43',1,NULL,NULL,NULL,'1321 W Main St',NULL,NULL,NULL,'Chicago','Bharat','1234567890','Bharat','1234567890','22323',5,NULL,NULL,NULL,NULL,1);
+INSERT INTO `customer` VALUES (5,'2015-09-10 21:22:45',1,NULL,NULL,'Active','2324 N Camelback Rd',NULL,NULL,NULL,'Chicago','Aberdeen Construction','1234567890','Raghav','1234567890','28262',5,NULL,NULL,NULL,NULL,1),(6,'2015-09-11 21:05:43',1,NULL,NULL,'Active','1321 W Main St',NULL,NULL,NULL,'Chicago','Gibbons Construction','1234567890','Bharat','1234567890','22323',5,NULL,NULL,NULL,NULL,1);
 /*!40000 ALTER TABLE `customer` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -174,7 +174,7 @@ CREATE TABLE `dumpsterInfo` (
 
 LOCK TABLES `dumpsterInfo` WRITE;
 /*!40000 ALTER TABLE `dumpsterInfo` DISABLE KEYS */;
-INSERT INTO `transys`.`dumpsterInfo` (`id`, `dumpsterSize`, `dumpsterNum`, `dumpsterPrice`) VALUES ('2', '20 yd', '20W-113-21', '20');
+INSERT INTO `transys`.`dumpsterInfo` (`id`, `dumpsterSize`, `dumpsterNum`, `dumpsterPrice`, `status`) VALUES ('2', '20 yd', '20W-113-21', '20', 'A');
 /*!40000 ALTER TABLE `dumpsterInfo` ENABLE KEYS */;
 UNLOCK TABLES;
 

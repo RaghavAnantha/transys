@@ -176,6 +176,7 @@
 			<artifactId>DynamicJasper</artifactId>
 			<version>3.1.1</version>
 		</dependency>
+		<!-- For dynamic reports -->
 		<dependency>
 			<groupId>net.sf.jasperreports</groupId>
 			<artifactId>jasperreports</artifactId>
@@ -186,6 +187,17 @@
 			<artifactId>jasperreports-fonts</artifactId>
 			<version>3.7.5</version>
 		</dependency>
+		<!-- For static reports -->
+		<!--<dependency>
+			<groupId>net.sf.jasperreports</groupId>
+			<artifactId>jasperreports</artifactId>
+			<version>6.1.1</version>
+		</dependency>
+		<dependency>
+			<groupId>net.sf.jasperreports</groupId>
+			<artifactId>jasperreports-fonts</artifactId>
+			<version>6.0.0</version>
+		</dependency>-->
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi</artifactId>
