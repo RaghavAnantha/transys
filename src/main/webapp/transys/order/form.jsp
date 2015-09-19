@@ -87,10 +87,7 @@ function populateCustomerAddress() {
 	<table id="form-table" class="table">
 		<tr>
 			<td class="form-left"><transys:label code="Order #" /><span class="errorMessage">*</span></td>
-			<td align="${left}">
-				<form:input path="id" cssClass="flat"  />
-			 	<br><form:errors path="id" cssClass="errorMessage" />
-			</td>
+			<td align="${left}">${modelObject.id}</td>
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Customer" /><span class="errorMessage"></span></td>
@@ -118,6 +115,9 @@ function populateCustomerAddress() {
 			<td align="${left}" id="phone"></td>
 			<td class="form-left"><transys:label code="Email"/></td>
 			<td align="${left}" id="email"></td>
+		</tr>
+		<tr>
+			<td colspan=10></td>
 		</tr>
 		<tr>
 			<td colspan=10 class="danger" style="font-size: 13px;font-weight: bold;color: white;">Delivery Information</td>
@@ -234,7 +234,9 @@ function populateCustomerAddress() {
 		        <td align="${left}">${aPermit.fee}</td>
 		    </tr>
 		</c:forEach>
-
+		<tr>
+			<td colspan=10></td>
+		</tr>
 		<tr>
 			<td colspan=10 class="danger" style="font-size: 13px;font-weight: bold;color: white;">Scale/Weights Information</td>
 		</tr>
@@ -267,6 +269,9 @@ function populateCustomerAddress() {
 				<form:input path="netWeightTonnage" cssClass="flat" />
 				<br><form:errors path="netWeightTonnage" cssClass="errorMessage" />
 			</td>
+		</tr>
+		<tr>
+			<td colspan=10></td>
 		</tr>
 		<tr>
 			<td colspan=10 class="danger" style="font-size: 13px;font-weight: bold;color: white;">Rates/Fees Information</td>
@@ -316,6 +321,9 @@ function populateCustomerAddress() {
 			</td>
 		</tr>
 		<tr>
+			<td colspan=10></td>
+		</tr>
+		<tr>
 			<td colspan=10 class="danger" style="font-size: 13px;font-weight: bold;color: white;">Payment Information</td>
 		</tr>
 		<tr>
@@ -327,7 +335,10 @@ function populateCustomerAddress() {
 		<tr>
 			<td class="form-left"><transys:label code="Payment Method"/><span class="errorMessage">*</span></td>
 			<td align="${left}">
-				<form:input path="orderPaymentInfo.paymentMethod" cssClass="flat" />
+				<form:select id="paymentMethod" cssClass="flat form-control input-sm" style="width:172px !important" path="orderPaymentInfo.paymentMethod"> 
+					<form:option value="">-----------Please Select----------</form:option>
+					<form:options items="${paymentMethods}" itemValue="id" itemLabel="type" />
+				</form:select>
 				<br><form:errors path="orderPaymentInfo.paymentMethod" cssClass="errorMessage" />
 			</td>
 		</tr>
@@ -342,6 +353,9 @@ function populateCustomerAddress() {
 				<form:input path="orderPaymentInfo.checkNum" cssClass="flat" />
 				<br><form:errors path="orderPaymentInfo.checkNum" cssClass="errorMessage" />
 			</td>
+		</tr>
+		<tr>
+			<td colspan=10></td>
 		</tr>
 		<tr>
 			<td colspan=10 class="danger" style="font-size: 13px;font-weight: bold;color: white;">Notes/Comments</td>

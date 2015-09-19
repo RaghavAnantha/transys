@@ -6,9 +6,7 @@
 	<table id="form-table" class="table delivery">
 		<tr>
 			<td class="form-left"><transys:label code="Customer ID" /><span class="errorMessage">*</span></td>
-			<td align="${left}">
-				<form:input path="customer.id" cssClass="flat"  />
-			 	<br><form:errors path="customer.id" cssClass="errorMessage" />
+			<td align="${left}">${modelObject.id}</td>
 			</td>
 		</tr>
 		<tr>

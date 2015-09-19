@@ -1,5 +1,6 @@
 package com.transys.controller;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -51,6 +52,10 @@ public class CustomerController extends CRUDController<Customer> {
 		model.addAttribute("customer",genericDAO.executeSimpleQuery("select obj from Customer obj where obj.id!=0 order by obj.companyName asc"));
 		model.addAttribute("customerIds",genericDAO.executeSimpleQuery("select obj from Customer obj where obj.id is not null order by obj.id asc"));
 		model.addAttribute("state", genericDAO.findByCriteria(State.class, criterias, "name", false));
+		
+		List<String> statusList = new ArrayList<String>();
+		statusList.add("Active");
+		model.addAttribute("statuses", statusList);
 	}
 	
 	@Override

@@ -32,6 +32,7 @@ import com.transys.model.Order;
 import com.transys.model.OrderNotes;
 import com.transys.model.OrderPaymentInfo;
 import com.transys.model.OrderStatus;
+import com.transys.model.PaymentMethodType;
 import com.transys.model.Permit;
 import com.transys.model.PermitNotes;
 import com.transys.model.PermitStatus;
@@ -93,6 +94,15 @@ public class OrderController extends CRUDController<Order> {
       materialTypeList.add(aMaterialType);
       
       model.addAttribute("materialTypes", materialTypeList);
+      
+      PaymentMethodType aPaymentMethodType = new PaymentMethodType();
+      aPaymentMethodType.setId(1l);
+      aPaymentMethodType.setType("Charge");
+      
+      List<PaymentMethodType> paymentMethodTypeList = new ArrayList<PaymentMethodType>();
+      paymentMethodTypeList.add(aPaymentMethodType);
+      
+      model.addAttribute("paymentMethods", paymentMethodTypeList);
 	}
 	
 	@Override

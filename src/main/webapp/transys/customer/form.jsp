@@ -53,23 +53,17 @@ function formatFax(){
 			<td align="${left}">
 				<form:input path="companyName" cssClass="flat"  />
 			 	<br><form:errors path="companyName" cssClass="errorMessage" />
-			</td>
-			
-			<td class="form-left"><transys:label code="Customer ID" /></td>
-			<td align="${left}">
-				<form:input path="id" cssClass="flat"/>
-			 	
-			</td>
+			</td><td class="form-left"><transys:label code="Customer ID" /></td>
+			<td align="${left}">${modelObject.id}</td>
 		</tr>
-		
 		<tr>
 			<td class="form-left"><transys:label code="Status" /></td>
 			<td align="${left}">
 				<form:select cssClass="flat form-control input-sm" path="status" >
 					<form:option value="">------Please Select--------</form:option>
-					<form:options items="${status}" itemValue="id" itemLabel="name" />
+					<form:options items="${statuses}" />
 				</form:select> 
-			 	<br><form:errors path="status" cssClass="errorMessage" />
+				<br><form:errors path="status" cssClass="errorMessage" />
 			</td> 
 		</tr>
 		<tr>
@@ -106,7 +100,7 @@ function formatFax(){
 			</td>
 		</tr>
 		<tr>
-			<td class="form-left"><transys:label code="State" /><span	class="errorMessage"></span></td>
+			<td class="form-left"><transys:label code="State" /><span class="errorMessage"></span></td>
 			<td align="${left}">
 				<form:select cssClass="flat form-control input-sm" path="state" >
 					<form:option value="">------Please Select--------</form:option>
@@ -159,6 +153,9 @@ function formatFax(){
 					id="fax" onkeypress="return onlyNumbers(event, false)" onblur="return formatFax();"/>
 				 <br><form:errors path="fax" cssClass="errorMessage" />
 			</td>
+		</tr>
+		<tr>
+			<td colspan=10></td>
 		</tr>
 		<tr>
 			<td colspan=10 class="danger" style="font-size: 13px;font-weight: bold;color: white;">Notes/Comments</td>

@@ -5,10 +5,10 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 //@Entity
-//@Table(name="materialType")
-public class MaterialType extends AbstractBaseModel {
+//@Table(name="paymentMethodType")
+public class PaymentMethodType extends AbstractBaseModel {
 
-	//@Column(name="materialType")
+	//@Column(name="paymentMethodType")
 	private String type;
 
 	public String getType() {
