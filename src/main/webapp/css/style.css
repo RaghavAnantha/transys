@@ -642,7 +642,7 @@ a.nivo-prevNav {
 }
 
 .datagrid .odd td {
-	background-color: #b7d0f3;
+	background-color: #deebf6;
 	
 }
 
@@ -694,6 +694,11 @@ a.nivo-prevNav {
 .footer a {
     color: #ffffff;
     text-decoration: none;
+    
+}
+
+a {
+	outline:none !important;
 }
 
 .logindisplay {
