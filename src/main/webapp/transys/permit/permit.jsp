@@ -23,7 +23,7 @@
 		</div>	
 		<div id="orderPermitAlert" class="tab-pane">
  			<br/>
-			<p>Placeholder for order permit alerts</p>
+			<%@include file="orderPermitAlert.jsp"%>
 		</div> 
 		<div id="permitsReport" class="tab-pane">
 			<br/>

@@ -72,6 +72,20 @@ public class PermitController extends CRUDController<Permit> {
 		return urlContext + "/permit";
 	}
 	
+	@RequestMapping(method = RequestMethod.GET, value = "/listOrderPermit.do")
+	public String displayOrderPermitsAlert(ModelMap model, HttpServletRequest request) {
+		System.out.println("Reached here?");
+		request.getSession().removeAttribute("searchCriteria");
+		setupList(model, request);
+		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
+		List<OrderPermits> orderPermits = genericDAO.search(OrderPermits.class, criteria, "id", null, null);
+		model.addAttribute("orderPermitList", orderPermits);
+		
+		model.addAttribute("activeTab", "orderPermitAlert");
+//		model.addAttribute("mode", "MANAGE");
+		return urlContext + "/permit";
+	}
+	
 	@RequestMapping(method = RequestMethod.GET, value = "/notes.do")
 	public String displayNotes(ModelMap model, HttpServletRequest request) {
 		return urlContext + "/permit";
@@ -96,6 +110,7 @@ public class PermitController extends CRUDController<Permit> {
 		//return urlContext + "/form";
 		
 		model.addAttribute("notesModelObject", new PermitNotes());
+		model.addAttribute("orderPermitList", new OrderPermits());
 				
 		return urlContext + "/permit";
 	}
@@ -116,8 +131,8 @@ public class PermitController extends CRUDController<Permit> {
 		notes.setPermit(emptyPermit);
 		model.addAttribute("notesModelObject", notes);
 	
-		List<BaseModel> addressList = genericDAO.executeSimpleQuery("select obj from PermitNotes obj where obj.permit.id=" +  permitToBeEdited.getId() + " order by obj.id asc");
-		model.addAttribute("notesList", addressList);
+		List<BaseModel> notesList = genericDAO.executeSimpleQuery("select obj from PermitNotes obj where obj.permit.id=" +  permitToBeEdited.getId() + " order by obj.id asc");
+		model.addAttribute("notesList", notesList);
 		
 		// only in cases of Edit, an order ID can be associated with the permit
 		OrderPermits orderPermitObj = (OrderPermits)genericDAO.executeSimpleQuery("select obj from OrderPermits obj where obj.permit.id=" +  permitToBeEdited.getId() + " order by obj.id desc").get(0);
@@ -139,6 +154,7 @@ public class PermitController extends CRUDController<Permit> {
 		model.addAttribute("permitType", genericDAO.findByCriteria(PermitType.class, criterias, "permitType", false));
 		model.addAttribute("permitStatus", genericDAO.findByCriteria(PermitStatus.class, criterias, "status", false));
 		model.addAttribute("permit", genericDAO.findByCriteria(Permit.class, criterias, "id", false));
+		model.addAttribute("orderPermitList", genericDAO.findByCriteria(OrderPermits.class, criterias, "id", false));
 	}
 	
 	@RequestMapping(method = RequestMethod.POST, value = "/save.do")

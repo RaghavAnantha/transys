@@ -1,0 +1,155 @@
+<%@include file="/common/taglibs.jsp"%>
+<br/>
+<h4 style="margin-top: -15px; !important">Order Permits Alert</h4>
+
+<form:form action="listOrderPermit.do" method="get" name="searchForm2" id="orderPermitSearchForm">
+	<table width="100%" id="form-table">
+		<tr>
+		  <td align="${left}" class="form-left"><transys:label code="End Date From"/></td>
+		  <td align="${left}" class="wide"><input class="flat" id="datepicker3" name="endDateFrom" style="width: 163px" /></td>
+				
+		  <td align="${left}" class="form-left"><transys:label code="End Date To"/></td>
+	      <td align="${left}" class="wide"><input class="flat" id="datepicker4" name="endDateTo" style="width: 163px" /></td>
+			
+	 	</tr>
+		 <tr>
+		  <td align="${left}" class="form-left"><transys:label code="Delivery Address #"/></td>
+				<td align="${left}"><select class="flat form-control input-sm" id="deliveryAddress" name="order.deliveryAddress.line1" style="width: 175px">
+					<option value="">------<transys:label code="Please Select"/>------</option>
+					<c:forEach items="${deliveryAddress}" var="deliveryAddressVar">
+						 <c:set var="selected" value=""/>
+						 <c:if test="${sessionScope.searchCriteria.searchMap['order.deliveryAddress.line1'] == deliveryAddressVar.line1}">
+							<c:set var="selected" value="selected"/>
+						</c:if> 
+							<option value="${deliveryAddressVar.line1}" ${selected}>${deliveryAddressVar.line1}</option>
+					</c:forEach>
+				</select>
+				</td>
+			
+			<td align="${left}" class="form-left"><transys:label code="Delivery Street"/></td>
+			<td align="${left}"><select class="flat form-control input-sm" id="deliveryStreet" name="order.deliveryAddress.line2" style="width: 175px">
+				<option value="">------<transys:label code="Please Select"/>------</option>
+				<c:forEach items="${deliveryAddress}" var="deliveryAddress">
+						<c:set var="selected" value=""/>
+						<c:if test="${sessionScope.searchCriteria.searchMap['order.deliveryAddress.line2'] == deliveryAddress.line2}">
+							<c:set var="selected" value="selected"/>
+						</c:if> 
+						<option value="${deliveryAddress.line2}" ${selected}>${deliveryAddress.line2}</option>
+				</c:forEach>
+			</select>
+			</td> 
+	 </tr>
+	 
+ 	 <tr>
+		  <td align="${left}" class="form-left"><transys:label code="Contact Name"/></td>
+				<td align="${left}"><select class="flat form-control input-sm" id="contactName" name="order.customer.contactName" style="width: 175px">
+					<option value="">------<transys:label code="Please Select"/>------</option>
+					<c:forEach items="${customer}" var="customer">
+							<c:set var="selected" value=""/>
+							<c:if test="${sessionScope.searchCriteria.searchMap['order.customer.contactName'] == customer.contactName}">
+								<c:set var="selected" value="selected"/>
+							</c:if>
+								<option value="${customer.contactName}" ${selected}>${customer.contactName}</option>
+					</c:forEach>
+				</select>
+				</td>
+			
+			<td align="${left}" class="form-left"><transys:label code="Phone Number"/></td>
+			<td align="${left}"><select class="flat form-control input-sm" id="phoneNum" name="order.customer.phone" style="width: 175px">
+				<option value="">------<transys:label code="Please Select"/>------</option>
+				<c:forEach items="${customer}" var="customer">
+						<c:set var="selected" value=""/>
+						<c:if test="${sessionScope.searchCriteria.searchMap['order.customer.phone'] == customer.phone}">
+							<c:set var="selected" value="selected"/>
+							<option value="${customer.phone}" ${selected}>${customer.phone}</option>
+					</c:if>
+				</c:forEach>
+			</select>
+			</td>
+	 </tr>
+	 <tr>
+	 <tr>
+		  <td align="${left}" class="form-left"><transys:label code="Permit Number"/></td>
+				<td align="${left}"><select class="flat form-control input-sm" id="permitNumber" name="permit.number" style="width: 175px">
+					<option value="">------<transys:label code="Please Select"/>------</option>
+					<c:forEach items="${permit}" var="permit">
+							<c:set var="selected" value=""/>
+							<c:if test="${sessionScope.searchCriteria.searchMap['permit.number'] == permit.number}">
+								<c:set var="selected" value="selected"/>
+							</c:if>
+								<option value="${permit.number}" ${selected}>${permit.number}</option>
+					</c:forEach>
+				</select>
+				</td>
+			
+			<td align="${left}" class="form-left"><transys:label code="Permit Status"/></td>
+			<td align="${left}"><select class="flat form-control input-sm" id="permitStatus" name="permit.status.status" style="width: 175px">
+				<option value="">------<transys:label code="Please Select"/>------</option>
+				<c:forEach items="${permitStatus}" var="permitStatus">
+					<c:set var="selected" value=""/>
+					<c:if test="${sessionScope.searchCriteria.searchMap['permit.status.status'] == permitStatus.status}">
+						<c:set var="selected" value="selected"/>
+					</c:if>
+						<option value="${permitStatus.status}" ${selected}>${permitStatus.status}</option>
+				</c:forEach>
+			</select>
+			</td>
+	 </tr>
+	 <tr>
+		<td align="${left}" class="form-left"><transys:label code="Order Number"/></td>
+			<td align="${left}"><select id="orderNumber" name="order.id" style="min-width:200px; max-width:200px">
+				<option value="">------<transys:label code="Please Select"/>------</option>
+				<c:forEach items="${order}" var="order">
+					<c:set var="selected" value=""/>
+					<c:if test="${sessionScope.searchCriteria.searchMap['order.id'] == order.id}">
+						<c:set var="selected" value="selected"/>
+					</c:if>
+					<option value="${order.id}" ${selected}>${order.id}</option>
+				</c:forEach>
+			</select>
+		</td>
+		<%-- <td align="${left}" class="form-left"><transys:label code="Order Status"/></td>
+			<td align="${left}"><select id="orderStatus" name="order.status" style="min-width:200px; max-width:200px">
+				<option value="">------<transys:label code="Please Select"/>------</option>
+				<c:forEach items="${order}" var="order">
+					<c:set var="selected" value=""/>
+					<c:if test="${sessionScope.searchCriteria.searchMap['order.id'] == order.id}">
+						<c:set var="selected" value="selected"/>
+					</c:if>
+					<option value="${order.id}" ${selected}>${order.id}</option>
+				</c:forEach>
+			</select>
+		</td> --%>
+	 </tr>
+		<tr>
+			<td align="${left}"></td>
+			<td align="${left}"><input type="button" class="btn btn-primary btn-sm"
+				onclick="document.forms['searchForm2'].submit();"
+				value="<transys:label code="Search"/>" /></td>
+		</tr>
+	</table>
+</form:form>
+
+<form:form name="delete.do" id="serviceForm" class="tab-color">
+	<transys:datatable urlContext="permit" deletable="true"
+		editable="true" insertable="true" baseObjects="${orderPermitList}"
+		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
+		pagingLink="search.do" multipleDelete="false" searcheable="false" 
+		exportPdf="true" exportXls="true">
+		<transys:textcolumn headerText="Delivery#" dataField="order.deliveryAddress.line1" />
+		<transys:textcolumn headerText="DeliveryStreet" dataField="orderdeliveryAddress.line2" />
+		<transys:textcolumn headerText="CustomerName" dataField="order.customer.companyName" />
+		<transys:textcolumn headerText="Order#" dataField="order.id" />
+		<transys:textcolumn headerText="Contact" dataField="order.customer.contactName" />
+		<transys:textcolumn headerText="Phone#" dataField="order.customer.phone" />
+		<%-- <transys:textcolumn headerText="OrderStatus" dataField="order.status" /> --%>
+		<transys:textcolumn headerText="Delivery Date" dataField="order.deliveryDate" />
+		<transys:textcolumn headerText="Permit#" dataField="permit.number" />
+		<transys:textcolumn headerText="PermitStatus" dataField="permit.status.status" />
+		<transys:textcolumn headerText="StartDate" dataField="permit.startDate" />
+		<transys:textcolumn headerText="EndDate" dataField="permit.endDate" />
+	</transys:datatable>
+	<%session.setAttribute("columnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
+</form:form>
+
+
