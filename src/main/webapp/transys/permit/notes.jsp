@@ -1,14 +1,16 @@
 <%@include file="/common/taglibs.jsp"%>
-<h4>Add Permit Notes</h4>
+<h5>Add Permit Notes</h5>
 
 <form:form action="savePermitNotes.do" name="typeForm" commandName="notesModelObject" method="post">
 	<form:hidden path="id" id="id" />
 	<form:hidden path="permit.id" id="permit.id" />
 	<table id="form-table" width="100%" cellspacing="1" cellpadding="5">
 		<tr>
-			<%-- <td align="${left}" class="form-left"><transys:label code="Notes" /></td> --%>
-			<form:textarea id="notesTextArea" path="notes" cssClass="flat" style="min-width:350px; max-width:350px"/>
+			<td colspan=10>
+				<%-- <td align="${left}" class="form-left"><transys:label code="Notes" /></td> --%>
+				<form:textarea row="5" id="notesTextArea" path="notes" cssClass="flat" style="width:100%;"/>
 			 	<br><form:errors path="notes" cssClass="errorMessage" />
+			</td>
 		</tr>
 		<tr><td colspan="2"></td></tr>
 		<tr>

@@ -1,5 +1,5 @@
 <%@include file="/common/taglibs.jsp"%>
-<h4>Add Notes</h4>
+<h5>Add Notes</h5>
 
 <form:form action="saveOrderNotes.do" name="typeForm" commandName="notesModelObject" method="post">
 	<form:hidden path="id" id="id" />
@@ -7,7 +7,7 @@
 	<table id="form-table" width="100%" cellspacing="1" cellpadding="5">
 		<tr>
 			<td colspan=10>
-				<form:textarea row="5" id="notesTabNotes" path="notes" placeholder="Enter Notes" cssClass="flat" style="width:100%;"/>
+				<form:textarea row="5" id="notesTabNotes" path="notes" cssClass="flat" style="width:100%;"/>
 				<br><form:errors path="notes" cssClass="errorMessage" />
 			</td>
 		</tr>
