@@ -14,6 +14,7 @@
 		<%@include file="dropOffDriver.jsp"%>
 	</div>
 	<div id="pickupDriver" class="tab-pane">
+		<%@include file="pickupDriver.jsp"%>
 	</div>
 	<div id="orderNotesTab" class="tab-pane">
 		<%@include file="notes.jsp"%>
