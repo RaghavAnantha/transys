@@ -641,13 +641,9 @@ a.nivo-prevNav {
 	background-color: #EAEAF3;
 }
 
-.datagrid .evenS td {
-	background-color: #EAEAF3;
-	color:red;
-}
-
-
-.datagrid .odd td {	
+.datagrid .odd td {
+	background-color: #b7d0f3;
+	
 }
 
 .datagrid .oddS td {
