@@ -4,7 +4,7 @@
 	<li><a href="#orderDetails" data-toggle="tab">Order Details</a></li>
 	<li><a href="#dropOff" data-toggle="tab">Drop Off</a></li>
 	<li><a href="#pickup" data-toggle="tab">Pickup</a></li>
-	<li><a href="#notes" data-toggle="tab">Notes</a></li>
+	<li><a href="#orderNotesTab" data-toggle="tab">Notes</a></li>
 </ul>
 <div class="tab-content" style="background-color: white;">
 	<div id="orderDetails" class="tab-pane">
@@ -14,6 +14,7 @@
 	</div>
 	<div id="pickup" class="tab-pane">
 	</div>
-	<div id="notes" class="tab-pane">
+	<div id="orderNotesTab" class="tab-pane">
+		<%@include file="notes.jsp"%>
 	</div>
 </div>

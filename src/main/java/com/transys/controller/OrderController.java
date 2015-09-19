@@ -1,6 +1,7 @@
 package com.transys.controller;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.google.gson.Gson;
 import com.transys.controller.editor.AbstractModelEditor;
+import com.transys.model.AbstractBaseModel;
 import com.transys.model.Address;
 import com.transys.model.BaseModel;
 import com.transys.model.Customer;
@@ -30,6 +32,8 @@ import com.transys.model.OrderNotes;
 import com.transys.model.OrderPaymentInfo;
 import com.transys.model.OrderStatus;
 import com.transys.model.Permit;
+import com.transys.model.PermitNotes;
+import com.transys.model.PermitStatus;
 //import com.transys.model.FuelVendor;
 //import com.transys.model.Location;
 import com.transys.model.SearchCriteria;
@@ -107,11 +111,68 @@ public class OrderController extends CRUDController<Order> {
 		model.addAttribute("activeSubTab", "orderDetails");
 		//return urlContext + "/form";
 		
-		//model.addAttribute("deliveryAddressModelObject", new Address());
+		model.addAttribute("notesModelObject", new OrderNotes());
 				
 		return urlContext + "/order";
 	}
 	
+	@RequestMapping(method = RequestMethod.POST, value = "/saveOrderNotes.do")
+	public String saveOrderNotes(HttpServletRequest request,
+			@ModelAttribute("notesModelObject") OrderNotes entity,
+			BindingResult bindingResult, ModelMap model) {
+		try {
+			getValidator().validate(entity, bindingResult);
+		} catch (ValidationException e) {
+			e.printStackTrace();
+			log.warn("Error in validation :" + e);
+		}
+		// return to form if we had errors
+		if (bindingResult.hasErrors()) {
+			setupCreate(model, request);
+			return urlContext + "/form";
+		}
+		//beforeSave(request, entity, model);
+		if (entity instanceof AbstractBaseModel) {
+			AbstractBaseModel baseModel = (AbstractBaseModel) entity;
+			if (baseModel.getId() == null) {
+				baseModel.setCreatedAt(Calendar.getInstance().getTime());
+				if (baseModel.getCreatedBy()==null) {
+					baseModel.setCreatedBy(getUser(request).getId());
+				}
+			} else {
+				baseModel.setModifiedAt(Calendar.getInstance().getTime());
+				if (baseModel.getModifiedBy()==null) {
+					baseModel.setModifiedBy(getUser(request).getId());
+				}
+			}
+		}
+		
+		genericDAO.saveOrUpdate(entity);
+		cleanUp(request);
+
+		setupCreate(model, request);
+		
+		//model.addAttribute("modelObject", entity);
+		model.addAttribute("activeTab", "manageOrders");
+		model.addAttribute("mode", "ADD");
+		model.addAttribute("activeSubTab", "orderNotesTab");
+		
+		Long orderId = entity.getOrder().getId();
+		List<BaseModel> orderList = genericDAO.executeSimpleQuery("select obj from Order obj where obj.id=" + orderId);
+		model.addAttribute("modelObject", orderList.get(0));
+		
+		Order emptyOrder = new Order();
+		emptyOrder.setId(orderId);
+		OrderNotes notes = new OrderNotes();
+		notes.setOrder(emptyOrder);
+		model.addAttribute("notesModelObject", notes);
+	
+		List<BaseModel> notesList = genericDAO.executeSimpleQuery("select obj from OrderNotes obj where obj.order.id=" +  orderId + " order by obj.id asc");
+		model.addAttribute("notesList", notesList);
+		
+		return urlContext + "/order";
+	}
+
 	@RequestMapping(method = RequestMethod.GET, value = "/main.do")
 	public String displayMain(ModelMap model, HttpServletRequest request) {
 		request.getSession().removeAttribute("searchCriteria");
@@ -141,6 +202,17 @@ public class OrderController extends CRUDController<Order> {
 		model.addAttribute("activeTab", "manageOrders");
 		model.addAttribute("mode", "ADD");
 		model.addAttribute("activeSubTab", "orderDetails");
+		
+		Order orderToBeEdited = (Order)model.get("modelObject");
+		
+		Order emptyOrder = new Order();
+		emptyOrder.setId(orderToBeEdited.getId());
+		OrderNotes notes = new OrderNotes();
+		notes.setOrder(emptyOrder);
+		model.addAttribute("notesModelObject", notes);
+	
+		List<BaseModel> notesList = genericDAO.executeSimpleQuery("select obj from OrderNotes obj where obj.order.id=" +  orderToBeEdited.getId() + " order by obj.id asc");
+		model.addAttribute("notesList", notesList);
 		
 		//return urlContext + "/form";
 		return urlContext + "/order";
@@ -212,8 +284,8 @@ public class OrderController extends CRUDController<Order> {
 																					+ ")");
 		entity.setPermits(permitList);
 		
-		OrderStatus orderStatus = new OrderStatus();
-		orderStatus.setId(1l);
+		String initOrderStatus = "Open";
+		OrderStatus orderStatus = (OrderStatus)genericDAO.executeSimpleQuery("select obj from OrderStatus obj where obj.status='" + initOrderStatus + "'").get(0);
 		entity.setOrderStatus(orderStatus);
 		
 		entity.getOrderPaymentInfo().setOrder(entity);
@@ -251,6 +323,14 @@ public class OrderController extends CRUDController<Order> {
 		model.addAttribute("activeTab", "manageOrders");
 		model.addAttribute("activeSubTab", "orderDetails");
 		model.addAttribute("mode", "ADD");
+		
+		Order order = new Order();
+		order.setId(entity.getId());
+		OrderNotes notes = new OrderNotes();
+		notes.setOrder(order);
+		model.addAttribute("notesModelObject", notes);
+		List<BaseModel> notesList = genericDAO.executeSimpleQuery("select obj from OrderNotes obj where obj.order.id=" +  entity.getId() + " order by obj.id asc");
+		model.addAttribute("notesList", notesList);
 		
 		//return urlContext + "/form";
 		return urlContext + "/order";
