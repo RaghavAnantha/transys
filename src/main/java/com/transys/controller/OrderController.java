@@ -26,6 +26,8 @@ import com.transys.model.Customer;
 import com.transys.model.LocationType;
 import com.transys.model.MaterialType;
 import com.transys.model.Order;
+import com.transys.model.OrderNotes;
+import com.transys.model.OrderPaymentInfo;
 import com.transys.model.OrderStatus;
 import com.transys.model.Permit;
 //import com.transys.model.FuelVendor;
@@ -45,6 +47,9 @@ public class OrderController extends CRUDController<Order> {
 		binder.registerCustomEditor(Address.class, new AbstractModelEditor(Address.class));
 		binder.registerCustomEditor(Permit.class, new AbstractModelEditor(Permit.class));
 		binder.registerCustomEditor(LocationType.class, new AbstractModelEditor(LocationType.class));
+		binder.registerCustomEditor(OrderPaymentInfo.class, new AbstractModelEditor(OrderPaymentInfo.class));
+		binder.registerCustomEditor(OrderNotes.class, new AbstractModelEditor(OrderNotes.class));
+		
 		super.initBinder(binder);
 	}
 	
@@ -210,6 +215,10 @@ public class OrderController extends CRUDController<Order> {
 		OrderStatus orderStatus = new OrderStatus();
 		orderStatus.setId(1l);
 		entity.setOrderStatus(orderStatus);
+		
+		entity.getOrderPaymentInfo().setOrder(entity);
+		
+		entity.getOrderNotes().get(0).setOrder(entity);
 
 		genericDAO.saveOrUpdate(entity);
 		cleanUp(request);

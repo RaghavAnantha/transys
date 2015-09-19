@@ -78,11 +78,11 @@ public class Order extends AbstractBaseModel {
 	}
 	
 	/******** Notes Info ************/
-	@OneToMany(cascade = CascadeType.ALL)
-	@JoinTable(
+	@OneToMany(mappedBy="order", cascade = CascadeType.ALL)
+	/*@JoinTable(
      name = "orderNotes",
      joinColumns = @JoinColumn(name = "orderId")
-	)
+	)*/
 	private List<OrderNotes> orderNotes;
 	 
 	public List<OrderNotes> getOrderNotes() {
@@ -94,11 +94,11 @@ public class Order extends AbstractBaseModel {
 	}
 	
 	/******** Order payment info ************/
-	@OneToOne(cascade = CascadeType.ALL)
-	@JoinTable(
+	@OneToOne(mappedBy="order", cascade = CascadeType.ALL)
+	/*@JoinTable(
      name = "orderPaymentInfo",
      joinColumns = @JoinColumn(name = "orderId")
-	)
+	)*/
 	private OrderPaymentInfo orderPaymentInfo;
 	
 	public OrderPaymentInfo getOrderPaymentInfo() {
