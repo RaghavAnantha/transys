@@ -7,7 +7,7 @@
 	<table id="form-table" width="100%" cellspacing="1" cellpadding="5">
 		<tr>
 			<td colspan=10>
-				<form:textarea row="5" id="notesTabNotes" path="notes" cssClass="flat" style="width:100%; height:150%;"/>
+				<form:textarea row="5" id="notesTabNotes" path="notes" placeholder="Enter Notes" cssClass="flat" style="width:100%;"/>
 				<br><form:errors path="notes" cssClass="errorMessage" />
 			</td>
 		</tr>

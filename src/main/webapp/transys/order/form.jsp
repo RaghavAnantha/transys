@@ -95,7 +95,7 @@ function populateCustomerAddress() {
 		<tr>
 			<td class="form-left"><transys:label code="Customer" /><span class="errorMessage"></span></td>
 			<td align="${left}">
-				<form:select id="customerSelect" cssClass="flat form-control input-sm" style="width:175px" path="customer" onChange="return populateCustomerInfo();"> 
+				<form:select id="customerSelect" cssClass="flat form-control input-sm" style="width:172px !important" path="customer" onChange="return populateCustomerInfo();"> 
 					<form:option value="">-----------Please Select----------</form:option>
 					<form:options items="${customers}" itemValue="id" itemLabel="companyName" />
 				</form:select> 
@@ -117,16 +117,21 @@ function populateCustomerAddress() {
 			<td class="form-left"><transys:label code="Phone" /><span class="errorMessage"></span></td>
 			<td align="${left}" id="phone"></td>
 			<td class="form-left"><transys:label code="Email"/></td>
-			<td align="${left}" id="email">
-			</td>
+			<td align="${left}" id="email"></td>
 		</tr>
 		<tr>
 			<td colspan=10 class="danger" style="font-size: 13px;font-weight: bold;color: white;">Delivery Information</td>
 		</tr>
 		<tr>
+			<td colspan="10"></td>
+		</tr>
+		<tr>
+			<td colspan="10"></td>
+		</tr>
+		<tr>
 			<td class="form-left"><transys:label code="Delivery Address" /><span class="errorMessage"></span></td>
 			<td align="${left}">
-				<form:select id="deliveryAddressSelect" cssClass="flat form-control input-sm" path="deliveryAddress" style="width:175px">
+				<form:select id="deliveryAddressSelect" cssClass="flat form-control input-sm" path="deliveryAddress" style="width:172px !important">
 					<form:option value="">-----------Please Select----------</form:option>
 					<form:options items="${deliveryAddresses}" itemValue="id" itemLabel="line1" />
 				</form:select> 
@@ -168,7 +173,7 @@ function populateCustomerAddress() {
 		<tr>
 			<td class="form-left"><transys:label code="Dumpster Location" /><span class="errorMessage">*</span></td>
 			<td align="${left}">
-				<form:select id="dumpsterLocationSelect" cssClass="flat form-control input-sm" style="width:175px" path="dumpsterLocation"> 
+				<form:select id="dumpsterLocationSelect" cssClass="flat form-control input-sm" style="width:172px !important" path="dumpsterLocation"> 
 					<form:option value="">-----------Please Select----------</form:option>
 					<form:options items="${dusmpsterLocationTypes}" itemValue="id" itemLabel="locationType" />
 				</form:select> 
@@ -178,7 +183,7 @@ function populateCustomerAddress() {
 		<tr>
 			<td class="form-left"><transys:label code="Dumpster Size"/><span class="errorMessage">*</span></td>
 			<td align="${left}">
-				<form:select id="dumpsterSize" cssClass="flat form-control input-sm" style="width:175px" path="dumpsterSize"> 
+				<form:select id="dumpsterSize" cssClass="flat form-control input-sm" style="width:172px !important" path="dumpsterSize"> 
 					<form:option value="">-----------Please Select----------</form:option>
 					<form:options items="${dumpsters}" itemValue="dumpsterSize" itemLabel="dumpsterSize" />
 				</form:select> 
@@ -186,8 +191,8 @@ function populateCustomerAddress() {
 			</td>
 			<td class="form-left"><transys:label code="Material Type"/></td>
 			<td align="${left}">
-				<form:select id="materialType" cssClass="flat form-control input-sm" style="width:175px" path="materialType"> 
-					<form:option value="">-----------Please Select----------</form:option>
+				<form:select id="materialType" cssClass="flat form-control input-sm" style="width:172px !important" path="materialType"> 
+					<form:option value="">--------Please Select--------</form:option>
 					<form:options items="${materialTypes}" itemValue="id" itemLabel="type" />
 				</form:select> 
 				<br><form:errors path="materialType" cssClass="errorMessage" />
@@ -195,6 +200,12 @@ function populateCustomerAddress() {
 		</tr>
 		<tr>
 			<td colspan=10 class="danger" style="font-size: 13px;font-weight: bold;color: white;">Permit Information</td>
+		</tr>
+		<tr>
+			<td colspan="10"></td>
+		</tr>
+		<tr>
+			<td colspan="10"></td>
 		</tr>
 		<c:forEach var="aPermit" varStatus="status" items="${permits}">
 			<c:set var="permitDisplayIndex" value="${status.index + 1}" />
@@ -228,6 +239,12 @@ function populateCustomerAddress() {
 			<td colspan=10 class="danger" style="font-size: 13px;font-weight: bold;color: white;">Scale/Weights Information</td>
 		</tr>
 		<tr>
+			<td colspan="10"></td>
+		</tr>
+		<tr>
+			<td colspan="10"></td>
+		</tr>
+		<tr>
 			<td class="form-left"><transys:label code="Gross"/><span class="errorMessage">*</span></td>
 			<td align="${left}">
 				<form:input path="grossWeight" cssClass="flat" />
@@ -253,6 +270,12 @@ function populateCustomerAddress() {
 		</tr>
 		<tr>
 			<td colspan=10 class="danger" style="font-size: 13px;font-weight: bold;color: white;">Rates/Fees Information</td>
+		</tr>
+		<tr>
+			<td colspan="10"></td>
+		</tr>
+		<tr>
+			<td colspan="10"></td>
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Dumpster Price"/><span class="errorMessage">*</span></td>
@@ -296,6 +319,12 @@ function populateCustomerAddress() {
 			<td colspan=10 class="danger" style="font-size: 13px;font-weight: bold;color: white;">Payment Information</td>
 		</tr>
 		<tr>
+			<td colspan="10"></td>
+		</tr>
+		<tr>
+			<td colspan="10"></td>
+		</tr>
+		<tr>
 			<td class="form-left"><transys:label code="Payment Method"/><span class="errorMessage">*</span></td>
 			<td align="${left}">
 				<form:input path="orderPaymentInfo.paymentMethod" cssClass="flat" />
@@ -316,6 +345,9 @@ function populateCustomerAddress() {
 		</tr>
 		<tr>
 			<td colspan=10 class="danger" style="font-size: 13px;font-weight: bold;color: white;">Notes/Comments</td>
+		</tr>
+		<tr>
+			<td colspan="10"></td>
 		</tr>
 		<tr>
 			<td colspan=10>
