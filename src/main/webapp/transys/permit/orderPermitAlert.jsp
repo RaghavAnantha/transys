@@ -2,7 +2,7 @@
 <br/>
 <h4 style="margin-top: -15px; !important">Order Permits Alert</h4>
 
-<form:form action="listOrderPermit.do" method="get" name="searchForm2" id="orderPermitSearchForm">
+<form:form action="listOrderPermit.do" method="get" name="searchFormPermitOrder" id="orderPermitSearchForm">
 	<table width="100%" id="form-table">
 		<tr>
 		  <td align="${left}" class="form-left"><transys:label code="End Date From"/></td>
@@ -124,7 +124,7 @@
 		<tr>
 			<td align="${left}"></td>
 			<td align="${left}"><input type="button" class="btn btn-primary btn-sm"
-				onclick="document.forms['searchForm2'].submit();"
+				onclick="document.forms['searchFormPermitOrder'].submit();"
 				value="<transys:label code="Search"/>" /></td>
 		</tr>
 	</table>
@@ -137,7 +137,7 @@
 		pagingLink="search.do" multipleDelete="false" searcheable="false" 
 		exportPdf="true" exportXls="true">
 		<transys:textcolumn headerText="Delivery#" dataField="order.deliveryAddress.line1" />
-		<transys:textcolumn headerText="DeliveryStreet" dataField="orderdeliveryAddress.line2" />
+		<transys:textcolumn headerText="DeliveryStreet" dataField="order.deliveryAddress.line2" />
 		<transys:textcolumn headerText="CustomerName" dataField="order.customer.companyName" />
 		<transys:textcolumn headerText="Order#" dataField="order.id" />
 		<transys:textcolumn headerText="Contact" dataField="order.customer.contactName" />

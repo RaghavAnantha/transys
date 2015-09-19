@@ -97,7 +97,6 @@ public abstract class CRUDController<T extends BaseModel> extends BaseController
 	@RequestMapping(method = RequestMethod.GET, value = "/create.do")
 	public String create(ModelMap model, HttpServletRequest request) {
 		setupCreate(model, request);
-		
 		return urlContext + "/form";
 	}
 

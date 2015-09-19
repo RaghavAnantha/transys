@@ -107,10 +107,9 @@ public class PermitController extends CRUDController<Permit> {
 		model.addAttribute("activeTab", "managePermits");
 		model.addAttribute("mode", "ADD");
 		model.addAttribute("activeSubTab", "permitDetails");
-		//return urlContext + "/form";
 		
 		model.addAttribute("notesModelObject", new PermitNotes());
-		model.addAttribute("orderPermitList", new OrderPermits());
+//		model.addAttribute("orderPermitList", new OrderPermits());
 				
 		return urlContext + "/permit";
 	}
