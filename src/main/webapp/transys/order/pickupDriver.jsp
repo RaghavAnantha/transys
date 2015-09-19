@@ -1,26 +1,23 @@
 <%@include file="/common/taglibs.jsp"%>
 <br/>
-<form:form action="saveDropOffDriver.do" name="typeForm" commandName="modelObject" method="post" id="typeForm">
+<form:form action="savePickupDriver.do" name="typeForm" commandName="modelObject" method="post" id="typeForm">
 	<form:hidden path="id" id="id" />
 	<table id="form-table" class="table">
 		<tr>
-			<td class="form-left"><transys:label code="Drop-off Driver" /><span class="errorMessage"></span></td>
+			<td class="form-left"><transys:label code="Pickup Date"/><span class="errorMessage">*</span></td>
 			<td align="${left}">
-				<form:select id="dropOffDriver" cssClass="flat form-control input-sm" style="width:175px" path="dropOffDriver"> 
-					<form:option value="">-----------Please Select----------</form:option>
-					<form:options items="${drivers}" itemValue="id" itemLabel="name" />
-				</form:select> 
-				 <br><form:errors path="dropOffDriver" cssClass="errorMessage" />
+				<form:input path="pickupDate" cssClass="flat" id="datepicker6" name="pickupDate"/>
+				 <br><form:errors path="pickupDate" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>
-			<td class="form-left"><transys:label code="Dumpster #" /><span class="errorMessage"></span></td>
+			<td class="form-left"><transys:label code="Pickup Driver" /><span class="errorMessage"></span></td>
 			<td align="${left}">
-				<form:select id="dumpsterNum" cssClass="flat form-control input-sm" path="dumpster" style="width:175px">
+				<form:select id="pickupDriver" cssClass="flat form-control input-sm" style="width:175px" path="pickupDriver"> 
 					<form:option value="">-----------Please Select----------</form:option>
-					<form:options items="${dumpsters}" itemValue="id" itemLabel="dumpsterNum" />
+					<form:options items="${drivers}" itemValue="id" itemLabel="name" />
 				</form:select> 
-				<br><form:errors path="dumpster" cssClass="errorMessage" />
+				 <br><form:errors path="pickupDriver" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>

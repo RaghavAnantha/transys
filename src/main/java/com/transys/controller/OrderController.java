@@ -237,6 +237,63 @@ public class OrderController extends CRUDController<Order> {
 		
 		return urlContext + "/order";
 	}
+	
+	@RequestMapping(method = RequestMethod.POST, value = "/savePickupDriver.do")
+	public String savePickupDriver(HttpServletRequest request,
+			@ModelAttribute("modelObject") Order entity,
+			BindingResult bindingResult, ModelMap model) {
+		try {
+			getValidator().validate(entity, bindingResult);
+		} catch (ValidationException e) {
+			e.printStackTrace();
+			log.warn("Error in validation :" + e);
+		}
+		// return to form if we had errors
+		if (bindingResult.hasErrors()) {
+			setupCreate(model, request);
+			return urlContext + "/form";
+		}
+		//beforeSave(request, entity, model);
+		if (entity instanceof AbstractBaseModel) {
+			AbstractBaseModel baseModel = (AbstractBaseModel) entity;
+			if (baseModel.getId() == null) {
+				baseModel.setCreatedAt(Calendar.getInstance().getTime());
+				if (baseModel.getCreatedBy()==null) {
+					baseModel.setCreatedBy(getUser(request).getId());
+				}
+			} else {
+				baseModel.setModifiedAt(Calendar.getInstance().getTime());
+				if (baseModel.getModifiedBy()==null) {
+					baseModel.setModifiedBy(getUser(request).getId());
+				}
+			}
+		}
+		
+		genericDAO.saveOrUpdate(entity);
+		cleanUp(request);
+
+		setupCreate(model, request);
+		
+		//model.addAttribute("modelObject", entity);
+		model.addAttribute("activeTab", "manageOrders");
+		model.addAttribute("mode", "ADD");
+		model.addAttribute("activeSubTab", "pickupDriver");
+		
+		Long orderId = entity.getId();
+		List<BaseModel> orderList = genericDAO.executeSimpleQuery("select obj from Order obj where obj.id=" + orderId);
+		model.addAttribute("modelObject", orderList.get(0));
+		
+		Order emptyOrder = new Order();
+		emptyOrder.setId(orderId);
+		OrderNotes notes = new OrderNotes();
+		notes.setOrder(emptyOrder);
+		model.addAttribute("notesModelObject", notes);
+	
+		List<BaseModel> notesList = genericDAO.executeSimpleQuery("select obj from OrderNotes obj where obj.order.id=" +  orderId + " order by obj.id asc");
+		model.addAttribute("notesList", notesList);
+		
+		return urlContext + "/order";
+	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/main.do")
 	public String displayMain(ModelMap model, HttpServletRequest request) {
@@ -354,8 +411,12 @@ public class OrderController extends CRUDController<Order> {
 		entity.setOrderStatus(orderStatus);
 		
 		entity.getOrderPaymentInfo().setOrder(entity);
+		entity.getOrderPaymentInfo().setCreatedBy(entity.getCreatedBy());
+		entity.getOrderPaymentInfo().setModifiedBy(entity.getModifiedBy());
 		
 		entity.getOrderNotes().get(0).setOrder(entity);
+		entity.getOrderNotes().get(0).setCreatedBy(entity.getCreatedBy());
+		entity.getOrderNotes().get(0).setModifiedBy(entity.getModifiedBy());
 
 		genericDAO.saveOrUpdate(entity);
 		cleanUp(request);

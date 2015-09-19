@@ -741,6 +741,7 @@ LOCK TABLES `user_info` WRITE;
 /*!40000 ALTER TABLE `user_info` DISABLE KEYS */;
 INSERT INTO `user_info` VALUES (1,NULL,NULL,NULL,NULL,1,NULL,NULL,'admin','2015-09-10 21:32:56','admin',NULL,NULL,'admin','admin',NULL,NULL,'admin',1,NULL,1);
 INSERT INTO `transys`.`user_info` (`id`, `account_status`, `first_name`, `last_login_date`, `last_name`, `name`, `password`, `username`, `role_id`, `delete_flag`) VALUES ('2', '1', 'Robert', '2015-09-19 12:41:30', 'De La Rosa', 'Robert De La Rosa', 'robert', 'robert', '6', '1');
+INSERT INTO `transys`.`user_info` (`id`, `account_status`, `first_name`, `last_login_date`, `last_name`, `name`, `password`, `username`, `role_id`, `delete_flag`) VALUES ('3', '1', 'Thomas', '2015-09-19 12:41:30', 'De Silva', 'Thomas de Silva', 'thomas', 'thomas', '6', '1');
 /*!40000 ALTER TABLE `user_info` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
