@@ -53,7 +53,8 @@ CREATE TABLE `address` (
 
 LOCK TABLES `address` WRITE;
 /*!40000 ALTER TABLE `address` DISABLE KEYS */;
-INSERT INTO `address` VALUES (1,NULL,NULL,NULL,NULL,5,'4818 W VAN BUREN',NULL,'Chicago',1,'3344',1),(3,NULL,NULL,NULL,NULL,5,'1121 E Lemon st',NULL,'Chicago',1,'28262',1);
+INSERT INTO `address` VALUES (1,NULL,NULL,NULL,NULL,5,'4818 W VAN BUREN',NULL,'Chicago',1,'28262',1),(3,NULL,NULL,NULL,NULL,5,'1121 E Lemon st',NULL,'Chicago',1,'28262',1);
+INSERT INTO `transys`.`address` (`id`, `custID`, `line1`, `city`, `state`, `zip`, `delete_flag`) VALUES ('4', '6', '1890 Chesterfield Ct', 'Chicago', '1', '28262', '1');
 /*!40000 ALTER TABLE `address` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -139,7 +140,7 @@ CREATE TABLE `customer` (
 
 LOCK TABLES `customer` WRITE;
 /*!40000 ALTER TABLE `customer` DISABLE KEYS */;
-INSERT INTO `customer` VALUES (5,'2015-09-10 21:22:45',1,NULL,NULL,NULL,'adf',NULL,NULL,'sdfdsf','df','Raghav','1234567890','Raghav','1234567890','34',4,NULL,NULL,NULL,NULL,1),(6,'2015-09-11 21:05:43',1,NULL,NULL,NULL,'line',NULL,NULL,'line2','Il','Bharat','1234567890','Bharat','1234567890','22323',5,NULL,NULL,NULL,NULL,1);
+INSERT INTO `customer` VALUES (5,'2015-09-10 21:22:45',1,NULL,NULL,NULL,'2324 N Camelback Rd',NULL,NULL,NULL,'Chicago','Raghav','1234567890','Raghav','1234567890','28262',5,NULL,NULL,NULL,NULL,1),(6,'2015-09-11 21:05:43',1,NULL,NULL,NULL,'1321 W Main St',NULL,NULL,NULL,'Chicago','Bharat','1234567890','Bharat','1234567890','22323',5,NULL,NULL,NULL,NULL,1);
 /*!40000 ALTER TABLE `customer` ENABLE KEYS */;
 UNLOCK TABLES;
 
