@@ -76,6 +76,12 @@ function formatFax(){
 			<td colspan=10 class="danger" style="font-size: 13px;font-weight: bold;color: white;">Billing Address</td>
 		</tr>
 		<tr>
+			<td colspan=10></td>
+		</tr>
+		<tr>
+			<td colspan=10></td>
+		</tr>
+		<tr>
 			<td class="form-left"><transys:label code="Address Line1"/><span class="errorMessage">*</span></td>
 			<td align="${left}">
 				<form:input path="billingAddressLine1" cssClass="flat"/>
@@ -111,6 +117,12 @@ function formatFax(){
 		</tr>	
 		<tr>
 			<td colspan=10 class="danger" style="font-size: 13px;font-weight: bold;color: white;">Billing Contact</td>
+		</tr>
+		<tr>
+			<td colspan=10></td>
+		</tr>
+		<tr>
+			<td colspan=10></td>
 		</tr>	
 		<tr>
 		<td class="form-left"><transys:label code="Contact Name" /><span class="errorMessage"></span></td>
@@ -150,6 +162,12 @@ function formatFax(){
 		</tr>
 		<tr>
 			<td colspan=10 class="danger" style="font-size: 13px;font-weight: bold;color: white;">Notes/Comments</td>
+		</tr>
+		<tr>
+			<td colspan=10></td>
+		</tr>
+		<tr>
+			<td colspan=10></td>
 		</tr>
 		<tr>
 			<td colspan=10>
