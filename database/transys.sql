@@ -256,6 +256,8 @@ CREATE TABLE `trans_order` (
   `pickupDate` datetime DEFAULT NULL,
   `orderStatusId` bigint(20) NOT NULL,
   -- `permits` bigint(20) DEFAULT NULL,
+  `pickUpDriverId` bigint(20) DEFAULT NULL,
+  `dropOffDriverId` bigint(20) DEFAULT NULL,
   `deliveryTimeTo` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `key1_idx` (`custID`),
@@ -272,8 +274,10 @@ CREATE TABLE `trans_order` (
   -- CONSTRAINT `paymentInfoRef` FOREIGN KEY (`paymentInfo`) REFERENCES `orderPaymentInfo` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   -- CONSTRAINT `weightInfoRef` FOREIGN KEY (`weightInfo`) REFERENCES `orderWeightInfo` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
   CONSTRAINT `dumpsterRef` FOREIGN KEY (`dumpsterId`) REFERENCES `dumpsterInfo` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `dumpsterLocationRef` FOREIGN KEY (`locationTypeId`) REFERENCES `locationType` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-  ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  CONSTRAINT `dumpsterLocationRef` FOREIGN KEY (`locationTypeId`) REFERENCES `locationType` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `pickupDriverRef` FOREIGN KEY (`pickUpDriverId`) REFERENCES `user_info` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `dropOffDriverRef` FOREIGN KEY (`dropOffDriverId`) REFERENCES `user_info` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -313,37 +317,6 @@ LOCK TABLES `locationType` WRITE;
 /*!40000 ALTER TABLE `locationType` DISABLE KEYS */;
 INSERT INTO `locationType` VALUES (1,'Alley',NULL,NULL,NULL,NULL,1),(2,'Curb',NULL,NULL,NULL,NULL,1),(3,'Drive',NULL,NULL,NULL,NULL,1);
 /*!40000 ALTER TABLE `locationType` ENABLE KEYS */;
-UNLOCK TABLES;
-
-
---
--- Table structure for table `orderDriverInfo`
---
-
-DROP TABLE IF EXISTS `orderDriverInfo`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `orderDriverInfo` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `orderID` bigint(20) NOT NULL,
-  `pickUpDriver` bigint(20) NOT NULL,
-  `dropOffDriver` bigint(20) NOT NULL,
-  `created_at` datetime DEFAULT NULL,
-  `created_by` bigint(20) DEFAULT NULL,
-  `modified_at` datetime DEFAULT NULL,
-  `modified_by` bigint(20) DEFAULT NULL,
-  `delete_flag` int(11) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `orderDriverInfo`
---
-
-LOCK TABLES `orderDriverInfo` WRITE;
-/*!40000 ALTER TABLE `orderDriverInfo` DISABLE KEYS */;
-/*!40000 ALTER TABLE `orderDriverInfo` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -656,6 +629,7 @@ CREATE TABLE `role` (
 LOCK TABLES `role` WRITE;
 /*!40000 ALTER TABLE `role` DISABLE KEYS */;
 INSERT INTO `role` VALUES (1,NULL,NULL,NULL,NULL,1,'ADMIN',NULL,NULL),(2,NULL,NULL,NULL,NULL,1,'OPERATOR',NULL,NULL),(3,NULL,NULL,NULL,NULL,1,'REPORTUSER',NULL,NULL),(4,'2012-03-16 01:43:40',1,NULL,NULL,1,'DATA ENTRY_BILLING',NULL,NULL),(5,'2012-03-16 14:25:34',1,NULL,NULL,1,'TEST',NULL,NULL);
+INSERT INTO `transys`.`role` (`id`, `default_flag`, `name`) VALUES ('6', '1', 'DRIVER');
 /*!40000 ALTER TABLE `role` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -766,6 +740,7 @@ CREATE TABLE `user_info` (
 LOCK TABLES `user_info` WRITE;
 /*!40000 ALTER TABLE `user_info` DISABLE KEYS */;
 INSERT INTO `user_info` VALUES (1,NULL,NULL,NULL,NULL,1,NULL,NULL,'admin','2015-09-10 21:32:56','admin',NULL,NULL,'admin','admin',NULL,NULL,'admin',1,NULL,1);
+INSERT INTO `transys`.`user_info` (`id`, `account_status`, `first_name`, `last_login_date`, `last_name`, `name`, `password`, `username`, `role_id`, `delete_flag`) VALUES ('2', '1', 'Robert', '2015-09-19 12:41:30', 'De La Rosa', 'Robert De La Rosa', 'robert', 'robert', '6', '1');
 /*!40000 ALTER TABLE `user_info` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;

@@ -108,6 +108,30 @@ public class Order extends AbstractBaseModel {
 	public void setOrderPaymentInfo(OrderPaymentInfo orderPaymentInfo) {
 		this.orderPaymentInfo = orderPaymentInfo;
 	}
+	
+	@ManyToOne
+	@JoinColumn(name="pickupDriverId") 
+	private User pickupDriver;
+	
+	@ManyToOne
+	@JoinColumn(name="dropOffDriverId") 
+	private User dropOffDriver;
+	
+	public User getPickupDriver() {
+		return pickupDriver;
+	}
+
+	public void setPickupDriver(User pickupDriver) {
+		this.pickupDriver = pickupDriver;
+	}
+
+	public User getDropOffDriver() {
+		return dropOffDriver;
+	}
+
+	public void setDropOffDriver(User dropOffDriver) {
+		this.dropOffDriver = dropOffDriver;
+	}
 
 	/******** Dumpster Info ************/
 	@ManyToOne

@@ -25,6 +25,7 @@ import com.transys.model.AbstractBaseModel;
 import com.transys.model.Address;
 import com.transys.model.BaseModel;
 import com.transys.model.Customer;
+import com.transys.model.DumpsterInfo;
 import com.transys.model.LocationType;
 import com.transys.model.MaterialType;
 import com.transys.model.Order;
@@ -37,6 +38,7 @@ import com.transys.model.PermitStatus;
 //import com.transys.model.FuelVendor;
 //import com.transys.model.Location;
 import com.transys.model.SearchCriteria;
+import com.transys.model.User;
 
 @Controller
 @RequestMapping("/order")
@@ -53,6 +55,8 @@ public class OrderController extends CRUDController<Order> {
 		binder.registerCustomEditor(LocationType.class, new AbstractModelEditor(LocationType.class));
 		binder.registerCustomEditor(OrderPaymentInfo.class, new AbstractModelEditor(OrderPaymentInfo.class));
 		binder.registerCustomEditor(OrderNotes.class, new AbstractModelEditor(OrderNotes.class));
+		binder.registerCustomEditor(DumpsterInfo.class, new AbstractModelEditor(DumpsterInfo.class));
+		binder.registerCustomEditor(User.class, new AbstractModelEditor(User.class));
 		
 		super.initBinder(binder);
 	}
@@ -76,6 +80,10 @@ public class OrderController extends CRUDController<Order> {
       
       model.addAttribute("dumpsters", genericDAO.executeSimpleQuery("select obj from DumpsterInfo obj where obj.id!=0 order by obj.id asc"));
       model.addAttribute("dusmpsterLocationTypes", genericDAO.executeSimpleQuery("select obj from LocationType obj where obj.id!=0 order by obj.id asc"));
+      
+      String driverRole = "DRIVER";
+      List<BaseModel> driversList = genericDAO.executeSimpleQuery("select obj from User obj where obj.id!=0 and obj.role.name='" + driverRole + "' order by obj.id asc");
+      model.addAttribute("drivers", driversList);
       
       MaterialType aMaterialType = new MaterialType();
       aMaterialType.setId(1l);
@@ -112,7 +120,7 @@ public class OrderController extends CRUDController<Order> {
 		//return urlContext + "/form";
 		
 		model.addAttribute("notesModelObject", new OrderNotes());
-				
+		
 		return urlContext + "/order";
 	}
 	
@@ -158,6 +166,63 @@ public class OrderController extends CRUDController<Order> {
 		model.addAttribute("activeSubTab", "orderNotesTab");
 		
 		Long orderId = entity.getOrder().getId();
+		List<BaseModel> orderList = genericDAO.executeSimpleQuery("select obj from Order obj where obj.id=" + orderId);
+		model.addAttribute("modelObject", orderList.get(0));
+		
+		Order emptyOrder = new Order();
+		emptyOrder.setId(orderId);
+		OrderNotes notes = new OrderNotes();
+		notes.setOrder(emptyOrder);
+		model.addAttribute("notesModelObject", notes);
+	
+		List<BaseModel> notesList = genericDAO.executeSimpleQuery("select obj from OrderNotes obj where obj.order.id=" +  orderId + " order by obj.id asc");
+		model.addAttribute("notesList", notesList);
+		
+		return urlContext + "/order";
+	}
+	
+	@RequestMapping(method = RequestMethod.POST, value = "/saveDropOffDriver.do")
+	public String saveDropOffDriver(HttpServletRequest request,
+			@ModelAttribute("modelObject") Order entity,
+			BindingResult bindingResult, ModelMap model) {
+		try {
+			getValidator().validate(entity, bindingResult);
+		} catch (ValidationException e) {
+			e.printStackTrace();
+			log.warn("Error in validation :" + e);
+		}
+		// return to form if we had errors
+		if (bindingResult.hasErrors()) {
+			setupCreate(model, request);
+			return urlContext + "/form";
+		}
+		//beforeSave(request, entity, model);
+		if (entity instanceof AbstractBaseModel) {
+			AbstractBaseModel baseModel = (AbstractBaseModel) entity;
+			if (baseModel.getId() == null) {
+				baseModel.setCreatedAt(Calendar.getInstance().getTime());
+				if (baseModel.getCreatedBy()==null) {
+					baseModel.setCreatedBy(getUser(request).getId());
+				}
+			} else {
+				baseModel.setModifiedAt(Calendar.getInstance().getTime());
+				if (baseModel.getModifiedBy()==null) {
+					baseModel.setModifiedBy(getUser(request).getId());
+				}
+			}
+		}
+		
+		genericDAO.saveOrUpdate(entity);
+		cleanUp(request);
+
+		setupCreate(model, request);
+		
+		//model.addAttribute("modelObject", entity);
+		model.addAttribute("activeTab", "manageOrders");
+		model.addAttribute("mode", "ADD");
+		model.addAttribute("activeSubTab", "dropOffDriver");
+		
+		Long orderId = entity.getId();
 		List<BaseModel> orderList = genericDAO.executeSimpleQuery("select obj from Order obj where obj.id=" + orderId);
 		model.addAttribute("modelObject", orderList.get(0));
 		

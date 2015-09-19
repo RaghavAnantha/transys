@@ -16,9 +16,6 @@ import org.hibernate.validator.constraints.NotEmpty;
 @Entity
 @Table(name = "role")
 public class Role extends AbstractBaseModel {
-
-	private static final long serialVersionUID = -1592068085641641114L;
-
 	@NotEmpty
 	public String getName() {
 		return name;
