@@ -421,6 +421,7 @@ public class GenericJpaDAO implements GenericDAO {
 					+ " p where 1!=1 ");
 		queryStmt.append(searchString.toString());
 		System.out.println("***** the search string is "+queryStmt.toString());
+		
 		return entityManager.createQuery(queryStmt.toString())
 				.setMaxResults(criteria.getPageSize())
 				.setFirstResult(criteria.getPage() * criteria.getPageSize())
