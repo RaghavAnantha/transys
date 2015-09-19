@@ -677,7 +677,7 @@ public final class Datatable extends BodyTagSupport {
 					if ((i % 2) == 0)
 						objOut.println("<tr class=\"even\">");
 					else
-						objOut.println("<tr>");
+						objOut.println("<tr class=\"odd\">");
 					iterCol = null;
 					this.currItem = baseObjects.get(i);
 					if (editColumn!=null) {
@@ -712,13 +712,13 @@ public final class Datatable extends BodyTagSupport {
 					objCol = null;
 					objOut.println("</tr>");
 				}
-				if (this.searchCriteria != null) {
+			/*	if (this.searchCriteria != null) {
 					objOut.println("<tr>");
 					objOut.println("<td colspan=" + this.columns.size() + ">");
 					drawTablePaging();
 					objOut.println("</td>");
 					objOut.println("</tr>");
-				}
+				} */
 				objOut.println("</table>");
 			}
 		} catch (IOException IOEx) {
