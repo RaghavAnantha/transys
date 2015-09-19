@@ -76,7 +76,7 @@ function populateEndDate() {
 		<tr>
 			<td class="form-left"><transys:label code="Delivery Address" /><span class="errorMessage">*</span></td>
 			<td align="${left}">
-				<form:select id="deliveryAddressSelect" cssClass="flat form-control input-sm" path="deliveryAddress" style="width: 175px" >
+				<form:select id="deliveryAddressSelect" cssClass="flat form-control input-sm" path="deliveryAddress" style="width: 175px !important" >
 					<form:option value="">-----------Please Select----------</form:option>
 					<%-- <form:options items="${deliveryAddress}" itemValue="id" itemLabel="line1" /> --%>
 				</form:select> 
@@ -85,7 +85,7 @@ function populateEndDate() {
 			</td> 
 			<td class="form-left"><transys:label code="LocationType" /><span class="errorMessage">*</span></td>
 			<td align="${left}">
-				<form:select id="locationTypeSelect" cssClass="flat form-control input-sm" path="locationType.id" style="width: 175px" >
+				<form:select id="locationTypeSelect" cssClass="flat form-control input-sm" path="locationType.id" style="width: 175px !important" >
 					<form:option value="">------Please Select--------</form:option>
 					<form:options items="${locationType}" itemValue="id" itemLabel="locationType" />
 				</form:select> 
@@ -109,7 +109,7 @@ function populateEndDate() {
 		<tr>
 			<td class="form-left"><transys:label code="Permit Class" /><span class="errorMessage">*</span></td>
 			<td align="${left}">
-				<form:select cssClass="flat form-control input-sm" path="permitClass.id" style="width: 175px" >
+				<form:select cssClass="flat form-control input-sm" path="permitClass.id" style="width: 175px !important" >
 					<form:option value="">------Please Select--------</form:option>
 					<form:options items="${permitClass}" itemValue="id" itemLabel="permitClass" />
 				</form:select> 
@@ -118,7 +118,7 @@ function populateEndDate() {
 			
 			<td class="form-left"><transys:label code="Permit Type" /></td>
 			<td align="${left}">
-				<form:select id="permitTypeSelect" cssClass="flat form-control input-sm" path="permitType.id" style="width: 175px"  onChange="return populateEndDate();" >
+				<form:select id="permitTypeSelect" cssClass="flat form-control input-sm" path="permitType.id" style="width: 175px !important"  onChange="return populateEndDate();" >
 					<form:option value="">------Please Select--------</form:option>
 					<form:options items="${permitType}" itemValue="id" itemLabel="permitType" />
 				</form:select> 
@@ -141,7 +141,7 @@ function populateEndDate() {
 		<tr>
 		<td class="form-left"><transys:label code="Parking Meter" /><span class="errorMessage">*</span></td>
 			<td align="${left}">
-				<form:select cssClass="flat form-control input-sm" path="parkingMeter" style="width: 175px" >
+				<form:select cssClass="flat form-control input-sm" path="parkingMeter" style="width: 175px !important" >
 					<form:option value="Yes"></form:option>
 					<form:option value="No"></form:option>
 				</form:select> 
@@ -158,9 +158,9 @@ function populateEndDate() {
 		<tr>
 			<td>&nbsp;</td>
 			<td align="${left}" colspan="2">
-				<input type="submit"  id="create" onclick="return true" value="<transys:label code="Save"/>" class="flat" /> 
-				<input type="reset" id="resetBtn" value="<transys:label code="Reset"/> "class="flat" /> 
-				<input type="button" id="cancelBtn" value="<transys:label code="Cancel"/>" class="flat" onClick="location.href='main.do'" />
+				<input type="submit"  id="create" onclick="return true" value="<transys:label code="Save"/>" class="flat btn btn-primary btn-sm" /> 
+				<input type="reset" id="resetBtn" value="<transys:label code="Reset"/> "class="flat btn btn-primary btn-sm" /> 
+				<input type="button" id="cancelBtn" value="<transys:label code="Cancel"/>" class="flat btn btn-primary btn-sm" onClick="location.href='main.do'" />
 			</td>
 		</tr>
 	</table>
