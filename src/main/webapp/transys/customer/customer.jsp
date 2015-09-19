@@ -10,7 +10,7 @@
 		<li><a href="#manageCustomer" data-toggle="tab">Customers</a></li>
 		<li><a href="#customerReports" data-toggle="tab">Customer Reports</a></li>
 	</ul>
-	<div class="tab-content" style="background-color: white;">
+	<div class="tab-content" style="background-color: white;padding-top: 5px;">
 		<div id="manageCustomer" class="tab-pane">
 			<c:if test="${mode == 'MANAGE'}">
 				<%@include file="list.jsp"%>

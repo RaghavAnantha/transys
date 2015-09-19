@@ -36,6 +36,9 @@
     <decorator name="masterdata" page="singleColumnLayout.jsp">
         <pattern>/transys/masterdata/**</pattern>
     </decorator>
+    <decorator name="report" page="singleColumnLayout.jsp">
+        <pattern>/transys/report/**</pattern>
+    </decorator>
     <decorator name="login" page="singleColumnLayoutLogin.jsp">
         <pattern>/transys/login/**</pattern>
     </decorator>
