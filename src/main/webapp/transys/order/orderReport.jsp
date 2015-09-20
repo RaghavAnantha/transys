@@ -1,0 +1,129 @@
+<%@include file="/common/taglibs.jsp"%>
+<h4 !important">Orders Report</h4>
+<form:form action="list.do" method="get" name="searchForm" id="orderSearchForm">
+	<table width="100%" id="form-table">
+		<tr>
+			<td align="${left}" class="form-left"><transys:label code="Company Name" /></td>
+			<td align="${left}" class="wide">
+				<select class="flat form-control input-sm" id="OrderId" name="id" style="width: 175px">
+					<option value="">------<transys:label code="Please Select" />------</option>
+					<c:forEach items="${customers}" var="name">
+						<c:set var="selected" value="" />
+						<c:if
+							test="${sessionScope.searchCriteria.searchMap['companyName'] == name.companyName}">
+							<c:set var="selected" value="selected" />
+						</c:if>
+						<option value="${name.companyName}" ${selected}>${name.companyName}</option>
+					</c:forEach>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td align="${left}" class="form-left"><transys:label code="Delivery Date from" /></td>
+			<td align="${left}" class="wide">
+				<select class="flat form-control input-sm" id=deliveryDateFrom name="deliveryDate" style="width: 175px">
+					<option value="">------<transys:label code="Please Select" />------</option>
+					<c:forEach items="${order}" var="anOrder">
+						<c:set var="selected" value="" />
+						<c:if
+							test="${sessionScope.searchCriteria.searchMap['deliveryDate'] == anOrder.deliveryDate}">
+							<c:set var="selected" value="selected" />
+						</c:if>
+						<option value="${anOrder.deliveryDate}" ${selected}>${anOrder.deliveryDate}</option>
+					</c:forEach>
+				</select>
+			</td>
+			<td align="${left}" class="form-left"><transys:label code="Delivery Date to" /></td>
+			<td align="${left}" class="wide">
+				<select class="flat form-control input-sm" id=deliveryDateTo name="deliveryDate" style="width: 175px">
+					<option value="">------<transys:label code="Please Select" />------</option>
+					<c:forEach items="${order}" var="anOrder">
+						<c:set var="selected" value="" />
+						<c:if
+							test="${sessionScope.searchCriteria.searchMap['deliveryDate'] == anOrder.deliveryDate}">
+							<c:set var="selected" value="selected" />
+						</c:if>
+						<option value="${anOrder.deliveryDate}" ${selected}>${anOrder.deliveryDate}</option>
+					</c:forEach>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td align="${left}" class="form-left"><transys:label code="Contact Name" /></td>
+			<td align="${left}" class="wide">
+				<select class="flat form-control input-sm" id="contactName" name="deliveryContactName" style="width: 175px">
+					<option value="">------<transys:label code="Please Select" />------</option>
+					<c:forEach items="${order}" var="aOrder">
+						<c:set var="selected" value="" />
+						<c:if
+							test="${sessionScope.searchCriteria.searchMap['deliveryContactName'] == aOrder.deliveryContactName}">
+							<c:set var="selected" value="selected" />
+						</c:if>
+						<option value="${aOrder.deliveryContactName}" ${selected}>${aOrder.deliveryContactName}</option>
+					</c:forEach>
+				</select>
+			</td>
+			<td align="${left}" class="form-left"><transys:label code="Order Status" /></td>
+			<td align="${left}">
+				<select class="flat form-control input-sm" id="orderStatus" name="status" style="width: 175px">
+					<option value="">------<transys:label code="Please Select" />------</option>
+					<c:forEach items="${orderStatuses}" var="oStatus">
+						<c:set var="selected" value="" />
+						<c:if
+							test="${sessionScope.searchCriteria.searchMap['status'] == oStatus.status}">
+							<c:set var="selected" value="selected" />
+						</c:if>
+						<option value="${oStatus.status}" ${selected}>${oStatus.status}</option>
+					</c:forEach>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td align="${left}" class="form-left"><transys:label code="Phone Number" /></td>
+			<td align="${left}" class="wide">
+				<select class="flat form-control input-sm" id=deliveryContactPhone1 name="deliveryContactPhone1" style="width: 175px">
+					<option value="">------<transys:label code="Please Select" />------</option>
+					<c:forEach items="${order}" var="anOrder">
+						<c:set var="selected" value="" />
+						<c:if
+							test="${sessionScope.searchCriteria.searchMap['deliveryContactPhone1'] == anOrder.deliveryContactPhone1}">
+							<c:set var="selected" value="selected" />
+						</c:if>
+						<option value="${anOrder.deliveryContactPhone1}" ${selected}>${anOrder.deliveryContactPhone1}</option>
+					</c:forEach>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td align="${left}"></td>
+			<td align="${left}">
+				<input type="button" class="btn btn-primary btn-sm" onclick="document.forms['searchForm'].submit();"
+					value="<transys:label code="Preview"/>" />
+			</td>
+		</tr>
+	</table>
+</form:form>
+
+<form:form name="orderReportForm" id="orderReportForm" class="tab-color">
+	<transys:datatable urlContext="order"  baseObjects="${list}"
+		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
+		pagingLink="search.do" multipleDelete="false" searcheable="false"
+		exportPdf="true" exportXls="true">
+		<transys:textcolumn headerText="Order #" dataField="id" />
+		<transys:textcolumn headerText="Customer" dataField="customer.companyName" />
+		<transys:textcolumn headerText="Contact" dataField="deliveryContactName" />
+		<transys:textcolumn headerText="Phone" dataField="deliveryContactPhone1" />
+		<transys:textcolumn headerText="Delivery Address" dataField="deliveryAddress.line1" />
+		<transys:textcolumn headerText="City" dataField="deliveryAddress.city" />
+		<transys:textcolumn headerText="Status" dataField="orderStatus.status" />
+		<transys:textcolumn headerText="Delivery Date" dataField="deliveryDate" />
+		<transys:textcolumn headerText="Pickup Date" dataField="pickupDate" />
+		<transys:textcolumn headerText="Pymt. method" dataField="orderPaymentInfo.paymentMethod" />	
+		<transys:textcolumn headerText="Dumpster Price" dataField="orderPaymentInfo.dumpsterPrice" />
+		<transys:textcolumn headerText="City Fee" dataField="orderPaymentInfo.cityFee" />
+		<transys:textcolumn headerText="Permit Fee" dataField="orderPaymentInfo.permitFees" />
+		<transys:textcolumn headerText="OvrWt. Fee" dataField="orderPaymentInfo.overweightFee" />
+		<transys:textcolumn headerText="Total Fees" dataField="orderPaymentInfo.totalFees" />	
+	</transys:datatable>
+	<%session.setAttribute("columnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
+</form:form>
