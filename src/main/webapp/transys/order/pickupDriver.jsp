@@ -14,7 +14,7 @@
 			<td class="form-left"><transys:label code="Pickup Driver" /><span class="errorMessage"></span></td>
 			<td align="${left}">
 				<form:select id="pickupDriver" cssClass="flat form-control input-sm" style="width:172px !important" path="pickupDriver"> 
-					<form:option value="">-----------Please Select----------</form:option>
+					<form:option value="">-------Please Select------</form:option>
 					<form:options items="${drivers}" itemValue="id" itemLabel="name" />
 				</form:select> 
 				 <br><form:errors path="pickupDriver" cssClass="errorMessage" />
