@@ -134,8 +134,11 @@ public class PermitController extends CRUDController<Permit> {
 		model.addAttribute("notesList", notesList);
 		
 		// only in cases of Edit, an order ID can be associated with the permit
-		OrderPermits orderPermitObj = (OrderPermits)genericDAO.executeSimpleQuery("select obj from OrderPermits obj where obj.permit.id=" +  permitToBeEdited.getId() + " order by obj.id desc").get(0);
-		model.addAttribute("associatedOrderID", orderPermitObj);
+		List<BaseModel> orderPermits = (List<BaseModel>)genericDAO.executeSimpleQuery("select obj from OrderPermits obj where obj.permit.id=" +  permitToBeEdited.getId() + " order by obj.id desc");
+		if (orderPermits != null && orderPermits.size() > 0) {
+			BaseModel orderPermitObj = orderPermits.get(0);
+			model.addAttribute("associatedOrderID", orderPermitObj);
+		}
 	
 		return urlContext + "/permit";
 	}
