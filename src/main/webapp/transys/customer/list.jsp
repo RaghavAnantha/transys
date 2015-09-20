@@ -9,9 +9,7 @@
 			<td align="${left}" class="wide"><select
 				class="flat form-control input-sm" id="companyName"
 				name="companyName" style="width:175px !important">
-					<option value="">------
-						<transys:label code="Please Select" />------
-					</option>
+					<option value="">------<transys:label code="Please Select" />------</option>
 					<c:forEach items="${customer}" var="customer">
 						<c:set var="selected" value="" />
 						<c:if

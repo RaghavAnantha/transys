@@ -36,7 +36,7 @@ function populateDeliveryAddress() {
 	
 	deliveryAddressSelect.empty();
 	
-	var firstOption = $('<option value="">'+ "-----------Please Select----------" +'</option>');
+	var firstOption = $('<option value="">'+ "-------Please Select------" +'</option>');
 	deliveryAddressSelect.append(firstOption);
 	
 	var customerId = customerSelect.val();

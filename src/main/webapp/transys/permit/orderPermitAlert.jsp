@@ -6,10 +6,10 @@
 	<table width="100%" id="form-table">
 		<tr>
 		  <td align="${left}" class="form-left"><transys:label code="End Date From"/></td>
-		  <td align="${left}" class="wide"><input class="flat" id="datepicker3" name="endDateFrom" style="width: 163px" /></td>
+		  <td align="${left}" class="wide"><input class="flat" id="datepicker3" name="endDateFrom" style="width: 175px" /></td>
 				
 		  <td align="${left}" class="form-left"><transys:label code="End Date To"/></td>
-	      <td align="${left}" class="wide"><input class="flat" id="datepicker4" name="endDateTo" style="width: 163px" /></td>
+	      <td align="${left}" class="wide"><input class="flat" id="datepicker4" name="endDateTo" style="width: 175px" /></td>
 			
 	 	</tr>
 		 <tr>
