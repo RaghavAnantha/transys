@@ -97,7 +97,7 @@
 	 </tr>
 	 <tr>
 		<td align="${left}" class="form-left"><transys:label code="Order Number"/></td>
-			<td align="${left}"><select id="orderNumber" name="order.id" style="min-width:200px; max-width:200px">
+			<td align="${left}"><select id="orderNumber" name="order.id" class="flat form-control input-sm" style="width: 175px">
 				<option value="">------<transys:label code="Please Select"/>------</option>
 				<c:forEach items="${order}" var="order">
 					<c:set var="selected" value=""/>
@@ -132,7 +132,7 @@
 
 <form:form name="delete.do" id="serviceForm" class="tab-color">
 	<transys:datatable urlContext="permit" deletable="true"
-		editable="true" insertable="true" baseObjects="${orderPermitList}"
+		editable="true" baseObjects="${orderPermitList}"
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
 		pagingLink="search.do" multipleDelete="false" searcheable="false" 
 		exportPdf="true" exportXls="true">
