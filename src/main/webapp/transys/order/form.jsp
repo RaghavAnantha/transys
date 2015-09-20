@@ -36,7 +36,7 @@ function populateDeliveryAddress() {
 	
 	deliveryAddressSelect.empty();
 	
-	var firstOption = $('<option value="">'+ "-----------Please Select----------" +'</option>');
+	var firstOption = $('<option value="">'+ "-------Please Select------" +'</option>');
 	deliveryAddressSelect.append(firstOption);
 	
 	var customerId = customerSelect.val();
@@ -93,7 +93,7 @@ function populateCustomerAddress() {
 			<td class="form-left"><transys:label code="Customer" /><span class="errorMessage"></span></td>
 			<td align="${left}">
 				<form:select id="customerSelect" cssClass="flat form-control input-sm" style="width:172px !important" path="customer" onChange="return populateCustomerInfo();"> 
-					<form:option value="">-----------Please Select----------</form:option>
+					<form:option value="">-------Please Select------</form:option>
 					<form:options items="${customers}" itemValue="id" itemLabel="companyName" />
 				</form:select> 
 				 <br><form:errors path="customer" cssClass="errorMessage" />
@@ -132,7 +132,7 @@ function populateCustomerAddress() {
 			<td class="form-left"><transys:label code="Delivery Address" /><span class="errorMessage"></span></td>
 			<td align="${left}">
 				<form:select id="deliveryAddressSelect" cssClass="flat form-control input-sm" path="deliveryAddress" style="width:172px !important">
-					<form:option value="">-----------Please Select----------</form:option>
+					<form:option value="">-------Please Select------</form:option>
 					<form:options items="${deliveryAddresses}" itemValue="id" itemLabel="line1" />
 				</form:select> 
 				<br><form:errors path="deliveryAddress" cssClass="errorMessage" />
@@ -166,15 +166,37 @@ function populateCustomerAddress() {
 			</td>
 			<td class="form-left"><transys:label code="Delivery Time"/></td>
 			<td align="${left}">
-				<form:input path="deliveryTimeFrom" cssClass="flat" />&nbsp;to&nbsp;<form:input path="deliveryTimeTo" cssClass="flat" />
-				 <br><form:errors path="deliveryTimeFrom" cssClass="errorMessage" /><form:errors path="deliveryTimeTo" cssClass="errorMessage" />
+				<label style="display: inline-block; font-weight: normal">
+					<form:select id="deliveryHourFrom" cssClass="flat form-control input-sm" style="width:95px !important" path="deliveryHourFrom"> 
+						<form:options items="${deliveryHours}" />
+					</form:select>
+				</label>
+				&nbsp;
+				<label style="display: inline-block; font-weight: normal">
+					<form:select id="deliveryMinutesFrom" cssClass="flat form-control input-sm" style="width:55px !important" path="deliveryMinutesFrom"> 
+						<form:options items="${deliveryMinutes}" />
+					</form:select>
+				</label>
+				&nbsp;to&nbsp;
+				<label style="display: inline-block; font-weight: normal">
+					<form:select id="deliveryHourTo" cssClass="flat form-control input-sm" style="width:95px !important" path="deliveryHourTo"> 
+						<form:options items="${deliveryHours}" />
+				</form:select>
+				</label>
+				&nbsp;
+				<label style="display: inline-block; font-weight: normal">
+					<form:select id="deliveryMinutesTo" cssClass="flat form-control input-sm" style="width:55px !important" path="deliveryMinutesTo"> 
+						<form:options items="${deliveryMinutes}" />
+					</form:select>
+				</label>
+			 	<br><form:errors path="deliveryHourFrom" cssClass="errorMessage" /><form:errors path="deliveryHourTo" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Dumpster Location" /><span class="errorMessage">*</span></td>
 			<td align="${left}">
 				<form:select id="dumpsterLocationSelect" cssClass="flat form-control input-sm" style="width:172px !important" path="dumpsterLocation"> 
-					<form:option value="">-----------Please Select----------</form:option>
+					<form:option value="">-------Please Select------</form:option>
 					<form:options items="${dusmpsterLocationTypes}" itemValue="id" itemLabel="locationType" />
 				</form:select> 
 			 	<br><form:errors path="dumpsterLocation" cssClass="errorMessage" />
@@ -184,7 +206,7 @@ function populateCustomerAddress() {
 			<td class="form-left"><transys:label code="Dumpster Size"/><span class="errorMessage">*</span></td>
 			<td align="${left}">
 				<form:select id="dumpsterSize" cssClass="flat form-control input-sm" style="width:172px !important" path="dumpsterSize"> 
-					<form:option value="">-----------Please Select----------</form:option>
+					<form:option value="">-------Please Select------</form:option>
 					<form:options items="${dumpsters}" itemValue="dumpsterSize" itemLabel="dumpsterSize" />
 				</form:select> 
 			 	<br><form:errors path="dumpsterSize" cssClass="errorMessage" />
@@ -192,7 +214,7 @@ function populateCustomerAddress() {
 			<td class="form-left"><transys:label code="Material Type"/></td>
 			<td align="${left}">
 				<form:select id="materialType" cssClass="flat form-control input-sm" style="width:172px !important" path="materialType"> 
-					<form:option value="">--------Please Select--------</form:option>
+					<form:option value="">-------Please Select------</form:option>
 					<form:options items="${materialTypes}" itemValue="id" itemLabel="type" />
 				</form:select> 
 				<br><form:errors path="materialType" cssClass="errorMessage" />
@@ -336,7 +358,7 @@ function populateCustomerAddress() {
 			<td class="form-left"><transys:label code="Payment Method"/><span class="errorMessage">*</span></td>
 			<td align="${left}">
 				<form:select id="paymentMethod" cssClass="flat form-control input-sm" style="width:172px !important" path="orderPaymentInfo.paymentMethod"> 
-					<form:option value="">-----------Please Select----------</form:option>
+					<form:option value="">-------Please Select------</form:option>
 					<form:options items="${paymentMethods}" itemValue="id" itemLabel="type" />
 				</form:select>
 				<br><form:errors path="orderPaymentInfo.paymentMethod" cssClass="errorMessage" />

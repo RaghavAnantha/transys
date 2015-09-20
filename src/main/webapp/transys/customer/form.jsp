@@ -53,13 +53,14 @@ function formatFax(){
 			<td align="${left}">
 				<form:input path="companyName" cssClass="flat"  />
 			 	<br><form:errors path="companyName" cssClass="errorMessage" />
-			</td><td class="form-left"><transys:label code="Customer ID" /></td>
+			</td>
+			<td class="form-left"><transys:label code="Customer ID" /></td>
 			<td align="${left}">${modelObject.id}</td>
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Status" /></td>
 			<td align="${left}">
-				<form:select cssClass="flat form-control input-sm" path="status" >
+				<form:select cssClass="flat form-control input-sm" style="width:172px !important" path="status" >
 					<form:option value="">------Please Select--------</form:option>
 					<form:options items="${statuses}" />
 				</form:select> 
@@ -102,7 +103,7 @@ function formatFax(){
 		<tr>
 			<td class="form-left"><transys:label code="State" /><span class="errorMessage"></span></td>
 			<td align="${left}">
-				<form:select cssClass="flat form-control input-sm" path="state" >
+				<form:select cssClass="flat form-control input-sm" path="state" style="width:172px !important">
 					<form:option value="">------Please Select--------</form:option>
 					<form:options items="${state}" itemValue="id" itemLabel="name" />
 				</form:select> 
@@ -137,19 +138,22 @@ function formatFax(){
 					id="phone" onkeypress="return onlyNumbers(event, false)" onblur="return formatPhone();"/>
 			 	<br><form:errors path="phone" cssClass="errorMessage" />
 			</td>
-			
-			
-	<!--  		<td class="form-left"><transys:label code="Alt Phone2" /></td>
+			<td class="form-left"><transys:label code="Alt Phone2" /></td>
 			<td align="${left}">
 				<form:input path="altPhone2" cssClass="flat"  maxlength="12" 
 					id="altPhone2" onkeypress="return onlyNumbers(event, false)" onblur="return formatPhone();"/>
 			 	<br><form:errors path="altPhone2" cssClass="errorMessage" />
-			</td> -->
+			</td>
 		</tr>
 		<tr>
-		<td class="form-left"><transys:label code="Fax" /></td>
+			<td class="form-left"><transys:label code="Email" /></td>
 			<td align="${left}">
-				<form:input path="fax" cssClass="flat"	 maxlength="12" 
+				<form:input path="email" cssClass="flat" id="email" />
+				 <br><form:errors path="email" cssClass="errorMessage" />
+			</td>
+			<td class="form-left"><transys:label code="Fax" /></td>
+			<td align="${left}">
+				<form:input path="fax" cssClass="flat" maxlength="12" 
 					id="fax" onkeypress="return onlyNumbers(event, false)" onblur="return formatFax();"/>
 				 <br><form:errors path="fax" cssClass="errorMessage" />
 			</td>

@@ -6,7 +6,7 @@ function populateDeliveryAddress() {
 	var deliveryAddressSelect = $('#deliveryAddressSelect');
 	deliveryAddressSelect.empty();
 	
-	var firstOption = $('<option value="">'+ "-----------Please Select----------" +'</option>');
+	var firstOption = $('<option value="">'+ "------Please Select--------" +'</option>');
 	deliveryAddressSelect.append(firstOption);
 	
 	var customerId = $('#customerSelect').val();
@@ -61,7 +61,7 @@ function populateEndDate() {
 		<tr>
 			<td class="form-left"><transys:label code="Customer Name" /><span class="errorMessage">*</span></td>
 			<td align="${left}">
-				<form:select id="customerSelect" cssClass="flat form-control input-sm" path="customer" style="width: 175px" onChange="return populateDeliveryAddress();"> 
+				<form:select id="customerSelect" cssClass="flat form-control input-sm" path="customer" style="width: 175px !important" onChange="return populateDeliveryAddress();"> 
 					<form:option value="">------Please Select--------</form:option>
 					<form:options items="${customer}" itemValue="id" itemLabel="companyName" />
 				</form:select> 
@@ -77,7 +77,7 @@ function populateEndDate() {
 			<td class="form-left"><transys:label code="Delivery Address" /><span class="errorMessage">*</span></td>
 			<td align="${left}">
 				<form:select id="deliveryAddressSelect" cssClass="flat form-control input-sm" path="deliveryAddress" style="width: 175px !important" >
-					<form:option value="">-----------Please Select----------</form:option>
+					<form:option value="">------Please Select--------</form:option>
 					<%-- <form:options items="${deliveryAddress}" itemValue="id" itemLabel="line1" /> --%>
 				</form:select> 
 				<%-- <form:input id="deliveryAddressInput" path="deliveryAddress.id" cssClass="flat" style="min-width:350px; max-width:350px"  /> --%>

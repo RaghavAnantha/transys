@@ -39,11 +39,17 @@ public class Order extends AbstractBaseModel {
 	@Column(name="deliverydate")
 	private Date deliveryDate;
 	
-	@Column(name="deliveryTimeFrom")
-	private Date deliveryTimeFrom;
+	@Column(name="deliveryHourFrom")
+	private String deliveryHourFrom;
 	
-	@Column(name="deliveryTimeTo")
-	private Date deliveryTimeTo;
+	@Column(name="deliveryMinutesFrom")
+	private String deliveryMinutesFrom;
+	
+	@Column(name="deliveryHourTo")
+	private String deliveryHourTo;
+	
+	@Column(name="deliveryMinutesTo")
+	private String deliveryMinutesTo;
 	
 	@ManyToOne
 	@JoinColumn(name="deliveryAddressId")
@@ -249,21 +255,37 @@ public class Order extends AbstractBaseModel {
 	public void setDeliveryDate(Date deliveryDate) {
 		this.deliveryDate = deliveryDate;
 	}
-
-	public Date getDeliveryTimeFrom() {
-		return deliveryTimeFrom;
+	
+	public String getDeliveryHourFrom() {
+		return deliveryHourFrom;
 	}
 
-	public void setDeliveryTimeFrom(Date deliveryTimeFrom) {
-		this.deliveryTimeFrom = deliveryTimeFrom;
+	public void setDeliveryHourFrom(String deliveryHourFrom) {
+		this.deliveryHourFrom = deliveryHourFrom;
 	}
 
-	public Date getDeliveryTimeTo() {
-		return deliveryTimeTo;
+	public String getDeliveryMinutesFrom() {
+		return deliveryMinutesFrom;
 	}
 
-	public void setDeliveryTimeTo(Date deliveryTimeTo) {
-		this.deliveryTimeTo = deliveryTimeTo;
+	public void setDeliveryMinutesFrom(String deliveryMinutesFrom) {
+		this.deliveryMinutesFrom = deliveryMinutesFrom;
+	}
+
+	public String getDeliveryHourTo() {
+		return deliveryHourTo;
+	}
+
+	public void setDeliveryHourTo(String deliveryHourTo) {
+		this.deliveryHourTo = deliveryHourTo;
+	}
+
+	public String getDeliveryMinutesTo() {
+		return deliveryMinutesTo;
+	}
+
+	public void setDeliveryMinutesTo(String deliveryMinutesTo) {
+		this.deliveryMinutesTo = deliveryMinutesTo;
 	}
 
 	public Address getDeliveryAddress() {

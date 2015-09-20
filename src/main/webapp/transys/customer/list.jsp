@@ -8,10 +8,8 @@
 					code="Company Name" /></td>
 			<td align="${left}" class="wide"><select
 				class="flat form-control input-sm" id="companyName"
-				name="companyName" style="width: 175px">
-					<option value="">------
-						<transys:label code="Please Select" />------
-					</option>
+				name="companyName" style="width:175px !important">
+					<option value="">------<transys:label code="Please Select" />------</option>
 					<c:forEach items="${customer}" var="customer">
 						<c:set var="selected" value="" />
 						<c:if
@@ -25,10 +23,8 @@
 			<td align="${left}" class="form-left"><transys:label
 					code="Customer ID" /></td>
 			<td align="${left}"><select class="flat form-control input-sm"
-				id="customerId" name="id" style="width: 175px">
-					<option value="">------
-						<transys:label code="Please Select" />------
-					</option>
+				id="customerId" name="id" style="width:175px !important">
+					<option value="">------<transys:label code="Please Select" />------</option>
 					<c:forEach items="${customerIds}" var="customerId">
 						<c:set var="selected" value="" />
 						<c:if
@@ -44,10 +40,8 @@
 					code="Contact Name" /></td>
 			<td align="${left}" class="wide"><select
 				class="flat form-control input-sm" id="contactName"
-				name="contactName" style="width: 175px">
-					<option value="">------
-						<transys:label code="Please Select" />------
-					</option>
+				name="contactName" style="width:175px !important">
+					<option value="">------<transys:label code="Please Select" />------</option>
 					<c:forEach items="${customer}" var="name">
 						<c:set var="selected" value="" />
 						<c:if
@@ -62,9 +56,7 @@
 					code="Phone Number" /></td>
 			<td align="${left}"><select class="flat form-control input-sm"
 				id="phone" name="phone" style="width: 175px">
-					<option value="">------
-						<transys:label code="Please Select" />------
-					</option>
+					<option value="">------<transys:label code="Please Select" />------</option>
 					<c:forEach items="${customerIds}" var="phone">
 						<c:set var="selected" value="" />
 						<c:if
@@ -79,12 +71,12 @@
 			<td align="${left}" class="form-left"><transys:label
 					code="Create Date From" /></td>
 			<td align="${left}" class="wide"><input class="flat"
-				id="datepicker" name="dateFrom" style="width: 163px" /></td>
+				id="datepicker" name="dateFrom" style="width: 175px" /></td>
 
 			<td align="${left}" class="form-left"><transys:label
 					code="Create Date To" /></td>
 			<td align="${left}"><input class="flat" id="datepicker1"
-				name="dateTo" style="width: 163px" /></td>
+				name="dateTo" style="width: 175px" /></td>
 		</tr>
 
 		<tr>
@@ -93,9 +85,7 @@
 			<td align="${left}" class="wide"><select
 				class="flat form-control input-sm" id="status" name="status"
 				style="width: 175px">
-					<option value="">------
-						<transys:label code="Please Select" />------
-					</option>
+					<option value="">------<transys:label code="Please Select" />------</option>
 					<c:forEach items="${customer}" var="Status">
 						<c:set var="selected" value="" />
 						<c:if

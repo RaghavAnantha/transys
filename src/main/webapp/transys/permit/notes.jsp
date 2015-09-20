@@ -24,7 +24,7 @@
 </form:form>
 
 <form:form name="delete.do" id="serviceForm" class="tab-color">
-	<transys:datatable urlContext="permit" insertable="true" baseObjects="${notesList}"
+	<transys:datatable urlContext="permit" baseObjects="${notesList}"
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
 		pagingLink="search.do" searcheable="false">
 		<transys:textcolumn headerText="Entered By" dataField="createdBy" />

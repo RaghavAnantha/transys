@@ -60,18 +60,18 @@
 	 </tr>
 	 <tr>
 		  <td align="${left}" class="form-left"><transys:label code="Start Date From"/></td>
-		  <td align="${left}" class="wide"><input class="flat" id="datepicker1" name="startDateFrom" style="width: 163px" /></td>
+		  <td align="${left}" class="wide"><input class="flat" id="datepicker1" name="startDateFrom" style="width: 175px" /></td>
 				
 		  <td align="${left}" class="form-left"><transys:label code="Start Date To"/></td>
-	      <td align="${left}" class="wide"><input class="flat" id="datepicker2" name="startDateTo" style="width: 163px" /></td>
+	      <td align="${left}" class="wide"><input class="flat" id="datepicker2" name="startDateTo" style="width: 175px" /></td>
 			
 	 </tr>
 	 <tr>
 		  <td align="${left}" class="form-left"><transys:label code="End Date From"/></td>
-		  <td align="${left}" class="wide"><input class="flat" id="datepicker3" name="endDateFrom" style="width: 163px" /></td>
+		  <td align="${left}" class="wide"><input class="flat" id="datepicker3" name="endDateFrom" style="width: 175px" /></td>
 				
 		  <td align="${left}" class="form-left"><transys:label code="End Date To"/></td>
-	      <td align="${left}" class="wide"><input class="flat" id="datepicker4" name="endDateTo" style="width: 163px" /></td>
+	      <td align="${left}" class="wide"><input class="flat" id="datepicker4" name="endDateTo" style="width: 175px" /></td>
 			
 	 </tr>
 	 <tr>
@@ -147,7 +147,7 @@
 				</td>
 			
 			<td align="${left}" class="form-left"><transys:label code="Order Number"/></td>
-			<td align="${left}"><select id="orderNumber" name="order.id" style="min-width:200px; max-width:200px">
+			<td align="${left}"><select id="orderNumber" name="order.id" class="flat form-control input-sm" style="width: 175px">
 				<option value="">------<transys:label code="Please Select"/>------</option>
 				<c:forEach items="${order}" var="order">
 					<c:set var="selected" value=""/>

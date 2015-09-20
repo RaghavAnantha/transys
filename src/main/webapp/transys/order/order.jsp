@@ -20,8 +20,7 @@
 			</c:if>
 		</div>
 		<div id="orderReports" class="tab-pane">
-			<br/>
-			<p>Placeholder for order reports</p>
+			<%@include file="orderReport.jsp"%>
 		</div>
 	</div>
 
