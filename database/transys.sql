@@ -234,7 +234,6 @@ CREATE TABLE `trans_order` (
   `deliveryContactPhone1` varchar(25) DEFAULT NULL,
   `deliveryContactPhone2` varchar(25) DEFAULT NULL,
   `deliveryDate` datetime DEFAULT NULL,
-  `deliveryTimeFrom` datetime DEFAULT NULL,
   `deliveryAddressId` bigint(20) DEFAULT NULL,
   `locationTypeId` bigint(20) NOT NULL,
   `dumpsterSize` varchar(5) DEFAULT NULL,
@@ -259,7 +258,10 @@ CREATE TABLE `trans_order` (
   -- `permits` bigint(20) DEFAULT NULL,
   `pickUpDriverId` bigint(20) DEFAULT NULL,
   `dropOffDriverId` bigint(20) DEFAULT NULL,
-  `deliveryTimeTo` datetime DEFAULT NULL,
+  `deliveryHourFrom` varchar(10) DEFAULT NULL,
+  `deliveryHourTo` varchar(10) DEFAULT NULL,
+  `deliveryMinutesFrom` varchar(5) DEFAULT NULL,
+  `deliveryMinutesTo` varchar(5) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `key1_idx` (`custID`),
   -- KEY `deliveryAddressRef_idx` (`deliveryAddressId`),
@@ -287,7 +289,7 @@ CREATE TABLE `trans_order` (
 
 LOCK TABLES `trans_order` WRITE;
 /*!40000 ALTER TABLE `trans_order` DISABLE KEYS */;
-INSERT INTO `transys`.`trans_order` (`id`, `custID`, `deliveryContactName`, `deliveryContactPhone1`, `deliveryContactPhone2`, `deliveryDate`, `deliveryTimeFrom`, `deliveryAddressId`, `locationTypeId`, `dumpsterSize`, `materialType`, `created_at`, `delete_flag`, `grossWeight`, `netWeightLb`, `netWeightTonnage`, `tare`, `dumpsterId`, `pickupDate`, `orderStatusId`, `deliveryTimeTo`) VALUES (1, 5, 'Raghav', '1234567890', '1234567890', curdate(), curdate(), 3, 1, '20 yd', 'Drywall', curdate(), 1, '10.0', '10.0', '10.0', '10.0', 2, curdate(), 1, curdate());
+INSERT INTO `transys`.`trans_order` (`id`, `custID`, `deliveryContactName`, `deliveryContactPhone1`, `deliveryContactPhone2`, `deliveryDate`, `deliveryAddressId`, `locationTypeId`, `dumpsterSize`, `materialType`, `created_at`, `delete_flag`, `grossWeight`, `netWeightLb`, `netWeightTonnage`, `tare`, `dumpsterId`, `pickupDate`, `orderStatusId` , `created_by`) VALUES (1, 5, 'Raghav', '123-456-7890', '123-456-7890', curdate(), 3, 1, '20 yd', 1, curdate(), 1, '10.0', '10.0', '10.0', '10.0', 2, curdate(), 1, 1);
 /*!40000 ALTER TABLE `trans_order` ENABLE KEYS */;
 UNLOCK TABLES;
 

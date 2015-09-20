@@ -165,10 +165,26 @@ function populateCustomerAddress() {
 				 <br><form:errors path="deliveryDate" cssClass="errorMessage" />
 			</td>
 			<td class="form-left"><transys:label code="Delivery Time"/></td>
-			<td align="${left}">
-				<form:input path="deliveryTimeFrom" cssClass="flat" />&nbsp;to&nbsp;<form:input path="deliveryTimeTo" cssClass="flat" />
-				 <br><form:errors path="deliveryTimeFrom" cssClass="errorMessage" /><form:errors path="deliveryTimeTo" cssClass="errorMessage" />
-			</td>
+			<td align="${left}" style="display:block;">
+			<div style="display:block;">
+				<form:select id="deliveryHourFrom" cssClass="flat form-control input-sm" style="width:95px !important" path="deliveryHourFrom"> 
+					<form:options items="${deliveryHours}" />
+				</form:select>
+				&nbsp;
+				<form:select id="deliveryMinutesFrom" cssClass="flat form-control input-sm" style="width:55px !important" path="deliveryMinutesFrom"> 
+					<form:options items="${deliveryMinutes}" />
+				</form:select>
+				&nbsp;to&nbsp;
+				<form:select id="deliveryHourTo" cssClass="flat form-control input-sm" style="width:95px !important" path="deliveryHourTo"> 
+					<form:options items="${deliveryHours}" />
+				</form:select>
+				&nbsp;
+				<form:select id="deliveryMinutesTo" cssClass="flat form-control input-sm" style="width:55px !important" path="deliveryMinutesTo"> 
+					<form:options items="${deliveryMinutes}" />
+				</form:select>
+			 	<br><form:errors path="deliveryHourFrom" cssClass="errorMessage" /><form:errors path="deliveryHourTo" cssClass="errorMessage" />
+			 </div>
+			 </td>
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Dumpster Location" /><span class="errorMessage">*</span></td>

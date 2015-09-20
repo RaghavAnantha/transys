@@ -82,6 +82,11 @@ public class OrderController extends CRUDController<Order> {
       model.addAttribute("dumpsters", genericDAO.executeSimpleQuery("select obj from DumpsterInfo obj where obj.id!=0 order by obj.id asc"));
       model.addAttribute("dusmpsterLocationTypes", genericDAO.executeSimpleQuery("select obj from LocationType obj where obj.id!=0 order by obj.id asc"));
       
+      model.addAttribute("permitClasses", genericDAO.executeSimpleQuery("select obj from PermitClass obj where obj.id!=0 order by obj.id asc"));
+      model.addAttribute("permitTypes", genericDAO.executeSimpleQuery("select obj from PermitType obj where obj.id!=0 order by obj.id asc"));
+      
+      populateDeliveryTimeSettings(model);
+      
       String driverRole = "DRIVER";
       List<BaseModel> driversList = genericDAO.executeSimpleQuery("select obj from User obj where obj.id!=0 and obj.role.name='" + driverRole + "' order by obj.id asc");
       model.addAttribute("drivers", driversList);
@@ -103,6 +108,20 @@ public class OrderController extends CRUDController<Order> {
       paymentMethodTypeList.add(aPaymentMethodType);
       
       model.addAttribute("paymentMethods", paymentMethodTypeList);
+	}
+	
+	private void populateDeliveryTimeSettings(ModelMap model) {
+		List<String> deliveryHours = new ArrayList<String>();
+      deliveryHours.add("12:00 AM");
+      deliveryHours.add("1:00 AM");
+      
+      model.addAttribute("deliveryHours", deliveryHours);
+      
+      List<String> deliveryMinutes = new ArrayList<String>();
+      deliveryMinutes.add("00");
+      deliveryMinutes.add("15");
+      
+      model.addAttribute("deliveryMinutes", deliveryMinutes);
 	}
 	
 	@Override
