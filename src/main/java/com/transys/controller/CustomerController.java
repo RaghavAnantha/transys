@@ -40,6 +40,7 @@ public class CustomerController extends CRUDController<Customer> {
 	@Override
 	public void initBinder(WebDataBinder binder) {
 		binder.registerCustomEditor(State.class, new AbstractModelEditor(State.class));
+		binder.registerCustomEditor(Address.class, new AbstractModelEditor(Address.class));
 	}
 	
 	/*

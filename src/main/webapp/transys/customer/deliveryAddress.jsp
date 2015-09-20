@@ -3,6 +3,7 @@
 <br />
 <form:form action="saveDeliveryAddress.do" name="typeForm" commandName="deliveryAddressModelObject" method="post" id="typeForm">
 	<form:hidden path="id" id="id" />
+	<form:hidden path="customer.id" id="custID" />
 	<table id="form-table" class="table delivery">
 		<tr>
 			<td class="form-left"><transys:label code="Customer ID" /><span class="errorMessage">*</span></td>
