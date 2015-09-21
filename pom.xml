@@ -169,6 +169,11 @@
 			<artifactId>hibernate</artifactId>
 			<version>3.2.3.ga</version>
 		</dependency>
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>2.3.1</version>
+		</dependency>
 
 		<!--Jasper reports related -->
 		<!--<dependency>
@@ -235,11 +240,6 @@
 			<groupId>org.eclipse.jdt.core.compiler</groupId>
 			<artifactId>ecj</artifactId>
 			<version>4.4.2</version>
-		</dependency>
-		<dependency>
-			<groupId>com.google.code.gson</groupId>
-			<artifactId>gson</artifactId>
-			<version>2.3.1</version>
 		</dependency>
 
 		<!-- <dependency> <groupId>ar.com.fdvs</groupId> <artifactId>DynamicJasper</artifactId> 
