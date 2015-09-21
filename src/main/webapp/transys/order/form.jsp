@@ -233,15 +233,39 @@ function populateCustomerAddress() {
 			<c:set var="permitDisplayIndex" value="${status.index + 1}" />
 			<tr>
 		    	<td class="form-left"><transys:label code="Permit${permitDisplayIndex} Class"/><span class="errorMessage">*</span></td>
-		        <td align="${left}"><form:input path="permits[${status.index}].id" cssClass="flat"/></td>
+		        <td align="${left}">
+		        	<!--<form:input path="permits[${status.index}].id" cssClass="flat"/>-->
+			        <select class="flat form-control input-sm" id="permitClasses" name="permitClasses" style="width:172px !important">
+						<option value="">------<transys:label code="Please Select" />------</option>
+						<c:forEach items="${permitClasses}" var="aPermitClass">
+							<option value="${aPermitClass.id}">${aPermitClass.permitClass}</option>
+						</c:forEach>
+					</select>
+			 	</td>
 		    </tr>
 		    <tr>
 		    	<td class="form-left"><transys:label code="Permit${permitDisplayIndex} Type"/><span class="errorMessage">*</span></td>
-		        <td align="${left}"><form:input path="permits[${status.index}].permitType.permitType" cssClass="flat"/></td>
+		        <td align="${left}">
+		        	<!--<form:input path="permits[${status.index}].permitType.permitType" cssClass="flat"/>-->
+		        	<select class="flat form-control input-sm" id="permitTypes" name="permitTypes" style="width:172px !important">
+						<option value="">------<transys:label code="Please Select" />------</option>
+						<c:forEach items="${permitTypes}" var="aPermitType">
+							<option value="${aPermitType.id}">${aPermitType.permitType}</option>
+						</c:forEach>
+					</select>
+		        </td>
 		    </tr>
 		    <tr>
 		    	<td class="form-left"><transys:label code="Permit${permitDisplayIndex} Number"/><span class="errorMessage">*</span></td>
-		        <td align="${left}"><form:input path="permits[${status.index}].number" cssClass="flat"/></td>
+		        <td align="${left}">
+		        	<!--<form:input path="permits[${status.index}].number" cssClass="flat"/>-->
+		        	<select class="flat form-control input-sm" id="permits[${status.index}].id" name="permits[${status.index}].id" style="width:172px !important">
+						<option value="">------<transys:label code="Please Select" />------</option>
+						<c:forEach items="${permits}" var="aInnerPermit">
+							<option value="${aInnerPermit.id}">${aInnerPermit.number}</option>
+						</c:forEach>
+					</select>
+		        </td>
 			</tr>
 		    <tr>
 		    	<td class="form-left"><transys:label code="Permit${permitDisplayIndex} Valid From"/><span class="errorMessage">*</span></td>

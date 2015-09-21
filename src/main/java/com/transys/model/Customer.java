@@ -68,6 +68,9 @@ public class Customer extends AbstractBaseModel {
 	
 	@Column(name="fax")
 	private String fax;
+	
+	@Column(name="email")
+	private String email;
 
 	public String getCompanyName() {
 		return companyName;
@@ -189,4 +192,11 @@ public class Customer extends AbstractBaseModel {
 		this.fax = fax;
 	}
 
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
 }

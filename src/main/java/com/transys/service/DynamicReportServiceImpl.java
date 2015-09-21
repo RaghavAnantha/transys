@@ -471,7 +471,7 @@ public class DynamicReportServiceImpl implements DynamicReportService {
 			List<Field> displayableFieldList, HttpServletRequest request,String type,Class entityClass) {
 		Style headerStyle = getHeaderStyle();
 		Style detailStyle = new Style();
-		detailStyle.setBorder(Border.THIN);
+		//detailStyle.setBorder(Border.THIN);
 		JasperPrint jp = null;
 		try {
 			DynamicReportBuilder jasperReport = getReport(reportName,
@@ -491,7 +491,7 @@ public class DynamicReportServiceImpl implements DynamicReportService {
 			Map<String, Field> displayableFieldMap, HttpServletRequest request) {
 		Style headerStyle = getHeaderStyle();
 		Style detailStyle = new Style();
-		detailStyle.setBorder(Border.THIN);
+		//detailStyle.setBorder(Border.THIN);
 		JasperPrint jp = null;
 		try {
 			DynamicReportBuilder jasperReport = getReportFromMap(reportName,
@@ -709,7 +709,7 @@ public class DynamicReportServiceImpl implements DynamicReportService {
 		Font font = new Font(10, "ARIAL", "ARIAL.TTF",
 		Font.PDF_ENCODING_Identity_H_Unicode_with_horizontal_writing, true);
 		headerStyle.setFont(font);
-		headerStyle.setBorder(Border.THIN);
+		//headerStyle.setBorder(Border.THIN);
 		headerStyle.setHorizontalAlign(HorizontalAlign.CENTER);
 		headerStyle.setVerticalAlign(VerticalAlign.MIDDLE);
 		headerStyle.setBackgroundColor(new Color(0x99ccff));
@@ -733,7 +733,7 @@ public class DynamicReportServiceImpl implements DynamicReportService {
 			Style detailStyle, String locale) throws ColumnBuilderException {
 		if (columnTag instanceof StaticDataColumn) {
 			Style intStyle = new Style();
-			intStyle.setBorder(Border.THIN);
+			//intStyle.setBorder(Border.THIN);
 			intStyle.setHorizontalAlign(HorizontalAlign.LEFT);
 			intStyle.setTextColor(Color.BLACK);
 			StaticDataExpression sde = new StaticDataExpression(columnTag.getDataField(),((StaticDataColumn) columnTag).getDataType());
@@ -744,7 +744,7 @@ public class DynamicReportServiceImpl implements DynamicReportService {
 		}
 		else if (field.getType() == int.class || field.getType() == Integer.class) {
 			Style intStyle = new Style();
-			intStyle.setBorder(Border.THIN);
+			//intStyle.setBorder(Border.THIN);
 			intStyle.setHorizontalAlign(HorizontalAlign.LEFT);
 			intStyle.setTextColor(Color.BLACK);
 			AbstractColumn intColumn = getColumn(columnTag.getDataField(), Integer.class,
@@ -753,7 +753,7 @@ public class DynamicReportServiceImpl implements DynamicReportService {
 			report.addColumn(intColumn);
 		}  else if (field.getType() == Long.class) {
 			Style longStyle = new Style();
-			longStyle.setBorder(Border.THIN);
+			//longStyle.setBorder(Border.THIN);
 			longStyle.setHorizontalAlign(HorizontalAlign.CENTER);
 			longStyle.setTextColor(Color.MAGENTA);
 			AbstractColumn longColumn = getColumn(columnTag.getDataField(), Long.class,
@@ -762,7 +762,7 @@ public class DynamicReportServiceImpl implements DynamicReportService {
 			report.addColumn(longColumn);
 		} else if (field.getType() == Double.class) {
 			Style doubleStyle = new Style();
-			doubleStyle.setBorder(Border.THIN);
+			//doubleStyle.setBorder(Border.THIN);
 			doubleStyle.setHorizontalAlign(HorizontalAlign.RIGHT);
 			doubleStyle.setPattern("####.000");
 			doubleStyle.setTextColor(Color.RED);
@@ -772,7 +772,7 @@ public class DynamicReportServiceImpl implements DynamicReportService {
 			report.addColumn(doubleColumn);
 		} else if (field.getType() == Date.class) {
 			Style timeStyle = new Style("Date");
-			timeStyle.setBorder(Border.THIN);
+			//timeStyle.setBorder(Border.THIN);
 			timeStyle.setHorizontalAlign(HorizontalAlign.LEFT);
 			timeStyle.setPattern("MM/dd/yyyy");
 			AbstractColumn longColumn = getColumn(columnTag.getDataField(), Date.class,
