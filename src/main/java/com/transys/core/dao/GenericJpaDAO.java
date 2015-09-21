@@ -1,6 +1,7 @@
 package com.transys.core.dao;
 
 import java.sql.Timestamp;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -19,6 +20,7 @@ import org.hibernate.Session;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.transys.controller.BaseController;
 import com.transys.model.BaseModel;
 import com.transys.model.SearchCriteria;
 
@@ -650,20 +652,8 @@ public class GenericJpaDAO implements GenericDAO {
 											.toString().trim().substring(2)
 									+ "'");
 
-						} else if (criterias.get(param.toString()) instanceof Date) {
-							if ("from".equalsIgnoreCase(param.toString())) {
-								Timestamp firstDate = new Timestamp(
-										((Date) criterias.get(param.toString()))
-												.getTime());
-								Timestamp secondDate = null;
-								secondDate = new Timestamp(
-										((Date) criterias.get("to")).getTime() + 86399999);
-								String fieldName = (String) criterias
-										.get("dateField");
-								searchString.append(" UPPER(p." + fieldName
-										+ ") Between '" + firstDate + "' AND '"
-										+ secondDate + "'");
-							}
+						} else if (param.toString().toUpperCase().contains("DATE")) {
+							appendSearchStringWithDateRange(criterias, searchString, param);
 						} else {							
 							if (!"dateField".equalsIgnoreCase(param.toString()))
 								searchString.append(" UPPER(p." + criteriaKey
@@ -722,20 +712,8 @@ public class GenericJpaDAO implements GenericDAO {
 								+ criterias.get(param.toString()).toString()
 										.trim().substring(2) + "'");
 
-					} else if (criterias.get(param.toString()) instanceof Date) {
-						if ("from".equalsIgnoreCase(param.toString())) {
-							Timestamp firstDate = new Timestamp(
-									((Date) criterias.get(param.toString()))
-											.getTime());
-							Timestamp secondDate = null;
-							secondDate = new Timestamp(
-									((Date) criterias.get("to")).getTime() + 86399999);
-							String fieldName = (String) criterias
-									.get("dateField");
-							searchString.append(" and UPPER(p." + fieldName
-									+ ") Between '" + firstDate + "' AND '"
-									+ secondDate + "'");
-						}
+					} else if (param.toString().toUpperCase().contains("DATE")) {
+						 appendSearchStringWithDateRange(criterias, searchString, param);
 					} else {
 						if (!"dateField".equalsIgnoreCase(param.toString()))
 						{							
@@ -780,6 +758,36 @@ public class GenericJpaDAO implements GenericDAO {
 			}
 		}
 		return searchString;
+	}
+
+	/**
+	 * 
+	 * @param criterias
+	 * @param searchString
+	 * @param param
+	 */
+	private void appendSearchStringWithDateRange(Map criterias, StringBuffer searchString, Object param) {
+		 
+		 String fieldName = param.toString(); // ex., startDateFrom
+
+		 if (fieldName.endsWith("From")) {
+				try {
+					Timestamp fromDate = new Timestamp(
+							((Date) BaseController.dateFormat.parse(criterias.get(fieldName).toString()))
+									.getTime());
+
+					String fieldType = fieldName.substring(0, fieldName.indexOf("From")); // ex., start
+					Timestamp toDate = new Timestamp(
+							((Date) BaseController.dateFormat.parse(criterias.get(fieldType + "To").toString()))
+									.getTime());
+					
+					searchString.append(" and UPPER(p." + fieldType
+							+ ") Between '" + fromDate + "' AND '"
+							+ toDate + "'");
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+			}
 	}
 
 /*	@Transactional(propagation = Propagation.REQUIRED)

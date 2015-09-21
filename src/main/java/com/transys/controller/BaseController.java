@@ -37,6 +37,7 @@ import com.transys.model.User;
 public class BaseController {
 	protected static DecimalFormat decimalFormat = new DecimalFormat(
 			"######.000");
+	public static SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
 
 	protected static Logger log = LogManager.getLogger("com.transys.controller");
 
@@ -56,8 +57,6 @@ public class BaseController {
 	// Set up any custom editors, adds a custom one for java.sql.date by default
 	@InitBinder
 	public void initBinder(WebDataBinder binder) {
-//		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
 		dateFormat.setLenient(false);
 		binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, false));
 		binder.registerCustomEditor(byte[].class, new ByteArrayMultipartFileEditor());
