@@ -1,5 +1,6 @@
 package com.transys.controller;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -8,8 +9,10 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.ValidationException;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -17,10 +20,12 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.google.gson.Gson;
 import com.transys.controller.editor.AbstractModelEditor;
+import com.transys.core.util.MimeUtil;
 import com.transys.model.AbstractBaseModel;
 import com.transys.model.Address;
 import com.transys.model.BaseModel;
@@ -73,7 +78,7 @@ public class OrderController extends CRUDController<Order> {
 		model.addAttribute("orderIds", genericDAO.executeSimpleQuery("select obj from Order obj where obj.id is not null order by obj.id asc"));
 		
 		model.addAttribute("orderStatuses", genericDAO.findByCriteria(OrderStatus.class, criterias, "status", false));
-      model.addAttribute("customers", genericDAO.findByCriteria(Customer.class, criterias, "companyName", false));
+		model.addAttribute("customers", genericDAO.findByCriteria(Customer.class, criterias, "companyName", false));
       //model.addAttribute("deliveryAddresses", genericDAO.findByCriteria(Address.class, criterias, "line1", false));
       
       //model.addAttribute("permits", genericDAO.executeSimpleQuery("select obj from Permit obj where obj.id!=0 order by obj.id asc"));
@@ -137,6 +142,19 @@ public class OrderController extends CRUDController<Order> {
 		model.addAttribute("mode", "MANAGE");
 		
 		//return urlContext + "/list";
+		return urlContext + "/order";
+	}
+	
+	@RequestMapping(method = RequestMethod.GET, value = "/orderReport.do")
+	public String orderReport(ModelMap model, HttpServletRequest request) {
+		setupList(model, request);
+		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
+		//criteria.getSearchMap().put("id!",0l);
+		//TODO fix me
+		criteria.getSearchMap().remove("_csrf");
+		model.addAttribute("list",genericDAO.search(getEntityClass(), criteria,"id",null,null));
+		model.addAttribute("activeTab", "orderReports");
+		model.addAttribute("mode", "MANAGE");
 		return urlContext + "/order";
 	}
 	
@@ -345,6 +363,75 @@ public class OrderController extends CRUDController<Order> {
 		model.addAttribute("activeTab", "manageOrder");
 		return urlContext + "/order";
 	}
+	
+	
+	@RequestMapping(method = { RequestMethod.GET, RequestMethod.POST }, value = "/genorderreport.do")
+	public void generateOrderReport(ModelMap model, HttpServletRequest request,
+			HttpServletResponse response, @RequestParam("type") String type,
+			Object objectDAO, Class clazz) {
+		
+		try {
+		if (StringUtils.isEmpty(type))
+			type = "xlsx";
+		if (!type.equals("html") && !(type.equals("print"))) {
+			response.setHeader("Content-Disposition",
+					"attachment;filename= ordersReport." + type);
+		}
+		response.setContentType(MimeUtil.getContentType(type));
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		Map<String, Object> params = new HashMap<String,Object>();
+		
+		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
+		List<Order> list = genericDAO.search(getEntityClass(), criteria,"id",null,null);
+		List<Map<String, ?>> newList = new ArrayList<Map<String, ?>>();
+		for (Order order : list) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("id", order.getId());
+			map.put("company_name", order.getCustomer().getCompanyName());
+			map.put("deliveryContactName", order.getDeliveryContactName());
+			map.put("phone", order.getCustomer().getPhone());
+			map.put("line1", order.getDeliveryAddress().getLine1());
+			map.put("city", order.getDeliveryAddress().getCity());
+			map.put("line1", order.getDeliveryAddress().getLine1());
+			map.put("status", order.getOrderStatus().getStatus());
+			map.put("deliveryDate", order.getDeliveryDate().toString());
+			map.put("pickupDate", order.getPickupDate().toString());
+			map.put("paymentMethod", order.getOrderPaymentInfo().getPaymentMethod());
+			map.put("dumpsterPrice", order.getOrderPaymentInfo().getDumpsterPrice().toString());
+			map.put("cityFee", order.getOrderPaymentInfo().getCityFee().toString());
+			map.put("permitFees", order.getOrderPaymentInfo().getPermitFees().toString());
+			map.put("overweightFee", order.getOrderPaymentInfo().getOverweightFee().toString());
+			if (order.getOrderPaymentInfo().getTotalFees() != null ){
+			map.put("totalFees", order.getOrderPaymentInfo().getTotalFees().toString());
+			}
+			
+			newList.add(map);
+		}
+		
+		if (!type.equals("print") && !type.equals("pdf")) {
+			out = dynamicReportService.generateStaticReport("ordersReport",
+					newList, params, type, request);
+		}
+		else if(type.equals("pdf")){
+			out = dynamicReportService.generateStaticReport("ordersReportPdf",
+					newList, params, type, request);
+		}
+		else {
+			out = dynamicReportService.generateStaticReport("ordersReport"+"print",
+					newList, params, type, request);
+		}
+	
+		out.writeTo(response.getOutputStream());
+		out.close();
+		
+	} catch (Exception e) {
+		e.printStackTrace();
+		log.warn("Unable to create file :" + e);
+		request.getSession().setAttribute("errors", e.getMessage());
+		
+	}
+	}
+	
 	
 	@Override
 	public String edit2(ModelMap model, HttpServletRequest request) {
