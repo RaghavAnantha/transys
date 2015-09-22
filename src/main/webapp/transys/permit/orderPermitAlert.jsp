@@ -108,18 +108,18 @@
 				</c:forEach>
 			</select>
 		</td>
-		<%-- <td align="${left}" class="form-left"><transys:label code="Order Status"/></td>
-			<td align="${left}"><select id="orderStatus" name="order.status" style="min-width:200px; max-width:200px">
+		<td align="${left}" class="form-left"><transys:label code="Order Status"/></td>
+		<td align="${left}"><select id="orderStatus" name="order.orderStatus" class="flat form-control input-sm" style="width: 175px">
 				<option value="">------<transys:label code="Please Select"/>------</option>
-				<c:forEach items="${order}" var="order">
+				<c:forEach items="${orderStatuses}" var="anOrderStatus">
 					<c:set var="selected" value=""/>
-					<c:if test="${sessionScope.searchCriteria.searchMap['order.id'] == order.id}">
-						<c:set var="selected" value="selected"/>
+					<c:if test="${sessionScope.searchCriteria.searchMap['orderStatus'] == anOrderStatus.id}">
+						<c:set var="selected" value="selected" />
 					</c:if>
-					<option value="${order.id}" ${selected}>${order.id}</option>
+					<option value="${anOrderStatus.id}" ${selected}>${anOrderStatus.status}</option>
 				</c:forEach>
 			</select>
-		</td> --%>
+		</td>
 	 </tr>
 		<tr>
 			<td align="${left}"></td>

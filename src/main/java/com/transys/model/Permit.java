@@ -21,7 +21,7 @@ public class Permit  extends AbstractBaseModel {
 	private PermitType permitType;
 	
 	@ManyToOne
-	@JoinColumn(name="class")
+	@JoinColumn(name="permitClass")
 	private PermitClass permitClass;
 	
 	@Column(name="number")
@@ -59,6 +59,16 @@ public class Permit  extends AbstractBaseModel {
 	
 	@Column(name="parkingMeterFee")
 	private Double parkingMeterFee;
+	
+	private Long orderID;
+	
+	public Long getOrderID() {
+		return orderID;
+	}
+
+	public void setOrderID(Long orderID) {
+		this.orderID = orderID;
+	}
 
 	public Customer getCustomer() {
 		return customer;
@@ -168,7 +178,7 @@ public class Permit  extends AbstractBaseModel {
 		return this.parkingMeterFee;
 	}
 
-	public void setParkingMeter(Double parkingMeterFee) {
+	public void setParkingMeterFee(Double parkingMeterFee) {
 		this.parkingMeterFee = parkingMeterFee;
 	}
 	

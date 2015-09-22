@@ -147,11 +147,11 @@
 				</td>
 			
 			<td align="${left}" class="form-left"><transys:label code="Order Number"/></td>
-			<td align="${left}"><select id="orderNumber" name="order.id" class="flat form-control input-sm" style="width: 175px">
+			<td align="${left}"><select id="orderNumber" name="exclude.order.id" class="flat form-control input-sm" style="width: 175px">
 				<option value="">------<transys:label code="Please Select"/>------</option>
 				<c:forEach items="${order}" var="order">
 					<c:set var="selected" value=""/>
-					<c:if test="${sessionScope.searchCriteria.searchMap['order.id'] == order.id}">
+					<c:if test="${sessionScope.searchCriteria.searchMap['exclude.order.id'] == order.id}">
 						<c:set var="selected" value="selected"/>
 					</c:if>
 					<option value="${order.id}" ${selected}>${order.id}</option>
@@ -184,6 +184,7 @@
 		<transys:textcolumn headerText="CustomerName" dataField="customer.companyName" />
 		<transys:textcolumn headerText="Permit#" dataField="number" />
 		<transys:textcolumn headerText="PermitFee" dataField="fee" />
+		<transys:textcolumn headerText="Order#" dataField="orderID" />
 		<transys:textcolumn headerText="PermitAddr#" dataField="permitAddress" />
 		<transys:textcolumn headerText="Status" dataField="status.status" />
 	</transys:datatable>

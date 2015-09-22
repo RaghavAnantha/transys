@@ -2,21 +2,22 @@ package com.transys.controller;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ValidationException;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,6 +33,7 @@ import com.transys.model.Customer;
 import com.transys.model.LocationType;
 import com.transys.model.Order;
 import com.transys.model.OrderPermits;
+import com.transys.model.OrderStatus;
 import com.transys.model.Permit;
 import com.transys.model.PermitClass;
 import com.transys.model.PermitNotes;
@@ -64,8 +66,18 @@ public class PermitController extends CRUDController<Permit> {
 		request.getSession().removeAttribute("searchCriteria");
 		setupList(model, request);
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
-//		criteria.getSearchMap().put("id!",0l);
-		model.addAttribute("list", genericDAO.search(Permit.class, criteria, "id", null, null));
+
+		List<Permit> listOfPermits = genericDAO.search(Permit.class, criteria, "id", null, null);
+		
+		for (Permit p : listOfPermits) {
+			List<BaseModel> orders = (List<BaseModel>)genericDAO.executeSimpleQuery("select obj.order from OrderPermits obj where obj.permit.id=" +  p.getId() + " order by obj.id desc");
+			if (orders != null && orders.size() > 0) {
+				BaseModel order = orders.get(0);
+				p.setOrderID(order.getId());
+			}
+		}
+		
+		model.addAttribute("list",listOfPermits);
 		
 		model.addAttribute("activeTab", "managePermits");
 		model.addAttribute("mode", "MANAGE");
@@ -79,6 +91,9 @@ public class PermitController extends CRUDController<Permit> {
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		List<OrderPermits> orderPermits = genericDAO.search(OrderPermits.class, criteria, "id", null, null);
 		model.addAttribute("orderPermitList", orderPermits);
+		
+		model.addAttribute("orderStatuses", genericDAO.search(OrderStatus.class, criteria, "status", null, null));
+		
 		model.addAttribute("activeTab", "orderPermitAlert");
 		return urlContext + "/permit";
 	}
@@ -106,39 +121,65 @@ public class PermitController extends CRUDController<Permit> {
 		//TODO: Fix me 
 		criteria.getSearchMap().remove("_csrf");
 		
-		injectOrderSearchCriteria(criteria);
+		if (!injectOrderSearchCriteria(criteria)) {
+			// search yielded no results
+			model.addAttribute("list", new ArrayList<Permit>());
+			return urlContext + "/list";
+		}
 		
-		model.addAttribute("list",genericDAO.search(getEntityClass(), criteria));
+		List<Permit> listOfPermits = genericDAO.search(getEntityClass(), criteria);
+		
+		for (Permit p : listOfPermits) {
+			List<BaseModel> orders = (List<BaseModel>)genericDAO.executeSimpleQuery("select obj.order from OrderPermits obj where obj.permit.id=" +  p.getId() + " order by obj.id desc");
+			if (orders != null && orders.size() > 0) {
+				BaseModel order = orders.get(0);
+				p.setOrderID(order.getId());
+			}
+		}
+		
+		model.addAttribute("list",listOfPermits);
 		return urlContext + "/list";
 	}
 
-	private void injectOrderSearchCriteria(SearchCriteria criteria) {
+	private boolean injectOrderSearchCriteria(SearchCriteria criteria) {
 		if (criteria != null && criteria.getSearchMap() != null) {
 			Map<String, Object> searchMap = criteria.getSearchMap();
 			Object[] param = searchMap.keySet().toArray();
 			
 			for (int i = 0; i < param.length; i++) {
 				String key = param[i].toString();
-				if(key.toUpperCase().contains("ORDER.ID") && searchMap.get(key).toString().length() > 0 ) {
+				if(key.toUpperCase().contains("EXCLUDE.ORDER.ID") && searchMap.get(key).toString().length() > 0 ) {
 					// execute statement and get related permits
 					List<OrderPermits> orderPermits = getOrderRelatedPermits(searchMap, param, i);
 					String permitIDSearchCriteria = constructPermitSearchCriteria(orderPermits, searchMap, param, i);
+					
+					if (permitIDSearchCriteria == null) {
+						System.out.println("Permits for searched Order is not available.");
+						return false;
+					}
 					searchMap.put("id", permitIDSearchCriteria);
 				}
 			}
 			criteria.setSearchMap(searchMap);
 		}
+		
+		return true;
 	}
 
 	private String constructPermitSearchCriteria(List<OrderPermits> orderPermits, Map<String, Object> searchMap,
 			Object[] param, int i) {
+
+		if (orderPermits == null || orderPermits.size() == 0) {
+			return null;
+		}
+		
 		StringBuffer permitIDSearchCriteria = new StringBuffer();
 		for(OrderPermits o : orderPermits) {
 			permitIDSearchCriteria.append(o.getPermit().getId() + ",");
 		}
 		
 		System.out.println("Found permits for order = " + permitIDSearchCriteria);
-		searchMap.remove(param[i].toString());
+		//searchMap.remove(param[i].toString());
 		return permitIDSearchCriteria.substring(0, permitIDSearchCriteria.lastIndexOf(",")).toString();
 	}
 
@@ -159,8 +200,6 @@ public class PermitController extends CRUDController<Permit> {
 		model.addAttribute("activeSubTab", "permitDetails");
 		
 		model.addAttribute("notesModelObject", new PermitNotes());
-//		model.addAttribute("orderPermitList", new OrderPermits());
-				
 		return urlContext + "/permit";
 	}
 	
@@ -172,27 +211,19 @@ public class PermitController extends CRUDController<Permit> {
 		model.addAttribute("mode", "ADD");
 		model.addAttribute("activeSubTab", "permitDetails");
 
-		Iterator<Entry<String, Object>> iterator = model.entrySet().iterator();
-		while(iterator.hasNext()) {
-			Entry<String, Object> n = iterator.next();
-			System.out.println(n.getKey() + "=" + n.getValue());
-		}
-		
 		Permit permitToBeEdited = (Permit)model.get("modelObject");
 		
-		if (permitToBeEdited == null) {
-			System.out.println("Setting the new model object");
-			OrderPermits orderPermitToBeEdited = (OrderPermits)model.get("orderPermitModelObject");
+		if (permitToBeEdited == null) { // OrderPermitAlert Screen - Add New Permit, should do a new add, not an update - clear out the id field?
+			OrderPermits orderPermitToBeEdited = setupOrderPermitModel(request);
 			permitToBeEdited = orderPermitToBeEdited.getPermit();
-			System.out.println("Got the new permit id " + permitToBeEdited.getId());
-		}
+			System.out.println("Got the new permit number " + permitToBeEdited.getNumber());
+			model.put("modelObject", permitToBeEdited);
+		} 
 		
-		Permit emptyPermit = new Permit();
-		emptyPermit.setId(permitToBeEdited.getId());
 		PermitNotes notes = new PermitNotes();
-		notes.setPermit(emptyPermit);
+		notes.setPermit(permitToBeEdited); 
 		model.addAttribute("notesModelObject", notes);
-	
+		
 		List<BaseModel> notesList = genericDAO.executeSimpleQuery("select obj from PermitNotes obj where obj.permit.id=" +  permitToBeEdited.getId() + " order by obj.id asc");
 		model.addAttribute("notesList", notesList);
 		
@@ -204,6 +235,15 @@ public class PermitController extends CRUDController<Permit> {
 		}
 	
 		return urlContext + "/permit";
+	}
+	
+	public OrderPermits setupOrderPermitModel(HttpServletRequest request) {
+		String pk = request.getParameter(getPkParam());
+		if (pk == null || StringUtils.isEmpty(pk)) {
+			return new OrderPermits();
+		} else {
+			return genericDAO.getById(OrderPermits.class, Long.parseLong(pk));
+		}
 	}
 	
 	@Override
@@ -220,8 +260,10 @@ public class PermitController extends CRUDController<Permit> {
 		model.addAttribute("permitStatus", genericDAO.findByCriteria(PermitStatus.class, criterias, "status", false));
 		model.addAttribute("permit", genericDAO.findByCriteria(Permit.class, criterias, "id", false));
 		model.addAttribute("orderPermitList", genericDAO.findByCriteria(OrderPermits.class, criterias, "id", false));
+		model.addAttribute("orderStatuses", genericDAO.findByCriteria(OrderStatus.class, criterias, "status", false));
 	}
 	
+	@Override
 	@RequestMapping(method = RequestMethod.POST, value = "/save.do")
 	public String save(HttpServletRequest request,
 			@ModelAttribute("modelObject") Permit entity,
@@ -232,30 +274,51 @@ public class PermitController extends CRUDController<Permit> {
 				status = "Available";
 			} 
 			
-			System.out.println("Setting Permit Status to " + status);
 			PermitStatus permitStatus = (PermitStatus)genericDAO.executeSimpleQuery("select obj from PermitStatus obj where obj.status='" + status + "'").get(0);
 			entity.setStatus(permitStatus);
 			
-			super.save(request, entity, bindingResult, model);
+			try {
+				getValidator().validate(entity, bindingResult);
+			} catch (ValidationException e) {
+				e.printStackTrace();
+				System.out.println("Error in validation " + e);
+				log.warn("Error in validation :" + e);
+			}
+			
+			SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
+			criteria.getSearchMap().put("id!",0l);
+			//TODO: Fix me 
+			criteria.getSearchMap().remove("_csrf");
+			
+			// return to form if we had errors
+			if (bindingResult.hasErrors()) {
+				List<ObjectError> errors = bindingResult.getAllErrors();
+				for(ObjectError e : errors) {
+					System.out.println("Error: " + e.getDefaultMessage());
+				}
+				
+				setupCreate(model, request);
+				return urlContext + "/form";
+			}
+			
+			beforeSave(request, entity, model);
+			genericDAO.saveOrUpdate(entity);
+			cleanUp(request);
 			
 			return saveSuccess(model, request, entity);
 	}
 	
 	public String saveSuccess(ModelMap model, HttpServletRequest request, Permit entity) {
 		setupCreate(model, request);
-		model.addAttribute("modelObject", entity);
 		model.addAttribute("activeTab", "managePermits");
 		model.addAttribute("activeSubTab", "permitNotes");
 		model.addAttribute("mode", "ADD");
 		
-		Permit permit = new Permit();
-		permit.setId(entity.getId());
 		PermitNotes notes = new PermitNotes();
-		notes.setPermit(permit);
+		notes.setPermit(entity);
 		model.addAttribute("notesModelObject", notes);
 		List<BaseModel> notesList = genericDAO.executeSimpleQuery("select obj from PermitNotes obj where obj.permit.id=" +  entity.getId() + " order by obj.id asc");
 		model.addAttribute("notesList", notesList);
-		//return urlContext + "/form";
 		return urlContext + "/permit";
 	}
 	
@@ -326,11 +389,6 @@ public class PermitController extends CRUDController<Permit> {
 		cleanUp(request);
 
 		setupCreate(model, request);
-		//model.addAttribute("modelObject", entity);
-		/*model.addAttribute("activeTab", "managePermits");
-		model.addAttribute("activeSubTab", "permitNotes");
-		model.addAttribute("mode", "ADD");*/
-		
 		return urlContext + "/list";
 	}
 }

@@ -599,11 +599,16 @@ public class GenericJpaDAO implements GenericDAO {
 		StringBuffer searchString = new StringBuffer("");
 		if (criterias != null) {
 			for (Object param : criterias.keySet()) {
-				if (param.toString().startsWith("||"))
+				if (param.toString().toUpperCase().startsWith("||EXCLUDE.")) {
+					continue;
+				} else if (param.toString().startsWith("||"))
 					counter++;
 			}
 			for (Object param : criterias.keySet()) {
 				if (criterias.get(param.toString())!=null) {
+					if (param.toString().toUpperCase().startsWith("||EXCLUDE.")) { // this param is not part of this object, continue
+						continue;
+					}
 					if (param.toString().startsWith("||")) {
 						containsOr = true;
 						if (count == 0 && counter > 1)
@@ -670,7 +675,9 @@ public class GenericJpaDAO implements GenericDAO {
 			for (Object param : criterias.keySet()) {
 				if (param.toString().startsWith("||"))
 					continue;
-				else {
+				else if (param.toString().toUpperCase().startsWith("EXCLUDE.")) {
+					continue;
+				} else {
 					if (criterias.get(param.toString()) instanceof Integer
 							|| criterias.get(param.toString()) instanceof Long) {
 						searchString.append(" and p." + param + "="
@@ -776,7 +783,7 @@ public class GenericJpaDAO implements GenericDAO {
 							((Date) BaseController.dateFormat.parse(criterias.get(fieldName).toString()))
 									.getTime());
 
-					String fieldType = fieldName.substring(0, fieldName.indexOf("From")); // ex., start
+					String fieldType = fieldName.substring(0, fieldName.indexOf("From")); // ex., startDate
 					Timestamp toDate = new Timestamp(
 							((Date) BaseController.dateFormat.parse(criterias.get(fieldType + "To").toString()))
 									.getTime());

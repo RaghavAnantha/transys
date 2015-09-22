@@ -8,7 +8,7 @@ import javax.persistence.Table;
 @Table(name="permitClass")
 public class PermitClass extends AbstractBaseModel {
 
-	@Column(name="class")
+	@Column(name="permitClass")
 	private String permitClass;
 
 	public String getPermitClass() {
