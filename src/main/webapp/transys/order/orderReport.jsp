@@ -1,19 +1,19 @@
 <%@include file="/common/taglibs.jsp"%>
 <h4 !important">Orders Report</h4>
-<form:form action="list.do" method="get" name="searchForm" id="orderSearchForm">
+<form:form action="orderReport.do" method="get" name="orderReportSearchForm" id="orderReportSearchForm">
 	<table width="100%" id="form-table">
 		<tr>
 			<td align="${left}" class="form-left"><transys:label code="Company Name" /></td>
 			<td align="${left}" class="wide">
-				<select class="flat form-control input-sm" id="OrderId" name="id" style="width: 175px">
+				<select class="flat form-control input-sm" id="compName" name="customer" style="width: 175px">
 					<option value="">------<transys:label code="Please Select" />------</option>
 					<c:forEach items="${customers}" var="name">
 						<c:set var="selected" value="" />
 						<c:if
-							test="${sessionScope.searchCriteria.searchMap['companyName'] == name.companyName}">
+							test="${sessionScope.searchCriteria.searchMap['customer'] == name.id}">
 							<c:set var="selected" value="selected" />
 						</c:if>
-						<option value="${name.companyName}" ${selected}>${name.companyName}</option>
+						<option value="${name.id}" ${selected}>${name.companyName}</option>
 					</c:forEach>
 				</select>
 			</td>
@@ -65,15 +65,15 @@
 			</td>
 			<td align="${left}" class="form-left"><transys:label code="Order Status" /></td>
 			<td align="${left}">
-				<select class="flat form-control input-sm" id="orderStatus" name="status" style="width: 175px">
+				<select class="flat form-control input-sm" id="orderStatus" name="orderStatus" style="width: 175px">
 					<option value="">------<transys:label code="Please Select" />------</option>
 					<c:forEach items="${orderStatuses}" var="oStatus">
 						<c:set var="selected" value="" />
 						<c:if
-							test="${sessionScope.searchCriteria.searchMap['status'] == oStatus.status}">
+							test="${sessionScope.searchCriteria.searchMap['orderStatus'] == oStatus.id}">
 							<c:set var="selected" value="selected" />
 						</c:if>
-						<option value="${oStatus.status}" ${selected}>${oStatus.status}</option>
+						<option value="${oStatus.id}" ${selected}>${oStatus.status}</option>
 					</c:forEach>
 				</select>
 			</td>
@@ -97,18 +97,19 @@
 		<tr>
 			<td align="${left}"></td>
 			<td align="${left}">
-				<input type="button" class="btn btn-primary btn-sm" onclick="document.forms['searchForm'].submit();"
+				<input type="button" class="btn btn-primary btn-sm" onclick="document.forms['orderReportSearchForm'].submit();"
 					value="<transys:label code="Preview"/>" />
 			</td>
 		</tr>
 	</table>
 </form:form>
 
+<a href="/order/genorderreport.do?type=xls"><img src="/images/excel.png" border="0" style="float:right" class="toolbarButton"></a>
+<a href="/order/genorderreport.do?type=pdf"><img src="/images/pdf.png" border="0" style="float:right" class="toolbarButton"></a>
 <form:form name="orderReportForm" id="orderReportForm" class="tab-color">
 	<transys:datatable urlContext="order"  baseObjects="${list}"
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
-		pagingLink="search.do" multipleDelete="false" searcheable="false"
-		exportPdf="true" exportXls="true">
+		pagingLink="search.do" multipleDelete="false" searcheable="false">
 		<transys:textcolumn headerText="Order #" dataField="id" />
 		<transys:textcolumn headerText="Customer" dataField="customer.companyName" />
 		<transys:textcolumn headerText="Contact" dataField="deliveryContactName" />

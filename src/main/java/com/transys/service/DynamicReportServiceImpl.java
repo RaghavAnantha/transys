@@ -21,6 +21,7 @@ import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.data.JRBeanArrayDataSource;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.data.JRMapArrayDataSource;
+import net.sf.jasperreports.engine.data.JRMapCollectionDataSource;
 import net.sf.jasperreports.engine.export.JRCsvExporter;
 import net.sf.jasperreports.engine.export.JRCsvExporterParameter;
 import net.sf.jasperreports.engine.export.JRHtmlExporter;
@@ -553,6 +554,7 @@ public class DynamicReportServiceImpl implements DynamicReportService {
 			if (datas != null) {
 				//JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(datas);
 				JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(datas, false);
+				//JRMapCollectionDataSource dataSource =new JRMapCollectionDataSource(datas);
 				jp = JasperFillManager.fillReport(jasperReport, params,
 						dataSource);
 			} else
@@ -563,6 +565,7 @@ public class DynamicReportServiceImpl implements DynamicReportService {
 			return null;
 		}
 	}
+	
 
 	private DynamicReportBuilder getReport(String reportName,
 			Style headerStyle, Style detailStyle,
