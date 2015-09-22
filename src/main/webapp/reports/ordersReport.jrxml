@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="orderReports" pageWidth="1210" pageHeight="555" orientation="Landscape" columnWidth="401" leftMargin="3" rightMargin="3" topMargin="0" bottomMargin="0" uuid="1c66690f-01f1-4b96-ab51-00f1d62e1ce2">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<field name="id" class="java.lang.Long"/>
+	<field name="company_name" class="java.lang.String"/>
+	<field name="deliveryContactName" class="java.lang.String"/>
+	<field name="phone" class="java.lang.String"/>
+	<field name="line1" class="java.lang.String"/>
+	<field name="city" class="java.lang.String"/>
+	<field name="status" class="java.lang.String"/>
+	<field name="deliveryDate" class="java.lang.String"/>
+	<field name="pickupDate" class="java.lang.String"/>
+	<field name="paymentMethod" class="java.lang.String"/>
+	<field name="dumpsterPrice" class="java.lang.String"/>
+	<field name="cityFee" class="java.lang.String"/>
+	<field name="permitFees" class="java.lang.String"/>
+	<field name="overweightFee" class="java.lang.String"/>
+	<field name="totalFees" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="41" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="487" y="0" width="100" height="20" backcolor="#DDDDA7" uuid="79b17b89-6385-4723-bf56-5f3dc49c543c"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="13" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Orders Report]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="21" splitType="Stretch">
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="41" y="1" width="51" height="20" backcolor="#CCCCFF" uuid="5b4f71e8-58d1-4fa7-8ca0-0a4f7c9145ce"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Order #]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="226" y="1" width="89" height="20" backcolor="#CCCCFF" uuid="462418b9-ddc8-4a65-9dda-b6da3ae15a5a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Phone]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="315" y="1" width="100" height="20" backcolor="#CCCCFF" uuid="522443ed-1ef0-4239-8a29-325d79fa9ed3"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Delivery Address]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="415" y="1" width="72" height="20" backcolor="#CCCCFF" uuid="9ef44617-dbef-4049-bba3-9830b207d37f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[City]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="549" y="1" width="100" height="20" backcolor="#CCCCFF" uuid="b0ebf467-fc6b-4fc2-a91a-cb7e9880a9b7"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Delivery Date]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="649" y="1" width="102" height="20" backcolor="#CCCCFF" uuid="6d9b14a3-0cfe-449c-8d3c-8f98c501aa80"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Pickup Date]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="812" y="1" width="87" height="20" backcolor="#CCCCFF" uuid="080229b7-2d66-446b-880a-664bb35cadac"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Dumpster Price]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="899" y="1" width="61" height="20" backcolor="#CCCCFF" uuid="88fe29f0-44d9-45b2-847d-85fadef216ad"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[City Fee]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="960" y="1" width="65" height="20" backcolor="#CCCCFF" uuid="14cfa8a0-ce36-4b68-bb64-840ce898515a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Permit Fees]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="1025" y="1" width="74" height="20" backcolor="#CCCCFF" uuid="ddc10899-6952-4338-8264-bb9192ff6a4e"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Ovr. wt Fee]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="157" y="1" width="69" height="20" backcolor="#CCCCFF" uuid="d340982d-c4a4-46f8-9eb4-fba52cbef1c2"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Contact Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="92" y="1" width="65" height="20" backcolor="#CCCCFF" uuid="6e6246f8-29f0-4c58-8e77-e5a4d45d8de1"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Customer]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="751" y="1" width="61" height="20" backcolor="#CCCCFF" uuid="212f4d74-0f8f-4de9-9543-378343ea7c4a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Payment Method]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="1099" y="1" width="68" height="20" backcolor="#CCCCFF" uuid="9c42da70-ca7e-4c7e-ba0b-f129ae848a34"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Total Fees]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="487" y="1" width="62" height="20" backcolor="#CCCCFF" uuid="bff756c9-df0c-4cc6-9e8d-033ad86c655a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Status]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="21" splitType="Stretch">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="899" y="1" width="61" height="20" backcolor="#CCFFCC" uuid="8d16551e-1508-4583-9d29-633aa3a18b52"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{cityFee}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="751" y="1" width="61" height="20" backcolor="#CCFFCC" uuid="7925ff30-fd27-4b73-9452-efd2b21d13ee"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{paymentMethod}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="1099" y="1" width="68" height="20" backcolor="#CCFFCC" uuid="03d8ccbf-f556-49ef-9842-c0cb6d6ab308"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{totalFees}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="1025" y="1" width="74" height="20" backcolor="#CCFFCC" uuid="d87f01e1-f26d-498d-a6fc-db5a8dbffc40"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{overweightFee}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="960" y="1" width="65" height="20" backcolor="#CCFFCC" uuid="a41a9b90-ab03-4428-8648-750788ce8012"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{permitFees}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="812" y="1" width="87" height="20" backcolor="#CCFFCC" uuid="4816752d-0e67-41b5-82bd-7288eb8f0011"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{dumpsterPrice}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="649" y="1" width="102" height="20" backcolor="#CCFFCC" uuid="60f82e54-dd51-4a7f-8408-5338715d2949"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{pickupDate}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="549" y="1" width="100" height="20" backcolor="#CCFFCC" uuid="9b32193b-61c3-4d87-93e0-6a36ffd98be3"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{deliveryDate}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="487" y="1" width="62" height="20" backcolor="#CCFFCC" uuid="aa7b1b36-7b53-4afa-84ad-df58ada47633"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{status}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="415" y="1" width="72" height="20" backcolor="#CCFFCC" uuid="6871bf9a-8c27-4cf6-a91d-e07d5c4bd715"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{city}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="315" y="1" width="100" height="20" backcolor="#CCFFCC" uuid="3a388def-97c9-4baf-84c8-f7e52cfac4c4"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{line1}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="226" y="1" width="89" height="20" backcolor="#CCFFCC" uuid="d4a81a28-adcf-44bc-814b-78b88b8fd0f2"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{phone}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="157" y="1" width="69" height="20" backcolor="#CCFFCC" uuid="7f7005e8-5646-47ad-9ed8-9528d6d33a17"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{deliveryContactName}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="92" y="1" width="65" height="20" backcolor="#CCFFCC" uuid="d8a1f25c-4c53-4f01-996f-1a21118baccf"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{company_name}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="41" y="1" width="51" height="20" backcolor="#CCFFCC" uuid="5d0bbeff-585d-4a9d-aabe-2f579d654228"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{id}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="1" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

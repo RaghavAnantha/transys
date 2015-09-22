@@ -34,6 +34,11 @@ import net.sf.jasperreports.engine.export.JRXlsExporter;
 import net.sf.jasperreports.engine.export.JRXlsExporterParameter;
 import net.sf.jasperreports.engine.export.ooxml.JRXlsxExporter;
 import net.sf.jasperreports.engine.util.JRLoader;
+import net.sf.jasperreports.export.ExporterInput;
+import net.sf.jasperreports.export.SimpleExporterInput;
+import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
+import net.sf.jasperreports.export.SimplePdfExporterConfiguration;
+import net.sf.jasperreports.export.SimpleXlsReportConfiguration;
 import net.sf.jasperreports.j2ee.servlets.ImageServlet;
 
 import org.hibernate.Query;
@@ -553,8 +558,8 @@ public class DynamicReportServiceImpl implements DynamicReportService {
 			JasperPrint jp = null;
 			if (datas != null) {
 				//JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(datas);
-				JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(datas, false);
-				//JRMapCollectionDataSource dataSource =new JRMapCollectionDataSource(datas);
+				//JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(datas, false);
+				JRMapCollectionDataSource dataSource =new JRMapCollectionDataSource(datas);
 				jp = JasperFillManager.fillReport(jasperReport, params,
 						dataSource);
 			} else
@@ -823,15 +828,27 @@ public class DynamicReportServiceImpl implements DynamicReportService {
 			throws JRException {
 		JRXlsExporter exporter = new JRXlsExporter();
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		exporter.setParameter(JRExporterParameter.JASPER_PRINT, jp);
+		exporter.setExporterInput(new SimpleExporterInput(jp));
+		exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(out));
+		SimpleXlsReportConfiguration configuration = new SimpleXlsReportConfiguration();
+		
+		configuration.setDetectCellType(true);
+		
+		configuration.setIgnoreGraphics(true);
+		configuration.setWhitePageBackground(true);
+		configuration.setRemoveEmptySpaceBetweenColumns(true);
+		configuration.setRemoveEmptySpaceBetweenRows(true);
+		exporter.setConfiguration(configuration); 
+		
+		/*exporter.setParameter(JRExporterParameter.JASPER_PRINT, jp);
 		exporter.setParameter(JRExporterParameter.OUTPUT_STREAM, out);
 		exporter.setParameter(JRXlsExporterParameter.IS_DETECT_CELL_TYPE,
 				Boolean.TRUE);
 		exporter.setParameter(JRXlsExporterParameter.IS_WHITE_PAGE_BACKGROUND,
 				Boolean.FALSE);
 		exporter.setParameter(JRXlsExporterParameter.IS_IGNORE_GRAPHICS,
-				Boolean.FALSE);
-		exporter.exportReport();
+				Boolean.FALSE); */
+		exporter.exportReport();  
 
 		return out;
 	}
@@ -858,8 +875,13 @@ public class DynamicReportServiceImpl implements DynamicReportService {
 			throws JRException {
 		JRPdfExporter exporter = new JRPdfExporter();
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		exporter.setParameter(JRExporterParameter.JASPER_PRINT, jp);
-		exporter.setParameter(JRExporterParameter.OUTPUT_STREAM, out);
+		
+		exporter.setExporterInput(new SimpleExporterInput(jp));
+		exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(out));
+		
+		/*exporter.setParameter(JRExporterParameter.JASPER_PRINT, jp);
+		exporter.setParameter(JRExporterParameter.OUTPUT_STREAM, out); */
+		
 		exporter.exportReport();
 		return out;
 	}
