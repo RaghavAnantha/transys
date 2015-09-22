@@ -466,7 +466,7 @@ CREATE TABLE `permit` (
   `permitType` bigint(20) NOT NULL,
   `class` bigint(20) DEFAULT NULL,
   `number` varchar(15) DEFAULT NULL,
-  `fee` varchar(12) DEFAULT 0,
+  `fee` double DEFAULT '0',
   `startDate` datetime DEFAULT NULL,
   `endDate` datetime DEFAULT NULL,
   `permitAddress` varchar(100) DEFAULT NULL,
@@ -523,7 +523,6 @@ DROP TABLE IF EXISTS `permitClass`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `permitClass` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `class` varchar(20) NOT NULL,
   `created_at` datetime DEFAULT NULL,
   `created_by` bigint(20) DEFAULT NULL,
   `modified_at` datetime DEFAULT NULL,
@@ -540,10 +539,9 @@ CREATE TABLE `permitClass` (
 
 LOCK TABLES `permitClass` WRITE;
 /*!40000 ALTER TABLE `permitClass` DISABLE KEYS */;
-INSERT INTO `permitClass` VALUES (1,'CLASS A',NULL,NULL,NULL,NULL,1,NULL),(2,'CLASS B',NULL,NULL,NULL,NULL,1,NULL),(3,'DRIVE',NULL,NULL,NULL,NULL,1,NULL);
+INSERT INTO `permitClass` VALUES (1,NULL,NULL,NULL,NULL,1,'CLASS A'),(2,'2015-09-22 13:47:10',NULL,NULL,NULL,1,'CLASS B'),(3,'2015-09-22 13:43:51',NULL,NULL,NULL,1,'CLASS C');
 /*!40000 ALTER TABLE `permitClass` ENABLE KEYS */;
 UNLOCK TABLES;
-
 --
 -- Table structure for table `permitStatus`
 --
