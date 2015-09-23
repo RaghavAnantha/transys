@@ -11,14 +11,14 @@
 			</td>
 		</tr>
 		<tr>
-			<td class="form-left"><transys:label code="Delivery Address" /><span class="errorMessage">*</span></td>
+			<td class="form-left"><transys:label code="Delivery Address #" /><span class="errorMessage">*</span></td>
 			<td align="${left}">
 				<form:input path="line1" cssClass="flat" onkeyup="checkVal(this.id)"/>
 			 	<br><form:errors path="line1" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>
-			<td class="form-left"><transys:label code="Line 2" /><span class="errorMessage">*</span></td>
+			<td class="form-left"><transys:label code="Delivery Street" /><span class="errorMessage">*</span></td>
 			<td align="${left}">
 				<form:input path="line2" cssClass="flat" onkeyup="checkVal(this.id)"/>
 			 	<br><form:errors path="line2" cssClass="errorMessage" />
@@ -42,7 +42,7 @@
 			</td>
 		</tr>
 		<tr>
-			<td class="form-left"><transys:label code="Zip" /><span class="errorMessage">*</span></td>
+			<td class="form-left"><transys:label code="Zipcode" /><span class="errorMessage">*</span></td>
 			<td align="${left}">
 				<form:input path="zipcode" cssClass="flat"  onkeyup="checkValDrop(this.id, this.value)"/>
 			 	<br><form:errors path="zipcode" cssClass="errorMessage" />
@@ -66,8 +66,8 @@
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
 		pagingLink="search.do" multipleDelete="false" searcheable="false"
 		>
-		<transys:textcolumn headerText="Delivery Address" dataField="line1" />
-		<transys:textcolumn headerText="Address Line 2" dataField="line2" />
+		<transys:textcolumn headerText="Delivery Address #" dataField="line1" />
+		<transys:textcolumn headerText="Delivery Street" dataField="line2" />
 		<transys:textcolumn headerText="City" dataField="city" />
 		<transys:textcolumn headerText="State" dataField="state.name" />
 		<transys:textcolumn headerText="Zipcode" dataField="zipcode" />
