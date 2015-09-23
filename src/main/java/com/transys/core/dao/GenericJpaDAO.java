@@ -646,7 +646,17 @@ public class GenericJpaDAO implements GenericDAO {
 										+ ") IN (" + valBuilder.toString()
 										+ ")");
 							}
-						} else if (criterias.get(param.toString()).toString()
+						} /*else if (criterias.get(param.toString()).toString()
+								.startsWith("<=")) {
+							
+							searchString.append(" p."
+									+ criteriaKey
+									+ " <= '"
+									+ criterias.get(param.toString())
+											.toString().trim().substring(2)
+									+ "'");
+							
+						} */else if (criterias.get(param.toString()).toString()
 								.startsWith("!=")
 								|| criterias.get(param.toString()).toString()
 										.startsWith("<>")) {
@@ -657,7 +667,7 @@ public class GenericJpaDAO implements GenericDAO {
 											.toString().trim().substring(2)
 									+ "'");
 
-						} else if (param.toString().toUpperCase().contains("DATE")) {
+						} else if (param.toString().toUpperCase().contains("DATE") || param.toString().toUpperCase().startsWith("CREATEDAT") || param.toString().toUpperCase().startsWith("MODIFIEDAT")) {
 							appendSearchStringWithDateRange(criterias, searchString, param);
 						} else {							
 							if (!"dateField".equalsIgnoreCase(param.toString()))
@@ -709,7 +719,17 @@ public class GenericJpaDAO implements GenericDAO {
 							searchString.append(" and UPPER(p." + param
 									+ ") IN (" + valBuilder.toString() + ")");
 						}
-					} else if (criterias.get(param.toString()).toString()
+					} /*else if (criterias.get(param.toString()).toString()
+							.startsWith("<=")) {
+						
+						searchString.append(" p."
+								+ param
+								+ " <= '"
+								+ criterias.get(param.toString())
+										.toString().trim().substring(2)
+								+ "'");
+						
+					}*/ else if (criterias.get(param.toString()).toString()
 							.startsWith("!=")
 							|| criterias.get(param.toString()).toString()
 									.startsWith("<>")) {
@@ -719,7 +739,7 @@ public class GenericJpaDAO implements GenericDAO {
 								+ criterias.get(param.toString()).toString()
 										.trim().substring(2) + "'");
 
-					} else if (param.toString().toUpperCase().contains("DATE")) {
+					} else if (param.toString().toUpperCase().contains("DATE") || param.toString().toUpperCase().startsWith("CREATEDAT") || param.toString().toUpperCase().startsWith("MODIFIEDAT")) {
 						 appendSearchStringWithDateRange(criterias, searchString, param);
 					} else {
 						if (!"dateField".equalsIgnoreCase(param.toString()))
