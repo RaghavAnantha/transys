@@ -120,8 +120,8 @@ public class CustomerController extends CRUDController<Customer> {
 		criteria.getSearchMap().remove("_csrf");
 		List<Customer> customer =  genericDAO.search(getEntityClass(), criteria,"companyName",null,null);
 		List<ViewCustomerReport> CustomerListReport = new ArrayList<ViewCustomerReport>() ;
-		ViewCustomerReport custListReport =  new ViewCustomerReport();
 		for (Customer cust: customer) {
+		ViewCustomerReport custListReport =  new ViewCustomerReport();
 		List<OrderPaymentInfo> orderPymntInfo = genericDAO.executeSimpleQuery("select obj from OrderPaymentInfo obj where obj.order.customer.id = "+ cust.getId());
 			Double sum=0.0;
 		for (OrderPaymentInfo orderPaymntInfo: orderPymntInfo) {
