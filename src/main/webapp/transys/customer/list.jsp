@@ -36,10 +36,8 @@
 			</select></td>
 		</tr>
 		<tr>
-			<td align="${left}" class="form-left"><transys:label
-					code="Contact Name" /></td>
-			<td align="${left}" class="wide"><select
-				class="flat form-control input-sm" id="contactName"
+			<td align="${left}" class="form-left"><transys:label code="Contact Name" /></td>
+			<td align="${left}" class="wide"><select class="flat form-control input-sm" id="contactName"
 				name="contactName" style="width:175px !important">
 					<option value="">------<transys:label code="Please Select" />------</option>
 					<c:forEach items="${customer}" var="name">
@@ -71,28 +69,25 @@
 			<td align="${left}" class="form-left"><transys:label
 					code="Create Date From" /></td>
 			<td align="${left}" class="wide"><input class="flat"
-				id="datepicker" name="dateFrom" style="width: 175px" /></td>
+				id="datepicker" name="createdAtFrom" style="width: 175px" /></td>
 
 			<td align="${left}" class="form-left"><transys:label
 					code="Create Date To" /></td>
 			<td align="${left}"><input class="flat" id="datepicker1"
-				name="dateTo" style="width: 175px" /></td>
+				name="createdAtTo" style="width: 175px" /></td>
 		</tr>
 
 		<tr>
-			<td align="${left}" class="form-left"><transys:label
-					code="Status" /></td>
-			<td align="${left}" class="wide"><select
-				class="flat form-control input-sm" id="status" name="status"
-				style="width: 175px">
+			<td align="${left}" class="form-left"><transys:label code="Status" /></td>
+			<td align="${left}" class="wide">
+				<select class="flat form-control input-sm" id="status" name="status" style="width: 175px">
 					<option value="">------<transys:label code="Please Select" />------</option>
-					<c:forEach items="${customer}" var="Status">
+					<c:forEach items="${customer}" var="aCustomer">
 						<c:set var="selected" value="" />
-						<c:if
-							test="${sessionScope.searchCriteria.searchMap['contactName'] == Status.status}">
+						<c:if test="${sessionScope.searchCriteria.searchMap['status'] == aCustomer.status}">
 							<c:set var="selected" value="selected" />
 						</c:if>
-						<option value="${Status.status}" ${selected}>${Status.status}</option>
+						<option value="${aCustomer.status}" ${selected}>${aCustomer.status}</option>
 					</c:forEach>
 			</select></td>
 		</tr>

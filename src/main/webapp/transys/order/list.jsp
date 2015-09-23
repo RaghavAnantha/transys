@@ -134,63 +134,23 @@ function populateCustomerDeliveryAddress() {
 			</td>
 		</tr>
 		<tr>
-			<td align="${left}" class="form-left"><transys:label code="Delivery Date from" /></td>
+			<td align="${left}" class="form-left"><transys:label code="Delivery Date From" /></td>
 			<td align="${left}" class="wide">
-				<select class="flat form-control input-sm" id=deliveryDate name="deliveryDate" style="width: 175px">
-					<option value="">------<transys:label code="Please Select" />------</option>
-					<c:forEach items="${order}" var="anOrder">
-						<c:set var="selected" value="" />
-						<c:if
-							test="${sessionScope.searchCriteria.searchMap['deliveryDate'] == anOrder.deliveryDate}">
-							<c:set var="selected" value="selected" />
-						</c:if>
-						<option value="${anOrder.deliveryDate}" ${selected}>${anOrder.deliveryDate}</option>
-					</c:forEach>
-				</select>
+				<input class="flat" id="datepicker" name="deliveryDateFrom" style="width: 175px" />
 			</td>
-			<td align="${left}" class="form-left"><transys:label code="Delivery Date to" /></td>
+			<td align="${left}" class="form-left"><transys:label code="Delivery Date To" /></td>
 			<td align="${left}" class="wide">
-				<select class="flat form-control input-sm" id=deliveryDate name="deliveryDate" style="width: 175px">
-					<option value="">------<transys:label code="Please Select" />------</option>
-					<c:forEach items="${order}" var="anOrder">
-						<c:set var="selected" value="" />
-						<c:if
-							test="${sessionScope.searchCriteria.searchMap['deliveryDate'] == anOrder.deliveryDate}">
-							<c:set var="selected" value="selected" />
-						</c:if>
-						<option value="${anOrder.deliveryDate}" ${selected}>${anOrder.deliveryDate}</option>
-					</c:forEach>
-				</select>
+				<input class="flat" id="datepicker1" name="deliveryDateTo" style="width: 175px" />
 			</td>
 		</tr>
 		<tr>
-			<td align="${left}" class="form-left"><transys:label code="Pick Up Date from" /></td>
+			<td align="${left}" class="form-left"><transys:label code="Pick Up Date From" /></td>
 			<td align="${left}" class="wide">
-				<select class="flat form-control input-sm" id=pickupDate name="pickupDate" style="width: 175px">
-					<option value="">------<transys:label code="Please Select" />------</option>
-					<c:forEach items="${order}" var="anOrder">
-						<c:set var="selected" value="" />
-						<c:if
-							test="${sessionScope.searchCriteria.searchMap['pickupDate'] == anOrder.pickupDate}">
-							<c:set var="selected" value="selected" />
-						</c:if>
-						<option value="${anOrder.pickupDate}" ${selected}>${anOrder.pickupDate}</option>
-					</c:forEach>
-				</select>
+				<input class="flat" id="datepicker2" name="pickupDateFrom" style="width: 175px" />
 			</td>
-			<td align="${left}" class="form-left"><transys:label code="Pick Up Date to" /></td>
+			<td align="${left}" class="form-left"><transys:label code="Pick Up Date To" /></td>
 			<td align="${left}" class="wide">
-				<select class="flat form-control input-sm" id=pickupDate name="pickupDate" style="width: 175px">
-					<option value="">------<transys:label code="Please Select" />------</option>
-					<c:forEach items="${order}" var="anOrder">
-						<c:set var="selected" value="" />
-						<c:if
-							test="${sessionScope.searchCriteria.searchMap['pickupDate'] == anOrder.pickupDate}">
-							<c:set var="selected" value="selected" />
-						</c:if>
-						<option value="${anOrder.pickupDate}" ${selected}>${anOrder.pickupDate}</option>
-					</c:forEach>
-				</select>
+				<input class="flat" id="datepicker3" name="pickupDateTo" style="width: 175px" />
 			</td>
 		</tr>
 		<tr>
