@@ -4,7 +4,7 @@
 	<form:hidden path="id" id="id" />
 	<table id="form-table" class="table">
 		<tr>
-			<td class="form-left"><transys:label code="Drop-off Driver" /><span class="errorMessage"></span></td>
+			<td class="form-left"><transys:label code="Drop-off Driver" /><span class="errorMessage">*</span></td>
 			<td align="${left}">
 				<form:select id="dropOffDriver" cssClass="flat form-control input-sm" style="width:172px !important" path="dropOffDriver"> 
 					<form:option value="">-------Please Select------</form:option>

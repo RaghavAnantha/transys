@@ -48,7 +48,7 @@ function populateDeliveryAddress() {
     	   	$.each(addressList, function () {
     	   	    $("<option />", {
     	   	        val: this.id,
-    	   	        text: this.line1
+    	   	        text: this.line1 + " " + this.line2
     	   	    }).appendTo(deliveryAddressSelect);
     	   	});
 		}
@@ -342,27 +342,23 @@ function populatePermitDateAndFee(index) {
 	        <td align="${left}">
 	        	<select class="flat form-control input-sm" id="permits[0].id" name="permits[0].id" style="width:172px !important" onChange="return populatePermitDateAndFee(1);">
 					<option value="">------<transys:label code="Please Select" />------</option>
+					<!--  
 					<c:forEach items="${permits}" var="aPermit">
 						<option value="${aPermit.id}">${aPermit.number}</option>
 					</c:forEach>
+					-->
 				</select>
 	        </td>
 	        <td class="form-left"><transys:label code="Permit2 Number"/><span class="errorMessage">*</span></td>
 	        <td align="${left}">
 	        	<select class="flat form-control input-sm" id="permits[1].id" name="permits[1].id" style="width:172px !important" onChange="return populatePermitDateAndFee(2);">
 					<option value="">------<transys:label code="Please Select" />------</option>
-					<c:forEach items="${permits}" var="aPermit">
-						<option value="${aPermit.id}">${aPermit.number}</option>
-					</c:forEach>
 				</select>
 	        </td>
 	        <td class="form-left"><transys:label code="Permit3 Number"/><span class="errorMessage">*</span></td>
 	        <td align="${left}">
 	        	<select class="flat form-control input-sm" id="permits[2].id" name="permits[2].id" style="width:172px !important" onChange="return populatePermitDateAndFee(3);">
 					<option value="">------<transys:label code="Please Select" />------</option>
-					<c:forEach items="${permits}" var="aPermit">
-						<option value="${aPermit.id}">${aPermit.number}</option>
-					</c:forEach>
 				</select>
 	        </td>
 		</tr>

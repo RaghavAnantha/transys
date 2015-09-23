@@ -82,7 +82,7 @@ public class OrderController extends CRUDController<Order> {
       //model.addAttribute("deliveryAddresses", genericDAO.findByCriteria(Address.class, criterias, "line1", false));
       
       //model.addAttribute("permits", genericDAO.executeSimpleQuery("select obj from Permit obj where obj.id!=0 order by obj.id asc"));
-      model.addAttribute("permits", genericDAO.findByCriteria(Permit.class, criterias, "id", false));
+      //model.addAttribute("permits", genericDAO.findByCriteria(Permit.class, criterias, "id", false));
       
       model.addAttribute("dumpsters", genericDAO.executeSimpleQuery("select obj from DumpsterInfo obj where obj.id!=0 order by obj.id asc"));
       model.addAttribute("dusmpsterLocationTypes", genericDAO.executeSimpleQuery("select obj from LocationType obj where obj.id!=0 order by obj.id asc"));

@@ -18,7 +18,7 @@ function populateCustomerDeliveryAddress() {
     	   	$.each(addressList, function () {
     	   	    $("<option />", {
     	   	        val: this.id,
-    	   	        text: this.line1
+    	   	        text: this.line1 + " " + this.line2
     	   	    }).appendTo(deliveryAddressSelect);
     	   	});
 		}
@@ -77,13 +77,15 @@ function populateCustomerDeliveryAddress() {
 			<td align="${left}">
 				<select class="flat form-control input-sm" id="deliveryAddress" name="deliveryAddress" style="width: 175px">
 					<option value="">------<transys:label code="Please Select" />------</option>
+					<!--  
 					<c:forEach items="${deliveryAddresses}" var="aDeliveryAddress">
 						<c:set var="selected" value=""/>
 						<c:if test="${sessionScope.searchCriteria.searchMap['deliveryAddress'] == aDeliveryAddress.id}">
 							<c:set var="selected" value="selected" />
 						</c:if>
-						<option value="${aDeliveryAddress.id}" ${selected}>${aDeliveryAddress.line1}</option>
+						<option value="${aDeliveryAddress.id}" ${selected}>${aDeliveryAddress.line1} + " " + ${aDeliveryAddress.line2}</option>
 					</c:forEach>
+					-->
 				</select>
 			</td>
 		</tr>
@@ -173,7 +175,8 @@ function populateCustomerDeliveryAddress() {
 		<transys:textcolumn headerText="Customer" dataField="customer.companyName" />
 		<transys:textcolumn headerText="Contact" dataField="deliveryContactName" />
 		<transys:textcolumn headerText="Phone" dataField="deliveryContactPhone1" />
-		<transys:textcolumn headerText="Delivery Address" dataField="deliveryAddress.line1" />
+		<transys:textcolumn headerText="Delivery #" dataField="deliveryAddress.line1" />
+		<transys:textcolumn headerText="Delivery Street" dataField="deliveryAddress.line2" />
 		<transys:textcolumn headerText="City" dataField="deliveryAddress.city" />
 		<transys:textcolumn headerText="Dumpster Size" dataField="dumpsterSize" />
 		<transys:textcolumn headerText="Dmpstr #" dataField="dumpster.dumpsterNum" />
