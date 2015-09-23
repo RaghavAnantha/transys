@@ -130,6 +130,11 @@ function populatePermitDateAndFee(index) {
 		}
 	}); 
 }
+
+$("#addDeliveryAddressModal").on("show.bs.modal", function(e) {
+    var link = $(e.relatedTarget);
+    $(this).find("#addDeliveryAddressModalBody").load(link.attr("href"));
+});	
 </script>
 <br/>
 <form:form action="save.do" name="typeForm" commandName="modelObject" method="post" id="typeForm">
@@ -146,7 +151,7 @@ function populatePermitDateAndFee(index) {
 					<form:option value="">-------Please Select------</form:option>
 					<form:options items="${customers}" itemValue="id" itemLabel="companyName" />
 				</form:select> 
-				 <br><form:errors path="customer" cssClass="errorMessage" />
+				<br><form:errors path="customer" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>
@@ -181,10 +186,18 @@ function populatePermitDateAndFee(index) {
 		<tr>
 			<td class="form-left"><transys:label code="Delivery Address" /><span class="errorMessage"></span></td>
 			<td align="${left}">
-				<form:select id="deliveryAddressSelect" cssClass="flat form-control input-sm" path="deliveryAddress" style="width:172px !important">
-					<form:option value="">-------Please Select------</form:option>
-					<form:options items="${deliveryAddresses}" itemValue="id" itemLabel="line1" />
-				</form:select> 
+				<label style="display: inline-block; font-weight: normal">
+					<form:select id="deliveryAddressSelect" cssClass="flat form-control input-sm" path="deliveryAddress" style="width:172px !important">
+						<form:option value="">-------Please Select------</form:option>
+						<form:options items="${deliveryAddresses}" itemValue="id" itemLabel="line1" />
+					</form:select> 
+				</label>
+				<label style="display: inline-block; font-weight: normal">
+					&nbsp;
+					<a href="/order/retrievePermit.do?permitId=1" data-backdrop="static" data-remote="false" data-toggle="modal" data-target="#addDeliveryAddressModal">
+						<img src="/images/addnew.png" border="0" style="float:right" class="toolbarButton">
+					</a>
+				</label>
 				<br><form:errors path="deliveryAddress" cssClass="errorMessage" />
 			</td>
 		</tr>
@@ -231,7 +244,7 @@ function populatePermitDateAndFee(index) {
 				<label style="display: inline-block; font-weight: normal">
 					<form:select id="deliveryHourTo" cssClass="flat form-control input-sm" style="width:95px !important" path="deliveryHourTo"> 
 						<form:options items="${deliveryHours}" />
-				</form:select>
+					</form:select>
 				</label>
 				&nbsp;
 				<label style="display: inline-block; font-weight: normal">
@@ -532,3 +545,16 @@ function populatePermitDateAndFee(index) {
 		</tr>
 	</table>
 </form:form>
+
+<div class="modal fade" id="addDeliveryAddressModal" role="dialog">
+	<div class="modal-dialog" style="width:90% !important">
+		<div class="modal-content">
+			<div class="modal-header">		
+				<h5 class="modal-title">Add Delivery Address</h5>
+				<div id="validations" style="color:red"></div>
+			</div>
+			<div class="modal-body" id="addDeliveryAddressModalBody"> 
+			</div>
+		</div>
+	</div>
+</div>
