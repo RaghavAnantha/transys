@@ -482,20 +482,22 @@ CREATE TABLE `permit` (
   `deliveryAddress` bigint(20) NOT NULL,
   `parkingMeter` varchar(3) DEFAULT NULL,
   `parkingMeterFee` double DEFAULT '0',
+  `orderID` bigint(20) DEFAULT NULL,
+  `permitClass` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `permitStatusRef_idx` (`status`),
   KEY `customerPermitRef_idx` (`customerID`),
   KEY `deliveryAddressPermitRef_idx` (`deliveryAddress`),
   KEY `locationTypeRef_idx` (`locationType`),
-  KEY `permitClassRef_idx` (`class`),
   KEY `permitTypeRef_idx` (`permitType`),
+  KEY `FK_b8158603jnlm5s4u1kuyxecl9` (`permitClass`),
+  CONSTRAINT `FK_b8158603jnlm5s4u1kuyxecl9` FOREIGN KEY (`permitClass`) REFERENCES `permitClass` (`id`),
   CONSTRAINT `customerPermitRef` FOREIGN KEY (`customerID`) REFERENCES `customer` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `deliveryAddressPermitRef` FOREIGN KEY (`deliveryAddress`) REFERENCES `address` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `locationTypeRef` FOREIGN KEY (`locationType`) REFERENCES `locationType` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `permitClassRef` FOREIGN KEY (`class`) REFERENCES `permitClass` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `permitStatusRef` FOREIGN KEY (`status`) REFERENCES `permitStatus` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `permitTypeRef` FOREIGN KEY (`permitType`) REFERENCES `permitType` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
