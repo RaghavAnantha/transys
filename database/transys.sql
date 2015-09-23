@@ -53,8 +53,8 @@ CREATE TABLE `address` (
 
 LOCK TABLES `address` WRITE;
 /*!40000 ALTER TABLE `address` DISABLE KEYS */;
-INSERT INTO `address` VALUES (1,NULL,NULL,NULL,NULL,5,'4818 W VAN BUREN',NULL,'Chicago',1,'28262',1),(3,NULL,NULL,NULL,NULL,5,'1121 E Lemon st',NULL,'Chicago',1,'28262',1);
-INSERT INTO `transys`.`address` (`id`, `custID`, `line1`, `city`, `state`, `zip`, `delete_flag`) VALUES ('4', '6', '1890 Chesterfield Ct', 'Chicago', '1', '28262', '1');
+INSERT INTO `address` VALUES (1,NULL,NULL,NULL,NULL,5,'4818 W','VAN BUREN','Chicago',1,'28262',1),(3,NULL,NULL,NULL,NULL,5,'1121 E','Lemon st','Chicago',1,'28262',1);
+INSERT INTO `transys`.`address` (`id`, `custID`, `line1`, `line2`, `city`, `state`, `zip`, `delete_flag`) VALUES ('4', '6', '1890', 'Chesterfield Ct', 'Chicago', '1', '28262', '1');
 /*!40000 ALTER TABLE `address` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -451,6 +451,7 @@ CREATE TABLE `orderStatus` (
 LOCK TABLES `orderStatus` WRITE;
 /*!40000 ALTER TABLE `orderStatus` DISABLE KEYS */;
 INSERT INTO `transys`.`orderstatus` (`id`, `status`) VALUES ('1', 'Open');
+INSERT INTO `orderStatus` VALUES (2,'Dropped-off',NULL,NULL,NULL,NULL,1),(3,'Picked Up',NULL,NULL,NULL,NULL,1),(4,'Closed',NULL,NULL,NULL,NULL,1);
 /*!40000 ALTER TABLE `orderStatus` ENABLE KEYS */;
 UNLOCK TABLES;
 
