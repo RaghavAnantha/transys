@@ -465,7 +465,6 @@ DROP TABLE IF EXISTS `permit`;
 CREATE TABLE `permit` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `permitType` bigint(20) NOT NULL,
-  `class` bigint(20) DEFAULT NULL,
   `number` varchar(15) DEFAULT NULL,
   `fee` double DEFAULT '0',
   `startDate` datetime DEFAULT NULL,
@@ -505,7 +504,7 @@ CREATE TABLE `permit` (
 
 LOCK TABLES `permit` WRITE;
 /*!40000 ALTER TABLE `permit` DISABLE KEYS */;
-INSERT INTO `transys`.`permit` (`id`, `permitType`, `class`, `number`, `fee`, `startDate`, `endDate`, `permitAddress`, `locationType`, `status`, `created_at`, `delete_flag`, `customerID`, `deliveryAddress`) VALUES (1, '1', '1', '1301-11W', '50', curdate(), curdate()+3, '4818W VAN BUREN', '1', '1', curdate(), '1', '5', '1');
+INSERT INTO `permit` VALUES (1,1,'1301-11W',50,'2015-09-22 00:00:00','2015-09-25 00:00:00','4818W VAN BUREN',1,2,NULL,'2015-09-22 00:00:00',NULL,'2015-09-22 21:51:56',1,1,5,1,'Yes',0,NULL,1),(2,1,'5667890',90,'2015-09-22 00:00:00','2015-09-25 00:00:00',NULL,1,2,NULL,'2015-09-23 12:27:14',1,NULL,NULL,1,6,4,'Yes',90,NULL,1);
 -- INSERT INTO `permit` VALUES (1,1,1,'1234','50',curdate(),'1301-11W',1,2,'Test',NULL,NULL,NULL,NULL,1,5,1,NULL);
 -- ,(9,1,1,'6','0.0',curdate(),NULL,1,1,NULL,'2015-09-15 16:25:46',1,NULL,NULL,1,6,1,'yes')
 -- ,(10,2,2,'9','0.0',curdate(),NULL,2,1,NULL,'2015-09-15 16:28:40',1,NULL,NULL,1,6,1,'no')
