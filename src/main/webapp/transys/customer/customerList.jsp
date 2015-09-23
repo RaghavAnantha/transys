@@ -1,7 +1,7 @@
 <%@include file="/common/taglibs.jsp"%>
 <br />
 <h4 style="margin-top: -15px; !important">Customers List Report</h4>
-<form:form action="customerListReport.do" method="get" name="customersListReport">
+<form:form action="customerList.do" method="get" name="customersListReport">
 	<table width="100%" id="form-table">
 		<tr>
 			<td align="${left}" class="form-left"><transys:label
@@ -73,20 +73,20 @@
 				value="<transys:label code="Preview"/>" /></td>
 		</tr>
 	</table>
+<a href="/order/generateCustomerListReport.do?type=xls"><img src="/images/excel.png" border="0" style="float:right" class="toolbarButton"></a>
+<a href="/order/generateCustomerListReport.do?type=pdf"><img src="/images/pdf.png" border="0" style="float:right" class="toolbarButton"></a>
 </form:form>
 <form:form name="searchCustomersListReport" id="searchCustomersListReport" class="tab-color">
-	<transys:datatable urlContext="customer" deletable="true"
-		editable="true" insertable="true" baseObjects="${customerlist}"
+	<transys:datatable urlContext="customer" baseObjects="${customerlist}"
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
-		pagingLink="search.do" multipleDelete="false" searcheable="false"
-		exportPdf="true" exportXls="true">
+		pagingLink="search.do">
 		<transys:textcolumn headerText="Customer ID" dataField="id" />
 		<transys:textcolumn headerText="Company Name" dataField="companyName" />
 		<transys:textcolumn headerText="ContactName" dataField="contactName" />
-		<transys:textcolumn headerText="Phone Number" dataField="phone" />
-		<transys:textcolumn headerText="Status" dataField="createdAt" />
-		<transys:textcolumn headerText="Total Orders" dataField="status" />
-		<transys:textcolumn headerText="Total Amount" dataField="status" />
+		<transys:textcolumn headerText="Phone Number" dataField="phoneNumber" />
+		<transys:textcolumn headerText="Status" dataField="status" />
+		<transys:textcolumn headerText="Total Orders" dataField="totalOrders" />
+		<transys:textcolumn headerText="Total Amount" dataField="totalAmount" />
 	</transys:datatable>
 	<%session.setAttribute("columnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
 </form:form>

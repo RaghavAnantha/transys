@@ -1,5 +1,6 @@
 package com.transys.controller;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -7,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.ValidationException;
 
 import org.apache.commons.lang3.StringUtils;
@@ -17,16 +19,21 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.transys.controller.CRUDController;
 import com.transys.controller.editor.AbstractModelEditor;
+import com.transys.core.util.MimeUtil;
 import com.transys.model.AbstractBaseModel;
 import com.transys.model.Address;
 import com.transys.model.Customer;
+import com.transys.model.Order;
+import com.transys.model.OrderPaymentInfo;
 //import com.transys.model.FuelVendor;
 //import com.transys.model.Location;
 import com.transys.model.SearchCriteria;
 import com.transys.model.State;
+import com.transys.model.ViewCustomerReport;
 import com.transys.model.BaseModel;
 
 @Controller
@@ -105,18 +112,104 @@ public class CustomerController extends CRUDController<Customer> {
 		return urlContext + "/customer";
 	}
 	
-	@RequestMapping(method = RequestMethod.GET, value = "/customerListReport.do")
+	@RequestMapping(method = RequestMethod.GET, value = "/customerList.do")
 	public String customerListReport(ModelMap model, HttpServletRequest request) {
 		setupList(model, request);
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		//criteria.getSearchMap().put("id!",0l);
 		criteria.getSearchMap().remove("_csrf");
-		model.addAttribute("customerlist",genericDAO.search(getEntityClass(), criteria,"companyName",null,null));
+		List<Customer> customer =  genericDAO.search(getEntityClass(), criteria,"companyName",null,null);
+		List<ViewCustomerReport> CustomerListReport = new ArrayList<ViewCustomerReport>() ;
+		ViewCustomerReport custListReport =  new ViewCustomerReport();
+		for (Customer cust: customer) {
+		List<OrderPaymentInfo> orderPymntInfo = genericDAO.executeSimpleQuery("select obj from OrderPaymentInfo obj where obj.order.customer.id = "+ cust.getId());
+			Double sum=0.0;
+		for (OrderPaymentInfo orderPaymntInfo: orderPymntInfo) {
+				sum = sum + orderPaymntInfo.getTotalFees();		
+			}
+		custListReport.setCompanyName(cust.getCompanyName());
+		custListReport.setContactName(cust.getContactName());
+		custListReport.setPhoneNumber(cust.getPhone());
+		custListReport.setTotalAmount(sum);
+		custListReport.setTotalOrders(orderPymntInfo.size());
+		custListReport.setId(cust.getId());
+		custListReport.setStatus(cust.getStatus());
+		CustomerListReport.add(custListReport);
+		}
+		model.addAttribute("customerlist",CustomerListReport);
 		model.addAttribute("activeTab", "customerReports");
 		//model.addAttribute("activeSubTab", "billing");
 		model.addAttribute("mode", "MANAGE");
 		//return urlContext + "/list";
 		return urlContext + "/customer";
+	}
+	
+	@RequestMapping(method = RequestMethod.GET, value = "/generateCustomerListReport.do")
+	public void generateOrderReport(ModelMap model, HttpServletRequest request,
+			HttpServletResponse response, @RequestParam("type") String type,
+			Object objectDAO, Class clazz) {
+		
+		try {
+		if (StringUtils.isEmpty(type))
+			type = "xlsx";
+		if (!type.equals("html") && !(type.equals("print"))) {
+			response.setHeader("Content-Disposition",
+					"attachment;filename= ordersReport." + type);
+		}
+		response.setContentType(MimeUtil.getContentType(type));
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		Map<String, Object> params = new HashMap<String,Object>();
+		
+		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
+		List<Customer> list = genericDAO.search(getEntityClass(), criteria,"id",null,null);
+		List<Map<String, ?>> newList = new ArrayList<Map<String, ?>>();
+		for (Customer customer : list) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			/*map.put("id", order.getId());
+			map.put("company_name", order.getCustomer().getCompanyName());
+			map.put("createdAt", order.getCreatedAt().toString());
+			map.put("deliveryContactName", order.getDeliveryContactName());
+			map.put("phone", order.getCustomer().getPhone());
+			map.put("line1", order.getDeliveryAddress().getLine1());
+			map.put("city", order.getDeliveryAddress().getCity());
+			map.put("line1", order.getDeliveryAddress().getLine1());
+			map.put("status", order.getOrderStatus().getStatus());
+			map.put("deliveryDate", order.getDeliveryDate().toString());
+			map.put("pickupDate", order.getPickupDate().toString());
+			map.put("paymentMethod", order.getOrderPaymentInfo().getPaymentMethod());
+			map.put("dumpsterPrice", order.getOrderPaymentInfo().getDumpsterPrice().toString());
+			map.put("cityFee", order.getOrderPaymentInfo().getCityFee().toString());
+			map.put("permitFees", order.getOrderPaymentInfo().getPermitFees().toString());
+			map.put("overweightFee", order.getOrderPaymentInfo().getOverweightFee().toString());
+			if (order.getOrderPaymentInfo().getTotalFees() != null ){
+			map.put("totalFees", order.getOrderPaymentInfo().getTotalFees().toString());
+			}
+			
+			newList.add(map); */
+		}
+		
+		if (!type.equals("print") && !type.equals("pdf")) {
+			out = dynamicReportService.generateStaticReport("ordersReport",
+					newList, params, type, request);
+		}
+		else if(type.equals("pdf")){
+			out = dynamicReportService.generateStaticReport("ordersReportPdf",
+					newList, params, type, request);
+		}
+		else {
+			out = dynamicReportService.generateStaticReport("ordersReport"+"print",
+					newList, params, type, request);
+		}
+	
+		out.writeTo(response.getOutputStream());
+		out.close();
+		
+	} catch (Exception e) {
+		e.printStackTrace();
+		log.warn("Unable to create file :" + e);
+		request.getSession().setAttribute("errors", e.getMessage());
+		
+	}
 	}
 	
 	@Override
