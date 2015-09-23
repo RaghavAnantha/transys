@@ -107,7 +107,7 @@
 <a href="/order/generateOrderReport.do?type=xls"><img src="/images/excel.png" border="0" style="float:right" class="toolbarButton"></a>
 <a href="/order/generateOrderReport.do?type=pdf"><img src="/images/pdf.png" border="0" style="float:right" class="toolbarButton"></a>
 <form:form name="orderReportForm" id="orderReportForm" class="tab-color">
-	<transys:datatable urlContext="order"  baseObjects="${list}"
+	<transys:datatable urlContext="order"  baseObjects="${orderReportList}"
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
 		pagingLink="search.do" multipleDelete="false" searcheable="false">
 		<transys:textcolumn headerText="Order #" dataField="id" />
