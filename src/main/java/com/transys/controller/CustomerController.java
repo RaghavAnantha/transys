@@ -40,6 +40,7 @@ import com.transys.model.BaseModel;
 @RequestMapping("/customer")
 public class CustomerController extends CRUDController<Customer> {
 	
+	List<ViewCustomerReport> CustomerListReport;
 	public CustomerController(){
 		setUrlContext("customer");
 	}
@@ -119,7 +120,7 @@ public class CustomerController extends CRUDController<Customer> {
 		//criteria.getSearchMap().put("id!",0l);
 		criteria.getSearchMap().remove("_csrf");
 		List<Customer> customer =  genericDAO.search(getEntityClass(), criteria,"companyName",null,null);
-		List<ViewCustomerReport> CustomerListReport = new ArrayList<ViewCustomerReport>() ;
+		CustomerListReport = new ArrayList<ViewCustomerReport>() ;
 		for (Customer cust: customer) {
 		ViewCustomerReport custListReport =  new ViewCustomerReport();
 		List<OrderPaymentInfo> orderPymntInfo = genericDAO.executeSimpleQuery("select obj from OrderPaymentInfo obj where obj.order.customer.id = "+ cust.getId());
@@ -145,7 +146,7 @@ public class CustomerController extends CRUDController<Customer> {
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/generateCustomerListReport.do")
-	public void generateOrderReport(ModelMap model, HttpServletRequest request,
+	public void generateCustomerListReport(ModelMap model, HttpServletRequest request,
 			HttpServletResponse response, @RequestParam("type") String type,
 			Object objectDAO, Class clazz) {
 		
@@ -154,50 +155,37 @@ public class CustomerController extends CRUDController<Customer> {
 			type = "xlsx";
 		if (!type.equals("html") && !(type.equals("print"))) {
 			response.setHeader("Content-Disposition",
-					"attachment;filename= ordersReport." + type);
+					"attachment;filename= customersListReport." + type);
 		}
 		response.setContentType(MimeUtil.getContentType(type));
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		Map<String, Object> params = new HashMap<String,Object>();
 		
-		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
-		List<Customer> list = genericDAO.search(getEntityClass(), criteria,"id",null,null);
 		List<Map<String, ?>> newList = new ArrayList<Map<String, ?>>();
-		for (Customer customer : list) {
+		
+		for (ViewCustomerReport viewCustRep : CustomerListReport) {
 			Map<String, Object> map = new HashMap<String, Object>();
-			/*map.put("id", order.getId());
-			map.put("company_name", order.getCustomer().getCompanyName());
-			map.put("createdAt", order.getCreatedAt().toString());
-			map.put("deliveryContactName", order.getDeliveryContactName());
-			map.put("phone", order.getCustomer().getPhone());
-			map.put("line1", order.getDeliveryAddress().getLine1());
-			map.put("city", order.getDeliveryAddress().getCity());
-			map.put("line1", order.getDeliveryAddress().getLine1());
-			map.put("status", order.getOrderStatus().getStatus());
-			map.put("deliveryDate", order.getDeliveryDate().toString());
-			map.put("pickupDate", order.getPickupDate().toString());
-			map.put("paymentMethod", order.getOrderPaymentInfo().getPaymentMethod());
-			map.put("dumpsterPrice", order.getOrderPaymentInfo().getDumpsterPrice().toString());
-			map.put("cityFee", order.getOrderPaymentInfo().getCityFee().toString());
-			map.put("permitFees", order.getOrderPaymentInfo().getPermitFees().toString());
-			map.put("overweightFee", order.getOrderPaymentInfo().getOverweightFee().toString());
-			if (order.getOrderPaymentInfo().getTotalFees() != null ){
-			map.put("totalFees", order.getOrderPaymentInfo().getTotalFees().toString());
-			}
-			
-			newList.add(map); */
+			map.put("id", viewCustRep.getId().toString());
+			map.put("companyName", viewCustRep.getCompanyName());
+			map.put("contactName", viewCustRep.getContactName());
+			map.put("phoneNumber", viewCustRep.getPhoneNumber());
+			map.put("status", 	   viewCustRep.getStatus());
+			map.put("totalOrders", viewCustRep.getTotalOrders().toString());
+			map.put("totalAmount", viewCustRep.getTotalAmount().toString());
+			newList.add(map);
 		}
 		
+		
 		if (!type.equals("print") && !type.equals("pdf")) {
-			out = dynamicReportService.generateStaticReport("ordersReport",
+			out = dynamicReportService.generateStaticReport("customersListReport",
 					newList, params, type, request);
 		}
 		else if(type.equals("pdf")){
-			out = dynamicReportService.generateStaticReport("ordersReportPdf",
+			out = dynamicReportService.generateStaticReport("customersListReportPdf",
 					newList, params, type, request);
 		}
 		else {
-			out = dynamicReportService.generateStaticReport("ordersReport"+"print",
+			out = dynamicReportService.generateStaticReport("customersListReport"+"print",
 					newList, params, type, request);
 		}
 	

@@ -73,8 +73,8 @@
 				value="<transys:label code="Preview"/>" /></td>
 		</tr>
 	</table>
-<a href="/order/generateCustomerListReport.do?type=xls"><img src="/images/excel.png" border="0" style="float:right" class="toolbarButton"></a>
-<a href="/order/generateCustomerListReport.do?type=pdf"><img src="/images/pdf.png" border="0" style="float:right" class="toolbarButton"></a>
+<a href="/customer/generateCustomerListReport.do?type=xls"><img src="/images/excel.png" border="0" style="float:right" class="toolbarButton"></a>
+<a href="/customer/generateCustomerListReport.do?type=pdf"><img src="/images/pdf.png" border="0" style="float:right" class="toolbarButton"></a>
 </form:form>
 <form:form name="searchCustomersListReport" id="searchCustomersListReport" class="tab-color">
 	<transys:datatable urlContext="customer" baseObjects="${customerlist}"
