@@ -154,7 +154,7 @@ public class OrderController extends CRUDController<Order> {
 		//criteria.getSearchMap().put("id!",0l);
 		//TODO fix me
 		criteria.getSearchMap().remove("_csrf");
-		model.addAttribute("list",genericDAO.search(getEntityClass(), criteria,"id",null,null));
+		model.addAttribute("orderReportList",genericDAO.search(getEntityClass(), criteria,"id",null,null));
 		model.addAttribute("activeTab", "orderReports");
 		model.addAttribute("mode", "MANAGE");
 		return urlContext + "/order";
@@ -390,6 +390,7 @@ public class OrderController extends CRUDController<Order> {
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("id", order.getId());
 			map.put("company_name", order.getCustomer().getCompanyName());
+			map.put("createdAt", order.getCreatedAt().toString());
 			map.put("deliveryContactName", order.getDeliveryContactName());
 			map.put("phone", order.getCustomer().getPhone());
 			map.put("line1", order.getDeliveryAddress().getLine1());
