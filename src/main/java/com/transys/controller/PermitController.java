@@ -89,10 +89,19 @@ public class PermitController extends CRUDController<Permit> {
 		request.getSession().removeAttribute("searchCriteria");
 		setupList(model, request);
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
+		
+		// TODO: Search for permits corresponding to open orders and status=expired or expiring in the next 7 days
+		Map<String, Object> searchMap = criteria.getSearchMap();
+		
+		// open orders --> include DroppedOff?
+		searchMap.put("order.status", "Open");
+		
+		// permit EndDate <= Today + 7 days
+		
 		List<OrderPermits> orderPermits = genericDAO.search(OrderPermits.class, criteria, "id", null, null);
 		model.addAttribute("orderPermitList", orderPermits);
 		
-		model.addAttribute("orderStatuses", genericDAO.search(OrderStatus.class, criteria, "status", null, null));
+//		model.addAttribute("orderStatuses", genericDAO.search(OrderStatus.class, criteria, "status", null, null));
 		
 		model.addAttribute("activeTab", "orderPermitAlert");
 		return urlContext + "/permit";
