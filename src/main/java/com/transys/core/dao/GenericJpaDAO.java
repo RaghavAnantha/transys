@@ -646,17 +646,24 @@ public class GenericJpaDAO implements GenericDAO {
 										+ ") IN (" + valBuilder.toString()
 										+ ")");
 							}
-						} /*else if (criterias.get(param.toString()).toString()
+						} else if (criterias.get(param.toString()).toString()
 								.startsWith("<=")) {
 							
-							searchString.append(" p."
-									+ criteriaKey
-									+ " <= '"
-									+ criterias.get(param.toString())
-											.toString().trim().substring(2)
-									+ "'");
+							try {
+								searchString.append(" p."
+										+ param
+										+ " <= '"
+										+ new Timestamp(
+												((Date) BaseController.dateFormat.parse(criterias.get(param.toString())
+														.toString().trim().substring(2)))
+												.getTime())
+										+ "'");
+							} catch (ParseException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
 							
-						} */else if (criterias.get(param.toString()).toString()
+						} else if (criterias.get(param.toString()).toString()
 								.startsWith("!=")
 								|| criterias.get(param.toString()).toString()
 										.startsWith("<>")) {
@@ -719,17 +726,24 @@ public class GenericJpaDAO implements GenericDAO {
 							searchString.append(" and UPPER(p." + param
 									+ ") IN (" + valBuilder.toString() + ")");
 						}
-					} /*else if (criterias.get(param.toString()).toString()
+					} else if (criterias.get(param.toString()).toString()
 							.startsWith("<=")) {
 						
-						searchString.append(" p."
-								+ param
-								+ " <= '"
-								+ criterias.get(param.toString())
-										.toString().trim().substring(2)
-								+ "'");
+						try {
+							searchString.append(" and p."
+									+ param
+									+ " <= '"
+									+ new Timestamp(
+											((Date) BaseController.dateFormat.parse(criterias.get(param.toString())
+													.toString().trim().substring(2)))
+											.getTime())
+									+ "'");
+						} catch (ParseException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 						
-					}*/ else if (criterias.get(param.toString()).toString()
+					} else if (criterias.get(param.toString()).toString()
 							.startsWith("!=")
 							|| criterias.get(param.toString()).toString()
 									.startsWith("<>")) {

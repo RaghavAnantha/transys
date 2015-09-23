@@ -90,18 +90,9 @@ public class PermitController extends CRUDController<Permit> {
 		setupList(model, request);
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		
-		// TODO: Search for permits corresponding to open orders and status=expired or expiring in the next 7 days
-		Map<String, Object> searchMap = criteria.getSearchMap();
-		
-		// open orders --> include DroppedOff?
-		searchMap.put("order.status", "Open");
-		
-		// permit EndDate <= Today + 7 days
-		
-		List<OrderPermits> orderPermits = genericDAO.search(OrderPermits.class, criteria, "id", null, null);
+		// Search for permits corresponding to open orders and status=expired or expiring in the next 7 days
+		List<OrderPermits> orderPermits = getToBeAlertedPermits(criteria);
 		model.addAttribute("orderPermitList", orderPermits);
-		
-//		model.addAttribute("orderStatuses", genericDAO.search(OrderStatus.class, criteria, "status", null, null));
 		
 		model.addAttribute("activeTab", "orderPermitAlert");
 		return urlContext + "/permit";
@@ -110,6 +101,63 @@ public class PermitController extends CRUDController<Permit> {
 	@RequestMapping(method = RequestMethod.GET, value = "/notes.do")
 	public String displayNotes(ModelMap model, HttpServletRequest request) {
 		return urlContext + "/permit";
+	}
+	
+	/**
+	 * Return the list of permits associated with open orders, expired or expiring in the next 7 days
+	 * 
+	 * @param searchCriteria
+	 * @return
+	 */
+	private List<OrderPermits> getToBeAlertedPermits(SearchCriteria searchCriteria) {
+			// TODO: open orders --> include DroppedOff?
+			Object existingSearchValue = setupOrderPermitSearchCriteria(searchCriteria);
+			
+			List<OrderPermits> orderPermits = genericDAO.search(OrderPermits.class, searchCriteria, "id", null, null);
+			System.out.println("Order Permits Size = " + orderPermits.size());
+
+			cleanOrderPermitSearchCriteria(searchCriteria, existingSearchValue);
+	
+			return orderPermits;
+			
+	}
+
+	private Object setupOrderPermitSearchCriteria(SearchCriteria searchCriteria) {
+		
+		Object existingSearchValue = null;
+		Map searchMap = searchCriteria.getSearchMap();
+		
+		if (searchMap.containsKey("order.orderStatus.status")) {
+			existingSearchValue = searchMap.get("order.orderStatus.status");
+			// append these to it, store the existing search to be reset after the search
+			
+		} else {
+			searchMap.put("order.orderStatus.status", "Open");
+		}
+		
+		// permit EndDate <= Today + 7 days
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(new Date());
+		cal.add(Calendar.DATE, 7);
+		searchMap.put("permit.endDate", "<=" + BaseController.dateFormat.format(cal.getTime()));
+		
+		searchCriteria.setSearchMap(searchMap);
+		return existingSearchValue;
+	}
+
+	private void cleanOrderPermitSearchCriteria(SearchCriteria searchCriteria, Object existingSearchValue) {
+		Map searchMap = searchCriteria.getSearchMap();
+		if (existingSearchValue == null) {
+			// remove the key
+			searchMap.remove("existingSearchValue");
+		} else {
+			// reset the value
+			searchMap.put("order.orderStatus.status", existingSearchValue);
+		}
+		
+		// TODO: Filter on endDate already available in SearchCriteria
+		searchMap.remove("permit.endDate");
+		searchCriteria.setSearchMap(searchMap);
 	}
 	
 	/*
@@ -268,8 +316,11 @@ public class PermitController extends CRUDController<Permit> {
 		model.addAttribute("permitType", genericDAO.findByCriteria(PermitType.class, criterias, "permitType", false));
 		model.addAttribute("permitStatus", genericDAO.findByCriteria(PermitStatus.class, criterias, "status", false));
 		model.addAttribute("permit", genericDAO.findByCriteria(Permit.class, criterias, "id", false));
-		model.addAttribute("orderPermitList", genericDAO.findByCriteria(OrderPermits.class, criterias, "id", false));
 		model.addAttribute("orderStatuses", genericDAO.findByCriteria(OrderStatus.class, criterias, "status", false));
+
+		List<OrderPermits> orderPermits = getToBeAlertedPermits(new SearchCriteria());
+		model.addAttribute("orderPermitList", orderPermits);
+
 	}
 	
 	@Override
