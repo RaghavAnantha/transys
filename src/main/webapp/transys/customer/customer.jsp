@@ -28,7 +28,7 @@
 
 			<div class="tab-content tab-color">
 				<div id="customerList" class="tab-pane">
-					<p>Placeholder for Customer List</p>
+					<%@include file="customerList.jsp"%>
 				</div>
 				<div id="customerOrderReports" class="tab-pane">
 					<p>Placeholder for Customer Order Reports</p>

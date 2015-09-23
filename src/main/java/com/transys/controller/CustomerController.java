@@ -105,6 +105,20 @@ public class CustomerController extends CRUDController<Customer> {
 		return urlContext + "/customer";
 	}
 	
+	@RequestMapping(method = RequestMethod.GET, value = "/customerListReport.do")
+	public String customerListReport(ModelMap model, HttpServletRequest request) {
+		setupList(model, request);
+		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
+		//criteria.getSearchMap().put("id!",0l);
+		criteria.getSearchMap().remove("_csrf");
+		model.addAttribute("customerlist",genericDAO.search(getEntityClass(), criteria,"companyName",null,null));
+		model.addAttribute("activeTab", "customerReports");
+		//model.addAttribute("activeSubTab", "billing");
+		model.addAttribute("mode", "MANAGE");
+		//return urlContext + "/list";
+		return urlContext + "/customer";
+	}
+	
 	@Override
 	public String edit2(ModelMap model, HttpServletRequest request) {
 		setupUpdate(model, request);
