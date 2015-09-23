@@ -558,8 +558,8 @@ public class DynamicReportServiceImpl implements DynamicReportService {
 			JasperPrint jp = null;
 			if (datas != null) {
 				//JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(datas);
-				//JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(datas, false);
-				JRMapCollectionDataSource dataSource =new JRMapCollectionDataSource(datas);
+				JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(datas, false);
+				//JRMapCollectionDataSource dataSource =new JRMapCollectionDataSource(datas);
 				jp = JasperFillManager.fillReport(jasperReport, params,
 						dataSource);
 			} else

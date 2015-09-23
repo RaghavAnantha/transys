@@ -52,7 +52,7 @@ function populateDeliveryAddress() {
     	   	    }).appendTo(deliveryAddressSelect);
     	   	});
 		}
-	}); 
+	});
 }
 
 function populateCustomerAddress() {
@@ -76,7 +76,57 @@ function populateCustomerAddress() {
 			var p3 = phone.substring(6,10);				
 			$('#phone').html(p1 + "-" + p2 + "-" + p3);
     		
-    		//$('#email').html(customer.email);
+    		$('#email').html(customer.email);
+		}
+	}); 
+}
+
+function populatePermitNumbers(index) {
+	var permitClassSelect = $("#permitClasses" + index);
+	var permitClassId = permitClassSelect.val();
+	
+	var permitTypeSelect = $("#permitTypes" + index);
+	var permitTypeId = permitTypeSelect.val();
+	
+	var permitNumbersSelect = $("#permits\\[" + (index-1) + "\\]\\.id");
+	permitNumbersSelect.empty();
+	
+	var firstOption = $('<option value="">'+ "-------Please Select------" +'</option>');
+	permitNumbersSelect.append(firstOption);
+	
+	$.ajax({
+  		url: "retrievePermit.do?" + "permitClassId=" + permitClassId + "\&permitTypeId=" + permitTypeId,
+       	type: "GET",
+       	success: function(responseData, textStatus, jqXHR) {
+       		var permitList = jQuery.parseJSON(responseData);
+    	   	$.each(permitList, function () {
+    	   	    $("<option />", {
+    	   	        val: this.id,
+    	   	        text: this.number
+    	   	    }).appendTo(permitNumbersSelect);
+    	   	});
+		}
+	}); 
+}
+
+function populatePermitDateAndFee(index) {
+	var permitNumbersSelect = $("#permits\\[" + (index-1) + "\\]\\.id");
+	var permitId = permitNumbersSelect.val();
+	
+	var permitValidFrom = $("#permitValidFrom" + index);
+	var permitValidTo = $("#permitValidTo" + index);
+	var permitFee = $("#permitFee" + index);
+	
+	$.ajax({
+  		url: "retrievePermit.do?" + "permitId=" + permitId,
+       	type: "GET",
+       	success: function(responseData, textStatus, jqXHR) {
+       		var permitList = jQuery.parseJSON(responseData);
+    	   	var permit = permitList[0];
+    	   	
+    	   	permitValidFrom.html(permit.startDate);
+    	   	permitValidTo.html(permit.endDate);
+    	   	permitFee.html(permit.fee);
 		}
 	}); 
 }
@@ -149,12 +199,12 @@ function populateCustomerAddress() {
 			<td class="form-left"><transys:label code="Phone1"/><span class="errorMessage">*</span></td>
 			<td align="${left}">
 				<form:input path="deliveryContactPhone1" cssClass="flat" maxlength="12" 
-					id="phone" onkeypress="return onlyNumbers(event, false)" onblur="return formatPhone();"/>
+					id="deliveryContactPhone1" onkeypress="return onlyNumbers(event, false)" onblur="return formatPhone();"/>
 				<br><form:errors path="deliveryContactPhone1" cssClass="errorMessage" />
 			</td>
 			<td class="form-left"><transys:label code="Phone2"/></td>
 			<td align="${left}">
-				<form:input path="deliveryContactPhone2" cssClass="flat" />
+				<form:input path="deliveryContactPhone2" id="deliveryContactPhone2" cssClass="flat" />
 				<br><form:errors path="deliveryContactPhone2" cssClass="errorMessage" />
 			</td>
 		</tr>
@@ -229,58 +279,118 @@ function populateCustomerAddress() {
 		<tr>
 			<td colspan="10"></td>
 		</tr>
-		<c:forEach var="aPermit" varStatus="status" items="${permits}">
-			<c:set var="permitDisplayIndex" value="${status.index + 1}" />
-			<tr>
-		    	<td class="form-left"><transys:label code="Permit${permitDisplayIndex} Class"/><span class="errorMessage">*</span></td>
-		        <td align="${left}">
-		        	<!--<form:input path="permits[${status.index}].id" cssClass="flat"/>-->
-			        <select class="flat form-control input-sm" id="permitClasses" name="permitClasses" style="width:172px !important">
-						<option value="">------<transys:label code="Please Select" />------</option>
-						<c:forEach items="${permitClasses}" var="aPermitClass">
-							<option value="${aPermitClass.id}">${aPermitClass.permitClass}</option>
-						</c:forEach>
-					</select>
-			 	</td>
-		    </tr>
-		    <tr>
-		    	<td class="form-left"><transys:label code="Permit${permitDisplayIndex} Type"/><span class="errorMessage">*</span></td>
-		        <td align="${left}">
-		        	<!--<form:input path="permits[${status.index}].permitType.permitType" cssClass="flat"/>-->
-		        	<select class="flat form-control input-sm" id="permitTypes" name="permitTypes" style="width:172px !important">
-						<option value="">------<transys:label code="Please Select" />------</option>
-						<c:forEach items="${permitTypes}" var="aPermitType">
-							<option value="${aPermitType.id}">${aPermitType.permitType}</option>
-						</c:forEach>
-					</select>
-		        </td>
-		    </tr>
-		    <tr>
-		    	<td class="form-left"><transys:label code="Permit${permitDisplayIndex} Number"/><span class="errorMessage">*</span></td>
-		        <td align="${left}">
-		        	<!--<form:input path="permits[${status.index}].number" cssClass="flat"/>-->
-		        	<select class="flat form-control input-sm" id="permits[${status.index}].id" name="permits[${status.index}].id" style="width:172px !important">
-						<option value="">------<transys:label code="Please Select" />------</option>
-						<c:forEach items="${permits}" var="aInnerPermit">
-							<option value="${aInnerPermit.id}">${aInnerPermit.number}</option>
-						</c:forEach>
-					</select>
-		        </td>
-			</tr>
-		    <tr>
-		    	<td class="form-left"><transys:label code="Permit${permitDisplayIndex} Valid From"/><span class="errorMessage">*</span></td>
-		        <td align="${left}">${aPermit.startDate}</td>
-		    </tr>
-		    <tr>
-		    	<td class="form-left"><transys:label code="Permit${permitDisplayIndex} Valid To"/><span class="errorMessage">*</span></td>
-		        <td align="${left}">${aPermit.endDate}</td>
-		    </tr>
-		    <tr>
-		    	<td class="form-left"><transys:label code="Permit${permitDisplayIndex} Fee"/><span class="errorMessage">*</span></td>
-		        <td align="${left}">${aPermit.fee}</td>
-		    </tr>
-		</c:forEach>
 		<tr>
+	    	<td class="form-left"><transys:label code="Permit1 Class"/><span class="errorMessage">*</span></td>
+	        <td align="${left}">
+	        	<select class="flat form-control input-sm" id="permitClasses1" name="permitClasses1" style="width:172px !important">
+					<option value="">------<transys:label code="Please Select" />------</option>
+					<c:forEach items="${permitClasses}" var="aPermitClass">
+						<option value="${aPermitClass.id}">${aPermitClass.permitClass}</option>
+					</c:forEach>
+				</select>
+		 	</td>
+		 	<td class="form-left"><transys:label code="Permit2 Class"/></span></td>
+	        <td align="${left}">
+	        	<select class="flat form-control input-sm" id="permitClasses2" name="permitClasses2" style="width:172px !important">
+					<option value="">------<transys:label code="Please Select" />------</option>
+					<c:forEach items="${permitClasses}" var="aPermitClass">
+						<option value="${aPermitClass.id}">${aPermitClass.permitClass}</option>
+					</c:forEach>
+				</select>
+		 	</td>
+		 	<td class="form-left"><transys:label code="Permit3 Class"/></span></td>
+	        <td align="${left}">
+	        	<select class="flat form-control input-sm" id="permitClasses3" name="permitClasses3" style="width:172px !important">
+					<option value="">------<transys:label code="Please Select" />------</option>
+					<c:forEach items="${permitClasses}" var="aPermitClass">
+						<option value="${aPermitClass.id}">${aPermitClass.permitClass}</option>
+					</c:forEach>
+				</select>
+		 	</td>
+	    </tr>
+	    <tr>
+	    	<td class="form-left"><transys:label code="Permit1 Type"/><span class="errorMessage">*</span></td>
+	        <td align="${left}">
+	        	<select class="flat form-control input-sm" id="permitTypes1" name="permitTypes1" style="width:172px !important" onChange="return populatePermitNumbers(1);">
+					<option value="">------<transys:label code="Please Select" />------</option>
+					<c:forEach items="${permitTypes}" var="aPermitType">
+						<option value="${aPermitType.id}">${aPermitType.permitType}</option>
+					</c:forEach>
+				</select>
+	        </td>
+	        <td class="form-left"><transys:label code="Permit2 Type"/><span class="errorMessage">*</span></td>
+	        <td align="${left}">
+	        	<select class="flat form-control input-sm" id="permitTypes2" name="permitTypes2" style="width:172px !important" onChange="return populatePermitNumbers(2);">
+					<option value="">------<transys:label code="Please Select" />------</option>
+					<c:forEach items="${permitTypes}" var="aPermitType">
+						<option value="${aPermitType.id}">${aPermitType.permitType}</option>
+					</c:forEach>
+				</select>
+	        </td>
+	        <td class="form-left"><transys:label code="Permit3 Type"/><span class="errorMessage">*</span></td>
+	        <td align="${left}">
+	        	<select class="flat form-control input-sm" id="permitTypes3" name="permitTypes3" style="width:172px !important" onChange="return populatePermitNumbers(3);">
+					<option value="">------<transys:label code="Please Select" />------</option>
+					<c:forEach items="${permitTypes}" var="aPermitType">
+						<option value="${aPermitType.id}">${aPermitType.permitType}</option>
+					</c:forEach>
+				</select>
+	        </td>
+	    </tr>
+	    <tr>
+	    	<td class="form-left"><transys:label code="Permit1 Number"/><span class="errorMessage">*</span></td>
+	        <td align="${left}">
+	        	<select class="flat form-control input-sm" id="permits[0].id" name="permits[0].id" style="width:172px !important" onChange="return populatePermitDateAndFee(1);">
+					<option value="">------<transys:label code="Please Select" />------</option>
+					<c:forEach items="${permits}" var="aPermit">
+						<option value="${aPermit.id}">${aPermit.number}</option>
+					</c:forEach>
+				</select>
+	        </td>
+	        <td class="form-left"><transys:label code="Permit2 Number"/><span class="errorMessage">*</span></td>
+	        <td align="${left}">
+	        	<select class="flat form-control input-sm" id="permits[1].id" name="permits[1].id" style="width:172px !important" onChange="return populatePermitDateAndFee(2);">
+					<option value="">------<transys:label code="Please Select" />------</option>
+					<c:forEach items="${permits}" var="aPermit">
+						<option value="${aPermit.id}">${aPermit.number}</option>
+					</c:forEach>
+				</select>
+	        </td>
+	        <td class="form-left"><transys:label code="Permit3 Number"/><span class="errorMessage">*</span></td>
+	        <td align="${left}">
+	        	<select class="flat form-control input-sm" id="permits[2].id" name="permits[2].id" style="width:172px !important" onChange="return populatePermitDateAndFee(3);">
+					<option value="">------<transys:label code="Please Select" />------</option>
+					<c:forEach items="${permits}" var="aPermit">
+						<option value="${aPermit.id}">${aPermit.number}</option>
+					</c:forEach>
+				</select>
+	        </td>
+		</tr>
+	    <tr>
+	    	<td class="form-left"><transys:label code="Permit1 Valid From"/><span class="errorMessage">*</span></td>
+	        <td align="${left}" id="permitValidFrom1"></td>
+	        <td class="form-left"><transys:label code="Permit2 Valid From"/><span class="errorMessage">*</span></td>
+	        <td align="${left}" id="permitValidFrom2"></td>
+	        <td class="form-left"><transys:label code="Permit3 Valid From"/><span class="errorMessage">*</span></td>
+	        <td align="${left}" id="permitValidFrom3"></td>
+	    </tr>
+	    <tr>
+	    	<td class="form-left"><transys:label code="Permit1 Valid To"/><span class="errorMessage">*</span></td>
+	        <td align="${left}" id="permitValidTo1"></td>
+	        <td class="form-left" ><transys:label code="Permit2 Valid To"/><span class="errorMessage">*</span></td>
+	        <td align="${left}" id="permitValidTo2"></td>
+	        <td class="form-left"><transys:label code="Permit3 Valid To"/><span class="errorMessage">*</span></td>
+	        <td align="${left}" id="permitValidTo3"></td>
+	    </tr>
+	    <tr>
+	    	<td class="form-left"><transys:label code="Permit1 Fee"/><span class="errorMessage">*</span></td>
+	        <td align="${left}" id="permitFee1"></td>
+	        <td class="form-left"><transys:label code="Permit2 Fee"/><span class="errorMessage">*</span></td>
+	        <td align="${left}" id="permitFee2"></td>
+	        <td class="form-left"><transys:label code="Permit3 Fee"/><span class="errorMessage">*</span></td>
+	        <td align="${left}" id="permitFee3"></td>
+	    </tr>
+	    <tr>
 			<td colspan=10></td>
 		</tr>
 		<tr>

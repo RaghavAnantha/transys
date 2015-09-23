@@ -117,12 +117,14 @@ public class OrderController extends CRUDController<Order> {
 	
 	private void populateDeliveryTimeSettings(ModelMap model) {
 		List<String> deliveryHours = new ArrayList<String>();
+		deliveryHours.add("--");
       deliveryHours.add("12:00 AM");
       deliveryHours.add("1:00 AM");
       
       model.addAttribute("deliveryHours", deliveryHours);
       
       List<String> deliveryMinutes = new ArrayList<String>();
+      deliveryMinutes.add("--");
       deliveryMinutes.add("00");
       deliveryMinutes.add("15");
       
@@ -365,7 +367,7 @@ public class OrderController extends CRUDController<Order> {
 	}
 	
 	
-	@RequestMapping(method = { RequestMethod.GET, RequestMethod.POST }, value = "/genorderreport.do")
+	@RequestMapping(method = { RequestMethod.GET, RequestMethod.POST }, value = "/generateOrderReport.do")
 	public void generateOrderReport(ModelMap model, HttpServletRequest request,
 			HttpServletResponse response, @RequestParam("type") String type,
 			Object objectDAO, Class clazz) {
@@ -432,6 +434,23 @@ public class OrderController extends CRUDController<Order> {
 	}
 	}
 	
+	@RequestMapping(method = RequestMethod.GET, value = "/retrievePermit.do")
+	public @ResponseBody String retrievePermit(ModelMap model, HttpServletRequest request,
+														    @RequestParam(value = "permitId", required = false) String permitId,
+															 @RequestParam(value = "permitClassId", required = false) String permitClassId,
+															 @RequestParam(value = "permitTypeId", required = false) String permitTypeId) {
+		String query = "select obj from Permit obj where ";
+		if (StringUtils.isNotEmpty(permitId)) {
+			query += "obj.id=" + permitId;
+		} else {
+			query += "obj.permitType.id=" + permitTypeId
+					 + " and obj.permitClass.id=" + permitClassId;
+		}
+		
+		List<Permit> permitList  = genericDAO.executeSimpleQuery(query);
+		String json = (new Gson()).toJson(permitList);
+		return json;
+	}
 	
 	@Override
 	public String edit2(ModelMap model, HttpServletRequest request) {
@@ -517,9 +536,19 @@ public class OrderController extends CRUDController<Order> {
 			return urlContext + "/order";
 		}
 		beforeSave(request, entity, model);
+		
+		StringBuffer permitIdsBuff = new StringBuffer();
+		for (Permit aPermit : entity.getPermits()) {
+			if (aPermit.getId() != null) {
+				permitIdsBuff.append(aPermit.getId().toString() + ", ");
+			}
+		}
+		
+		String permitIds = permitIdsBuff.substring(0, (permitIdsBuff.length() - 2));
 		List<Permit> permitList = genericDAO.executeSimpleQuery("select obj from Permit obj where obj.id in (" 
-																					+ entity.getPermits().get(0).getId()
+																					+ permitIds
 																					+ ")");
+		
 		entity.setPermits(permitList);
 		
 		String initOrderStatus = "Open";
