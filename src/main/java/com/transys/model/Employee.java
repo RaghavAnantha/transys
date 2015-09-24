@@ -1,7 +1,11 @@
 package com.transys.model;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -14,8 +18,9 @@ public class Employee extends AbstractBaseModel {
 	@Column(name="lname")
 	private String lastName;
 	
-	@Column(name="jobTitle")
-	private String jobTitle; //enum?
+	@ManyToOne
+	@JoinColumn(name="jobTitle")
+	private JobTitle jobTitle; 
 	
 	@Column(name="address")
 	private String address;
@@ -23,8 +28,9 @@ public class Employee extends AbstractBaseModel {
 	@Column(name="city")
 	private String city;
 	
-	@Column(name="state")
-	private String state; // linked to state? -> not necessary as employee can be from any state
+	@ManyToOne
+	@JoinColumn(name="state")
+	private State state; // TODO: linked to state? -> not necessary as employee can be from any state
 	
 	@Column(name="zip")
 	private String zipcode;
@@ -36,10 +42,10 @@ public class Employee extends AbstractBaseModel {
 	private String email;
 	
 	@Column(name="hireDate")
-	private String hireDate;
+	private Date hireDate;
 	
 	@Column(name="leaveDate")
-	private String leaveDate;
+	private Date leaveDate;
 	
 	@Column(name="comments")
 	private String comments;
@@ -49,6 +55,13 @@ public class Employee extends AbstractBaseModel {
 	
 	@Column(name="password")
 	private String password; // TODO: to encrypt
+	
+	@ManyToOne
+	@JoinColumn(name="status")
+	private EmployeeStatus status;
+	
+	@Column(name="employeeID")
+	private String employeeID;
 
 	public String getFirstName() {
 		return firstName;
@@ -66,12 +79,8 @@ public class Employee extends AbstractBaseModel {
 		this.lastName = lastName;
 	}
 
-	public String getJobTitle() {
+	public JobTitle getJobTitle() {
 		return jobTitle;
-	}
-
-	public void setJobTitle(String jobTitle) {
-		this.jobTitle = jobTitle;
 	}
 
 	public String getAddress() {
@@ -90,11 +99,11 @@ public class Employee extends AbstractBaseModel {
 		this.city = city;
 	}
 
-	public String getState() {
+	public State getState() {
 		return state;
 	}
 
-	public void setState(String state) {
+	public void setState(State state) {
 		this.state = state;
 	}
 
@@ -122,19 +131,19 @@ public class Employee extends AbstractBaseModel {
 		this.email = email;
 	}
 
-	public String getHireDate() {
+	public Date getHireDate() {
 		return hireDate;
 	}
 
-	public void setHireDate(String hireDate) {
+	public void setHireDate(Date hireDate) {
 		this.hireDate = hireDate;
 	}
 
-	public String getLeaveDate() {
+	public Date getLeaveDate() {
 		return leaveDate;
 	}
 
-	public void setLeaveDate(String leaveDate) {
+	public void setLeaveDate(Date leaveDate) {
 		this.leaveDate = leaveDate;
 	}
 
@@ -163,4 +172,24 @@ public class Employee extends AbstractBaseModel {
 		this.password = password;
 	}
 
+	public void setJobTitle(JobTitle jobTitle) {
+		this.jobTitle = jobTitle;
+	}
+
+	public EmployeeStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(EmployeeStatus status) {
+		this.status = status;
+	}
+
+	public String getEmployeeID() {
+		return employeeID;
+	}
+
+	public void setEmployeeID(String employeeID) {
+		this.employeeID = employeeID;
+	}
+	
 }
