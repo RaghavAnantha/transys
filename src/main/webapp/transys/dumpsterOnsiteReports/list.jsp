@@ -21,13 +21,12 @@
 						<option value="${size.dumpsterSize}" ${selected}>${size.dumpsterSize}</option>
 					</c:forEach>
 			</select></td>
-		</tr>
-		<tr>
+			
 			<td align="${left}" class="form-left"><transys:label
 					code="status" /></td>
 			<td align="${left}" class="wide"><select
 				class="flat form-control input-sm" id="status" name="status"
-				style="width: 175px !important">
+				style="width: 168px !important">
 					<option value="">------
 						<transys:label code="Please Select" />------
 					</option>
