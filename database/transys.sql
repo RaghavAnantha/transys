@@ -913,6 +913,37 @@ INSERT INTO `materialtype` VALUES (1,'Concrete',NULL,NULL,NULL,NULL,1),(2,'Dirt'
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
+--
+-- Table structure for table `paymentMethod`
+--
+
+DROP TABLE IF EXISTS `paymentMethod`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `paymentMethod` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `method` varchar(20) NOT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `created_by` bigint(20) DEFAULT NULL,
+  `modified_at` datetime DEFAULT NULL,
+  `modified_by` bigint(20) DEFAULT NULL,
+  `delete_flag` int(11) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `paymentMethod`
+--
+
+LOCK TABLES `paymentMethod` WRITE;
+/*!40000 ALTER TABLE `paymentMethod` DISABLE KEYS */;
+INSERT INTO `paymentMethod` VALUES (1,'Company Check',NULL,NULL,'2015-09-24 22:51:23',1,1),(2,'Cash',NULL,NULL,NULL,NULL,1),(3,'Credit Card',NULL,NULL,NULL,NULL,1),(4,'Charge',NULL,NULL,NULL,NULL,1),(5,'Money Order',NULL,NULL,NULL,NULL,1);
+/*!40000 ALTER TABLE `paymentMethod` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
 /*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
