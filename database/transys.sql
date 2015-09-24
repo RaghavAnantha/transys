@@ -189,10 +189,10 @@ CREATE TABLE `employee` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `fname` varchar(50) DEFAULT NULL,
   `lname` varchar(50) DEFAULT NULL,
-  `jobTitle` varchar(100) DEFAULT NULL,
+  `jobTitle` bigint(20) DEFAULT NULL,
   `address` tinytext,
   `city` varchar(50) DEFAULT NULL,
-  `state` varchar(50) DEFAULT NULL,
+  `state` bigint(20) DEFAULT NULL,
   `zip` varchar(12) DEFAULT NULL,
   `phone` varchar(20) DEFAULT NULL,
   `email` varchar(150) DEFAULT NULL,
@@ -206,8 +206,17 @@ CREATE TABLE `employee` (
   `modified_at` datetime DEFAULT NULL,
   `modified_by` bigint(20) DEFAULT NULL,
   `delete_flag` int(11) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `status` bigint(20) DEFAULT NULL,
+  `employeeID` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `employeeID_UNIQUE` (`employeeID`),
+  KEY `jobTitleRef_idx` (`jobTitle`),
+  KEY `stateRef_idx` (`state`),
+  KEY `employeeStatusRef_idx` (`status`),
+  CONSTRAINT `employeeStateRef` FOREIGN KEY (`state`) REFERENCES `state` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `employeeStatusRef` FOREIGN KEY (`status`) REFERENCES `employeeStatus` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `jobTitleRef` FOREIGN KEY (`jobTitle`) REFERENCES `jobTitle` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -216,9 +225,68 @@ CREATE TABLE `employee` (
 
 LOCK TABLES `employee` WRITE;
 /*!40000 ALTER TABLE `employee` DISABLE KEYS */;
-INSERT INTO `transys`.`employee` (`id`, `fname`, `lname`, `address`, `city`, `state`, `zip`) VALUES ('1', 'Raghav', 'Anantha', '123', 'Chicago', '1', '28262');
+INSERT INTO `employee` VALUES (1,'Raghav','Anantha',1,'123','Chicago',1,'28262','','','2015-09-02 00:00:00','2015-09-30 00:00:00',NULL,NULL,NULL,NULL,NULL,'2015-09-24 14:39:45',1,1,1,'007'),(2,'Kasia','Figura',5,'5521 Milwaukee','Chicago',1,'60630','773-987-2221','kasiaFigura@gmail.com','2015-09-01 00:00:00','2015-09-29 00:00:00',NULL,NULL,NULL,'2015-09-24 12:21:31',1,NULL,NULL,1,NULL,'123'),(4,'Scott','Eaker',2,'','',1,'','','kasiaFigura@gmail.com','2015-09-01 00:00:00','2015-09-14 00:00:00',NULL,NULL,NULL,'2015-09-24 12:28:04',1,NULL,NULL,1,NULL,'234'),(5,'Aldo','Valazquez',7,'','',1,'','','','2015-09-01 00:00:00','2015-09-29 00:00:00',NULL,NULL,NULL,'2015-09-24 12:40:41',1,NULL,NULL,1,1,'345');
 /*!40000 ALTER TABLE `employee` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `employeeStatus`
+--
+
+DROP TABLE IF EXISTS `employeeStatus`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `employeeStatus` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `status` varchar(20) NOT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `created_by` bigint(20) DEFAULT NULL,
+  `modified_at` datetime DEFAULT NULL,
+  `modified_by` bigint(20) DEFAULT NULL,
+  `delete_flag` int(11) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `employeeStatus`
+--
+
+LOCK TABLES `employeeStatus` WRITE;
+/*!40000 ALTER TABLE `employeeStatus` DISABLE KEYS */;
+INSERT INTO `employeeStatus` VALUES (1,'Active',NULL,NULL,NULL,NULL,1),(2,'Inactive',NULL,NULL,NULL,NULL,1);
+/*!40000 ALTER TABLE `employeeStatus` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `jobTitle`
+--
+
+DROP TABLE IF EXISTS `jobTitle`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `jobTitle` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `created_at` datetime DEFAULT NULL,
+  `created_by` bigint(20) DEFAULT NULL,
+  `modified_at` datetime DEFAULT NULL,
+  `modified_by` bigint(20) DEFAULT NULL,
+  `jobTitle` varchar(150) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `delete_flag` int(11) DEFAULT '1',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `jobTitle`
+--
+
+LOCK TABLES `jobTitle` WRITE;
+/*!40000 ALTER TABLE `jobTitle` DISABLE KEYS */;
+INSERT INTO `jobTitle` VALUES (1,NULL,NULL,NULL,NULL,'President',1),(2,NULL,NULL,NULL,NULL,'Roll-Off Driver',1),(3,NULL,NULL,NULL,NULL,'Semi Driver',1),(4,NULL,NULL,NULL,NULL,'Driver',1),(5,NULL,NULL,NULL,NULL,'Receptionist',1),(6,NULL,NULL,NULL,NULL,'Office',1),(7,NULL,NULL,NULL,NULL,'Roll-Off Truck Driver',1),(8,NULL,NULL,NULL,NULL,'Representative',1);
+/*!40000 ALTER TABLE `jobTitle` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 --
 -- Table structure for table `trans_order`
