@@ -1,14 +1,11 @@
 <%@include file="/common/taglibs.jsp"%>
 
-<br />
-<form:form action="saveDeliveryAddress.do" name="typeForm" commandName="deliveryAddressModelObject" method="post" id="typeForm">
-	<form:hidden path="id" id="id" />
+<form:form action="/customer/saveDeliveryAddressModal.do" name="deliveryAddressForm" commandName="deliveryAddressModelObject" method="post" id="deliveryAddressForm">
 	<form:hidden path="customer.id" id="custID" />
 	<table id="form-table" class="table delivery">
 		<tr>
 			<td class="form-left"><transys:label code="Customer ID" /><span class="errorMessage">*</span></td>
 			<td align="${left}">${deliveryAddressModelObject.customer.id}</td>
-			</td>
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Delivery Address #" /><span class="errorMessage">*</span></td>
@@ -52,34 +49,15 @@
 		<tr>
 			<td>&nbsp;</td>
 			<td align="${left}" colspan="2">
-				<input type="submit" id="create" onclick="return validateForm()" value="<transys:label code="Save"/>" class="flat btn btn-primary btn-sm" /> 
-				<input type="reset" id="resetBtn" value="<transys:label code="Reset"/> "class="flat btn btn-primary btn-sm" /> 
-				<input type="button" id="cancelBtn" value="<transys:label code="Cancel"/>" class="flat btn btn-primary btn-sm" onClick="location.href='main.do'" />
+				<input type="submit" id="create" onclick="return validateForm()" value="Save" class="flat btn btn-primary btn-sm" /> 
+				<input type="reset" id="resetBtn" value="Reset" class="flat btn btn-primary btn-sm" /> 
+				<input type="button" value="Close" class="flat btn btn-primary btn-sm" data-dismiss="modal" />
 			</td>
 		</tr>
 	</table>
 </form:form>
 
-<form:form name="deliveryAddressServiceForm" id="deliveryAddressServiceForm" class="tab-color">
-	<transys:datatable urlContext="customer" deletable="true"
-		editable="true" editableInScreen="true"   baseObjects="${deliveryAddressList}"
-		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
-		pagingLink="search.do" multipleDelete="false" searcheable="false"
-		>
-		<transys:textcolumn headerText="Delivery Address #" dataField="line1" />
-		<transys:textcolumn headerText="Delivery Street" dataField="line2" />
-		<transys:textcolumn headerText="City" dataField="city" />
-		<transys:textcolumn headerText="State" dataField="state.name" />
-		<transys:textcolumn headerText="Zipcode" dataField="zipcode" />
-	</transys:datatable>
-	<%session.setAttribute("columnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
-</form:form>
-
 <script type="text/javascript">
-function validate() {
-	return true;
-};
-
 $("tr a").click(function() {	
 	var ids = ["line1", "line2", "city", "zipcode", "state"];
 	
@@ -127,4 +105,22 @@ function validateForm() {
 	return true;
 };
 
+$("#deliveryAddressForm").submit(function (ev) {
+	var $this = $(this);
+	
+    $.ajax({
+        type: $this.attr('method'),
+        url: $this.attr('action'),
+        data: $this.serialize(),
+        success: function(responseData, textStatus, jqXHR) {
+        	var address = jQuery.parseJSON(responseData);
+        	
+        	var deliveryAddressSelect = $('#deliveryAddressSelect');
+        	var newOption = $('<option value=' + address.id + '>'+ address.line1 + " " + address.line2 +'</option>');
+        	deliveryAddressSelect.append(newOption);
+        }
+    });
+    
+    ev.preventDefault();
+});
 </script>

@@ -132,9 +132,14 @@ function populatePermitDateAndFee(index) {
 }
 
 $("#addDeliveryAddressModal").on("show.bs.modal", function(e) {
-    var link = $(e.relatedTarget);
-    $(this).find("#addDeliveryAddressModalBody").load(link.attr("href"));
+	var customerId = $('#customerSelect').val();
+	
+    var link = $(e.relatedTarget).attr("href");
+    link += "?customerId=" + customerId;
+    
+    $(this).find("#addDeliveryAddressModalBody").load(link);
 });	
+
 </script>
 <br/>
 <form:form action="save.do" name="typeForm" commandName="modelObject" method="post" id="typeForm">
@@ -194,8 +199,8 @@ $("#addDeliveryAddressModal").on("show.bs.modal", function(e) {
 				</label>
 				<label style="display: inline-block; font-weight: normal">
 					&nbsp;
-					<a href="/order/retrievePermit.do?permitId=1" data-backdrop="static" data-remote="false" data-toggle="modal" data-target="#addDeliveryAddressModal">
-						<img src="/images/addnew.png" border="0" style="float:right" class="toolbarButton">
+					<a href="/customer/deliveryAddressCreate.do" id="retrievePermitLink" data-backdrop="static" data-remote="false" data-toggle="modal" data-target="#addDeliveryAddressModal">
+						<img src="/images/addnew.png" border="0" style="float:bottom" class="toolbarButton">
 					</a>
 				</label>
 				<br><form:errors path="deliveryAddress" cssClass="errorMessage" />
@@ -549,12 +554,13 @@ $("#addDeliveryAddressModal").on("show.bs.modal", function(e) {
 <div class="modal fade" id="addDeliveryAddressModal" role="dialog">
 	<div class="modal-dialog" style="width:90% !important">
 		<div class="modal-content">
-			<div class="modal-header">		
-				<h5 class="modal-title">Add Delivery Address</h5>
-				<div id="validations" style="color:red"></div>
-			</div>
-			<div class="modal-body" id="addDeliveryAddressModalBody"> 
-			</div>
+		 	<div class="modal-header">
+        		<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+       			<h4 class="modal-title">Add Delivery Address</h4>
+       			<div id="validations" style="color:red"></div>
+      		 </div>	
+			
+			<div class="modal-body" id="addDeliveryAddressModalBody"></div>
 		</div>
 	</div>
 </div>

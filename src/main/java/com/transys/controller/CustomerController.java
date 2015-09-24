@@ -20,7 +20,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.google.gson.Gson;
 import com.transys.controller.CRUDController;
 import com.transys.controller.editor.AbstractModelEditor;
 import com.transys.core.util.MimeUtil;
@@ -76,6 +78,28 @@ public class CustomerController extends CRUDController<Customer> {
 		model.addAttribute("deliveryAddressModelObject", new Address());
 				
 		return urlContext + "/customer";
+	}
+	
+	@RequestMapping(method = RequestMethod.GET, value = "/deliveryAddressCreate.do")
+	public String deliveryAddressCreate(ModelMap model, HttpServletRequest request,
+			 										@RequestParam(value = "customerId") Long customerId) {
+		//setupCreate(model, request);
+		//model.addAttribute("activeTab", "manageCustomer");
+		//model.addAttribute("mode", "ADD");
+		//model.addAttribute("activeSubTab", "billing");
+		//return urlContext + "/form";
+		
+		Map criterias = new HashMap();
+		model.addAttribute("state", genericDAO.findByCriteria(State.class, criterias, "name", false));
+		
+		Customer emptyCustomer = new Customer();
+		emptyCustomer.setId(customerId);
+		Address emptyAddress = new Address();
+		emptyAddress.setCustomer(emptyCustomer);
+		
+		model.addAttribute("deliveryAddressModelObject", emptyAddress);
+		
+		return urlContext + "/deliveryAddressModal";
 	}
 	
 	//@Override
@@ -395,13 +419,6 @@ public class CustomerController extends CRUDController<Customer> {
 		//return saveSuccess(model, request, entity);
 		setupCreate(model, request);
 		//model.addAttribute("modelObject", entity);
-		model.addAttribute("activeTab", "manageCustomer");
-		model.addAttribute("activeSubTab", "delivery");
-		model.addAttribute("mode", "ADD");
-		
-		Long customerId = entity.getCustomer().getId();
-		List<BaseModel> customerList = genericDAO.executeSimpleQuery("select obj from Customer obj where obj.id=" + customerId);
-		model.addAttribute("modelObject", customerList.get(0));
 		
 		Customer customer = new Customer();
 		customer.setId(entity.getCustomer().getId());
@@ -409,14 +426,78 @@ public class CustomerController extends CRUDController<Customer> {
 		address.setCustomer(customer);
 		model.addAttribute("deliveryAddressModelObject", address);
 		
+		Long customerId = entity.getCustomer().getId();
+		List<BaseModel> customerList = genericDAO.executeSimpleQuery("select obj from Customer obj where obj.id=" + customerId);
+		model.addAttribute("modelObject", customerList.get(0));
+		
 		List<BaseModel> addressList = genericDAO.executeSimpleQuery("select obj from Address obj where obj.customer.id=" +  customerId + " order by obj.id asc");
 		model.addAttribute("deliveryAddressList", addressList);
+		
+		model.addAttribute("activeTab", "manageCustomer");
+		model.addAttribute("activeSubTab", "delivery");
+		model.addAttribute("mode", "ADD");
+		
 		//return urlContext + "/form";
 		return urlContext + "/customer";
 	}
+	
+	@RequestMapping(method = RequestMethod.POST, value = "/saveDeliveryAddressModal.do")
+	public @ResponseBody String saveDeliveryAddressModal(HttpServletRequest request,
+			@ModelAttribute("deliveryAddressModelObject") Address entity,
+			BindingResult bindingResult, ModelMap model) {
+		try {
+			getValidator().validate(entity, bindingResult);
+		} catch (ValidationException e) {
+			e.printStackTrace();
+			log.warn("Error in validation :" + e);
+		}
+		// return to form if we had errors
+		if (bindingResult.hasErrors()) {
+			setupCreate(model, request);
+			return urlContext + "/form";
+		}
+		//beforeSave(request, entity, model);
+		if (entity instanceof AbstractBaseModel) {
+			AbstractBaseModel baseModel = (AbstractBaseModel) entity;
+			if (baseModel.getId() == null) {
+				baseModel.setCreatedAt(Calendar.getInstance().getTime());
+				if (baseModel.getCreatedBy()==null) {
+					baseModel.setCreatedBy(getUser(request).getId());
+				}
+			} else {
+				baseModel.setModifiedAt(Calendar.getInstance().getTime());
+				if (baseModel.getModifiedBy()==null) {
+					baseModel.setModifiedBy(getUser(request).getId());
+				}
+			}
+		}
+		
+		genericDAO.saveOrUpdate(entity);
+		cleanUp(request);
+		
+		//return "redirect:/" + urlContext + "/list.do";
+		//model.addAttribute("activeTab", "manageCustomer");
+		//return urlContext + "/list";
+		
+		/*SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
+		//criteria.getSearchMap().put("id!",0l);
+		//TODO: Fix me 
+		criteria.getSearchMap().remove("_csrf");*/
+		
+		/*setupList(model, request);
+		
+		model.addAttribute("list",genericDAO.search(getEntityClass(), criteria,"companyName",null,null));
+		model.addAttribute("activeTab", "manageCustomer");
+		//return urlContext + "/list";
+		return urlContext + "/customer";*/
+		//request.getSession().removeAttribute("searchCriteria");
+		//request.getParameterMap().remove("_csrf");
+		
+		//return list(model, request);
+		//return saveSuccess(model, request, entity);
+		//setupCreate(model, request);
+		//model.addAttribute("modelObject", entity);
+		String json = (new Gson()).toJson(entity);
+		return json;
+	}
 }
-	
-	
-	
-	
-
