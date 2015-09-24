@@ -1,7 +1,7 @@
 <%@include file="/common/taglibs.jsp"%>
 <br />
 <h4 style="margin-top: -15px; !important">Dumpsters On-site Report</h4>
-<form:form action="list.do" method="get" name="searchForm">
+<form:form action="list.do" method="get" name="dumpstersOnsiteReportsearchForm">
 	<table width="100%" id="form-table">
 		<tr>
 			<td align="${left}" class="form-left"><transys:label
@@ -27,17 +27,17 @@
 					code="status" /></td>
 			<td align="${left}" class="wide"><select
 				class="flat form-control input-sm" id="status" name="status"
-				style="width: 175px">
+				style="width: 175px !important">
 					<option value="">------
 						<transys:label code="Please Select" />------
 					</option>
-					<c:forEach items="${dumpsterInfo}" var="status">
+					<c:forEach items="${dumpsterStatus}" var="status">
 						<c:set var="selected" value="" />
 						<c:if
 							test="${sessionScope.searchCriteria.searchMap['status'] == status.status}">
 							<c:set var="selected" value="selected" />
 						</c:if>
-						<option value="${status.status}" ${selected}>${status.status}</option>
+						<option value="${status.id}" ${selected}>${status.status}</option>
 					</c:forEach>
 			</select></td>
 		</tr>
@@ -45,18 +45,18 @@
 			<td align="${left}"></td>
 			<td align="${left}"><input type="button"
 				class="btn btn-primary btn-sm"
-				onclick="document.forms['searchForm'].submit();"
+				onclick="document.forms['dumpstersOnsiteReportsearchForm'].submit();"
 				value="<transys:label code="Preview"/>" /></td>
 		</tr>
 	</table>
 </form:form>
 <form:form name="dumpsterOnsiteReport" id="dumpsterOnsiteReport" class="tab-color">
-	<transys:datatable urlContext="report"  baseObjects="${list}"
+	<transys:datatable urlContext="dumpsterOnsiteReports"  baseObjects="${dumpsterInfoList}"
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
 		pagingLink="search.do" exportPdf="true" exportXls="true">
 		<transys:textcolumn headerText="Dumpster Size" dataField="dumpsterSize" />
 		<transys:textcolumn headerText="Dumpster#" dataField="dumpsterNum" />
-		<transys:textcolumn headerText="Status" dataField="status" />
+		<transys:textcolumn headerText="Status" dataField="status.status" />
 		<transys:textcolumn headerText="Comments" dataField="dumpsterSize" />
 
 

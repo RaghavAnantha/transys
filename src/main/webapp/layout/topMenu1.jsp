@@ -17,7 +17,16 @@
 				<li id="orderPage"><a href="/order/main.do">Orders</a></li>
 				<li id="permitPage"><a href="/permit/main.do">Permits</a></li>
 				<li id="customerPage"><a href="/customer/main.do">Customers</a></li>
-				<li id="reportPage"><a href="/report/main.do">Reports</a></li>
+				<li id="reportPage"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Reports
+				<b class="caret"></b></a>
+				<ul class="dropdown-menu">
+					<li><a href="/revenueReports/main.do">Revenue Reports</a></li>
+					<li><a href="/deliveryPickupReports/main.do">Delivery/Pickup Reports</a></li>
+					<li><a href="/dumpsterOnsiteReports/main.do">Dumpster On-site Reports</a></li>
+					<li><a href="/dumpsterRentedReports/main.do">Dumpster Rented Reports</a></li>
+					<li><a href="/recycleReports/main.do">Recycle Reports</a></li>
+				</ul>
+				</li>
 				<li id="masterDataPage"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Master Data
 				<b class="caret"></b></a>
 				<ul class="dropdown-menu">

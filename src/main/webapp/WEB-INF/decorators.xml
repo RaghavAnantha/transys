@@ -48,7 +48,7 @@
         <pattern>/transys/locationType/**</pattern>
     </decorator>
     <decorator name="report" page="singleColumnLayout.jsp">
-        <pattern>/transys/report/**</pattern>
+        <pattern>/transys/dumpsterOnsiteReports/**</pattern>
     </decorator>
     <decorator name="login" page="singleColumnLayoutLogin.jsp">
         <pattern>/transys/login/**</pattern>
