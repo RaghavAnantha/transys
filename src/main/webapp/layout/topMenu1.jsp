@@ -22,7 +22,7 @@
 				<b class="caret"></b></a>
 				<ul class="dropdown-menu">
 					<li><a href="/employee/main.do">Employees</a></li>
-					<li><a href="#">Dumpster</a></li>
+					<li><a href="/materialType/main.do">Material Type</a></li>
 				</ul>
 				
 				</li>

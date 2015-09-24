@@ -14,26 +14,30 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.transys.controller.editor.AbstractModelEditor;
+import com.transys.model.Address;
+import com.transys.model.Customer;
 import com.transys.model.Employee;
 import com.transys.model.EmployeeStatus;
 import com.transys.model.JobTitle;
+import com.transys.model.LocationType;
+import com.transys.model.MaterialType;
+import com.transys.model.PermitClass;
+import com.transys.model.PermitNotes;
+import com.transys.model.PermitType;
 import com.transys.model.SearchCriteria;
 import com.transys.model.State;
 
-@SuppressWarnings("unchecked")
 @Controller
-@RequestMapping("/employee")
-public class EmployeeController extends CRUDController<Employee> {
+@RequestMapping("/materialType")
+public class MaterialTypeController extends CRUDController<MaterialType> {
 	
-	public EmployeeController(){
-		setUrlContext("employee");
+	public MaterialTypeController(){
+		setUrlContext("materialType");
 	}
-
+	
 	@Override
 	public void initBinder(WebDataBinder binder) {
-		binder.registerCustomEditor(JobTitle.class, new AbstractModelEditor(JobTitle.class));
-		binder.registerCustomEditor(State.class, new AbstractModelEditor(State.class));
-		binder.registerCustomEditor(EmployeeStatus.class, new AbstractModelEditor(EmployeeStatus.class));
+		binder.registerCustomEditor(MaterialType.class, new AbstractModelEditor(MaterialType.class));
 		super.initBinder(binder);
 	}
 	
@@ -41,7 +45,7 @@ public class EmployeeController extends CRUDController<Employee> {
 	public String displayMain(ModelMap model, HttpServletRequest request) {
 		setupList(model, request);
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
-		model.addAttribute("list", genericDAO.search(Employee.class, criteria, "id", null, null));
+		model.addAttribute("list", genericDAO.search(MaterialType.class, criteria, "id", null, null));
 		return urlContext + "/list";
 	}
 	
@@ -52,7 +56,7 @@ public class EmployeeController extends CRUDController<Employee> {
 		// TODO:
 		criteria.getSearchMap().remove("_csrf");
 		criteria.setPageSize(25);
-		model.addAttribute("list",genericDAO.search(Employee.class, criteria));
+		model.addAttribute("list",genericDAO.search(MaterialType.class, criteria));
 		return urlContext + "/list";
 	}
 	
@@ -65,26 +69,18 @@ public class EmployeeController extends CRUDController<Employee> {
 	@Override
 	public String create(ModelMap model, HttpServletRequest request) {
 		setupCreate(model, request);
-		
-		Map criterias = new HashMap();
-		model.addAttribute("employee", genericDAO.findByCriteria(Employee.class, criterias, "id", false));
-				
-//		super.create(model, request);
 		return urlContext + "/form";
 	}
 	
 	@Override
 	public void setupCreate(ModelMap model, HttpServletRequest request) {
 		Map criterias = new HashMap();
-		model.addAttribute("jobTitleValues", genericDAO.findByCriteria(JobTitle.class, criterias, "jobTitle", false));
-		model.addAttribute("state", genericDAO.findByCriteria(State.class, criterias, "name", false));
-		model.addAttribute("employeeStatus", genericDAO.findByCriteria(EmployeeStatus.class, criterias, "status", false));
-		model.addAttribute("employee", genericDAO.findByCriteria(Employee.class, criterias, "id", false));
+		model.addAttribute("materialType", genericDAO.findByCriteria(MaterialType.class, criterias, "id", false));
 	}
 	
 	@RequestMapping(method = RequestMethod.POST, value = "/save.do")
 	public String save(HttpServletRequest request,
-			@ModelAttribute("modelObject") Employee entity,
+			@ModelAttribute("modelObject") MaterialType entity,
 			BindingResult bindingResult, ModelMap model) {
 		
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
@@ -94,5 +90,5 @@ public class EmployeeController extends CRUDController<Employee> {
 		return urlContext + "/list";
 		
 	}
-	
+
 }
