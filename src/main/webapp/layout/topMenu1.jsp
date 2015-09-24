@@ -18,7 +18,15 @@
 				<li id="permitPage"><a href="/permit/main.do">Permits</a></li>
 				<li id="customerPage"><a href="/customer/main.do">Customers</a></li>
 				<li id="reportPage"><a href="/report/main.do">Reports</a></li>
-				<li id="masterDataPage"><a href="/masterdata/main.do">Master Data</a></li>
+				<li id="masterDataPage"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Master Data
+				<b class="caret"></b></a>
+				<ul class="dropdown-menu">
+					<li><a href="/employee/main.do">Employees</a></li>
+					<li><a href="#">Dumpster</a></li>
+				</ul>
+				
+				</li>
+				 <!-- <li id="masterDataPage"><a href="#masterData">Master Data</a></li> -->
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
 				<li><a href="#"><transys:label code="Welcome" /> <c:if
@@ -50,9 +58,7 @@
 			$('#customerPage').addClass("active");
 		} else if (loc.match('/reports')) {
 			$('#reportPage').addClass("active");
-		} else if (loc.match('/master')) {
-			$('#masterDataPage').addClass("active");
-		}
+		} 
 	});
 </script>
 </html>
