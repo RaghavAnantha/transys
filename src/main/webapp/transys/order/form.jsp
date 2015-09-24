@@ -81,6 +81,12 @@ function populateCustomerAddress() {
 	}); 
 }
 
+function appendDeliveryAddress(address) {
+	var deliveryAddressSelect = $('#deliveryAddressSelect');
+	var newOption = $('<option value=' + address.id + '>'+ address.line1 + " " + address.line2 +'</option>');
+	deliveryAddressSelect.append(newOption);
+}
+
 function populatePermitNumbers(index) {
 	var permitClassSelect = $("#permitClasses" + index);
 	var permitClassId = permitClassSelect.val();
@@ -139,7 +145,6 @@ $("#addDeliveryAddressModal").on("show.bs.modal", function(e) {
     
     $(this).find("#addDeliveryAddressModalBody").load(link);
 });	
-
 </script>
 <br/>
 <form:form action="save.do" name="typeForm" commandName="modelObject" method="post" id="typeForm">
