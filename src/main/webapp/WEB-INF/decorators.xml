@@ -44,6 +44,9 @@
     <decorator name="paymentMethod" page="singleColumnLayout.jsp">
         <pattern>/transys/paymentMethod/**</pattern>
     </decorator>
+    <decorator name="locationType" page="singleColumnLayout.jsp">
+        <pattern>/transys/locationType/**</pattern>
+    </decorator>
     <decorator name="report" page="singleColumnLayout.jsp">
         <pattern>/transys/report/**</pattern>
     </decorator>
