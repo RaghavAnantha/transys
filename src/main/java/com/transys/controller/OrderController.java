@@ -531,16 +531,18 @@ public class OrderController extends CRUDController<Order> {
 			e.printStackTrace();
 			log.warn("Error in validation :" + e);
 		}
+		
 		// return to form if we had errors
 		if (bindingResult.hasErrors()) {
 			setupCreate(model, request);
 			return urlContext + "/order";
 		}
+		
 		beforeSave(request, entity, model);
 		
 		StringBuffer permitIdsBuff = new StringBuffer();
 		for (Permit aPermit : entity.getPermits()) {
-			if (aPermit.getId() != null) {
+			if (aPermit != null && aPermit.getId() != null) {
 				permitIdsBuff.append(aPermit.getId().toString() + ", ");
 			}
 		}
@@ -549,7 +551,6 @@ public class OrderController extends CRUDController<Order> {
 		List<Permit> permitList = genericDAO.executeSimpleQuery("select obj from Permit obj where obj.id in (" 
 																					+ permitIds
 																					+ ")");
-		
 		entity.setPermits(permitList);
 		
 		String initOrderStatus = "Open";

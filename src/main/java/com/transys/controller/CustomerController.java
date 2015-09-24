@@ -163,28 +163,49 @@ public class CustomerController extends CRUDController<Customer> {
 		//criteria.getSearchMap().put("id!",0l);
 		criteria.getSearchMap().remove("_csrf");
 		
-		List<Customer> customer =  genericDAO.search(getEntityClass(), criteria, "companyName", null, null);
+		List<Customer> customerList =  genericDAO.search(getEntityClass(), criteria, "companyName", null, null);
 		
-		List<CustomerReportVO> customerReportVOList = new ArrayList<CustomerReportVO>() ;
-		for (Customer cust: customer) {
-			CustomerReportVO customerReportVO =  new CustomerReportVO();
-			
-			List<OrderPaymentInfo> orderPymntInfo = genericDAO.executeSimpleQuery("select obj from OrderPaymentInfo obj where obj.order.customer.id = "+ cust.getId());
-			Double sum = 0.0;
-			for (OrderPaymentInfo orderPaymntInfo: orderPymntInfo) {
-				sum = sum + orderPaymntInfo.getTotalFees();		
-			}
-			
-			customerReportVO.setCompanyName(cust.getCompanyName());
-			customerReportVO.setContactName(cust.getContactName());
-			customerReportVO.setPhoneNumber(cust.getPhone());
-			customerReportVO.setTotalAmount(sum);
-			customerReportVO.setTotalOrders(orderPymntInfo.size());
-			customerReportVO.setId(cust.getId());
-			customerReportVO.setStatus(cust.getStatus());
-			
-			customerReportVOList.add(customerReportVO);
-		}
+		Map<Long, Customer> customerMap = new HashMap<Long, Customer>();
+        StringBuffer Ids = new StringBuffer("(");
+        Integer count = 0;
+        for (Customer customer : customerList) {
+                count++;
+                Ids.append(customer.getId());
+                if (count < customerList.size()) {
+                        Ids.append(",");
+                }
+                else {
+                        Ids.append(")");
+                        }
+                customerMap.put(customer.getId(), customer);
+        }
+        //Query
+        
+        List<OrderPaymentInfo> orderPymntInfoList = genericDAO.executeSimpleQuery("select obj from OrderPaymentInfo obj where obj.order.customer.id IN " + Ids.toString());
+        List<CustomerReportVO> customerReportVOList = new ArrayList<CustomerReportVO>() ;
+
+        for (Long key : customerMap.keySet()) {
+                CustomerReportVO customerReportVO =  new CustomerReportVO();
+                Double sum = 0.0;
+                Integer Ordercount = 0;
+            for (OrderPaymentInfo orderPymntInfo: orderPymntInfoList ) {
+                if (orderPymntInfo.getOrder().getCustomer().getId() == key) {
+                        sum =  sum +  orderPymntInfo.getTotalFees();
+                        Ordercount++;
+                        }
+
+            }
+            customerReportVO.setCompanyName(customerMap.get(key).getCompanyName());
+                customerReportVO.setContactName(customerMap.get(key).getContactName());
+                customerReportVO.setPhoneNumber(customerMap.get(key).getPhone());
+                customerReportVO.setTotalAmount(sum);
+                customerReportVO.setTotalOrders(Ordercount);
+                customerReportVO.setId(customerMap.get(key).getId());
+                customerReportVO.setStatus(customerMap.get(key).getStatus());
+
+                customerReportVOList.add(customerReportVO);
+        }
+		
 		
 		//model.addAttribute("customerReportVOList",customerReportVOList);
 		request.getSession().setAttribute("customerReportVOList", customerReportVOList);
@@ -352,11 +373,13 @@ public class CustomerController extends CRUDController<Customer> {
 			e.printStackTrace();
 			log.warn("Error in validation :" + e);
 		}
+		
 		// return to form if we had errors
 		if (bindingResult.hasErrors()) {
 			setupCreate(model, request);
 			return urlContext + "/form";
 		}
+		
 		beforeSave(request, entity, model);
 		genericDAO.saveOrUpdate(entity);
 		cleanUp(request);
@@ -471,11 +494,13 @@ public class CustomerController extends CRUDController<Customer> {
 			e.printStackTrace();
 			log.warn("Error in validation :" + e);
 		}
+		
 		// return to form if we had errors
 		if (bindingResult.hasErrors()) {
 			setupCreate(model, request);
 			return urlContext + "/form";
 		}
+		
 		//beforeSave(request, entity, model);
 		if (entity instanceof AbstractBaseModel) {
 			AbstractBaseModel baseModel = (AbstractBaseModel) entity;
@@ -531,11 +556,13 @@ public class CustomerController extends CRUDController<Customer> {
 			e.printStackTrace();
 			log.warn("Error in validation :" + e);
 		}
+		
 		// return to form if we had errors
 		if (bindingResult.hasErrors()) {
 			setupCreate(model, request);
 			return urlContext + "/form";
 		}
+		
 		//beforeSave(request, entity, model);
 		if (entity instanceof AbstractBaseModel) {
 			AbstractBaseModel baseModel = (AbstractBaseModel) entity;
