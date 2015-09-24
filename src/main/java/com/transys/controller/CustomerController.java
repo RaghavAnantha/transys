@@ -352,11 +352,13 @@ public class CustomerController extends CRUDController<Customer> {
 			e.printStackTrace();
 			log.warn("Error in validation :" + e);
 		}
+		
 		// return to form if we had errors
 		if (bindingResult.hasErrors()) {
 			setupCreate(model, request);
 			return urlContext + "/form";
 		}
+		
 		beforeSave(request, entity, model);
 		genericDAO.saveOrUpdate(entity);
 		cleanUp(request);
@@ -471,11 +473,13 @@ public class CustomerController extends CRUDController<Customer> {
 			e.printStackTrace();
 			log.warn("Error in validation :" + e);
 		}
+		
 		// return to form if we had errors
 		if (bindingResult.hasErrors()) {
 			setupCreate(model, request);
 			return urlContext + "/form";
 		}
+		
 		//beforeSave(request, entity, model);
 		if (entity instanceof AbstractBaseModel) {
 			AbstractBaseModel baseModel = (AbstractBaseModel) entity;
@@ -531,11 +535,13 @@ public class CustomerController extends CRUDController<Customer> {
 			e.printStackTrace();
 			log.warn("Error in validation :" + e);
 		}
+		
 		// return to form if we had errors
 		if (bindingResult.hasErrors()) {
 			setupCreate(model, request);
 			return urlContext + "/form";
 		}
+		
 		//beforeSave(request, entity, model);
 		if (entity instanceof AbstractBaseModel) {
 			AbstractBaseModel baseModel = (AbstractBaseModel) entity;

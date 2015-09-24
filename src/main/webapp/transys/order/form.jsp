@@ -100,7 +100,7 @@ function populatePermitNumbers(index) {
 	var permitTypeSelect = $("#permitTypes" + index);
 	var permitTypeId = permitTypeSelect.val();
 	
-	var permitNumbersSelect = $("#permits\\[" + (index-1) + "\\]\\.id");
+	var permitNumbersSelect = $("#permits\\[" + (index-1) + "\\]");
 	permitNumbersSelect.empty();
 	
 	var firstOption = $('<option value="">'+ "-------Please Select------" +'</option>');
@@ -122,7 +122,7 @@ function populatePermitNumbers(index) {
 }
 
 function populatePermitDateAndFee(index) {
-	var permitNumbersSelect = $("#permits\\[" + (index-1) + "\\]\\.id");
+	var permitNumbersSelect = $("#permits\\[" + (index-1) + "\\]");
 	var permitId = permitNumbersSelect.val();
 	
 	var permitValidFrom = $("#permitValidFrom" + index);
@@ -383,24 +383,19 @@ $("#addCustomerModal").on("show.bs.modal", function(e) {
 	    <tr>
 	    	<td class="form-left"><transys:label code="Permit1 Number"/><span class="errorMessage">*</span></td>
 	        <td align="${left}">
-	        	<select class="flat form-control input-sm" id="permits[0].id" name="permits[0].id" style="width:172px !important" onChange="return populatePermitDateAndFee(1);">
+	        	<select class="flat form-control input-sm" id="permits[0]" name="permits[0]" style="width:172px !important" onChange="return populatePermitDateAndFee(1);">
 					<option value="">------<transys:label code="Please Select" />------</option>
-					<!--  
-					<c:forEach items="${permits}" var="aPermit">
-						<option value="${aPermit.id}">${aPermit.number}</option>
-					</c:forEach>
-					-->
 				</select>
 	        </td>
 	        <td class="form-left"><transys:label code="Permit2 Number"/><span class="errorMessage">*</span></td>
 	        <td align="${left}">
-	        	<select class="flat form-control input-sm" id="permits[1].id" name="permits[1].id" style="width:172px !important" onChange="return populatePermitDateAndFee(2);">
+	        	<select class="flat form-control input-sm" id="permits[1]" name="permits[1]" style="width:172px !important" onChange="return populatePermitDateAndFee(2);">
 					<option value="">------<transys:label code="Please Select" />------</option>
 				</select>
 	        </td>
 	        <td class="form-left"><transys:label code="Permit3 Number"/><span class="errorMessage">*</span></td>
 	        <td align="${left}">
-	        	<select class="flat form-control input-sm" id="permits[2].id" name="permits[2].id" style="width:172px !important" onChange="return populatePermitDateAndFee(3);">
+	        	<select class="flat form-control input-sm" id="permits[2]" name="permits[2]" style="width:172px !important" onChange="return populatePermitDateAndFee(3);">
 					<option value="">------<transys:label code="Please Select" />------</option>
 				</select>
 	        </td>
