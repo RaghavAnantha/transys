@@ -25,6 +25,7 @@
 					<li><a href="/materialType/main.do">Material Type</a></li>
 					<li><a href="/paymentMethod/main.do">Payment Method</a></li>
 					<li><a href="/locationType/main.do">Location Type</a></li>
+					<li><a href="/dumpsterPrice/main.do">Dumpster Price</a></li>
 				</ul>
 				
 				</li>

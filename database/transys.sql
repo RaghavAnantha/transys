@@ -943,6 +943,39 @@ INSERT INTO `paymentMethod` VALUES (1,'Company Check',NULL,NULL,'2015-09-24 22:5
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
+--
+-- Table structure for table `dumpsterPrice`
+--
+
+DROP TABLE IF EXISTS `dumpsterPrice`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `dumpsterPrice` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `dumpsterSize` varchar(5) NOT NULL,
+  `materialType` bigint(20) NOT NULL,
+  `price` double NOT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `created_by` bigint(20) DEFAULT NULL,
+  `modified_at` datetime DEFAULT NULL,
+  `modified_by` bigint(20) DEFAULT NULL,
+  `delete_flag` int(11) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`),
+  KEY `materialTypeDumpsterPriceRef_idx` (`materialType`),
+  CONSTRAINT `materialTypeDumpsterPriceRef` FOREIGN KEY (`materialType`) REFERENCES `materialtype` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `dumpsterPrice`
+--
+
+LOCK TABLES `dumpsterPrice` WRITE;
+/*!40000 ALTER TABLE `dumpsterPrice` DISABLE KEYS */;
+INSERT INTO `dumpsterPrice` VALUES (1,'6 yd',1,240,NULL,NULL,NULL,NULL,1),(2,'20 yd',2,300,NULL,NULL,NULL,NULL,1);
+/*!40000 ALTER TABLE `dumpsterPrice` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

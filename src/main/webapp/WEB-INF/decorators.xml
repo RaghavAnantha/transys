@@ -47,6 +47,9 @@
     <decorator name="locationType" page="singleColumnLayout.jsp">
         <pattern>/transys/locationType/**</pattern>
     </decorator>
+    <decorator name="dumpsterPrice" page="singleColumnLayout.jsp">
+        <pattern>/transys/dumpsterPrice/**</pattern>
+    </decorator>
     <decorator name="report" page="singleColumnLayout.jsp">
         <pattern>/transys/report/**</pattern>
     </decorator>
