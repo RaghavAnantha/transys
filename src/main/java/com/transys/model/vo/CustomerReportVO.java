@@ -1,7 +1,6 @@
-package com.transys.model;
+package com.transys.model.vo;
 
-public class ViewCustomerReport implements ViewBaseModel{
-	
+public class CustomerReportVO implements BaseVO {
 	private Long id;
 	private String companyName;
 	private String contactName;

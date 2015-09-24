@@ -33,15 +33,13 @@ import com.transys.model.OrderPaymentInfo;
 //import com.transys.model.Location;
 import com.transys.model.SearchCriteria;
 import com.transys.model.State;
-import com.transys.model.ViewCustomerReport;
+import com.transys.model.vo.CustomerReportVO;
 import com.transys.model.BaseModel;
 
 @Controller
 @RequestMapping("/customer")
 public class CustomerController extends CRUDController<Customer> {
-	
-	List<ViewCustomerReport> CustomerListReport;
-	public CustomerController(){
+	public CustomerController() {
 		setUrlContext("customer");
 	}
 	
@@ -113,34 +111,44 @@ public class CustomerController extends CRUDController<Customer> {
 		return urlContext + "/customer";
 	}
 	
-	@RequestMapping(method = RequestMethod.GET, value = "/customerList.do")
+	@RequestMapping(method = RequestMethod.GET, value = "/customerListReport.do")
 	public String customerListReport(ModelMap model, HttpServletRequest request) {
 		setupList(model, request);
+		
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		//criteria.getSearchMap().put("id!",0l);
 		criteria.getSearchMap().remove("_csrf");
-		List<Customer> customer =  genericDAO.search(getEntityClass(), criteria,"companyName",null,null);
-		CustomerListReport = new ArrayList<ViewCustomerReport>() ;
+		
+		List<Customer> customer =  genericDAO.search(getEntityClass(), criteria, "companyName", null, null);
+		
+		List<CustomerReportVO> customerReportVOList = new ArrayList<CustomerReportVO>() ;
 		for (Customer cust: customer) {
-		ViewCustomerReport custListReport =  new ViewCustomerReport();
-		List<OrderPaymentInfo> orderPymntInfo = genericDAO.executeSimpleQuery("select obj from OrderPaymentInfo obj where obj.order.customer.id = "+ cust.getId());
-			Double sum=0.0;
-		for (OrderPaymentInfo orderPaymntInfo: orderPymntInfo) {
+			CustomerReportVO customerReportVO =  new CustomerReportVO();
+			
+			List<OrderPaymentInfo> orderPymntInfo = genericDAO.executeSimpleQuery("select obj from OrderPaymentInfo obj where obj.order.customer.id = "+ cust.getId());
+			Double sum = 0.0;
+			for (OrderPaymentInfo orderPaymntInfo: orderPymntInfo) {
 				sum = sum + orderPaymntInfo.getTotalFees();		
 			}
-		custListReport.setCompanyName(cust.getCompanyName());
-		custListReport.setContactName(cust.getContactName());
-		custListReport.setPhoneNumber(cust.getPhone());
-		custListReport.setTotalAmount(sum);
-		custListReport.setTotalOrders(orderPymntInfo.size());
-		custListReport.setId(cust.getId());
-		custListReport.setStatus(cust.getStatus());
-		CustomerListReport.add(custListReport);
+			
+			customerReportVO.setCompanyName(cust.getCompanyName());
+			customerReportVO.setContactName(cust.getContactName());
+			customerReportVO.setPhoneNumber(cust.getPhone());
+			customerReportVO.setTotalAmount(sum);
+			customerReportVO.setTotalOrders(orderPymntInfo.size());
+			customerReportVO.setId(cust.getId());
+			customerReportVO.setStatus(cust.getStatus());
+			
+			customerReportVOList.add(customerReportVO);
 		}
-		model.addAttribute("customerlist",CustomerListReport);
+		
+		//model.addAttribute("customerReportVOList",customerReportVOList);
+		request.getSession().setAttribute("customerReportVOList", customerReportVOList);
+		
 		model.addAttribute("activeTab", "customerReports");
-		//model.addAttribute("activeSubTab", "billing");
+		model.addAttribute("activeSubTab", "customerListReport");
 		model.addAttribute("mode", "MANAGE");
+		
 		//return urlContext + "/list";
 		return urlContext + "/customer";
 	}
@@ -151,53 +159,52 @@ public class CustomerController extends CRUDController<Customer> {
 			Object objectDAO, Class clazz) {
 		
 		try {
-		if (StringUtils.isEmpty(type))
-			type = "xlsx";
-		if (!type.equals("html") && !(type.equals("print"))) {
-			response.setHeader("Content-Disposition",
-					"attachment;filename= customersListReport." + type);
+			List<CustomerReportVO> customerReportVOList = (List<CustomerReportVO>) request.getSession().getAttribute("customerReportVOList");
+			
+			List<Map<String, ?>> reportData = new ArrayList<Map<String, ?>>();
+			for (CustomerReportVO aCustomerReportVO : customerReportVOList) {
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("id", aCustomerReportVO.getId().toString());
+				map.put("companyName", aCustomerReportVO.getCompanyName());
+				map.put("contactName", aCustomerReportVO.getContactName());
+				map.put("phoneNumber", aCustomerReportVO.getPhoneNumber());
+				map.put("status", 	   aCustomerReportVO.getStatus());
+				map.put("totalOrders", aCustomerReportVO.getTotalOrders().toString());
+				map.put("totalAmount", aCustomerReportVO.getTotalAmount().toString());
+				
+				reportData.add(map);
+			}
+			
+			if (StringUtils.isEmpty(type))
+				type = "xlsx";
+			if (!type.equals("html") && !(type.equals("print"))) {
+				response.setHeader("Content-Disposition",
+					"attachment;filename= customerListReport." + type);
+			}
+			
+			response.setContentType(MimeUtil.getContentType(type));
+			
+			ByteArrayOutputStream out = new ByteArrayOutputStream();
+			Map<String, Object> params = new HashMap<String,Object>();
+			
+			if (!type.equals("print") && !type.equals("pdf")) {
+				out = dynamicReportService.generateStaticReport("customerListReport",
+						reportData, params, type, request);
+			} else if (type.equals("pdf")){
+				out = dynamicReportService.generateStaticReport("customerListReportPdf",
+						reportData, params, type, request);
+			} else {
+				out = dynamicReportService.generateStaticReport("customerListReport"+"print",
+						reportData, params, type, request);
+			}
+		
+			out.writeTo(response.getOutputStream());
+			out.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.warn("Unable to create file :" + e);
+			request.getSession().setAttribute("errors", e.getMessage());
 		}
-		response.setContentType(MimeUtil.getContentType(type));
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		Map<String, Object> params = new HashMap<String,Object>();
-		
-		List<Map<String, ?>> newList = new ArrayList<Map<String, ?>>();
-		
-		for (ViewCustomerReport viewCustRep : CustomerListReport) {
-			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("id", viewCustRep.getId().toString());
-			map.put("companyName", viewCustRep.getCompanyName());
-			map.put("contactName", viewCustRep.getContactName());
-			map.put("phoneNumber", viewCustRep.getPhoneNumber());
-			map.put("status", 	   viewCustRep.getStatus());
-			map.put("totalOrders", viewCustRep.getTotalOrders().toString());
-			map.put("totalAmount", viewCustRep.getTotalAmount().toString());
-			newList.add(map);
-		}
-		
-		
-		if (!type.equals("print") && !type.equals("pdf")) {
-			out = dynamicReportService.generateStaticReport("customersListReport",
-					newList, params, type, request);
-		}
-		else if(type.equals("pdf")){
-			out = dynamicReportService.generateStaticReport("customersListReportPdf",
-					newList, params, type, request);
-		}
-		else {
-			out = dynamicReportService.generateStaticReport("customersListReport"+"print",
-					newList, params, type, request);
-		}
-	
-		out.writeTo(response.getOutputStream());
-		out.close();
-		
-	} catch (Exception e) {
-		e.printStackTrace();
-		log.warn("Unable to create file :" + e);
-		request.getSession().setAttribute("errors", e.getMessage());
-		
-	}
 	}
 	
 	@Override

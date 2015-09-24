@@ -1,7 +1,7 @@
 <%@include file="/common/taglibs.jsp"%>
 <br />
 <h4 style="margin-top: -15px; !important">Customers List Report</h4>
-<form:form action="customerList.do" method="get" name="customersListReport">
+<form:form action="customerListReport.do" method="get" name="customersListReport" id="customersListReport">
 	<table width="100%" id="form-table">
 		<tr>
 			<td align="${left}" class="form-left"><transys:label
@@ -76,8 +76,8 @@
 <a href="/customer/generateCustomerListReport.do?type=xls"><img src="/images/excel.png" border="0" style="float:right" class="toolbarButton"></a>
 <a href="/customer/generateCustomerListReport.do?type=pdf"><img src="/images/pdf.png" border="0" style="float:right" class="toolbarButton"></a>
 </form:form>
-<form:form name="searchCustomersListReport" id="searchCustomersListReport" class="tab-color">
-	<transys:datatable urlContext="customer" baseObjects="${customerlist}"
+<form:form name="customersListReportDetails" id="customersListReportDetails" class="tab-color">
+	<transys:datatable urlContext="customer" baseObjects="${customerReportVOList}"
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
 		pagingLink="search.do">
 		<transys:textcolumn headerText="Customer ID" dataField="id" />
