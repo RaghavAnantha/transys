@@ -14,20 +14,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.transys.controller.editor.AbstractModelEditor;
-import com.transys.model.MaterialType;
+import com.transys.model.PaymentMethod;
 import com.transys.model.SearchCriteria;
 
 @Controller
-@RequestMapping("/materialType")
-public class MaterialTypeController extends CRUDController<MaterialType> {
+@RequestMapping("/paymentMethod")
+public class PaymentMethodController extends CRUDController<PaymentMethod> {
 
-	public MaterialTypeController() {
-		setUrlContext("materialType");
+	public PaymentMethodController() {
+		setUrlContext("paymentMethod");
 	}
 
 	@Override
 	public void initBinder(WebDataBinder binder) {
-		binder.registerCustomEditor(MaterialType.class, new AbstractModelEditor(MaterialType.class));
+		binder.registerCustomEditor(PaymentMethod.class, new AbstractModelEditor(PaymentMethod.class));
 		super.initBinder(binder);
 	}
 
@@ -35,7 +35,7 @@ public class MaterialTypeController extends CRUDController<MaterialType> {
 	public String displayMain(ModelMap model, HttpServletRequest request) {
 		setupList(model, request);
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
-		model.addAttribute("list", genericDAO.search(MaterialType.class, criteria, "id", null, null));
+		model.addAttribute("list", genericDAO.search(PaymentMethod.class, criteria, "id", null, null));
 		return urlContext + "/list";
 	}
 
@@ -46,7 +46,7 @@ public class MaterialTypeController extends CRUDController<MaterialType> {
 		// TODO:
 		criteria.getSearchMap().remove("_csrf");
 		criteria.setPageSize(25);
-		model.addAttribute("list", genericDAO.search(MaterialType.class, criteria));
+		model.addAttribute("list", genericDAO.search(PaymentMethod.class, criteria));
 		return urlContext + "/list";
 	}
 
@@ -65,11 +65,11 @@ public class MaterialTypeController extends CRUDController<MaterialType> {
 	@Override
 	public void setupCreate(ModelMap model, HttpServletRequest request) {
 		Map criterias = new HashMap();
-		model.addAttribute("materialType", genericDAO.findByCriteria(MaterialType.class, criterias, "id", false));
+		model.addAttribute("paymentMethods", genericDAO.findByCriteria(PaymentMethod.class, criterias, "id", false));
 	}
 
 	@RequestMapping(method = RequestMethod.POST, value = "/save.do")
-	public String save(HttpServletRequest request, @ModelAttribute("modelObject") MaterialType entity,
+	public String save(HttpServletRequest request, @ModelAttribute("modelObject") PaymentMethod entity,
 			BindingResult bindingResult, ModelMap model) {
 
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
@@ -79,5 +79,4 @@ public class MaterialTypeController extends CRUDController<MaterialType> {
 		return urlContext + "/list";
 
 	}
-
 }

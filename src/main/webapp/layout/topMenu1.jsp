@@ -23,6 +23,7 @@
 				<ul class="dropdown-menu">
 					<li><a href="/employee/main.do">Employees</a></li>
 					<li><a href="/materialType/main.do">Material Type</a></li>
+					<li><a href="/paymentMethod/main.do">Payment Method</a></li>
 				</ul>
 				
 				</li>
