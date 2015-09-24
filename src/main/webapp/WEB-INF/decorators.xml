@@ -38,6 +38,12 @@
     <decorator name="employee" page="singleColumnLayout.jsp">
         <pattern>/transys/employee/**</pattern>
     </decorator>
+    <decorator name="materialType" page="singleColumnLayout.jsp">
+        <pattern>/transys/materialType/**</pattern>
+    </decorator>
+    <decorator name="paymentMethod" page="singleColumnLayout.jsp">
+        <pattern>/transys/paymentMethod/**</pattern>
+    </decorator>
     <decorator name="report" page="singleColumnLayout.jsp">
         <pattern>/transys/report/**</pattern>
     </decorator>

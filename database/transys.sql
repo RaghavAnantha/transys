@@ -148,6 +148,10 @@ UNLOCK TABLES;
 -- Table structure for table `dumpsterInfo`
 --
 
+--
+-- Table structure for table `dumpsterInfo`
+--
+
 DROP TABLE IF EXISTS `dumpsterInfo`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
@@ -156,16 +160,16 @@ CREATE TABLE `dumpsterInfo` (
   `dumpsterSize` varchar(5) DEFAULT NULL,
   `dumpsterNum` varchar(50) DEFAULT NULL,
   `dumpsterPrice` double DEFAULT NULL,
-  -- `maxWeight` int(20) DEFAULT NULL,
-  -- `overWeightPrice` double DEFAULT NULL,
-  `status` varchar(25) DEFAULT NULL,
+  `status` bigint(20) DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   `created_by` bigint(20) DEFAULT NULL,
   `modified_at` datetime DEFAULT NULL,
   `modified_by` bigint(20) DEFAULT NULL,
   `delete_flag` int(11) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  PRIMARY KEY (`id`),
+  KEY `dumpsterStatusRef_idx` (`status`),
+  CONSTRAINT `dumpsterStatusRef` FOREIGN KEY (`status`) REFERENCES `dumpsterStatus` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -174,9 +178,39 @@ CREATE TABLE `dumpsterInfo` (
 
 LOCK TABLES `dumpsterInfo` WRITE;
 /*!40000 ALTER TABLE `dumpsterInfo` DISABLE KEYS */;
-INSERT INTO `transys`.`dumpsterInfo` (`id`, `dumpsterSize`, `dumpsterNum`, `dumpsterPrice`, `status`) VALUES ('2', '20 yd', '20W-113-21', '20', 'A');
+INSERT INTO `dumpsterInfo` VALUES (2,'20 yd','20W-113-21',20,1,NULL,NULL,NULL,NULL,1);
 /*!40000 ALTER TABLE `dumpsterInfo` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `dumpsterStatus`
+--
+
+DROP TABLE IF EXISTS `dumpsterStatus`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `dumpsterStatus` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `status` varchar(20) NOT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `created_by` bigint(20) DEFAULT NULL,
+  `modified_at` datetime DEFAULT NULL,
+  `modified_by` bigint(20) DEFAULT NULL,
+  `delete_flag` int(11) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `dumpsterStatus`
+--
+
+LOCK TABLES `dumpsterStatus` WRITE;
+/*!40000 ALTER TABLE `dumpsterStatus` DISABLE KEYS */;
+INSERT INTO `dumpsterStatus` VALUES (1,'Available',NULL,NULL,NULL,NULL,1),(2,'In-Repair',NULL,NULL,NULL,NULL,1),(3,'Dropped-Off',NULL,NULL,NULL,NULL,1);
+/*!40000 ALTER TABLE `dumpsterStatus` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 --
 -- Table structure for table `employee`
@@ -846,6 +880,36 @@ CREATE TABLE `permitNotes` (
 LOCK TABLES `permitNotes` WRITE;
 /*!40000 ALTER TABLE `permitNotes` DISABLE KEYS */;
 /*!40000 ALTER TABLE `permitNotes` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+--
+-- Table structure for table `materialtype`
+--
+
+DROP TABLE IF EXISTS `materialtype`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `materialtype` (
+  `id` bigint(20) NOT NULL,
+  `typeName` varchar(50) DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `created_by` bigint(20) DEFAULT NULL,
+  `modified_at` datetime DEFAULT NULL,
+  `modified_by` bigint(20) DEFAULT NULL,
+  `delete_flag` int(11) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `materialtype`
+--
+
+LOCK TABLES `materialtype` WRITE;
+/*!40000 ALTER TABLE `materialtype` DISABLE KEYS */;
+INSERT INTO `materialtype` VALUES (1,'Concrete',NULL,NULL,NULL,NULL,1),(2,'Dirt',NULL,NULL,NULL,NULL,1),(3,'Bricks',NULL,NULL,NULL,NULL,1);
+/*!40000 ALTER TABLE `materialtype` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 

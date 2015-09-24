@@ -4,11 +4,11 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-//@Entity
-//@Table(name="materialType")
+@Entity
+@Table(name="materialType")
 public class MaterialType extends AbstractBaseModel {
 
-	//@Column(name="materialType")
+	@Column(name="typeName")
 	private String type;
 
 	public String getType() {

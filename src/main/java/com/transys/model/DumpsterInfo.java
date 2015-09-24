@@ -2,6 +2,8 @@ package com.transys.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -16,8 +18,9 @@ public class DumpsterInfo extends AbstractBaseModel {
 	@Column(name="dumpsterNum")
 	private String dumpsterNum;
 	
-	@Column(name="status")
-	private String status;
+	@ManyToOne
+	@JoinColumn(name="status")
+	private DumpsterStatus status;
 
 	@Column(name="dumpsterPrice")
 	private Double dumpsterPrice;
@@ -60,11 +63,11 @@ public class DumpsterInfo extends AbstractBaseModel {
 		this.dumpsterNum = dumpsterNum;
 	}
 
-	public String getStatus() {
+	public DumpsterStatus getStatus() {
 		return status;
 	}
 
-	public void setStatus(String status) {
+	public void setStatus(DumpsterStatus status) {
 		this.status = status;
 	}
 }
