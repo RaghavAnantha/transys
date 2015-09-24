@@ -114,7 +114,6 @@ $("#deliveryAddressForm").submit(function (ev) {
         data: $this.serialize(),
         success: function(responseData, textStatus, jqXHR) {
         	var address = jQuery.parseJSON(responseData);
-        	
         	appendDeliveryAddress(address);
         }
     });
