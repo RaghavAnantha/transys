@@ -41,10 +41,25 @@ function formatFax(){
 		}
 	}	
 }	
+
+$("#customerForm").submit(function (ev) {
+	var $this = $(this);
+	
+    $.ajax({
+        type: $this.attr('method'),
+        url: $this.attr('action'),
+        data: $this.serialize(),
+        success: function(responseData, textStatus, jqXHR) {
+        	var customer = jQuery.parseJSON(responseData);
+        	appendCustomer(customer);
+        }
+    });
+    
+    ev.preventDefault();
+});
 </script>
-<br/>
-<form:form action="save.do" name="typeForm" commandName="modelObject" method="post" id="typeForm">
-	<form:hidden path="id" id="id" />
+
+<form:form action="/customer/saveModal.do" name="typeForm" commandName="modelObject" method="post" id="customerForm">
 	<table id="form-table" class="table">
 		<tr>
 			<td class="form-left"><transys:label code="Company Name" /><span class="errorMessage">*</span></td>
@@ -181,7 +196,7 @@ function formatFax(){
 			<td align="${left}" colspan="2">
 				<input type="submit" id="create" onclick="return validate()" value="<transys:label code="Save"/>" class="flat btn btn-primary btn-sm" /> 
 				<input type="reset" id="resetBtn" value="<transys:label code="Reset"/> "class="flat btn btn-primary btn-sm" /> 
-				<input type="button" id="cancelBtn" value="<transys:label code="Cancel"/>" class="flat btn btn-primary btn-sm" onClick="location.href='main.do'" />
+				<input type="button" value="Close" class="flat btn btn-primary btn-sm" data-dismiss="modal" />
 			</td>
 		</tr>
 	</table>

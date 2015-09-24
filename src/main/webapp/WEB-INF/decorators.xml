@@ -23,6 +23,7 @@
     <decorator name="popUp" page="popUpLayout.jsp">
         <!--<pattern>/transys/customer/form.jsp</pattern>-->
         <!--<pattern>/transys/order/form.jsp</pattern>-->
+        <pattern>/transys/customer/formModal.jsp</pattern>
         <pattern>/transys/customer/deliveryAddressModal.jsp</pattern>
     </decorator>
    <decorator name="customer" page="singleColumnLayout.jsp">

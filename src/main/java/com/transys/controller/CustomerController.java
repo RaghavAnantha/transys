@@ -80,8 +80,28 @@ public class CustomerController extends CRUDController<Customer> {
 		return urlContext + "/customer";
 	}
 	
-	@RequestMapping(method = RequestMethod.GET, value = "/deliveryAddressCreate.do")
-	public String deliveryAddressCreate(ModelMap model, HttpServletRequest request,
+	@RequestMapping(method = RequestMethod.GET, value = "/createModal.do")
+	public String createModal(ModelMap model, HttpServletRequest request) {
+		//setupCreate(model, request);
+		//model.addAttribute("activeTab", "manageCustomer");
+		//model.addAttribute("mode", "ADD");
+		//model.addAttribute("activeSubTab", "billing");
+		//return urlContext + "/form";
+		
+		//model.addAttribute("deliveryAddressModelObject", new Address());
+		
+		Map criterias = new HashMap();
+		model.addAttribute("state", genericDAO.findByCriteria(State.class, criterias, "name", false));
+		
+		List<String> statusList = new ArrayList<String>();
+		statusList.add("Active");
+		model.addAttribute("statuses", statusList);
+				
+		return urlContext + "/formModal";
+	}
+	
+	@RequestMapping(method = RequestMethod.GET, value = "/deliveryAddressCreateModal.do")
+	public String deliveryAddressCreateModal(ModelMap model, HttpServletRequest request,
 			 										@RequestParam(value = "customerId") Long customerId) {
 		//setupCreate(model, request);
 		//model.addAttribute("activeTab", "manageCustomer");
@@ -444,6 +464,66 @@ public class CustomerController extends CRUDController<Customer> {
 	@RequestMapping(method = RequestMethod.POST, value = "/saveDeliveryAddressModal.do")
 	public @ResponseBody String saveDeliveryAddressModal(HttpServletRequest request,
 			@ModelAttribute("deliveryAddressModelObject") Address entity,
+			BindingResult bindingResult, ModelMap model) {
+		try {
+			getValidator().validate(entity, bindingResult);
+		} catch (ValidationException e) {
+			e.printStackTrace();
+			log.warn("Error in validation :" + e);
+		}
+		// return to form if we had errors
+		if (bindingResult.hasErrors()) {
+			setupCreate(model, request);
+			return urlContext + "/form";
+		}
+		//beforeSave(request, entity, model);
+		if (entity instanceof AbstractBaseModel) {
+			AbstractBaseModel baseModel = (AbstractBaseModel) entity;
+			if (baseModel.getId() == null) {
+				baseModel.setCreatedAt(Calendar.getInstance().getTime());
+				if (baseModel.getCreatedBy()==null) {
+					baseModel.setCreatedBy(getUser(request).getId());
+				}
+			} else {
+				baseModel.setModifiedAt(Calendar.getInstance().getTime());
+				if (baseModel.getModifiedBy()==null) {
+					baseModel.setModifiedBy(getUser(request).getId());
+				}
+			}
+		}
+		
+		genericDAO.saveOrUpdate(entity);
+		cleanUp(request);
+		
+		//return "redirect:/" + urlContext + "/list.do";
+		//model.addAttribute("activeTab", "manageCustomer");
+		//return urlContext + "/list";
+		
+		/*SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
+		//criteria.getSearchMap().put("id!",0l);
+		//TODO: Fix me 
+		criteria.getSearchMap().remove("_csrf");*/
+		
+		/*setupList(model, request);
+		
+		model.addAttribute("list",genericDAO.search(getEntityClass(), criteria,"companyName",null,null));
+		model.addAttribute("activeTab", "manageCustomer");
+		//return urlContext + "/list";
+		return urlContext + "/customer";*/
+		//request.getSession().removeAttribute("searchCriteria");
+		//request.getParameterMap().remove("_csrf");
+		
+		//return list(model, request);
+		//return saveSuccess(model, request, entity);
+		//setupCreate(model, request);
+		//model.addAttribute("modelObject", entity);
+		String json = (new Gson()).toJson(entity);
+		return json;
+	}
+	
+	@RequestMapping(method = RequestMethod.POST, value = "/saveModal.do")
+	public @ResponseBody String saveModal(HttpServletRequest request,
+			@ModelAttribute("modelObject") Customer entity,
 			BindingResult bindingResult, ModelMap model) {
 		try {
 			getValidator().validate(entity, bindingResult);

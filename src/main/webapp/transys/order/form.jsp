@@ -83,8 +83,14 @@ function populateCustomerAddress() {
 
 function appendDeliveryAddress(address) {
 	var deliveryAddressSelect = $('#deliveryAddressSelect');
-	var newOption = $('<option value=' + address.id + '>'+ address.line1 + " " + address.line2 +'</option>');
-	deliveryAddressSelect.append(newOption);
+	var newAddressOption = $('<option value=' + address.id + '>'+ address.line1 + " " + address.line2 +'</option>');
+	deliveryAddressSelect.append(newAddressOption);
+}
+
+function appendCustomer(customer) {
+	var customerSelect = $('#customerSelect');
+	var newCustomerOption = $('<option value=' + customer.id + '>'+ customer.companyName +'</option>');
+	customerSelect.append(newCustomerOption);
 }
 
 function populatePermitNumbers(index) {
@@ -144,7 +150,13 @@ $("#addDeliveryAddressModal").on("show.bs.modal", function(e) {
     link += "?customerId=" + customerId;
     
     $(this).find("#addDeliveryAddressModalBody").load(link);
-});	
+});
+
+$("#addCustomerModal").on("show.bs.modal", function(e) {
+	var link = $(e.relatedTarget).attr("href");
+    
+    $(this).find("#addCustomerModalBody").load(link);
+});
 </script>
 <br/>
 <form:form action="save.do" name="typeForm" commandName="modelObject" method="post" id="typeForm">
@@ -157,10 +169,18 @@ $("#addDeliveryAddressModal").on("show.bs.modal", function(e) {
 		<tr>
 			<td class="form-left"><transys:label code="Customer" /><span class="errorMessage"></span></td>
 			<td align="${left}">
-				<form:select id="customerSelect" cssClass="flat form-control input-sm" style="width:172px !important" path="customer" onChange="return populateCustomerInfo();"> 
-					<form:option value="">-------Please Select------</form:option>
-					<form:options items="${customers}" itemValue="id" itemLabel="companyName" />
-				</form:select> 
+				<label style="display: inline-block; font-weight: normal">
+					<form:select id="customerSelect" cssClass="flat form-control input-sm" style="width:172px !important" path="customer" onChange="return populateCustomerInfo();"> 
+						<form:option value="">-------Please Select------</form:option>
+						<form:options items="${customers}" itemValue="id" itemLabel="companyName" />
+					</form:select>
+				</label>
+				<label style="display: inline-block; font-weight: normal">
+					&nbsp;
+					<a href="/customer/createModal.do" id="addCustomerLink" data-backdrop="static" data-remote="false" data-toggle="modal" data-target="#addCustomerModal">
+						<img src="/images/addnew.png" border="0" style="float:bottom" class="toolbarButton">
+					</a>
+				</label> 
 				<br><form:errors path="customer" cssClass="errorMessage" />
 			</td>
 		</tr>
@@ -204,7 +224,7 @@ $("#addDeliveryAddressModal").on("show.bs.modal", function(e) {
 				</label>
 				<label style="display: inline-block; font-weight: normal">
 					&nbsp;
-					<a href="/customer/deliveryAddressCreate.do" id="retrievePermitLink" data-backdrop="static" data-remote="false" data-toggle="modal" data-target="#addDeliveryAddressModal">
+					<a href="/customer/deliveryAddressCreateModal.do" id="addDeliveryAddressLink" data-backdrop="static" data-remote="false" data-toggle="modal" data-target="#addDeliveryAddressModal">
 						<img src="/images/addnew.png" border="0" style="float:bottom" class="toolbarButton">
 					</a>
 				</label>
@@ -312,7 +332,7 @@ $("#addDeliveryAddressModal").on("show.bs.modal", function(e) {
 					</c:forEach>
 				</select>
 		 	</td>
-		 	<td class="form-left"><transys:label code="Permit2 Class"/></span></td>
+		 	<td class="form-left"><transys:label code="Permit2 Class"/></td>
 	        <td align="${left}">
 	        	<select class="flat form-control input-sm" id="permitClasses2" name="permitClasses2" style="width:172px !important">
 					<option value="">------<transys:label code="Please Select" />------</option>
@@ -321,7 +341,7 @@ $("#addDeliveryAddressModal").on("show.bs.modal", function(e) {
 					</c:forEach>
 				</select>
 		 	</td>
-		 	<td class="form-left"><transys:label code="Permit3 Class"/></span></td>
+		 	<td class="form-left"><transys:label code="Permit3 Class"/></td>
 	        <td align="${left}">
 	        	<select class="flat form-control input-sm" id="permitClasses3" name="permitClasses3" style="width:172px !important">
 					<option value="">------<transys:label code="Please Select" />------</option>
@@ -562,10 +582,24 @@ $("#addDeliveryAddressModal").on("show.bs.modal", function(e) {
 		 	<div class="modal-header">
         		<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
        			<h4 class="modal-title">Add Delivery Address</h4>
-       			<div id="validations" style="color:red"></div>
+       			<div id="deliveryAddressValidations" style="color:red"></div>
       		 </div>	
 			
 			<div class="modal-body" id="addDeliveryAddressModalBody"></div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="addCustomerModal" role="dialog">
+	<div class="modal-dialog" style="width:90% !important">
+		<div class="modal-content">
+		 	<div class="modal-header">
+        		<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+       			<h4 class="modal-title">Add Customer</h4>
+       			<div id="customerValidations" style="color:red"></div>
+      		 </div>	
+			
+			<div class="modal-body" id="addCustomerModalBody"></div>
 		</div>
 	</div>
 </div>
