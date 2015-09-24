@@ -22,13 +22,13 @@
 		<div id="customerReports" class="tab-pane">
 			<br />
 			<ul class="nav nav-tabs" id="customer_reports_tabs">
-				<li><a href="#customerList" data-toggle="tab" class="active">Customer List</a></li>
+				<li><a href="#customerListReport" data-toggle="tab" class="active">Customer List Report</a></li>
 				<li><a href="#customerOrderReports" data-toggle="tab">Customer Order Reports</a></li>
 			</ul>
 
 			<div class="tab-content tab-color">
-				<div id="customerList" class="tab-pane">
-					<p>Placeholder for Customer List</p>
+				<div id="customerListReport" class="tab-pane">
+					<%@include file="customerListReport.jsp"%>
 				</div>
 				<div id="customerOrderReports" class="tab-pane">
 					<p>Placeholder for Customer Order Reports</p>
@@ -63,7 +63,7 @@
 
 <script type="text/javascript">
 	function showTab(tab){
-		    $('.nav-tabs a[href="#' + tab + '"]').tab('show');		    
+		$('.nav-tabs a[href="#' + tab + '"]').tab('show');		    
 	};
 	
 	showTab('${activeTab}');

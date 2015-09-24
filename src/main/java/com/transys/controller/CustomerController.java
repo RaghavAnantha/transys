@@ -1,5 +1,6 @@
 package com.transys.controller;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -7,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.ValidationException;
 
 import org.apache.commons.lang3.StringUtils;
@@ -17,23 +19,27 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.transys.controller.CRUDController;
 import com.transys.controller.editor.AbstractModelEditor;
+import com.transys.core.util.MimeUtil;
 import com.transys.model.AbstractBaseModel;
 import com.transys.model.Address;
 import com.transys.model.Customer;
+import com.transys.model.Order;
+import com.transys.model.OrderPaymentInfo;
 //import com.transys.model.FuelVendor;
 //import com.transys.model.Location;
 import com.transys.model.SearchCriteria;
 import com.transys.model.State;
+import com.transys.model.vo.CustomerReportVO;
 import com.transys.model.BaseModel;
 
 @Controller
 @RequestMapping("/customer")
 public class CustomerController extends CRUDController<Customer> {
-	
-	public CustomerController(){
+	public CustomerController() {
 		setUrlContext("customer");
 	}
 	
@@ -103,6 +109,102 @@ public class CustomerController extends CRUDController<Customer> {
 		model.addAttribute("mode", "MANAGE");
 		//return urlContext + "/list";
 		return urlContext + "/customer";
+	}
+	
+	@RequestMapping(method = RequestMethod.GET, value = "/customerListReport.do")
+	public String customerListReport(ModelMap model, HttpServletRequest request) {
+		setupList(model, request);
+		
+		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
+		//criteria.getSearchMap().put("id!",0l);
+		criteria.getSearchMap().remove("_csrf");
+		
+		List<Customer> customer =  genericDAO.search(getEntityClass(), criteria, "companyName", null, null);
+		
+		List<CustomerReportVO> customerReportVOList = new ArrayList<CustomerReportVO>() ;
+		for (Customer cust: customer) {
+			CustomerReportVO customerReportVO =  new CustomerReportVO();
+			
+			List<OrderPaymentInfo> orderPymntInfo = genericDAO.executeSimpleQuery("select obj from OrderPaymentInfo obj where obj.order.customer.id = "+ cust.getId());
+			Double sum = 0.0;
+			for (OrderPaymentInfo orderPaymntInfo: orderPymntInfo) {
+				sum = sum + orderPaymntInfo.getTotalFees();		
+			}
+			
+			customerReportVO.setCompanyName(cust.getCompanyName());
+			customerReportVO.setContactName(cust.getContactName());
+			customerReportVO.setPhoneNumber(cust.getPhone());
+			customerReportVO.setTotalAmount(sum);
+			customerReportVO.setTotalOrders(orderPymntInfo.size());
+			customerReportVO.setId(cust.getId());
+			customerReportVO.setStatus(cust.getStatus());
+			
+			customerReportVOList.add(customerReportVO);
+		}
+		
+		//model.addAttribute("customerReportVOList",customerReportVOList);
+		request.getSession().setAttribute("customerReportVOList", customerReportVOList);
+		
+		model.addAttribute("activeTab", "customerReports");
+		model.addAttribute("activeSubTab", "customerListReport");
+		model.addAttribute("mode", "MANAGE");
+		
+		//return urlContext + "/list";
+		return urlContext + "/customer";
+	}
+	
+	@RequestMapping(method = RequestMethod.GET, value = "/generateCustomerListReport.do")
+	public void generateCustomerListReport(ModelMap model, HttpServletRequest request,
+			HttpServletResponse response, @RequestParam("type") String type,
+			Object objectDAO, Class clazz) {
+		
+		try {
+			List<CustomerReportVO> customerReportVOList = (List<CustomerReportVO>) request.getSession().getAttribute("customerReportVOList");
+			
+			List<Map<String, ?>> reportData = new ArrayList<Map<String, ?>>();
+			for (CustomerReportVO aCustomerReportVO : customerReportVOList) {
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("id", aCustomerReportVO.getId().toString());
+				map.put("companyName", aCustomerReportVO.getCompanyName());
+				map.put("contactName", aCustomerReportVO.getContactName());
+				map.put("phoneNumber", aCustomerReportVO.getPhoneNumber());
+				map.put("status", 	   aCustomerReportVO.getStatus());
+				map.put("totalOrders", aCustomerReportVO.getTotalOrders().toString());
+				map.put("totalAmount", aCustomerReportVO.getTotalAmount().toString());
+				
+				reportData.add(map);
+			}
+			
+			if (StringUtils.isEmpty(type))
+				type = "xlsx";
+			if (!type.equals("html") && !(type.equals("print"))) {
+				response.setHeader("Content-Disposition",
+					"attachment;filename= customerListReport." + type);
+			}
+			
+			response.setContentType(MimeUtil.getContentType(type));
+			
+			ByteArrayOutputStream out = new ByteArrayOutputStream();
+			Map<String, Object> params = new HashMap<String,Object>();
+			
+			if (!type.equals("print") && !type.equals("pdf")) {
+				out = dynamicReportService.generateStaticReport("customerListReport",
+						reportData, params, type, request);
+			} else if (type.equals("pdf")){
+				out = dynamicReportService.generateStaticReport("customerListReportPdf",
+						reportData, params, type, request);
+			} else {
+				out = dynamicReportService.generateStaticReport("customerListReport"+"print",
+						reportData, params, type, request);
+			}
+		
+			out.writeTo(response.getOutputStream());
+			out.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.warn("Unable to create file :" + e);
+			request.getSession().setAttribute("errors", e.getMessage());
+		}
 	}
 	
 	@Override

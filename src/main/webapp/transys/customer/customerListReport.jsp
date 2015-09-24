@@ -1,13 +1,13 @@
 <%@include file="/common/taglibs.jsp"%>
 <br />
-<h4 style="margin-top: -15px; !important">Manage Customers</h4>
-<form:form action="list.do" method="get" name="searchForm">
+<h4 style="margin-top: -15px; !important">Customers List Report</h4>
+<form:form action="customerListReport.do" method="get" name="customersListReport" id="customersListReport">
 	<table width="100%" id="form-table">
 		<tr>
 			<td align="${left}" class="form-left"><transys:label
 					code="Company Name" /></td>
 			<td align="${left}" class="wide"><select
-				class="flat form-control input-sm" id="companyName"
+				class="flat form-control input-sm" id="companyNameListReport"
 				name="companyName" style="width:175px !important">
 					<option value="">------<transys:label code="Please Select" />------</option>
 					<c:forEach items="${customer}" var="customer">
@@ -19,25 +19,10 @@
 						<option value="${customer.companyName}" ${selected}>${customer.companyName}</option>
 					</c:forEach>
 			</select></td>
-
-			<td align="${left}" class="form-left"><transys:label
-					code="Customer ID" /></td>
-			<td align="${left}"><select class="flat form-control input-sm"
-				id="customerId" name="id" style="width:175px !important">
-					<option value="">------<transys:label code="Please Select" />------</option>
-					<c:forEach items="${customerIds}" var="customerId">
-						<c:set var="selected" value="" />
-						<c:if
-							test="${sessionScope.searchCriteria.searchMap['id'] == customerId.id}">
-							<c:set var="selected" value="selected" />
-						</c:if>
-						<option value="${customerId.id}" ${selected}>${customerId.id}</option>
-					</c:forEach>
-			</select></td>
 		</tr>
 		<tr>
 			<td align="${left}" class="form-left"><transys:label code="Contact Name" /></td>
-			<td align="${left}" class="wide"><select class="flat form-control input-sm" id="contactName"
+			<td align="${left}" class="wide"><select class="flat form-control input-sm" id="contactNameListReport"
 				name="contactName" style="width:175px !important">
 					<option value="">------<transys:label code="Please Select" />------</option>
 					<c:forEach items="${customer}" var="name">
@@ -48,8 +33,9 @@
 						</c:if>
 						<option value="${name.contactName}" ${selected}>${name.contactName}</option>
 					</c:forEach>
-			</select></td>
-
+			</select></td>	
+		</tr>
+		<tr>
 			<td align="${left}" class="form-left"><transys:label
 					code="Phone Number" /></td>
 			<td align="${left}"><select class="flat form-control input-sm"
@@ -65,18 +51,6 @@
 					</c:forEach>
 			</select></td>
 		</tr>
-		<tr>
-			<td align="${left}" class="form-left"><transys:label
-					code="Create Date From" /></td>
-			<td align="${left}" class="wide"><input class="flat"
-				id="datepicker" name="createdAtFrom" style="width: 175px" /></td>
-
-			<td align="${left}" class="form-left"><transys:label
-					code="Create Date To" /></td>
-			<td align="${left}"><input class="flat" id="datepicker1"
-				name="createdAtTo" style="width: 175px" /></td>
-		</tr>
-
 		<tr>
 			<td align="${left}" class="form-left"><transys:label code="Status" /></td>
 			<td align="${left}" class="wide">
@@ -95,23 +69,24 @@
 			<td align="${left}"></td>
 			<td align="${left}"><input type="button"
 				class="btn btn-primary btn-sm"
-				onclick="document.forms['searchForm'].submit();"
-				value="<transys:label code="Search"/>" /></td>
+				onclick="document.forms['customersListReport'].submit();"
+				value="<transys:label code="Preview"/>" /></td>
 		</tr>
 	</table>
+<a href="/customer/generateCustomerListReport.do?type=xls"><img src="/images/excel.png" border="0" style="float:right" class="toolbarButton"></a>
+<a href="/customer/generateCustomerListReport.do?type=pdf"><img src="/images/pdf.png" border="0" style="float:right" class="toolbarButton"></a>
 </form:form>
-<form:form name="delete.do" id="serviceForm" class="tab-color">
-	<transys:datatable urlContext="customer" deletable="true"
-		editable="true" insertable="true" baseObjects="${list}"
+<form:form name="customersListReportDetails" id="customersListReportDetails" class="tab-color">
+	<transys:datatable urlContext="customer" baseObjects="${customerReportVOList}"
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
-		pagingLink="search.do" multipleDelete="false" searcheable="false"
-		exportPdf="true" exportXls="true">
+		pagingLink="search.do">
 		<transys:textcolumn headerText="Customer ID" dataField="id" />
 		<transys:textcolumn headerText="Company Name" dataField="companyName" />
 		<transys:textcolumn headerText="ContactName" dataField="contactName" />
-		<transys:textcolumn headerText="Phone" dataField="phone" />
-		<transys:textcolumn headerText="Created Date" dataField="createdAt" />
+		<transys:textcolumn headerText="Phone Number" dataField="phoneNumber" />
 		<transys:textcolumn headerText="Status" dataField="status" />
+		<transys:textcolumn headerText="Total Orders" dataField="totalOrders" />
+		<transys:textcolumn headerText="Total Amount" dataField="totalAmount" />
 	</transys:datatable>
 	<%session.setAttribute("columnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
 </form:form>

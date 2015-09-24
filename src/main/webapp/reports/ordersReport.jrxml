@@ -3,6 +3,9 @@
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
+	<parameter name="SUBREPORT_DIR" class="Java.io.File" isForPrompting="false">
+		<defaultValueExpression><![CDATA["/Users/mbharatlal/"]]></defaultValueExpression>
+	</parameter>
 	<field name="id" class="java.lang.Long"/>
 	<field name="company_name" class="java.lang.String"/>
 	<field name="deliveryContactName" class="java.lang.String"/>
@@ -18,18 +21,54 @@
 	<field name="permitFees" class="java.lang.String"/>
 	<field name="overweightFee" class="java.lang.String"/>
 	<field name="totalFees" class="java.lang.String"/>
+	<field name="createdAt" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="41" splitType="Stretch">
+		<band height="99" splitType="Stretch">
 			<staticText>
-				<reportElement mode="Opaque" x="487" y="0" width="100" height="20" backcolor="#DDDDA7" uuid="79b17b89-6385-4723-bf56-5f3dc49c543c"/>
+				<reportElement mode="Opaque" x="549" y="21" width="100" height="20" backcolor="#DDDDA7" uuid="79b17b89-6385-4723-bf56-5f3dc49c543c"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="13" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Orders Report]]></text>
 			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="41" y="60" width="143" height="39" uuid="67ed55ae-247c-4d0f-86b3-b71bf5cfa5ce"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Order Data Range From]]></text>
+			</staticText>
+			<textField>
+				<reportElement mode="Transparent" x="184" y="60" width="131" height="39" uuid="c45089e0-8d08-46d3-9aa9-2d631dd2fbad"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true" isItalic="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{createdAt}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Transparent" x="315" y="60" width="21" height="39" uuid="1de03d6b-7b8b-4eed-99be-938ef9c315d3"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[To]]></text>
+			</staticText>
+			<textField>
+				<reportElement mode="Transparent" x="336" y="60" width="157" height="39" uuid="d654af23-9d6d-4717-acad-cd756003d233"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true" isItalic="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{createdAt}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="1003" y="21" width="164" height="20" uuid="b8204582-f19e-4cdf-bcb4-75fba1091240"/>
+				<textElement>
+					<font isItalic="true" isUnderline="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
 		</band>
 	</title>
 	<pageHeader>

@@ -10,6 +10,8 @@
 				 <br><form:errors path="pickupDate" cssClass="errorMessage" />
 			</td>
 		</tr>
+		<tr><td colspan="2"></td></tr>
+		<tr><td colspan="2"></td></tr>
 		<tr>
 			<td class="form-left"><transys:label code="Pickup Driver" /><span class="errorMessage"></span></td>
 			<td align="${left}">
