@@ -1,6 +1,7 @@
 package com.transys.controller;
 
 import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +20,7 @@ import com.transys.core.util.MimeUtil;
 import com.transys.model.Customer;
 import com.transys.model.DumpsterInfo;
 import com.transys.model.DumpsterStatus;
+import com.transys.model.Order;
 import com.transys.model.SearchCriteria;
 
 @Controller
@@ -67,15 +69,15 @@ public class DumpsterOnsiteReportController extends CRUDController<DumpsterInfo>
 	}
 	
 	
-	@Override
+	@RequestMapping(method = RequestMethod.GET, value = "/generateDumpsterOnsiteReport.do")
 	public void export(ModelMap model, HttpServletRequest request,
 			HttpServletResponse response, @RequestParam("type") String type,
 			Object objectDAO, Class clazz) {
 		
 		try {
-		
-		StringBuffer query= new StringBuffer("select obj from DumpsterInfo obj where obj.id!=0 order by obj.id asc");
-		
+			
+			List<DumpsterInfo> dumpsterInfoList = 	genericDAO.executeSimpleQuery("select obj from DumpsterInfo obj where obj.id!=0 order by obj.id asc");
+			
 		if (StringUtils.isEmpty(type))
 			type = "xlsx";
 		if (!type.equals("html") && !(type.equals("print"))) {
@@ -85,24 +87,28 @@ public class DumpsterOnsiteReportController extends CRUDController<DumpsterInfo>
 		response.setContentType(MimeUtil.getContentType(type));
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		Map<String, Object> params = new HashMap<String,Object>();
-		params.put("dumpsterSize", "dumpsterSize");
-		params.put("dumpsterNum", "dumpsterNum");
-		params.put("status", "status");
 		
-		System.out.println("******* The query is "+query);
-		List<DumpsterInfo> list = genericDAO.executeSimpleQuery(query.toString());
+		List<Map<String, ?>> newList = new ArrayList<Map<String, ?>>();
+		for (DumpsterInfo dumpsterInfo : dumpsterInfoList) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("dumpsterSize", dumpsterInfo.getDumpsterSize());
+			map.put("dumpsterNum", dumpsterInfo.getDumpsterNum());
+			map.put("status",dumpsterInfo.getStatus().getStatus());
+	
+			newList.add(map);
+		}
 		
 		if (!type.equals("print") && !type.equals("pdf")) {
 			out = dynamicReportService.generateStaticReport("dumpsterOnsiteReport",
-					list, params, type, request);
+					newList, params, type, request);
 		}
 		else if(type.equals("pdf")){
 			out = dynamicReportService.generateStaticReport("dumpsterOnsiteReportPdf",
-					list, params, type, request);
+					newList, params, type, request);
 		}
 		else {
 			out = dynamicReportService.generateStaticReport("dumpsterOnsiteReport"+"print",
-					list, params, type, request);
+					newList, params, type, request);
 		}
 	
 		out.writeTo(response.getOutputStream());

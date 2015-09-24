@@ -50,10 +50,13 @@
 		</tr>
 	</table>
 </form:form>
+
+<a href="/dumpsterOnsiteReports/generateDumpsterOnsiteReport.do?type=xls"><img src="/images/excel.png" border="0" style="float:right" class="toolbarButton"></a>
+<a href="/dumpsterOnsiteReports/generateDumpsterOnsiteReport.do?type=pdf"><img src="/images/pdf.png" border="0" style="float:right" class="toolbarButton"></a>
 <form:form name="dumpsterOnsiteReport" id="dumpsterOnsiteReport" class="tab-color">
 	<transys:datatable urlContext="dumpsterOnsiteReports"  baseObjects="${dumpsterInfoList}"
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
-		pagingLink="search.do" exportPdf="true" exportXls="true">
+		pagingLink="search.do" >
 		<transys:textcolumn headerText="Dumpster Size" dataField="dumpsterSize" />
 		<transys:textcolumn headerText="Dumpster#" dataField="dumpsterNum" />
 		<transys:textcolumn headerText="Status" dataField="status.status" />
