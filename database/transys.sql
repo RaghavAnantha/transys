@@ -977,6 +977,39 @@ INSERT INTO `dumpsterPrice` VALUES (1,'6 yd',1,240.00,NULL,NULL,NULL,NULL,1),(2,
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
+--
+-- Table structure for table `customerDumpsterPrice`
+--
+
+DROP TABLE IF EXISTS `customerDumpsterPrice`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `customerDumpsterPrice` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `customer` bigint(20) NOT NULL,
+  `dumpsterPrice` decimal(6,2) NOT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `created_by` bigint(20) DEFAULT NULL,
+  `modified_at` datetime DEFAULT NULL,
+  `modified_by` bigint(20) DEFAULT NULL,
+  `delete_flag` int(11) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`),
+  KEY `customerDumpsterPriceRef_idx` (`customer`),
+  CONSTRAINT `customerDumpsterPriceRef` FOREIGN KEY (`customer`) REFERENCES `customer` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `customerDumpsterPrice`
+--
+
+LOCK TABLES `customerDumpsterPrice` WRITE;
+/*!40000 ALTER TABLE `customerDumpsterPrice` DISABLE KEYS */;
+INSERT INTO `customerDumpsterPrice` VALUES (5,5,300.00,'2015-09-25 11:48:14',1,'2015-09-25 11:50:40',1,1);
+/*!40000 ALTER TABLE `customerDumpsterPrice` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
