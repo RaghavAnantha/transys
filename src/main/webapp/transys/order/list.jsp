@@ -96,8 +96,7 @@ function populateCustomerDeliveryAddress() {
 					<option value="">------<transys:label code="Please Select" />------</option>
 					<c:forEach items="${order}" var="anOrder">
 						<c:set var="selected" value="" />
-						<c:if
-							test="${sessionScope.searchCriteria.searchMap['deliveryContactPhone1'] == anOrder.deliveryContactPhone1}">
+						<c:if test="${sessionScope.searchCriteria.searchMap['deliveryContactPhone1'] == anOrder.deliveryContactPhone1}">
 							<c:set var="selected" value="selected" />
 						</c:if>
 						<option value="${anOrder.deliveryContactPhone1}" ${selected}>${anOrder.deliveryContactPhone1}</option>

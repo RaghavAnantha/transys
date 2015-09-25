@@ -325,28 +325,46 @@ $("#addCustomerModal").on("show.bs.modal", function(e) {
 		<tr>
 	    	<td class="form-left"><transys:label code="Permit1 Class"/><span class="errorMessage">*</span></td>
 	        <td align="${left}">
-	        	<select class="flat form-control input-sm" id="permitClasses1" name="permitClasses1" style="width:172px !important">
-					<option value="">------<transys:label code="Please Select" />------</option>
+				<select class="flat form-control input-sm" id="permitClasses1" name="permitClasses1" style="width:172px !important">
+					<option value="">------Please Select------</option>
 					<c:forEach items="${permitClasses}" var="aPermitClass">
-						<option value="${aPermitClass.id}">${aPermitClass.permitClass}</option>
+						<c:set var="selected" value="" />
+						<c:if test="${modelObject.permits != null and modelObject.permits[0] != null and modelObject.permits[0].permitClass != null}">
+							<c:if test="${modelObject.permits[0].permitClass.id == aPermitClass.id}">
+								<c:set var="selected" value="selected" />
+							</c:if>
+						</c:if>
+						<option value="${aPermitClass.id}" ${selected}>${aPermitClass.permitClass}</option>
 					</c:forEach>
 				</select>
 		 	</td>
 		 	<td class="form-left"><transys:label code="Permit2 Class"/></td>
 	        <td align="${left}">
-	        	<select class="flat form-control input-sm" id="permitClasses2" name="permitClasses2" style="width:172px !important">
-					<option value="">------<transys:label code="Please Select" />------</option>
+				<select class="flat form-control input-sm" id="permitClasses2" name="permitClasses2" style="width:172px !important">
+					<option value="">------Please Select------</option>
 					<c:forEach items="${permitClasses}" var="aPermitClass">
-						<option value="${aPermitClass.id}">${aPermitClass.permitClass}</option>
+						<c:set var="selected" value="" />
+						<c:if test="${modelObject.permits != null and modelObject.permits[1] != null and modelObject.permits[1].permitClass != null}">
+							<c:if test="${modelObject.permits[1].permitClass.id == aPermitClass.id}">
+								<c:set var="selected" value="selected" />
+							</c:if>
+						</c:if>
+						<option value="${aPermitClass.id}" ${selected}>${aPermitClass.permitClass}</option>
 					</c:forEach>
 				</select>
 		 	</td>
 		 	<td class="form-left"><transys:label code="Permit3 Class"/></td>
 	        <td align="${left}">
-	        	<select class="flat form-control input-sm" id="permitClasses3" name="permitClasses3" style="width:172px !important">
-					<option value="">------<transys:label code="Please Select" />------</option>
+				<select class="flat form-control input-sm" id="permitClasses3" name="permitClasses3" style="width:172px !important">
+					<option value="">------Please Select------</option>
 					<c:forEach items="${permitClasses}" var="aPermitClass">
-						<option value="${aPermitClass.id}">${aPermitClass.permitClass}</option>
+						<c:set var="selected" value="" />
+						<c:if test="${modelObject.permits != null and modelObject.permits[2] != null and modelObject.permits[2].permitClass != null}">
+							<c:if test="${modelObject.permits[2].permitClass.id == aPermitClass.id}">
+								<c:set var="selected" value="selected" />
+							</c:if>
+						</c:if>
+						<option value="${aPermitClass.id}" ${selected}>${aPermitClass.permitClass}</option>
 					</c:forEach>
 				</select>
 		 	</td>
@@ -354,28 +372,46 @@ $("#addCustomerModal").on("show.bs.modal", function(e) {
 	    <tr>
 	    	<td class="form-left"><transys:label code="Permit1 Type"/><span class="errorMessage">*</span></td>
 	        <td align="${left}">
-	        	<select class="flat form-control input-sm" id="permitTypes1" name="permitTypes1" style="width:172px !important" onChange="return populatePermitNumbers(1);">
-					<option value="">------<transys:label code="Please Select" />------</option>
+				<select class="flat form-control input-sm" id="permitTypes1" name="permitTypes1" style="width:172px !important" onChange="return populatePermitNumbers(1);">
+					<option value="">------Please Select------</option>
 					<c:forEach items="${permitTypes}" var="aPermitType">
-						<option value="${aPermitType.id}">${aPermitType.permitType}</option>
+						<c:set var="selected" value="" />
+						<c:if test="${modelObject.permits != null and modelObject.permits[0] != null and modelObject.permits[0].permitType != null}">
+							<c:if test="${modelObject.permits[0].permitType.id == aPermitType.id}">
+								<c:set var="selected" value="selected" />
+							</c:if>
+						</c:if>
+						<option value="${aPermitType.id}" ${selected}>${aPermitType.permitType}</option>
 					</c:forEach>
 				</select>
 	        </td>
 	        <td class="form-left"><transys:label code="Permit2 Type"/><span class="errorMessage">*</span></td>
 	        <td align="${left}">
 	        	<select class="flat form-control input-sm" id="permitTypes2" name="permitTypes2" style="width:172px !important" onChange="return populatePermitNumbers(2);">
-					<option value="">------<transys:label code="Please Select" />------</option>
+					<option value="">------Please Select------</option>
 					<c:forEach items="${permitTypes}" var="aPermitType">
-						<option value="${aPermitType.id}">${aPermitType.permitType}</option>
+						<c:set var="selected" value="" />
+						<c:if test="${modelObject.permits != null and modelObject.permits[1] != null and modelObject.permits[1].permitType != null}">
+							<c:if test="${modelObject.permits[1].permitType.id == aPermitType.id}">
+								<c:set var="selected" value="selected" />
+							</c:if>
+						</c:if>
+						<option value="${aPermitType.id}" ${selected}>${aPermitType.permitType}</option>
 					</c:forEach>
 				</select>
 	        </td>
 	        <td class="form-left"><transys:label code="Permit3 Type"/><span class="errorMessage">*</span></td>
 	        <td align="${left}">
-	        	<select class="flat form-control input-sm" id="permitTypes3" name="permitTypes3" style="width:172px !important" onChange="return populatePermitNumbers(3);">
-					<option value="">------<transys:label code="Please Select" />------</option>
+	        	<select class="flat form-control input-sm" id="permitTypes2" name="permitTypes2" style="width:172px !important" onChange="return populatePermitNumbers(3);">
+					<option value="">------Please Select------</option>
 					<c:forEach items="${permitTypes}" var="aPermitType">
-						<option value="${aPermitType.id}">${aPermitType.permitType}</option>
+						<c:set var="selected" value="" />
+						<c:if test="${modelObject.permits != null and modelObject.permits[2] != null and modelObject.permits[2].permitType != null}">
+							<c:if test="${modelObject.permits[2].permitType.id == aPermitType.id}">
+								<c:set var="selected" value="selected" />
+							</c:if>
+						</c:if>
+						<option value="${aPermitType.id}" ${selected}>${aPermitType.permitType}</option>
 					</c:forEach>
 				</select>
 	        </td>
