@@ -1,5 +1,7 @@
 package com.transys.model;
 
+import java.math.BigDecimal;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -18,7 +20,7 @@ public class DumpsterPrice extends AbstractBaseModel {
 	private MaterialType materialType;
 	
 	@Column(name="price")
-	private Double price;
+	private BigDecimal price;
 
 	public String getDumpsterSize() {
 		return dumpsterSize;
@@ -36,11 +38,11 @@ public class DumpsterPrice extends AbstractBaseModel {
 		this.materialType = materialType;
 	}
 
-	public Double getPrice() {
+	public BigDecimal getPrice() {
 		return price;
 	}
 
-	public void setPrice(Double price) {
+	public void setPrice(BigDecimal price) {
 		this.price = price;
 	}
 	

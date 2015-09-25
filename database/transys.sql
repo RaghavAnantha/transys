@@ -954,7 +954,7 @@ CREATE TABLE `dumpsterPrice` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `dumpsterSize` varchar(5) NOT NULL,
   `materialType` bigint(20) NOT NULL,
-  `price` double NOT NULL,
+  `price` decimal(6,2) NOT NULL,
   `created_at` datetime DEFAULT NULL,
   `created_by` bigint(20) DEFAULT NULL,
   `modified_at` datetime DEFAULT NULL,
@@ -972,10 +972,11 @@ CREATE TABLE `dumpsterPrice` (
 
 LOCK TABLES `dumpsterPrice` WRITE;
 /*!40000 ALTER TABLE `dumpsterPrice` DISABLE KEYS */;
-INSERT INTO `dumpsterPrice` VALUES (1,'6 yd',1,240,NULL,NULL,NULL,NULL,1),(2,'20 yd',2,300,NULL,NULL,NULL,NULL,1);
+INSERT INTO `dumpsterPrice` VALUES (1,'6 yd',1,240.00,NULL,NULL,NULL,NULL,1),(2,'20 yd',2,300.00,NULL,NULL,NULL,NULL,1);
 /*!40000 ALTER TABLE `dumpsterPrice` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
