@@ -50,8 +50,11 @@
     <decorator name="dumpsterPrice" page="singleColumnLayout.jsp">
         <pattern>/transys/dumpsterPrice/**</pattern>
     </decorator>
-        <decorator name="customerDumpsterPrice" page="singleColumnLayout.jsp">
+    <decorator name="customerDumpsterPrice" page="singleColumnLayout.jsp">
         <pattern>/transys/customerDumpsterPrice/**</pattern>
+    </decorator>
+    <decorator name="cityFee" page="singleColumnLayout.jsp">
+        <pattern>/transys/cityFee/**</pattern>
     </decorator>
     <decorator name="report" page="singleColumnLayout.jsp">
         <pattern>/transys/dumpsterOnsiteReports/**</pattern>

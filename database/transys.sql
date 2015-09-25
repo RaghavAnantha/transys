@@ -1010,6 +1010,37 @@ INSERT INTO `customerDumpsterPrice` VALUES (5,5,300.00,'2015-09-25 11:48:14',1,'
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
+--
+-- Table structure for table `cityFee`
+--
+
+DROP TABLE IF EXISTS `cityFee`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `cityFee` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `city` varchar(40) NOT NULL,
+  `fee` decimal(6,2) NOT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `created_by` bigint(20) DEFAULT NULL,
+  `modified_at` datetime DEFAULT NULL,
+  `modified_by` bigint(20) DEFAULT NULL,
+  `delete_flag` int(11) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `cityFee`
+--
+
+LOCK TABLES `cityFee` WRITE;
+/*!40000 ALTER TABLE `cityFee` DISABLE KEYS */;
+INSERT INTO `cityFee` VALUES (5,'Chicago',35.00,'2015-09-25 12:31:34',1,'2015-09-25 12:32:00',1,1);
+/*!40000 ALTER TABLE `cityFee` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
