@@ -1059,11 +1059,12 @@ CREATE TABLE `permitFee` (
   `modified_by` bigint(20) DEFAULT NULL,
   `delete_flag` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
+  UNIQUE KEY `uniqueClassType` (`permitClass`,`permitType`),
   KEY `permitClassFeeRef_idx` (`permitClass`),
   KEY `permitTypeFeeRef_idx` (`permitType`),
   CONSTRAINT `permitClassFeeRef` FOREIGN KEY (`permitClass`) REFERENCES `permitClass` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `permitTypeFeeRef` FOREIGN KEY (`permitType`) REFERENCES `permitType` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1072,11 +1073,43 @@ CREATE TABLE `permitFee` (
 
 LOCK TABLES `permitFee` WRITE;
 /*!40000 ALTER TABLE `permitFee` DISABLE KEYS */;
-INSERT INTO `permitFee` VALUES (5,1,1,230.00,'2015-09-25 14:46:36',1,'2015-09-25 14:49:44',1,1);
+INSERT INTO `permitFee` VALUES (5,1,1,65.00,'2015-09-25 14:46:36',1,'2015-09-25 15:45:42',1,1),(6,1,2,115.00,'2015-09-25 15:45:56',1,NULL,NULL,1),(7,2,1,130.00,'2015-09-25 15:46:19',1,NULL,NULL,1),(8,2,2,230.00,'2015-09-25 15:46:37',1,NULL,NULL,1);
 /*!40000 ALTER TABLE `permitFee` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
+
+
+--
+-- Table structure for table `additionalFee`
+--
+
+DROP TABLE IF EXISTS `additionalFee`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `additionalFee` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `description` varchar(40) NOT NULL,
+  `fee` decimal(6,2) NOT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `created_by` bigint(20) DEFAULT NULL,
+  `modified_at` datetime DEFAULT NULL,
+  `modified_by` bigint(20) DEFAULT NULL,
+  `delete_flag` int(11) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `additionalFee`
+--
+
+LOCK TABLES `additionalFee` WRITE;
+/*!40000 ALTER TABLE `additionalFee` DISABLE KEYS */;
+INSERT INTO `additionalFee` VALUES (5,'Move Box',190.00,'2015-09-25 15:38:13',1,NULL,NULL,1);
+/*!40000 ALTER TABLE `additionalFee` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

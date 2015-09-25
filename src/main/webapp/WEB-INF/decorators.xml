@@ -38,6 +38,9 @@
     <decorator name="employee" page="singleColumnLayout.jsp">
         <pattern>/transys/employee/**</pattern>
     </decorator>
+    <decorator name="dumpsters" page="singleColumnLayout.jsp">
+        <pattern>/transys/dumpsters/**</pattern>
+    </decorator>
     <decorator name="materialType" page="singleColumnLayout.jsp">
         <pattern>/transys/materialType/**</pattern>
     </decorator>
@@ -58,6 +61,9 @@
     </decorator>
     <decorator name="permitFee" page="singleColumnLayout.jsp">
         <pattern>/transys/permitFee/**</pattern>
+    </decorator>
+    <decorator name="additionalFee" page="singleColumnLayout.jsp">
+        <pattern>/transys/additionalFee/**</pattern>
     </decorator>
     <decorator name="report" page="singleColumnLayout.jsp">
         <pattern>/transys/dumpsterOnsiteReports/**</pattern>

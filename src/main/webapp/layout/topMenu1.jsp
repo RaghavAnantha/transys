@@ -31,6 +31,7 @@
 				<b class="caret"></b></a>
 				<ul class="dropdown-menu">
 					<li><a href="/employee/main.do">Employees</a></li>
+					<li><a href="/dumpsters/main.do">Dumpsters</a></li>
 					<li><a href="/materialType/main.do">Material Type</a></li>
 					<li><a href="/paymentMethod/main.do">Payment Method</a></li>
 					<li><a href="/locationType/main.do">Location Type</a></li>
@@ -38,6 +39,7 @@
 					<li><a href="/customerDumpsterPrice/main.do">Customer Dumpster Price</a></li>
 					<li><a href="/cityFee/main.do">City Fee</a></li>
 					<li><a href="/permitFee/main.do">Permit Fee</a></li>
+					<li><a href="/additionalFee/main.do">Additional Fee</a></li>
 				</ul>
 				
 				</li>
