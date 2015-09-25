@@ -1077,6 +1077,36 @@ INSERT INTO `permitFee` VALUES (5,1,1,230.00,'2015-09-25 14:46:36',1,'2015-09-25
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
+--
+-- Table structure for table `additionalFee`
+--
+
+DROP TABLE IF EXISTS `additionalFee`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `additionalFee` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `description` varchar(40) NOT NULL,
+  `fee` decimal(6,2) NOT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `created_by` bigint(20) DEFAULT NULL,
+  `modified_at` datetime DEFAULT NULL,
+  `modified_by` bigint(20) DEFAULT NULL,
+  `delete_flag` int(11) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `additionalFee`
+--
+
+LOCK TABLES `additionalFee` WRITE;
+/*!40000 ALTER TABLE `additionalFee` DISABLE KEYS */;
+INSERT INTO `additionalFee` VALUES (5,'Move Box',190.00,'2015-09-25 15:38:13',1,NULL,NULL,1);
+/*!40000 ALTER TABLE `additionalFee` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

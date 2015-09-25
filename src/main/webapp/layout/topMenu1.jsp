@@ -38,6 +38,7 @@
 					<li><a href="/customerDumpsterPrice/main.do">Customer Dumpster Price</a></li>
 					<li><a href="/cityFee/main.do">City Fee</a></li>
 					<li><a href="/permitFee/main.do">Permit Fee</a></li>
+					<li><a href="/additionalFee/main.do">Additional Fee</a></li>
 				</ul>
 				
 				</li>
