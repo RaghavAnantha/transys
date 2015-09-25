@@ -186,20 +186,20 @@ $("#addCustomerModal").on("show.bs.modal", function(e) {
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Address" /><span class="errorMessage"></span></td>
-			<td align="${left}" id="address"></td>
+			<c:set var="address" value="${modelObject.customer.billingAddressLine1}" />
+			<td align="${left}" id="address">${address}</td>
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Contact" /><span class="errorMessage"></span></td>
-			<td align="${left}" id="contact"></td>
+			<td align="${left}" id="contact">${modelObject.customer.contactName}</td>
 			<td class="form-left"><transys:label code="Fax"/></td>
-			<td align="${left}" id="fax">
-			</td>
+			<td align="${left}" id="fax">${modelObject.customer.fax}</td>
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Phone" /><span class="errorMessage"></span></td>
-			<td align="${left}" id="phone"></td>
+			<td align="${left}" id="phone">${modelObject.customer.phone}</td>
 			<td class="form-left"><transys:label code="Email"/></td>
-			<td align="${left}" id="email"></td>
+			<td align="${left}" id="email">${modelObject.customer.phone}</td>
 		</tr>
 		<tr>
 			<td colspan=10></td>
@@ -421,24 +421,36 @@ $("#addCustomerModal").on("show.bs.modal", function(e) {
 	        <td align="${left}">
 	        	<select class="flat form-control input-sm" id="permits[0]" name="permits[0]" style="width:172px !important" onChange="return populatePermitDateAndFee(1);">
 					<option value="">------<transys:label code="Please Select" />------</option>
+					<c:if test="${modelObject.permits != null and modelObject.permits[0] != null and modelObject.permits[0].number != null}">
+						<c:set var="selected" value="selected" />
+						<option value="${modelObject.permits[0].id}" ${selected}>${modelObject.permits[0].number}</option>
+					</c:if>
 				</select>
 	        </td>
 	        <td class="form-left"><transys:label code="Permit2 Number"/><span class="errorMessage">*</span></td>
 	        <td align="${left}">
 	        	<select class="flat form-control input-sm" id="permits[1]" name="permits[1]" style="width:172px !important" onChange="return populatePermitDateAndFee(2);">
 					<option value="">------<transys:label code="Please Select" />------</option>
+					<c:if test="${modelObject.permits != null and modelObject.permits[1] != null and modelObject.permits[1].number != null}">
+						<c:set var="selected" value="selected" />
+						<option value="${modelObject.permits[1].id}" ${selected}>${modelObject.permits[1].number}</option>
+					</c:if>
 				</select>
 	        </td>
 	        <td class="form-left"><transys:label code="Permit3 Number"/><span class="errorMessage">*</span></td>
 	        <td align="${left}">
 	        	<select class="flat form-control input-sm" id="permits[2]" name="permits[2]" style="width:172px !important" onChange="return populatePermitDateAndFee(3);">
 					<option value="">------<transys:label code="Please Select" />------</option>
+					<c:if test="${modelObject.permits != null and modelObject.permits[2] != null and modelObject.permits[2].number != null}">
+						<c:set var="selected" value="selected" />
+						<option value="${modelObject.permits[2].id}" ${selected}>${modelObject.permits[2].number}</option>
+					</c:if>
 				</select>
 	        </td>
 		</tr>
 	    <tr>
 	    	<td class="form-left"><transys:label code="Permit1 Valid From"/><span class="errorMessage">*</span></td>
-	        <td align="${left}" id="permitValidFrom1"></td>
+	        <td align="${left}" id="permitValidFrom1">${modelObject.permits[0].startDate}</td>
 	        <td class="form-left"><transys:label code="Permit2 Valid From"/><span class="errorMessage">*</span></td>
 	        <td align="${left}" id="permitValidFrom2"></td>
 	        <td class="form-left"><transys:label code="Permit3 Valid From"/><span class="errorMessage">*</span></td>
@@ -446,7 +458,7 @@ $("#addCustomerModal").on("show.bs.modal", function(e) {
 	    </tr>
 	    <tr>
 	    	<td class="form-left"><transys:label code="Permit1 Valid To"/><span class="errorMessage">*</span></td>
-	        <td align="${left}" id="permitValidTo1"></td>
+	        <td align="${left}" id="permitValidTo1">${modelObject.permits[0].endDate}</td>
 	        <td class="form-left" ><transys:label code="Permit2 Valid To"/><span class="errorMessage">*</span></td>
 	        <td align="${left}" id="permitValidTo2"></td>
 	        <td class="form-left"><transys:label code="Permit3 Valid To"/><span class="errorMessage">*</span></td>
@@ -454,9 +466,9 @@ $("#addCustomerModal").on("show.bs.modal", function(e) {
 	    </tr>
 	    <tr>
 	    	<td class="form-left"><transys:label code="Permit1 Fee"/><span class="errorMessage">*</span></td>
-	        <td align="${left}" id="permitFee1"></td>
+	        <td align="${left}" id="permitFee1">${modelObject.permits[0].endDate}</td>
 	        <td class="form-left"><transys:label code="Permit2 Fee"/><span class="errorMessage">*</span></td>
-	        <td align="${left}" id="permitFee2"></td>
+	        <td align="${left}" id="permitFee2">${modelObject.permits[1].endDate}</td>
 	        <td class="form-left"><transys:label code="Permit3 Fee"/><span class="errorMessage">*</span></td>
 	        <td align="${left}" id="permitFee3"></td>
 	    </tr>
