@@ -38,6 +38,9 @@
     <decorator name="employee" page="singleColumnLayout.jsp">
         <pattern>/transys/employee/**</pattern>
     </decorator>
+    <decorator name="dumpsters" page="singleColumnLayout.jsp">
+        <pattern>/transys/dumpsters/**</pattern>
+    </decorator>
     <decorator name="materialType" page="singleColumnLayout.jsp">
         <pattern>/transys/materialType/**</pattern>
     </decorator>
