@@ -56,6 +56,9 @@
     <decorator name="cityFee" page="singleColumnLayout.jsp">
         <pattern>/transys/cityFee/**</pattern>
     </decorator>
+    <decorator name="permitFee" page="singleColumnLayout.jsp">
+        <pattern>/transys/permitFee/**</pattern>
+    </decorator>
     <decorator name="report" page="singleColumnLayout.jsp">
         <pattern>/transys/dumpsterOnsiteReports/**</pattern>
     </decorator>
