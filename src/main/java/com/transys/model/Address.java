@@ -5,6 +5,9 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import org.apache.commons.lang3.StringUtils;
 
 @Entity
 @Table(name="address")
@@ -51,6 +54,19 @@ public class Address extends AbstractBaseModel {
 
 	public void setLine2(String line2) {
 		this.line2 = line2;
+	}
+	
+	@Transient
+	public String getFullLine() {
+		StringBuffer fullLineBuff = new StringBuffer();
+		if (StringUtils.isNotEmpty(getLine1())) {
+			fullLineBuff.append(getLine1());
+		}
+		if (StringUtils.isNotEmpty(getLine2())) {
+			fullLineBuff.append(" " + getLine2());
+		}
+		
+		return fullLineBuff.toString();
 	}
 
 	public String getCity() {

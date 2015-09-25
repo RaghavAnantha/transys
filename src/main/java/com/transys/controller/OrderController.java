@@ -460,9 +460,12 @@ public class OrderController extends CRUDController<Order> {
 		model.addAttribute("activeTab", "manageOrders");
 		model.addAttribute("mode", "ADD");
 		model.addAttribute("activeSubTab", "orderDetails");
-		
+		 
 		Order orderToBeEdited = (Order)model.get("modelObject");
 		
+		String query = "select obj from Address obj where obj.customer.id=" +  orderToBeEdited.getCustomer().getId() + " order by obj.line1 asc";
+		model.addAttribute("deliveryAddresses", genericDAO.executeSimpleQuery(query));
+    	
 		Order emptyOrder = new Order();
 		emptyOrder.setId(orderToBeEdited.getId());
 		OrderNotes notes = new OrderNotes();
@@ -605,6 +608,9 @@ public class OrderController extends CRUDController<Order> {
 		List<BaseModel> notesList = genericDAO.executeSimpleQuery("select obj from OrderNotes obj where obj.order.id=" +  entity.getId() + " order by obj.id asc");
 		model.addAttribute("notesList", notesList);
 		
+		String query = "select obj from Address obj where obj.customer.id=" +  entity.getCustomer().getId() + " order by obj.line1 asc";
+		model.addAttribute("deliveryAddresses", genericDAO.executeSimpleQuery(query));
+    	
 		//return urlContext + "/form";
 		return urlContext + "/order";
 

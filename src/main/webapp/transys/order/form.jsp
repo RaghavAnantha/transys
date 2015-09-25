@@ -219,7 +219,7 @@ $("#addCustomerModal").on("show.bs.modal", function(e) {
 				<label style="display: inline-block; font-weight: normal">
 					<form:select id="deliveryAddressSelect" cssClass="flat form-control input-sm" path="deliveryAddress" style="width:172px !important">
 						<form:option value="">-------Please Select------</form:option>
-						<form:options items="${deliveryAddresses}" itemValue="id" itemLabel="line1" />
+						<form:options items="${deliveryAddresses}" itemValue="id" itemLabel="fullLine"/>
 					</form:select> 
 				</label>
 				<label style="display: inline-block; font-weight: normal">
