@@ -423,8 +423,15 @@ $("#addCustomerModal").on("show.bs.modal", function(e) {
 	        	<select class="flat form-control input-sm" id="permits[0]" name="permits[0]" style="width:172px !important" onChange="return populatePermitDateAndFee(1);">
 					<option value="">------<transys:label code="Please Select" />------</option>
 					<c:if test="${modelObject.permits != null and modelObject.permits[0] != null and modelObject.permits[0].number != null}">
-						<c:set var="selected" value="selected" />
-						<option value="${modelObject.permits[0].id}" ${selected}>${modelObject.permits[0].number}</option>
+						<c:set var="chosenPermit" value="${modelObject.permits[0]}" />
+						<c:set var="allPermitsOfChosenType" value="${allPermitsOfChosenTypesList[0]}" />
+						<c:forEach items="${allPermitsOfChosenType}" var="aPermitOfChosenType">
+							<c:set var="selected" value="" />
+							<c:if test="${aPermitOfChosenType.id == chosenPermit.id}">
+								<c:set var="selected" value="selected" />
+							</c:if>
+							<option value="${aPermitOfChosenType.id}" ${selected}>${aPermitOfChosenType.number}</option>
+						</c:forEach>
 					</c:if>
 				</select>
 	        </td>
@@ -433,8 +440,15 @@ $("#addCustomerModal").on("show.bs.modal", function(e) {
 	        	<select class="flat form-control input-sm" id="permits[1]" name="permits[1]" style="width:172px !important" onChange="return populatePermitDateAndFee(2);">
 					<option value="">------<transys:label code="Please Select" />------</option>
 					<c:if test="${modelObject.permits != null and modelObject.permits[1] != null and modelObject.permits[1].number != null}">
-						<c:set var="selected" value="selected" />
-						<option value="${modelObject.permits[1].id}" ${selected}>${modelObject.permits[1].number}</option>
+						<c:set var="chosenPermit" value="${modelObject.permits[1]}" />
+						<c:set var="allPermitsOfChosenType" value="${allPermitsOfChosenTypesList[1]}" />
+						<c:forEach items="${allPermitsOfChosenType}" var="aPermitOfChosenType">
+							<c:set var="selected" value="" />
+							<c:if test="${aPermitOfChosenType.id == chosenPermit.id}">
+								<c:set var="selected" value="selected" />
+							</c:if>
+							<option value="${aPermitOfChosenType.id}" ${selected}>${aPermitOfChosenType.number}</option>
+						</c:forEach>
 					</c:if>
 				</select>
 	        </td>
@@ -443,8 +457,15 @@ $("#addCustomerModal").on("show.bs.modal", function(e) {
 	        	<select class="flat form-control input-sm" id="permits[2]" name="permits[2]" style="width:172px !important" onChange="return populatePermitDateAndFee(3);">
 					<option value="">------<transys:label code="Please Select" />------</option>
 					<c:if test="${modelObject.permits != null and modelObject.permits[2] != null and modelObject.permits[2].number != null}">
-						<c:set var="selected" value="selected" />
-						<option value="${modelObject.permits[2].id}" ${selected}>${modelObject.permits[2].number}</option>
+						<c:set var="chosenPermit" value="${modelObject.permits[2]}" />
+						<c:set var="allPermitsOfChosenType" value="${allPermitsOfChosenTypesList[2]}" />
+						<c:forEach items="${allPermitsOfChosenType}" var="aPermitOfChosenType">
+							<c:set var="selected" value="" />
+							<c:if test="${aPermitOfChosenType.id == chosenPermit.id}">
+								<c:set var="selected" value="selected" />
+							</c:if>
+							<option value="${aPermitOfChosenType.id}" ${selected}>${aPermitOfChosenType.number}</option>
+						</c:forEach>
 					</c:if>
 				</select>
 	        </td>

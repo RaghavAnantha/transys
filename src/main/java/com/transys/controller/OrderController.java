@@ -440,17 +440,23 @@ public class OrderController extends CRUDController<Order> {
 														    @RequestParam(value = "permitId", required = false) String permitId,
 															 @RequestParam(value = "permitClassId", required = false) String permitClassId,
 															 @RequestParam(value = "permitTypeId", required = false) String permitTypeId) {
+		List<Permit> permitList = retrievePermit(permitId, permitClassId, permitTypeId);
+		
+		String json = (new Gson()).toJson(permitList);
+		return json;
+	}
+	
+	
+	private List<Permit> retrievePermit(String permitId, String permitClassId, String permitTypeId) {
 		String query = "select obj from Permit obj where ";
 		if (StringUtils.isNotEmpty(permitId)) {
 			query += "obj.id=" + permitId;
 		} else {
-			query += "obj.permitType.id=" + permitTypeId
-					 + " and obj.permitClass.id=" + permitClassId;
+			query += "obj.permitType.id=" + permitTypeId;
+			query += " and obj.permitClass.id=" + permitClassId;
 		}
 		
-		List<Permit> permitList  = genericDAO.executeSimpleQuery(query);
-		String json = (new Gson()).toJson(permitList);
-		return json;
+		return genericDAO.executeSimpleQuery(query);
 	}
 	
 	@Override
@@ -474,6 +480,18 @@ public class OrderController extends CRUDController<Order> {
 	
 		List<BaseModel> notesList = genericDAO.executeSimpleQuery("select obj from OrderNotes obj where obj.order.id=" +  orderToBeEdited.getId() + " order by obj.id asc");
 		model.addAttribute("notesList", notesList);
+		
+		List<List<Permit>> allPermitsOfChosenTypesList = new ArrayList<List<Permit>>();
+		for(Permit aChosenPermit : orderToBeEdited.getPermits()) {
+			if (aChosenPermit != null && aChosenPermit.getId() != null) {
+				String aChosenPermitClassId =  aChosenPermit.getPermitClass().getId().toString();
+				String aChosenPermitTypeId =  aChosenPermit.getPermitType().getId().toString();
+				List<Permit> aPermitsOfChosenTypeList = retrievePermit(StringUtils.EMPTY, aChosenPermitClassId, aChosenPermitTypeId);
+				
+				allPermitsOfChosenTypesList.add(aPermitsOfChosenTypeList);
+			}
+		}
+		model.addAttribute("allPermitsOfChosenTypesList", allPermitsOfChosenTypesList);
 		
 		//return urlContext + "/form";
 		return urlContext + "/order";
@@ -610,15 +628,22 @@ public class OrderController extends CRUDController<Order> {
 		
 		String query = "select obj from Address obj where obj.customer.id=" +  entity.getCustomer().getId() + " order by obj.line1 asc";
 		model.addAttribute("deliveryAddresses", genericDAO.executeSimpleQuery(query));
+		
+		List<List<Permit>> allPermitsOfChosenTypesList = new ArrayList<List<Permit>>();
+		for(Permit aChosenPermit : entity.getPermits()) {
+			if (aChosenPermit != null && aChosenPermit.getId() != null) {
+				String aChosenPermitClassId =  aChosenPermit.getPermitClass().getId().toString();
+				String aChosenPermitTypeId =  aChosenPermit.getPermitType().getId().toString();
+				List<Permit> aPermitsOfChosenTypeList = retrievePermit(StringUtils.EMPTY, aChosenPermitClassId, aChosenPermitTypeId);
+				
+				allPermitsOfChosenTypesList.add(aPermitsOfChosenTypeList);
+			}
+		}
+		model.addAttribute("allPermitsOfChosenTypes", allPermitsOfChosenTypesList);
     	
 		//return urlContext + "/form";
 		return urlContext + "/order";
 
-		// create permit relationship
-		/*	Map criterias = new HashMap();
-		List<Permit> permits = genericDAO.findByCriteria(Permit.class, criterias, "id", false);
-		entity.setPermits(permits.parallelStream().distinct().collect(Collectors.toSet()));*/
-		
 		//return super.save(request, entity, bindingResult, model);
 	}
 }
