@@ -8,6 +8,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 @Entity
 @Table(name="permit")
 public class Permit  extends AbstractBaseModel {
@@ -31,9 +33,11 @@ public class Permit  extends AbstractBaseModel {
 	private Double fee;
 	
 	@Column(name="startDate")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM/dd/yyyy")
 	private Date startDate;
 	
 	@Column(name="endDate")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM/dd/yyyy")
 	private Date endDate;
 	
 	@Column(name="permitAddress")

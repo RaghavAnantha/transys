@@ -1,7 +1,7 @@
 <%@include file="/common/taglibs.jsp"%>
 <script type="text/javascript">
 function validateAndFormatPhone() {	
-	var phone = document.getElementById("phone").value;
+	var phone = document.getElementById("deliveryContactPhone1").value;
 	if(phone != ""){
 		if(phone.length < 10) {
 			alert("Invalid Phone Number");
@@ -9,7 +9,7 @@ function validateAndFormatPhone() {
 			return true;
 		} else {
 			var formattedPhone = formatPhone(phone);
-			document.getElementById("phone").value = formattedPhone;
+			document.getElementById("deliveryContactPhone1").value = formattedPhone;
 		}
 	}	
 }
@@ -34,53 +34,64 @@ function validate() {
 };
 
 function populateCustomerInfo() {
-	populateDeliveryAddress();
-	populateCustomerBillingAddress();
+	retrieveAndPopulateDeliveryAddress();
+	retrieveAndPopulateCustomerBillingAddress();
 }
 
-function populateDeliveryAddress() {
+function retrieveAndPopulateDeliveryAddress() {
 	var customerSelect =  $('#customerSelect');
-	var deliveryAddressSelect = $('#deliveryAddressSelect');
-	
-	deliveryAddressSelect.empty();
-	
-	var firstOption = $('<option value="">'+ "-------Please Select------" +'</option>');
-	deliveryAddressSelect.append(firstOption);
-	
 	var customerId = customerSelect.val();
 	$.ajax({
   		url: "customerDeliveryAddress.do?id=" + customerId,
        	type: "GET",
        	success: function(responseData, textStatus, jqXHR) {
     	   	var addressList = jQuery.parseJSON(responseData);
-    	   	$.each(addressList, function () {
-    	   	    $("<option />", {
-    	   	        val: this.id,
-    	   	        text: this.line1 + " " + this.line2
-    	   	    }).appendTo(deliveryAddressSelect);
-    	   	});
+    	   	populateDeliveryAddress(addressList);
 		}
 	});
 }
 
-function populateCustomerBillingAddress() {
+function populateDeliveryAddress(addressList) {
+	var deliveryAddressSelect = $('#deliveryAddressSelect');
+	deliveryAddressSelect.empty();
+	
+	var firstOption = $('<option value="">'+ "-------Please Select------" +'</option>');
+	deliveryAddressSelect.append(firstOption);
+	
+	var selected = "";
+   	$.each(addressList, function () {
+   		$("<option />", {
+   	        val: this.id,
+   	        text: this.line1 + " " + this.line2
+   	    }).appendTo(deliveryAddressSelect);
+   	});
+}
+
+function selectDeliveryAddressOption(value) {
+	$('#deliveryAddressSelect').val(value);
+}
+
+function retrieveAndPopulateCustomerBillingAddress() {
 	var customerId = $('#customerSelect').val();
 	$.ajax({
   		url: "customerAddress.do?id=" + customerId,
        	type: "GET",
        	success: function(responseData, textStatus, jqXHR) {
     	   	var customer = jQuery.parseJSON(responseData);
-    	   	
-    	   	var address = customer.billingAddressLine1 + ", " 
-    	   					+ customer.city + ", " + customer.state.name + ", " + customer.zipcode
-    	   	$('#address').html(address);
-    	   	
-    		$('#contact').html(customer.contactName);
-    		$('#phone').html(formatPhone(customer.phone));
-    		$('#fax').html(formatPhone(customer.fax));
-    		$('#email').html(customer.email);
+    	   	populateCustomerBillingAddress(customer);
 		}
 	}); 
+}
+
+function populateCustomerBillingAddress(customer) {
+   	var address = customer.billingAddressLine1 + ", " 
+   					+ customer.city + ", " + customer.state.name + ", " + customer.zipcode
+   	$('#addressTd').html(address);
+   	
+	$('#contactTd').html(customer.contactName);
+	$('#phoneTd').html(formatPhone(customer.phone));
+	$('#faxTd').html(formatPhone(customer.fax));
+	$('#emailTd').html(customer.email);
 }
 
 function appendDeliveryAddress(address) {
@@ -94,7 +105,10 @@ function appendCustomer(customer) {
 	var newCustomerOption = $('<option value=' + customer.id + ' selected>'+ customer.companyName +'</option>');
 	customerSelect.append(newCustomerOption);
 	
-	appendDeliveryAddress(customer.address[0]);
+	populateCustomerBillingAddress(customer);
+	
+	populateDeliveryAddress(customer.address);
+	selectDeliveryAddressOption(customer.address[0].id);
 }
 
 function populatePermitNumbers(index) {
@@ -190,19 +204,19 @@ $("#addCustomerModal").on("show.bs.modal", function(e) {
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Address" /><span class="errorMessage"></span></td>
-			<td align="${left}" id="address">${modelObject.customer.getBillingAddress()}</td>
+			<td align="${left}" id="addressTd">${modelObject.customer.getBillingAddress()}</td>
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Contact" /><span class="errorMessage"></span></td>
-			<td align="${left}" id="contact">${modelObject.customer.contactName}</td>
+			<td align="${left}" id="contactTd">${modelObject.customer.contactName}</td>
 			<td class="form-left"><transys:label code="Fax"/></td>
-			<td align="${left}" id="fax">${modelObject.customer.getFormattedFax()}</td>
+			<td align="${left}" id="faxTd">${modelObject.customer.getFormattedFax()}</td>
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Phone" /><span class="errorMessage"></span></td>
-			<td align="${left}" id="phone">${modelObject.customer.getFormattedPhone()}</td>
+			<td align="${left}" id="phoneTd">${modelObject.customer.getFormattedPhone()}</td>
 			<td class="form-left"><transys:label code="Email"/></td>
-			<td align="${left}" id="email">${modelObject.customer.email}</td>
+			<td align="${left}" id="emailTd">${modelObject.customer.email}</td>
 		</tr>
 		<tr>
 			<td colspan=10></td>

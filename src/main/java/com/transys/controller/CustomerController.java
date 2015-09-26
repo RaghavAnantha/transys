@@ -622,6 +622,9 @@ public class CustomerController extends CRUDController<Customer> {
 		//setupCreate(model, request);
 		//model.addAttribute("modelObject", entity);
 		
+		//Or retrieve cust again?
+		List<State> stateList = genericDAO.executeSimpleQuery("select obj from State obj where obj.id= " + entity.getState().getId());
+		entity.getState().setName(stateList.get(0).getName());
 		
 		ObjectMapper objectMapper = new ObjectMapper();
 		String json = StringUtils.EMPTY;
@@ -634,7 +637,7 @@ public class CustomerController extends CRUDController<Customer> {
 		
 		return json;
 				
-		/*String json = (new Gson()).toJson(entity.getAddress());
+		/*String json = (new Gson()).toJson(entity);
 		return json;*/
 	}
 }

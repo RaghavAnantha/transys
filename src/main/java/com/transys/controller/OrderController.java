@@ -545,7 +545,7 @@ public class OrderController extends CRUDController<Order> {
 		ObjectMapper objectMapper = new ObjectMapper();
 		String json = StringUtils.EMPTY;
 		try {
-			json = objectMapper.writeValueAsString(customerList);
+			json = objectMapper.writeValueAsString(customerList.get(0));
 		} catch (JsonProcessingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -672,8 +672,12 @@ public class OrderController extends CRUDController<Order> {
 				allPermitsOfChosenTypesList.add(aPermitsOfChosenTypeList);
 			}
 		}
-		model.addAttribute("allPermitsOfChosenTypes", allPermitsOfChosenTypesList);
-    	
+		model.addAttribute("allPermitsOfChosenTypesList", allPermitsOfChosenTypesList);
+		
+		Long customerId = entity.getCustomer().getId();
+		List<Customer> customerList = genericDAO.executeSimpleQuery("select obj from Customer obj where obj.id=" + customerId);
+		entity.setCustomer(customerList.get(0));
+		
 		//return urlContext + "/form";
 		return urlContext + "/order";
 

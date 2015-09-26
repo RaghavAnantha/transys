@@ -1,7 +1,7 @@
 <%@include file="/common/taglibs.jsp"%>
 <script type="text/javascript">
 function formatPhone(){	
-	var phone = document.getElementById("phone").value;
+	var phone = $("#phone").val();
 	if(phone != ""){
 		if(phone.length < 10){
 			alert("Invalid Phone Number");
