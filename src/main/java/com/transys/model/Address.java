@@ -57,6 +57,7 @@ public class Address extends AbstractBaseModel {
 	}
 	
 	@Transient
+	//TODO: Move to utils?
 	public String getFullLine() {
 		StringBuffer fullLineBuff = new StringBuffer();
 		if (StringUtils.isNotEmpty(getLine1())) {

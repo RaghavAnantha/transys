@@ -1,24 +1,32 @@
 <%@include file="/common/taglibs.jsp"%>
 <script type="text/javascript">
-function formatPhone() {	
+function validateAndFormatPhone() {	
 	var phone = document.getElementById("phone").value;
 	if(phone != ""){
-		if(phone.length < 10){
+		if(phone.length < 10) {
 			alert("Invalid Phone Number");
 			document.getElementById("phone").value = "";
 			return true;
-		}
-		else{
-			var str = new String(phone);
-			if(!str.match("-")){
-				var p1 = str.substring(0,3);
-				var p2 = str.substring(3,6);
-				var p3 = str.substring(6,10);				
-				var phone = p1 + "-" + p2 + "-" + p3;
-				document.getElementById("phone").value = phone;
-			}
+		} else {
+			var formattedPhone = formatPhone(phone);
+			document.getElementById("phone").value = formattedPhone;
 		}
 	}	
+}
+
+function formatPhone(phone) {
+	var str = new String(phone);
+	if(str.match("-")) {
+		return phone;
+	}
+	if(phone.length < 10) {
+		return phone;
+	}
+	
+	var p1 = str.substring(0,3);
+	var p2 = str.substring(3,6);
+	var p3 = str.substring(6,10);				
+	return p1 + "-" + p2 + "-" + p3;
 }
 
 function validate() {
@@ -27,7 +35,7 @@ function validate() {
 
 function populateCustomerInfo() {
 	populateDeliveryAddress();
-	populateCustomerAddress();
+	populateCustomerBillingAddress();
 }
 
 function populateDeliveryAddress() {
@@ -55,7 +63,7 @@ function populateDeliveryAddress() {
 	});
 }
 
-function populateCustomerAddress() {
+function populateCustomerBillingAddress() {
 	var customerId = $('#customerSelect').val();
 	$.ajax({
   		url: "customerAddress.do?id=" + customerId,
@@ -68,14 +76,8 @@ function populateCustomerAddress() {
     	   	$('#address').html(address);
     	   	
     		$('#contact').html(customer.contactName);
-    		$('#fax').html(customer.fax);
-    		
-    		var phone = customer.phone;
-    		var p1 = phone.substring(0,3);
-			var p2 = phone.substring(3,6);
-			var p3 = phone.substring(6,10);				
-			$('#phone').html(p1 + "-" + p2 + "-" + p3);
-    		
+    		$('#phone').html(formatPhone(customer.phone));
+    		$('#fax').html(formatPhone(customer.fax));
     		$('#email').html(customer.email);
 		}
 	}); 
@@ -186,20 +188,19 @@ $("#addCustomerModal").on("show.bs.modal", function(e) {
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Address" /><span class="errorMessage"></span></td>
-			<c:set var="address" value="${modelObject.customer.billingAddressLine1}" />
-			<td align="${left}" id="address">${address}</td>
+			<td align="${left}" id="address">${modelObject.customer.getBillingAddress()}</td>
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Contact" /><span class="errorMessage"></span></td>
 			<td align="${left}" id="contact">${modelObject.customer.contactName}</td>
 			<td class="form-left"><transys:label code="Fax"/></td>
-			<td align="${left}" id="fax">${modelObject.customer.fax}</td>
+			<td align="${left}" id="fax">${modelObject.customer.getFormattedFax()}</td>
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Phone" /><span class="errorMessage"></span></td>
-			<td align="${left}" id="phone">${modelObject.customer.phone}</td>
+			<td align="${left}" id="phone">${modelObject.customer.getFormattedPhone()}</td>
 			<td class="form-left"><transys:label code="Email"/></td>
-			<td align="${left}" id="email">${modelObject.customer.phone}</td>
+			<td align="${left}" id="email">${modelObject.customer.email}</td>
 		</tr>
 		<tr>
 			<td colspan=10></td>
@@ -242,7 +243,7 @@ $("#addCustomerModal").on("show.bs.modal", function(e) {
 			<td class="form-left"><transys:label code="Phone1"/><span class="errorMessage">*</span></td>
 			<td align="${left}">
 				<form:input path="deliveryContactPhone1" cssClass="flat" maxlength="12" 
-					id="deliveryContactPhone1" onkeypress="return onlyNumbers(event, false)" onblur="return formatPhone();"/>
+					id="deliveryContactPhone1" onkeypress="return onlyNumbers(event, false)" onblur="return validateAndFormatPhone();"/>
 				<br><form:errors path="deliveryContactPhone1" cssClass="errorMessage" />
 			</td>
 			<td class="form-left"><transys:label code="Phone2"/></td>
@@ -402,7 +403,7 @@ $("#addCustomerModal").on("show.bs.modal", function(e) {
 	        </td>
 	        <td class="form-left"><transys:label code="Permit3 Type"/><span class="errorMessage">*</span></td>
 	        <td align="${left}">
-	        	<select class="flat form-control input-sm" id="permitTypes2" name="permitTypes2" style="width:172px !important" onChange="return populatePermitNumbers(3);">
+	        	<select class="flat form-control input-sm" id="permitTypes3" name="permitTypes3" style="width:172px !important" onChange="return populatePermitNumbers(3);">
 					<option value="">------Please Select------</option>
 					<c:forEach items="${permitTypes}" var="aPermitType">
 						<c:set var="selected" value="" />
@@ -452,25 +453,25 @@ $("#addCustomerModal").on("show.bs.modal", function(e) {
 	    	<td class="form-left"><transys:label code="Permit1 Valid From"/><span class="errorMessage">*</span></td>
 	        <td align="${left}" id="permitValidFrom1">${modelObject.permits[0].startDate}</td>
 	        <td class="form-left"><transys:label code="Permit2 Valid From"/><span class="errorMessage">*</span></td>
-	        <td align="${left}" id="permitValidFrom2"></td>
+	        <td align="${left}" id="permitValidFrom2">${modelObject.permits[1].startDate}</td>
 	        <td class="form-left"><transys:label code="Permit3 Valid From"/><span class="errorMessage">*</span></td>
-	        <td align="${left}" id="permitValidFrom3"></td>
+	        <td align="${left}" id="permitValidFrom3">${modelObject.permits[2].startDate}</td>
 	    </tr>
 	    <tr>
 	    	<td class="form-left"><transys:label code="Permit1 Valid To"/><span class="errorMessage">*</span></td>
 	        <td align="${left}" id="permitValidTo1">${modelObject.permits[0].endDate}</td>
 	        <td class="form-left" ><transys:label code="Permit2 Valid To"/><span class="errorMessage">*</span></td>
-	        <td align="${left}" id="permitValidTo2"></td>
+	        <td align="${left}" id="permitValidTo2">${modelObject.permits[1].endDate}</td>
 	        <td class="form-left"><transys:label code="Permit3 Valid To"/><span class="errorMessage">*</span></td>
-	        <td align="${left}" id="permitValidTo3"></td>
+	        <td align="${left}" id="permitValidTo3">${modelObject.permits[2].endDate}</td>
 	    </tr>
 	    <tr>
 	    	<td class="form-left"><transys:label code="Permit1 Fee"/><span class="errorMessage">*</span></td>
-	        <td align="${left}" id="permitFee1">${modelObject.permits[0].endDate}</td>
+	        <td align="${left}" id="permitFee1">${modelObject.permits[0].fee}</td>
 	        <td class="form-left"><transys:label code="Permit2 Fee"/><span class="errorMessage">*</span></td>
-	        <td align="${left}" id="permitFee2">${modelObject.permits[1].endDate}</td>
+	        <td align="${left}" id="permitFee2">${modelObject.permits[1].fee}</td>
 	        <td class="form-left"><transys:label code="Permit3 Fee"/><span class="errorMessage">*</span></td>
-	        <td align="${left}" id="permitFee3"></td>
+	        <td align="${left}" id="permitFee3">${modelObject.permits[2].fee}</td>
 	    </tr>
 	    <tr>
 			<td colspan=10></td>

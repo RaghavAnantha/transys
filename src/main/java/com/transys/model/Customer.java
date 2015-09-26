@@ -5,9 +5,11 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
@@ -174,6 +176,53 @@ public class Customer extends AbstractBaseModel {
 	
 	public String getZipcode() {
 		return zipcode;
+	}
+	
+	@Transient
+	//TODO: Move to utils
+	public String getBillingAddress() {
+		StringBuffer addressBuff = new StringBuffer();
+		if (StringUtils.isNotEmpty(getBillingAddressLine1())) {
+			addressBuff.append(getBillingAddressLine1());
+		}
+		if (StringUtils.isNotEmpty(getBillingAddressLine2())) {
+			addressBuff.append(" " + getBillingAddressLine2());
+		}
+		if (StringUtils.isNotEmpty(getCity())) {
+			addressBuff.append(", " + getCity());
+		}
+		if (StringUtils.isNotEmpty(getState().getName())) {
+			addressBuff.append(", " + getState().getName());
+		}
+		if (StringUtils.isNotEmpty(getZipcode())) {
+			addressBuff.append(", " + getZipcode());
+		}
+		
+		return addressBuff.toString();
+	}
+	
+	@Transient
+	//TODO: Move to utils
+	public String getFormattedPhone() {
+		return formatPhone(getPhone());
+	}
+	
+	@Transient
+	//TODO: Move to utils
+	public String getFormattedFax() {
+		return formatPhone(getFax());
+	}
+	
+	@Transient
+	//TODO: Move to utils
+	public String formatPhone(String phone) {
+		if (StringUtils.isEmpty(phone) || phone.length() < 10) {
+			return phone;
+		}
+		
+		return String.format("%s-%s-%s", phone.substring(0, 3), 
+												   phone.substring(3, 6), 
+												   phone.substring(6, 10));
 	}
 
 	public String getPhone() {
