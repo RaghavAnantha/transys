@@ -24,7 +24,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.google.gson.Gson;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+//import com.google.gson.Gson;
 import com.transys.controller.editor.AbstractModelEditor;
 import com.transys.model.AbstractBaseModel;
 import com.transys.model.Address;
@@ -386,8 +388,18 @@ public class PermitController extends CRUDController<Permit> {
 	public @ResponseBody String displayCustomerDeliveryAddress(ModelMap model, HttpServletRequest request) {
 		String customerId = request.getParameter("customerId");
 		List<Address> addressList  = genericDAO.executeSimpleQuery("select obj from Address obj where obj.customer.id=" + customerId);
-		String json = (new Gson()).toJson(addressList);
+		
+		ObjectMapper objectMapper = new ObjectMapper();
+		String json = StringUtils.EMPTY;
+		try {
+			json = objectMapper.writeValueAsString(addressList);
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return json;
+		//String json = (new Gson()).toJson(addressList);
+		//return json;
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/calculatePermitEndDate")

@@ -23,7 +23,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.google.gson.Gson;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+//import com.google.gson.Gson;
 import com.transys.controller.editor.AbstractModelEditor;
 import com.transys.core.util.MimeUtil;
 import com.transys.model.AbstractBaseModel;
@@ -442,8 +444,17 @@ public class OrderController extends CRUDController<Order> {
 															 @RequestParam(value = "permitTypeId", required = false) String permitTypeId) {
 		List<Permit> permitList = retrievePermit(permitId, permitClassId, permitTypeId);
 		
-		String json = (new Gson()).toJson(permitList);
+		ObjectMapper objectMapper = new ObjectMapper();
+		String json = StringUtils.EMPTY;
+		try {
+			json = objectMapper.writeValueAsString(permitList);
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return json;
+		//String json = (new Gson()).toJson(permitList);
+		//return json;
 	}
 	
 	
@@ -511,16 +522,38 @@ public class OrderController extends CRUDController<Order> {
 	public @ResponseBody String retrieveCustomerDeliveryAddress(ModelMap model, HttpServletRequest request) {
 		String customerId = request.getParameter("id");
 		List<Address> addressList  = genericDAO.executeSimpleQuery("select obj from Address obj where obj.customer.id=" + customerId);
-		String json = (new Gson()).toJson(addressList);
+		
+		ObjectMapper objectMapper = new ObjectMapper();
+		String json = StringUtils.EMPTY;
+		try {
+			json = objectMapper.writeValueAsString(addressList);
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return json;
+		
+		//String json = (new Gson()).toJson(addressList);
+		//return json;
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/customerAddress.do")
 	public @ResponseBody String retrieveCustomerAddress(ModelMap model, HttpServletRequest request) {
 		String customerId = request.getParameter("id");
 		List<Customer> customerList  = genericDAO.executeSimpleQuery("select obj from Customer obj where obj.id=" + customerId);
-		String json = (new Gson()).toJson(customerList.get(0));
+		
+		ObjectMapper objectMapper = new ObjectMapper();
+		String json = StringUtils.EMPTY;
+		try {
+			json = objectMapper.writeValueAsString(customerList);
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return json;
+		
+		//String json = (new Gson()).toJson(customerList.get(0));
+		//return json;
 	}
 	
 	@Override
