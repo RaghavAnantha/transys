@@ -1,9 +1,13 @@
 package com.transys.model;
 
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
@@ -11,6 +15,8 @@ import javax.validation.constraints.Size;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.constraints.NotEmpty;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name="customer")
@@ -73,6 +79,18 @@ public class Customer extends AbstractBaseModel {
 	
 	@Column(name="email")
 	private String email;
+	
+	@OneToMany(mappedBy="customer", cascade = CascadeType.ALL)
+	@JsonManagedReference
+	private List<Address> address;
+
+	public List<Address> getAddress() {
+		return address;
+	}
+
+	public void setAddress(List<Address> address) {
+		this.address = address;
+	}
 
 	public String getCompanyName() {
 		return companyName;
@@ -216,7 +234,7 @@ public class Customer extends AbstractBaseModel {
 	@Transient
 	//TODO: Move to utils
 	public String formatPhone(String phone) {
-		if (StringUtils.isEmpty(phone) || phone.length() < 10) {
+		if (StringUtils.isEmpty(phone) || phone.length() < 10 || StringUtils.contains(phone, "-")) {
 			return phone;
 		}
 		

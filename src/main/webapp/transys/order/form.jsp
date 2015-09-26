@@ -85,14 +85,16 @@ function populateCustomerBillingAddress() {
 
 function appendDeliveryAddress(address) {
 	var deliveryAddressSelect = $('#deliveryAddressSelect');
-	var newAddressOption = $('<option value=' + address.id + '>'+ address.line1 + " " + address.line2 +'</option>');
+	var newAddressOption = $('<option value=' + address.id + ' selected>'+ address.line1 + " " + address.line2 +'</option>');
 	deliveryAddressSelect.append(newAddressOption);
 }
 
 function appendCustomer(customer) {
 	var customerSelect = $('#customerSelect');
-	var newCustomerOption = $('<option value=' + customer.id + '>'+ customer.companyName +'</option>');
+	var newCustomerOption = $('<option value=' + customer.id + ' selected>'+ customer.companyName +'</option>');
 	customerSelect.append(newCustomerOption);
+	
+	appendDeliveryAddress(customer.address[0]);
 }
 
 function populatePermitNumbers(index) {

@@ -22,7 +22,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.google.gson.Gson;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+//import com.google.gson.Gson;
 import com.transys.controller.CRUDController;
 import com.transys.controller.editor.AbstractModelEditor;
 import com.transys.core.util.MimeUtil;
@@ -366,7 +368,6 @@ public class CustomerController extends CRUDController<Customer> {
 		}*/
 		//return super.save(request, entity, bindingResult, model);
 		
-		
 		try {
 			getValidator().validate(entity, bindingResult);
 		} catch (ValidationException e) {
@@ -542,8 +543,20 @@ public class CustomerController extends CRUDController<Customer> {
 		//return saveSuccess(model, request, entity);
 		//setupCreate(model, request);
 		//model.addAttribute("modelObject", entity);
-		String json = (new Gson()).toJson(entity);
+		
+		ObjectMapper objectMapper = new ObjectMapper();
+		String json = StringUtils.EMPTY;
+		try {
+			json = objectMapper.writeValueAsString(entity);
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		return json;
+		
+		//String json = (new Gson()).toJson(entity);
+		//return json;
 	}
 	
 	@RequestMapping(method = RequestMethod.POST, value = "/saveModal.do")
@@ -579,6 +592,10 @@ public class CustomerController extends CRUDController<Customer> {
 			}
 		}
 		
+		entity.getAddress().get(0).setCustomer(entity);
+		entity.getAddress().get(0).setCreatedBy(entity.getCreatedBy());
+		entity.getAddress().get(0).setModifiedBy(entity.getModifiedBy());
+		
 		genericDAO.saveOrUpdate(entity);
 		cleanUp(request);
 		
@@ -604,7 +621,20 @@ public class CustomerController extends CRUDController<Customer> {
 		//return saveSuccess(model, request, entity);
 		//setupCreate(model, request);
 		//model.addAttribute("modelObject", entity);
-		String json = (new Gson()).toJson(entity);
+		
+		
+		ObjectMapper objectMapper = new ObjectMapper();
+		String json = StringUtils.EMPTY;
+		try {
+			json = objectMapper.writeValueAsString(entity);
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		return json;
+				
+		/*String json = (new Gson()).toJson(entity.getAddress());
+		return json;*/
 	}
 }
