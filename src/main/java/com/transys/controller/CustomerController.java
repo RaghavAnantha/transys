@@ -69,6 +69,11 @@ public class CustomerController extends CRUDController<Customer> {
 		
 		model.addAttribute("customerTypes", genericDAO.findByCriteria(CustomerType.class, criterias, "customerType", false));
 		
+		List<String> chargeCompanyOptions = new ArrayList<String>();
+		chargeCompanyOptions.add("Yes");
+		chargeCompanyOptions.add("No");
+		model.addAttribute("chargeCompanyOptions", chargeCompanyOptions);
+		
 		List<String> statusList = new ArrayList<String>();
 		statusList.add("Active");
 		model.addAttribute("statuses", statusList);
