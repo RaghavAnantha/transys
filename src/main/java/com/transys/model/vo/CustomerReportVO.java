@@ -1,12 +1,14 @@
 package com.transys.model.vo;
 
+import java.math.BigDecimal;
+
 public class CustomerReportVO implements BaseVO {
 	private Long id;
 	private String companyName;
 	private String contactName;
 	private String phoneNumber;
 	private Integer totalOrders;
-	private Double totalAmount;
+	private BigDecimal totalAmount;
 	private String status;
 
 	public String getStatus() {
@@ -45,11 +47,10 @@ public class CustomerReportVO implements BaseVO {
 	public void setTotalOrders(Integer totalOrders) {
 		this.totalOrders = totalOrders;
 	}
-	public Double getTotalAmount() {
+	public BigDecimal getTotalAmount() {
 		return totalAmount;
 	}
-	public void setTotalAmount(Double totalAmount) {
+	public void setTotalAmount(BigDecimal totalAmount) {
 		this.totalAmount = totalAmount;
 	}
-	
 }
