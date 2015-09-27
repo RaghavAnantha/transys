@@ -46,6 +46,7 @@ import com.transys.model.PermitStatus;
 //import com.transys.model.FuelVendor;
 //import com.transys.model.Location;
 import com.transys.model.SearchCriteria;
+import com.transys.model.State;
 import com.transys.model.User;
 
 @Controller
@@ -92,29 +93,17 @@ public class OrderController extends CRUDController<Order> {
       model.addAttribute("permitClasses", genericDAO.executeSimpleQuery("select obj from PermitClass obj where obj.id!=0 order by obj.id asc"));
       model.addAttribute("permitTypes", genericDAO.executeSimpleQuery("select obj from PermitType obj where obj.id!=0 order by obj.id asc"));
       
+      model.addAttribute("additionalFeeTypes", genericDAO.executeSimpleQuery("select obj from AdditionalFee obj where obj.id!=0 order by obj.id asc"));
+     
+      model.addAttribute("materialTypes", genericDAO.executeSimpleQuery("select obj from MaterialType obj where obj.id!=0 order by obj.id asc"));
+      
+      model.addAttribute("paymentMethods", genericDAO.executeSimpleQuery("select obj from PaymentMethod obj where obj.id!=0 order by obj.id asc"));
+      
       populateDeliveryTimeSettings(model);
       
       String driverRole = "DRIVER";
       List<BaseModel> driversList = genericDAO.executeSimpleQuery("select obj from User obj where obj.id!=0 and obj.role.name='" + driverRole + "' order by obj.id asc");
       model.addAttribute("drivers", driversList);
-      
-      MaterialType aMaterialType = new MaterialType();
-      aMaterialType.setId(1l);
-      aMaterialType.setType("Drywall/Wood");
-      
-      List<MaterialType> materialTypeList = new ArrayList<MaterialType>();
-      materialTypeList.add(aMaterialType);
-      
-      model.addAttribute("materialTypes", materialTypeList);
-      
-      PaymentMethodType aPaymentMethodType = new PaymentMethodType();
-      aPaymentMethodType.setId(1l);
-      aPaymentMethodType.setType("Charge");
-      
-      List<PaymentMethodType> paymentMethodTypeList = new ArrayList<PaymentMethodType>();
-      paymentMethodTypeList.add(aPaymentMethodType);
-      
-      model.addAttribute("paymentMethods", paymentMethodTypeList);
 	}
 	
 	private void populateDeliveryTimeSettings(ModelMap model) {
@@ -676,7 +665,13 @@ public class OrderController extends CRUDController<Order> {
 		
 		Long customerId = entity.getCustomer().getId();
 		List<Customer> customerList = genericDAO.executeSimpleQuery("select obj from Customer obj where obj.id=" + customerId);
-		entity.setCustomer(customerList.get(0));
+		
+		//Or set hibernate fetch all?
+		Customer orderCustomer = customerList.get(0);
+		List<State> stateList = genericDAO.executeSimpleQuery("select obj from State obj where obj.id= " + orderCustomer.getState().getId());
+		orderCustomer.getState().setName(stateList.get(0).getName());
+		
+		entity.setCustomer(orderCustomer);
 		
 		//return urlContext + "/form";
 		return urlContext + "/order";

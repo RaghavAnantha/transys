@@ -583,10 +583,48 @@ $("#addCustomerModal").on("show.bs.modal", function(e) {
 			</td>
 		</tr>
 		<tr>
+			<td class="form-left"><transys:label code="Additional Fee1 Description"/><span class="errorMessage">*</span></td>
+				<td align="${left}">
+				<form:select id="additionalFee1Type" cssClass="flat form-control input-sm" style="width:172px !important" path="orderPaymentInfo.additionalFee1Type"> 
+					<form:option value="">-------Please Select------</form:option>
+					<form:options items="${additionalFeeTypes}" itemValue="id" itemLabel="description" />
+				</form:select>
+				<br><form:errors path="orderPaymentInfo.additionalFee1Type" cssClass="errorMessage" />
+			</td>
 			<td class="form-left"><transys:label code="Additional Fee1"/><span class="errorMessage">*</span></td>
 			<td align="${left}">
 				<form:input path="orderPaymentInfo.additionalFee1" cssClass="flat" />
 				<br><form:errors path="orderPaymentInfo.additionalFee1" cssClass="errorMessage" />
+			</td>
+		</tr>
+		<tr>
+			<td class="form-left"><transys:label code="Additional Fee2 Description"/><span class="errorMessage">*</span></td>
+				<td align="${left}">
+				<form:select id="additionalFee2Type" cssClass="flat form-control input-sm" style="width:172px !important" path="orderPaymentInfo.additionalFee2Type"> 
+					<form:option value="">-------Please Select------</form:option>
+					<form:options items="${additionalFeeTypes}" itemValue="id" itemLabel="description" />
+				</form:select>
+				<br><form:errors path="orderPaymentInfo.additionalFee2Type" cssClass="errorMessage" />
+			</td>
+			<td class="form-left"><transys:label code="Additional Fee2"/><span class="errorMessage">*</span></td>
+			<td align="${left}">
+				<form:input path="orderPaymentInfo.additionalFee2" cssClass="flat" />
+				<br><form:errors path="orderPaymentInfo.additionalFee2" cssClass="errorMessage" />
+			</td>
+		</tr>
+		<tr>
+			<td class="form-left"><transys:label code="Additional Fee3 Description"/><span class="errorMessage">*</span></td>
+				<td align="${left}">
+				<form:select id="additionalFee3Type" cssClass="flat form-control input-sm" style="width:172px !important" path="orderPaymentInfo.additionalFee3Type"> 
+					<form:option value="">-------Please Select------</form:option>
+					<form:options items="${additionalFeeTypes}" itemValue="id" itemLabel="description" />
+				</form:select>
+				<br><form:errors path="orderPaymentInfo.additionalFee3Type" cssClass="errorMessage" />
+			</td>
+			<td class="form-left"><transys:label code="Additional Fee3"/><span class="errorMessage">*</span></td>
+			<td align="${left}">
+				<form:input path="orderPaymentInfo.additionalFee3" cssClass="flat" />
+				<br><form:errors path="orderPaymentInfo.additionalFee3" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>
@@ -613,7 +651,7 @@ $("#addCustomerModal").on("show.bs.modal", function(e) {
 			<td align="${left}">
 				<form:select id="paymentMethod" cssClass="flat form-control input-sm" style="width:172px !important" path="orderPaymentInfo.paymentMethod"> 
 					<form:option value="">-------Please Select------</form:option>
-					<form:options items="${paymentMethods}" itemValue="id" itemLabel="type" />
+					<form:options items="${paymentMethods}" itemValue="id" itemLabel="method" />
 				</form:select>
 				<br><form:errors path="orderPaymentInfo.paymentMethod" cssClass="errorMessage" />
 			</td>
