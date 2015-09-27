@@ -29,6 +29,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.transys.controller.editor.AbstractModelEditor;
 import com.transys.core.util.MimeUtil;
 import com.transys.model.AbstractBaseModel;
+import com.transys.model.AdditionalFee;
 import com.transys.model.Address;
 import com.transys.model.BaseModel;
 import com.transys.model.Customer;
@@ -66,6 +67,8 @@ public class OrderController extends CRUDController<Order> {
 		binder.registerCustomEditor(OrderNotes.class, new AbstractModelEditor(OrderNotes.class));
 		binder.registerCustomEditor(DumpsterInfo.class, new AbstractModelEditor(DumpsterInfo.class));
 		binder.registerCustomEditor(User.class, new AbstractModelEditor(User.class));
+		binder.registerCustomEditor(MaterialType.class, new AbstractModelEditor(MaterialType.class));
+		binder.registerCustomEditor(AdditionalFee.class, new AbstractModelEditor(AdditionalFee.class));
 		
 		super.initBinder(binder);
 	}
@@ -665,11 +668,11 @@ public class OrderController extends CRUDController<Order> {
 		
 		Long customerId = entity.getCustomer().getId();
 		List<Customer> customerList = genericDAO.executeSimpleQuery("select obj from Customer obj where obj.id=" + customerId);
-		
-		//Or set hibernate fetch all?
 		Customer orderCustomer = customerList.get(0);
+		
+		/*//Or set hibernate fetch all?
 		List<State> stateList = genericDAO.executeSimpleQuery("select obj from State obj where obj.id= " + orderCustomer.getState().getId());
-		orderCustomer.getState().setName(stateList.get(0).getName());
+		orderCustomer.getState().setName(stateList.get(0).getName());*/
 		
 		entity.setCustomer(orderCustomer);
 		
