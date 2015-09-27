@@ -32,8 +32,9 @@ public class Customer extends AbstractBaseModel {
 	@Column(name="contact_name")
 	private String contactName;
 	
-	@Column(name="type")
-	private Long type;
+	@ManyToOne
+	@JoinColumn(name="customerTypeId") 
+	private CustomerType customerType;
 	
 	@Column(name="status")
 	private String status;
@@ -104,12 +105,12 @@ public class Customer extends AbstractBaseModel {
 		return contactName;
 	}
 
-	public Long getType() {
-		return type;
+	public CustomerType getCustomerType() {
+		return customerType;
 	}
 
-	public void setType(Long type) {
-		this.type = type;
+	public void setCustomerType(CustomerType customerType) {
+		this.customerType = customerType;
 	}
 
 	public String getStatus() {

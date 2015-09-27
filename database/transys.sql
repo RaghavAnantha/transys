@@ -113,7 +113,7 @@ CREATE TABLE `customer` (
   `modified_by` bigint(20) DEFAULT NULL,
   `status` varchar(11) COLLATE utf8_unicode_ci DEFAULT NULL,
   `billing_address_line1` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `type` bigint(20) DEFAULT NULL,
+  `customerTypeId` bigint(20) DEFAULT NULL,
   `notes` varchar(500) COLLATE utf8_unicode_ci DEFAULT NULL,
   `billing_address_line2` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `city` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -129,7 +129,8 @@ CREATE TABLE `customer` (
   `chargeCompany` varchar(5) DEFAULT NULL,
   `delete_flag` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
-  CONSTRAINT `stateRef` FOREIGN KEY (`state`) REFERENCES `state` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `stateRef` FOREIGN KEY (`state`) REFERENCES `state` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `customerTypeRef` FOREIGN KEY (`customerTypeId`) REFERENCES `customerType` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -421,6 +422,35 @@ LOCK TABLES `locationType` WRITE;
 /*!40000 ALTER TABLE `locationType` DISABLE KEYS */;
 INSERT INTO `locationType` VALUES (1,'Alley',NULL,NULL,NULL,NULL,1),(2,'Curb',NULL,NULL,NULL,NULL,1),(3,'Drive',NULL,NULL,NULL,NULL,1);
 /*!40000 ALTER TABLE `locationType` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `customerType`
+--
+
+DROP TABLE IF EXISTS `customerType`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `customerType` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `customerType` varchar(50) NOT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `created_by` bigint(20) DEFAULT NULL,
+  `modified_at` datetime DEFAULT NULL,
+  `modified_by` bigint(20) DEFAULT NULL,
+  `delete_flag` int(11) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `customerType`
+--
+
+LOCK TABLES `customerType` WRITE;
+/*!40000 ALTER TABLE `customerType` DISABLE KEYS */;
+INSERT INTO `customerType` VALUES (1,'Commercial',NULL,NULL,NULL,NULL,1);
+/*!40000 ALTER TABLE `customerType` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --

@@ -32,6 +32,7 @@ import com.transys.core.util.MimeUtil;
 import com.transys.model.AbstractBaseModel;
 import com.transys.model.Address;
 import com.transys.model.Customer;
+import com.transys.model.CustomerType;
 import com.transys.model.Order;
 import com.transys.model.OrderPaymentInfo;
 //import com.transys.model.FuelVendor;
@@ -52,6 +53,7 @@ public class CustomerController extends CRUDController<Customer> {
 	public void initBinder(WebDataBinder binder) {
 		binder.registerCustomEditor(State.class, new AbstractModelEditor(State.class));
 		binder.registerCustomEditor(Address.class, new AbstractModelEditor(Address.class));
+		binder.registerCustomEditor(CustomerType.class, new AbstractModelEditor(CustomerType.class));
 	}
 	
 	/*
@@ -64,6 +66,8 @@ public class CustomerController extends CRUDController<Customer> {
 		model.addAttribute("customer",genericDAO.executeSimpleQuery("select obj from Customer obj where obj.id!=0 order by obj.companyName asc"));
 		model.addAttribute("customerIds",genericDAO.executeSimpleQuery("select obj from Customer obj where obj.id is not null order by obj.id asc"));
 		model.addAttribute("state", genericDAO.findByCriteria(State.class, criterias, "name", false));
+		
+		model.addAttribute("customerTypes", genericDAO.findByCriteria(CustomerType.class, criterias, "customerType", false));
 		
 		List<String> statusList = new ArrayList<String>();
 		statusList.add("Active");
