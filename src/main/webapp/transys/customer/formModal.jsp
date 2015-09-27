@@ -59,7 +59,7 @@ $("#customerForm").submit(function (ev) {
 });
 </script>
 
-<form:form action="/customer/saveModal.do" name="typeForm" commandName="modelObject" method="post" id="customerForm">
+<form:form action="/customer/saveModal.do" name="customerForm" commandName="modelObject" method="post" id="customerForm">
 	<table id="form-table" class="table">
 		<tr>
 			<td class="form-left"><transys:label code="Company Name" /><span class="errorMessage">*</span></td>
@@ -71,13 +71,33 @@ $("#customerForm").submit(function (ev) {
 			<td align="${left}">${modelObject.id}</td>
 		</tr>
 		<tr>
+			<td class="form-left"><transys:label code="Customer Type" /></td>
+			<td align="${left}">
+				<form:select cssClass="flat form-control input-sm" style="width:172px !important" path="customerType" >
+					<form:option value="">------Please Select--------</form:option>
+					<form:options items="${customerTypes}" itemValue="id" itemLabel="customerType"/>
+				</form:select> 
+				<br><form:errors path="customerType" cssClass="errorMessage" />
+			</td> 
+		</tr>
+		<tr>
+			<td class="form-left"><transys:label code="Charge Company" /></td>
+			<td align="${left}">
+				<form:select cssClass="flat form-control input-sm" style="width:172px !important" path="chargeCompany" >
+					<form:option value="">------Please Select--------</form:option>
+					<form:options items="${chargeCompanyOptions}" />
+				</form:select> 
+				<br><form:errors path="chargeCompany" cssClass="errorMessage" />
+			</td> 
+		</tr>
+		<tr>
 			<td class="form-left"><transys:label code="Status" /></td>
 			<td align="${left}">
-				<form:select cssClass="flat form-control input-sm" style="width:172px !important" path="status" >
+				<form:select cssClass="flat form-control input-sm" style="width:172px !important" path="customerStatus" >
 					<form:option value="">------Please Select--------</form:option>
-					<form:options items="${statuses}" />
+					<form:options items="${customerStatuses}" itemValue="id" itemLabel="status"/>
 				</form:select> 
-				<br><form:errors path="status" cssClass="errorMessage" />
+				<br><form:errors path="customerStatus" cssClass="errorMessage" />
 			</td> 
 		</tr>
 		<tr>
@@ -235,8 +255,8 @@ $("#customerForm").submit(function (ev) {
 		</tr>
 		<tr>
 			<td colspan=10>
-				<form:textarea row="5" path="notes" cssClass="flat" id="notes" style="width:100%; height:150%;"/>
-				<br><form:errors path="notes" cssClass="errorMessage" />
+				<form:textarea row="5" path="customerNotes[0].notes" cssClass="flat" id="customerNotes" style="width:100%; height:150%;"/>
+				<br><form:errors path="customerNotes[0].notes" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr><td colspan="2"></td></tr>

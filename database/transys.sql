@@ -111,10 +111,9 @@ CREATE TABLE `customer` (
   `created_by` bigint(20) DEFAULT NULL,
   `modified_at` datetime DEFAULT NULL,
   `modified_by` bigint(20) DEFAULT NULL,
-  `status` varchar(11) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `customerStatusId` bigint(20) DEFAULT NULL,
   `billing_address_line1` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `customerTypeId` bigint(20) DEFAULT NULL,
-  `notes` varchar(500) COLLATE utf8_unicode_ci DEFAULT NULL,
   `billing_address_line2` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `city` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
   `company_name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -130,6 +129,7 @@ CREATE TABLE `customer` (
   `delete_flag` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   CONSTRAINT `stateRef` FOREIGN KEY (`state`) REFERENCES `state` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `customerStatusRef` FOREIGN KEY (`customerStatusId`) REFERENCES `customerStatus` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `customerTypeRef` FOREIGN KEY (`customerTypeId`) REFERENCES `customerType` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -140,7 +140,7 @@ CREATE TABLE `customer` (
 
 LOCK TABLES `customer` WRITE;
 /*!40000 ALTER TABLE `customer` DISABLE KEYS */;
-INSERT INTO `customer` VALUES (5,'2015-09-10 21:22:45',1,NULL,NULL,'Active','2324 N Camelback Rd',NULL,NULL,NULL,'Chicago','Aberdeen Construction','1234567890','Raghav','1234567890','28262',1,'abc@aberdeen.com',NULL,NULL,NULL,1),(6,'2015-09-11 21:05:43',1,NULL,NULL,'Active','1321 W Main St',NULL,NULL,NULL,'Chicago','Gibbons Construction','1234567890','Bharat','1234567890','22323',1,'abc@aberdeen.com',NULL,NULL,NULL,1);
+INSERT INTO `customer` VALUES (5,'2015-09-10 21:22:45',1,NULL,NULL,1,'2324 N Camelback Rd',1,NULL,'Chicago','Aberdeen Construction','1234567890','Raghav','1234567890','28262',1,'abc@aberdeen.com',NULL,NULL,NULL,1),(6,'2015-09-11 21:05:43',1,NULL,NULL,1,'1321 W Main St',1,NULL,'Chicago','Gibbons Construction','1234567890','Bharat','1234567890','22323',1,'abc@aberdeen.com',NULL,NULL,NULL,1);
 /*!40000 ALTER TABLE `customer` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -454,6 +454,37 @@ INSERT INTO `customerType` VALUES (1,'Commercial',NULL,NULL,NULL,NULL,1);
 UNLOCK TABLES;
 
 --
+-- Table structure for table `customerNotes`
+--
+
+DROP TABLE IF EXISTS `customerNotes`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `customerNotes` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `customerId` bigint(20) NOT NULL,
+  `notes` varchar(255) DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `created_by` bigint(20) DEFAULT NULL,
+  `modified_at` datetime DEFAULT NULL,
+  `modified_by` bigint(20) DEFAULT NULL,
+  `delete_flag` int(11) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`),
+  KEY `customerNotesCustomerRef_idx` (`customerId`),
+  CONSTRAINT `customerNotesCustomerRef` FOREIGN KEY (`customerId`) REFERENCES `customer` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `customerNotes`
+--
+
+LOCK TABLES `customerNotes` WRITE;
+/*!40000 ALTER TABLE `customerNotes` DISABLE KEYS */;
+/*!40000 ALTER TABLE `customerNotes` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `orderNotes`
 --
 
@@ -592,6 +623,36 @@ LOCK TABLES `orderStatus` WRITE;
 INSERT INTO `transys`.`orderstatus` (`id`, `status`) VALUES ('1', 'Open');
 INSERT INTO `orderStatus` VALUES (2,'Dropped-off',NULL,NULL,NULL,NULL,1),(3,'Picked Up',NULL,NULL,NULL,NULL,1),(4,'Closed',NULL,NULL,NULL,NULL,1);
 /*!40000 ALTER TABLE `orderStatus` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `customerStatus`
+--
+
+DROP TABLE IF EXISTS `customerStatus`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `customerStatus` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `status` varchar(20) NOT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `created_by` bigint(20) DEFAULT NULL,
+  `modified_at` datetime DEFAULT NULL,
+  `modified_by` bigint(20) DEFAULT NULL,
+  `delete_flag` int(11) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `customerStatus`
+--
+
+LOCK TABLES `customerStatus` WRITE;
+/*!40000 ALTER TABLE `customerStatus` DISABLE KEYS */;
+INSERT INTO `transys`.`customerStatus` (`id`, `status`) VALUES ('1', 'Active');
+INSERT INTO `customerStatus` VALUES (2,'Inactive',NULL,NULL,NULL,NULL,1);
+/*!40000 ALTER TABLE `customerStatus` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --

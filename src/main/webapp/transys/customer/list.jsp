@@ -76,20 +76,20 @@
 			<td align="${left}"><input class="flat" id="datepicker1"
 				name="createdAtTo" style="width: 175px" /></td>
 		</tr>
-
 		<tr>
 			<td align="${left}" class="form-left"><transys:label code="Status" /></td>
 			<td align="${left}" class="wide">
-				<select class="flat form-control input-sm" id="status" name="status" style="width: 175px">
+				<select class="flat form-control input-sm" id="customerStatus" name="customerStatus" style="width: 175px">
 					<option value="">------<transys:label code="Please Select" />------</option>
-					<c:forEach items="${customer}" var="aCustomer">
-						<c:set var="selected" value="" />
-						<c:if test="${sessionScope.searchCriteria.searchMap['status'] == aCustomer.status}">
+					<c:forEach items="${customerStatuses}" var="aCustomerStatus">
+						<c:set var="selected" value=""/>
+						<c:if test="${sessionScope.searchCriteria.searchMap['customerStatus'] == aCustomerStatus.id}">
 							<c:set var="selected" value="selected" />
 						</c:if>
-						<option value="${aCustomer.status}" ${selected}>${aCustomer.status}</option>
+						<option value="${aCustomerStatus.id}" ${selected}>${aCustomerStatus.status}</option>
 					</c:forEach>
-			</select></td>
+				</select>
+			</td>
 		</tr>
 		<tr>
 			<td align="${left}"></td>
@@ -111,7 +111,7 @@
 		<transys:textcolumn headerText="ContactName" dataField="contactName" />
 		<transys:textcolumn headerText="Phone" dataField="phone" />
 		<transys:textcolumn headerText="Created Date" dataField="createdAt" />
-		<transys:textcolumn headerText="Status" dataField="status" />
+		<transys:textcolumn headerText="Status" dataField="customerStatus.status" />
 	</transys:datatable>
 	<%session.setAttribute("columnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
 </form:form>

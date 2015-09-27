@@ -32,6 +32,7 @@ import com.transys.core.util.MimeUtil;
 import com.transys.model.AbstractBaseModel;
 import com.transys.model.Address;
 import com.transys.model.Customer;
+import com.transys.model.CustomerStatus;
 import com.transys.model.CustomerType;
 import com.transys.model.Order;
 import com.transys.model.OrderPaymentInfo;
@@ -54,6 +55,7 @@ public class CustomerController extends CRUDController<Customer> {
 		binder.registerCustomEditor(State.class, new AbstractModelEditor(State.class));
 		binder.registerCustomEditor(Address.class, new AbstractModelEditor(Address.class));
 		binder.registerCustomEditor(CustomerType.class, new AbstractModelEditor(CustomerType.class));
+		binder.registerCustomEditor(CustomerStatus.class, new AbstractModelEditor(CustomerStatus.class));
 	}
 	
 	/*
@@ -74,9 +76,7 @@ public class CustomerController extends CRUDController<Customer> {
 		chargeCompanyOptions.add("No");
 		model.addAttribute("chargeCompanyOptions", chargeCompanyOptions);
 		
-		List<String> statusList = new ArrayList<String>();
-		statusList.add("Active");
-		model.addAttribute("statuses", statusList);
+		model.addAttribute("customerStatuses", genericDAO.findByCriteria(CustomerStatus.class, criterias, "status", false));
 	}
 	
 	@Override
@@ -105,9 +105,14 @@ public class CustomerController extends CRUDController<Customer> {
 		Map criterias = new HashMap();
 		model.addAttribute("state", genericDAO.findByCriteria(State.class, criterias, "name", false));
 		
-		List<String> statusList = new ArrayList<String>();
-		statusList.add("Active");
-		model.addAttribute("statuses", statusList);
+		model.addAttribute("customerTypes", genericDAO.findByCriteria(CustomerType.class, criterias, "customerType", false));
+		
+		List<String> chargeCompanyOptions = new ArrayList<String>();
+		chargeCompanyOptions.add("Yes");
+		chargeCompanyOptions.add("No");
+		model.addAttribute("chargeCompanyOptions", chargeCompanyOptions);
+		
+		model.addAttribute("customerStatuses", genericDAO.findByCriteria(CustomerStatus.class, criterias, "status", false));
 				
 		return urlContext + "/formModal";
 	}
@@ -212,7 +217,7 @@ public class CustomerController extends CRUDController<Customer> {
                 customerReportVO.setTotalAmount(sum);
                 customerReportVO.setTotalOrders(Ordercount);
                 customerReportVO.setId(customerMap.get(key).getId());
-                customerReportVO.setStatus(customerMap.get(key).getStatus());
+                customerReportVO.setStatus(customerMap.get(key).getCustomerStatus().getStatus());
 
                 customerReportVOList.add(customerReportVO);
         }
@@ -244,7 +249,7 @@ public class CustomerController extends CRUDController<Customer> {
 				map.put("companyName", aCustomerReportVO.getCompanyName());
 				map.put("contactName", aCustomerReportVO.getContactName());
 				map.put("phoneNumber", aCustomerReportVO.getPhoneNumber());
-				map.put("status", 	   aCustomerReportVO.getStatus());
+				map.put("status", aCustomerReportVO.getStatus());
 				map.put("totalOrders", aCustomerReportVO.getTotalOrders().toString());
 				map.put("totalAmount", aCustomerReportVO.getTotalAmount().toString());
 				
@@ -391,6 +396,11 @@ public class CustomerController extends CRUDController<Customer> {
 		}
 		
 		beforeSave(request, entity, model);
+		
+		entity.getCustomerNotes().get(0).setCustomer(entity);
+		entity.getCustomerNotes().get(0).setCreatedBy(entity.getCreatedBy());
+		entity.getCustomerNotes().get(0).setModifiedBy(entity.getModifiedBy());
+		
 		genericDAO.saveOrUpdate(entity);
 		cleanUp(request);
 		
@@ -604,6 +614,10 @@ public class CustomerController extends CRUDController<Customer> {
 		entity.getAddress().get(0).setCustomer(entity);
 		entity.getAddress().get(0).setCreatedBy(entity.getCreatedBy());
 		entity.getAddress().get(0).setModifiedBy(entity.getModifiedBy());
+		
+		entity.getCustomerNotes().get(0).setCustomer(entity);
+		entity.getCustomerNotes().get(0).setCreatedBy(entity.getCreatedBy());
+		entity.getCustomerNotes().get(0).setModifiedBy(entity.getModifiedBy());
 		
 		genericDAO.saveOrUpdate(entity);
 		cleanUp(request);

@@ -36,12 +36,10 @@ public class Customer extends AbstractBaseModel {
 	@JoinColumn(name="customerTypeId") 
 	private CustomerType customerType;
 	
-	@Column(name="status")
-	private String status;
+	@ManyToOne
+	@JoinColumn(name="customerStatusId") //Enum?
+	private CustomerStatus customerStatus;
 	
-	@Column(name="notes")
-	private String notes;
-
 	// Billing Info
 	@Column(name="chargeCompany")
 	private String chargeCompany;
@@ -81,6 +79,18 @@ public class Customer extends AbstractBaseModel {
 	@Column(name="email")
 	private String email;
 	
+	/******** Notes Info ************/
+	@OneToMany(mappedBy="customer", cascade = CascadeType.ALL)
+	private List<CustomerNotes> customerNotes;
+	
+	public List<CustomerNotes> getCustomerNotes() {
+		return customerNotes;
+	}
+
+	public void setCustomerNotes(List<CustomerNotes> customerNotes) {
+		this.customerNotes = customerNotes;
+	}
+
 	@OneToMany(mappedBy="customer", cascade = CascadeType.ALL)
 	@JsonManagedReference
 	private List<Address> address;
@@ -112,21 +122,13 @@ public class Customer extends AbstractBaseModel {
 	public void setCustomerType(CustomerType customerType) {
 		this.customerType = customerType;
 	}
-
-	public String getStatus() {
-		return status;
-	}
-
-	public void setStatus(String status) {
-		this.status = status;
-	}
 	
-	public String getNotes() {
-		return notes;
+	public CustomerStatus getCustomerStatus() {
+		return customerStatus;
 	}
 
-	public void setNotes(String notes) {
-		this.notes = notes;
+	public void setCustomerStatus(CustomerStatus customerStatus) {
+		this.customerStatus = customerStatus;
 	}
 
 	public String getChargeCompany() {

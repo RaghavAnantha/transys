@@ -643,10 +643,10 @@ public class OrderController extends CRUDController<Order> {
 		model.addAttribute("activeSubTab", "orderDetails");
 		model.addAttribute("mode", "ADD");
 		
-		Order order = new Order();
-		order.setId(entity.getId());
+		Order emptyOrder = new Order();
+		emptyOrder.setId(entity.getId());
 		OrderNotes notes = new OrderNotes();
-		notes.setOrder(order);
+		notes.setOrder(emptyOrder);
 		model.addAttribute("notesModelObject", notes);
 		List<BaseModel> notesList = genericDAO.executeSimpleQuery("select obj from OrderNotes obj where obj.order.id=" +  entity.getId() + " order by obj.id asc");
 		model.addAttribute("notesList", notesList);
