@@ -1,7 +1,7 @@
 <%@include file="/common/taglibs.jsp"%>
 <script type="text/javascript">
 function formatPhone(){	
-	var phone = document.getElementById("phone").value;
+	var phone = $("#phone").val();
 	if(phone != ""){
 		if(phone.length < 10){
 			alert("Invalid Phone Number");
@@ -175,6 +175,56 @@ $("#customerForm").submit(function (ev) {
 			<td colspan=10></td>
 		</tr>
 		<tr>
+			<td colspan=10 class="danger" style="font-size: 13px;font-weight: bold;color: white;">Delivery Address</td>
+		</tr>
+		<tr>
+			<td colspan=10></td>
+		</tr>
+		<tr>
+			<td colspan=10></td>
+		</tr>
+		<tr>
+			<td class="form-left"><transys:label code="Delivery Address #" /><span class="errorMessage">*</span></td>
+			<td align="${left}">
+				<form:input path="address[0].line1" cssClass="flat"/>
+			 	<br><form:errors path="address[0].line1" cssClass="errorMessage" />
+			</td>
+		</tr>
+		<tr>
+			<td class="form-left"><transys:label code="Delivery Street" /><span class="errorMessage">*</span></td>
+			<td align="${left}">
+				<form:input path="address[0].line2" cssClass="flat"/>
+			 	<br><form:errors path="address[0].line2" cssClass="errorMessage" />
+			</td>
+		</tr>
+		<tr>
+			<td class="form-left"><transys:label code="City" /><span class="errorMessage">*</span></td>
+			<td align="${left}">
+				<form:input path="address[0].city" cssClass="flat"/>
+			 	<br><form:errors path="address[0].city" cssClass="errorMessage" />
+			</td>
+		</tr>
+		<tr>
+			<td class="form-left"><transys:label code="State" /><span class="errorMessage">*</span></td>
+			<td align="${left}">
+				<form:select cssClass="flat form-control input-sm" style="width: 174px !important" path="address[0].state">
+					<form:option value="">------Please Select--------</form:option>
+					<form:options items="${state}" itemValue="id" itemLabel="name" />
+				</form:select> 
+				<br><form:errors path="address[0].state" cssClass="errorMessage" />
+			</td>
+		</tr>
+		<tr>
+			<td class="form-left"><transys:label code="Zipcode" /><span class="errorMessage">*</span></td>
+			<td align="${left}">
+				<form:input path="address[0].zipcode" cssClass="flat"/>
+			 	<br><form:errors path="address[0].zipcode" cssClass="errorMessage" />
+			</td>
+		</tr>
+		<tr>
+			<td colspan=10></td>
+		</tr>
+		<tr>
 			<td colspan=10 class="danger" style="font-size: 13px;font-weight: bold;color: white;">Notes/Comments</td>
 		</tr>
 		<tr>
@@ -189,7 +239,6 @@ $("#customerForm").submit(function (ev) {
 				<br><form:errors path="notes" cssClass="errorMessage" />
 			</td>
 		</tr>
-	   
 		<tr><td colspan="2"></td></tr>
 		<tr>
 			<td>&nbsp;</td>

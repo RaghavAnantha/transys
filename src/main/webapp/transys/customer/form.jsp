@@ -56,6 +56,26 @@ function formatFax(){
 			<td align="${left}">${modelObject.id}</td>
 		</tr>
 		<tr>
+			<td class="form-left"><transys:label code="Customer Type" /></td>
+			<td align="${left}">
+				<form:select cssClass="flat form-control input-sm" style="width:172px !important" path="customerType" >
+					<form:option value="">------Please Select--------</form:option>
+					<form:options items="${customerTypes}" itemValue="id" itemLabel="customerType"/>
+				</form:select> 
+				<br><form:errors path="customerType" cssClass="errorMessage" />
+			</td> 
+		</tr>
+		<tr>
+			<td class="form-left"><transys:label code="Charge Company" /></td>
+			<td align="${left}">
+				<form:select cssClass="flat form-control input-sm" style="width:172px !important" path="chargeCompany" >
+					<form:option value="">------Please Select--------</form:option>
+					<form:options items="${chargeCompanyOptions}" />
+				</form:select> 
+				<br><form:errors path="chargeCompany" cssClass="errorMessage" />
+			</td> 
+		</tr>
+		<tr>
 			<td class="form-left"><transys:label code="Status" /></td>
 			<td align="${left}">
 				<form:select cssClass="flat form-control input-sm" style="width:172px !important" path="status" >

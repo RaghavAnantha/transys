@@ -55,12 +55,9 @@ public class Order extends AbstractBaseModel {
 	@JoinColumn(name="deliveryAddressId")
 	private Address deliveryAddress;
 	
-	/*@ManyToOne
+	@ManyToOne
 	@JoinColumn(name="materialTypeId") 
-	private MaterialType materialType;*/
-	
-	@Column(name="materialType")
-	private String materialType;
+	private MaterialType materialType;
 	
 	@Column(name="pickupDate")
 	private Date pickupDate;
@@ -361,13 +358,13 @@ public class Order extends AbstractBaseModel {
 		this.orderStatus = status;
 	}
 
-	/*public MaterialType getMaterialType() {
+	public MaterialType getMaterialType() {
 		return materialType;
 	}
 
 	public void setMaterialType(MaterialType materialType) {
 		this.materialType = materialType;
-	}*/
+	}
 
 	public DumpsterInfo getDumpster() {
 		return dumpster;
@@ -377,13 +374,13 @@ public class Order extends AbstractBaseModel {
 		this.dumpster = dumpster;
 	}
 
-	public String getMaterialType() {
+	/*public String getMaterialType() {
 		return materialType;
 	}
 
 	public void setMaterialType(String materialType) {
 		this.materialType = materialType;
-	}
+	}*/
 
 	/*public OrderNotes getNotes() {
 		return notes;

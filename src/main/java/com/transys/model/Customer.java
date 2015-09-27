@@ -1,14 +1,22 @@
 package com.transys.model;
 
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.constraints.NotEmpty;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name="customer")
@@ -24,8 +32,9 @@ public class Customer extends AbstractBaseModel {
 	@Column(name="contact_name")
 	private String contactName;
 	
-	@Column(name="type")
-	private String type;
+	@ManyToOne
+	@JoinColumn(name="customerTypeId") 
+	private CustomerType customerType;
 	
 	@Column(name="status")
 	private String status;
@@ -71,6 +80,18 @@ public class Customer extends AbstractBaseModel {
 	
 	@Column(name="email")
 	private String email;
+	
+	@OneToMany(mappedBy="customer", cascade = CascadeType.ALL)
+	@JsonManagedReference
+	private List<Address> address;
+
+	public List<Address> getAddress() {
+		return address;
+	}
+
+	public void setAddress(List<Address> address) {
+		this.address = address;
+	}
 
 	public String getCompanyName() {
 		return companyName;
@@ -84,12 +105,12 @@ public class Customer extends AbstractBaseModel {
 		return contactName;
 	}
 
-	public String getType() {
-		return type;
+	public CustomerType getCustomerType() {
+		return customerType;
 	}
 
-	public void setType(String type) {
-		this.type = type;
+	public void setCustomerType(CustomerType customerType) {
+		this.customerType = customerType;
 	}
 
 	public String getStatus() {
@@ -174,6 +195,53 @@ public class Customer extends AbstractBaseModel {
 	
 	public String getZipcode() {
 		return zipcode;
+	}
+	
+	@Transient
+	//TODO: Move to utils
+	public String getBillingAddress() {
+		StringBuffer addressBuff = new StringBuffer();
+		if (StringUtils.isNotEmpty(getBillingAddressLine1())) {
+			addressBuff.append(getBillingAddressLine1());
+		}
+		if (StringUtils.isNotEmpty(getBillingAddressLine2())) {
+			addressBuff.append(" " + getBillingAddressLine2());
+		}
+		if (StringUtils.isNotEmpty(getCity())) {
+			addressBuff.append(", " + getCity());
+		}
+		if (StringUtils.isNotEmpty(getState().getName())) {
+			addressBuff.append(", " + getState().getName());
+		}
+		if (StringUtils.isNotEmpty(getZipcode())) {
+			addressBuff.append(", " + getZipcode());
+		}
+		
+		return addressBuff.toString();
+	}
+	
+	@Transient
+	//TODO: Move to utils
+	public String getFormattedPhone() {
+		return formatPhone(getPhone());
+	}
+	
+	@Transient
+	//TODO: Move to utils
+	public String getFormattedFax() {
+		return formatPhone(getFax());
+	}
+	
+	@Transient
+	//TODO: Move to utils
+	public String formatPhone(String phone) {
+		if (StringUtils.isEmpty(phone) || phone.length() < 10 || StringUtils.contains(phone, "-")) {
+			return phone;
+		}
+		
+		return String.format("%s-%s-%s", phone.substring(0, 3), 
+												   phone.substring(3, 6), 
+												   phone.substring(6, 10));
 	}
 
 	public String getPhone() {

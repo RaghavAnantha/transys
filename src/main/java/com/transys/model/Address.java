@@ -9,11 +9,14 @@ import javax.persistence.Transient;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
 @Table(name="address")
 public class Address extends AbstractBaseModel {
 	@ManyToOne
 	@JoinColumn(name="custID")
+	@JsonBackReference
 	private Customer customer;
 	
 	@Column(name="line1")
@@ -57,6 +60,7 @@ public class Address extends AbstractBaseModel {
 	}
 	
 	@Transient
+	//TODO: Move to utils?
 	public String getFullLine() {
 		StringBuffer fullLineBuff = new StringBuffer();
 		if (StringUtils.isNotEmpty(getLine1())) {

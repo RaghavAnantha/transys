@@ -23,10 +23,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.google.gson.Gson;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+//import com.google.gson.Gson;
 import com.transys.controller.editor.AbstractModelEditor;
 import com.transys.core.util.MimeUtil;
 import com.transys.model.AbstractBaseModel;
+import com.transys.model.AdditionalFee;
 import com.transys.model.Address;
 import com.transys.model.BaseModel;
 import com.transys.model.Customer;
@@ -44,6 +47,7 @@ import com.transys.model.PermitStatus;
 //import com.transys.model.FuelVendor;
 //import com.transys.model.Location;
 import com.transys.model.SearchCriteria;
+import com.transys.model.State;
 import com.transys.model.User;
 
 @Controller
@@ -63,6 +67,8 @@ public class OrderController extends CRUDController<Order> {
 		binder.registerCustomEditor(OrderNotes.class, new AbstractModelEditor(OrderNotes.class));
 		binder.registerCustomEditor(DumpsterInfo.class, new AbstractModelEditor(DumpsterInfo.class));
 		binder.registerCustomEditor(User.class, new AbstractModelEditor(User.class));
+		binder.registerCustomEditor(MaterialType.class, new AbstractModelEditor(MaterialType.class));
+		binder.registerCustomEditor(AdditionalFee.class, new AbstractModelEditor(AdditionalFee.class));
 		
 		super.initBinder(binder);
 	}
@@ -90,29 +96,17 @@ public class OrderController extends CRUDController<Order> {
       model.addAttribute("permitClasses", genericDAO.executeSimpleQuery("select obj from PermitClass obj where obj.id!=0 order by obj.id asc"));
       model.addAttribute("permitTypes", genericDAO.executeSimpleQuery("select obj from PermitType obj where obj.id!=0 order by obj.id asc"));
       
+      model.addAttribute("additionalFeeTypes", genericDAO.executeSimpleQuery("select obj from AdditionalFee obj where obj.id!=0 order by obj.id asc"));
+     
+      model.addAttribute("materialTypes", genericDAO.executeSimpleQuery("select obj from MaterialType obj where obj.id!=0 order by obj.id asc"));
+      
+      model.addAttribute("paymentMethods", genericDAO.executeSimpleQuery("select obj from PaymentMethod obj where obj.id!=0 order by obj.id asc"));
+      
       populateDeliveryTimeSettings(model);
       
       String driverRole = "DRIVER";
       List<BaseModel> driversList = genericDAO.executeSimpleQuery("select obj from User obj where obj.id!=0 and obj.role.name='" + driverRole + "' order by obj.id asc");
       model.addAttribute("drivers", driversList);
-      
-      MaterialType aMaterialType = new MaterialType();
-      aMaterialType.setId(1l);
-      aMaterialType.setType("Drywall/Wood");
-      
-      List<MaterialType> materialTypeList = new ArrayList<MaterialType>();
-      materialTypeList.add(aMaterialType);
-      
-      model.addAttribute("materialTypes", materialTypeList);
-      
-      PaymentMethodType aPaymentMethodType = new PaymentMethodType();
-      aPaymentMethodType.setId(1l);
-      aPaymentMethodType.setType("Charge");
-      
-      List<PaymentMethodType> paymentMethodTypeList = new ArrayList<PaymentMethodType>();
-      paymentMethodTypeList.add(aPaymentMethodType);
-      
-      model.addAttribute("paymentMethods", paymentMethodTypeList);
 	}
 	
 	private void populateDeliveryTimeSettings(ModelMap model) {
@@ -440,17 +434,32 @@ public class OrderController extends CRUDController<Order> {
 														    @RequestParam(value = "permitId", required = false) String permitId,
 															 @RequestParam(value = "permitClassId", required = false) String permitClassId,
 															 @RequestParam(value = "permitTypeId", required = false) String permitTypeId) {
+		List<Permit> permitList = retrievePermit(permitId, permitClassId, permitTypeId);
+		
+		ObjectMapper objectMapper = new ObjectMapper();
+		String json = StringUtils.EMPTY;
+		try {
+			json = objectMapper.writeValueAsString(permitList);
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return json;
+		//String json = (new Gson()).toJson(permitList);
+		//return json;
+	}
+	
+	
+	private List<Permit> retrievePermit(String permitId, String permitClassId, String permitTypeId) {
 		String query = "select obj from Permit obj where ";
 		if (StringUtils.isNotEmpty(permitId)) {
 			query += "obj.id=" + permitId;
 		} else {
-			query += "obj.permitType.id=" + permitTypeId
-					 + " and obj.permitClass.id=" + permitClassId;
+			query += "obj.permitType.id=" + permitTypeId;
+			query += " and obj.permitClass.id=" + permitClassId;
 		}
 		
-		List<Permit> permitList  = genericDAO.executeSimpleQuery(query);
-		String json = (new Gson()).toJson(permitList);
-		return json;
+		return genericDAO.executeSimpleQuery(query);
 	}
 	
 	@Override
@@ -475,6 +484,18 @@ public class OrderController extends CRUDController<Order> {
 		List<BaseModel> notesList = genericDAO.executeSimpleQuery("select obj from OrderNotes obj where obj.order.id=" +  orderToBeEdited.getId() + " order by obj.id asc");
 		model.addAttribute("notesList", notesList);
 		
+		List<List<Permit>> allPermitsOfChosenTypesList = new ArrayList<List<Permit>>();
+		for(Permit aChosenPermit : orderToBeEdited.getPermits()) {
+			if (aChosenPermit != null && aChosenPermit.getId() != null) {
+				String aChosenPermitClassId =  aChosenPermit.getPermitClass().getId().toString();
+				String aChosenPermitTypeId =  aChosenPermit.getPermitType().getId().toString();
+				List<Permit> aPermitsOfChosenTypeList = retrievePermit(StringUtils.EMPTY, aChosenPermitClassId, aChosenPermitTypeId);
+				
+				allPermitsOfChosenTypesList.add(aPermitsOfChosenTypeList);
+			}
+		}
+		model.addAttribute("allPermitsOfChosenTypesList", allPermitsOfChosenTypesList);
+		
 		//return urlContext + "/form";
 		return urlContext + "/order";
 	}
@@ -493,16 +514,38 @@ public class OrderController extends CRUDController<Order> {
 	public @ResponseBody String retrieveCustomerDeliveryAddress(ModelMap model, HttpServletRequest request) {
 		String customerId = request.getParameter("id");
 		List<Address> addressList  = genericDAO.executeSimpleQuery("select obj from Address obj where obj.customer.id=" + customerId);
-		String json = (new Gson()).toJson(addressList);
+		
+		ObjectMapper objectMapper = new ObjectMapper();
+		String json = StringUtils.EMPTY;
+		try {
+			json = objectMapper.writeValueAsString(addressList);
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return json;
+		
+		//String json = (new Gson()).toJson(addressList);
+		//return json;
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/customerAddress.do")
 	public @ResponseBody String retrieveCustomerAddress(ModelMap model, HttpServletRequest request) {
 		String customerId = request.getParameter("id");
 		List<Customer> customerList  = genericDAO.executeSimpleQuery("select obj from Customer obj where obj.id=" + customerId);
-		String json = (new Gson()).toJson(customerList.get(0));
+		
+		ObjectMapper objectMapper = new ObjectMapper();
+		String json = StringUtils.EMPTY;
+		try {
+			json = objectMapper.writeValueAsString(customerList.get(0));
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return json;
+		
+		//String json = (new Gson()).toJson(customerList.get(0));
+		//return json;
 	}
 	
 	@Override
@@ -610,15 +653,32 @@ public class OrderController extends CRUDController<Order> {
 		
 		String query = "select obj from Address obj where obj.customer.id=" +  entity.getCustomer().getId() + " order by obj.line1 asc";
 		model.addAttribute("deliveryAddresses", genericDAO.executeSimpleQuery(query));
-    	
+		
+		List<List<Permit>> allPermitsOfChosenTypesList = new ArrayList<List<Permit>>();
+		for(Permit aChosenPermit : entity.getPermits()) {
+			if (aChosenPermit != null && aChosenPermit.getId() != null) {
+				String aChosenPermitClassId =  aChosenPermit.getPermitClass().getId().toString();
+				String aChosenPermitTypeId =  aChosenPermit.getPermitType().getId().toString();
+				List<Permit> aPermitsOfChosenTypeList = retrievePermit(StringUtils.EMPTY, aChosenPermitClassId, aChosenPermitTypeId);
+				
+				allPermitsOfChosenTypesList.add(aPermitsOfChosenTypeList);
+			}
+		}
+		model.addAttribute("allPermitsOfChosenTypesList", allPermitsOfChosenTypesList);
+		
+		Long customerId = entity.getCustomer().getId();
+		List<Customer> customerList = genericDAO.executeSimpleQuery("select obj from Customer obj where obj.id=" + customerId);
+		Customer orderCustomer = customerList.get(0);
+		
+		/*//Or set hibernate fetch all?
+		List<State> stateList = genericDAO.executeSimpleQuery("select obj from State obj where obj.id= " + orderCustomer.getState().getId());
+		orderCustomer.getState().setName(stateList.get(0).getName());*/
+		
+		entity.setCustomer(orderCustomer);
+		
 		//return urlContext + "/form";
 		return urlContext + "/order";
 
-		// create permit relationship
-		/*	Map criterias = new HashMap();
-		List<Permit> permits = genericDAO.findByCriteria(Permit.class, criterias, "id", false);
-		entity.setPermits(permits.parallelStream().distinct().collect(Collectors.toSet()));*/
-		
 		//return super.save(request, entity, bindingResult, model);
 	}
 }

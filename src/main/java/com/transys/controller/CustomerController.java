@@ -1,6 +1,7 @@
 package com.transys.controller;
 
 import java.io.ByteArrayOutputStream;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -22,13 +23,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.google.gson.Gson;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+//import com.google.gson.Gson;
 import com.transys.controller.CRUDController;
 import com.transys.controller.editor.AbstractModelEditor;
 import com.transys.core.util.MimeUtil;
 import com.transys.model.AbstractBaseModel;
 import com.transys.model.Address;
 import com.transys.model.Customer;
+import com.transys.model.CustomerType;
 import com.transys.model.Order;
 import com.transys.model.OrderPaymentInfo;
 //import com.transys.model.FuelVendor;
@@ -49,6 +53,7 @@ public class CustomerController extends CRUDController<Customer> {
 	public void initBinder(WebDataBinder binder) {
 		binder.registerCustomEditor(State.class, new AbstractModelEditor(State.class));
 		binder.registerCustomEditor(Address.class, new AbstractModelEditor(Address.class));
+		binder.registerCustomEditor(CustomerType.class, new AbstractModelEditor(CustomerType.class));
 	}
 	
 	/*
@@ -61,6 +66,13 @@ public class CustomerController extends CRUDController<Customer> {
 		model.addAttribute("customer",genericDAO.executeSimpleQuery("select obj from Customer obj where obj.id!=0 order by obj.companyName asc"));
 		model.addAttribute("customerIds",genericDAO.executeSimpleQuery("select obj from Customer obj where obj.id is not null order by obj.id asc"));
 		model.addAttribute("state", genericDAO.findByCriteria(State.class, criterias, "name", false));
+		
+		model.addAttribute("customerTypes", genericDAO.findByCriteria(CustomerType.class, criterias, "customerType", false));
+		
+		List<String> chargeCompanyOptions = new ArrayList<String>();
+		chargeCompanyOptions.add("Yes");
+		chargeCompanyOptions.add("No");
+		model.addAttribute("chargeCompanyOptions", chargeCompanyOptions);
 		
 		List<String> statusList = new ArrayList<String>();
 		statusList.add("Active");
@@ -186,14 +198,13 @@ public class CustomerController extends CRUDController<Customer> {
 
         for (Long key : customerMap.keySet()) {
                 CustomerReportVO customerReportVO =  new CustomerReportVO();
-                Double sum = 0.0;
+                BigDecimal sum = new BigDecimal("0.0");
                 Integer Ordercount = 0;
             for (OrderPaymentInfo orderPymntInfo: orderPymntInfoList ) {
                 if (orderPymntInfo.getOrder().getCustomer().getId() == key) {
-                        sum =  sum +  orderPymntInfo.getTotalFees();
-                        Ordercount++;
-                        }
-
+                     sum =  sum.add(orderPymntInfo.getTotalFees());
+                     Ordercount++;
+                }
             }
             customerReportVO.setCompanyName(customerMap.get(key).getCompanyName());
                 customerReportVO.setContactName(customerMap.get(key).getContactName());
@@ -365,7 +376,6 @@ public class CustomerController extends CRUDController<Customer> {
 				bindingResult.rejectValue("fax", "typeMismatch.java.lang.String", null, null);
 		}*/
 		//return super.save(request, entity, bindingResult, model);
-		
 		
 		try {
 			getValidator().validate(entity, bindingResult);
@@ -542,8 +552,20 @@ public class CustomerController extends CRUDController<Customer> {
 		//return saveSuccess(model, request, entity);
 		//setupCreate(model, request);
 		//model.addAttribute("modelObject", entity);
-		String json = (new Gson()).toJson(entity);
+		
+		ObjectMapper objectMapper = new ObjectMapper();
+		String json = StringUtils.EMPTY;
+		try {
+			json = objectMapper.writeValueAsString(entity);
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		return json;
+		
+		//String json = (new Gson()).toJson(entity);
+		//return json;
 	}
 	
 	@RequestMapping(method = RequestMethod.POST, value = "/saveModal.do")
@@ -579,6 +601,10 @@ public class CustomerController extends CRUDController<Customer> {
 			}
 		}
 		
+		entity.getAddress().get(0).setCustomer(entity);
+		entity.getAddress().get(0).setCreatedBy(entity.getCreatedBy());
+		entity.getAddress().get(0).setModifiedBy(entity.getModifiedBy());
+		
 		genericDAO.saveOrUpdate(entity);
 		cleanUp(request);
 		
@@ -604,7 +630,23 @@ public class CustomerController extends CRUDController<Customer> {
 		//return saveSuccess(model, request, entity);
 		//setupCreate(model, request);
 		//model.addAttribute("modelObject", entity);
-		String json = (new Gson()).toJson(entity);
+		
+		//Or retrieve cust again?
+		List<State> stateList = genericDAO.executeSimpleQuery("select obj from State obj where obj.id= " + entity.getState().getId());
+		entity.getState().setName(stateList.get(0).getName());
+		
+		ObjectMapper objectMapper = new ObjectMapper();
+		String json = StringUtils.EMPTY;
+		try {
+			json = objectMapper.writeValueAsString(entity);
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		return json;
+				
+		/*String json = (new Gson()).toJson(entity);
+		return json;*/
 	}
 }

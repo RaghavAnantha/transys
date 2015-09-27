@@ -113,24 +113,24 @@ CREATE TABLE `customer` (
   `modified_by` bigint(20) DEFAULT NULL,
   `status` varchar(11) COLLATE utf8_unicode_ci DEFAULT NULL,
   `billing_address_line1` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `type` int(11) DEFAULT NULL,
-  `notes` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `customerTypeId` bigint(20) DEFAULT NULL,
+  `notes` varchar(500) COLLATE utf8_unicode_ci DEFAULT NULL,
   `billing_address_line2` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `city` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `city` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
   `company_name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `fax` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `fax` varchar(15) COLLATE utf8_unicode_ci DEFAULT NULL,
   `contact_name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `phone` varchar(45) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `zipcode` varchar(45) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `phone` varchar(25) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `zipcode` varchar(25) COLLATE utf8_unicode_ci DEFAULT NULL,
   `state` bigint(20) DEFAULT NULL,
-  `email` varchar(45) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `alt_phone_1` varchar(45) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `alt_phone_2` varchar(45) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `email` varchar(25) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `alt_phone_1` varchar(25) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `alt_phone_2` varchar(25) COLLATE utf8_unicode_ci DEFAULT NULL,
   `chargeCompany` varchar(5) DEFAULT NULL,
   `delete_flag` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
-  KEY `FK_fvq6be0iquj59i5x3d51959b5` (`state`),
-  CONSTRAINT `stateRef` FOREIGN KEY (`state`) REFERENCES `state` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `stateRef` FOREIGN KEY (`state`) REFERENCES `state` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `customerTypeRef` FOREIGN KEY (`customerTypeId`) REFERENCES `customerType` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -140,7 +140,7 @@ CREATE TABLE `customer` (
 
 LOCK TABLES `customer` WRITE;
 /*!40000 ALTER TABLE `customer` DISABLE KEYS */;
-INSERT INTO `customer` VALUES (5,'2015-09-10 21:22:45',1,NULL,NULL,'Active','2324 N Camelback Rd',NULL,NULL,NULL,'Chicago','Aberdeen Construction','1234567890','Raghav','1234567890','28262',5,'abc@aberdeen.com',NULL,NULL,NULL,1),(6,'2015-09-11 21:05:43',1,NULL,NULL,'Active','1321 W Main St',NULL,NULL,NULL,'Chicago','Gibbons Construction','1234567890','Bharat','1234567890','22323',5,'abc@aberdeen.com',NULL,NULL,NULL,1);
+INSERT INTO `customer` VALUES (5,'2015-09-10 21:22:45',1,NULL,NULL,'Active','2324 N Camelback Rd',NULL,NULL,NULL,'Chicago','Aberdeen Construction','1234567890','Raghav','1234567890','28262',1,'abc@aberdeen.com',NULL,NULL,NULL,1),(6,'2015-09-11 21:05:43',1,NULL,NULL,'Active','1321 W Main St',NULL,NULL,NULL,'Chicago','Gibbons Construction','1234567890','Bharat','1234567890','22323',1,'abc@aberdeen.com',NULL,NULL,NULL,1);
 /*!40000 ALTER TABLE `customer` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -159,7 +159,6 @@ CREATE TABLE `dumpsterInfo` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `dumpsterSize` varchar(5) DEFAULT NULL,
   `dumpsterNum` varchar(50) DEFAULT NULL,
-  `dumpsterPrice` double DEFAULT NULL,
   `status` bigint(20) DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   `created_by` bigint(20) DEFAULT NULL,
@@ -178,7 +177,7 @@ CREATE TABLE `dumpsterInfo` (
 
 LOCK TABLES `dumpsterInfo` WRITE;
 /*!40000 ALTER TABLE `dumpsterInfo` DISABLE KEYS */;
-INSERT INTO `dumpsterInfo` VALUES (2,'20 yd','20W-113-21',20,1,NULL,NULL,NULL,NULL,1);
+INSERT INTO `dumpsterInfo` VALUES (2,'20 yd','20W-113-21',1,NULL,NULL,NULL,NULL,1);
 /*!40000 ALTER TABLE `dumpsterInfo` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -339,7 +338,7 @@ CREATE TABLE `trans_order` (
   `deliveryAddressId` bigint(20) DEFAULT NULL,
   `locationTypeId` bigint(20) NOT NULL,
   `dumpsterSize` varchar(5) DEFAULT NULL,
-  `materialType` varchar(50) DEFAULT NULL,
+  `materialTypeId` bigint(20) DEFAULT NULL,
   -- `dumpsterPrice` double DEFAULT NULL,
   -- `paymentInfo` bigint(20) DEFAULT NULL,
   -- `notes` int(11) DEFAULT NULL,
@@ -365,7 +364,7 @@ CREATE TABLE `trans_order` (
   `deliveryMinutesFrom` varchar(5) DEFAULT NULL,
   `deliveryMinutesTo` varchar(5) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `key1_idx` (`custID`),
+  KEY `keyCustId_idx` (`custID`),
   -- KEY `deliveryAddressRef_idx` (`deliveryAddressId`),
   -- KEY `orderStatusRef_idx` (`orderStatusId`),
   -- KEY `driverInfoRef_idx` (`driverInfo`),
@@ -379,6 +378,7 @@ CREATE TABLE `trans_order` (
   -- CONSTRAINT `paymentInfoRef` FOREIGN KEY (`paymentInfo`) REFERENCES `orderPaymentInfo` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   -- CONSTRAINT `weightInfoRef` FOREIGN KEY (`weightInfo`) REFERENCES `orderWeightInfo` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
   CONSTRAINT `dumpsterRef` FOREIGN KEY (`dumpsterId`) REFERENCES `dumpsterInfo` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `materialTypeRef` FOREIGN KEY (`materialTypeId`) REFERENCES `materialType` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `dumpsterLocationRef` FOREIGN KEY (`locationTypeId`) REFERENCES `locationType` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `pickupDriverRef` FOREIGN KEY (`pickUpDriverId`) REFERENCES `user_info` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `dropOffDriverRef` FOREIGN KEY (`dropOffDriverId`) REFERENCES `user_info` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
@@ -391,7 +391,7 @@ CREATE TABLE `trans_order` (
 
 LOCK TABLES `trans_order` WRITE;
 /*!40000 ALTER TABLE `trans_order` DISABLE KEYS */;
-INSERT INTO `transys`.`trans_order` (`id`, `custID`, `deliveryContactName`, `deliveryContactPhone1`, `deliveryContactPhone2`, `deliveryDate`, `deliveryAddressId`, `locationTypeId`, `dumpsterSize`, `materialType`, `created_at`, `delete_flag`, `grossWeight`, `netWeightLb`, `netWeightTonnage`, `tare`, `dumpsterId`, `pickupDate`, `orderStatusId` , `created_by`) VALUES (1, 5, 'Raghav', '123-456-7890', '123-456-7890', curdate(), 3, 1, '20 yd', 1, curdate(), 1, '10.0', '10.0', '10.0', '10.0', 2, curdate(), 1, 1);
+INSERT INTO `transys`.`trans_order` (`id`, `custID`, `deliveryContactName`, `deliveryContactPhone1`, `deliveryContactPhone2`, `deliveryDate`, `deliveryAddressId`, `locationTypeId`, `dumpsterSize`, `materialTypeId`, `created_at`, `delete_flag`, `grossWeight`, `netWeightLb`, `netWeightTonnage`, `tare`, `dumpsterId`, `pickupDate`, `orderStatusId` , `created_by`) VALUES (1, 5, 'Raghav', '123-456-7890', '123-456-7890', curdate(), 3, 1, '20 yd', 1, curdate(), 1, '10.0', '10.0', '10.0', '10.0', 2, curdate(), 1, 1);
 /*!40000 ALTER TABLE `trans_order` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -422,6 +422,35 @@ LOCK TABLES `locationType` WRITE;
 /*!40000 ALTER TABLE `locationType` DISABLE KEYS */;
 INSERT INTO `locationType` VALUES (1,'Alley',NULL,NULL,NULL,NULL,1),(2,'Curb',NULL,NULL,NULL,NULL,1),(3,'Drive',NULL,NULL,NULL,NULL,1);
 /*!40000 ALTER TABLE `locationType` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `customerType`
+--
+
+DROP TABLE IF EXISTS `customerType`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `customerType` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `customerType` varchar(50) NOT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `created_by` bigint(20) DEFAULT NULL,
+  `modified_at` datetime DEFAULT NULL,
+  `modified_by` bigint(20) DEFAULT NULL,
+  `delete_flag` int(11) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `customerType`
+--
+
+LOCK TABLES `customerType` WRITE;
+/*!40000 ALTER TABLE `customerType` DISABLE KEYS */;
+INSERT INTO `customerType` VALUES (1,'Commercial',NULL,NULL,NULL,NULL,1);
+/*!40000 ALTER TABLE `customerType` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -465,11 +494,16 @@ DROP TABLE IF EXISTS `orderPaymentInfo`;
 CREATE TABLE `orderPaymentInfo` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `orderId` bigint(20) NOT NULL,
-  `dumpsterPrice` double DEFAULT NULL,
-  `cityFee` double DEFAULT NULL,
-  `permitFees` double DEFAULT NULL,
-  `overweightFee` double DEFAULT NULL,
-  `additionalFee` double DEFAULT NULL,
+  `dumpsterPrice` decimal(6,2) DEFAULT NULL,
+  `cityFee` decimal(6,2) DEFAULT NULL,
+  `permitFees` decimal(6,2) DEFAULT NULL,
+  `overweightFee` decimal(6,2) DEFAULT NULL,
+  `additionalFee1Id` bigint(20) DEFAULT NULL,
+  `additionalFee1` decimal(6,2) DEFAULT NULL,
+  `additionalFee2Id` bigint(20) DEFAULT NULL,
+  `additionalFee2` decimal(6,2) DEFAULT NULL,
+  `additionalFee3Id` bigint(20) DEFAULT NULL,
+  `additionalFee3` decimal(6,2) DEFAULT NULL,
   `paymentMethod` varchar(50) DEFAULT NULL,
   `ccReferenceNum` varchar(50) DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
@@ -477,10 +511,13 @@ CREATE TABLE `orderPaymentInfo` (
   `modified_at` datetime DEFAULT NULL,
   `modified_by` bigint(20) DEFAULT NULL,
   `delete_flag` int(11) NOT NULL DEFAULT '1',
-  `totalFees` double DEFAULT NULL,
+  `totalFees` decimal(6,2) DEFAULT NULL,
   `checkNum` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  CONSTRAINT `orderPaymentOrderRef` FOREIGN KEY (`orderId`) REFERENCES `trans_order` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `orderPaymentOrderRef` FOREIGN KEY (`orderId`) REFERENCES `trans_order` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `orderPaymentAddnlFee1Ref` FOREIGN KEY (`additionalFee1Id`) REFERENCES `additionalFee` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `orderPaymentAddnlFee2Ref` FOREIGN KEY (`additionalFee2Id`) REFERENCES `additionalFee` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `orderPaymentAddnlFee3Ref` FOREIGN KEY (`additionalFee2Id`) REFERENCES `additionalFee` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -567,14 +604,13 @@ DROP TABLE IF EXISTS `permit`;
 CREATE TABLE `permit` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `permitType` bigint(20) NOT NULL,
-  `number` varchar(15) DEFAULT NULL,
-  `fee` double DEFAULT '0',
+  `number` varchar(25) DEFAULT NULL,
+  `fee` decimal(6,2) DEFAULT NULL,
   `startDate` datetime DEFAULT NULL,
   `endDate` datetime DEFAULT NULL,
   `permitAddress` varchar(100) DEFAULT NULL,
   `locationType` bigint(20) DEFAULT NULL,
   `status` bigint(20) NOT NULL DEFAULT '1',
-  `comments` mediumtext,
   `created_at` datetime DEFAULT NULL,
   `created_by` bigint(20) DEFAULT NULL,
   `modified_at` datetime DEFAULT NULL,
@@ -583,8 +619,7 @@ CREATE TABLE `permit` (
   `customerID` bigint(20) DEFAULT NULL,
   `deliveryAddress` bigint(20) NOT NULL,
   `parkingMeter` varchar(3) DEFAULT NULL,
-  `parkingMeterFee` double DEFAULT '0',
-  `orderID` bigint(20) DEFAULT NULL,
+  `parkingMeterFee` decimal(6,2) DEFAULT NULL,
   `permitClass` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `permitStatusRef_idx` (`status`),
@@ -592,8 +627,8 @@ CREATE TABLE `permit` (
   KEY `deliveryAddressPermitRef_idx` (`deliveryAddress`),
   KEY `locationTypeRef_idx` (`locationType`),
   KEY `permitTypeRef_idx` (`permitType`),
-  KEY `FK_b8158603jnlm5s4u1kuyxecl9` (`permitClass`),
-  CONSTRAINT `FK_b8158603jnlm5s4u1kuyxecl9` FOREIGN KEY (`permitClass`) REFERENCES `permitClass` (`id`),
+  KEY `permitClassRef_Idx` (`permitClass`),
+  CONSTRAINT `permitClassRef` FOREIGN KEY (`permitClass`) REFERENCES `permitClass` (`id`),
   CONSTRAINT `customerPermitRef` FOREIGN KEY (`customerID`) REFERENCES `customer` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `deliveryAddressPermitRef` FOREIGN KEY (`deliveryAddress`) REFERENCES `address` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `locationTypeRef` FOREIGN KEY (`locationType`) REFERENCES `locationType` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
@@ -608,7 +643,7 @@ CREATE TABLE `permit` (
 
 LOCK TABLES `permit` WRITE;
 /*!40000 ALTER TABLE `permit` DISABLE KEYS */;
-INSERT INTO `permit` VALUES (1,1,'1301-11W',50,'2015-09-22 00:00:00','2015-09-25 00:00:00','4818W VAN BUREN',1,2,NULL,'2015-09-22 00:00:00',NULL,'2015-09-22 21:51:56',1,1,5,1,'Yes',0,NULL,1),(2,1,'5667890',90,'2015-09-22 00:00:00','2015-09-25 00:00:00',NULL,1,2,NULL,'2015-09-23 12:27:14',1,NULL,NULL,1,6,4,'Yes',90,NULL,1);
+ INSERT INTO `permit` VALUES (1,1,'1301-11W',50,'2015-09-22 00:00:00','2015-09-25 00:00:00','4818W VAN BUREN',1,2,'2015-09-22 00:00:00',NULL,'2015-09-22 21:51:56', NULL, 1,5,1,'Yes',1.0,1),(2,1,'5667890',90,'2015-09-22 00:00:00','2015-09-25 00:00:00','1890 Chesterfield Ct',1,2,'2015-09-23 12:27:14',1,NULL,NULL,1,6,4,'Yes',90,1);
 -- INSERT INTO `permit` VALUES (1,1,1,'1234','50',curdate(),'1301-11W',1,2,'Test',NULL,NULL,NULL,NULL,1,5,1,NULL);
 -- ,(9,1,1,'6','0.0',curdate(),NULL,1,1,NULL,'2015-09-15 16:25:46',1,NULL,NULL,1,6,1,'yes')
 -- ,(10,2,2,'9','0.0',curdate(),NULL,2,1,NULL,'2015-09-15 16:28:40',1,NULL,NULL,1,6,1,'no')

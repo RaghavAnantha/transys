@@ -1,24 +1,32 @@
 <%@include file="/common/taglibs.jsp"%>
 <script type="text/javascript">
-function formatPhone() {	
-	var phone = document.getElementById("phone").value;
+function validateAndFormatPhone() {	
+	var phone = document.getElementById("deliveryContactPhone1").value;
 	if(phone != ""){
-		if(phone.length < 10){
+		if(phone.length < 10) {
 			alert("Invalid Phone Number");
 			document.getElementById("phone").value = "";
 			return true;
-		}
-		else{
-			var str = new String(phone);
-			if(!str.match("-")){
-				var p1 = str.substring(0,3);
-				var p2 = str.substring(3,6);
-				var p3 = str.substring(6,10);				
-				var phone = p1 + "-" + p2 + "-" + p3;
-				document.getElementById("phone").value = phone;
-			}
+		} else {
+			var formattedPhone = formatPhone(phone);
+			document.getElementById("deliveryContactPhone1").value = formattedPhone;
 		}
 	}	
+}
+
+function formatPhone(phone) {
+	var str = new String(phone);
+	if(str.match("-")) {
+		return phone;
+	}
+	if(phone.length < 10) {
+		return phone;
+	}
+	
+	var p1 = str.substring(0,3);
+	var p2 = str.substring(3,6);
+	var p3 = str.substring(6,10);				
+	return p1 + "-" + p2 + "-" + p3;
 }
 
 function validate() {
@@ -26,71 +34,81 @@ function validate() {
 };
 
 function populateCustomerInfo() {
-	populateDeliveryAddress();
-	populateCustomerAddress();
+	retrieveAndPopulateDeliveryAddress();
+	retrieveAndPopulateCustomerBillingAddress();
 }
 
-function populateDeliveryAddress() {
+function retrieveAndPopulateDeliveryAddress() {
 	var customerSelect =  $('#customerSelect');
-	var deliveryAddressSelect = $('#deliveryAddressSelect');
-	
-	deliveryAddressSelect.empty();
-	
-	var firstOption = $('<option value="">'+ "-------Please Select------" +'</option>');
-	deliveryAddressSelect.append(firstOption);
-	
 	var customerId = customerSelect.val();
 	$.ajax({
   		url: "customerDeliveryAddress.do?id=" + customerId,
        	type: "GET",
        	success: function(responseData, textStatus, jqXHR) {
     	   	var addressList = jQuery.parseJSON(responseData);
-    	   	$.each(addressList, function () {
-    	   	    $("<option />", {
-    	   	        val: this.id,
-    	   	        text: this.line1 + " " + this.line2
-    	   	    }).appendTo(deliveryAddressSelect);
-    	   	});
+    	   	populateDeliveryAddress(addressList);
 		}
 	});
 }
 
-function populateCustomerAddress() {
+function populateDeliveryAddress(addressList) {
+	var deliveryAddressSelect = $('#deliveryAddressSelect');
+	deliveryAddressSelect.empty();
+	
+	var firstOption = $('<option value="">'+ "-------Please Select------" +'</option>');
+	deliveryAddressSelect.append(firstOption);
+	
+	var selected = "";
+   	$.each(addressList, function () {
+   		$("<option />", {
+   	        val: this.id,
+   	        text: this.line1 + " " + this.line2
+   	    }).appendTo(deliveryAddressSelect);
+   	});
+}
+
+function selectDeliveryAddressOption(value) {
+	$('#deliveryAddressSelect').val(value);
+}
+
+function retrieveAndPopulateCustomerBillingAddress() {
 	var customerId = $('#customerSelect').val();
 	$.ajax({
   		url: "customerAddress.do?id=" + customerId,
        	type: "GET",
        	success: function(responseData, textStatus, jqXHR) {
     	   	var customer = jQuery.parseJSON(responseData);
-    	   	
-    	   	var address = customer.billingAddressLine1 + ", " 
-    	   					+ customer.city + ", " + customer.state.name + ", " + customer.zipcode
-    	   	$('#address').html(address);
-    	   	
-    		$('#contact').html(customer.contactName);
-    		$('#fax').html(customer.fax);
-    		
-    		var phone = customer.phone;
-    		var p1 = phone.substring(0,3);
-			var p2 = phone.substring(3,6);
-			var p3 = phone.substring(6,10);				
-			$('#phone').html(p1 + "-" + p2 + "-" + p3);
-    		
-    		$('#email').html(customer.email);
+    	   	populateCustomerBillingAddress(customer);
 		}
 	}); 
 }
 
+function populateCustomerBillingAddress(customer) {
+   	var address = customer.billingAddressLine1 + ", " 
+   					+ customer.city + ", " + customer.state.name + ", " + customer.zipcode
+   	$('#addressTd').html(address);
+   	
+	$('#contactTd').html(customer.contactName);
+	$('#phoneTd').html(formatPhone(customer.phone));
+	$('#faxTd').html(formatPhone(customer.fax));
+	$('#emailTd').html(customer.email);
+}
+
 function appendDeliveryAddress(address) {
 	var deliveryAddressSelect = $('#deliveryAddressSelect');
-	var newAddressOption = $('<option value=' + address.id + '>'+ address.line1 + " " + address.line2 +'</option>');
+	var newAddressOption = $('<option value=' + address.id + ' selected>'+ address.line1 + " " + address.line2 +'</option>');
 	deliveryAddressSelect.append(newAddressOption);
 }
 
 function appendCustomer(customer) {
 	var customerSelect = $('#customerSelect');
-	var newCustomerOption = $('<option value=' + customer.id + '>'+ customer.companyName +'</option>');
+	var newCustomerOption = $('<option value=' + customer.id + ' selected>'+ customer.companyName +'</option>');
 	customerSelect.append(newCustomerOption);
+	
+	populateCustomerBillingAddress(customer);
+	
+	populateDeliveryAddress(customer.address);
+	selectDeliveryAddressOption(customer.address[0].id);
 }
 
 function populatePermitNumbers(index) {
@@ -186,20 +204,19 @@ $("#addCustomerModal").on("show.bs.modal", function(e) {
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Address" /><span class="errorMessage"></span></td>
-			<td align="${left}" id="address"></td>
+			<td align="${left}" id="addressTd">${modelObject.customer.getBillingAddress()}</td>
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Contact" /><span class="errorMessage"></span></td>
-			<td align="${left}" id="contact"></td>
+			<td align="${left}" id="contactTd">${modelObject.customer.contactName}</td>
 			<td class="form-left"><transys:label code="Fax"/></td>
-			<td align="${left}" id="fax">
-			</td>
+			<td align="${left}" id="faxTd">${modelObject.customer.getFormattedFax()}</td>
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Phone" /><span class="errorMessage"></span></td>
-			<td align="${left}" id="phone"></td>
+			<td align="${left}" id="phoneTd">${modelObject.customer.getFormattedPhone()}</td>
 			<td class="form-left"><transys:label code="Email"/></td>
-			<td align="${left}" id="email"></td>
+			<td align="${left}" id="emailTd">${modelObject.customer.email}</td>
 		</tr>
 		<tr>
 			<td colspan=10></td>
@@ -242,7 +259,7 @@ $("#addCustomerModal").on("show.bs.modal", function(e) {
 			<td class="form-left"><transys:label code="Phone1"/><span class="errorMessage">*</span></td>
 			<td align="${left}">
 				<form:input path="deliveryContactPhone1" cssClass="flat" maxlength="12" 
-					id="deliveryContactPhone1" onkeypress="return onlyNumbers(event, false)" onblur="return formatPhone();"/>
+					id="deliveryContactPhone1" onkeypress="return onlyNumbers(event, false)" onblur="return validateAndFormatPhone();"/>
 				<br><form:errors path="deliveryContactPhone1" cssClass="errorMessage" />
 			</td>
 			<td class="form-left"><transys:label code="Phone2"/></td>
@@ -325,28 +342,46 @@ $("#addCustomerModal").on("show.bs.modal", function(e) {
 		<tr>
 	    	<td class="form-left"><transys:label code="Permit1 Class"/><span class="errorMessage">*</span></td>
 	        <td align="${left}">
-	        	<select class="flat form-control input-sm" id="permitClasses1" name="permitClasses1" style="width:172px !important">
-					<option value="">------<transys:label code="Please Select" />------</option>
+				<select class="flat form-control input-sm" id="permitClasses1" name="permitClasses1" style="width:172px !important">
+					<option value="">------Please Select------</option>
 					<c:forEach items="${permitClasses}" var="aPermitClass">
-						<option value="${aPermitClass.id}">${aPermitClass.permitClass}</option>
+						<c:set var="selected" value="" />
+						<c:if test="${modelObject.permits != null and modelObject.permits[0] != null and modelObject.permits[0].permitClass != null}">
+							<c:if test="${modelObject.permits[0].permitClass.id == aPermitClass.id}">
+								<c:set var="selected" value="selected" />
+							</c:if>
+						</c:if>
+						<option value="${aPermitClass.id}" ${selected}>${aPermitClass.permitClass}</option>
 					</c:forEach>
 				</select>
 		 	</td>
 		 	<td class="form-left"><transys:label code="Permit2 Class"/></td>
 	        <td align="${left}">
-	        	<select class="flat form-control input-sm" id="permitClasses2" name="permitClasses2" style="width:172px !important">
-					<option value="">------<transys:label code="Please Select" />------</option>
+				<select class="flat form-control input-sm" id="permitClasses2" name="permitClasses2" style="width:172px !important">
+					<option value="">------Please Select------</option>
 					<c:forEach items="${permitClasses}" var="aPermitClass">
-						<option value="${aPermitClass.id}">${aPermitClass.permitClass}</option>
+						<c:set var="selected" value="" />
+						<c:if test="${modelObject.permits != null and modelObject.permits[1] != null and modelObject.permits[1].permitClass != null}">
+							<c:if test="${modelObject.permits[1].permitClass.id == aPermitClass.id}">
+								<c:set var="selected" value="selected" />
+							</c:if>
+						</c:if>
+						<option value="${aPermitClass.id}" ${selected}>${aPermitClass.permitClass}</option>
 					</c:forEach>
 				</select>
 		 	</td>
 		 	<td class="form-left"><transys:label code="Permit3 Class"/></td>
 	        <td align="${left}">
-	        	<select class="flat form-control input-sm" id="permitClasses3" name="permitClasses3" style="width:172px !important">
-					<option value="">------<transys:label code="Please Select" />------</option>
+				<select class="flat form-control input-sm" id="permitClasses3" name="permitClasses3" style="width:172px !important">
+					<option value="">------Please Select------</option>
 					<c:forEach items="${permitClasses}" var="aPermitClass">
-						<option value="${aPermitClass.id}">${aPermitClass.permitClass}</option>
+						<c:set var="selected" value="" />
+						<c:if test="${modelObject.permits != null and modelObject.permits[2] != null and modelObject.permits[2].permitClass != null}">
+							<c:if test="${modelObject.permits[2].permitClass.id == aPermitClass.id}">
+								<c:set var="selected" value="selected" />
+							</c:if>
+						</c:if>
+						<option value="${aPermitClass.id}" ${selected}>${aPermitClass.permitClass}</option>
 					</c:forEach>
 				</select>
 		 	</td>
@@ -354,28 +389,46 @@ $("#addCustomerModal").on("show.bs.modal", function(e) {
 	    <tr>
 	    	<td class="form-left"><transys:label code="Permit1 Type"/><span class="errorMessage">*</span></td>
 	        <td align="${left}">
-	        	<select class="flat form-control input-sm" id="permitTypes1" name="permitTypes1" style="width:172px !important" onChange="return populatePermitNumbers(1);">
-					<option value="">------<transys:label code="Please Select" />------</option>
+				<select class="flat form-control input-sm" id="permitTypes1" name="permitTypes1" style="width:172px !important" onChange="return populatePermitNumbers(1);">
+					<option value="">------Please Select------</option>
 					<c:forEach items="${permitTypes}" var="aPermitType">
-						<option value="${aPermitType.id}">${aPermitType.permitType}</option>
+						<c:set var="selected" value="" />
+						<c:if test="${modelObject.permits != null and modelObject.permits[0] != null and modelObject.permits[0].permitType != null}">
+							<c:if test="${modelObject.permits[0].permitType.id == aPermitType.id}">
+								<c:set var="selected" value="selected" />
+							</c:if>
+						</c:if>
+						<option value="${aPermitType.id}" ${selected}>${aPermitType.permitType}</option>
 					</c:forEach>
 				</select>
 	        </td>
 	        <td class="form-left"><transys:label code="Permit2 Type"/><span class="errorMessage">*</span></td>
 	        <td align="${left}">
 	        	<select class="flat form-control input-sm" id="permitTypes2" name="permitTypes2" style="width:172px !important" onChange="return populatePermitNumbers(2);">
-					<option value="">------<transys:label code="Please Select" />------</option>
+					<option value="">------Please Select------</option>
 					<c:forEach items="${permitTypes}" var="aPermitType">
-						<option value="${aPermitType.id}">${aPermitType.permitType}</option>
+						<c:set var="selected" value="" />
+						<c:if test="${modelObject.permits != null and modelObject.permits[1] != null and modelObject.permits[1].permitType != null}">
+							<c:if test="${modelObject.permits[1].permitType.id == aPermitType.id}">
+								<c:set var="selected" value="selected" />
+							</c:if>
+						</c:if>
+						<option value="${aPermitType.id}" ${selected}>${aPermitType.permitType}</option>
 					</c:forEach>
 				</select>
 	        </td>
 	        <td class="form-left"><transys:label code="Permit3 Type"/><span class="errorMessage">*</span></td>
 	        <td align="${left}">
 	        	<select class="flat form-control input-sm" id="permitTypes3" name="permitTypes3" style="width:172px !important" onChange="return populatePermitNumbers(3);">
-					<option value="">------<transys:label code="Please Select" />------</option>
+					<option value="">------Please Select------</option>
 					<c:forEach items="${permitTypes}" var="aPermitType">
-						<option value="${aPermitType.id}">${aPermitType.permitType}</option>
+						<c:set var="selected" value="" />
+						<c:if test="${modelObject.permits != null and modelObject.permits[2] != null and modelObject.permits[2].permitType != null}">
+							<c:if test="${modelObject.permits[2].permitType.id == aPermitType.id}">
+								<c:set var="selected" value="selected" />
+							</c:if>
+						</c:if>
+						<option value="${aPermitType.id}" ${selected}>${aPermitType.permitType}</option>
 					</c:forEach>
 				</select>
 	        </td>
@@ -385,44 +438,77 @@ $("#addCustomerModal").on("show.bs.modal", function(e) {
 	        <td align="${left}">
 	        	<select class="flat form-control input-sm" id="permits[0]" name="permits[0]" style="width:172px !important" onChange="return populatePermitDateAndFee(1);">
 					<option value="">------<transys:label code="Please Select" />------</option>
+					<c:if test="${modelObject.permits != null and modelObject.permits[0] != null and modelObject.permits[0].number != null}">
+						<c:set var="chosenPermit" value="${modelObject.permits[0]}" />
+						<c:set var="allPermitsOfChosenType" value="${allPermitsOfChosenTypesList[0]}" />
+						<c:forEach items="${allPermitsOfChosenType}" var="aPermitOfChosenType">
+							<c:set var="selected" value="" />
+							<c:if test="${aPermitOfChosenType.id == chosenPermit.id}">
+								<c:set var="selected" value="selected" />
+							</c:if>
+							<option value="${aPermitOfChosenType.id}" ${selected}>${aPermitOfChosenType.number}</option>
+						</c:forEach>
+					</c:if>
 				</select>
 	        </td>
 	        <td class="form-left"><transys:label code="Permit2 Number"/><span class="errorMessage">*</span></td>
 	        <td align="${left}">
 	        	<select class="flat form-control input-sm" id="permits[1]" name="permits[1]" style="width:172px !important" onChange="return populatePermitDateAndFee(2);">
 					<option value="">------<transys:label code="Please Select" />------</option>
+					<c:if test="${modelObject.permits != null and modelObject.permits[1] != null and modelObject.permits[1].number != null}">
+						<c:set var="chosenPermit" value="${modelObject.permits[1]}" />
+						<c:set var="allPermitsOfChosenType" value="${allPermitsOfChosenTypesList[1]}" />
+						<c:forEach items="${allPermitsOfChosenType}" var="aPermitOfChosenType">
+							<c:set var="selected" value="" />
+							<c:if test="${aPermitOfChosenType.id == chosenPermit.id}">
+								<c:set var="selected" value="selected" />
+							</c:if>
+							<option value="${aPermitOfChosenType.id}" ${selected}>${aPermitOfChosenType.number}</option>
+						</c:forEach>
+					</c:if>
 				</select>
 	        </td>
 	        <td class="form-left"><transys:label code="Permit3 Number"/><span class="errorMessage">*</span></td>
 	        <td align="${left}">
 	        	<select class="flat form-control input-sm" id="permits[2]" name="permits[2]" style="width:172px !important" onChange="return populatePermitDateAndFee(3);">
 					<option value="">------<transys:label code="Please Select" />------</option>
+					<c:if test="${modelObject.permits != null and modelObject.permits[2] != null and modelObject.permits[2].number != null}">
+						<c:set var="chosenPermit" value="${modelObject.permits[2]}" />
+						<c:set var="allPermitsOfChosenType" value="${allPermitsOfChosenTypesList[2]}" />
+						<c:forEach items="${allPermitsOfChosenType}" var="aPermitOfChosenType">
+							<c:set var="selected" value="" />
+							<c:if test="${aPermitOfChosenType.id == chosenPermit.id}">
+								<c:set var="selected" value="selected" />
+							</c:if>
+							<option value="${aPermitOfChosenType.id}" ${selected}>${aPermitOfChosenType.number}</option>
+						</c:forEach>
+					</c:if>
 				</select>
 	        </td>
 		</tr>
 	    <tr>
 	    	<td class="form-left"><transys:label code="Permit1 Valid From"/><span class="errorMessage">*</span></td>
-	        <td align="${left}" id="permitValidFrom1"></td>
+	        <td align="${left}" id="permitValidFrom1">${modelObject.permits[0].startDate}</td>
 	        <td class="form-left"><transys:label code="Permit2 Valid From"/><span class="errorMessage">*</span></td>
-	        <td align="${left}" id="permitValidFrom2"></td>
+	        <td align="${left}" id="permitValidFrom2">${modelObject.permits[1].startDate}</td>
 	        <td class="form-left"><transys:label code="Permit3 Valid From"/><span class="errorMessage">*</span></td>
-	        <td align="${left}" id="permitValidFrom3"></td>
+	        <td align="${left}" id="permitValidFrom3">${modelObject.permits[2].startDate}</td>
 	    </tr>
 	    <tr>
 	    	<td class="form-left"><transys:label code="Permit1 Valid To"/><span class="errorMessage">*</span></td>
-	        <td align="${left}" id="permitValidTo1"></td>
+	        <td align="${left}" id="permitValidTo1">${modelObject.permits[0].endDate}</td>
 	        <td class="form-left" ><transys:label code="Permit2 Valid To"/><span class="errorMessage">*</span></td>
-	        <td align="${left}" id="permitValidTo2"></td>
+	        <td align="${left}" id="permitValidTo2">${modelObject.permits[1].endDate}</td>
 	        <td class="form-left"><transys:label code="Permit3 Valid To"/><span class="errorMessage">*</span></td>
-	        <td align="${left}" id="permitValidTo3"></td>
+	        <td align="${left}" id="permitValidTo3">${modelObject.permits[2].endDate}</td>
 	    </tr>
 	    <tr>
 	    	<td class="form-left"><transys:label code="Permit1 Fee"/><span class="errorMessage">*</span></td>
-	        <td align="${left}" id="permitFee1"></td>
+	        <td align="${left}" id="permitFee1">${modelObject.permits[0].fee}</td>
 	        <td class="form-left"><transys:label code="Permit2 Fee"/><span class="errorMessage">*</span></td>
-	        <td align="${left}" id="permitFee2"></td>
+	        <td align="${left}" id="permitFee2">${modelObject.permits[1].fee}</td>
 	        <td class="form-left"><transys:label code="Permit3 Fee"/><span class="errorMessage">*</span></td>
-	        <td align="${left}" id="permitFee3"></td>
+	        <td align="${left}" id="permitFee3">${modelObject.permits[2].fee}</td>
 	    </tr>
 	    <tr>
 			<td colspan=10></td>
@@ -497,10 +583,48 @@ $("#addCustomerModal").on("show.bs.modal", function(e) {
 			</td>
 		</tr>
 		<tr>
-			<td class="form-left"><transys:label code="Additional Fee"/><span class="errorMessage">*</span></td>
+			<td class="form-left"><transys:label code="Additional Fee1 Description"/><span class="errorMessage">*</span></td>
+				<td align="${left}">
+				<form:select id="additionalFee1Type" cssClass="flat form-control input-sm" style="width:172px !important" path="orderPaymentInfo.additionalFee1Type"> 
+					<form:option value="">-------Please Select------</form:option>
+					<form:options items="${additionalFeeTypes}" itemValue="id" itemLabel="description" />
+				</form:select>
+				<br><form:errors path="orderPaymentInfo.additionalFee1Type" cssClass="errorMessage" />
+			</td>
+			<td class="form-left"><transys:label code="Additional Fee1"/><span class="errorMessage">*</span></td>
 			<td align="${left}">
-				<form:input path="orderPaymentInfo.additionalFee" cssClass="flat" />
-				<br><form:errors path="orderPaymentInfo.additionalFee" cssClass="errorMessage" />
+				<form:input path="orderPaymentInfo.additionalFee1" cssClass="flat" />
+				<br><form:errors path="orderPaymentInfo.additionalFee1" cssClass="errorMessage" />
+			</td>
+		</tr>
+		<tr>
+			<td class="form-left"><transys:label code="Additional Fee2 Description"/><span class="errorMessage">*</span></td>
+				<td align="${left}">
+				<form:select id="additionalFee2Type" cssClass="flat form-control input-sm" style="width:172px !important" path="orderPaymentInfo.additionalFee2Type"> 
+					<form:option value="">-------Please Select------</form:option>
+					<form:options items="${additionalFeeTypes}" itemValue="id" itemLabel="description" />
+				</form:select>
+				<br><form:errors path="orderPaymentInfo.additionalFee2Type" cssClass="errorMessage" />
+			</td>
+			<td class="form-left"><transys:label code="Additional Fee2"/><span class="errorMessage">*</span></td>
+			<td align="${left}">
+				<form:input path="orderPaymentInfo.additionalFee2" cssClass="flat" />
+				<br><form:errors path="orderPaymentInfo.additionalFee2" cssClass="errorMessage" />
+			</td>
+		</tr>
+		<tr>
+			<td class="form-left"><transys:label code="Additional Fee3 Description"/><span class="errorMessage">*</span></td>
+				<td align="${left}">
+				<form:select id="additionalFee3Type" cssClass="flat form-control input-sm" style="width:172px !important" path="orderPaymentInfo.additionalFee3Type"> 
+					<form:option value="">-------Please Select------</form:option>
+					<form:options items="${additionalFeeTypes}" itemValue="id" itemLabel="description" />
+				</form:select>
+				<br><form:errors path="orderPaymentInfo.additionalFee3Type" cssClass="errorMessage" />
+			</td>
+			<td class="form-left"><transys:label code="Additional Fee3"/><span class="errorMessage">*</span></td>
+			<td align="${left}">
+				<form:input path="orderPaymentInfo.additionalFee3" cssClass="flat" />
+				<br><form:errors path="orderPaymentInfo.additionalFee3" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>
@@ -527,7 +651,7 @@ $("#addCustomerModal").on("show.bs.modal", function(e) {
 			<td align="${left}">
 				<form:select id="paymentMethod" cssClass="flat form-control input-sm" style="width:172px !important" path="orderPaymentInfo.paymentMethod"> 
 					<form:option value="">-------Please Select------</form:option>
-					<form:options items="${paymentMethods}" itemValue="id" itemLabel="type" />
+					<form:options items="${paymentMethods}" itemValue="id" itemLabel="method" />
 				</form:select>
 				<br><form:errors path="orderPaymentInfo.paymentMethod" cssClass="errorMessage" />
 			</td>
