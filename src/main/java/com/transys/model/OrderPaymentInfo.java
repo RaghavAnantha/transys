@@ -1,5 +1,7 @@
 package com.transys.model;
 
+import java.math.BigDecimal;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -15,22 +17,40 @@ public class OrderPaymentInfo extends AbstractBaseModel {
 		private Order order;
 		
 		@Column(name="dumpsterPrice")
-		private Double dumpsterPrice;
+		private BigDecimal dumpsterPrice;
 		
 		@Column(name="permitFees")
-		private Double permitFees;
+		private BigDecimal permitFees;
 		  
 		@Column(name="overweightFee")
-		private Double overweightFee;
+		private BigDecimal overweightFee;
 		  
 		@Column(name="cityFee")
-		private Double cityFee;
+		private BigDecimal cityFee;
 		
-		@Column(name="additionalFee")
-		private Double additionalFee;
+		@ManyToOne
+		@JoinColumn(name="additionalFee1Id") 
+		private AdditionalFee additionalFee1Type;
+		
+		@Column(name="additionalFee1")
+		private BigDecimal additionalFee1;
+		
+		@ManyToOne
+		@JoinColumn(name="additionalFee2Id") 
+		private AdditionalFee additionalFee2Type;
+		
+		@Column(name="additionalFee2")
+		private BigDecimal additionalFee2;
+		
+		@ManyToOne
+		@JoinColumn(name="additionalFee3Id") 
+		private AdditionalFee additionalFee3Type;
+		
+		@Column(name="additionalFee3")
+		private BigDecimal additionalFee3;
 		
 		@Column(name="totalFees")
-		private Double totalFees;
+		private BigDecimal totalFees;
 		
 		@Column(name="paymentMethod")
 		private String paymentMethod;
@@ -49,51 +69,90 @@ public class OrderPaymentInfo extends AbstractBaseModel {
 			this.order = order;
 		}
 
-		public Double getDumpsterPrice() {
+		public BigDecimal getDumpsterPrice() {
 			return dumpsterPrice;
 		}
 
-		public void setDumpsterPrice(Double dumpsterPrice) {
+		public void setDumpsterPrice(BigDecimal dumpsterPrice) {
 			this.dumpsterPrice = dumpsterPrice;
 		}
 
-		public Double getPermitFees() {
+		public BigDecimal getPermitFees() {
 			return permitFees;
 		}
 
-		public void setPermitFees(Double permitFees) {
+		public void setPermitFees(BigDecimal permitFees) {
 			this.permitFees = permitFees;
 		}
 
-		public Double getOverweightFee() {
+		public BigDecimal getOverweightFee() {
 			return overweightFee;
 		}
 
-		public void setOverweightFee(Double overweightFee) {
+		public void setOverweightFee(BigDecimal overweightFee) {
 			this.overweightFee = overweightFee;
 		}
 
-		public Double getCityFee() {
+		public BigDecimal getCityFee() {
 			return cityFee;
 		}
 
-		public void setCityFee(Double cityFee) {
+		public void setCityFee(BigDecimal cityFee) {
 			this.cityFee = cityFee;
 		}
-
-		public Double getAdditionalFee() {
-			return additionalFee;
+		public AdditionalFee getAdditionalFee1Type() {
+			return additionalFee1Type;
 		}
 
-		public void setAdditionalFee(Double additionalFee) {
-			this.additionalFee = additionalFee;
+		public void setAdditionalFee1Type(AdditionalFee additionalFee1Type) {
+			this.additionalFee1Type = additionalFee1Type;
 		}
 
-		public Double getTotalFees() {
+		public BigDecimal getAdditionalFee1() {
+			return additionalFee1;
+		}
+
+		public void setAdditionalFee1(BigDecimal additionalFee1) {
+			this.additionalFee1 = additionalFee1;
+		}
+
+		public AdditionalFee getAdditionalFee2Type() {
+			return additionalFee2Type;
+		}
+
+		public void setAdditionalFee2Type(AdditionalFee additionalFee2Type) {
+			this.additionalFee2Type = additionalFee2Type;
+		}
+
+		public BigDecimal getAdditionalFee2() {
+			return additionalFee2;
+		}
+
+		public void setAdditionalFee2(BigDecimal additionalFee2) {
+			this.additionalFee2 = additionalFee2;
+		}
+
+		public AdditionalFee getAdditionalFee3Type() {
+			return additionalFee3Type;
+		}
+
+		public void setAdditionalFee3Type(AdditionalFee additionalFee3Type) {
+			this.additionalFee3Type = additionalFee3Type;
+		}
+
+		public BigDecimal getAdditionalFee3() {
+			return additionalFee3;
+		}
+
+		public void setAdditionalFee3(BigDecimal additionalFee3) {
+			this.additionalFee3 = additionalFee3;
+		}
+
+		public BigDecimal getTotalFees() {
 			return totalFees;
 		}
 
-		public void setTotalFees(Double totalFees) {
+		public void setTotalFees(BigDecimal totalFees) {
 			this.totalFees = totalFees;
 		}
 

@@ -1,5 +1,6 @@
 package com.transys.model;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -7,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -30,7 +32,7 @@ public class Permit  extends AbstractBaseModel {
 	private String number;
 	
 	@Column(name="fee")
-	private Double fee;
+	private BigDecimal fee;
 	
 	@Column(name="startDate")
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM/dd/yyyy")
@@ -55,15 +57,13 @@ public class Permit  extends AbstractBaseModel {
 	@JoinColumn(name="status")
 	private PermitStatus status;
 	
-	@Column(name="comments")
-	private String comments;
-
 	@Column(name="parkingMeter")
 	private String parkingMeter;
 	
 	@Column(name="parkingMeterFee")
-	private Double parkingMeterFee;
+	private BigDecimal parkingMeterFee;
 	
+	@Transient
 	private Long orderID;
 	
 	public Long getOrderID() {
@@ -104,14 +104,6 @@ public class Permit  extends AbstractBaseModel {
 
 	public void setNumber(String number) {
 		this.number = number;
-	}
-
-	public Double getFee() {
-		return fee;
-	}
-
-	public void setFee(Double fee) {
-		this.fee = fee;
 	}
 
 	public Date getStartDate() {
@@ -162,14 +154,6 @@ public class Permit  extends AbstractBaseModel {
 		this.status = status;
 	}
 
-	public String getComments() {
-		return comments;
-	}
-
-	public void setComments(String comments) {
-		this.comments = comments;
-	}
-
 	public String getParkingMeter() {
 		return parkingMeter;
 	}
@@ -177,13 +161,20 @@ public class Permit  extends AbstractBaseModel {
 	public void setParkingMeter(String parkingMeter) {
 		this.parkingMeter = parkingMeter;
 	}
-	
-	public Double getParkingMeterFee() {
-		return this.parkingMeterFee;
+
+	public BigDecimal getFee() {
+		return fee;
 	}
 
-	public void setParkingMeterFee(Double parkingMeterFee) {
+	public void setFee(BigDecimal fee) {
+		this.fee = fee;
+	}
+
+	public BigDecimal getParkingMeterFee() {
+		return parkingMeterFee;
+	}
+
+	public void setParkingMeterFee(BigDecimal parkingMeterFee) {
 		this.parkingMeterFee = parkingMeterFee;
 	}
-	
 }

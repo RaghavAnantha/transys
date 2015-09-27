@@ -33,7 +33,7 @@ public class Customer extends AbstractBaseModel {
 	private String contactName;
 	
 	@Column(name="type")
-	private String type;
+	private Long type;
 	
 	@Column(name="status")
 	private String status;
@@ -104,11 +104,11 @@ public class Customer extends AbstractBaseModel {
 		return contactName;
 	}
 
-	public String getType() {
+	public Long getType() {
 		return type;
 	}
 
-	public void setType(String type) {
+	public void setType(Long type) {
 		this.type = type;
 	}
 

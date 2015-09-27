@@ -1,6 +1,7 @@
 package com.transys.controller;
 
 import java.io.ByteArrayOutputStream;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -188,14 +189,13 @@ public class CustomerController extends CRUDController<Customer> {
 
         for (Long key : customerMap.keySet()) {
                 CustomerReportVO customerReportVO =  new CustomerReportVO();
-                Double sum = 0.0;
+                BigDecimal sum = new BigDecimal("0.0");
                 Integer Ordercount = 0;
             for (OrderPaymentInfo orderPymntInfo: orderPymntInfoList ) {
                 if (orderPymntInfo.getOrder().getCustomer().getId() == key) {
-                        sum =  sum +  orderPymntInfo.getTotalFees();
-                        Ordercount++;
-                        }
-
+                     sum =  sum.add(orderPymntInfo.getTotalFees());
+                     Ordercount++;
+                }
             }
             customerReportVO.setCompanyName(customerMap.get(key).getCompanyName());
                 customerReportVO.setContactName(customerMap.get(key).getContactName());

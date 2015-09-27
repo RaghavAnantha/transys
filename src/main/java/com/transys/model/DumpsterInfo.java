@@ -22,8 +22,8 @@ public class DumpsterInfo extends AbstractBaseModel {
 	@JoinColumn(name="status")
 	private DumpsterStatus status;
 
-	@Column(name="dumpsterPrice")
-	private Double dumpsterPrice;
+	/*@Column(name="dumpsterPrice")
+	private Double dumpsterPrice;*/
 	
 	/*@Column(name="maxWeight")
 	private String maxWeight;*/
@@ -46,14 +46,6 @@ public class DumpsterInfo extends AbstractBaseModel {
 	public void setMaxWeight(String maxWeight) {
 		this.maxWeight = maxWeight;
 	}*/
-
-	public Double getDumpsterPrice() {
-		return dumpsterPrice;
-	}
-
-	public void setDumpsterPrice(Double dumpsterPrice) {
-		this.dumpsterPrice = dumpsterPrice;
-	}
 
 	public String getDumpsterNum() {
 		return dumpsterNum;

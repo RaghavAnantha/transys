@@ -583,10 +583,10 @@ $("#addCustomerModal").on("show.bs.modal", function(e) {
 			</td>
 		</tr>
 		<tr>
-			<td class="form-left"><transys:label code="Additional Fee"/><span class="errorMessage">*</span></td>
+			<td class="form-left"><transys:label code="Additional Fee1"/><span class="errorMessage">*</span></td>
 			<td align="${left}">
-				<form:input path="orderPaymentInfo.additionalFee" cssClass="flat" />
-				<br><form:errors path="orderPaymentInfo.additionalFee" cssClass="errorMessage" />
+				<form:input path="orderPaymentInfo.additionalFee1" cssClass="flat" />
+				<br><form:errors path="orderPaymentInfo.additionalFee1" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>
