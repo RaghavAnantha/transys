@@ -20,7 +20,7 @@
 				<li id="reportPage"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Reports
 				<b class="caret"></b></a>
 				<ul class="dropdown-menu">
-					<li><a href="/revenueReports/main.do">Revenue Reports</a></li>
+					<li><a href="/ordersRevenueReport/main.do">Revenue Report</a></li>
 					<li><a href="/deliveryPickupReports/main.do">Delivery/Pickup Reports</a></li>
 					<li><a href="/dumpsterOnsiteReports/main.do">Dumpster On-site Reports</a></li>
 					<li><a href="/dumpsterRentedReports/main.do">Dumpster Rented Reports</a></li>
