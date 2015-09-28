@@ -16,7 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.google.gson.Gson;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+//import com.google.gson.Gson;
 import com.transys.core.util.MimeUtil;
 import com.transys.model.Address;
 import com.transys.model.Order;
@@ -79,7 +81,17 @@ public class OrdersRevenueReportController extends CRUDController<Order> {
 			selectedOrderIDs.append(o.getId() + ",");
 		}
 		List<?> aggregationResults = genericDAO.executeSimpleQuery("select SUM(p.dumpsterPrice) as totalDumpsterPrice, SUM(p.permitFees) as totalPermitFees, SUM(p.cityFee) as totalCityFees, SUM(p.overweightFee) as totalOverweightFees, SUM(p.totalFees) as totalFees from OrderPaymentInfo p where p.order IN (" + selectedOrderIDs.substring(0,selectedOrderIDs.lastIndexOf(",")) + ")");
-		String jSonResponse =new Gson().toJson(aggregationResults.get(0));
+		
+		//String jSonResponse = new Gson().toJson(aggregationResults.get(0));
+		ObjectMapper objectMapper = new ObjectMapper();
+		String jSonResponse = StringUtils.EMPTY;
+		try {
+			jSonResponse = objectMapper.writeValueAsString(aggregationResults.get(0));
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		jSonResponse = jSonResponse.substring(1, jSonResponse.length()-1);
 		String[] aggregationValues = jSonResponse.split(",");
 		return aggregationValues;
@@ -156,7 +168,7 @@ public class OrdersRevenueReportController extends CRUDController<Order> {
 				map.put("cityFee", "" + orderPaymentInfo.getCityFee());
 				map.put("permitFees", "" + orderPaymentInfo.getPermitFees());
 				map.put("overweightFee", "" + orderPaymentInfo.getOverweightFee());
-				map.put("additionalFee", "" + orderPaymentInfo.getAdditionalFee());
+				map.put("additionalFee", "" + orderPaymentInfo.getAdditionalFee1());
 				map.put("totalFees", "" + orderPaymentInfo.getTotalFees());
 			}
 			
@@ -168,7 +180,17 @@ public class OrdersRevenueReportController extends CRUDController<Order> {
 			map.put("totalCityFees", "$" + aggregationValues[2]);
 			map.put("totalOverweightFees", "$" + aggregationValues[3]);
 			map.put("aggregateTotalFees", "$" + aggregationValues[4]);
-			System.out.println(new Gson().toJson(map));
+			
+			//System.out.println(new Gson().toJson(map));
+			ObjectMapper objectMapper = new ObjectMapper();
+			String jSonResponse = StringUtils.EMPTY;
+			try {
+				jSonResponse = objectMapper.writeValueAsString(map);
+				System.out.println(jSonResponse);
+			} catch (JsonProcessingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			
 			reportData.add(map);
 		}
