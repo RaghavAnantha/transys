@@ -29,10 +29,6 @@ function formatPhone(phone) {
 	return p1 + "-" + p2 + "-" + p3;
 }
 
-function validate() {
-	return true;
-};
-
 function populateCustomerInfo() {
 	retrieveAndPopulateDeliveryAddress();
 	retrieveAndPopulateCustomerBillingAddress();
@@ -175,10 +171,59 @@ $("#addCustomerModal").on("show.bs.modal", function(e) {
     
     $(this).find("#addCustomerModalBody").load(link);
 });
+
+function validateForm() {
+	return true;
+}
+
+function processForm() {
+	if (validateForm()) {
+		verifyExchangeOrderAndSubmit();
+	}
+}
+
+function verifyExchangeOrderAndSubmit() {
+	var orderAddEditForm = $("#orderAddEditForm");
+	var isExchangeIndicator = $('#isExchange');
+	
+	var selectedCustomerId = $('#customerSelect').val();
+	var selectedDeliveryAddressId = $('#deliveryAddressSelect').val();
+	
+    $.ajax({
+        type: "GET",
+        url: "retrieveMatchingOrder.do" + "?customerId=" + selectedCustomerId + "&deliveryAddressId=" + selectedDeliveryAddressId,
+        success: function(responseData, textStatus, jqXHR) {
+        	var existingDroppedOffOrderId = responseData;
+        	if (existingDroppedOffOrderId != "") {
+        		var exchMsg = "<p>There is already a Dumpster delivered to this address with the Order# "
+      			  		   	  + existingDroppedOffOrderId
+    			  		   	  + " and can be picked up as an Exchange Order.<br><br>"
+    			  		   	  + "Would you like to create an Exchange Order?</p>";
+    			  	
+        		$('#confirmExchangeOrderDialogBody').html(exchMsg);
+        		$("#confirmExchangeOrderDialog").modal('show');
+        	} else {
+        		isExchangeIndicator.val("false");
+        		orderAddEditForm.submit();
+        	}
+        }
+    });
+    
+    return false;
+}
+
+$("#confirmExchangeOrderDialogYes").click(function (ev) {
+	var orderAddEditForm = $("#orderAddEditForm");
+	var isExchangeIndicator = $('#isExchange');
+	
+	isExchangeIndicator.val("true");
+	orderAddEditForm.submit();
+});
 </script>
 <br/>
-<form:form action="save.do" name="typeForm" commandName="modelObject" method="post" id="typeForm">
+<form:form action="save.do" name="orderAddEditForm" commandName="modelObject" method="post" id="orderAddEditForm">
 	<form:hidden path="id" id="id" />
+	<input type="hidden" name="isExchange" id="isExchange" value="false" />
 	<table id="form-table" class="table">
 		<tr>
 			<td class="form-left"><transys:label code="Order #" /><span class="errorMessage">*</span></td>
@@ -687,9 +732,9 @@ $("#addCustomerModal").on("show.bs.modal", function(e) {
 		<tr>
 			<td>&nbsp;</td>
 			<td align="${left}" colspan="2">
-				<input type="submit" id="create" onclick="return validate()" value="<transys:label code="Save"/>" class="flat btn btn-primary btn-sm" /> 
-				<input type="reset" id="resetBtn" value="<transys:label code="Reset"/> "class="flat btn btn-primary btn-sm" /> 
-				<input type="button" id="cancelBtn" value="<transys:label code="Cancel"/>" class="flat btn btn-primary btn-sm" onClick="location.href='main.do'" />
+				<input type="button" id="orderCreate" onclick="processForm();" value="<transys:label code="Save"/>" class="flat btn btn-primary btn-sm" /> 
+				<input type="reset" id="orderResetBtn" value="<transys:label code="Reset"/> "class="flat btn btn-primary btn-sm" /> 
+				<input type="button" id="orderCancelBtn" value="<transys:label code="Cancel"/>" class="flat btn btn-primary btn-sm" onClick="location.href='main.do'" />
 			</td>
 		</tr>
 	</table>
@@ -719,6 +764,21 @@ $("#addCustomerModal").on("show.bs.modal", function(e) {
       		 </div>	
 			
 			<div class="modal-body" id="addCustomerModalBody"></div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="confirmExchangeOrderDialog" role="dialog" data-backdrop="static" data-keyboard="false">
+	<div class="modal-dialog" style="width:50% !important">
+		<div class="modal-content">
+		 	<div class="modal-header">
+		 		<h4 class="modal-title">Confirm Exchange Order</h4>
+		 	</div>	
+			<div class="modal-body" id="confirmExchangeOrderDialogBody"></div>
+			<div class="modal-footer">
+			   <button type="button" data-dismiss="modal" class="btn btn-primary" id="confirmExchangeOrderDialogYes">Yes</button>
+			   <button type="button" data-dismiss="modal" class="btn">No</button>
+			</div>
 		</div>
 	</div>
 </div>

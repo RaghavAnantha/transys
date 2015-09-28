@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.ValidationException;
 
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -453,8 +454,8 @@ public class OrderController extends CRUDController<Order> {
 			map.put("cityFee", order.getOrderPaymentInfo().getCityFee().toString());
 			map.put("permitFees", order.getOrderPaymentInfo().getPermitFees().toString());
 			map.put("overweightFee", order.getOrderPaymentInfo().getOverweightFee().toString());
-			if (order.getOrderPaymentInfo().getTotalFees() != null ){
-			map.put("totalFees", order.getOrderPaymentInfo().getTotalFees().toString());
+			if (order.getOrderPaymentInfo().getTotalFees() != null ) {
+				map.put("totalFees", order.getOrderPaymentInfo().getTotalFees().toString());
 			}
 			
 			newList.add(map);
@@ -584,6 +585,27 @@ public class OrderController extends CRUDController<Order> {
 		//return json;
 	}
 	
+	
+	@RequestMapping(method = RequestMethod.GET, value = "/retrieveMatchingOrder.do")
+	public @ResponseBody String retrieveMatchingOrder(ModelMap model, HttpServletRequest request,
+																	  @RequestParam("customerId") String customerId,
+																	  @RequestParam("deliveryAddressId") String deliveryAddressId) {
+		String query = "select obj from Order obj where obj.customer.id=" + customerId
+				+ " and obj.deliveryAddress.id=" + deliveryAddressId
+				+ " and obj.dumpster.dumpsterNum is not null";
+		List<Order> orderList = genericDAO.executeSimpleQuery(query);
+		
+		String existingDroppedOffOrderId = StringUtils.EMPTY;
+		if (orderList.size() > 0) {
+			existingDroppedOffOrderId = orderList.get(0).getId().toString();
+		}
+		
+		return existingDroppedOffOrderId;
+		
+		//String json = (new Gson()).toJson(customerList.get(0));
+		//return json;
+	}
+	
 	@RequestMapping(method = RequestMethod.GET, value = "/customerAddress.do")
 	public @ResponseBody String retrieveCustomerAddress(ModelMap model, HttpServletRequest request) {
 		String customerId = request.getParameter("id");
@@ -626,6 +648,11 @@ public class OrderController extends CRUDController<Order> {
 
 		//return super.save(request, entity, bindingResult, model);
 	
+		String isExchange = request.getParameter("isExchange");
+		if (BooleanUtils.toBoolean(isExchange)) {
+			
+		}
+		
 		try {
 			getValidator().validate(entity, bindingResult);
 		} catch (ValidationException e) {
