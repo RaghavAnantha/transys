@@ -109,13 +109,13 @@ function populateCustomerDeliveryAddress() {
 			<td align="${left}" class="wide">
 				<select class="flat form-control input-sm" id="dumpsterSize" name="dumpsterSize" style="width: 175px">
 					<option value="">------<transys:label code="Please Select" />------</option>
-					<c:forEach items="${dumpsters}" var="aDumpster">
+					<c:forEach items="${dumpsterSizes}" var="aDumpsterSize">
 						<c:set var="selected" value="" />
 						<c:if
-							test="${sessionScope.searchCriteria.searchMap['dumpsterSize'] == aDumpster.dumpsterSize}">
+							test="${sessionScope.searchCriteria.searchMap['dumpsterSize'] == aDumpsterSize.id}">
 							<c:set var="selected" value="selected" />
 						</c:if>
-						<option value="${aDumpster.dumpsterSize}" ${selected}>${aDumpster.dumpsterSize}</option>
+						<option value="${aDumpsterSize.id}" ${selected}>${aDumpsterSize.size}</option>
 					</c:forEach>
 				</select>
 			</td>
