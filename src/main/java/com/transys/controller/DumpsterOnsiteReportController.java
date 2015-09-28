@@ -91,7 +91,7 @@ public class DumpsterOnsiteReportController extends CRUDController<DumpsterInfo>
 		List<Map<String, ?>> newList = new ArrayList<Map<String, ?>>();
 		for (DumpsterInfo dumpsterInfo : dumpsterInfoList) {
 			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("dumpsterSize", dumpsterInfo.getDumpsterSize());
+			map.put("dumpsterSize", dumpsterInfo.getDumpsterSize().getSize());
 			map.put("dumpsterNum", dumpsterInfo.getDumpsterNum());
 			map.put("status",dumpsterInfo.getStatus().getStatus());
 	

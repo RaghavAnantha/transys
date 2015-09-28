@@ -157,7 +157,7 @@ DROP TABLE IF EXISTS `dumpsterInfo`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `dumpsterInfo` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `dumpsterSize` varchar(5) DEFAULT NULL,
+  `dumpsterSizeId` bigint(20) DEFAULT NULL,
   `dumpsterNum` varchar(50) DEFAULT NULL,
   `status` bigint(20) DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
@@ -166,8 +166,9 @@ CREATE TABLE `dumpsterInfo` (
   `modified_by` bigint(20) DEFAULT NULL,
   `delete_flag` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
-  KEY `dumpsterStatusRef_idx` (`status`),
-  CONSTRAINT `dumpsterStatusRef` FOREIGN KEY (`status`) REFERENCES `dumpsterStatus` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  KEY `dumpsterInfoDumpsterStatusRef_Idx` (`status`),
+  CONSTRAINT `dumpsterInfoDumpsterStatusRef` FOREIGN KEY (`status`) REFERENCES `dumpsterStatus` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `dumpsterInfoDumpsterSizeRef` FOREIGN KEY (`dumpsterSizeId`) REFERENCES `dumpsterSize` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -177,7 +178,8 @@ CREATE TABLE `dumpsterInfo` (
 
 LOCK TABLES `dumpsterInfo` WRITE;
 /*!40000 ALTER TABLE `dumpsterInfo` DISABLE KEYS */;
-INSERT INTO `dumpsterInfo` VALUES (2,'20 yd','20W-113-21',1,NULL,NULL,NULL,NULL,1);
+INSERT INTO `dumpsterInfo` VALUES (2,1,'20W-113-21',1,NULL,NULL,NULL,NULL,1);
+INSERT INTO `dumpsterInfo` VALUES (3,2,'30W-456-31',1,NULL,NULL,NULL,NULL,1);
 /*!40000 ALTER TABLE `dumpsterInfo` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -377,12 +379,12 @@ CREATE TABLE `trans_order` (
   CONSTRAINT `orderStatusRef` FOREIGN KEY (`orderStatusId`) REFERENCES `orderStatus` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   -- CONSTRAINT `paymentInfoRef` FOREIGN KEY (`paymentInfo`) REFERENCES `orderPaymentInfo` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   -- CONSTRAINT `weightInfoRef` FOREIGN KEY (`weightInfo`) REFERENCES `orderWeightInfo` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-  CONSTRAINT `dumpsterRef` FOREIGN KEY (`dumpsterId`) REFERENCES `dumpsterInfo` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `materialTypeRef` FOREIGN KEY (`materialTypeId`) REFERENCES `materialType` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `dumpsterLocationRef` FOREIGN KEY (`locationTypeId`) REFERENCES `locationType` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `dumpsterSizeRef` FOREIGN KEY (`dumpsterSizeId`) REFERENCES `dumpsterSize` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `pickupDriverRef` FOREIGN KEY (`pickUpDriverId`) REFERENCES `user_info` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `dropOffDriverRef` FOREIGN KEY (`dropOffDriverId`) REFERENCES `user_info` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `orderDumpsterRef` FOREIGN KEY (`dumpsterId`) REFERENCES `dumpsterInfo` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `orderMaterialTypeRef` FOREIGN KEY (`materialTypeId`) REFERENCES `materialType` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `orderDumpsterLocationRef` FOREIGN KEY (`locationTypeId`) REFERENCES `locationType` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `orderDumpsterSizeRef` FOREIGN KEY (`dumpsterSizeId`) REFERENCES `dumpsterSize` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `orderPickupDriverRef` FOREIGN KEY (`pickUpDriverId`) REFERENCES `user_info` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `orderDropOffDriverRef` FOREIGN KEY (`dropOffDriverId`) REFERENCES `user_info` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 

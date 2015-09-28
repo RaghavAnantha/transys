@@ -213,8 +213,9 @@ public class OrderController extends CRUDController<Order> {
 		model.addAttribute("activeSubTab", "orderNotesTab");
 		
 		Long orderId = entity.getOrder().getId();
-		List<BaseModel> orderList = genericDAO.executeSimpleQuery("select obj from Order obj where obj.id=" + orderId);
-		model.addAttribute("modelObject", orderList.get(0));
+		List<Order> orderList = genericDAO.executeSimpleQuery("select obj from Order obj where obj.id=" + orderId);
+		Order savedOrder = orderList.get(0);
+		model.addAttribute("modelObject", savedOrder);
 		
 		Order emptyOrder = new Order();
 		emptyOrder.setId(orderId);
@@ -224,6 +225,21 @@ public class OrderController extends CRUDController<Order> {
 	
 		List<BaseModel> notesList = genericDAO.executeSimpleQuery("select obj from OrderNotes obj where obj.order.id=" +  orderId + " order by obj.id asc");
 		model.addAttribute("notesList", notesList);
+		
+		String query = "select obj from Address obj where obj.customer.id=" +  savedOrder.getCustomer().getId() + " order by obj.line1 asc";
+		model.addAttribute("deliveryAddresses", genericDAO.executeSimpleQuery(query));
+		
+		List<List<Permit>> allPermitsOfChosenTypesList = new ArrayList<List<Permit>>();
+		for(Permit aChosenPermit : savedOrder.getPermits()) {
+			if (aChosenPermit != null && aChosenPermit.getId() != null) {
+				String aChosenPermitClassId =  aChosenPermit.getPermitClass().getId().toString();
+				String aChosenPermitTypeId =  aChosenPermit.getPermitType().getId().toString();
+				List<Permit> aPermitsOfChosenTypeList = retrievePermit(StringUtils.EMPTY, aChosenPermitClassId, aChosenPermitTypeId);
+				
+				allPermitsOfChosenTypesList.add(aPermitsOfChosenTypeList);
+			}
+		}
+		model.addAttribute("allPermitsOfChosenTypesList", allPermitsOfChosenTypesList);
 		
 		return urlContext + "/order";
 	}
