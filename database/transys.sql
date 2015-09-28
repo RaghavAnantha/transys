@@ -337,7 +337,7 @@ CREATE TABLE `trans_order` (
   `deliveryDate` datetime DEFAULT NULL,
   `deliveryAddressId` bigint(20) DEFAULT NULL,
   `locationTypeId` bigint(20) NOT NULL,
-  `dumpsterSize` varchar(5) DEFAULT NULL,
+  `dumpsterSizeId` bigint(20) DEFAULT NULL,
   `materialTypeId` bigint(20) DEFAULT NULL,
   -- `dumpsterPrice` double DEFAULT NULL,
   -- `paymentInfo` bigint(20) DEFAULT NULL,
@@ -380,6 +380,7 @@ CREATE TABLE `trans_order` (
   CONSTRAINT `dumpsterRef` FOREIGN KEY (`dumpsterId`) REFERENCES `dumpsterInfo` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `materialTypeRef` FOREIGN KEY (`materialTypeId`) REFERENCES `materialType` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `dumpsterLocationRef` FOREIGN KEY (`locationTypeId`) REFERENCES `locationType` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `dumpsterSizeRef` FOREIGN KEY (`dumpsterSizeId`) REFERENCES `dumpsterSize` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `pickupDriverRef` FOREIGN KEY (`pickUpDriverId`) REFERENCES `user_info` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `dropOffDriverRef` FOREIGN KEY (`dropOffDriverId`) REFERENCES `user_info` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -391,7 +392,7 @@ CREATE TABLE `trans_order` (
 
 LOCK TABLES `trans_order` WRITE;
 /*!40000 ALTER TABLE `trans_order` DISABLE KEYS */;
-INSERT INTO `transys`.`trans_order` (`id`, `custID`, `deliveryContactName`, `deliveryContactPhone1`, `deliveryContactPhone2`, `deliveryDate`, `deliveryAddressId`, `locationTypeId`, `dumpsterSize`, `materialTypeId`, `created_at`, `delete_flag`, `grossWeight`, `netWeightLb`, `netWeightTonnage`, `tare`, `dumpsterId`, `pickupDate`, `orderStatusId` , `created_by`) VALUES (1, 5, 'Raghav', '123-456-7890', '123-456-7890', curdate(), 3, 1, '20 yd', 1, curdate(), 1, '10.0', '10.0', '10.0', '10.0', 2, curdate(), 1, 1);
+INSERT INTO `transys`.`trans_order` (`id`, `custID`, `deliveryContactName`, `deliveryContactPhone1`, `deliveryContactPhone2`, `deliveryDate`, `deliveryAddressId`, `locationTypeId`, `dumpsterSizeId`, `materialTypeId`, `created_at`, `delete_flag`, `grossWeight`, `netWeightLb`, `netWeightTonnage`, `tare`, `dumpsterId`, `pickupDate`, `orderStatusId` , `created_by`) VALUES (1, 5, 'Raghav', '123-456-7890', '123-456-7890', curdate(), 3, 1, 1, 1, curdate(), 1, '10.0', '10.0', '10.0', '10.0', 2, curdate(), 1, 1);
 /*!40000 ALTER TABLE `trans_order` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1006,6 +1007,36 @@ LOCK TABLES `materialtype` WRITE;
 /*!40000 ALTER TABLE `materialtype` DISABLE KEYS */;
 INSERT INTO `materialtype` VALUES (1,'Concrete',NULL,NULL,NULL,NULL,1),(2,'Dirt',NULL,NULL,NULL,NULL,1),(3,'Bricks',NULL,NULL,NULL,NULL,1);
 /*!40000 ALTER TABLE `materialtype` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+--
+-- Table structure for table `dumpsterSize`
+--
+
+DROP TABLE IF EXISTS `dumpsterSize`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `dumpsterSize` (
+  `id` bigint(20) NOT NULL,
+  `size` varchar(25) DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `created_by` bigint(20) DEFAULT NULL,
+  `modified_at` datetime DEFAULT NULL,
+  `modified_by` bigint(20) DEFAULT NULL,
+  `delete_flag` int(11) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `dumpsterSize`
+--
+
+LOCK TABLES `dumpsterSize` WRITE;
+/*!40000 ALTER TABLE `dumpsterSize` DISABLE KEYS */;
+INSERT INTO `dumpsterSize` VALUES (1,'20 yd',NULL,NULL,NULL,NULL,1),(2,'30 yd',NULL,NULL,NULL,NULL,1);
+/*!40000 ALTER TABLE `dumpsterSize` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 

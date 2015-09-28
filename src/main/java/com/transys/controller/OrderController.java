@@ -34,6 +34,7 @@ import com.transys.model.Address;
 import com.transys.model.BaseModel;
 import com.transys.model.Customer;
 import com.transys.model.DumpsterInfo;
+import com.transys.model.DumpsterSize;
 import com.transys.model.LocationType;
 import com.transys.model.MaterialType;
 import com.transys.model.Order;
@@ -69,6 +70,7 @@ public class OrderController extends CRUDController<Order> {
 		binder.registerCustomEditor(User.class, new AbstractModelEditor(User.class));
 		binder.registerCustomEditor(MaterialType.class, new AbstractModelEditor(MaterialType.class));
 		binder.registerCustomEditor(AdditionalFee.class, new AbstractModelEditor(AdditionalFee.class));
+		binder.registerCustomEditor(DumpsterSize.class, new AbstractModelEditor(DumpsterSize.class));
 		
 		super.initBinder(binder);
 	}
@@ -91,6 +93,8 @@ public class OrderController extends CRUDController<Order> {
       //model.addAttribute("permits", genericDAO.findByCriteria(Permit.class, criterias, "id", false));
       
       model.addAttribute("dumpsters", genericDAO.executeSimpleQuery("select obj from DumpsterInfo obj where obj.id!=0 order by obj.id asc"));
+      model.addAttribute("dumpsterSizes", genericDAO.executeSimpleQuery("select obj from DumpsterSize obj where obj.id!=0 order by obj.size asc"));
+      
       model.addAttribute("dusmpsterLocationTypes", genericDAO.executeSimpleQuery("select obj from LocationType obj where obj.id!=0 order by obj.id asc"));
       
       model.addAttribute("permitClasses", genericDAO.executeSimpleQuery("select obj from PermitClass obj where obj.id!=0 order by obj.id asc"));

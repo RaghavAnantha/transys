@@ -317,7 +317,7 @@ $("#addCustomerModal").on("show.bs.modal", function(e) {
 			<td align="${left}">
 				<form:select id="dumpsterSize" cssClass="flat form-control input-sm" style="width:172px !important" path="dumpsterSize"> 
 					<form:option value="">-------Please Select------</form:option>
-					<form:options items="${dumpsters}" itemValue="dumpsterSize" itemLabel="dumpsterSize" />
+					<form:options items="${dumpsterSizes}" itemValue="id" itemLabel="size" />
 				</form:select> 
 			 	<br><form:errors path="dumpsterSize" cssClass="errorMessage" />
 			</td>
