@@ -278,6 +278,21 @@ public class OrderController extends CRUDController<Order> {
 		List<BaseModel> notesList = genericDAO.executeSimpleQuery("select obj from OrderNotes obj where obj.order.id=" +  orderId + " order by obj.id asc");
 		model.addAttribute("notesList", notesList);
 		
+		String query = "select obj from Address obj where obj.customer.id=" +  entity.getCustomer().getId() + " order by obj.line1 asc";
+		model.addAttribute("deliveryAddresses", genericDAO.executeSimpleQuery(query));
+		
+		List<List<Permit>> allPermitsOfChosenTypesList = new ArrayList<List<Permit>>();
+		for(Permit aChosenPermit : entity.getPermits()) {
+			if (aChosenPermit != null && aChosenPermit.getId() != null) {
+				String aChosenPermitClassId =  aChosenPermit.getPermitClass().getId().toString();
+				String aChosenPermitTypeId =  aChosenPermit.getPermitType().getId().toString();
+				List<Permit> aPermitsOfChosenTypeList = retrievePermit(StringUtils.EMPTY, aChosenPermitClassId, aChosenPermitTypeId);
+				
+				allPermitsOfChosenTypesList.add(aPermitsOfChosenTypeList);
+			}
+		}
+		model.addAttribute("allPermitsOfChosenTypesList", allPermitsOfChosenTypesList);
+		
 		return urlContext + "/order";
 	}
 	
@@ -312,6 +327,7 @@ public class OrderController extends CRUDController<Order> {
 			}
 		}
 		
+		//TODO: why is this reqd?
 		entity.getOrderPaymentInfo().setOrder(entity);
 		entity.getOrderPaymentInfo().setCreatedBy(entity.getCreatedBy());
 		entity.getOrderPaymentInfo().setModifiedBy(entity.getModifiedBy());
@@ -338,6 +354,21 @@ public class OrderController extends CRUDController<Order> {
 	
 		List<BaseModel> notesList = genericDAO.executeSimpleQuery("select obj from OrderNotes obj where obj.order.id=" +  orderId + " order by obj.id asc");
 		model.addAttribute("notesList", notesList);
+		
+		String query = "select obj from Address obj where obj.customer.id=" +  entity.getCustomer().getId() + " order by obj.line1 asc";
+		model.addAttribute("deliveryAddresses", genericDAO.executeSimpleQuery(query));
+		
+		List<List<Permit>> allPermitsOfChosenTypesList = new ArrayList<List<Permit>>();
+		for(Permit aChosenPermit : entity.getPermits()) {
+			if (aChosenPermit != null && aChosenPermit.getId() != null) {
+				String aChosenPermitClassId =  aChosenPermit.getPermitClass().getId().toString();
+				String aChosenPermitTypeId =  aChosenPermit.getPermitType().getId().toString();
+				List<Permit> aPermitsOfChosenTypeList = retrievePermit(StringUtils.EMPTY, aChosenPermitClassId, aChosenPermitTypeId);
+				
+				allPermitsOfChosenTypesList.add(aPermitsOfChosenTypeList);
+			}
+		}
+		model.addAttribute("allPermitsOfChosenTypesList", allPermitsOfChosenTypesList);
 		
 		return urlContext + "/order";
 	}
@@ -597,6 +628,7 @@ public class OrderController extends CRUDController<Order> {
 			}
 		}
 		
+		// TODO: why is permit updating even when not changed?
 		String permitIds = permitIdsBuff.substring(0, (permitIdsBuff.length() - 2));
 		List<Permit> permitList = genericDAO.executeSimpleQuery("select obj from Permit obj where obj.id in (" 
 																					+ permitIds
@@ -607,10 +639,12 @@ public class OrderController extends CRUDController<Order> {
 		OrderStatus orderStatus = (OrderStatus)genericDAO.executeSimpleQuery("select obj from OrderStatus obj where obj.status='" + initOrderStatus + "'").get(0);
 		entity.setOrderStatus(orderStatus);
 		
+		// TODO: Why both created by and modified by and why set if not changed?
 		entity.getOrderPaymentInfo().setOrder(entity);
 		entity.getOrderPaymentInfo().setCreatedBy(entity.getCreatedBy());
 		entity.getOrderPaymentInfo().setModifiedBy(entity.getModifiedBy());
 		
+		// TODO: Why both created by and modified by and why set if not changed?
 		entity.getOrderNotes().get(0).setOrder(entity);
 		entity.getOrderNotes().get(0).setCreatedBy(entity.getCreatedBy());
 		entity.getOrderNotes().get(0).setModifiedBy(entity.getModifiedBy());
