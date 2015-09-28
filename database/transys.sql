@@ -1081,7 +1081,7 @@ DROP TABLE IF EXISTS `dumpsterPrice`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `dumpsterPrice` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `dumpsterSize` varchar(5) NOT NULL,
+  `dumpsterSizeId` bigint(20) NOT NULL,
   `materialType` bigint(20) NOT NULL,
   `price` decimal(6,2) NOT NULL,
   `created_at` datetime DEFAULT NULL,
@@ -1090,8 +1090,9 @@ CREATE TABLE `dumpsterPrice` (
   `modified_by` bigint(20) DEFAULT NULL,
   `delete_flag` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
-  KEY `materialTypeDumpsterPriceRef_idx` (`materialType`),
-  CONSTRAINT `materialTypeDumpsterPriceRef` FOREIGN KEY (`materialType`) REFERENCES `materialtype` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  KEY `dumpsterPriceMaterialTypeRef_idx` (`materialType`),
+  CONSTRAINT `dumpsterPriceMaterialTypeRef` FOREIGN KEY (`materialType`) REFERENCES `materialtype` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `dumpsterPriceDumpsterSizeRef` FOREIGN KEY (`dumpsterSizeId`) REFERENCES `dumpsterSize` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -1101,7 +1102,7 @@ CREATE TABLE `dumpsterPrice` (
 
 LOCK TABLES `dumpsterPrice` WRITE;
 /*!40000 ALTER TABLE `dumpsterPrice` DISABLE KEYS */;
-INSERT INTO `dumpsterPrice` VALUES (1,'6 yd',1,240.00,NULL,NULL,NULL,NULL,1),(2,'20 yd',2,300.00,NULL,NULL,NULL,NULL,1);
+INSERT INTO `dumpsterPrice` VALUES (1,1,1,240.00,NULL,NULL,NULL,NULL,1),(2,2,2,300.00,NULL,NULL,NULL,NULL,1);
 /*!40000 ALTER TABLE `dumpsterPrice` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;

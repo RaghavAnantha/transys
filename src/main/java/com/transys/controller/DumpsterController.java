@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.transys.controller.editor.AbstractModelEditor;
 import com.transys.model.DumpsterInfo;
+import com.transys.model.DumpsterSize;
 import com.transys.model.DumpsterStatus;
 import com.transys.model.SearchCriteria;
 
@@ -30,6 +31,7 @@ public class DumpsterController extends CRUDController<DumpsterInfo> {
 	@Override
 	public void initBinder(WebDataBinder binder) {
 		binder.registerCustomEditor(DumpsterStatus.class, new AbstractModelEditor(DumpsterStatus.class));
+		binder.registerCustomEditor(DumpsterSize.class, new AbstractModelEditor(DumpsterSize.class));
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/main.do")
@@ -68,6 +70,7 @@ public class DumpsterController extends CRUDController<DumpsterInfo> {
 		Map criterias = new HashMap();
 		model.addAttribute("dumpsters", genericDAO.findByCriteria(DumpsterInfo.class, criterias, "id", false));
 		model.addAttribute("dumpsterStatus", genericDAO.findByCriteria(DumpsterStatus.class, criterias, "id", false));
+		model.addAttribute("dumpsterSizes", genericDAO.findUniqueByCriteria(DumpsterSize.class, criterias, "size", false));
 	}
 
 	@RequestMapping(method = RequestMethod.POST, value = "/save.do")

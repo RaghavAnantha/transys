@@ -6,11 +6,15 @@
 	method="post" id="typeForm">
 	<form:hidden path="id" id="id" />
 	<table id="form-table" class="table">
-	
 		<tr>
 			<td class="form-left"><transys:label code="Dumpster Size" /><span class="errorMessage">*</span></td>
-			<td align="${left}"><form:input path="dumpsterSize" cssClass="flat" /> <br>
-			<form:errors path="dumpsterSize" cssClass="errorMessage" /></td>
+			<td align="${left}">
+				<form:select id="dumpsterSize" cssClass="flat form-control input-sm" style="width:172px !important" path="dumpsterSize"> 
+					<form:option value="">-------Please Select------</form:option>
+					<form:options items="${dumpsterSizes}" itemValue="id" itemLabel="size" />
+				</form:select> 
+			 	<br><form:errors path="dumpsterSize" cssClass="errorMessage" />
+			</td>
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Dumpster Number" /><span class="errorMessage">*</span></td>

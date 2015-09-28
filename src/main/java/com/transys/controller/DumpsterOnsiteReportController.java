@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.transys.core.util.MimeUtil;
 import com.transys.model.Customer;
 import com.transys.model.DumpsterInfo;
+import com.transys.model.DumpsterSize;
 import com.transys.model.DumpsterStatus;
 import com.transys.model.Order;
 import com.transys.model.SearchCriteria;
@@ -38,6 +39,7 @@ public class DumpsterOnsiteReportController extends CRUDController<DumpsterInfo>
 		Map criterias = new HashMap();
 		model.addAttribute("dumpsterInfo", genericDAO.executeSimpleQuery("select obj from DumpsterInfo obj where obj.id!=0 order by obj.id asc"));
 		model.addAttribute("dumpsterStatus", genericDAO.findByCriteria(DumpsterStatus.class, criterias, "id", false));
+		model.addAttribute("dumpsterSizes", genericDAO.findUniqueByCriteria(DumpsterSize.class, criterias, "size", false));
 	}
 	
 	@Override
