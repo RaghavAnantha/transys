@@ -312,6 +312,10 @@ public class OrderController extends CRUDController<Order> {
 			}
 		}
 		
+		entity.getOrderPaymentInfo().setOrder(entity);
+		entity.getOrderPaymentInfo().setCreatedBy(entity.getCreatedBy());
+		entity.getOrderPaymentInfo().setModifiedBy(entity.getModifiedBy());
+		
 		genericDAO.saveOrUpdate(entity);
 		cleanUp(request);
 

@@ -7,11 +7,14 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
 @Table(name="customerNotes")
 public class CustomerNotes extends AbstractBaseModel {
 	@ManyToOne
-	@JoinColumn(name="customerId") 
+	@JoinColumn(name="customerId")
+	@JsonBackReference
 	private Customer customer;
 
 	@Column(name="notes")

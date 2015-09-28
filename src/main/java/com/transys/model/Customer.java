@@ -81,6 +81,7 @@ public class Customer extends AbstractBaseModel {
 	
 	/******** Notes Info ************/
 	@OneToMany(mappedBy="customer", cascade = CascadeType.ALL)
+	@JsonManagedReference
 	private List<CustomerNotes> customerNotes;
 	
 	public List<CustomerNotes> getCustomerNotes() {
