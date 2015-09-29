@@ -12,8 +12,9 @@ public class DumpsterInfo extends AbstractBaseModel {
 	
 	// TODO: Do we need table size restriction here?
 	
-	@Column(name="dumpsterSize")
-	private String dumpsterSize;
+	@ManyToOne
+	@JoinColumn(name="dumpsterSizeId") //Enum?
+	private DumpsterSize dumpsterSize;
 	
 	@Column(name="dumpsterNum")
 	private String dumpsterNum;
@@ -31,14 +32,6 @@ public class DumpsterInfo extends AbstractBaseModel {
 	/*@Column(name="overWeightPrice")
 	private String overWeightPrice;*/
 	
-	public String getDumpsterSize() {
-		return dumpsterSize;
-	}
-
-	public void setDumpsterSize(String dumpsterSize) {
-		this.dumpsterSize = dumpsterSize;
-	}
-
 	/*public String getMaxWeight() {
 		return maxWeight;
 	}
@@ -49,6 +42,14 @@ public class DumpsterInfo extends AbstractBaseModel {
 
 	public String getDumpsterNum() {
 		return dumpsterNum;
+	}
+
+	public DumpsterSize getDumpsterSize() {
+		return dumpsterSize;
+	}
+
+	public void setDumpsterSize(DumpsterSize dumpsterSize) {
+		this.dumpsterSize = dumpsterSize;
 	}
 
 	public void setDumpsterNum(String dumpsterNum) {

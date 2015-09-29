@@ -5,22 +5,20 @@
 	<table width="100%" id="form-table">
 		<tr>
 			<td align="${left}" class="form-left"><transys:label
-					code="dumpsterSize" /></td>
-			<td align="${left}" class="wide"><select
-				class="flat form-control input-sm" id="dumpsterSize" name="dumpsterSize"
-				style="width: 175px">
-					<option value="">------
-						<transys:label code="Please Select" />------
-					</option>
-					<c:forEach items="${dumpsterInfo}" var="size">
+					code="Dumpster Size" /></td>
+			<td align="${left}" class="wide">
+				<select class="flat form-control input-sm" id="dumpsterSize" name="dumpsterSize" style="width: 175px">
+					<option value="">------<transys:label code="Please Select" />------</option>
+					<c:forEach items="${dumpsterSizes}" var="aDumpsterSize">
 						<c:set var="selected" value="" />
 						<c:if
-							test="${sessionScope.searchCriteria.searchMap['dumpsterSize'] == size.dumpsterSize}">
+							test="${sessionScope.searchCriteria.searchMap['dumpsterSize'] == aDumpsterSize.id}">
 							<c:set var="selected" value="selected" />
 						</c:if>
-						<option value="${size.dumpsterSize}" ${selected}>${size.dumpsterSize}</option>
+						<option value="${aDumpsterSize.id}" ${selected}>${aDumpsterSize.size}</option>
 					</c:forEach>
-			</select></td>
+				</select>
+			</td>
 			
 			<td align="${left}" class="form-left"><transys:label
 					code="status" /></td>
@@ -56,10 +54,10 @@
 	<transys:datatable urlContext="dumpsterOnsiteReports"  baseObjects="${dumpsterInfoList}"
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
 		pagingLink="search.do" >
-		<transys:textcolumn headerText="Dumpster Size" dataField="dumpsterSize" />
+		<transys:textcolumn headerText="Dumpster Size" dataField="dumpsterSize.size" />
 		<transys:textcolumn headerText="Dumpster#" dataField="dumpsterNum" />
 		<transys:textcolumn headerText="Status" dataField="status.status" />
-		<transys:textcolumn headerText="Comments" dataField="dumpsterSize" />
+		<transys:textcolumn headerText="Comments" dataField="dumpsterSize.size" />
 
 
 	</transys:datatable>

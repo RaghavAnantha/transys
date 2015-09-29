@@ -78,11 +78,11 @@ function formatFax(){
 		<tr>
 			<td class="form-left"><transys:label code="Status" /></td>
 			<td align="${left}">
-				<form:select cssClass="flat form-control input-sm" style="width:172px !important" path="status" >
+				<form:select cssClass="flat form-control input-sm" style="width:172px !important" path="customerStatus" >
 					<form:option value="">------Please Select--------</form:option>
-					<form:options items="${statuses}" />
+					<form:options items="${customerStatuses}" itemValue="id" itemLabel="status" />
 				</form:select> 
-				<br><form:errors path="status" cssClass="errorMessage" />
+				<br><form:errors path="customerStatus" cssClass="errorMessage" />
 			</td> 
 		</tr>
 		<tr>
@@ -190,8 +190,8 @@ function formatFax(){
 		</tr>
 		<tr>
 			<td colspan=10>
-				<form:textarea row="5" path="notes" cssClass="flat" id="notes" style="width:100%; height:150%;"/>
-				<br><form:errors path="notes" cssClass="errorMessage" />
+				<form:textarea row="5" path="customerNotes[0].notes" cssClass="flat" id="customerNotes" style="width:100%; height:150%;"/>
+				<br><form:errors path="customerNotes[0].notes" cssClass="errorMessage" />
 			</td>
 		</tr>
 	   

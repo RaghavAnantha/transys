@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+//import com.google.gson.Gson;
 import com.transys.core.util.MimeUtil;
 import com.transys.model.Address;
 import com.transys.model.Order;
@@ -85,12 +86,14 @@ public class OrdersRevenueReportController extends CRUDController<Order> {
 		String jsonResponse = StringUtils.EMPTY;
 		try {
 			jsonResponse = objectMapper.writeValueAsString(aggregationResults.get(0));
+
 		} catch (JsonProcessingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		jsonResponse = jsonResponse.substring(1, jsonResponse.length()-1);
 		String[] aggregationValues = jsonResponse.split(",");
+
 		return aggregationValues;
 	}
 	
@@ -177,6 +180,17 @@ public class OrdersRevenueReportController extends CRUDController<Order> {
 			map.put("totalCityFees", "$" + aggregationValues[2]);
 			map.put("totalOverweightFees", "$" + aggregationValues[3]);
 			map.put("aggregateTotalFees", "$" + aggregationValues[4]);
+			
+			//System.out.println(new Gson().toJson(map));
+			ObjectMapper objectMapper = new ObjectMapper();
+			String jSonResponse = StringUtils.EMPTY;
+			try {
+				jSonResponse = objectMapper.writeValueAsString(map);
+				System.out.println(jSonResponse);
+			} catch (JsonProcessingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			
 			reportData.add(map);
 		}

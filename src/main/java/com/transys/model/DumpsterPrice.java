@@ -12,8 +12,9 @@ import javax.persistence.Table;
 @Table(name="dumpsterPrice")
 public class DumpsterPrice extends AbstractBaseModel {
 	
-	@Column(name="dumpsterSize")
-	private String dumpsterSize;
+	@ManyToOne
+	@JoinColumn(name="dumpsterSizeId") //Enum?
+	private DumpsterSize dumpsterSize;
 	
 	@ManyToOne
 	@JoinColumn(name="materialType")
@@ -22,11 +23,11 @@ public class DumpsterPrice extends AbstractBaseModel {
 	@Column(name="price")
 	private BigDecimal price;
 
-	public String getDumpsterSize() {
+	public DumpsterSize getDumpsterSize() {
 		return dumpsterSize;
 	}
 
-	public void setDumpsterSize(String dumpsterSize) {
+	public void setDumpsterSize(DumpsterSize dumpsterSize) {
 		this.dumpsterSize = dumpsterSize;
 	}
 

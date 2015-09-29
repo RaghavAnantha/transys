@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import com.transys.controller.editor.AbstractModelEditor;
 import com.transys.model.DumpsterInfo;
 import com.transys.model.DumpsterPrice;
+import com.transys.model.DumpsterSize;
 import com.transys.model.MaterialType;
 import com.transys.model.SearchCriteria;
 
@@ -30,6 +31,8 @@ public class DumpsterPriceController extends CRUDController<DumpsterPrice> {
 	@Override
 	public void initBinder(WebDataBinder binder) {
 		binder.registerCustomEditor(DumpsterPrice.class, new AbstractModelEditor(DumpsterPrice.class));
+		binder.registerCustomEditor(DumpsterSize.class, new AbstractModelEditor(DumpsterSize.class));
+		binder.registerCustomEditor(MaterialType.class, new AbstractModelEditor(MaterialType.class));
 		super.initBinder(binder);
 	}
 
@@ -67,7 +70,7 @@ public class DumpsterPriceController extends CRUDController<DumpsterPrice> {
 	@Override
 	public void setupCreate(ModelMap model, HttpServletRequest request) {
 		Map criterias = new HashMap();
-		model.addAttribute("dumpsterSizes", genericDAO.findUniqueByCriteria(DumpsterInfo.class, criterias, "id", false));
+		model.addAttribute("dumpsterSizes", genericDAO.findUniqueByCriteria(DumpsterSize.class, criterias, "size", false));
 		model.addAttribute("materialTypes", genericDAO.findByCriteria(MaterialType.class, criterias, "id", false));
 		model.addAttribute("dumpsterPrices", genericDAO.findUniqueByCriteria(DumpsterPrice.class, criterias, "id", false));
 	}
