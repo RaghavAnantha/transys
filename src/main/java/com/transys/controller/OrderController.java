@@ -458,7 +458,7 @@ public class OrderController extends CRUDController<Order> {
 			map.put("paymentMethod", order.getOrderPaymentInfo().getPaymentMethod());
 			map.put("dumpsterPrice", order.getOrderPaymentInfo().getDumpsterPrice().toString());
 			map.put("cityFee", order.getOrderPaymentInfo().getCityFee().toString());
-			map.put("permitFees", order.getOrderPaymentInfo().getPermitFees().toString());
+			map.put("permitFees", order.getOrderPaymentInfo().getPermitFee1().toString());
 			map.put("overweightFee", order.getOrderPaymentInfo().getOverweightFee().toString());
 			if (order.getOrderPaymentInfo().getTotalFees() != null ) {
 				map.put("totalFees", order.getOrderPaymentInfo().getTotalFees().toString());

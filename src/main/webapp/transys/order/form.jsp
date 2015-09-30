@@ -623,10 +623,10 @@ $("#confirmExchangeOrderDialogYes").click(function (ev) {
 			</td>
 		</tr>
 		<tr>
-			<td class="form-left"><transys:label code="Permit Fee"/><span class="errorMessage">*</span></td>
+			<td class="form-left"><transys:label code="Permit Fees"/><span class="errorMessage">*</span></td>
 			<td align="${left}">
-				<form:input path="orderPaymentInfo.permitFees" cssClass="flat" />
-				<br><form:errors path="orderPaymentInfo.permitFees" cssClass="errorMessage" />
+				<form:input path="orderPaymentInfo.permitFee1" cssClass="flat" />
+				<br><form:errors path="orderPaymentInfo.permitFee1" cssClass="errorMessage" />
 			</td>
 			<td class="form-left"><transys:label code="Overweight Fee"/><span class="errorMessage">*</span></td>
 			<td align="${left}">

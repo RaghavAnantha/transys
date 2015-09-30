@@ -166,7 +166,7 @@ public class OrdersRevenueReportController extends CRUDController<Order> {
 				map.put("ccReferenceNum", "" + orderPaymentInfo.getCcReferenceNum());
 				map.put("dumpsterPrice", "" + orderPaymentInfo.getDumpsterPrice());
 				map.put("cityFee", "" + orderPaymentInfo.getCityFee());
-				map.put("permitFees", "" + orderPaymentInfo.getPermitFees());
+				map.put("permitFees", "" + orderPaymentInfo.getPermitFee1());
 				map.put("overweightFee", "" + orderPaymentInfo.getOverweightFee());
 				map.put("additionalFee", "" + orderPaymentInfo.getAdditionalFee1());
 				map.put("totalFees", "" + orderPaymentInfo.getTotalFees());
