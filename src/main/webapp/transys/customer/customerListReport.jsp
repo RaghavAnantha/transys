@@ -80,16 +80,16 @@
 <form:form name="customersListReportDetails" id="customersListReportDetails" class="tab-color">
 	<transys:datatable urlContext="customer" baseObjects="${customerReportVOList}"
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
-		pagingLink="search.do">
+		pagingLink="search.do" dataQualifier="customerListReport">
 		<transys:textcolumn headerText="Customer ID" dataField="id" />
 		<transys:textcolumn headerText="Company Name" dataField="companyName" />
 		<transys:textcolumn headerText="ContactName" dataField="contactName" />
 		<transys:textcolumn headerText="Phone Number" dataField="phoneNumber" />
-		<transys:textcolumn headerText="Status" dataField="customerStatus.status" />
+		<transys:textcolumn headerText="Status" dataField="status" />
 		<transys:textcolumn headerText="Total Orders" dataField="totalOrders" />
 		<transys:textcolumn headerText="Total Amount" dataField="totalAmount" />
 	</transys:datatable>
-	<%session.setAttribute("columnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
+	<%session.setAttribute("customerListReportColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
 </form:form>
 
 

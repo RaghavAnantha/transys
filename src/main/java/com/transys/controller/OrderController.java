@@ -1,6 +1,7 @@
 package com.transys.controller;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -14,6 +15,8 @@ import javax.validation.ValidationException;
 
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.Query;
+import org.hibernate.Session;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -28,6 +31,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 //import com.google.gson.Gson;
 import com.transys.controller.editor.AbstractModelEditor;
+import com.transys.core.dao.GenericJpaDAO;
+import com.transys.core.tags.IColumnTag;
 import com.transys.core.util.MimeUtil;
 import com.transys.model.AbstractBaseModel;
 import com.transys.model.AdditionalFee;
@@ -51,6 +56,7 @@ import com.transys.model.PermitStatus;
 import com.transys.model.SearchCriteria;
 import com.transys.model.State;
 import com.transys.model.User;
+import com.transys.service.DynamicReportServiceImpl;
 
 @Controller
 @RequestMapping("/order")
@@ -720,6 +726,38 @@ public class OrderController extends CRUDController<Order> {
 		//return list(model, request);
 		return saveSuccess(model, request, entity);
 	}
+	
+	/*@Override
+	@RequestMapping(method = {RequestMethod.GET, RequestMethod.POST}, value = "/export.do")
+	public void export(ModelMap model, HttpServletRequest request,
+			HttpServletResponse response, @RequestParam("type") String type,
+			Object objectDAO, Class clazz) {
+		String dataQualifier = request.getParameter("dataQualifier");
+		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
+		List columnPropertyList = (List) request.getSession().getAttribute(dataQualifier + "ColumnPropertyList");
+		
+		response.setContentType(MimeUtil.getContentType(type));
+		if (!type.equals("html"))
+			response.setHeader("Content-Disposition", "attachment;filename="
+					+ urlContext + "Report." + type);
+		try {
+			criteria.setPageSize(100000);
+			//String label = getCriteriaAsString(criteria);
+			ByteArrayOutputStream out = dynamicReportService.exportReport(
+					urlContext + "Report", type, getEntityClass(),
+					columnPropertyList, criteria, request);
+			out.writeTo(response.getOutputStream());
+			if (type.equals("html"))
+				response.getOutputStream()
+						.println(
+								"<script language=\"javascript\">window.print()</script>");
+			criteria.setPageSize(25);
+			out.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+			log.warn("Unable to create file :" + e);
+		}
+	}*/
 	
 	public String saveSuccess(ModelMap model, HttpServletRequest request, Order entity) {
 		setupCreate(model, request);

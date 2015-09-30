@@ -125,8 +125,7 @@ function populateCustomerDeliveryAddress() {
 					<option value="">------<transys:label code="Please Select" />------</option>
 					<c:forEach items="${dumpsters}" var="aDumpster">
 						<c:set var="selected" value="" />
-						<c:if
-							test="${sessionScope.searchCriteria.searchMap['dumpster'] == aDumpster.id}">
+						<c:if test="${sessionScope.searchCriteria.searchMap['dumpster'] == aDumpster.id}">
 							<c:set var="selected" value="selected" />
 						</c:if>
 						<option value="${aDumpster.id}" ${selected}>${aDumpster.dumpsterNum}</option>
@@ -137,21 +136,21 @@ function populateCustomerDeliveryAddress() {
 		<tr>
 			<td align="${left}" class="form-left"><transys:label code="Delivery Date From" /></td>
 			<td align="${left}" class="wide">
-				<input class="flat" id="datepicker" name="deliveryDateFrom" style="width: 175px" />
+				<input class="flat" id="datepicker" name="deliveryDateFrom" value="${sessionScope.searchCriteria.searchMap['deliveryDateFrom']}" style="width: 175px" />
 			</td>
 			<td align="${left}" class="form-left"><transys:label code="Delivery Date To" /></td>
 			<td align="${left}" class="wide">
-				<input class="flat" id="datepicker1" name="deliveryDateTo" style="width: 175px" />
+				<input class="flat" id="datepicker1" name="deliveryDateTo" value="${sessionScope.searchCriteria.searchMap['deliveryDateTo']}" style="width: 175px" />
 			</td>
 		</tr>
 		<tr>
 			<td align="${left}" class="form-left"><transys:label code="Pick Up Date From" /></td>
 			<td align="${left}" class="wide">
-				<input class="flat" id="datepicker2" name="pickupDateFrom" style="width: 175px" />
+				<input class="flat" id="datepicker2" name="pickupDateFrom" value="${sessionScope.searchCriteria.searchMap['pickupDateFrom']}" style="width: 175px" />
 			</td>
 			<td align="${left}" class="form-left"><transys:label code="Pick Up Date To" /></td>
 			<td align="${left}" class="wide">
-				<input class="flat" id="datepicker3" name="pickupDateTo" style="width: 175px" />
+				<input class="flat" id="datepicker3" name="pickupDateTo" value="${sessionScope.searchCriteria.searchMap['pickupDateTo']}" style="width: 175px" />
 			</td>
 		</tr>
 		<tr>
@@ -169,7 +168,7 @@ function populateCustomerDeliveryAddress() {
 		editable="true" insertable="true" baseObjects="${list}"
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
 		pagingLink="search.do" multipleDelete="false" searcheable="false"
-		exportPdf="true" exportXls="true">
+		exportPdf="true" exportXls="true" dataQualifier="manageOrders">
 		<transys:textcolumn headerText="Order #" dataField="id" />
 		<transys:textcolumn headerText="Customer" dataField="customer.companyName" />
 		<transys:textcolumn headerText="Contact" dataField="deliveryContactName" />
@@ -183,7 +182,7 @@ function populateCustomerDeliveryAddress() {
 		<transys:textcolumn headerText="Pickup Date" dataField="pickupDate" />
 		<transys:textcolumn headerText="Status" dataField="orderStatus.status" />
 	</transys:datatable>
-	<%session.setAttribute("columnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
+	<%session.setAttribute("manageOrdersColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
 </form:form>
 
 

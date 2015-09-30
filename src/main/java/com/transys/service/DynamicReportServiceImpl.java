@@ -65,10 +65,13 @@ import ar.com.fdvs.dj.domain.constants.VerticalAlign;
 import ar.com.fdvs.dj.domain.entities.columns.AbstractColumn;
 
 import com.transys.core.dao.GenericDAO;
+import com.transys.core.dao.GenericJpaDAO;
 import com.transys.core.tags.IColumnTag;
 import com.transys.core.tags.StaticDataColumn;
 import com.transys.core.tags.StaticDataUtil;
 import com.transys.core.util.LabelUtil;
+import com.transys.model.BaseModel;
+import com.transys.model.Order;
 import com.transys.model.SearchCriteria;
 
 /**
@@ -221,7 +224,7 @@ public class DynamicReportServiceImpl implements DynamicReportService {
 		return out;
 	}
 
-	@Override
+	/*@Override
 	public ByteArrayOutputStream exportReport(String reportName, String type,
 			Class entityClass, List<IColumnTag> columnPropertyList,
 			SearchCriteria criteria, HttpServletRequest request) {
@@ -336,6 +339,103 @@ public class DynamicReportServiceImpl implements DynamicReportService {
 				}
 			}
 			session.close();
+			JasperPrint jp = getJasperPrint(reportName, obj,
+					columnPropertyList, displayableFieldList, request,type,entityClass);
+			out = getStreamByType(type, jp, request);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return out;
+	}*/
+	
+	@Override
+	public <T extends BaseModel> ByteArrayOutputStream exportReport(String reportName, String type,
+			Class<T> entityClass, List<IColumnTag> columnPropertyList,
+			SearchCriteria criteria, HttpServletRequest request) {
+		System.out.println("**************exportReport 2a**************");
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		List<Field> displayableFieldList = new ArrayList<Field>();
+		try {
+			if (entityClass.getSuperclass() != Object.class) {
+				Field[] superClassfields = entityClass.getSuperclass()
+						.getDeclaredFields();
+				for (IColumnTag objCol : columnPropertyList) {
+					for (Field field : superClassfields) {
+						if (field.getName().equalsIgnoreCase(
+								objCol.getDataField())) {
+							displayableFieldList.add(field);
+						}
+						if (objCol.getDataField().indexOf(".") != -1
+								&& field.getName().equalsIgnoreCase(
+										objCol.getDataField().substring(
+												0,
+												objCol.getDataField().indexOf(
+														".")))) {
+							displayableFieldList.add(field);
+						}
+					}
+				}
+			}
+			Field[] fields = entityClass.getDeclaredFields();
+			for (IColumnTag objCol : columnPropertyList) {
+				for (Field field : fields) {
+					if (field.getName().equalsIgnoreCase(objCol.getDataField())) {
+						displayableFieldList.add(field);
+					}
+					if (objCol.getDataField().indexOf(".") != -1
+							&& field.getName()
+									.equalsIgnoreCase(
+											objCol.getDataField().substring(
+													0,
+													objCol.getDataField()
+															.indexOf(".")))) {
+						displayableFieldList.add(field);
+					}
+				}
+			}
+			
+			String query = "select ";
+			for (int i = 0; i < columnPropertyList.size(); i++) {
+				query += columnPropertyList.get(i).getDataField();
+				if (i < columnPropertyList.size() - 1)
+					query += ",";
+			}
+			
+			String fromQuery = genericDAO.contructQuery(entityClass, criteria, "id", null, null);
+			query += fromQuery;
+			
+			System.out.println("***** Download query is "+query);
+			
+			Session session = ((Session)genericDAO.getEntityManager().getDelegate());
+			//System.out.println("\nDRSImpl----exportReport 2Last----Query==>"+query+"\n");
+			Query query1 = session.createQuery(query);
+			
+			//System.out.println("\nDRSImpl----exportReport 2Last----Query1==>"+query1+"\n");
+			List objectList = query1.list();
+			Object[] obj = new Object[objectList.size()];
+			for (int i = 0; i < objectList.size(); i++) {
+				obj[i] = new HashMap();
+				if (columnPropertyList.size() == 1) {
+					((Map) obj[i]).put(
+							columnPropertyList.get(0).getDataField(),
+							objectList.get(i));
+				} else {
+					for (int j = 0; j < columnPropertyList.size(); j++) {
+						if (columnPropertyList.get(j) instanceof StaticDataColumn) {
+							Object value=((Object[]) objectList.get(i))[j];
+							StaticDataColumn column = (StaticDataColumn)columnPropertyList.get(j);
+							Object data = StaticDataUtil.getText(column.getDataType(), value.toString());
+							((Map) obj[i]).put(columnPropertyList.get(j)
+									.getDataField(),data);
+						}
+						else {
+							((Map) obj[i]).put(columnPropertyList.get(j)
+									.getDataField(), ((Object[]) objectList.get(i))[j]);
+						}
+					}
+				}
+			}
+			
 			JasperPrint jp = getJasperPrint(reportName, obj,
 					columnPropertyList, displayableFieldList, request,type,entityClass);
 			out = getStreamByType(type, jp, request);

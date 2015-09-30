@@ -184,6 +184,13 @@ function processForm() {
 
 function verifyExchangeOrderAndSubmit() {
 	var orderAddEditForm = $("#orderAddEditForm");
+	
+	var id = orderAddEditForm.find("#id");
+	if (id.val() != "") {
+		orderAddEditForm.submit();
+		return false;
+	}
+	
 	var isExchangeIndicator = $('#isExchange');
 	
 	var selectedCustomerId = $('#customerSelect').val();

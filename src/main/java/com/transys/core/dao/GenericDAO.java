@@ -34,5 +34,7 @@ String groupField);
 <T extends BaseModel> void executeSimpleUpdateQuery(String query);
 <T extends BaseModel> boolean isUnique(Class<T> clazz, T entity, Map properties);
 <T extends BaseModel> List<T> findByCommaSeparatedIds(Class<T> clazz, String ids);
+public <T extends BaseModel> String contructQuery(Class<T> clazz, SearchCriteria criteria, String orderField, Boolean desc,
+		String groupField);
 EntityManager getEntityManager();
 }

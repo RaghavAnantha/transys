@@ -173,7 +173,7 @@
 		editable="true" insertable="true" baseObjects="${list}"
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
 		pagingLink="search.do" multipleDelete="false" searcheable="false" 
-		exportPdf="true" exportXls="true">
+		exportPdf="true" exportXls="true" dataQualifier="managePermit">
 		<transys:textcolumn headerText="Delivery#" dataField="deliveryAddress.line1" />
 		<transys:textcolumn headerText="DeliveryStreet" dataField="deliveryAddress.line2" />
 		<transys:textcolumn headerText="Locn. Type" dataField="locationType.locationType" />
@@ -188,7 +188,7 @@
 		<transys:textcolumn headerText="PermitAddr#" dataField="permitAddress" />
 		<transys:textcolumn headerText="Status" dataField="status.status" />
 	</transys:datatable>
-	<%session.setAttribute("columnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
+	<%session.setAttribute("managePermitColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
 </form:form>
 
 

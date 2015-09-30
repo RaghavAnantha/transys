@@ -64,6 +64,8 @@ public final class Datatable extends BodyTagSupport {
 	private String urlContext=null;
 	private int additionalColumn=0;
 	
+	private String dataQualifier;
+	
 	public Datatable() {
 		super();
 		this.border = 0;
@@ -109,6 +111,14 @@ public final class Datatable extends BodyTagSupport {
 		return columns;
 	}
 
+
+	public String getDataQualifier() {
+		return dataQualifier;
+	}
+
+	public void setDataQualifier(String dataQualifier) {
+		this.dataQualifier = dataQualifier;
+	}
 
 	/**
 	 * @param columns the columns to set
@@ -889,16 +899,16 @@ public final class Datatable extends BodyTagSupport {
 			if (displayPrint) {		
 				objOut.write("<a href=\"print.do\" onClick=\"smallPopup(this.href);return false;\"><img src=\""+pageContext.getAttribute("resourceCtx")+"/images/print.png\" border=\"0\" class=\"toolbarButton\"/></a>&nbsp;");
 			}
-			String url = "/"+urlContext+"/export.do";
+			String url = "/"+urlContext+"/export.do?dataQualifier=" + getDataQualifier();
 			//if (authenticationService.hasUserPermission(user, url)) {
 				if (exportPdf) {
-					objOut.write("<a href=\""+pageContext.getAttribute("ctx")+"/"+urlContext+"/export.do?type=pdf\"><img src=\""+pageContext.getAttribute("resourceCtx")+"/images/pdf.png\" border=\"0\" style=\"padding-left: 36px; \" class=\"toolbarButton\"/></a>&nbsp;");
+					objOut.write("<a href=\""+pageContext.getAttribute("ctx")+url+"&type=pdf\"><img src=\""+pageContext.getAttribute("resourceCtx")+"/images/pdf.png\" border=\"0\" style=\"padding-left: 36px; \" class=\"toolbarButton\"/></a>&nbsp;");
 				}
 				if (exportXls) {
-					objOut.write("<a href=\""+pageContext.getAttribute("ctx")+"/"+urlContext+"/export.do?type=xls\"><img src=\""+pageContext.getAttribute("resourceCtx")+"/images/excel.png\" border=\"0\" class=\"toolbarButton\"/></a>");
+					objOut.write("<a href=\""+pageContext.getAttribute("ctx")+url+"&type=xls\"><img src=\""+pageContext.getAttribute("resourceCtx")+"/images/excel.png\" border=\"0\" class=\"toolbarButton\"/></a>");
 				}
 				if (exportCsv) {
-					objOut.write("<a href=\""+pageContext.getAttribute("ctx")+"/"+urlContext+"/export.do?type=csv\"><img src=\""+pageContext.getAttribute("resourceCtx")+"/images/csv.png\" border=\"0\" class=\"toolbarButton\"/></a>");
+					objOut.write("<a href=\""+pageContext.getAttribute("ctx")+url+"&type=csv\"><img src=\""+pageContext.getAttribute("resourceCtx")+"/images/csv.png\" border=\"0\" class=\"toolbarButton\"/></a>");
 				}
 			//}
 			objOut.write("</td></tr></table>");

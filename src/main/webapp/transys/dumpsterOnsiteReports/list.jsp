@@ -53,7 +53,7 @@
 <form:form name="dumpsterOnsiteReport" id="dumpsterOnsiteReport" class="tab-color">
 	<transys:datatable urlContext="dumpsterOnsiteReports"  baseObjects="${dumpsterInfoList}"
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
-		pagingLink="search.do" >
+		pagingLink="search.do" dataQualifier="dumpsterOnsiteReport">
 		<transys:textcolumn headerText="Dumpster Size" dataField="dumpsterSize.size" />
 		<transys:textcolumn headerText="Dumpster#" dataField="dumpsterNum" />
 		<transys:textcolumn headerText="Status" dataField="status.status" />
@@ -61,7 +61,7 @@
 
 
 	</transys:datatable>
-	<%session.setAttribute("columnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
+	<%session.setAttribute("dumpsterOnsiteReportColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
 </form:form>
 
 

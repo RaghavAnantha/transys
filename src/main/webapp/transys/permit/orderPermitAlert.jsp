@@ -135,7 +135,7 @@
 		editable="true" baseObjects="${orderPermitList}"
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
 		pagingLink="search.do" multipleDelete="false" searcheable="false" 
-		exportPdf="true" exportXls="true">
+		exportPdf="true" exportXls="true" dataQualifier="orderPermitAlert">
 		<transys:textcolumn headerText="Delivery#" dataField="order.deliveryAddress.line1" />
 		<transys:textcolumn headerText="DeliveryStreet" dataField="order.deliveryAddress.line2" />
 		<transys:textcolumn headerText="CustomerName" dataField="order.customer.companyName" />
@@ -149,7 +149,7 @@
 		<transys:textcolumn headerText="StartDate" dataField="permit.startDate" />
 		<transys:textcolumn headerText="EndDate" dataField="permit.endDate" />
 	</transys:datatable>
-	<%session.setAttribute("columnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
+	<%session.setAttribute("orderPermitAlertColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
 </form:form>
 
 

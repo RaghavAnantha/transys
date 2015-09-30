@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import net.sf.jasperreports.engine.JasperPrint;
 
 import com.transys.core.tags.IColumnTag;
+import com.transys.model.BaseModel;
 import com.transys.model.SearchCriteria;
 
 /**
@@ -34,8 +35,8 @@ public interface DynamicReportService {
      *            HttpServletRequest
      * @return
      */
-    public ByteArrayOutputStream exportReport(String reportName, String type, Class entityClass, List<IColumnTag> columnPropertyList,
-	    SearchCriteria criteria, HttpServletRequest request);
+    //public ByteArrayOutputStream exportReport(String reportName, String type, Class entityClass, List<IColumnTag> columnPropertyList,
+	   // SearchCriteria criteria, HttpServletRequest request);
 
     /**
      * @param reportName
@@ -58,6 +59,10 @@ public interface DynamicReportService {
     public ByteArrayOutputStream exportReport(String reportName, String type, Class entityClass, List<IColumnTag> columnPropertyList,
 	    SearchCriteria criteria, HttpServletRequest request, Object objectDAO, Class clazz);
 
+    public <T extends BaseModel> ByteArrayOutputStream exportReport(String reportName, String type,
+ 			Class<T> entityClass, List<IColumnTag> columnPropertyList,
+ 			SearchCriteria criteria, HttpServletRequest request);
+    
     /**
      * @param <T>
      * @param reportName

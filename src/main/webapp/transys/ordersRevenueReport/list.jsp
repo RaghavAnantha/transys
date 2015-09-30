@@ -56,7 +56,7 @@
 <form:form name="ordersRevenueReport" id="ordersRevenueReport" class="tab-color">
 	<transys:datatable urlContext="ordersRevenueReports"  baseObjects="${ordersList}"
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
-		pagingLink="search.do" >
+		pagingLink="search.do" dataQualifier="orderRevenueReport">
 		<transys:textcolumn headerText="Order #" dataField="id" />
 		<transys:textcolumn headerText="Customer" dataField="customer.companyName" />
 		<transys:textcolumn headerText="Delivery Address" dataField="deliveryAddress.line1" />
@@ -71,6 +71,6 @@
 		<transys:textcolumn headerText="Additional Fee" dataField="orderPaymentInfo.additionalFee" />
 		<transys:textcolumn headerText="Total Fees" dataField="orderPaymentInfo.totalFees" />
 	</transys:datatable>
-	<%session.setAttribute("columnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
+	<%session.setAttribute("orderRevenueReportColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
 </form:form>
 

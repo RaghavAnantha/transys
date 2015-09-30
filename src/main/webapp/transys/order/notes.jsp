@@ -25,10 +25,10 @@
 <form:form name="delete.do" id="serviceForm" class="tab-color">
 	<transys:datatable urlContext="order" baseObjects="${notesList}"
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
-		pagingLink="search.do" searcheable="false">
+		pagingLink="search.do" searcheable="false" dataQualifier="manageNotes">
 		<transys:textcolumn headerText="Entered By" dataField="createdBy" />
 		<transys:textcolumn headerText="Date/Time" dataField="createdAt" />
 		<transys:textcolumn headerText="Notes/Comments" dataField="notes" />
 	</transys:datatable>
-	<%session.setAttribute("columnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
+	<%session.setAttribute("manageNotesColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
 </form:form>

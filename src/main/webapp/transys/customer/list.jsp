@@ -66,15 +66,16 @@
 			</select></td>
 		</tr>
 		<tr>
-			<td align="${left}" class="form-left"><transys:label
-					code="Create Date From" /></td>
-			<td align="${left}" class="wide"><input class="flat"
-				id="datepicker" name="createdAtFrom" style="width: 175px" /></td>
-
-			<td align="${left}" class="form-left"><transys:label
-					code="Create Date To" /></td>
-			<td align="${left}"><input class="flat" id="datepicker1"
-				name="createdAtTo" style="width: 175px" /></td>
+			<td align="${left}" class="form-left">
+				<transys:label code="Create Date From" /></td>
+			<td align="${left}" class="wide">
+				<input class="flat" id="datepicker" name="createdAtFrom" value="${sessionScope.searchCriteria.searchMap['createdAtFrom']}" style="width: 175px" />
+			</td>
+			<td align="${left}" class="form-left">
+				<transys:label code="Create Date To" /></td>
+			<td align="${left}">
+				<input class="flat" id="datepicker1" name="createdAtTo" value="${sessionScope.searchCriteria.searchMap['createdAtTo']}" style="width: 175px" />
+			</td>
 		</tr>
 		<tr>
 			<td align="${left}" class="form-left"><transys:label code="Status" /></td>
@@ -105,15 +106,15 @@
 		editable="true" insertable="true" baseObjects="${list}"
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
 		pagingLink="search.do" multipleDelete="false" searcheable="false"
-		exportPdf="true" exportXls="true">
+		exportPdf="true" exportXls="true" dataQualifier="manageCustomer">
 		<transys:textcolumn headerText="Customer ID" dataField="id" />
+		<transys:textcolumn headerText="Created Date" dataField="createdAt" />
 		<transys:textcolumn headerText="Company Name" dataField="companyName" />
 		<transys:textcolumn headerText="ContactName" dataField="contactName" />
 		<transys:textcolumn headerText="Phone" dataField="phone" />
-		<transys:textcolumn headerText="Created Date" dataField="createdAt" />
 		<transys:textcolumn headerText="Status" dataField="customerStatus.status" />
 	</transys:datatable>
-	<%session.setAttribute("columnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
+	<%session.setAttribute("manageCustomerColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
 </form:form>
 
 
