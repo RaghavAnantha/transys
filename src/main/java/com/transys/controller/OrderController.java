@@ -113,6 +113,8 @@ public class OrderController extends CRUDController<Order> {
       
       model.addAttribute("paymentMethods", genericDAO.executeSimpleQuery("select obj from PaymentMethod obj where obj.id!=0 order by obj.id asc"));
       
+      model.addAttribute("cityFeeDetails", genericDAO.executeSimpleQuery("select obj from CityFee obj where obj.id!=0 order by obj.id asc"));
+      
       populateDeliveryTimeSettings(model);
       
       String driverRole = "DRIVER";

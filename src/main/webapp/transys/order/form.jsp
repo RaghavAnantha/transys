@@ -635,6 +635,21 @@ $("#confirmExchangeOrderDialogYes").click(function (ev) {
 			</td>
 		</tr>
 		<tr>
+			<td class="form-left"><transys:label code="City Fee Description"/><span class="errorMessage">*</span></td>
+				<td align="${left}">
+				<form:select id="cityFeeDescription" cssClass="flat form-control input-sm" style="width:172px !important" path="orderPaymentInfo.cityFeeType"> 
+					<form:option value="">-------Please Select------</form:option>
+					<form:options items="${cityFeeDetails}" itemValue="id" itemLabel="suburbName" />
+				</form:select>
+				<br><form:errors path="orderPaymentInfo.cityFeeType" cssClass="errorMessage" />
+			</td>
+			<td class="form-left"><transys:label code="City Fee"/><span class="errorMessage">*</span></td>
+			<td align="${left}">
+				<form:input path="orderPaymentInfo.cityFee" cssClass="flat" />
+				<br><form:errors path="orderPaymentInfo.cityFee" cssClass="errorMessage" />
+			</td>
+		</tr>
+		<tr>
 			<td class="form-left"><transys:label code="Additional Fee1 Description"/><span class="errorMessage">*</span></td>
 				<td align="${left}">
 				<form:select id="additionalFee1Type" cssClass="flat form-control input-sm" style="width:172px !important" path="orderPaymentInfo.additionalFee1Type"> 
