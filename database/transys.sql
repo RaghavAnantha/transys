@@ -59,6 +59,44 @@ INSERT INTO `transys`.`address` (`id`, `custID`, `line1`, `line2`, `city`, `stat
 UNLOCK TABLES;
 
 --
+-- Table structure for table `permitAddress`
+--
+
+DROP TABLE IF EXISTS `permitAddress`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `permitAddress` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `created_at` datetime DEFAULT NULL,
+  `created_by` bigint(20) DEFAULT NULL,
+  `modified_at` datetime DEFAULT NULL,
+  `modified_by` bigint(20) DEFAULT NULL,
+  `permitId` bigint(20) NOT NULL,
+  `line1` varchar(150) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `line2` varchar(150) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `city` varchar(150) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `state` bigint(20) DEFAULT NULL,
+  `zip` varchar(12) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `delete_flag` int(11) DEFAULT '1',
+  PRIMARY KEY (`id`),
+  KEY `permitRef_idx` (`permitId`),
+  KEY `stateRef_idx` (`state`),
+  CONSTRAINT `permitAddressPermitRef` FOREIGN KEY (`permitId`) REFERENCES `permit` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `permitAddressStateRef` FOREIGN KEY (`state`) REFERENCES `state` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `permitAddress`
+--
+
+LOCK TABLES `permitAddress` WRITE;
+/*!40000 ALTER TABLE `permitAddress` DISABLE KEYS */;
+INSERT INTO `permitAddress` VALUES (1,NULL,NULL,NULL,NULL,1,'4818 W','VAN BUREN','Chicago',1,'28262',1),(2,NULL,NULL,NULL,NULL,1,'1121 E','Lemon st','Chicago',1,'28262',1);
+/*!40000 ALTER TABLE `permitAddress` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `business_object`
 --
 
@@ -128,7 +166,7 @@ CREATE TABLE `customer` (
   `chargeCompany` varchar(5) DEFAULT NULL,
   `delete_flag` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
-  CONSTRAINT `stateRef` FOREIGN KEY (`state`) REFERENCES `state` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `customerStateRef` FOREIGN KEY (`state`) REFERENCES `state` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `customerStatusRef` FOREIGN KEY (`customerStatusId`) REFERENCES `customerStatus` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `customerTypeRef` FOREIGN KEY (`customerTypeId`) REFERENCES `customerType` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
