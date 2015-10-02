@@ -683,9 +683,9 @@ $("#confirmExchangeOrderDialogYes").click(function (ev) {
 			</td>
 		</tr>
 		<tr>
-			<td class="form-left"><transys:label code="Permit Fees"/></td>
+			<td class="form-left"><transys:label code="Total Permit Fees"/></td>
 			<td align="${left}">
-				<input id="permitFees" class="form-control" readonly="readonly" style="width:172px;height:25px !important"/>
+				<form:input path="orderPaymentInfo.totalPermitFees" cssClass="form-control" readonly="true" style="width:172px;height:25px !important"/>
 			</td>
 			<td class="form-left"><transys:label code="Overweight Fee"/><span class="errorMessage">*</span></td>
 			<td align="${left}">
@@ -756,7 +756,7 @@ $("#confirmExchangeOrderDialogYes").click(function (ev) {
 		<tr>
 			<td class="form-left"><transys:label code="Total Additional Fees"/></td>
 			<td align="${left}">
-				<input id="totalAdditionalFees" class="form-control" readonly="readonly" style="width:172px;height:25px !important"/>
+				<form:input path="orderPaymentInfo.totalAdditionalFees" cssClass="form-control" readonly="true" style="width:172px;height:25px !important"/>
 			</td>
 		</tr>
 		<tr>
