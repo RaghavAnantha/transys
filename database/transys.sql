@@ -1212,7 +1212,9 @@ DROP TABLE IF EXISTS `customerDumpsterPrice`;
 CREATE TABLE `customerDumpsterPrice` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `customer` bigint(20) NOT NULL,
-  `dumpsterPrice` decimal(6,2) NOT NULL,
+  `dumpsterSizeId` bigint(20) NOT NULL,
+  `materialCategoryId` bigint(20) NOT NULL,
+  `price` decimal(6,2) NOT NULL,
   `comments` varchar(500) DEFAULT NULL,
   `effectiveDateFrom` datetime DEFAULT NULL,
   `effectiveDateTo` datetime DEFAULT NULL,
@@ -1223,7 +1225,9 @@ CREATE TABLE `customerDumpsterPrice` (
   `delete_flag` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   KEY `customerDumpsterPriceRef_idx` (`customer`),
-  CONSTRAINT `customerDumpsterPriceRef` FOREIGN KEY (`customer`) REFERENCES `customer` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `customerDumpsterPriceRef` FOREIGN KEY (`customer`) REFERENCES `customer` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `customerDumpsterPriceMaterialCategoryRef` FOREIGN KEY (`materialCategoryId`) REFERENCES `materialCategory` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `customerDumpsterPriceDumpsterSizeRef` FOREIGN KEY (`dumpsterSizeId`) REFERENCES `dumpsterSize` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -1233,7 +1237,7 @@ CREATE TABLE `customerDumpsterPrice` (
 
 LOCK TABLES `customerDumpsterPrice` WRITE;
 /*!40000 ALTER TABLE `customerDumpsterPrice` DISABLE KEYS */;
-INSERT INTO `customerDumpsterPrice` VALUES (5,5,300.00,NULL,'2015-09-25 11:48:14', '2025-09-25 11:48:14','2015-09-25 11:48:14',1,'2015-09-25 11:50:40',1,1);
+INSERT INTO `customerDumpsterPrice` VALUES (5,5,1, 1, 300.00,NULL,'2015-09-25 11:48:14', '2025-09-25 11:48:14','2015-09-25 11:48:14',1,'2015-09-25 11:50:40',1,1);
 /*!40000 ALTER TABLE `customerDumpsterPrice` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;

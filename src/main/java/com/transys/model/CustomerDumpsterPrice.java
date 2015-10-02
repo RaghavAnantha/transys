@@ -16,6 +16,30 @@ public class CustomerDumpsterPrice extends AbstractBaseModel {
 	@JoinColumn(name="customer")
 	private Customer customer;
 	
+	@ManyToOne
+	@JoinColumn(name="dumpsterSizeId") //Enum?
+	private DumpsterSize dumpsterSize;
+	
+	@ManyToOne
+	@JoinColumn(name="materialCategoryId")
+	private MaterialCategory materialCategory;
+	
+	public DumpsterSize getDumpsterSize() {
+		return dumpsterSize;
+	}
+
+	public void setDumpsterSize(DumpsterSize dumpsterSize) {
+		this.dumpsterSize = dumpsterSize;
+	}
+
+	public MaterialCategory getMaterialCategory() {
+		return materialCategory;
+	}
+
+	public void setMaterialCategory(MaterialCategory materialCategory) {
+		this.materialCategory = materialCategory;
+	}
+
 	@Column(name="dumpsterPrice")
 	private String dumpsterPrice;
 	

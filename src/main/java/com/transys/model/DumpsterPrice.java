@@ -18,7 +18,7 @@ public class DumpsterPrice extends AbstractBaseModel {
 	private DumpsterSize dumpsterSize;
 	
 	@ManyToOne
-	@JoinColumn(name="materialCategory")
+	@JoinColumn(name="materialCategoryId")
 	private MaterialCategory materialCategory;
 	
 	@Column(name="price")

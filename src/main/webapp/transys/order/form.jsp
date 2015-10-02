@@ -658,11 +658,6 @@ $("#confirmExchangeOrderDialogYes").click(function (ev) {
 				<form:input path="orderPaymentInfo.dumpsterPrice" cssClass="flat" />
 				<br><form:errors path="orderPaymentInfo.dumpsterPrice" cssClass="errorMessage" />
 			</td>
-			<td class="form-left"><transys:label code="City Fee"/><span class="errorMessage">*</span></td>
-			<td align="${left}">
-				<form:input path="orderPaymentInfo.cityFee" cssClass="flat" />
-				<br><form:errors path="orderPaymentInfo.cityFee" cssClass="errorMessage" />
-			</td>
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Permit Fees"/></td>
@@ -734,10 +729,15 @@ $("#confirmExchangeOrderDialogYes").click(function (ev) {
 			</td>
 		</tr>
 		<tr>
+			<td class="form-left"><transys:label code="Total Additional Fees"/></td>
+			<td align="${left}">
+				<input id="totalAdditionalFees" class="form-control" readonly="readonly" style="width:172px;height:25px !important"/>
+			</td>
+		</tr>
+		<tr>
 			<td class="form-left"><transys:label code="Total Fees"/><span class="errorMessage">*</span></td>
 			<td align="${left}">
 				<form:input path="orderPaymentInfo.totalFees" cssClass="form-control" readonly="true" style="width:172px;height:25px !important"/>
-				<br><form:errors path="orderPaymentInfo.totalFees" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>
