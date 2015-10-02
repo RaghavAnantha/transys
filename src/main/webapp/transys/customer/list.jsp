@@ -9,7 +9,7 @@
 			<td align="${left}" class="wide"><select
 				class="flat form-control input-sm" id="companyName"
 				name="companyName" style="width:175px !important">
-					<option value="">------<transys:label code="Please Select" />------</option>
+					<option value="">------Please Select------</option>
 					<c:forEach items="${customer}" var="customer">
 						<c:set var="selected" value="" />
 						<c:if
@@ -24,7 +24,7 @@
 					code="Customer ID" /></td>
 			<td align="${left}"><select class="flat form-control input-sm"
 				id="customerId" name="id" style="width:175px !important">
-					<option value="">Please Select</option>
+					<option value="">------Please Select------</option>
 					<c:forEach items="${customerIds}" var="customerId">
 						<c:set var="selected" value="" />
 						<c:if test="${sessionScope.searchCriteria.searchMap['id'] == customerId.id}">
@@ -38,7 +38,7 @@
 			<td align="${left}" class="form-left"><transys:label code="Contact Name" /></td>
 			<td align="${left}" class="wide"><select class="flat form-control input-sm" id="contactName"
 				name="contactName" style="width:175px !important">
-					<option value="">Please Select</option>
+					<option value="">------Please Select------</option>
 					<c:forEach items="${customer}" var="name">
 						<c:set var="selected" value="" />
 						<c:if test="${sessionScope.searchCriteria.searchMap['contactName'] == name.contactName}">

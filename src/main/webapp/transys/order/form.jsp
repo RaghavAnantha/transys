@@ -142,7 +142,12 @@ function populatePermitDetails(index) {
 	var permitValidFrom = $("#permitValidFrom" + index);
 	var permitValidTo = $("#permitValidTo" + index);
 	var permitFee = $("#orderPaymentInfo\\.permitFee" + index);
+	
 	var permitAddressSelect = $("#permitAddress" + index);
+	permitAddressSelect.empty();
+	
+	var firstOption = $('<option value="">'+ "-------Please Select------" +'</option>');
+	permitAddressSelect.append(firstOption);
 	
 	$.ajax({
   		url: "retrievePermit.do?" + "permitId=" + permitId,
@@ -731,7 +736,7 @@ $("#confirmExchangeOrderDialogYes").click(function (ev) {
 		<tr>
 			<td class="form-left"><transys:label code="Total Fees"/><span class="errorMessage">*</span></td>
 			<td align="${left}">
-				<form:input path="orderPaymentInfo.totalFees" cssClass="flat" />
+				<form:input path="orderPaymentInfo.totalFees" cssClass="form-control" readonly="true" style="width:172px !important"/>
 				<br><form:errors path="orderPaymentInfo.totalFees" cssClass="errorMessage" />
 			</td>
 		</tr>
