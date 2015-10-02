@@ -1,5 +1,7 @@
 package com.transys.model;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -16,6 +18,15 @@ public class CustomerDumpsterPrice extends AbstractBaseModel {
 	
 	@Column(name="dumpsterPrice")
 	private String dumpsterPrice;
+	
+	@Column(name="comments")
+	private String comments;
+	
+	@Column(name="effectiveDateFrom")
+	private Date effectiveDateFrom;
+	
+	@Column(name="effectiveDateTo")
+	private Date effectiveDateTo;
 
 	public Customer getCustomer() {
 		return customer;
@@ -32,5 +43,28 @@ public class CustomerDumpsterPrice extends AbstractBaseModel {
 	public void setDumpsterPrice(String dumpsterPrice) {
 		this.dumpsterPrice = dumpsterPrice;
 	}
-	
+
+	public String getComments() {
+		return comments;
+	}
+
+	public void setComments(String comments) {
+		this.comments = comments;
+	}
+
+	public Date getEffectiveDateFrom() {
+		return effectiveDateFrom;
+	}
+
+	public void setEffectiveDateFrom(Date effectiveDateFrom) {
+		this.effectiveDateFrom = effectiveDateFrom;
+	}
+
+	public Date getEffectiveDateTo() {
+		return effectiveDateTo;
+	}
+
+	public void setEffectiveDateTo(Date effectiveDateTo) {
+		this.effectiveDateTo = effectiveDateTo;
+	}
 }

@@ -12,6 +12,9 @@ public class CustomerStatus extends AbstractBaseModel {
 	@Column(name="status")
 	private String status;
 	
+	@Column(name="comments")
+	private String comments;
+	
 	public String getStatus() {
 		return status;
 	}
@@ -20,4 +23,11 @@ public class CustomerStatus extends AbstractBaseModel {
 		this.status = status;
 	}
 
+	public String getComments() {
+		return comments;
+	}
+
+	public void setComments(String comments) {
+		this.comments = comments;
+	}
 }

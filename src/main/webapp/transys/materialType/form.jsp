@@ -14,9 +14,11 @@
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Material Type" /></td>
-			<td align="${left}"><form:input path="type" cssClass="flat" />
+			<td align="${left}">
+				<form:input path="materialName" cssClass="flat" />
 				<br>
-			<form:errors path="type" cssClass="errorMessage" /></td>
+				<form:errors path="materialName" cssClass="errorMessage" />
+			</td>
 		</tr>
 		
 		<tr>

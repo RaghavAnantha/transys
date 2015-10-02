@@ -11,6 +11,9 @@ public class LocationType extends AbstractBaseModel {
 	@Column(name="locationType")
 	private String locationType;
 
+	@Column(name="comments")
+	private String comments;
+
 	public String getLocationType() {
 		return locationType;
 	}
@@ -18,6 +21,12 @@ public class LocationType extends AbstractBaseModel {
 	public void setLocationType(String locationType) {
 		this.locationType = locationType;
 	}
-	
-	
+
+	public String getComments() {
+		return comments;
+	}
+
+	public void setComments(String comments) {
+		this.comments = comments;
+	}
 }

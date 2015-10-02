@@ -24,11 +24,22 @@ public class PermitFee extends AbstractBaseModel {
 	@Column(name="fee")
 	private BigDecimal fee;
 	
+	@Column(name="comments")
+	private String comments;
+	
 	@Column(name="effectiveDateFrom")
 	private Date effectiveDateFrom;
 	
 	@Column(name="effectiveDateTo")
 	private Date effectiveDateTo;
+	
+	public String getComments() {
+		return comments;
+	}
+
+	public void setComments(String comments) {
+		this.comments = comments;
+	}
 
 	public PermitClass getPermitClass() {
 		return permitClass;
