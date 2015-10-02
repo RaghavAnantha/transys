@@ -1097,12 +1097,15 @@ DROP TABLE IF EXISTS `dumpsterSize`;
 CREATE TABLE `dumpsterSize` (
   `id` bigint(20) NOT NULL,
   `size` varchar(25) DEFAULT NULL,
+  `permitClassId` bigint(20) NOT NULL,
+  `comments` varchar(20) DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   `created_by` bigint(20) DEFAULT NULL,
   `modified_at` datetime DEFAULT NULL,
   `modified_by` bigint(20) DEFAULT NULL,
   `delete_flag` int(11) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  CONSTRAINT `dumpsterSizePermitClassRef` FOREIGN KEY (`permitClassId`) REFERENCES `permitClass` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -1112,7 +1115,7 @@ CREATE TABLE `dumpsterSize` (
 
 LOCK TABLES `dumpsterSize` WRITE;
 /*!40000 ALTER TABLE `dumpsterSize` DISABLE KEYS */;
-INSERT INTO `dumpsterSize` VALUES (1,'20 yd',NULL,NULL,NULL,NULL,1),(2,'30 yd',NULL,NULL,NULL,NULL,1);
+INSERT INTO `dumpsterSize` VALUES (1,'20 yd', 1, NULL, NULL,NULL,NULL,NULL,1),(2,'30 yd', 1, NULL,NULL,NULL,NULL,NULL,1);
 /*!40000 ALTER TABLE `dumpsterSize` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -1157,16 +1160,19 @@ DROP TABLE IF EXISTS `dumpsterPrice`;
 CREATE TABLE `dumpsterPrice` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `dumpsterSizeId` bigint(20) NOT NULL,
-  `materialType` bigint(20) NOT NULL,
+  `materialCategoryId` bigint(20) NOT NULL,
   `price` decimal(6,2) NOT NULL,
+  `comments` varchar(500) DEFAULT NULL,
+  `effectiveDateFrom` datetime DEFAULT NULL,
+  `effectiveDateTo` datetime DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   `created_by` bigint(20) DEFAULT NULL,
   `modified_at` datetime DEFAULT NULL,
   `modified_by` bigint(20) DEFAULT NULL,
   `delete_flag` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
-  KEY `dumpsterPriceMaterialTypeRef_idx` (`materialType`),
-  CONSTRAINT `dumpsterPriceMaterialTypeRef` FOREIGN KEY (`materialType`) REFERENCES `materialtype` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  KEY `dumpsterPriceMaterialCategoryRef_idx` (`materialCategoryId`),
+  CONSTRAINT `dumpsterPriceMaterialCategoryRef` FOREIGN KEY (`materialCategoryId`) REFERENCES `materialCategory` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `dumpsterPriceDumpsterSizeRef` FOREIGN KEY (`dumpsterSizeId`) REFERENCES `dumpsterSize` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -1177,7 +1183,8 @@ CREATE TABLE `dumpsterPrice` (
 
 LOCK TABLES `dumpsterPrice` WRITE;
 /*!40000 ALTER TABLE `dumpsterPrice` DISABLE KEYS */;
-INSERT INTO `dumpsterPrice` VALUES (1,1,1,240.00,NULL,NULL,NULL,NULL,1),(2,2,2,300.00,NULL,NULL,NULL,NULL,1);
+INSERT INTO `dumpsterPrice` VALUES (1,1,1,240.00,NULL,'2015-09-25 12:31:34', '2020-09-25 12:31:34', NULL,NULL,NULL,NULL,1),
+(2,2,2,300.00,NULL,'2015-09-25 12:31:34', '2020-09-25 12:31:34',NULL,NULL,NULL,NULL,1);
 /*!40000 ALTER TABLE `dumpsterPrice` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -1271,8 +1278,8 @@ CREATE TABLE `overweightFee` (
   `modified_by` bigint(20) DEFAULT NULL,
   `delete_flag` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
-  CONSTRAINT `dumpsterSize` FOREIGN KEY (`dumpsterSizeId`) REFERENCES `dumpsterSize` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `materialCategoryRef` FOREIGN KEY (`materialCategoryId`) REFERENCES `materialCategory` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `overweightFeeDumpsterSizeRef` FOREIGN KEY (`dumpsterSizeId`) REFERENCES `dumpsterSize` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `overweightFeeMaterialCategoryRef` FOREIGN KEY (`materialCategoryId`) REFERENCES `materialCategory` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
