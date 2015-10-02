@@ -1306,6 +1306,8 @@ CREATE TABLE `permitFee` (
   `permitClass` bigint(20) NOT NULL,
   `permitType` bigint(20) NOT NULL,
   `fee` decimal(6,2) NOT NULL,
+  `effectiveDateFrom` datetime DEFAULT NULL,
+  `effectiveDateTo` datetime DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   `created_by` bigint(20) DEFAULT NULL,
   `modified_at` datetime DEFAULT NULL,
@@ -1326,7 +1328,7 @@ CREATE TABLE `permitFee` (
 
 LOCK TABLES `permitFee` WRITE;
 /*!40000 ALTER TABLE `permitFee` DISABLE KEYS */;
-INSERT INTO `permitFee` VALUES (5,1,1,65.00,'2015-09-25 14:46:36',1,'2015-09-25 15:45:42',1,1),(6,1,2,115.00,'2015-09-25 15:45:56',1,NULL,NULL,1),(7,2,1,130.00,'2015-09-25 15:46:19',1,NULL,NULL,1),(8,2,2,230.00,'2015-09-25 15:46:37',1,NULL,NULL,1);
+INSERT INTO `permitFee` VALUES (5,1,1,65.00,'2015-09-25 14:46:36','2025-09-25 14:46:36''2015-09-25 14:46:36',1,'2015-09-25 15:45:42',1,1),(6,1,2,115.00,'2015-09-25 15:45:56',1,NULL,NULL,1),(7,2,1,130.00,'2015-09-25 15:46:19',1,NULL,NULL,1),(8,2,2,230.00,'2015-09-25 15:46:37',1,NULL,NULL,1);
 /*!40000 ALTER TABLE `permitFee` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;

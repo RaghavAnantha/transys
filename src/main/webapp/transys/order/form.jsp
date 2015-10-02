@@ -135,14 +135,14 @@ function populatePermitNumbers(index) {
 	}); 
 }
 
-function populatePermitDateAndFee(index) {
+function populatePermitDetails(index) {
 	var permitNumbersSelect = $("#permits\\[" + (index-1) + "\\]");
 	var permitId = permitNumbersSelect.val();
 	
 	var permitValidFrom = $("#permitValidFrom" + index);
 	var permitValidTo = $("#permitValidTo" + index);
-	//var permitFee = $("#permitFee" + index);
 	var permitFee = $("#orderPaymentInfo\\.permitFee" + index);
+	var permitAddressSelect = $("#permitAddress" + index);
 	
 	$.ajax({
   		url: "retrievePermit.do?" + "permitId=" + permitId,
@@ -154,6 +154,14 @@ function populatePermitDateAndFee(index) {
     	   	permitValidFrom.html(permit.startDate);
     	   	permitValidTo.html(permit.endDate);
     	   	permitFee.val(permit.fee);
+    	   	
+    	   	var permitAddressList = permit.permitAddress;
+    	   	$.each(permitAddressList, function () {
+    	   	    $("<option />", {
+    	   	        val: this.id,
+    	   	        text: this.line1 + " " + this.line2
+    	   	    }).appendTo(permitAddressSelect);
+    	   	});
 		}
 	}); 
 }
@@ -497,7 +505,7 @@ $("#confirmExchangeOrderDialogYes").click(function (ev) {
 	    <tr>
 	    	<td class="form-left"><transys:label code="Permit1 Number"/><span class="errorMessage">*</span></td>
 	        <td align="${left}">
-	        	<select class="flat form-control input-sm" id="permits[0]" name="permits[0]" style="width:172px !important" onChange="return populatePermitDateAndFee(1);">
+	        	<select class="flat form-control input-sm" id="permits[0]" name="permits[0]" style="width:172px !important" onChange="return populatePermitDetails(1);">
 					<option value="">------<transys:label code="Please Select" />------</option>
 					<c:if test="${modelObject.permits != null and modelObject.permits[0] != null and modelObject.permits[0].number != null}">
 						<c:set var="chosenPermit" value="${modelObject.permits[0]}" />
@@ -514,7 +522,7 @@ $("#confirmExchangeOrderDialogYes").click(function (ev) {
 	        </td>
 	        <td class="form-left"><transys:label code="Permit2 Number"/><span class="errorMessage">*</span></td>
 	        <td align="${left}">
-	        	<select class="flat form-control input-sm" id="permits[1]" name="permits[1]" style="width:172px !important" onChange="return populatePermitDateAndFee(2);">
+	        	<select class="flat form-control input-sm" id="permits[1]" name="permits[1]" style="width:172px !important" onChange="return populatePermitDetails(2);">
 					<option value="">------<transys:label code="Please Select" />------</option>
 					<c:if test="${modelObject.permits != null and modelObject.permits[1] != null and modelObject.permits[1].number != null}">
 						<c:set var="chosenPermit" value="${modelObject.permits[1]}" />
@@ -531,7 +539,7 @@ $("#confirmExchangeOrderDialogYes").click(function (ev) {
 	        </td>
 	        <td class="form-left"><transys:label code="Permit3 Number"/><span class="errorMessage">*</span></td>
 	        <td align="${left}">
-	        	<select class="flat form-control input-sm" id="permits[2]" name="permits[2]" style="width:172px !important" onChange="return populatePermitDateAndFee(3);">
+	        	<select class="flat form-control input-sm" id="permits[2]" name="permits[2]" style="width:172px !important" onChange="return populatePermitDetails(3);">
 					<option value="">------<transys:label code="Please Select" />------</option>
 					<c:if test="${modelObject.permits != null and modelObject.permits[2] != null and modelObject.permits[2].number != null}">
 						<c:set var="chosenPermit" value="${modelObject.permits[2]}" />
@@ -563,6 +571,26 @@ $("#confirmExchangeOrderDialogYes").click(function (ev) {
 	        <td class="form-left"><transys:label code="Permit3 Valid To"/><span class="errorMessage">*</span></td>
 	        <td align="${left}" id="permitValidTo3">${modelObject.permits[2].endDate}</td>
 	    </tr>
+	    <tr>
+	      <td class="form-left"><transys:label code="Permit1 Address"/><span class="errorMessage">*</span></td>
+	      <td align="${left}">
+	        	<select class="flat form-control input-sm" id="permitAddress1" name="permit1Address" style="width:172px !important">
+					<option value="">------Please Select------</option>
+				</select>
+	      </td>
+	      <td class="form-left"><transys:label code="Permit2 Address"/><span class="errorMessage">*</span></td>
+	      <td align="${left}">
+	        	<select class="flat form-control input-sm" id="permitAddress2" name="permit2Address" style="width:172px !important">
+					<option value="">------Please Select------</option>
+				</select>
+	      </td>
+	      <td class="form-left"><transys:label code="Permit3 Address"/><span class="errorMessage">*</span></td>
+	      <td align="${left}">
+	        	<select class="flat form-control input-sm" id="permitAddress3" name="permit3Address" style="width:172px !important">
+					<option value="">------Please Select------</option>
+				</select>
+	      </td>
+		</tr>
 	    <tr>
 	    	<td class="form-left">Permit1 Fee<span class="errorMessage">*</span></td>
 	        <td align="${left}"><form:input path="orderPaymentInfo.permitFee1" cssClass="flat" /></td>

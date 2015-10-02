@@ -611,9 +611,9 @@ public class CustomerController extends CRUDController<Customer> {
 			}
 		}
 		
-		entity.getAddress().get(0).setCustomer(entity);
-		entity.getAddress().get(0).setCreatedBy(entity.getCreatedBy());
-		entity.getAddress().get(0).setModifiedBy(entity.getModifiedBy());
+		entity.getDeliveryAddress().get(0).setCustomer(entity);
+		entity.getDeliveryAddress().get(0).setCreatedBy(entity.getCreatedBy());
+		entity.getDeliveryAddress().get(0).setModifiedBy(entity.getModifiedBy());
 		
 		entity.getCustomerNotes().get(0).setCustomer(entity);
 		entity.getCustomerNotes().get(0).setCreatedBy(entity.getCreatedBy());
