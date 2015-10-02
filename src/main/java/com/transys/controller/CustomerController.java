@@ -30,7 +30,7 @@ import com.transys.controller.CRUDController;
 import com.transys.controller.editor.AbstractModelEditor;
 import com.transys.core.util.MimeUtil;
 import com.transys.model.AbstractBaseModel;
-import com.transys.model.Address;
+import com.transys.model.DeliveryAddress;
 import com.transys.model.Customer;
 import com.transys.model.CustomerStatus;
 import com.transys.model.CustomerType;
@@ -53,7 +53,7 @@ public class CustomerController extends CRUDController<Customer> {
 	@Override
 	public void initBinder(WebDataBinder binder) {
 		binder.registerCustomEditor(State.class, new AbstractModelEditor(State.class));
-		binder.registerCustomEditor(Address.class, new AbstractModelEditor(Address.class));
+		binder.registerCustomEditor(DeliveryAddress.class, new AbstractModelEditor(DeliveryAddress.class));
 		binder.registerCustomEditor(CustomerType.class, new AbstractModelEditor(CustomerType.class));
 		binder.registerCustomEditor(CustomerStatus.class, new AbstractModelEditor(CustomerStatus.class));
 	}
@@ -87,7 +87,7 @@ public class CustomerController extends CRUDController<Customer> {
 		model.addAttribute("activeSubTab", "billing");
 		//return urlContext + "/form";
 		
-		model.addAttribute("deliveryAddressModelObject", new Address());
+		model.addAttribute("deliveryAddressModelObject", new DeliveryAddress());
 				
 		return urlContext + "/customer";
 	}
@@ -131,7 +131,7 @@ public class CustomerController extends CRUDController<Customer> {
 		
 		Customer emptyCustomer = new Customer();
 		emptyCustomer.setId(customerId);
-		Address emptyAddress = new Address();
+		DeliveryAddress emptyAddress = new DeliveryAddress();
 		emptyAddress.setCustomer(emptyCustomer);
 		
 		model.addAttribute("deliveryAddressModelObject", emptyAddress);
@@ -149,10 +149,10 @@ public class CustomerController extends CRUDController<Customer> {
 		
 		Customer customer = new Customer();
 		customer.setId(entity.getId());
-		Address address = new Address();
+		DeliveryAddress address = new DeliveryAddress();
 		address.setCustomer(customer);
 		model.addAttribute("deliveryAddressModelObject", address);
-		List<BaseModel> addressList = genericDAO.executeSimpleQuery("select obj from Address obj where obj.customer.id=" +  entity.getId() + " order by obj.id asc");
+		List<BaseModel> addressList = genericDAO.executeSimpleQuery("select obj from DeliveryAddress obj where obj.customer.id=" +  entity.getId() + " order by obj.id asc");
 		model.addAttribute("deliveryAddressList", addressList);
 		//return urlContext + "/form";
 		return urlContext + "/customer";
@@ -300,12 +300,12 @@ public class CustomerController extends CRUDController<Customer> {
 		
 		Customer emptyCustomer = new Customer();
 		emptyCustomer.setId(customerToBeEdited.getId());
-		Address address = new Address();
+		DeliveryAddress address = new DeliveryAddress();
 		address.setCustomer(emptyCustomer);
 		model.addAttribute("deliveryAddressModelObject", address);
 	
 		
-		List<BaseModel> addressList = genericDAO.executeSimpleQuery("select obj from Address obj where obj.customer.id=" +  customerToBeEdited.getId() + " order by obj.id asc");
+		List<BaseModel> addressList = genericDAO.executeSimpleQuery("select obj from DeliveryAddress obj where obj.customer.id=" +  customerToBeEdited.getId() + " order by obj.id asc");
 		model.addAttribute("deliveryAddressList", addressList);
 		
 		//return urlContext + "/form";
@@ -428,7 +428,7 @@ public class CustomerController extends CRUDController<Customer> {
 	
 	@RequestMapping(method = RequestMethod.POST, value = "/saveDeliveryAddress.do")
 	public String saveDeliveryAddress(HttpServletRequest request,
-			@ModelAttribute("deliveryAddressModelObject") Address entity,
+			@ModelAttribute("deliveryAddressModelObject") DeliveryAddress entity,
 			BindingResult bindingResult, ModelMap model) {
 		try {
 			getValidator().validate(entity, bindingResult);
@@ -485,7 +485,7 @@ public class CustomerController extends CRUDController<Customer> {
 		
 		Customer customer = new Customer();
 		customer.setId(entity.getCustomer().getId());
-		Address address = new Address();
+		DeliveryAddress address = new DeliveryAddress();
 		address.setCustomer(customer);
 		model.addAttribute("deliveryAddressModelObject", address);
 		
@@ -493,7 +493,7 @@ public class CustomerController extends CRUDController<Customer> {
 		List<BaseModel> customerList = genericDAO.executeSimpleQuery("select obj from Customer obj where obj.id=" + customerId);
 		model.addAttribute("modelObject", customerList.get(0));
 		
-		List<BaseModel> addressList = genericDAO.executeSimpleQuery("select obj from Address obj where obj.customer.id=" +  customerId + " order by obj.id asc");
+		List<BaseModel> addressList = genericDAO.executeSimpleQuery("select obj from DeliveryAddress obj where obj.customer.id=" +  customerId + " order by obj.id asc");
 		model.addAttribute("deliveryAddressList", addressList);
 		
 		model.addAttribute("activeTab", "manageCustomer");
@@ -506,7 +506,7 @@ public class CustomerController extends CRUDController<Customer> {
 	
 	@RequestMapping(method = RequestMethod.POST, value = "/saveDeliveryAddressModal.do")
 	public @ResponseBody String saveDeliveryAddressModal(HttpServletRequest request,
-			@ModelAttribute("deliveryAddressModelObject") Address entity,
+			@ModelAttribute("deliveryAddressModelObject") DeliveryAddress entity,
 			BindingResult bindingResult, ModelMap model) {
 		try {
 			getValidator().validate(entity, bindingResult);

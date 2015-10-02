@@ -12,8 +12,8 @@ import org.apache.commons.lang3.StringUtils;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
-@Table(name="address")
-public class Address extends AbstractBaseModel {
+@Table(name="deliveryAddress")
+public class DeliveryAddress extends AbstractBaseModel {
 	@ManyToOne
 	@JoinColumn(name="custID")
 	@JsonBackReference

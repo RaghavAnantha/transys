@@ -53,7 +53,7 @@ public class Order extends AbstractBaseModel {
 	
 	@ManyToOne
 	@JoinColumn(name="deliveryAddressId")
-	private Address deliveryAddress;
+	private DeliveryAddress deliveryAddress;
 	
 	@ManyToOne
 	@JoinColumn(name="materialTypeId") 
@@ -290,11 +290,11 @@ public class Order extends AbstractBaseModel {
 		this.deliveryMinutesTo = deliveryMinutesTo;
 	}
 
-	public Address getDeliveryAddress() {
+	public DeliveryAddress getDeliveryAddress() {
 		return deliveryAddress;
 	}
 
-	public void setDeliveryAddress(Address deliveryAddress) {
+	public void setDeliveryAddress(DeliveryAddress deliveryAddress) {
 		this.deliveryAddress = deliveryAddress;
 	}
 

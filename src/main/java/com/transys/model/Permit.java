@@ -47,7 +47,7 @@ public class Permit  extends AbstractBaseModel {
 	
 	@ManyToOne
 	@JoinColumn(name="deliveryAddress")
-	private Address deliveryAddress;
+	private DeliveryAddress deliveryAddress;
 	
 	@ManyToOne
 	@JoinColumn(name="locationType")
@@ -130,11 +130,11 @@ public class Permit  extends AbstractBaseModel {
 		this.permitAddress = permitAddres;
 	}
 
-	public Address getDeliveryAddress() {
+	public DeliveryAddress getDeliveryAddress() {
 		return deliveryAddress;
 	}
 
-	public void setDeliveryAddress(Address deliveryAddress) {
+	public void setDeliveryAddress(DeliveryAddress deliveryAddress) {
 		this.deliveryAddress = deliveryAddress;
 	}
 

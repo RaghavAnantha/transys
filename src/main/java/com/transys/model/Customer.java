@@ -94,13 +94,13 @@ public class Customer extends AbstractBaseModel {
 
 	@OneToMany(mappedBy="customer", cascade = CascadeType.ALL)
 	@JsonManagedReference
-	private List<Address> address;
+	private List<DeliveryAddress> address;
 
-	public List<Address> getAddress() {
+	public List<DeliveryAddress> getAddress() {
 		return address;
 	}
 
-	public void setAddress(List<Address> address) {
+	public void setAddress(List<DeliveryAddress> address) {
 		this.address = address;
 	}
 

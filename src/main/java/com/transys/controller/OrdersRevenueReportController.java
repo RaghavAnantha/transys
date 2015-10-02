@@ -20,7 +20,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 //import com.google.gson.Gson;
 import com.transys.core.util.MimeUtil;
-import com.transys.model.Address;
+import com.transys.model.DeliveryAddress;
 import com.transys.model.Order;
 import com.transys.model.OrderPaymentInfo;
 import com.transys.model.SearchCriteria;
@@ -151,7 +151,7 @@ public class OrdersRevenueReportController extends CRUDController<Order> {
 		List<Map<String, Object>> reportData = new ArrayList<Map<String, Object>>();
 		for (Order anOrder : orderList) {
 			
-			Address deliveryAddress = anOrder.getDeliveryAddress();
+			DeliveryAddress deliveryAddress = anOrder.getDeliveryAddress();
 			OrderPaymentInfo orderPaymentInfo = anOrder.getOrderPaymentInfo();
 			
 			Map<String, Object> map = new HashMap<String, Object>();

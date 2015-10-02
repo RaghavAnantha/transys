@@ -80,14 +80,14 @@ function retrieveAndPopulateCustomerBillingAddress() {
 }
 
 function populateCustomerBillingAddress(customer) {
-   	var address = customer.billingAddressLine1 + ", " 
-   					+ customer.city + ", " + customer.state.name + ", " + customer.zipcode
-   	$('#addressTd').html(address);
+   	var billingAddress = customer.billingAddressLine1 + ", " 
+   						 + customer.city + ", " + customer.state.name + ", " + customer.zipcode
+   	$('#billingAddressTd').html(billingAddress);
    	
-	$('#contactTd').html(customer.contactName);
-	$('#phoneTd').html(formatPhone(customer.phone));
-	$('#faxTd').html(formatPhone(customer.fax));
-	$('#emailTd').html(customer.email);
+	$('#billingContactTd').html(customer.contactName);
+	$('#billingPhoneTd').html(formatPhone(customer.phone));
+	$('#billingFaxTd').html(formatPhone(customer.fax));
+	$('#billingEmailTd').html(customer.email);
 }
 
 function appendDeliveryAddress(address) {
@@ -257,19 +257,19 @@ $("#confirmExchangeOrderDialogYes").click(function (ev) {
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Address" /><span class="errorMessage"></span></td>
-			<td align="${left}" id="addressTd">${modelObject.customer.getBillingAddress()}</td>
+			<td align="${left}" id="billingAddressTd">${modelObject.customer.getBillingAddress()}</td>
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Contact" /><span class="errorMessage"></span></td>
-			<td align="${left}" id="contactTd">${modelObject.customer.contactName}</td>
+			<td align="${left}" id="billingContactTd">${modelObject.customer.contactName}</td>
 			<td class="form-left"><transys:label code="Fax"/></td>
-			<td align="${left}" id="faxTd">${modelObject.customer.getFormattedFax()}</td>
+			<td align="${left}" id="billingFaxTd">${modelObject.customer.getFormattedFax()}</td>
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Phone" /><span class="errorMessage"></span></td>
-			<td align="${left}" id="phoneTd">${modelObject.customer.getFormattedPhone()}</td>
+			<td align="${left}" id="billingPhoneTd">${modelObject.customer.getFormattedPhone()}</td>
 			<td class="form-left"><transys:label code="Email"/></td>
-			<td align="${left}" id="emailTd">${modelObject.customer.email}</td>
+			<td align="${left}" id="billingEmailTd">${modelObject.customer.email}</td>
 		</tr>
 		<tr>
 			<td colspan=10></td>
