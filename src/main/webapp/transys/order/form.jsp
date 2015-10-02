@@ -510,20 +510,28 @@ $("#confirmExchangeOrderDialogYes").click(function (ev) {
 	    <tr>
 	    	<td class="form-left"><transys:label code="Permit1 Number"/><span class="errorMessage">*</span></td>
 	        <td align="${left}">
-	        	<select class="flat form-control input-sm" id="permits[0]" name="permits[0]" style="width:172px !important" onChange="return populatePermitDetails(1);">
-					<option value="">------<transys:label code="Please Select" />------</option>
-					<c:if test="${modelObject.permits != null and modelObject.permits[0] != null and modelObject.permits[0].number != null}">
-						<c:set var="chosenPermit" value="${modelObject.permits[0]}" />
-						<c:set var="allPermitsOfChosenType" value="${allPermitsOfChosenTypesList[0]}" />
-						<c:forEach items="${allPermitsOfChosenType}" var="aPermitOfChosenType">
-							<c:set var="selected" value="" />
-							<c:if test="${aPermitOfChosenType.id == chosenPermit.id}">
-								<c:set var="selected" value="selected" />
-							</c:if>
-							<option value="${aPermitOfChosenType.id}" ${selected}>${aPermitOfChosenType.number}</option>
-						</c:forEach>
-					</c:if>
-				</select>
+	        	<label style="display: inline-block; font-weight: normal">
+		        	<select class="flat form-control input-sm" id="permits[0]" name="permits[0]" style="width:172px !important" onChange="return populatePermitDetails(1);">
+						<option value="">------<transys:label code="Please Select" />------</option>
+						<c:if test="${modelObject.permits != null and modelObject.permits[0] != null and modelObject.permits[0].number != null}">
+							<c:set var="chosenPermit" value="${modelObject.permits[0]}" />
+							<c:set var="allPermitsOfChosenType" value="${allPermitsOfChosenTypesList[0]}" />
+							<c:forEach items="${allPermitsOfChosenType}" var="aPermitOfChosenType">
+								<c:set var="selected" value="" />
+								<c:if test="${aPermitOfChosenType.id == chosenPermit.id}">
+									<c:set var="selected" value="selected" />
+								</c:if>
+								<option value="${aPermitOfChosenType.id}" ${selected}>${aPermitOfChosenType.number}</option>
+							</c:forEach>
+						</c:if>
+					</select>
+				</label>
+				<label style="display: inline-block; font-weight: normal">
+					&nbsp;
+					<a href="/permit/createModal.do" id="addPermitLink" data-backdrop="static" data-remote="false" data-toggle="modal" data-target="#addPermitModal">
+						<img src="/images/addnew.png" border="0" style="float:bottom" class="toolbarButton">
+					</a>
+				</label>
 	        </td>
 	        <td class="form-left"><transys:label code="Permit2 Number"/><span class="errorMessage">*</span></td>
 	        <td align="${left}">
@@ -577,23 +585,38 @@ $("#confirmExchangeOrderDialogYes").click(function (ev) {
 	        <td align="${left}" id="permitValidTo3">${modelObject.permits[2].endDate}</td>
 	    </tr>
 	    <tr>
-	      <td class="form-left"><transys:label code="Permit1 Address"/><span class="errorMessage">*</span></td>
+	      <td class="form-left"><transys:label code="Permit1 Address"/></td>
 	      <td align="${left}">
-	        	<select class="flat form-control input-sm" id="permitAddress1" name="permit1Address" style="width:172px !important">
-					<option value="">------Please Select------</option>
-				</select>
+        	<select class="flat form-control input-sm" id="permitAddress1" name="permitAddress1" style="width:172px !important">
+				<option value="">------Please Select------</option>
+				<c:if test="${modelObject.permits != null and modelObject.permits[0] != null and modelObject.permits[0].number != null}">
+					<c:forEach items="${modelObject.permits[0].permitAddress}" var="aPermitAddress">
+						<option value="${aPermitAddress.id}" ${selected}>${aPermitAddress.fullLine}</option>
+					</c:forEach>
+				</c:if>
+			</select>
 	      </td>
-	      <td class="form-left"><transys:label code="Permit2 Address"/><span class="errorMessage">*</span></td>
+	      <td class="form-left"><transys:label code="Permit2 Address"/></td>
 	      <td align="${left}">
-	        	<select class="flat form-control input-sm" id="permitAddress2" name="permit2Address" style="width:172px !important">
-					<option value="">------Please Select------</option>
-				</select>
+        	<select class="flat form-control input-sm" id="permitAddress2" name="permitAddress2" style="width:172px !important">
+				<option value="">------Please Select------</option>
+				<c:if test="${modelObject.permits != null and modelObject.permits[1] != null and modelObject.permits[1].number != null}">
+					<c:forEach items="${modelObject.permits[1].permitAddress}" var="aPermitAddress">
+						<option value="${aPermitAddress.id}" ${selected}>${aPermitAddress.fullLine}</option>
+					</c:forEach>
+				</c:if>
+			</select>
 	      </td>
-	      <td class="form-left"><transys:label code="Permit3 Address"/><span class="errorMessage">*</span></td>
+	      <td class="form-left"><transys:label code="Permit3 Address"/></td>
 	      <td align="${left}">
-	        	<select class="flat form-control input-sm" id="permitAddress3" name="permit3Address" style="width:172px !important">
-					<option value="">------Please Select------</option>
-				</select>
+        	<select class="flat form-control input-sm" id="permitAddress3" name="permitAddress3" style="width:172px !important">
+				<option value="">------Please Select------</option>
+				<c:if test="${modelObject.permits != null and modelObject.permits[2] != null and modelObject.permits[2].number != null}">
+					<c:forEach items="${modelObject.permits[2].permitAddress}" var="aPermitAddress">
+						<option value="${aPermitAddress.id}" ${selected}>${aPermitAddress.fullLine}</option>
+					</c:forEach>
+				</c:if>
+			</select>
 	      </td>
 		</tr>
 	    <tr>

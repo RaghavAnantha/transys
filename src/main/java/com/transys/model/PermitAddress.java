@@ -96,7 +96,4 @@ public class PermitAddress extends AbstractBaseModel {
 	public void setZipcode(String zipcode) {
 		this.zipcode = zipcode;
 	}
-	
-	
-	
 }
