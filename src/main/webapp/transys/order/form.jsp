@@ -736,7 +736,7 @@ $("#confirmExchangeOrderDialogYes").click(function (ev) {
 		<tr>
 			<td class="form-left"><transys:label code="Total Fees"/><span class="errorMessage">*</span></td>
 			<td align="${left}">
-				<form:input path="orderPaymentInfo.totalFees" cssClass="form-control" readonly="true" style="width:172px !important"/>
+				<form:input path="orderPaymentInfo.totalFees" cssClass="form-control" readonly="true" style="width:172px;height:25px !important"/>
 				<br><form:errors path="orderPaymentInfo.totalFees" cssClass="errorMessage" />
 			</td>
 		</tr>
