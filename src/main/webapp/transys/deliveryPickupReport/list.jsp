@@ -54,11 +54,6 @@
 	</tr>
 	<tr>
 		<td>${dumpsterSizeAggregation}</td>
-		<%-- <td class="form-left"><transys:label code="${dumpsterSizes[0]}:"  /><span class="errorMessage"></span></td>
-		<td align="${left}" id="dumpsterSize">${dumpsterSizeAggregation[0]} </td>
-		
-		<td class="form-left"><transys:label code="${dumpsterSizes[1]}:"  /><span class="errorMessage"></span></td>
-		<td align="${left}" id="dumpsterSize">${dumpsterSizeAggregation[1]} </td> --%>
 	</tr> 
 </table>
 
@@ -67,7 +62,7 @@
 <form:form name="deliveryPickupReport" id="deliveryPickupReport" class="tab-color">
 	<transys:datatable urlContext="deliveryPickupReport"  baseObjects="${ordersList}"
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
-		pagingLink="search.do" >
+		pagingLink="search.do" dataQualifier="deliveryPickupReport">
 		<transys:textcolumn headerText="Order #" dataField="id" />
 		<transys:textcolumn headerText="Customer" dataField="customer.companyName" />
 		<transys:textcolumn headerText="Delivery Address" dataField="deliveryAddress.line1" />
