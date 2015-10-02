@@ -1,7 +1,8 @@
 <%@include file="/common/taglibs.jsp"%>
+
 <br/>
 <h4 style="margin-top: -15px; !important">Delivery/ Pickup Report</h4>
-<form:form action="list.do" method="get" name="searchForm" id="deliveryPickUpReportSearchForm">
+<form:form action="list.do" method="get" name="searchForm" id="deliveryPickUpReportSearchForm" >
 	<table width="100%" id="form-table">
 	 <tr>
 		  <td align="${left}" class="form-left"><transys:label code="Delivery Date From"/></td>
@@ -40,8 +41,7 @@
 	</table>
 </form:form>
 
-<hr>
-<table width="100%" id="form-table">
+<table id="aggregationTable" width="100%" id="form-table" >
 	<tr>
 		<td class="form-left"><transys:label code="Total Dumpsters/Boxes Delivered (or Picked up) for:" />
 	</tr>
@@ -52,20 +52,28 @@
 		<td class="form-left"><transys:label code="Pickup Date Range:" /><span class="errorMessage"></span></td>
 		<td align="${left}" id="pickupDateRange">${pickupDateFrom} To ${pickupDateTo}</td>
 	</tr>
+	<tr>
+		<td>${dumpsterSizeAggregation}</td>
+		<%-- <td class="form-left"><transys:label code="${dumpsterSizes[0]}:"  /><span class="errorMessage"></span></td>
+		<td align="${left}" id="dumpsterSize">${dumpsterSizeAggregation[0]} </td>
+		
+		<td class="form-left"><transys:label code="${dumpsterSizes[1]}:"  /><span class="errorMessage"></span></td>
+		<td align="${left}" id="dumpsterSize">${dumpsterSizeAggregation[1]} </td> --%>
+	</tr> 
 </table>
 
-<a href="/ordersRevenueReport/generateOrdersRevenueReport.do?type=xls"><img src="/images/excel.png" border="0" style="float:right" class="toolbarButton"></a>
-<a href="/ordersRevenueReport/generateOrdersRevenueReport.do?type=pdf"><img src="/images/pdf.png" border="0" style="float:right" class="toolbarButton"></a>
+<a href="/deliveryPickupReport/generateDeliveryPickupReport.do?type=xls"><img src="/images/excel.png" border="0" style="float:right" class="toolbarButton"></a>
+<a href="/deliveryPickupReport/generateDeliveryPickupReport.do?type=pdf"><img src="/images/pdf.png" border="0" style="float:right" class="toolbarButton"></a>
 <form:form name="deliveryPickupReport" id="deliveryPickupReport" class="tab-color">
-	<transys:datatable urlContext="deliveryPickUpReport"  baseObjects="${ordersList}"
+	<transys:datatable urlContext="deliveryPickupReport"  baseObjects="${ordersList}"
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
 		pagingLink="search.do" >
 		<transys:textcolumn headerText="Order #" dataField="id" />
 		<transys:textcolumn headerText="Customer" dataField="customer.companyName" />
 		<transys:textcolumn headerText="Delivery Address" dataField="deliveryAddress.line1" />
 		<transys:textcolumn headerText="City" dataField="deliveryAddress.city" />
-		<transys:textcolumn headerText="Dumpster Size" dataField="dumpsterSize" />
-		<transys:textcolumn headerText="Dumpster #" dataField="dumpsterInfo.dumpsterNum" />
+		<transys:textcolumn headerText="Dumpster Size" dataField="dumpsterSize.size" />
+		<transys:textcolumn headerText="Dumpster #" dataField="dumpster.dumpsterNum" />
 		<transys:textcolumn headerText="Delivery Date" dataField="deliveryDate" />
 		<transys:textcolumn headerText="Pickup Date" dataField="pickupDate" />
 	</transys:datatable>

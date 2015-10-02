@@ -110,14 +110,12 @@ public class OrdersRevenueReportController extends CRUDController<Order> {
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
 			Map<String, Object> params = new HashMap<String, Object>();
 
-			if (!type.equals("print") && !type.equals("pdf")) {
-				out = dynamicReportService.generateStaticReport("ordersRevenueReport", reportData, params, type, request);
-			} else if (type.equals("pdf")) {
-				out = dynamicReportService.generateStaticReport("ordersRevenueReport", reportData, params, type, request);
-			} else {
+			out = dynamicReportService.generateStaticReport("ordersRevenueReport", reportData, params, type, request);
+				
+			/* else {
 				out = dynamicReportService.generateStaticReport("ordersRevenueReport" + "print", reportData, params, type,
 						request);
-			}
+			}*/
 
 			out.writeTo(response.getOutputStream());
 			out.close();
@@ -134,7 +132,7 @@ public class OrdersRevenueReportController extends CRUDController<Order> {
 		if (StringUtils.isEmpty(type))
 			type = "xlsx";
 		if (!type.equals("html") && !(type.equals("print"))) {
-			response.setHeader("Content-Disposition", "attachment;filename= dumpsterOnsiteReport." + type);
+			response.setHeader("Content-Disposition", "attachment;filename= ordersRevenueReport." + type);
 		}
 		response.setContentType(MimeUtil.getContentType(type));
 		return type;
