@@ -20,10 +20,10 @@ public class CityFee extends AbstractBaseModel {
 	private BigDecimal fee;
 	
 	@Column(name="effectiveDateFrom")
-	protected Date effectiveDateFrom;
+	private Date effectiveDateFrom;
 	
 	@Column(name="effectiveDateTo")
-	protected Date effectiveDateTo;
+	private Date effectiveDateTo;
 	
 	public String getSuburbName() {
 		return suburbName;

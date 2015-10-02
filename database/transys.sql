@@ -1017,6 +1017,38 @@ INSERT INTO `materialtype` VALUES (1,'Concrete',NULL,NULL,NULL,NULL,1),(2,'Dirt'
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
+
+--
+-- Table structure for table `materialCategory`
+--
+
+DROP TABLE IF EXISTS `materialCategory`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `materialCategory` (
+  `id` bigint(20) NOT NULL,
+  `category` varchar(100) DEFAULT NULL,
+  `comments` varchar(500) DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `created_by` bigint(20) DEFAULT NULL,
+  `modified_at` datetime DEFAULT NULL,
+  `modified_by` bigint(20) DEFAULT NULL,
+  `delete_flag` int(11) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `materialCategory`
+--
+
+LOCK TABLES `materialCategory` WRITE;
+/*!40000 ALTER TABLE `materialCategory` DISABLE KEYS */;
+INSERT INTO `materialCategory` VALUES (1,'Construction Debris',NULL,NULL,NULL,NULL,NULL,1),(2,'Household Debris',NULL,NULL,NULL,NULL,NULL,1),(3,'Shingles',NULL,NULL,NULL,NULL,NULL,1);
+/*!40000 ALTER TABLE `materialCategory` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
 --
 -- Table structure for table `dumpsterSize`
 --
@@ -1176,6 +1208,44 @@ LOCK TABLES `cityFee` WRITE;
 /*!40000 ALTER TABLE `cityFee` DISABLE KEYS */;
 INSERT INTO `cityFee` VALUES (5,'Chicago',35.00,NULL,'2015-09-25 12:31:34', '2020-09-25 12:31:34', '2015-09-25 12:31:34',1,'2015-09-25 12:32:00',1,1);
 /*!40000 ALTER TABLE `cityFee` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+--
+-- Table structure for table `overweightFee`
+--
+
+DROP TABLE IF EXISTS `overweightFee`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `overweightFee` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `dumpsterSizeId` bigint(20) NOT NULL,
+  `materialCategoryId` bigint(20) NOT NULL,
+  `tonLimit` decimal(6,2) NOT NULL,
+  `fee` decimal(6,2) NOT NULL,
+  `comments` varchar(500) DEFAULT NULL,
+  `effectiveDateFrom` datetime DEFAULT NULL,
+  `effectiveDateTo` datetime DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `created_by` bigint(20) DEFAULT NULL,
+  `modified_at` datetime DEFAULT NULL,
+  `modified_by` bigint(20) DEFAULT NULL,
+  `delete_flag` int(11) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`),
+  CONSTRAINT `dumpsterSize` FOREIGN KEY (`dumpsterSizeId`) REFERENCES `dumpsterSize` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `materialCategoryRef` FOREIGN KEY (`materialCategoryId`) REFERENCES `materialCategory` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `overweightFee`
+--
+
+LOCK TABLES `overweightFee` WRITE;
+/*!40000 ALTER TABLE `overweightFee` DISABLE KEYS */;
+INSERT INTO `overweightFee` VALUES (5,1,1,50.00, 45.00, NULL,'2015-09-25 12:31:34', '2020-09-25 12:31:34', '2015-09-25 12:31:34',1,'2015-09-25 12:32:00',1,1);
+/*!40000 ALTER TABLE `overweightFee` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
