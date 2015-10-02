@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.ss.formula.functions.Address;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.transys.core.util.MimeUtil;
-import com.transys.model.Address;
+import com.transys.model.DeliveryAddress;
 import com.transys.model.Order;
 import com.transys.model.SearchCriteria;
 
@@ -57,7 +58,7 @@ public class DeliveryPickupReportController extends CRUDController<Order> {
 		model.addAttribute("ordersList",orderList);
 		model.addAttribute("dumpsterSizeAggregation", setDumpsterSizeAggregation(model, orderList));
 		
-		model.addAttribute("deliveryAddresses", genericDAO.findAll(Address.class));
+		model.addAttribute("deliveryAddresses", genericDAO.findAll(DeliveryAddress.class));
 		model.addAttribute("deliveryDateFrom", criteria.getSearchMap().get("deliveryDateFrom"));
 		model.addAttribute("deliveryDateTo", criteria.getSearchMap().get("deliveryDateTo"));
 		model.addAttribute("pickupDateFrom", criteria.getSearchMap().get("pickDateFrom"));
@@ -155,7 +156,7 @@ public class DeliveryPickupReportController extends CRUDController<Order> {
 		List<Map<String, Object>> reportData = new ArrayList<Map<String, Object>>();
 		for (Order anOrder : orderList) {
 			
-			Address deliveryAddress = anOrder.getDeliveryAddress();
+			DeliveryAddress deliveryAddress = anOrder.getDeliveryAddress();
 			
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("id", StringUtils.EMPTY + anOrder.getId().toString());
