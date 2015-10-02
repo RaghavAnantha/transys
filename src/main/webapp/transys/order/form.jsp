@@ -141,7 +141,8 @@ function populatePermitDateAndFee(index) {
 	
 	var permitValidFrom = $("#permitValidFrom" + index);
 	var permitValidTo = $("#permitValidTo" + index);
-	var permitFee = $("#permitFee" + index);
+	//var permitFee = $("#permitFee" + index);
+	var permitFee = $("#orderPaymentInfo\\.permitFee" + index);
 	
 	$.ajax({
   		url: "retrievePermit.do?" + "permitId=" + permitId,
@@ -152,7 +153,7 @@ function populatePermitDateAndFee(index) {
     	   	
     	   	permitValidFrom.html(permit.startDate);
     	   	permitValidTo.html(permit.endDate);
-    	   	permitFee.html(permit.fee);
+    	   	permitFee.val(permit.fee);
 		}
 	}); 
 }
@@ -363,8 +364,6 @@ $("#confirmExchangeOrderDialogYes").click(function (ev) {
 				</form:select> 
 			 	<br><form:errors path="dumpsterLocation" cssClass="errorMessage" />
 			</td>
-		</tr>
-		<tr>
 			<td class="form-left"><transys:label code="Dumpster Size"/><span class="errorMessage">*</span></td>
 			<td align="${left}">
 				<form:select id="dumpsterSize" cssClass="flat form-control input-sm" style="width:172px !important" path="dumpsterSize"> 
@@ -372,6 +371,16 @@ $("#confirmExchangeOrderDialogYes").click(function (ev) {
 					<form:options items="${dumpsterSizes}" itemValue="id" itemLabel="size" />
 				</form:select> 
 			 	<br><form:errors path="dumpsterSize" cssClass="errorMessage" />
+			</td>
+		</tr>
+		<tr>
+			<td class="form-left"><transys:label code="Material Category"/><span class="errorMessage">*</span></td>
+			<td align="${left}">
+				<form:select id="materialCategory" cssClass="flat form-control input-sm" style="width:172px !important" path="materialCategory"> 
+					<form:option value="">-------Please Select------</form:option>
+					<form:options items="${materialCategories}" itemValue="id" itemLabel="category" />
+				</form:select> 
+			 	<br><form:errors path="materialCategory" cssClass="errorMessage" />
 			</td>
 			<td class="form-left"><transys:label code="Material Type"/></td>
 			<td align="${left}">
@@ -555,12 +564,12 @@ $("#confirmExchangeOrderDialogYes").click(function (ev) {
 	        <td align="${left}" id="permitValidTo3">${modelObject.permits[2].endDate}</td>
 	    </tr>
 	    <tr>
-	    	<td class="form-left"><transys:label code="Permit1 Fee"/><span class="errorMessage">*</span></td>
-	        <td align="${left}" id="permitFee1">${modelObject.permits[0].fee}</td>
-	        <td class="form-left"><transys:label code="Permit2 Fee"/><span class="errorMessage">*</span></td>
-	        <td align="${left}" id="permitFee2">${modelObject.permits[1].fee}</td>
-	        <td class="form-left"><transys:label code="Permit3 Fee"/><span class="errorMessage">*</span></td>
-	        <td align="${left}" id="permitFee3">${modelObject.permits[2].fee}</td>
+	    	<td class="form-left">Permit1 Fee<span class="errorMessage">*</span></td>
+	        <td align="${left}"><form:input path="orderPaymentInfo.permitFee1" cssClass="flat" /></td>
+	        <td class="form-left">Permit2 Fee<span class="errorMessage">*</span></td>
+	        <td align="${left}"><form:input path="orderPaymentInfo.permitFee2" cssClass="flat" /></td>
+	        <td class="form-left">Permit3 Fee<span class="errorMessage">*</span></td>
+	        <td align="${left}"><form:input path="orderPaymentInfo.permitFee3" cssClass="flat" /></td>
 	    </tr>
 	    <tr>
 			<td colspan=10></td>
@@ -623,11 +632,8 @@ $("#confirmExchangeOrderDialogYes").click(function (ev) {
 			</td>
 		</tr>
 		<tr>
-			<td class="form-left"><transys:label code="Permit Fees"/><span class="errorMessage">*</span></td>
-			<td align="${left}">
-				<form:input path="orderPaymentInfo.permitFee1" cssClass="flat" />
-				<br><form:errors path="orderPaymentInfo.permitFee1" cssClass="errorMessage" />
-			</td>
+			<td class="form-left"><transys:label code="Permit Fees"/></td>
+			<td align="${left}" id="permitFees"></td>
 			<td class="form-left"><transys:label code="Overweight Fee"/><span class="errorMessage">*</span></td>
 			<td align="${left}">
 				<form:input path="orderPaymentInfo.overweightFee" cssClass="flat" />

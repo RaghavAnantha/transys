@@ -59,6 +59,10 @@ public class Order extends AbstractBaseModel {
 	@JoinColumn(name="materialTypeId") 
 	private MaterialType materialType;
 	
+	@ManyToOne
+	@JoinColumn(name="materialCategoryId") 
+	private MaterialCategory materialCategory;
+	
 	@Column(name="pickupDate")
 	private Date pickupDate;
 	
@@ -292,6 +296,14 @@ public class Order extends AbstractBaseModel {
 
 	public void setDeliveryAddress(Address deliveryAddress) {
 		this.deliveryAddress = deliveryAddress;
+	}
+
+	public MaterialCategory getMaterialCategory() {
+		return materialCategory;
+	}
+
+	public void setMaterialCategory(MaterialCategory materialCategory) {
+		this.materialCategory = materialCategory;
 	}
 
 	public Date getPickupDate() {
