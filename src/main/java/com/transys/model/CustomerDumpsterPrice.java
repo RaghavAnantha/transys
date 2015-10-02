@@ -13,7 +13,7 @@ import javax.persistence.Table;
 public class CustomerDumpsterPrice extends AbstractBaseModel {
 	
 	@ManyToOne
-	@JoinColumn(name="customer")
+	@JoinColumn(name="customerId")
 	private Customer customer;
 	
 	@ManyToOne

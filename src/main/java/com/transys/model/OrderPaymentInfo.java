@@ -59,8 +59,11 @@ public class OrderPaymentInfo extends AbstractBaseModel {
 		@Column(name="additionalFee3")
 		private BigDecimal additionalFee3;
 		
-		@Column(name="discount")
-		private BigDecimal discount;
+		@Column(name="discountPercentage")
+		private BigDecimal discountPercentage;
+		
+		@Column(name="discountAmount")
+		private BigDecimal discountAmount;
 		
 		@Column(name="totalFees")
 		private BigDecimal totalFees;
@@ -181,6 +184,22 @@ public class OrderPaymentInfo extends AbstractBaseModel {
 			return totalFees;
 		}
 
+		public BigDecimal getDiscountPercentage() {
+			return discountPercentage;
+		}
+
+		public void setDiscountPercentage(BigDecimal discountPercentage) {
+			this.discountPercentage = discountPercentage;
+		}
+
+		public BigDecimal getDiscountAmount() {
+			return discountAmount;
+		}
+
+		public void setDiscountAmount(BigDecimal discountAmount) {
+			this.discountAmount = discountAmount;
+		}
+
 		public void setTotalFees(BigDecimal totalFees) {
 			this.totalFees = totalFees;
 		}
@@ -216,14 +235,4 @@ public class OrderPaymentInfo extends AbstractBaseModel {
 		public void setCityFeeType(CityFee cityFeeType) {
 			this.cityFeeType = cityFeeType;
 		}
-
-		public BigDecimal getDiscount() {
-			return discount;
-		}
-
-		public void setDiscount(BigDecimal discount) {
-			this.discount = discount;
-		}
-		
-		
 }

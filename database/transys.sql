@@ -585,7 +585,8 @@ CREATE TABLE `orderPaymentInfo` (
   `additionalFee2` decimal(6,2) DEFAULT NULL,
   `additionalFee3Id` bigint(20) DEFAULT NULL,
   `additionalFee3` decimal(6,2) DEFAULT NULL,
-  `discount` decimal(6,2) DEFAULT NULL,
+  `discountPercentage` decimal(6,2) DEFAULT NULL,
+  `discountAmount` decimal(6,2) DEFAULT NULL,
   `paymentMethod` varchar(50) DEFAULT NULL,
   `ccReferenceNum` varchar(50) DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
@@ -1211,7 +1212,7 @@ DROP TABLE IF EXISTS `customerDumpsterPrice`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `customerDumpsterPrice` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `customer` bigint(20) NOT NULL,
+  `customerId` bigint(20) NOT NULL,
   `dumpsterSizeId` bigint(20) NOT NULL,
   `materialCategoryId` bigint(20) NOT NULL,
   `price` decimal(6,2) NOT NULL,
@@ -1224,8 +1225,8 @@ CREATE TABLE `customerDumpsterPrice` (
   `modified_by` bigint(20) DEFAULT NULL,
   `delete_flag` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
-  KEY `customerDumpsterPriceRef_idx` (`customer`),
-  CONSTRAINT `customerDumpsterPriceRef` FOREIGN KEY (`customer`) REFERENCES `customer` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  KEY `customerDumpsterPriceRef_idx` (`customerId`),
+  CONSTRAINT `customerDumpsterPriceRef` FOREIGN KEY (`customerId`) REFERENCES `customer` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `customerDumpsterPriceMaterialCategoryRef` FOREIGN KEY (`materialCategoryId`) REFERENCES `materialCategory` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `customerDumpsterPriceDumpsterSizeRef` FOREIGN KEY (`dumpsterSizeId`) REFERENCES `dumpsterSize` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;

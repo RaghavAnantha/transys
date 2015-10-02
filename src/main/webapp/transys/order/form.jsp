@@ -655,16 +655,18 @@ $("#confirmExchangeOrderDialogYes").click(function (ev) {
 		<tr>
 			<td class="form-left"><transys:label code="Dumpster Price"/><span class="errorMessage">*</span></td>
 			<td align="${left}">
-				<form:input path="orderPaymentInfo.dumpsterPrice" cssClass="flat" />
+				<form:input path="orderPaymentInfo.dumpsterPrice" cssClass="form-control" readonly="true" style="width:172px;height:25px !important" />
 				<br><form:errors path="orderPaymentInfo.dumpsterPrice" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Permit Fees"/></td>
-			<td align="${left}" id="permitFees"></td>
+			<td align="${left}">
+				<input id="permitFees" class="form-control" readonly="readonly" style="width:172px;height:25px !important"/>
+			</td>
 			<td class="form-left"><transys:label code="Overweight Fee"/><span class="errorMessage">*</span></td>
 			<td align="${left}">
-				<form:input path="orderPaymentInfo.overweightFee" cssClass="flat" />
+				<form:input path="orderPaymentInfo.overweightFee" cssClass="form-control" readonly="true" style="width:172px;height:25px !important" />
 				<br><form:errors path="orderPaymentInfo.overweightFee" cssClass="errorMessage" />
 			</td>
 		</tr>
@@ -679,7 +681,7 @@ $("#confirmExchangeOrderDialogYes").click(function (ev) {
 			</td>
 			<td class="form-left"><transys:label code="City Fee"/><span class="errorMessage">*</span></td>
 			<td align="${left}">
-				<form:input path="orderPaymentInfo.cityFee" cssClass="flat" />
+				<form:input path="orderPaymentInfo.cityFee" cssClass="form-control" readonly="true" style="width:172px;height:25px !important" />
 				<br><form:errors path="orderPaymentInfo.cityFee" cssClass="errorMessage" />
 			</td>
 		</tr>
@@ -732,6 +734,17 @@ $("#confirmExchangeOrderDialogYes").click(function (ev) {
 			<td class="form-left"><transys:label code="Total Additional Fees"/></td>
 			<td align="${left}">
 				<input id="totalAdditionalFees" class="form-control" readonly="readonly" style="width:172px;height:25px !important"/>
+			</td>
+		</tr>
+		<tr>
+			<td class="form-left"><transys:label code="Discount %"/><span class="errorMessage">*</span></td>
+			<td align="${left}">
+				<form:input path="orderPaymentInfo.discountPercentage" cssClass="flat" />
+				<br><form:errors path="orderPaymentInfo.discountPercentage" cssClass="errorMessage" />
+			</td>
+			<td class="form-left"><transys:label code="Discount Amount"/></td>
+			<td align="${left}">
+				<form:input path="orderPaymentInfo.discountAmount" cssClass="form-control" readonly="true" style="width:172px;height:25px !important"/>
 			</td>
 		</tr>
 		<tr>
