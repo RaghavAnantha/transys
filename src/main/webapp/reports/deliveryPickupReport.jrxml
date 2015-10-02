@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2015-10-02T23:53:36 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="DeliveryPickupReport" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="d3a0f573-b9d0-4bca-9a6f-1da0ab12e250">
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="deliveryDateFrom" class="java.lang.String"/>
+	<field name="deliveryDateTo" class="java.lang.String"/>
+	<field name="pickupDateFrom" class="java.lang.String"/>
+	<field name="pickupDateTo" class="java.lang.String"/>
+	<field name="id" class="java.lang.String"/>
+	<field name="customer" class="java.lang.String"/>
+	<field name="deliveryAddress" class="java.lang.String"/>
+	<field name="city" class="java.lang.String"/>
+	<field name="dumpsterSize" class="java.lang.String"/>
+	<field name="dumpsterNum" class="java.lang.String"/>
+	<field name="deliveryDate" class="java.lang.String"/>
+	<field name="pickupDate" class="java.lang.String"/>
+	<field name="dumpsterSizeAggregation" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="85" splitType="Stretch">
+			<staticText>
+				<reportElement x="139" y="22" width="290" height="40" uuid="cc962bc9-d4a0-4267-b08f-f7cd3ba02220"/>
+				<textElement textAlignment="Center">
+					<font size="22" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Delivery/ Pickup Report]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="145" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<staticText>
+				<reportElement x="0" y="10" width="280" height="30" uuid="5187a10f-df04-4827-90bf-9a0d493a8aad"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total Dumpsters/ Boxes Delivered (or Picked up) for:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="50" width="130" height="30" uuid="e598756c-c25a-49e5-ae7a-dfdc9a9f1e69"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Delivery Date Range:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="200" y="50" width="18" height="30" uuid="7c7c4288-6d85-46c1-95b4-7f5d19f191d3"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[to]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="320" y="50" width="100" height="30" uuid="bcb6c74c-95e6-4178-a023-b9beb5c96277"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Pickup Date Range:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="490" y="50" width="18" height="30" uuid="96b007ef-554b-4e09-bfc4-d5cf495e0b2a"/>
+				<text><![CDATA[to]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="140" y="50" width="54" height="30" uuid="c88a7da5-cee9-4aa7-96ee-5d0bc782f962"/>
+				<textFieldExpression><![CDATA[$F{deliveryDateFrom}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="230" y="50" width="70" height="30" uuid="67f45896-8eae-4d13-b012-bd098e7415e6"/>
+				<textFieldExpression><![CDATA[$F{deliveryDateTo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="429" y="50" width="53" height="30" uuid="7311f5f6-8d5c-4a76-ab25-c7e9020773de"/>
+				<textFieldExpression><![CDATA[$F{pickupDateFrom}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="520" y="50" width="55" height="30" uuid="0c55d46a-766c-49aa-847b-77ae6eb7b2b3"/>
+				<textFieldExpression><![CDATA[$F{pickupDateTo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="95" width="100" height="30" uuid="79977c34-be47-4008-b8e2-c53e5f4f097b"/>
+				<textFieldExpression><![CDATA[$F{dumpsterSizeAggregation}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="61" splitType="Stretch">
+			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.HorizontalRowLayout"/>
+			<staticText>
+				<reportElement x="0" y="0" width="72" height="61" uuid="e4611684-74cb-44f0-bf86-ebb0a109fc5e"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Order #]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="72" y="0" width="69" height="61" uuid="5642d135-3c91-4eda-a5b0-49d66b99eb2f"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Customer]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="141" y="0" width="69" height="61" uuid="2fac4328-19ae-46f0-bd6d-4d84844e1111">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Delivery Address]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="210" y="0" width="69" height="61" uuid="60089bfa-db84-4998-adf6-2dba9b8cf71f"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[City]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="279" y="0" width="69" height="61" uuid="78f93d39-daeb-4d24-b5b6-573d0a367a41"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Dumpster Size]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="348" y="0" width="69" height="61" uuid="e8eef395-b149-4ba7-acf7-034456ec08dd"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Dumpster Number]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="417" y="0" width="69" height="61" uuid="6b2d88ed-a8ae-4c4a-ae38-42af518c816c"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Delivery Date]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="486" y="0" width="69" height="61" uuid="1caa4be8-0509-485d-a8e5-48525e22999f"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Pickup Date]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="125" splitType="Stretch">
+			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.HorizontalRowLayout"/>
+			<textField>
+				<reportElement x="0" y="0" width="72" height="61" uuid="ff10fb41-b060-4fb4-89ee-40ce127ba193">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{id}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="72" y="0" width="69" height="61" uuid="5ea7f648-d1e7-4c3c-b393-72a9e4915cc6"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{customer}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="141" y="0" width="69" height="61" uuid="1ce5f69c-069f-4724-b05e-c170d6a4523b"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{deliveryAddress}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="210" y="0" width="69" height="61" uuid="dd42d151-3c0a-4b02-9b67-359501688025"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{city}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="279" y="0" width="69" height="61" uuid="5d71fbc1-044a-4049-b3ac-4e615b895e15"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{dumpsterSize}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="348" y="0" width="69" height="61" uuid="b067fd13-c46b-4f61-8a47-4de7b536ffca"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{dumpsterNum}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="417" y="0" width="69" height="61" uuid="7f225b01-fb90-4699-8ef1-e75cff3eee84"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{deliveryDate}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="486" y="0" width="69" height="61" uuid="dbbc510b-7ff0-4fb7-84b8-4b0f03298547"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{pickupDate}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>
