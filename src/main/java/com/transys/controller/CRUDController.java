@@ -264,8 +264,10 @@ public abstract class CRUDController<T extends BaseModel> extends BaseController
 	@RequestMapping(method = { RequestMethod.GET, RequestMethod.POST }, value = "/export.do")
 	public void export(ModelMap model, HttpServletRequest request,
 			HttpServletResponse response, @RequestParam("type") String type,
+			@RequestParam("dataQualifier") String dataQualifier,
 			Object objectDAO, Class clazz) {
-		List columnPropertyList = (List) request.getSession().getAttribute("columnPropertyList");
+		List columnPropertyList = (List) request.getSession().getAttribute(dataQualifier + "ColumnPropertyList");
+		//List columnPropertyList = (List) request.getSession().getAttribute("columnPropertyList");
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 
 		response.setContentType(MimeUtil.getContentType(type));

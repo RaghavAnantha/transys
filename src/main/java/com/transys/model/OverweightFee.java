@@ -5,20 +5,29 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="additionalFee")
-public class AdditionalFee extends AbstractBaseModel {
-
-	@Column(name="description")
-	private String description;
+@Table(name="overweightFee")
+public class OverweightFee extends AbstractBaseModel {
+	@Column(name="tonLimit")
+	private BigDecimal tonLimit;
 
 	@Column(name="fee")
 	private BigDecimal fee;
 	
 	@Column(name="comments")
 	private String comments;
+
+	@ManyToOne
+	@JoinColumn(name="dumpsterSizeId") 
+	private DumpsterSize dumpsterSize;
+	
+	@ManyToOne
+	@JoinColumn(name="materialCategoryId") 
+	private MaterialCategory materialCategory;
 	
 	@Column(name="effectiveDateFrom")
 	private Date effectiveDateFrom;
@@ -26,12 +35,12 @@ public class AdditionalFee extends AbstractBaseModel {
 	@Column(name="effectiveDateTo")
 	private Date effectiveDateTo;
 
-	public String getDescription() {
-		return description;
+	public BigDecimal getTonLimit() {
+		return tonLimit;
 	}
 
-	public void setDescription(String description) {
-		this.description = description;
+	public void setTonLimit(BigDecimal tonLimit) {
+		this.tonLimit = tonLimit;
 	}
 
 	public BigDecimal getFee() {
@@ -48,6 +57,22 @@ public class AdditionalFee extends AbstractBaseModel {
 
 	public void setComments(String comments) {
 		this.comments = comments;
+	}
+
+	public DumpsterSize getDumpsterSize() {
+		return dumpsterSize;
+	}
+
+	public void setDumpsterSize(DumpsterSize dumpsterSize) {
+		this.dumpsterSize = dumpsterSize;
+	}
+
+	public MaterialCategory getMaterialCategory() {
+		return materialCategory;
+	}
+
+	public void setMaterialCategory(MaterialCategory materialCategory) {
+		this.materialCategory = materialCategory;
 	}
 
 	public Date getEffectiveDateFrom() {

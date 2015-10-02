@@ -10,6 +10,9 @@ public class PaymentMethod extends AbstractBaseModel {
 	
 	@Column(name="method")
 	private String method;
+	
+	@Column(name="comments")
+	private String comments;
 
 	public String getMethod() {
 		return method;
@@ -18,5 +21,12 @@ public class PaymentMethod extends AbstractBaseModel {
 	public void setMethod(String method) {
 		this.method = method;
 	}
-	
+
+	public String getComments() {
+		return comments;
+	}
+
+	public void setComments(String comments) {
+		this.comments = comments;
+	}
 }

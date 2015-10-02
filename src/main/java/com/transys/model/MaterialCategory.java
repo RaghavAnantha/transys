@@ -5,22 +5,20 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="customerStatus")
-public class CustomerStatus extends AbstractBaseModel {
+@Table(name="materialCategory")
+public class MaterialCategory extends AbstractBaseModel {
+	@Column(name="category")
+	private String category;
 
-	// TODO: Make an ENUM?
-	@Column(name="status")
-	private String status;
-	
 	@Column(name="comments")
 	private String comments;
-	
-	public String getStatus() {
-		return status;
+
+	public String getCategory() {
+		return category;
 	}
 
-	public void setStatus(String status) {
-		this.status = status;
+	public void setCategory(String category) {
+		this.category = category;
 	}
 
 	public String getComments() {

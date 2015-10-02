@@ -19,12 +19,22 @@ public class OrderPaymentInfo extends AbstractBaseModel {
 		@Column(name="dumpsterPrice")
 		private BigDecimal dumpsterPrice;
 		
-		@Column(name="permitFees")
-		private BigDecimal permitFees;
+		@Column(name="permitFee1")
+		private BigDecimal permitFee1;
+		
+		@Column(name="permitFee2")
+		private BigDecimal permitFee2;
+		
+		@Column(name="permitFee3")
+		private BigDecimal permitFee3;
 		  
 		@Column(name="overweightFee")
 		private BigDecimal overweightFee;
 		  
+		@ManyToOne
+		@JoinColumn(name="cityFeeId") 
+		private CityFee cityFeeType;
+		
 		@Column(name="cityFee")
 		private BigDecimal cityFee;
 		
@@ -48,6 +58,12 @@ public class OrderPaymentInfo extends AbstractBaseModel {
 		
 		@Column(name="additionalFee3")
 		private BigDecimal additionalFee3;
+		
+		@Column(name="discountPercentage")
+		private BigDecimal discountPercentage;
+		
+		@Column(name="discountAmount")
+		private BigDecimal discountAmount;
 		
 		@Column(name="totalFees")
 		private BigDecimal totalFees;
@@ -77,12 +93,28 @@ public class OrderPaymentInfo extends AbstractBaseModel {
 			this.dumpsterPrice = dumpsterPrice;
 		}
 
-		public BigDecimal getPermitFees() {
-			return permitFees;
+		public BigDecimal getPermitFee1() {
+			return permitFee1;
 		}
 
-		public void setPermitFees(BigDecimal permitFees) {
-			this.permitFees = permitFees;
+		public void setPermitFee1(BigDecimal permitFee1) {
+			this.permitFee1 = permitFee1;
+		}
+
+		public BigDecimal getPermitFee2() {
+			return permitFee2;
+		}
+
+		public void setPermitFee2(BigDecimal permitFee2) {
+			this.permitFee2 = permitFee2;
+		}
+
+		public BigDecimal getPermitFee3() {
+			return permitFee3;
+		}
+
+		public void setPermitFee3(BigDecimal permitFee3) {
+			this.permitFee3 = permitFee3;
 		}
 
 		public BigDecimal getOverweightFee() {
@@ -152,6 +184,22 @@ public class OrderPaymentInfo extends AbstractBaseModel {
 			return totalFees;
 		}
 
+		public BigDecimal getDiscountPercentage() {
+			return discountPercentage;
+		}
+
+		public void setDiscountPercentage(BigDecimal discountPercentage) {
+			this.discountPercentage = discountPercentage;
+		}
+
+		public BigDecimal getDiscountAmount() {
+			return discountAmount;
+		}
+
+		public void setDiscountAmount(BigDecimal discountAmount) {
+			this.discountAmount = discountAmount;
+		}
+
 		public void setTotalFees(BigDecimal totalFees) {
 			this.totalFees = totalFees;
 		}
@@ -178,5 +226,13 @@ public class OrderPaymentInfo extends AbstractBaseModel {
 
 		public void setCheckNum(String checkNum) {
 			this.checkNum = checkNum;
+		}
+
+		public CityFee getCityFeeType() {
+			return cityFeeType;
+		}
+
+		public void setCityFeeType(CityFee cityFeeType) {
+			this.cityFeeType = cityFeeType;
 		}
 }

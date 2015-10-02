@@ -64,6 +64,8 @@ function formatFax(){
 				</form:select> 
 				<br><form:errors path="customerType" cssClass="errorMessage" />
 			</td> 
+			<td class="form-left"><transys:label code="Created Date" /></td>
+			<td align="${left}">${modelObject.createdAt}</td>
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Charge Company" /></td>
@@ -73,7 +75,9 @@ function formatFax(){
 					<form:options items="${chargeCompanyOptions}" />
 				</form:select> 
 				<br><form:errors path="chargeCompany" cssClass="errorMessage" />
-			</td> 
+			</td>
+			<td class="form-left"><transys:label code="Total Orders" /></td>
+			<td align="${left}"></td>
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Status" /></td>
@@ -84,6 +88,8 @@ function formatFax(){
 				</form:select> 
 				<br><form:errors path="customerStatus" cssClass="errorMessage" />
 			</td> 
+			<td class="form-left"><transys:label code="Last Delivery" /></td>
+			<td align="${left}"></td>
 		</tr>
 		<tr>
 			<td colspan=10 class="danger" style="font-size: 13px;font-weight: bold;color: white;">Billing Address</td>

@@ -2,15 +2,19 @@ package com.transys.model;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name="permit")
@@ -28,6 +32,10 @@ public class Permit  extends AbstractBaseModel {
 	@JoinColumn(name="permitClass")
 	private PermitClass permitClass;
 	
+	@OneToMany(mappedBy="permit", cascade = CascadeType.ALL)
+	@JsonManagedReference
+	private List<PermitAddress> permitAddress;
+	
 	@Column(name="number")
 	private String number;
 	
@@ -42,12 +50,9 @@ public class Permit  extends AbstractBaseModel {
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM/dd/yyyy")
 	private Date endDate;
 	
-	@Column(name="permitAddress")
-	private String permitAddress;
-	
 	@ManyToOne
 	@JoinColumn(name="deliveryAddress")
-	private Address deliveryAddress;
+	private DeliveryAddress deliveryAddress;
 	
 	@ManyToOne
 	@JoinColumn(name="locationType")
@@ -122,19 +127,19 @@ public class Permit  extends AbstractBaseModel {
 		return this.endDate;
 	}
 
-	public String getPermitAddress() {
+	public List<PermitAddress> getPermitAddress() {
 		return permitAddress;
 	}
 
-	public void setPermitAddres(String permitAddres) {
-		this.permitAddress = permitAddres;
+	public void setPermitAddress(List<PermitAddress> permitAddress) {
+		this.permitAddress = permitAddress;
 	}
 
-	public Address getDeliveryAddress() {
+	public DeliveryAddress getDeliveryAddress() {
 		return deliveryAddress;
 	}
 
-	public void setDeliveryAddress(Address deliveryAddress) {
+	public void setDeliveryAddress(DeliveryAddress deliveryAddress) {
 		this.deliveryAddress = deliveryAddress;
 	}
 

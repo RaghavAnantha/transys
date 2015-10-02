@@ -12,12 +12,12 @@ import org.apache.commons.lang3.StringUtils;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
-@Table(name="address")
-public class Address extends AbstractBaseModel {
+@Table(name="permitAddress")
+public class PermitAddress extends AbstractBaseModel {
 	@ManyToOne
-	@JoinColumn(name="custID")
+	@JoinColumn(name="permitId")
 	@JsonBackReference
-	private Customer customer;
+	private Permit permit;
 	
 	@Column(name="line1")
 	private String line1;
@@ -35,12 +35,12 @@ public class Address extends AbstractBaseModel {
 	@Column(name="zip")
 	private String zipcode;
 
-	public Customer getCustomer() {
-		return customer;
+	public Permit getPermit() {
+		return permit;
 	}
 
-	public void setCustomer(Customer customer) {
-		this.customer = customer;
+	public void setPermit(Permit permit) {
+		this.permit = permit;
 	}
 
 	public String getLine1() {
@@ -96,7 +96,4 @@ public class Address extends AbstractBaseModel {
 	public void setZipcode(String zipcode) {
 		this.zipcode = zipcode;
 	}
-	
-	
-	
 }

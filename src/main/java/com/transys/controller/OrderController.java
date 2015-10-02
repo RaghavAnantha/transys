@@ -1,6 +1,7 @@
 package com.transys.controller;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -14,6 +15,8 @@ import javax.validation.ValidationException;
 
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.Query;
+import org.hibernate.Session;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -28,10 +31,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 //import com.google.gson.Gson;
 import com.transys.controller.editor.AbstractModelEditor;
+import com.transys.core.dao.GenericJpaDAO;
+import com.transys.core.tags.IColumnTag;
 import com.transys.core.util.MimeUtil;
 import com.transys.model.AbstractBaseModel;
 import com.transys.model.AdditionalFee;
-import com.transys.model.Address;
+import com.transys.model.DeliveryAddress;
 import com.transys.model.BaseModel;
 import com.transys.model.Customer;
 import com.transys.model.DumpsterInfo;
@@ -51,6 +56,7 @@ import com.transys.model.PermitStatus;
 import com.transys.model.SearchCriteria;
 import com.transys.model.State;
 import com.transys.model.User;
+import com.transys.service.DynamicReportServiceImpl;
 
 @Controller
 @RequestMapping("/order")
@@ -62,7 +68,7 @@ public class OrderController extends CRUDController<Order> {
 	@Override
 	public void initBinder(WebDataBinder binder) {
 		binder.registerCustomEditor(Customer.class, new AbstractModelEditor(Customer.class));
-		binder.registerCustomEditor(Address.class, new AbstractModelEditor(Address.class));
+		binder.registerCustomEditor(DeliveryAddress.class, new AbstractModelEditor(DeliveryAddress.class));
 		binder.registerCustomEditor(Permit.class, new AbstractModelEditor(Permit.class));
 		binder.registerCustomEditor(LocationType.class, new AbstractModelEditor(LocationType.class));
 		binder.registerCustomEditor(OrderPaymentInfo.class, new AbstractModelEditor(OrderPaymentInfo.class));
@@ -88,7 +94,7 @@ public class OrderController extends CRUDController<Order> {
 		
 		model.addAttribute("orderStatuses", genericDAO.findByCriteria(OrderStatus.class, criterias, "status", false));
 		model.addAttribute("customers", genericDAO.findByCriteria(Customer.class, criterias, "companyName", false));
-      //model.addAttribute("deliveryAddresses", genericDAO.findByCriteria(Address.class, criterias, "line1", false));
+      //model.addAttribute("deliveryAddresses", genericDAO.findByCriteria(DeliveryAddress.class, criterias, "line1", false));
       
       //model.addAttribute("permits", genericDAO.executeSimpleQuery("select obj from Permit obj where obj.id!=0 order by obj.id asc"));
       //model.addAttribute("permits", genericDAO.findByCriteria(Permit.class, criterias, "id", false));
@@ -103,9 +109,12 @@ public class OrderController extends CRUDController<Order> {
       
       model.addAttribute("additionalFeeTypes", genericDAO.executeSimpleQuery("select obj from AdditionalFee obj where obj.id!=0 order by obj.id asc"));
      
+      model.addAttribute("materialCategories", genericDAO.executeSimpleQuery("select obj from MaterialCategory obj where obj.id!=0 order by obj.id asc"));
       model.addAttribute("materialTypes", genericDAO.executeSimpleQuery("select obj from MaterialType obj where obj.id!=0 order by obj.id asc"));
       
       model.addAttribute("paymentMethods", genericDAO.executeSimpleQuery("select obj from PaymentMethod obj where obj.id!=0 order by obj.id asc"));
+      
+      model.addAttribute("cityFeeDetails", genericDAO.executeSimpleQuery("select obj from CityFee obj where obj.id!=0 order by obj.id asc"));
       
       populateDeliveryTimeSettings(model);
       
@@ -227,7 +236,7 @@ public class OrderController extends CRUDController<Order> {
 		List<BaseModel> notesList = genericDAO.executeSimpleQuery("select obj from OrderNotes obj where obj.order.id=" +  orderId + " order by obj.id asc");
 		model.addAttribute("notesList", notesList);
 		
-		String query = "select obj from Address obj where obj.customer.id=" +  savedOrder.getCustomer().getId() + " order by obj.line1 asc";
+		String query = "select obj from DeliveryAddress obj where obj.customer.id=" +  savedOrder.getCustomer().getId() + " order by obj.line1 asc";
 		model.addAttribute("deliveryAddresses", genericDAO.executeSimpleQuery(query));
 		
 		List<List<Permit>> allPermitsOfChosenTypesList = new ArrayList<List<Permit>>();
@@ -299,7 +308,7 @@ public class OrderController extends CRUDController<Order> {
 		List<BaseModel> notesList = genericDAO.executeSimpleQuery("select obj from OrderNotes obj where obj.order.id=" +  orderId + " order by obj.id asc");
 		model.addAttribute("notesList", notesList);
 		
-		String query = "select obj from Address obj where obj.customer.id=" +  entity.getCustomer().getId() + " order by obj.line1 asc";
+		String query = "select obj from DeliveryAddress obj where obj.customer.id=" +  entity.getCustomer().getId() + " order by obj.line1 asc";
 		model.addAttribute("deliveryAddresses", genericDAO.executeSimpleQuery(query));
 		
 		List<List<Permit>> allPermitsOfChosenTypesList = new ArrayList<List<Permit>>();
@@ -376,7 +385,7 @@ public class OrderController extends CRUDController<Order> {
 		List<BaseModel> notesList = genericDAO.executeSimpleQuery("select obj from OrderNotes obj where obj.order.id=" +  orderId + " order by obj.id asc");
 		model.addAttribute("notesList", notesList);
 		
-		String query = "select obj from Address obj where obj.customer.id=" +  entity.getCustomer().getId() + " order by obj.line1 asc";
+		String query = "select obj from DeliveryAddress obj where obj.customer.id=" +  entity.getCustomer().getId() + " order by obj.line1 asc";
 		model.addAttribute("deliveryAddresses", genericDAO.executeSimpleQuery(query));
 		
 		List<List<Permit>> allPermitsOfChosenTypesList = new ArrayList<List<Permit>>();
@@ -452,7 +461,7 @@ public class OrderController extends CRUDController<Order> {
 			map.put("paymentMethod", order.getOrderPaymentInfo().getPaymentMethod());
 			map.put("dumpsterPrice", order.getOrderPaymentInfo().getDumpsterPrice().toString());
 			map.put("cityFee", order.getOrderPaymentInfo().getCityFee().toString());
-			map.put("permitFees", order.getOrderPaymentInfo().getPermitFees().toString());
+			map.put("permitFees", order.getOrderPaymentInfo().getPermitFee1().toString());
 			map.put("overweightFee", order.getOrderPaymentInfo().getOverweightFee().toString());
 			if (order.getOrderPaymentInfo().getTotalFees() != null ) {
 				map.put("totalFees", order.getOrderPaymentInfo().getTotalFees().toString());
@@ -528,7 +537,7 @@ public class OrderController extends CRUDController<Order> {
 		 
 		Order orderToBeEdited = (Order)model.get("modelObject");
 		
-		String query = "select obj from Address obj where obj.customer.id=" +  orderToBeEdited.getCustomer().getId() + " order by obj.line1 asc";
+		String query = "select obj from DeliveryAddress obj where obj.customer.id=" +  orderToBeEdited.getCustomer().getId() + " order by obj.line1 asc";
 		model.addAttribute("deliveryAddresses", genericDAO.executeSimpleQuery(query));
     	
 		Order emptyOrder = new Order();
@@ -569,7 +578,7 @@ public class OrderController extends CRUDController<Order> {
 	@RequestMapping(method = RequestMethod.GET, value = "/customerDeliveryAddress.do")
 	public @ResponseBody String retrieveCustomerDeliveryAddress(ModelMap model, HttpServletRequest request) {
 		String customerId = request.getParameter("id");
-		List<Address> addressList  = genericDAO.executeSimpleQuery("select obj from Address obj where obj.customer.id=" + customerId);
+		List<DeliveryAddress> addressList  = genericDAO.executeSimpleQuery("select obj from DeliveryAddress obj where obj.customer.id=" + customerId);
 		
 		ObjectMapper objectMapper = new ObjectMapper();
 		String json = StringUtils.EMPTY;
@@ -721,6 +730,38 @@ public class OrderController extends CRUDController<Order> {
 		return saveSuccess(model, request, entity);
 	}
 	
+	/*@Override
+	@RequestMapping(method = {RequestMethod.GET, RequestMethod.POST}, value = "/export.do")
+	public void export(ModelMap model, HttpServletRequest request,
+			HttpServletResponse response, @RequestParam("type") String type,
+			Object objectDAO, Class clazz) {
+		String dataQualifier = request.getParameter("dataQualifier");
+		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
+		List columnPropertyList = (List) request.getSession().getAttribute(dataQualifier + "ColumnPropertyList");
+		
+		response.setContentType(MimeUtil.getContentType(type));
+		if (!type.equals("html"))
+			response.setHeader("Content-Disposition", "attachment;filename="
+					+ urlContext + "Report." + type);
+		try {
+			criteria.setPageSize(100000);
+			//String label = getCriteriaAsString(criteria);
+			ByteArrayOutputStream out = dynamicReportService.exportReport(
+					urlContext + "Report", type, getEntityClass(),
+					columnPropertyList, criteria, request);
+			out.writeTo(response.getOutputStream());
+			if (type.equals("html"))
+				response.getOutputStream()
+						.println(
+								"<script language=\"javascript\">window.print()</script>");
+			criteria.setPageSize(25);
+			out.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+			log.warn("Unable to create file :" + e);
+		}
+	}*/
+	
 	public String saveSuccess(ModelMap model, HttpServletRequest request, Order entity) {
 		setupCreate(model, request);
 		model.addAttribute("modelObject", entity);
@@ -736,7 +777,7 @@ public class OrderController extends CRUDController<Order> {
 		List<BaseModel> notesList = genericDAO.executeSimpleQuery("select obj from OrderNotes obj where obj.order.id=" +  entity.getId() + " order by obj.id asc");
 		model.addAttribute("notesList", notesList);
 		
-		String query = "select obj from Address obj where obj.customer.id=" +  entity.getCustomer().getId() + " order by obj.line1 asc";
+		String query = "select obj from DeliveryAddress obj where obj.customer.id=" +  entity.getCustomer().getId() + " order by obj.line1 asc";
 		model.addAttribute("deliveryAddresses", genericDAO.executeSimpleQuery(query));
 		
 		List<List<Permit>> allPermitsOfChosenTypesList = new ArrayList<List<Permit>>();

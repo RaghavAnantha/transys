@@ -350,6 +350,43 @@ public class GenericJpaDAO implements GenericDAO {
 		return entityManager.createQuery(queryStmt.toString()).setMaxResults(criteria.getPageSize())
 				.setFirstResult(criteria.getPage() * criteria.getPageSize()).getResultList();
 	}
+	
+	@Override
+	public <T extends BaseModel> String contructQuery(Class<T> clazz, SearchCriteria criteria, String orderField, Boolean desc,
+			String groupField) {
+		Boolean containsOr = false;
+		int count = 0;
+		//StringBuffer queryCount = new StringBuffer("select count(p) from " + clazz.getSimpleName() + " p where 1=1 ");
+		StringBuffer searchString = new StringBuffer("");
+		if (criteria != null && criteria.getSearchMap() != null) {
+			searchString = createQueryFromCriterias(clazz, criteria.getSearchMap(), containsOr, count);
+		}
+		//if (containsOr && count == 1)
+			//queryCount = new StringBuffer("select count(p) from " + clazz.getSimpleName() + " p where 1!=1 ");
+		//queryCount.append(searchString.toString());
+		if (groupField != null)
+			searchString.append(" GROUP BY " + groupField);
+		if (orderField != null)
+			searchString.append(" ORDER BY " + orderField);
+		else {
+			// Setting default search result to be sorted by created at
+			searchString.append(" ORDER BY createdAt DESC");
+		}
+		if (desc != null) {
+			if (!desc)
+				searchString.append(" asc");
+			else
+				searchString.append(" desc");
+		}
+		//Long recordCount = (Long) entityManager.createQuery(queryCount.toString()).getSingleResult();
+		//criteria.setRecordCount(recordCount.intValue());
+		StringBuffer queryStmt = new StringBuffer(" from " + clazz.getSimpleName() + " p where 1=1 ");
+		if (containsOr && count == 1)
+			queryStmt = new StringBuffer(" from " + clazz.getSimpleName() + " p where 1!=1 ");
+		queryStmt.append(searchString.toString());
+		System.out.println("***** the search string is " + queryStmt.toString());
+		return queryStmt.toString();
+	}
 
 	@Override
 	public <T extends BaseModel> boolean isUnique(Class<T> clazz, T entity, Map properties) {

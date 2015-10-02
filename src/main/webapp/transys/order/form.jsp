@@ -80,14 +80,14 @@ function retrieveAndPopulateCustomerBillingAddress() {
 }
 
 function populateCustomerBillingAddress(customer) {
-   	var address = customer.billingAddressLine1 + ", " 
-   					+ customer.city + ", " + customer.state.name + ", " + customer.zipcode
-   	$('#addressTd').html(address);
+   	var billingAddress = customer.billingAddressLine1 + ", " 
+   						 + customer.city + ", " + customer.state.name + ", " + customer.zipcode
+   	$('#billingAddressTd').html(billingAddress);
    	
-	$('#contactTd').html(customer.contactName);
-	$('#phoneTd').html(formatPhone(customer.phone));
-	$('#faxTd').html(formatPhone(customer.fax));
-	$('#emailTd').html(customer.email);
+	$('#billingContactTd').html(customer.contactName);
+	$('#billingPhoneTd').html(formatPhone(customer.phone));
+	$('#billingFaxTd').html(formatPhone(customer.fax));
+	$('#billingEmailTd').html(customer.email);
 }
 
 function appendDeliveryAddress(address) {
@@ -135,13 +135,19 @@ function populatePermitNumbers(index) {
 	}); 
 }
 
-function populatePermitDateAndFee(index) {
+function populatePermitDetails(index) {
 	var permitNumbersSelect = $("#permits\\[" + (index-1) + "\\]");
 	var permitId = permitNumbersSelect.val();
 	
 	var permitValidFrom = $("#permitValidFrom" + index);
 	var permitValidTo = $("#permitValidTo" + index);
-	var permitFee = $("#permitFee" + index);
+	var permitFee = $("#orderPaymentInfo\\.permitFee" + index);
+	
+	var permitAddressSelect = $("#permitAddress" + index);
+	permitAddressSelect.empty();
+	
+	var firstOption = $('<option value="">'+ "-------Please Select------" +'</option>');
+	permitAddressSelect.append(firstOption);
 	
 	$.ajax({
   		url: "retrievePermit.do?" + "permitId=" + permitId,
@@ -152,7 +158,15 @@ function populatePermitDateAndFee(index) {
     	   	
     	   	permitValidFrom.html(permit.startDate);
     	   	permitValidTo.html(permit.endDate);
-    	   	permitFee.html(permit.fee);
+    	   	permitFee.val(permit.fee);
+    	   	
+    	   	var permitAddressList = permit.permitAddress;
+    	   	$.each(permitAddressList, function () {
+    	   	    $("<option />", {
+    	   	        val: this.id,
+    	   	        text: this.line1 + " " + this.line2
+    	   	    }).appendTo(permitAddressSelect);
+    	   	});
 		}
 	}); 
 }
@@ -184,6 +198,13 @@ function processForm() {
 
 function verifyExchangeOrderAndSubmit() {
 	var orderAddEditForm = $("#orderAddEditForm");
+	
+	var id = orderAddEditForm.find("#id");
+	if (id.val() != "") {
+		orderAddEditForm.submit();
+		return false;
+	}
+	
 	var isExchangeIndicator = $('#isExchange');
 	
 	var selectedCustomerId = $('#customerSelect').val();
@@ -249,19 +270,19 @@ $("#confirmExchangeOrderDialogYes").click(function (ev) {
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Address" /><span class="errorMessage"></span></td>
-			<td align="${left}" id="addressTd">${modelObject.customer.getBillingAddress()}</td>
+			<td align="${left}" id="billingAddressTd">${modelObject.customer.getBillingAddress()}</td>
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Contact" /><span class="errorMessage"></span></td>
-			<td align="${left}" id="contactTd">${modelObject.customer.contactName}</td>
+			<td align="${left}" id="billingContactTd">${modelObject.customer.contactName}</td>
 			<td class="form-left"><transys:label code="Fax"/></td>
-			<td align="${left}" id="faxTd">${modelObject.customer.getFormattedFax()}</td>
+			<td align="${left}" id="billingFaxTd">${modelObject.customer.getFormattedFax()}</td>
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Phone" /><span class="errorMessage"></span></td>
-			<td align="${left}" id="phoneTd">${modelObject.customer.getFormattedPhone()}</td>
+			<td align="${left}" id="billingPhoneTd">${modelObject.customer.getFormattedPhone()}</td>
 			<td class="form-left"><transys:label code="Email"/></td>
-			<td align="${left}" id="emailTd">${modelObject.customer.email}</td>
+			<td align="${left}" id="billingEmailTd">${modelObject.customer.email}</td>
 		</tr>
 		<tr>
 			<td colspan=10></td>
@@ -356,8 +377,6 @@ $("#confirmExchangeOrderDialogYes").click(function (ev) {
 				</form:select> 
 			 	<br><form:errors path="dumpsterLocation" cssClass="errorMessage" />
 			</td>
-		</tr>
-		<tr>
 			<td class="form-left"><transys:label code="Dumpster Size"/><span class="errorMessage">*</span></td>
 			<td align="${left}">
 				<form:select id="dumpsterSize" cssClass="flat form-control input-sm" style="width:172px !important" path="dumpsterSize"> 
@@ -366,11 +385,21 @@ $("#confirmExchangeOrderDialogYes").click(function (ev) {
 				</form:select> 
 			 	<br><form:errors path="dumpsterSize" cssClass="errorMessage" />
 			</td>
+		</tr>
+		<tr>
+			<td class="form-left"><transys:label code="Material Category"/><span class="errorMessage">*</span></td>
+			<td align="${left}">
+				<form:select id="materialCategory" cssClass="flat form-control input-sm" style="width:172px !important" path="materialCategory"> 
+					<form:option value="">-------Please Select------</form:option>
+					<form:options items="${materialCategories}" itemValue="id" itemLabel="category" />
+				</form:select> 
+			 	<br><form:errors path="materialCategory" cssClass="errorMessage" />
+			</td>
 			<td class="form-left"><transys:label code="Material Type"/></td>
 			<td align="${left}">
 				<form:select id="materialType" cssClass="flat form-control input-sm" style="width:172px !important" path="materialType"> 
 					<form:option value="">-------Please Select------</form:option>
-					<form:options items="${materialTypes}" itemValue="id" itemLabel="type" />
+					<form:options items="${materialTypes}" itemValue="id" itemLabel="materialName" />
 				</form:select> 
 				<br><form:errors path="materialType" cssClass="errorMessage" />
 			</td>
@@ -481,24 +510,32 @@ $("#confirmExchangeOrderDialogYes").click(function (ev) {
 	    <tr>
 	    	<td class="form-left"><transys:label code="Permit1 Number"/><span class="errorMessage">*</span></td>
 	        <td align="${left}">
-	        	<select class="flat form-control input-sm" id="permits[0]" name="permits[0]" style="width:172px !important" onChange="return populatePermitDateAndFee(1);">
-					<option value="">------<transys:label code="Please Select" />------</option>
-					<c:if test="${modelObject.permits != null and modelObject.permits[0] != null and modelObject.permits[0].number != null}">
-						<c:set var="chosenPermit" value="${modelObject.permits[0]}" />
-						<c:set var="allPermitsOfChosenType" value="${allPermitsOfChosenTypesList[0]}" />
-						<c:forEach items="${allPermitsOfChosenType}" var="aPermitOfChosenType">
-							<c:set var="selected" value="" />
-							<c:if test="${aPermitOfChosenType.id == chosenPermit.id}">
-								<c:set var="selected" value="selected" />
-							</c:if>
-							<option value="${aPermitOfChosenType.id}" ${selected}>${aPermitOfChosenType.number}</option>
-						</c:forEach>
-					</c:if>
-				</select>
+	        	<label style="display: inline-block; font-weight: normal">
+		        	<select class="flat form-control input-sm" id="permits[0]" name="permits[0]" style="width:172px !important" onChange="return populatePermitDetails(1);">
+						<option value="">------<transys:label code="Please Select" />------</option>
+						<c:if test="${modelObject.permits != null and modelObject.permits[0] != null and modelObject.permits[0].number != null}">
+							<c:set var="chosenPermit" value="${modelObject.permits[0]}" />
+							<c:set var="allPermitsOfChosenType" value="${allPermitsOfChosenTypesList[0]}" />
+							<c:forEach items="${allPermitsOfChosenType}" var="aPermitOfChosenType">
+								<c:set var="selected" value="" />
+								<c:if test="${aPermitOfChosenType.id == chosenPermit.id}">
+									<c:set var="selected" value="selected" />
+								</c:if>
+								<option value="${aPermitOfChosenType.id}" ${selected}>${aPermitOfChosenType.number}</option>
+							</c:forEach>
+						</c:if>
+					</select>
+				</label>
+				<label style="display: inline-block; font-weight: normal">
+					&nbsp;
+					<a href="/permit/createModal.do" id="addPermitLink" data-backdrop="static" data-remote="false" data-toggle="modal" data-target="#addPermitModal">
+						<img src="/images/addnew.png" border="0" style="float:bottom" class="toolbarButton">
+					</a>
+				</label>
 	        </td>
 	        <td class="form-left"><transys:label code="Permit2 Number"/><span class="errorMessage">*</span></td>
 	        <td align="${left}">
-	        	<select class="flat form-control input-sm" id="permits[1]" name="permits[1]" style="width:172px !important" onChange="return populatePermitDateAndFee(2);">
+	        	<select class="flat form-control input-sm" id="permits[1]" name="permits[1]" style="width:172px !important" onChange="return populatePermitDetails(2);">
 					<option value="">------<transys:label code="Please Select" />------</option>
 					<c:if test="${modelObject.permits != null and modelObject.permits[1] != null and modelObject.permits[1].number != null}">
 						<c:set var="chosenPermit" value="${modelObject.permits[1]}" />
@@ -515,7 +552,7 @@ $("#confirmExchangeOrderDialogYes").click(function (ev) {
 	        </td>
 	        <td class="form-left"><transys:label code="Permit3 Number"/><span class="errorMessage">*</span></td>
 	        <td align="${left}">
-	        	<select class="flat form-control input-sm" id="permits[2]" name="permits[2]" style="width:172px !important" onChange="return populatePermitDateAndFee(3);">
+	        	<select class="flat form-control input-sm" id="permits[2]" name="permits[2]" style="width:172px !important" onChange="return populatePermitDetails(3);">
 					<option value="">------<transys:label code="Please Select" />------</option>
 					<c:if test="${modelObject.permits != null and modelObject.permits[2] != null and modelObject.permits[2].number != null}">
 						<c:set var="chosenPermit" value="${modelObject.permits[2]}" />
@@ -548,12 +585,47 @@ $("#confirmExchangeOrderDialogYes").click(function (ev) {
 	        <td align="${left}" id="permitValidTo3">${modelObject.permits[2].endDate}</td>
 	    </tr>
 	    <tr>
-	    	<td class="form-left"><transys:label code="Permit1 Fee"/><span class="errorMessage">*</span></td>
-	        <td align="${left}" id="permitFee1">${modelObject.permits[0].fee}</td>
-	        <td class="form-left"><transys:label code="Permit2 Fee"/><span class="errorMessage">*</span></td>
-	        <td align="${left}" id="permitFee2">${modelObject.permits[1].fee}</td>
-	        <td class="form-left"><transys:label code="Permit3 Fee"/><span class="errorMessage">*</span></td>
-	        <td align="${left}" id="permitFee3">${modelObject.permits[2].fee}</td>
+	      <td class="form-left"><transys:label code="Permit1 Address"/></td>
+	      <td align="${left}">
+        	<select class="flat form-control input-sm" id="permitAddress1" name="permitAddress1" style="width:172px !important">
+				<option value="">------Please Select------</option>
+				<c:if test="${modelObject.permits != null and modelObject.permits[0] != null and modelObject.permits[0].number != null}">
+					<c:forEach items="${modelObject.permits[0].permitAddress}" var="aPermitAddress">
+						<option value="${aPermitAddress.id}" ${selected}>${aPermitAddress.fullLine}</option>
+					</c:forEach>
+				</c:if>
+			</select>
+	      </td>
+	      <td class="form-left"><transys:label code="Permit2 Address"/></td>
+	      <td align="${left}">
+        	<select class="flat form-control input-sm" id="permitAddress2" name="permitAddress2" style="width:172px !important">
+				<option value="">------Please Select------</option>
+				<c:if test="${modelObject.permits != null and modelObject.permits[1] != null and modelObject.permits[1].number != null}">
+					<c:forEach items="${modelObject.permits[1].permitAddress}" var="aPermitAddress">
+						<option value="${aPermitAddress.id}" ${selected}>${aPermitAddress.fullLine}</option>
+					</c:forEach>
+				</c:if>
+			</select>
+	      </td>
+	      <td class="form-left"><transys:label code="Permit3 Address"/></td>
+	      <td align="${left}">
+        	<select class="flat form-control input-sm" id="permitAddress3" name="permitAddress3" style="width:172px !important">
+				<option value="">------Please Select------</option>
+				<c:if test="${modelObject.permits != null and modelObject.permits[2] != null and modelObject.permits[2].number != null}">
+					<c:forEach items="${modelObject.permits[2].permitAddress}" var="aPermitAddress">
+						<option value="${aPermitAddress.id}" ${selected}>${aPermitAddress.fullLine}</option>
+					</c:forEach>
+				</c:if>
+			</select>
+	      </td>
+		</tr>
+	    <tr>
+	    	<td class="form-left">Permit1 Fee<span class="errorMessage">*</span></td>
+	        <td align="${left}"><form:input path="orderPaymentInfo.permitFee1" cssClass="flat" /></td>
+	        <td class="form-left">Permit2 Fee<span class="errorMessage">*</span></td>
+	        <td align="${left}"><form:input path="orderPaymentInfo.permitFee2" cssClass="flat" /></td>
+	        <td class="form-left">Permit3 Fee<span class="errorMessage">*</span></td>
+	        <td align="${left}"><form:input path="orderPaymentInfo.permitFee3" cssClass="flat" /></td>
 	    </tr>
 	    <tr>
 			<td colspan=10></td>
@@ -606,25 +678,34 @@ $("#confirmExchangeOrderDialogYes").click(function (ev) {
 		<tr>
 			<td class="form-left"><transys:label code="Dumpster Price"/><span class="errorMessage">*</span></td>
 			<td align="${left}">
-				<form:input path="orderPaymentInfo.dumpsterPrice" cssClass="flat" />
+				<form:input path="orderPaymentInfo.dumpsterPrice" cssClass="form-control" readonly="true" style="width:172px;height:25px !important" />
 				<br><form:errors path="orderPaymentInfo.dumpsterPrice" cssClass="errorMessage" />
-			</td>
-			<td class="form-left"><transys:label code="City Fee"/><span class="errorMessage">*</span></td>
-			<td align="${left}">
-				<form:input path="orderPaymentInfo.cityFee" cssClass="flat" />
-				<br><form:errors path="orderPaymentInfo.cityFee" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>
-			<td class="form-left"><transys:label code="Permit Fee"/><span class="errorMessage">*</span></td>
+			<td class="form-left"><transys:label code="Permit Fees"/></td>
 			<td align="${left}">
-				<form:input path="orderPaymentInfo.permitFees" cssClass="flat" />
-				<br><form:errors path="orderPaymentInfo.permitFees" cssClass="errorMessage" />
+				<input id="permitFees" class="form-control" readonly="readonly" style="width:172px;height:25px !important"/>
 			</td>
 			<td class="form-left"><transys:label code="Overweight Fee"/><span class="errorMessage">*</span></td>
 			<td align="${left}">
-				<form:input path="orderPaymentInfo.overweightFee" cssClass="flat" />
+				<form:input path="orderPaymentInfo.overweightFee" cssClass="form-control" readonly="true" style="width:172px;height:25px !important" />
 				<br><form:errors path="orderPaymentInfo.overweightFee" cssClass="errorMessage" />
+			</td>
+		</tr>
+		<tr>
+			<td class="form-left"><transys:label code="City Fee Description"/><span class="errorMessage">*</span></td>
+				<td align="${left}">
+				<form:select id="cityFeeDescription" cssClass="flat form-control input-sm" style="width:172px !important" path="orderPaymentInfo.cityFeeType"> 
+					<form:option value="">-------Please Select------</form:option>
+					<form:options items="${cityFeeDetails}" itemValue="id" itemLabel="suburbName" />
+				</form:select>
+				<br><form:errors path="orderPaymentInfo.cityFeeType" cssClass="errorMessage" />
+			</td>
+			<td class="form-left"><transys:label code="City Fee"/><span class="errorMessage">*</span></td>
+			<td align="${left}">
+				<form:input path="orderPaymentInfo.cityFee" cssClass="form-control" readonly="true" style="width:172px;height:25px !important" />
+				<br><form:errors path="orderPaymentInfo.cityFee" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>
@@ -673,10 +754,26 @@ $("#confirmExchangeOrderDialogYes").click(function (ev) {
 			</td>
 		</tr>
 		<tr>
+			<td class="form-left"><transys:label code="Total Additional Fees"/></td>
+			<td align="${left}">
+				<input id="totalAdditionalFees" class="form-control" readonly="readonly" style="width:172px;height:25px !important"/>
+			</td>
+		</tr>
+		<tr>
+			<td class="form-left"><transys:label code="Discount %"/><span class="errorMessage">*</span></td>
+			<td align="${left}">
+				<form:input path="orderPaymentInfo.discountPercentage" cssClass="flat" />
+				<br><form:errors path="orderPaymentInfo.discountPercentage" cssClass="errorMessage" />
+			</td>
+			<td class="form-left"><transys:label code="Discount Amount"/></td>
+			<td align="${left}">
+				<form:input path="orderPaymentInfo.discountAmount" cssClass="form-control" readonly="true" style="width:172px;height:25px !important"/>
+			</td>
+		</tr>
+		<tr>
 			<td class="form-left"><transys:label code="Total Fees"/><span class="errorMessage">*</span></td>
 			<td align="${left}">
-				<form:input path="orderPaymentInfo.totalFees" cssClass="flat" />
-				<br><form:errors path="orderPaymentInfo.totalFees" cssClass="errorMessage" />
+				<form:input path="orderPaymentInfo.totalFees" cssClass="form-control" readonly="true" style="width:172px;height:25px !important"/>
 			</td>
 		</tr>
 		<tr>

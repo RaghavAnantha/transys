@@ -29,7 +29,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 //import com.google.gson.Gson;
 import com.transys.controller.editor.AbstractModelEditor;
 import com.transys.model.AbstractBaseModel;
-import com.transys.model.Address;
+import com.transys.model.DeliveryAddress;
 import com.transys.model.BaseModel;
 import com.transys.model.Customer;
 import com.transys.model.LocationType;
@@ -58,7 +58,7 @@ public class PermitController extends CRUDController<Permit> {
 		binder.registerCustomEditor(LocationType.class, new AbstractModelEditor(LocationType.class));
 		binder.registerCustomEditor(PermitClass.class, new AbstractModelEditor(PermitClass.class));
 		binder.registerCustomEditor(PermitType.class, new AbstractModelEditor(PermitType.class));
-		binder.registerCustomEditor(Address.class, new AbstractModelEditor(Address.class));
+		binder.registerCustomEditor(DeliveryAddress.class, new AbstractModelEditor(DeliveryAddress.class));
 		binder.registerCustomEditor(PermitNotes.class, new AbstractModelEditor(PermitNotes.class));
 		super.initBinder(binder);
 	}
@@ -309,7 +309,7 @@ public class PermitController extends CRUDController<Permit> {
 	public void setupCreate(ModelMap model, HttpServletRequest request) {
 		Map criterias = new HashMap();
 		
-		List<Address> addresses = genericDAO.findUniqueByCriteria(Address.class, criterias, "line1", false);
+		List<DeliveryAddress> addresses = genericDAO.findUniqueByCriteria(DeliveryAddress.class, criterias, "line1", false);
 	   model.addAttribute("deliveryAddress", addresses);
 		model.addAttribute("customer", genericDAO.findByCriteria(Customer.class, criterias, "contactName", false));
 		model.addAttribute("locationType", genericDAO.findByCriteria(LocationType.class, criterias, "id", false));
@@ -387,7 +387,7 @@ public class PermitController extends CRUDController<Permit> {
 	@RequestMapping(method = RequestMethod.GET, value = "/customerDeliveryAddress")
 	public @ResponseBody String displayCustomerDeliveryAddress(ModelMap model, HttpServletRequest request) {
 		String customerId = request.getParameter("customerId");
-		List<Address> addressList  = genericDAO.executeSimpleQuery("select obj from Address obj where obj.customer.id=" + customerId);
+		List<DeliveryAddress> addressList  = genericDAO.executeSimpleQuery("select obj from DeliveryAddress obj where obj.customer.id=" + customerId);
 		
 		ObjectMapper objectMapper = new ObjectMapper();
 		String json = StringUtils.EMPTY;

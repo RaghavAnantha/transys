@@ -1,5 +1,6 @@
 package com.transys.model;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -53,11 +54,15 @@ public class Order extends AbstractBaseModel {
 	
 	@ManyToOne
 	@JoinColumn(name="deliveryAddressId")
-	private Address deliveryAddress;
+	private DeliveryAddress deliveryAddress;
 	
 	@ManyToOne
 	@JoinColumn(name="materialTypeId") 
 	private MaterialType materialType;
+	
+	@ManyToOne
+	@JoinColumn(name="materialCategoryId") 
+	private MaterialCategory materialCategory;
 	
 	@Column(name="pickupDate")
 	private Date pickupDate;
@@ -149,21 +154,32 @@ public class Order extends AbstractBaseModel {
 	/*@JoinColumn(name="paymentInfo")
 	private OrderPaymentInfo paymentInfo;*/
 	
+	@Column(name="pickupOrderId")
+	private Long pickupOrderId;
+	
+	public Long getPickupOrderId() {
+		return pickupOrderId;
+	}
+
+	public void setPickupOrderId(Long pickupOrderId) {
+		this.pickupOrderId = pickupOrderId;
+	}
+
 	/******** Weight Info ************/
 	/*@JoinColumn(name="weightInfo")
 	private OrderWeightInfo weightInfo;*/
 	
 	@Column(name="grossWeight")
-	private Double grossWeight;
+	private BigDecimal grossWeight;
 	
 	@Column(name="netWeightLb")
-	private Double netWeightLb;
+	private BigDecimal netWeightLb;
 	
 	@Column(name="netWeightTonnage")
-	private Double netWeightTonnage;
+	private BigDecimal netWeightTonnage;
 	
 	@Column(name="tare")
-	private Double tare;
+	private BigDecimal tare;
 	
 	/******** Driver Info ************/
 	/*@JoinColumn(name="driverInfo")
@@ -186,35 +202,35 @@ public class Order extends AbstractBaseModel {
 		return customer;
 	}
 
-	public Double getGrossWeight() {
+	public BigDecimal getGrossWeight() {
 		return grossWeight;
 	}
 
-	public void setGrossWeight(Double grossWeight) {
+	public void setGrossWeight(BigDecimal grossWeight) {
 		this.grossWeight = grossWeight;
 	}
 
-	public Double getNetWeightLb() {
+	public BigDecimal getNetWeightLb() {
 		return netWeightLb;
 	}
 
-	public void setNetWeightLb(Double netWeightLb) {
+	public void setNetWeightLb(BigDecimal netWeightLb) {
 		this.netWeightLb = netWeightLb;
 	}
 
-	public Double getNetWeightTonnage() {
+	public BigDecimal getNetWeightTonnage() {
 		return netWeightTonnage;
 	}
 
-	public void setNetWeightTonnage(Double netWeightTonnage) {
+	public void setNetWeightTonnage(BigDecimal netWeightTonnage) {
 		this.netWeightTonnage = netWeightTonnage;
 	}
 
-	public Double getTare() {
+	public BigDecimal getTare() {
 		return tare;
 	}
 
-	public void setTare(Double tare) {
+	public void setTare(BigDecimal tare) {
 		this.tare = tare;
 	}
 
@@ -286,12 +302,20 @@ public class Order extends AbstractBaseModel {
 		this.deliveryMinutesTo = deliveryMinutesTo;
 	}
 
-	public Address getDeliveryAddress() {
+	public DeliveryAddress getDeliveryAddress() {
 		return deliveryAddress;
 	}
 
-	public void setDeliveryAddress(Address deliveryAddress) {
+	public void setDeliveryAddress(DeliveryAddress deliveryAddress) {
 		this.deliveryAddress = deliveryAddress;
+	}
+
+	public MaterialCategory getMaterialCategory() {
+		return materialCategory;
+	}
+
+	public void setMaterialCategory(MaterialCategory materialCategory) {
+		this.materialCategory = materialCategory;
 	}
 
 	public Date getPickupDate() {

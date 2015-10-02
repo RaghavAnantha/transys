@@ -25,7 +25,7 @@
 		<tr>
 			<td align="${left}" class="form-left"><transys:label code="Material Type" /></td>
 			<td align="${left}" class="wide"><select
-				class="flat form-control input-sm" id="type" name="type"
+				class="flat form-control input-sm" id="materialName" name="materialName"
 				style="width: 175px">
 					<option value="">------
 						<transys:label code="Please Select" />------
@@ -33,10 +33,10 @@
 					<c:forEach items="${materialType}" var="aMaterial">
 						<c:set var="selected" value="" />
 						<c:if
-							test="${sessionScope.searchCriteria.searchMap['type'] == aMaterial.type}">
+							test="${sessionScope.searchCriteria.searchMap['materialName'] == aMaterial.materialName}">
 							<c:set var="selected" value="selected" />
 						</c:if>
-						<option value="${aMaterial.type}" ${selected}>${aMaterial.type}</option>
+						<option value="${aMaterial.id}" ${selected}>${aMaterial.materialName}</option>
 					</c:forEach>
 			</select></td>
 		</tr>
@@ -55,11 +55,11 @@
 		editable="true" insertable="true" baseObjects="${list}"
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
 		pagingLink="search.do" multipleDelete="false" searcheable="false"
-		exportPdf="true" exportXls="true">
+		exportPdf="true" exportXls="true" dataQualifier="materialType">
 		<transys:textcolumn headerText="Material ID" dataField="id" />
 		<transys:textcolumn headerText="Material Type" dataField="type" />
 	</transys:datatable>
-	<%session.setAttribute("columnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
+	<%session.setAttribute("materialTypeColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
 </form:form>
 
 

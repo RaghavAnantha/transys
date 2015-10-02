@@ -8,14 +8,25 @@ import javax.persistence.Table;
 @Table(name="materialType")
 public class MaterialType extends AbstractBaseModel {
 
-	@Column(name="typeName")
-	private String type;
+	@Column(name="materialName")
+	private String materialName;
 
-	public String getType() {
-		return type;
+	@Column(name="comments")
+	private String comments;
+
+	public String getMaterialName() {
+		return materialName;
 	}
 
-	public void setType(String type) {
-		this.type = type;
+	public void setMaterialName(String materialName) {
+		this.materialName = materialName;
+	}
+
+	public String getComments() {
+		return comments;
+	}
+
+	public void setComments(String comments) {
+		this.comments = comments;
 	}
 }

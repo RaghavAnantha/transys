@@ -64,15 +64,15 @@
 	<transys:datatable urlContext="customer" deletable="true"
 		editable="true" editableInScreen="true"   baseObjects="${deliveryAddressList}"
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
-		pagingLink="search.do" multipleDelete="false" searcheable="false"
-		>
+		pagingLink="search.do" multipleDelete="false" searcheable="false" 
+		dataQualifier="manageDeliveryAddress">
 		<transys:textcolumn headerText="Delivery Address #" dataField="line1" />
 		<transys:textcolumn headerText="Delivery Street" dataField="line2" />
 		<transys:textcolumn headerText="City" dataField="city" />
 		<transys:textcolumn headerText="State" dataField="state.name" />
 		<transys:textcolumn headerText="Zipcode" dataField="zipcode" />
 	</transys:datatable>
-	<%session.setAttribute("columnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
+	<%session.setAttribute("manageDeliveryAddressColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
 </form:form>
 
 <script type="text/javascript">
