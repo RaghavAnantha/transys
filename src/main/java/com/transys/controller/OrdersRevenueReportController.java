@@ -80,7 +80,7 @@ public class OrdersRevenueReportController extends CRUDController<Order> {
 		for(Order o : orderList) {
 			selectedOrderIDs.append(o.getId() + ",");
 		}
-		List<?> aggregationResults = genericDAO.executeSimpleQuery("select SUM(p.dumpsterPrice) as totalDumpsterPrice, SUM(p.permitFees) as totalPermitFees, SUM(p.cityFee) as totalCityFees, SUM(p.overweightFee) as totalOverweightFees, SUM(p.totalFees) as totalFees from OrderPaymentInfo p where p.order IN (" + selectedOrderIDs.substring(0,selectedOrderIDs.lastIndexOf(",")) + ")");
+		List<?> aggregationResults = genericDAO.executeSimpleQuery("select SUM(p.dumpsterPrice) as totalDumpsterPrice, SUM(p.totalPermitFees) as totalPermitFees, SUM(p.cityFee) as totalCityFees, SUM(p.overweightFee) as totalOverweightFees, SUM(p.totalFees) as totalFees from OrderPaymentInfo p where p.order IN (" + selectedOrderIDs.substring(0,selectedOrderIDs.lastIndexOf(",")) + ")");
 		//String jSonResponse =new Gson().toJson(aggregationResults.get(0));
 		ObjectMapper objectMapper = new ObjectMapper();
 		String jsonResponse = StringUtils.EMPTY;
