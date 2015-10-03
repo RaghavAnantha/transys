@@ -313,6 +313,10 @@ $("#confirmExchangeOrderDialogYes").click(function (ev) {
 				</label>
 				<br><form:errors path="deliveryAddress" cssClass="errorMessage" />
 			</td>
+			<td class="form-left"><span style="color:blue">Pickup Order #</span></td>
+			<td align="${left}">
+				<span style="color:blue">${modelObject.pickupOrderId}</span>
+			</td>
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Contact Name" /><span class="errorMessage">*</span></td>
