@@ -458,13 +458,17 @@ public class OrderController extends CRUDController<Order> {
 			map.put("status", order.getOrderStatus().getStatus());
 			map.put("deliveryDate", order.getDeliveryDate().toString());
 			map.put("pickupDate", order.getPickupDate().toString());
-			map.put("paymentMethod", order.getOrderPaymentInfo().getPaymentMethod());
-			map.put("dumpsterPrice", order.getOrderPaymentInfo().getDumpsterPrice().toString());
-			map.put("cityFee", order.getOrderPaymentInfo().getCityFee().toString());
-			map.put("permitFees", order.getOrderPaymentInfo().getPermitFee1().toString());
-			map.put("overweightFee", order.getOrderPaymentInfo().getOverweightFee().toString());
-			if (order.getOrderPaymentInfo().getTotalFees() != null ) {
-				map.put("totalFees", order.getOrderPaymentInfo().getTotalFees().toString());
+			
+			OrderPaymentInfo paymentInfo = order.getOrderPaymentInfo();
+			if (paymentInfo != null) {
+				map.put("paymentMethod", StringUtils.defaultIfEmpty(paymentInfo.getPaymentMethod().getMethod(), StringUtils.EMPTY));
+				map.put("dumpsterPrice", paymentInfo.getDumpsterPrice().toString());
+				map.put("cityFee", paymentInfo.getCityFee().toString());
+				map.put("permitFees", paymentInfo.getPermitFee1().toString());
+				map.put("overweightFee", paymentInfo.getOverweightFee().toString());
+				if (paymentInfo.getTotalFees() != null ) {
+					map.put("totalFees", order.getOrderPaymentInfo().getTotalFees().toString());
+				}
 			}
 			
 			newList.add(map);

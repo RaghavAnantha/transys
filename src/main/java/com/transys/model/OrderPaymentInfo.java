@@ -65,11 +65,18 @@ public class OrderPaymentInfo extends AbstractBaseModel {
 		@Column(name="discountAmount")
 		private BigDecimal discountAmount;
 		
+		@Column(name="totalPermitFees")
+		private BigDecimal totalPermitFees;
+		
+		@Column(name="totalAdditionalFees")
+		private BigDecimal totalAdditionalFees;
+		
 		@Column(name="totalFees")
 		private BigDecimal totalFees;
 		
-		@Column(name="paymentMethod")
-		private String paymentMethod;
+		@ManyToOne
+		@JoinColumn(name="paymentMethodId") 
+		private PaymentMethod paymentMethod;
 		
 		@Column(name="ccReferenceNum")
 		private String ccReferenceNum;
@@ -204,11 +211,11 @@ public class OrderPaymentInfo extends AbstractBaseModel {
 			this.totalFees = totalFees;
 		}
 
-		public String getPaymentMethod() {
+		public PaymentMethod getPaymentMethod() {
 			return paymentMethod;
 		}
 
-		public void setPaymentMethod(String paymentMethod) {
+		public void setPaymentMethod(PaymentMethod paymentMethod) {
 			this.paymentMethod = paymentMethod;
 		}
 
@@ -234,5 +241,21 @@ public class OrderPaymentInfo extends AbstractBaseModel {
 
 		public void setCityFeeType(CityFee cityFeeType) {
 			this.cityFeeType = cityFeeType;
+		}
+
+		public BigDecimal getTotalPermitFees() {
+			return totalPermitFees;
+		}
+
+		public void setTotalPermitFees(BigDecimal totalPermitFees) {
+			this.totalPermitFees = totalPermitFees;
+		}
+
+		public BigDecimal getTotalAdditionalFees() {
+			return totalAdditionalFees;
+		}
+
+		public void setTotalAdditionalFees(BigDecimal totalAdditionalFees) {
+			this.totalAdditionalFees = totalAdditionalFees;
 		}
 }
