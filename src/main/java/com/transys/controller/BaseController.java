@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Logger;
@@ -27,6 +28,7 @@ import org.springframework.web.multipart.support.ByteArrayMultipartFileEditor;
 
 //import com.google.gson.Gson;
 import com.transys.core.dao.GenericDAO;
+import com.transys.core.util.MimeUtil;
 //import com.transys.model.Language;
 import com.transys.model.SearchCriteria;
 //import com.transys.model.StaticData;
@@ -181,6 +183,16 @@ public class BaseController {
 			}
 		}
 		return buffer.toString();
+	}
+	
+	protected String setRequestHeaders(HttpServletResponse response, String type) {
+		if (StringUtils.isEmpty(type))
+			type = "xlsx";
+		if (!type.equals("html") && !(type.equals("print"))) {
+			response.setHeader("Content-Disposition", "attachment;filename= deliveryPickupReport." + type);
+		}
+		response.setContentType(MimeUtil.getContentType(type));
+		return type;
 	}
 
 	/*public void writeActivityLog(String activityType, String details) {

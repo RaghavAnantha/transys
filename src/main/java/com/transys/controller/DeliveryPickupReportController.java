@@ -135,16 +135,6 @@ public class DeliveryPickupReportController extends CRUDController<Order> {
 		}
 	}
 
-	private String setRequestHeaders(HttpServletResponse response, String type) {
-		if (StringUtils.isEmpty(type))
-			type = "xlsx";
-		if (!type.equals("html") && !(type.equals("print"))) {
-			response.setHeader("Content-Disposition", "attachment;filename= deliveryPickupReport." + type);
-		}
-		response.setContentType(MimeUtil.getContentType(type));
-		return type;
-	}
-
 	private List<Map<String, Object>> prepareReportData(ModelMap model, HttpServletRequest request) {
 		
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
