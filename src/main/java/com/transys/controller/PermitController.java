@@ -29,19 +29,21 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 //import com.google.gson.Gson;
 import com.transys.controller.editor.AbstractModelEditor;
 import com.transys.model.AbstractBaseModel;
-import com.transys.model.DeliveryAddress;
 import com.transys.model.BaseModel;
 import com.transys.model.Customer;
+import com.transys.model.DeliveryAddress;
 import com.transys.model.LocationType;
 import com.transys.model.Order;
 import com.transys.model.OrderPermits;
 import com.transys.model.OrderStatus;
 import com.transys.model.Permit;
+import com.transys.model.PermitAddress;
 import com.transys.model.PermitClass;
 import com.transys.model.PermitNotes;
 import com.transys.model.PermitStatus;
 import com.transys.model.PermitType;
 import com.transys.model.SearchCriteria;
+import com.transys.model.State;
 
 @SuppressWarnings("unchecked")
 @Controller
@@ -60,6 +62,8 @@ public class PermitController extends CRUDController<Permit> {
 		binder.registerCustomEditor(PermitType.class, new AbstractModelEditor(PermitType.class));
 		binder.registerCustomEditor(DeliveryAddress.class, new AbstractModelEditor(DeliveryAddress.class));
 		binder.registerCustomEditor(PermitNotes.class, new AbstractModelEditor(PermitNotes.class));
+		binder.registerCustomEditor(PermitAddress.class, new AbstractModelEditor(PermitAddress.class));
+		binder.registerCustomEditor(State.class, new AbstractModelEditor(State.class));
 		super.initBinder(binder);
 	}
 	
@@ -259,6 +263,7 @@ public class PermitController extends CRUDController<Permit> {
 		model.addAttribute("activeSubTab", "permitDetails");
 		
 		model.addAttribute("notesModelObject", new PermitNotes());
+		model.addAttribute("permitAddressModelObject", new PermitAddress());
 		return urlContext + "/permit";
 	}
 	
@@ -282,10 +287,15 @@ public class PermitController extends CRUDController<Permit> {
 		PermitNotes notes = new PermitNotes();
 		notes.setPermit(permitToBeEdited); 
 		model.addAttribute("notesModelObject", notes);
-		
 		List<BaseModel> notesList = genericDAO.executeSimpleQuery("select obj from PermitNotes obj where obj.permit.id=" +  permitToBeEdited.getId() + " order by obj.id asc");
 		model.addAttribute("notesList", notesList);
-		
+	
+		PermitAddress permitAddress = new PermitAddress();
+		permitAddress.setPermit(permitToBeEdited); 
+		model.addAttribute("permitAddressModelObject", permitAddress);
+		List<BaseModel> permitAddressList = genericDAO.executeSimpleQuery("select obj from PermitAddress obj where obj.permit.id=" +  permitToBeEdited.getId() + " order by obj.id asc");
+		model.addAttribute("permitAddressList", permitAddressList);
+
 		// only in cases of Edit, an order ID can be associated with the permit
 		List<BaseModel> orderPermits = (List<BaseModel>)genericDAO.executeSimpleQuery("select obj from OrderPermits obj where obj.permit.id=" +  permitToBeEdited.getId() + " order by obj.id desc");
 		if (orderPermits != null && orderPermits.size() > 0) {
@@ -319,6 +329,7 @@ public class PermitController extends CRUDController<Permit> {
 		model.addAttribute("permitStatus", genericDAO.findByCriteria(PermitStatus.class, criterias, "status", false));
 		model.addAttribute("permit", genericDAO.findByCriteria(Permit.class, criterias, "id", false));
 		model.addAttribute("orderStatuses", genericDAO.findByCriteria(OrderStatus.class, criterias, "status", false));
+		model.addAttribute("state", genericDAO.findAll(State.class));
 
 		List<OrderPermits> orderPermits = getToBeAlertedPermits(new SearchCriteria());
 		model.addAttribute("orderPermitList", orderPermits);
@@ -373,7 +384,7 @@ public class PermitController extends CRUDController<Permit> {
 	public String saveSuccess(ModelMap model, HttpServletRequest request, Permit entity) {
 		setupCreate(model, request);
 		model.addAttribute("activeTab", "managePermits");
-		model.addAttribute("activeSubTab", "permitNotes");
+		model.addAttribute("activeSubTab", "permitNotes"); // Permit Address?
 		model.addAttribute("mode", "ADD");
 		
 		PermitNotes notes = new PermitNotes();
@@ -381,6 +392,13 @@ public class PermitController extends CRUDController<Permit> {
 		model.addAttribute("notesModelObject", notes);
 		List<BaseModel> notesList = genericDAO.executeSimpleQuery("select obj from PermitNotes obj where obj.permit.id=" +  entity.getId() + " order by obj.id asc");
 		model.addAttribute("notesList", notesList);
+		
+		PermitAddress permitAddress = new PermitAddress();
+		permitAddress.setPermit(entity); 
+		model.addAttribute("permitAddressModelObject", permitAddress);
+		List<BaseModel> permitAddressList = genericDAO.executeSimpleQuery("select obj from PermitAddress obj where obj.permit.id=" +  entity.getId() + " order by obj.id asc");
+		model.addAttribute("permitAddressList", permitAddressList);
+		
 		return urlContext + "/permit";
 	}
 	
@@ -429,6 +447,44 @@ public class PermitController extends CRUDController<Permit> {
 	@RequestMapping(method = RequestMethod.POST, value = "/savePermitNotes.do")
 	public String savePermitNotes(HttpServletRequest request,
 			@ModelAttribute("notesModelObject") PermitNotes entity,
+			BindingResult bindingResult, ModelMap model) {
+		try {
+			getValidator().validate(entity, bindingResult);
+		} catch (ValidationException e) {
+			e.printStackTrace();
+			log.warn("Error in validation :" + e);
+		}
+		// return to form if we had errors
+		if (bindingResult.hasErrors()) {
+			setupCreate(model, request);
+			return urlContext + "/form";
+		}
+		//beforeSave(request, entity, model);
+		if (entity instanceof AbstractBaseModel) {
+			AbstractBaseModel baseModel = (AbstractBaseModel) entity;
+			if (baseModel.getId() == null) {
+				baseModel.setCreatedAt(Calendar.getInstance().getTime());
+				if (baseModel.getCreatedBy()==null) {
+					baseModel.setCreatedBy(getUser(request).getId());
+				}
+			} else {
+				baseModel.setModifiedAt(Calendar.getInstance().getTime());
+				if (baseModel.getModifiedBy()==null) {
+					baseModel.setModifiedBy(getUser(request).getId());
+				}
+			}
+		}
+		
+		genericDAO.saveOrUpdate(entity);
+		cleanUp(request);
+
+		setupCreate(model, request);
+		return urlContext + "/list";
+	}
+	
+	@RequestMapping(method = RequestMethod.POST, value = "/savePermitAddress.do")
+	public String savePermitAddress(HttpServletRequest request,
+			@ModelAttribute("permitAddressModelObject") PermitAddress entity,
 			BindingResult bindingResult, ModelMap model) {
 		try {
 			getValidator().validate(entity, bindingResult);
