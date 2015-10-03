@@ -61,7 +61,7 @@
 		<transys:textcolumn headerText="Customer" dataField="customer.companyName" />
 		<transys:textcolumn headerText="Delivery Address" dataField="deliveryAddress.line1" />
 		<transys:textcolumn headerText="City" dataField="deliveryAddress.city" />
-		<transys:textcolumn headerText="Payment Method" dataField="orderPaymentInfo.paymentMethod" />
+		<transys:textcolumn headerText="Payment Method" dataField="orderPaymentInfo.paymentMethod.method" />
 		<transys:textcolumn headerText="Check #" dataField="orderPaymentInfo.checkNum" />
 		<transys:textcolumn headerText="CC Reference #" dataField="orderPaymentInfo.ccReferenceNum" />
 		<transys:textcolumn headerText="Dumpster Price" dataField="orderPaymentInfo.dumpsterPrice" />
