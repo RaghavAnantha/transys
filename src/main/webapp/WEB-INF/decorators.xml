@@ -66,7 +66,10 @@
         <pattern>/transys/additionalFee/**</pattern>
     </decorator>
     <decorator name="report" page="singleColumnLayout.jsp">
-        <pattern>/transys/dumpsterOnsiteReports/**</pattern>
+        <pattern>/transys/dumpsterOnsiteReport/**</pattern>
+    </decorator>
+    <decorator name="report" page="singleColumnLayout.jsp">
+        <pattern>/transys/dumpstersRentedReport/**</pattern>
     </decorator>
     <decorator name="report" page="singleColumnLayout.jsp">
         <pattern>/transys/ordersRevenueReport/**</pattern>

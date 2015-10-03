@@ -28,12 +28,12 @@ import com.transys.model.Order;
 import com.transys.model.SearchCriteria;
 
 @Controller
-@RequestMapping("/dumpsterOnsiteReports")
-public class DumpsterOnsiteReportController extends CRUDController<DumpsterInfo> {
+@RequestMapping("/dumpstersRentedReport")
+public class DumpstersRentedReportController extends CRUDController<DumpsterInfo> {
 	
 	
-	public DumpsterOnsiteReportController(){	
-		setUrlContext("dumpsterOnsiteReports");
+	public DumpstersRentedReportController(){	
+		setUrlContext("dumpstersRentedReport");
 	}
 	
 	
@@ -52,7 +52,26 @@ public class DumpsterOnsiteReportController extends CRUDController<DumpsterInfo>
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		//TODO fix me
 		criteria.getSearchMap().remove("_csrf");
-		model.addAttribute("dumpsterInfoList",genericDAO.search(getEntityClass(), criteria,"id",null,null));
+		List<DumpsterInfo> dumpsterInfoList = genericDAO.search(getEntityClass(), criteria,"id",null,null);
+		model.addAttribute("dumpsterInfoList", dumpsterInfoList);
+		
+		for (DumpsterInfo aDumpster : dumpsterInfoList) {
+			// get the latest delivery address & delivery date for the corresponding dumpster# from trans_order table
+			List<?> deliveryDetailsForDumpster = genericDAO.executeSimpleQuery("select deliveryAddress, deliveryDate from Order p where p.dumpster.id = " + aDumpster.getId() + " order by p.id desc");
+			if (deliveryDetailsForDumpster.isEmpty()) {
+				// do nothing
+				continue;
+			}
+			
+			Object deliveryDetailForDumpster = deliveryDetailsForDumpster.get(0);
+			// set 2 transient fields for deliveryAddress and deliveryDate in DumpsterInfo
+			//aDumpster.setDeliveryAddress();
+			//aDumpster.setDeliveryDate();
+			
+		}
+		
+		
+		
 		return urlContext + "/list";
 	}
 	
@@ -72,7 +91,7 @@ public class DumpsterOnsiteReportController extends CRUDController<DumpsterInfo>
 		setupCreate(model, request);
 	}
 	
-	@RequestMapping(method = RequestMethod.GET, value = "/generateDumpsterOnsiteReport.do")
+	@RequestMapping(method = RequestMethod.GET, value = "/generateDumpstersRentedReport.do")
 	public void export(ModelMap model, HttpServletRequest request,
 			HttpServletResponse response, @RequestParam("type") String type,
 			Object objectDAO, Class clazz) {
