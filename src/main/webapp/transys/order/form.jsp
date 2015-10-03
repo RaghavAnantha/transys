@@ -114,6 +114,12 @@ function populatePermitNumbers(index) {
 	var permitTypeSelect = $("#permitTypes" + index);
 	var permitTypeId = permitTypeSelect.val();
 	
+	var deliveryDate = $("[name='deliveryDate']").val();
+	
+	if (permitClassId == "" || permitTypeId == "" || deliveryDate == "") {
+		return false;
+	}
+	
 	var permitNumbersSelect = $("#permits\\[" + (index-1) + "\\]");
 	permitNumbersSelect.empty();
 	
@@ -121,10 +127,18 @@ function populatePermitNumbers(index) {
 	permitNumbersSelect.append(firstOption);
 	
 	$.ajax({
-  		url: "retrievePermit.do?" + "permitClassId=" + permitClassId + "\&permitTypeId=" + permitTypeId,
+  		url: "retrievePermit.do?" + "permitClassId=" + permitClassId 
+  								  + "\&permitTypeId=" + permitTypeId
+  								  + "\&deliveryDate=" + deliveryDate,
+  								  
        	type: "GET",
        	success: function(responseData, textStatus, jqXHR) {
        		var permitList = jQuery.parseJSON(responseData);
+			if (jQuery.isEmptyObject(permitList)) {
+    	   		alert("No permits available for seleted criteria.");
+    	   		return false;
+    	   	}
+    	   	
     	   	$.each(permitList, function () {
     	   	    $("<option />", {
     	   	        val: this.id,
