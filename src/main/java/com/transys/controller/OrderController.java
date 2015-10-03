@@ -2,6 +2,7 @@ package com.transys.controller;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -46,6 +47,7 @@ import com.transys.model.BaseModel;
 import com.transys.model.CityFee;
 import com.transys.model.Customer;
 import com.transys.model.DumpsterInfo;
+import com.transys.model.DumpsterPrice;
 import com.transys.model.DumpsterSize;
 import com.transys.model.LocationType;
 import com.transys.model.MaterialCategory;
@@ -54,6 +56,7 @@ import com.transys.model.Order;
 import com.transys.model.OrderNotes;
 import com.transys.model.OrderPaymentInfo;
 import com.transys.model.OrderStatus;
+import com.transys.model.OverweightFee;
 import com.transys.model.PaymentMethodType;
 import com.transys.model.Permit;
 import com.transys.model.PermitNotes;
@@ -529,7 +532,6 @@ public class OrderController extends CRUDController<Order> {
 		//return json;
 	}
 	
-	
 	private List<Permit> retrievePermit(String permitId, String permitClassId, String permitTypeId, String deliveryDateStr) {
 		String requiredEndDateStr = StringUtils.EMPTY;
 		if (StringUtils.isNotEmpty(deliveryDateStr)) {
@@ -564,6 +566,88 @@ public class OrderController extends CRUDController<Order> {
 		
 		List<Permit> permits = genericDAO.executeSimpleQuery(permitsQuery);
 		return permits;
+	}
+	
+	@RequestMapping(method = RequestMethod.GET, value = "/retrieveDumpsterPrice.do")
+	public @ResponseBody String retrieveDumpsterPrice(ModelMap model, HttpServletRequest request,
+														    @RequestParam(value = "dumpsterSizeId") String dumpsterSizeId,
+															 @RequestParam(value = "materialCategoryId") String materialCategoryId) {
+		BigDecimal dumpsterPrice = retrieveDumpsterPrice(dumpsterSizeId, materialCategoryId);
+		
+		ObjectMapper objectMapper = new ObjectMapper();
+		String json = StringUtils.EMPTY;
+		try {
+			json = objectMapper.writeValueAsString(dumpsterPrice);
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return json;
+		//String json = (new Gson()).toJson(permitList);
+		//return json;
+	}
+	
+	private BigDecimal retrieveDumpsterPrice(String dumpsterSizeId, String materialCategoryId) {
+		String dumpsterPriceQuery = "select obj from DumpsterPrice obj where ";
+		dumpsterPriceQuery += "obj.dumpsterSize.id=" + dumpsterSizeId
+				    		  	 + " and obj.materialCategory.id=" + materialCategoryId;
+		
+		List<DumpsterPrice> dumsterPriceList = genericDAO.executeSimpleQuery(dumpsterPriceQuery);
+		return dumsterPriceList.get(0).getPrice();
+	}
+	
+	@RequestMapping(method = RequestMethod.GET, value = "/retrieveCityFee.do")
+	public @ResponseBody String retrieveCityFee(ModelMap model, HttpServletRequest request,
+														    @RequestParam(value = "cityFeeId") String cityFeeId) {
+		BigDecimal cityFee = retrieveCityFee(cityFeeId);
+		
+		ObjectMapper objectMapper = new ObjectMapper();
+		String json = StringUtils.EMPTY;
+		try {
+			json = objectMapper.writeValueAsString(cityFee);
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return json;
+		//String json = (new Gson()).toJson(permitList);
+		//return json;
+	}
+	
+	private BigDecimal retrieveCityFee(String cityFeeId) {
+		String cityFeeQuery = "select obj from CityFee obj where ";
+		cityFeeQuery += "obj.id=" + cityFeeId;
+		
+		List<CityFee> cityFeeList = genericDAO.executeSimpleQuery(cityFeeQuery);
+		return cityFeeList.get(0).getFee();
+	}
+	
+	@RequestMapping(method = RequestMethod.GET, value = "/retrieveOverweightFee.do")
+	public @ResponseBody String retrieveOverweightFee(ModelMap model, HttpServletRequest request,
+			 													     @RequestParam(value = "dumpsterSizeId") String dumpsterSizeId,
+			 													     @RequestParam(value = "materialCategoryId") String materialCategoryId,
+			 													     @RequestParam(value = "netTonnage") String netTonnage) {
+		BigDecimal cityFee = retrieveOverweightFee(dumpsterSizeId, materialCategoryId, netTonnage);
+		
+		ObjectMapper objectMapper = new ObjectMapper();
+		String json = StringUtils.EMPTY;
+		try {
+			json = objectMapper.writeValueAsString(cityFee);
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return json;
+		//String json = (new Gson()).toJson(permitList);
+		//return json;
+	}
+	
+	private BigDecimal retrieveOverweightFee(String dumpsterSizeId, String materialCategoryId, String netTonnage) {
+		String overweightFeeQuery = "select obj from OverweightFee obj where ";
+		overweightFeeQuery += "obj.id=" + dumpsterSizeId;
+		
+		List<OverweightFee> overweightFeeList = genericDAO.executeSimpleQuery(overweightFeeQuery);
+		return overweightFeeList.get(0).getFee();
 	}
 	
 	@Override

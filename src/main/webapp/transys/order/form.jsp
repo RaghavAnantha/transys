@@ -107,6 +107,50 @@ function appendCustomer(customer) {
 	selectDeliveryAddressOption(customer.address[0].id);
 }
 
+function populateDusmpsterPrice() {
+	var dumpsterSizeSelect = $("#dumpsterSize");
+	var dumpsterSizeId = dumpsterSizeSelect.val();
+	
+	var materialCategorySelect = $("#materialCategory");
+	var materialCategoryId = materialCategorySelect.val();
+	
+	if (dumpsterSizeId == "" || materialCategoryId == "") {
+		return false;
+	}
+	
+	var dumpsterPriceInput = $("#orderPaymentInfo\\.dumpsterPrice");
+	
+	$.ajax({
+  		url: "retrieveDumpsterPrice.do?" + "dumpsterSizeId=" + dumpsterSizeId 
+  								  		 + "\&materialCategoryId=" + materialCategoryId,
+  								  
+       	type: "GET",
+       	success: function(responseData, textStatus, jqXHR) {
+       		dumpsterPriceInput.val(responseData);
+		}
+	});
+}
+
+function populateCityFee() {
+	var cityFeeDescriptionSelect = $("#orderPaymentInfo\\.cityFeeType");
+	var cityFeeId = cityFeeDescriptionSelect.val();
+	
+	if (cityFeeDescriptionSelect == "") {
+		return false;
+	}
+	
+	var cityFeeInput = $("#orderPaymentInfo\\.cityFee");
+	
+	$.ajax({
+  		url: "retrieveCityFee.do?" + "cityFeeId=" + cityFeeId ,
+  								  
+       	type: "GET",
+       	success: function(responseData, textStatus, jqXHR) {
+       		cityFeeInput.val(responseData);
+		}
+	});
+}
+
 function populatePermitNumbers(index) {
 	var permitClassSelect = $("#permitClasses" + index);
 	var permitClassId = permitClassSelect.val();
@@ -407,7 +451,7 @@ $("#confirmExchangeOrderDialogYes").click(function (ev) {
 		<tr>
 			<td class="form-left"><transys:label code="Material Category"/><span class="errorMessage">*</span></td>
 			<td align="${left}">
-				<form:select id="materialCategory" cssClass="flat form-control input-sm" style="width:172px !important" path="materialCategory"> 
+				<form:select id="materialCategory" cssClass="flat form-control input-sm" style="width:172px !important" path="materialCategory" onChange="return populateDusmpsterPrice();"> 
 					<form:option value="">-------Please Select------</form:option>
 					<form:options items="${materialCategories}" itemValue="id" itemLabel="category" />
 				</form:select> 
@@ -714,7 +758,7 @@ $("#confirmExchangeOrderDialogYes").click(function (ev) {
 		<tr>
 			<td class="form-left"><transys:label code="City Fee Description"/><span class="errorMessage">*</span></td>
 				<td align="${left}">
-				<form:select id="cityFeeDescription" cssClass="flat form-control input-sm" style="width:172px !important" path="orderPaymentInfo.cityFeeType"> 
+				<form:select id="orderPaymentInfo.cityFeeType" cssClass="flat form-control input-sm" style="width:172px !important" path="orderPaymentInfo.cityFeeType" onChange="return populateCityFee();"> 
 					<form:option value="">-------Please Select------</form:option>
 					<form:options items="${cityFeeDetails}" itemValue="id" itemLabel="suburbName" />
 				</form:select>
