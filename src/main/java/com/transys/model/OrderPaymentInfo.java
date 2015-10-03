@@ -76,7 +76,7 @@ public class OrderPaymentInfo extends AbstractBaseModel {
 		
 		@ManyToOne
 		@JoinColumn(name="paymentMethodId") 
-		private PaymentMethod paymentMethod;
+		private PaymentMethodType paymentMethod;
 		
 		@Column(name="ccReferenceNum")
 		private String ccReferenceNum;
@@ -211,11 +211,11 @@ public class OrderPaymentInfo extends AbstractBaseModel {
 			this.totalFees = totalFees;
 		}
 
-		public PaymentMethod getPaymentMethod() {
+		public PaymentMethodType getPaymentMethod() {
 			return paymentMethod;
 		}
 
-		public void setPaymentMethod(PaymentMethod paymentMethod) {
+		public void setPaymentMethod(PaymentMethodType paymentMethod) {
 			this.paymentMethod = paymentMethod;
 		}
 

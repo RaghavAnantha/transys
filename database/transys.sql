@@ -601,7 +601,7 @@ CREATE TABLE `orderPaymentInfo` (
   PRIMARY KEY (`id`),
   CONSTRAINT `orderPaymentOrderRef` FOREIGN KEY (`orderId`) REFERENCES `trans_order` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `orderPaymentCityFeeRef` FOREIGN KEY (`cityFeeId`) REFERENCES `cityFee` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `orderPaymentPaymentMethodRef` FOREIGN KEY (`paymentMethodId`) REFERENCES `paymentMethod` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `orderPaymentPaymentMethodRef` FOREIGN KEY (`paymentMethodId`) REFERENCES `paymentMethodType` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `orderPaymentAddnlFee1Ref` FOREIGN KEY (`additionalFee1Id`) REFERENCES `additionalFee` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `orderPaymentAddnlFee2Ref` FOREIGN KEY (`additionalFee2Id`) REFERENCES `additionalFee` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `orderPaymentAddnlFee3Ref` FOREIGN KEY (`additionalFee2Id`) REFERENCES `additionalFee` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
@@ -1041,13 +1041,13 @@ UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 --
--- Table structure for table `materialtype`
+-- Table structure for table `materialType`
 --
 
-DROP TABLE IF EXISTS `materialtype`;
+DROP TABLE IF EXISTS `materialType`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `materialtype` (
+CREATE TABLE `materialType` (
   `id` bigint(20) NOT NULL,
   `materialName` varchar(50) DEFAULT NULL,
   `comments` varchar(500) DEFAULT NULL,
@@ -1061,13 +1061,13 @@ CREATE TABLE `materialtype` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `materialtype`
+-- Dumping data for table `materialType`
 --
 
-LOCK TABLES `materialtype` WRITE;
-/*!40000 ALTER TABLE `materialtype` DISABLE KEYS */;
-INSERT INTO `materialtype` VALUES (1,'Concrete',NULL,NULL,NULL,NULL,NULL,1),(2,'Dirt',NULL,NULL,NULL,NULL,NULL,1),(3,'Bricks',NULL,NULL,NULL,NULL,NULL,1);
-/*!40000 ALTER TABLE `materialtype` ENABLE KEYS */;
+LOCK TABLES `materialType` WRITE;
+/*!40000 ALTER TABLE `materialType` DISABLE KEYS */;
+INSERT INTO `materialType` VALUES (1,'Concrete',NULL,NULL,NULL,NULL,NULL,1),(2,'Dirt',NULL,NULL,NULL,NULL,NULL,1),(3,'Bricks',NULL,NULL,NULL,NULL,NULL,1);
+/*!40000 ALTER TABLE `materialType` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -1137,13 +1137,13 @@ UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 --
--- Table structure for table `paymentMethod`
+-- Table structure for table `paymentMethodType`
 --
 
-DROP TABLE IF EXISTS `paymentMethod`;
+DROP TABLE IF EXISTS `paymentMethodType`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `paymentMethod` (
+CREATE TABLE `paymentMethodType` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `method` varchar(20) NOT NULL,
   `comments` varchar(500) DEFAULT NULL,
@@ -1157,13 +1157,13 @@ CREATE TABLE `paymentMethod` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `paymentMethod`
+-- Dumping data for table `paymentMethodType`
 --
 
-LOCK TABLES `paymentMethod` WRITE;
-/*!40000 ALTER TABLE `paymentMethod` DISABLE KEYS */;
-INSERT INTO `paymentMethod` VALUES (1,'Company Check',NULL,NULL,NULL,'2015-09-24 22:51:23',1,1),(2,'Cash',NULL,NULL,NULL,NULL,NULL,1),(3,'Credit Card',NULL,NULL,NULL,NULL,NULL,1),(4,'Charge',NULL,NULL,NULL,NULL,NULL,1),(5,'Money Order',NULL,NULL,NULL,NULL,NULL,1);
-/*!40000 ALTER TABLE `paymentMethod` ENABLE KEYS */;
+LOCK TABLES `paymentMethodType` WRITE;
+/*!40000 ALTER TABLE `paymentMethodType` DISABLE KEYS */;
+INSERT INTO `paymentMethodType` VALUES (1,'Company Check',NULL,NULL,NULL,'2015-09-24 22:51:23',1,1),(2,'Cash',NULL,NULL,NULL,NULL,NULL,1),(3,'Credit Card',NULL,NULL,NULL,NULL,NULL,1),(4,'Charge',NULL,NULL,NULL,NULL,NULL,1),(5,'Money Order',NULL,NULL,NULL,NULL,NULL,1);
+/*!40000 ALTER TABLE `paymentMethodType` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 

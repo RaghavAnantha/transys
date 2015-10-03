@@ -38,10 +38,12 @@ import com.transys.model.AbstractBaseModel;
 import com.transys.model.AdditionalFee;
 import com.transys.model.DeliveryAddress;
 import com.transys.model.BaseModel;
+import com.transys.model.CityFee;
 import com.transys.model.Customer;
 import com.transys.model.DumpsterInfo;
 import com.transys.model.DumpsterSize;
 import com.transys.model.LocationType;
+import com.transys.model.MaterialCategory;
 import com.transys.model.MaterialType;
 import com.transys.model.Order;
 import com.transys.model.OrderNotes;
@@ -76,8 +78,11 @@ public class OrderController extends CRUDController<Order> {
 		binder.registerCustomEditor(DumpsterInfo.class, new AbstractModelEditor(DumpsterInfo.class));
 		binder.registerCustomEditor(User.class, new AbstractModelEditor(User.class));
 		binder.registerCustomEditor(MaterialType.class, new AbstractModelEditor(MaterialType.class));
+		binder.registerCustomEditor(MaterialCategory.class, new AbstractModelEditor(MaterialCategory.class));
 		binder.registerCustomEditor(AdditionalFee.class, new AbstractModelEditor(AdditionalFee.class));
 		binder.registerCustomEditor(DumpsterSize.class, new AbstractModelEditor(DumpsterSize.class));
+		binder.registerCustomEditor(CityFee.class, new AbstractModelEditor(CityFee.class));
+		binder.registerCustomEditor(PaymentMethodType.class, new AbstractModelEditor(PaymentMethodType.class));
 		
 		super.initBinder(binder);
 	}
@@ -112,7 +117,7 @@ public class OrderController extends CRUDController<Order> {
       model.addAttribute("materialCategories", genericDAO.executeSimpleQuery("select obj from MaterialCategory obj where obj.id!=0 order by obj.id asc"));
       model.addAttribute("materialTypes", genericDAO.executeSimpleQuery("select obj from MaterialType obj where obj.id!=0 order by obj.id asc"));
       
-      model.addAttribute("paymentMethods", genericDAO.executeSimpleQuery("select obj from PaymentMethod obj where obj.id!=0 order by obj.id asc"));
+      model.addAttribute("paymentMethods", genericDAO.executeSimpleQuery("select obj from PaymentMethodType obj where obj.id!=0 order by obj.id asc"));
       
       model.addAttribute("cityFeeDetails", genericDAO.executeSimpleQuery("select obj from CityFee obj where obj.id!=0 order by obj.id asc"));
       

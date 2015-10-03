@@ -4,18 +4,29 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-//@Entity
-//@Table(name="paymentMethodType")
+@Entity
+@Table(name="paymentMethodType")
 public class PaymentMethodType extends AbstractBaseModel {
+	
+	@Column(name="method")
+	private String method;
+	
+	@Column(name="comments")
+	private String comments;
 
-	//@Column(name="paymentMethodType")
-	private String type;
-
-	public String getType() {
-		return type;
+	public String getMethod() {
+		return method;
 	}
 
-	public void setType(String type) {
-		this.type = type;
+	public void setMethod(String method) {
+		this.method = method;
+	}
+
+	public String getComments() {
+		return comments;
+	}
+
+	public void setComments(String comments) {
+		this.comments = comments;
 	}
 }

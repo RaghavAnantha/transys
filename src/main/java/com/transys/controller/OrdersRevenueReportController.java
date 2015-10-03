@@ -149,7 +149,7 @@ public class OrdersRevenueReportController extends CRUDController<Order> {
 			map.put("city", StringUtils.EMPTY + deliveryAddress.getCity());
 			
 			if (orderPaymentInfo != null) {
-				map.put("paymentMethod", StringUtils.EMPTY + orderPaymentInfo.getPaymentMethod());
+				map.put("paymentMethod", StringUtils.EMPTY + orderPaymentInfo.getPaymentMethod().getMethod());
 				map.put("checkNum", StringUtils.EMPTY + orderPaymentInfo.getCheckNum());
 				map.put("ccReferenceNum", StringUtils.EMPTY + orderPaymentInfo.getCcReferenceNum());
 				map.put("dumpsterPrice", StringUtils.EMPTY + orderPaymentInfo.getDumpsterPrice());
