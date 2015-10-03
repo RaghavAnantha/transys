@@ -18,9 +18,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.transys.core.util.MimeUtil;
-import com.transys.model.Customer;
-import com.transys.model.DeliveryAddress;
 import com.transys.model.DumpsterInfo;
 import com.transys.model.DumpsterSize;
 import com.transys.model.DumpsterStatus;
@@ -55,24 +52,31 @@ public class DumpstersRentedReportController extends CRUDController<DumpsterInfo
 		List<DumpsterInfo> dumpsterInfoList = genericDAO.search(getEntityClass(), criteria,"id",null,null);
 		model.addAttribute("dumpsterInfoList", dumpsterInfoList);
 		
+		setDeliveryDetailsForDumpster(dumpsterInfoList);
+		return urlContext + "/list";
+	}
+
+
+	private void setDeliveryDetailsForDumpster(List<DumpsterInfo> dumpsterInfoList) {
 		for (DumpsterInfo aDumpster : dumpsterInfoList) {
 			// get the latest delivery address & delivery date for the corresponding dumpster# from trans_order table
-			List<?> deliveryDetailsForDumpster = genericDAO.executeSimpleQuery("select deliveryAddress, deliveryDate from Order p where p.dumpster.id = " + aDumpster.getId() + " order by p.id desc");
-			if (deliveryDetailsForDumpster.isEmpty()) {
+			
+			Map<String, Object> criterias = new HashMap<String, Object>();
+			criterias.put("dumpster.id", aDumpster.getId());
+			List<Order> ordersForDumpster = genericDAO.findByCriteria(Order.class, criterias, "id", true);
+			
+			//List<?> deliveryDetailsForDumpster = genericDAO.executeSimpleQuery("select obj from Order p where p.dumpster.id = " + aDumpster.getId() + " order by p.id desc");
+			if (ordersForDumpster.isEmpty()) {
 				// do nothing
 				continue;
 			}
 			
-			Object deliveryDetailForDumpster = deliveryDetailsForDumpster.get(0);
+			Order orderForDumpster = ordersForDumpster.get(0);
+
 			// set 2 transient fields for deliveryAddress and deliveryDate in DumpsterInfo
-			//aDumpster.setDeliveryAddress();
-			//aDumpster.setDeliveryDate();
-			
+			aDumpster.setDeliveryAddress(orderForDumpster.getDeliveryAddress().getFullLine());
+			aDumpster.setDeliveryDate(orderForDumpster.getDeliveryDate() + "");
 		}
-		
-		
-		
-		return urlContext + "/list";
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/main.do")
@@ -104,7 +108,7 @@ public class DumpstersRentedReportController extends CRUDController<DumpsterInfo
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
 			Map<String, Object> params = new HashMap<String, Object>();
 
-			out = dynamicReportService.generateStaticReport("dumpsterOnsiteReport", reportData, params, type, request);
+			out = dynamicReportService.generateStaticReport("dumpstersRentedReport", reportData, params, type, request);
 			/*} else {
 				out = dynamicReportService.generateStaticReport("ordersRevenueReport" + "print", reportData, params, type,
 						request);
@@ -127,14 +131,17 @@ public class DumpstersRentedReportController extends CRUDController<DumpsterInfo
 		criteria.getSearchMap().remove("_csrf");
 	
 		List<DumpsterInfo> dumpsterInfoList = genericDAO.search(getEntityClass(), criteria, "id", null, null);
+		setDeliveryDetailsForDumpster(dumpsterInfoList);
+		
 		List<Map<String, Object>> reportData = new ArrayList<Map<String, Object>>();
-
 		for (DumpsterInfo aDumpster : dumpsterInfoList) {
 			
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("dumpsterSize", aDumpster.getDumpsterSize().getSize());
 			map.put("dumpsterNum", aDumpster.getDumpsterNum());
 			map.put("status",aDumpster.getStatus().getStatus());
+			map.put("deliveryAddress",aDumpster.getDeliveryAddress());
+			map.put("deliveryDate",aDumpster.getDeliveryDate());
 			
 			ObjectMapper objectMapper = new ObjectMapper();
 			String jSonResponse = StringUtils.EMPTY;

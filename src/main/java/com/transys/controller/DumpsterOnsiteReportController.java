@@ -28,12 +28,12 @@ import com.transys.model.Order;
 import com.transys.model.SearchCriteria;
 
 @Controller
-@RequestMapping("/dumpsterOnsiteReports")
+@RequestMapping("/dumpsterOnsiteReport")
 public class DumpsterOnsiteReportController extends CRUDController<DumpsterInfo> {
 	
 	
 	public DumpsterOnsiteReportController(){	
-		setUrlContext("dumpsterOnsiteReports");
+		setUrlContext("dumpsterOnsiteReport");
 	}
 	
 	

@@ -1,10 +1,13 @@
 package com.transys.model;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name="dumpsterInfo")
@@ -22,6 +25,12 @@ public class DumpsterInfo extends AbstractBaseModel {
 	@ManyToOne
 	@JoinColumn(name="status")
 	private DumpsterStatus status;
+	
+	@Transient
+	private String deliveryAddress;
+	
+	@Transient
+	private String deliveryDate;
 
 	/*@Column(name="dumpsterPrice")
 	private Double dumpsterPrice;*/
@@ -63,4 +72,21 @@ public class DumpsterInfo extends AbstractBaseModel {
 	public void setStatus(DumpsterStatus status) {
 		this.status = status;
 	}
+
+	public String getDeliveryAddress() {
+		return deliveryAddress;
+	}
+
+	public void setDeliveryAddress(String deliveryAddress) {
+		this.deliveryAddress = deliveryAddress;
+	}
+
+	public String getDeliveryDate() {
+		return deliveryDate;
+	}
+
+	public void setDeliveryDate(String deliveryDate) {
+		this.deliveryDate = deliveryDate;
+	}
+	
 }

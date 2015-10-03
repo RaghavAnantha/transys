@@ -22,7 +22,7 @@
 				<ul class="dropdown-menu">
 					<li><a href="/ordersRevenueReport/main.do">Revenue Report</a></li>
 					<li><a href="/deliveryPickupReport/main.do">Delivery/Pickup Reports</a></li>
-					<li><a href="/dumpsterOnsiteReports/main.do">Dumpster On-site Report</a></li>
+					<li><a href="/dumpsterOnsiteReport/main.do">Dumpster On-site Report</a></li>
 					<li><a href="/dumpstersRentedReport/main.do">Dumpsters Rented Report</a></li>
 					<li><a href="/recycleReports/main.do">Recycle Reports</a></li>
 				</ul>

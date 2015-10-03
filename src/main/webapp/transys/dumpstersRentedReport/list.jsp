@@ -1,6 +1,6 @@
 <%@include file="/common/taglibs.jsp"%>
 <br />
-<h4 style="margin-top: -15px; !important">Dumpsters On-site Report</h4>
+<h4 style="margin-top: -15px; !important">Dumpsters Rented Report</h4>
 <form:form action="list.do" method="get" name="dumpstersRentedReportsearchForm">
 	<table width="100%" id="form-table">
 		<tr>
@@ -31,7 +31,7 @@
 					<c:forEach items="${dumpsterStatus}" var="status">
 						<c:set var="selected" value="" />
 						<c:if
-							test="${sessionScope.searchCriteria.searchMap['status'] == status.status}">
+							test="${sessionScope.searchCriteria.searchMap['status'] == status.id}">
 							<c:set var="selected" value="selected" />
 						</c:if>
 						<option value="${status.id}" ${selected}>${status.status}</option>
@@ -48,16 +48,16 @@
 	</table>
 </form:form>
 
-<a href="/dumpstersRentedReports/generateDumpstersRentedReport.do?type=xls"><img src="/images/excel.png" border="0" style="float:right" class="toolbarButton"></a>
-<a href="/dumpstersRentedReports/generateDumpstersRentedReport.do?type=pdf"><img src="/images/pdf.png" border="0" style="float:right" class="toolbarButton"></a>
+<a href="/dumpstersRentedReport/generateDumpstersRentedReport.do?type=xls"><img src="/images/excel.png" border="0" style="float:right" class="toolbarButton"></a>
+<a href="/dumpstersRentedReport/generateDumpstersRentedReport.do?type=pdf"><img src="/images/pdf.png" border="0" style="float:right" class="toolbarButton"></a>
 <form:form name="dumpstersRentedReport" id="dumpstersRentedReport" class="tab-color">
 	<transys:datatable urlContext="dumpstersRentedReports"  baseObjects="${dumpsterInfoList}"
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
 		pagingLink="search.do" dataQualifier="dumpsterOnsiteReport">
 		<transys:textcolumn headerText="Dumpster Size" dataField="dumpsterSize.size" />
 		<transys:textcolumn headerText="Dumpster#" dataField="dumpsterNum" />
-		<transys:textcolumn headerText="Delivery Address" dataField="dumpsterNum" />
-		<transys:textcolumn headerText="Delivery Date" dataField="dumpsterNum" />
+		<transys:textcolumn headerText="Delivery Address" dataField="deliveryAddress" />
+		<transys:textcolumn headerText="Delivery Date" dataField="deliveryDate" />
 		<transys:textcolumn headerText="Status" dataField="status.status" />
 
 
