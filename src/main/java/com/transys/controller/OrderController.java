@@ -2,8 +2,12 @@ package com.transys.controller;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,8 +17,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.ValidationException;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.springframework.stereotype.Controller;
@@ -41,6 +47,7 @@ import com.transys.model.BaseModel;
 import com.transys.model.CityFee;
 import com.transys.model.Customer;
 import com.transys.model.DumpsterInfo;
+import com.transys.model.DumpsterPrice;
 import com.transys.model.DumpsterSize;
 import com.transys.model.LocationType;
 import com.transys.model.MaterialCategory;
@@ -49,10 +56,12 @@ import com.transys.model.Order;
 import com.transys.model.OrderNotes;
 import com.transys.model.OrderPaymentInfo;
 import com.transys.model.OrderStatus;
+import com.transys.model.OverweightFee;
 import com.transys.model.PaymentMethodType;
 import com.transys.model.Permit;
 import com.transys.model.PermitNotes;
 import com.transys.model.PermitStatus;
+import com.transys.model.PermitType;
 //import com.transys.model.FuelVendor;
 //import com.transys.model.Location;
 import com.transys.model.SearchCriteria;
@@ -249,7 +258,7 @@ public class OrderController extends CRUDController<Order> {
 			if (aChosenPermit != null && aChosenPermit.getId() != null) {
 				String aChosenPermitClassId =  aChosenPermit.getPermitClass().getId().toString();
 				String aChosenPermitTypeId =  aChosenPermit.getPermitType().getId().toString();
-				List<Permit> aPermitsOfChosenTypeList = retrievePermit(StringUtils.EMPTY, aChosenPermitClassId, aChosenPermitTypeId);
+				List<Permit> aPermitsOfChosenTypeList = retrievePermit(StringUtils.EMPTY, aChosenPermitClassId, aChosenPermitTypeId, StringUtils.EMPTY);
 				
 				allPermitsOfChosenTypesList.add(aPermitsOfChosenTypeList);
 			}
@@ -321,7 +330,7 @@ public class OrderController extends CRUDController<Order> {
 			if (aChosenPermit != null && aChosenPermit.getId() != null) {
 				String aChosenPermitClassId =  aChosenPermit.getPermitClass().getId().toString();
 				String aChosenPermitTypeId =  aChosenPermit.getPermitType().getId().toString();
-				List<Permit> aPermitsOfChosenTypeList = retrievePermit(StringUtils.EMPTY, aChosenPermitClassId, aChosenPermitTypeId);
+				List<Permit> aPermitsOfChosenTypeList = retrievePermit(StringUtils.EMPTY, aChosenPermitClassId, aChosenPermitTypeId, StringUtils.EMPTY);
 				
 				allPermitsOfChosenTypesList.add(aPermitsOfChosenTypeList);
 			}
@@ -398,7 +407,7 @@ public class OrderController extends CRUDController<Order> {
 			if (aChosenPermit != null && aChosenPermit.getId() != null) {
 				String aChosenPermitClassId =  aChosenPermit.getPermitClass().getId().toString();
 				String aChosenPermitTypeId =  aChosenPermit.getPermitType().getId().toString();
-				List<Permit> aPermitsOfChosenTypeList = retrievePermit(StringUtils.EMPTY, aChosenPermitClassId, aChosenPermitTypeId);
+				List<Permit> aPermitsOfChosenTypeList = retrievePermit(StringUtils.EMPTY, aChosenPermitClassId, aChosenPermitTypeId, StringUtils.EMPTY);
 				
 				allPermitsOfChosenTypesList.add(aPermitsOfChosenTypeList);
 			}
@@ -435,80 +444,80 @@ public class OrderController extends CRUDController<Order> {
 	public void generateOrderReport(ModelMap model, HttpServletRequest request,
 			HttpServletResponse response, @RequestParam("type") String type,
 			Object objectDAO, Class clazz) {
-		
 		try {
-		if (StringUtils.isEmpty(type))
-			type = "xlsx";
-		if (!type.equals("html") && !(type.equals("print"))) {
-			response.setHeader("Content-Disposition",
-					"attachment;filename= ordersReport." + type);
-		}
-		response.setContentType(MimeUtil.getContentType(type));
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		Map<String, Object> params = new HashMap<String,Object>();
-		
-		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
-		List<Order> list = genericDAO.search(getEntityClass(), criteria,"id",null,null);
-		List<Map<String, ?>> newList = new ArrayList<Map<String, ?>>();
-		for (Order order : list) {
-			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("id", order.getId());
-			map.put("company_name", order.getCustomer().getCompanyName());
-			map.put("createdAt", order.getCreatedAt().toString());
-			map.put("deliveryContactName", order.getDeliveryContactName());
-			map.put("phone", order.getCustomer().getPhone());
-			map.put("line1", order.getDeliveryAddress().getLine1());
-			map.put("city", order.getDeliveryAddress().getCity());
-			map.put("line1", order.getDeliveryAddress().getLine1());
-			map.put("status", order.getOrderStatus().getStatus());
-			map.put("deliveryDate", order.getDeliveryDate().toString());
-			map.put("pickupDate", order.getPickupDate().toString());
+			if (StringUtils.isEmpty(type))
+				type = "xlsx";
+			if (!type.equals("html") && !(type.equals("print"))) {
+				response.setHeader("Content-Disposition",
+						"attachment;filename= ordersReport." + type);
+			}
+			response.setContentType(MimeUtil.getContentType(type));
+			ByteArrayOutputStream out = new ByteArrayOutputStream();
+			Map<String, Object> params = new HashMap<String,Object>();
 			
-			OrderPaymentInfo paymentInfo = order.getOrderPaymentInfo();
-			if (paymentInfo != null) {
-				map.put("paymentMethod", StringUtils.defaultIfEmpty(paymentInfo.getPaymentMethod().getMethod(), StringUtils.EMPTY));
-				map.put("dumpsterPrice", paymentInfo.getDumpsterPrice().toString());
-				map.put("cityFee", paymentInfo.getCityFee().toString());
-				map.put("permitFees", paymentInfo.getPermitFee1().toString());
-				map.put("overweightFee", paymentInfo.getOverweightFee().toString());
-				if (paymentInfo.getTotalFees() != null ) {
-					map.put("totalFees", order.getOrderPaymentInfo().getTotalFees().toString());
+			SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
+			List<Order> list = genericDAO.search(getEntityClass(), criteria,"id",null,null);
+			List<Map<String, ?>> newList = new ArrayList<Map<String, ?>>();
+			for (Order order : list) {
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("id", order.getId());
+				map.put("company_name", order.getCustomer().getCompanyName());
+				map.put("createdAt", order.getCreatedAt().toString());
+				map.put("deliveryContactName", order.getDeliveryContactName());
+				map.put("phone", order.getCustomer().getPhone());
+				map.put("line1", order.getDeliveryAddress().getLine1());
+				map.put("city", order.getDeliveryAddress().getCity());
+				map.put("line1", order.getDeliveryAddress().getLine1());
+				map.put("status", order.getOrderStatus().getStatus());
+				map.put("deliveryDate", order.getDeliveryDate().toString());
+				map.put("pickupDate", order.getPickupDate().toString());
+				
+				OrderPaymentInfo paymentInfo = order.getOrderPaymentInfo();
+				if (paymentInfo != null) {
+					map.put("paymentMethod", StringUtils.defaultIfEmpty(paymentInfo.getPaymentMethod().getMethod(), StringUtils.EMPTY));
+					map.put("dumpsterPrice", paymentInfo.getDumpsterPrice().toString());
+					map.put("cityFee", paymentInfo.getCityFee().toString());
+					map.put("permitFees", paymentInfo.getPermitFee1().toString());
+					map.put("overweightFee", paymentInfo.getOverweightFee().toString());
+					if (paymentInfo.getTotalFees() != null ) {
+						map.put("totalFees", order.getOrderPaymentInfo().getTotalFees().toString());
+					}
 				}
+				
+				newList.add(map);
 			}
 			
-			newList.add(map);
-		}
+			if (!type.equals("print") && !type.equals("pdf")) {
+				out = dynamicReportService.generateStaticReport("ordersReport",
+						newList, params, type, request);
+			}
+			else if(type.equals("pdf")){
+				out = dynamicReportService.generateStaticReport("ordersReportPdf",
+						newList, params, type, request);
+			}
+			else {
+				out = dynamicReportService.generateStaticReport("ordersReport"+"print",
+						newList, params, type, request);
+			}
 		
-		if (!type.equals("print") && !type.equals("pdf")) {
-			out = dynamicReportService.generateStaticReport("ordersReport",
-					newList, params, type, request);
+			out.writeTo(response.getOutputStream());
+			out.close();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.warn("Unable to create file :" + e);
+			request.getSession().setAttribute("errors", e.getMessage());
+			
 		}
-		else if(type.equals("pdf")){
-			out = dynamicReportService.generateStaticReport("ordersReportPdf",
-					newList, params, type, request);
-		}
-		else {
-			out = dynamicReportService.generateStaticReport("ordersReport"+"print",
-					newList, params, type, request);
-		}
-	
-		out.writeTo(response.getOutputStream());
-		out.close();
-		
-	} catch (Exception e) {
-		e.printStackTrace();
-		log.warn("Unable to create file :" + e);
-		request.getSession().setAttribute("errors", e.getMessage());
-		
-	}
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/retrievePermit.do")
 	public @ResponseBody String retrievePermit(ModelMap model, HttpServletRequest request,
 														    @RequestParam(value = "permitId", required = false) String permitId,
 															 @RequestParam(value = "permitClassId", required = false) String permitClassId,
-															 @RequestParam(value = "permitTypeId", required = false) String permitTypeId) {
-		List<Permit> permitList = retrievePermit(permitId, permitClassId, permitTypeId);
+															 @RequestParam(value = "permitTypeId", required = false) String permitTypeId,
+															 @RequestParam(value = "deliveryDate", required = false) String deliveryDate) {
+		List<Permit> permitList = retrievePermit(permitId, permitClassId, permitTypeId, deliveryDate);
 		
 		ObjectMapper objectMapper = new ObjectMapper();
 		String json = StringUtils.EMPTY;
@@ -523,17 +532,124 @@ public class OrderController extends CRUDController<Order> {
 		//return json;
 	}
 	
-	
-	private List<Permit> retrievePermit(String permitId, String permitClassId, String permitTypeId) {
-		String query = "select obj from Permit obj where ";
-		if (StringUtils.isNotEmpty(permitId)) {
-			query += "obj.id=" + permitId;
-		} else {
-			query += "obj.permitType.id=" + permitTypeId;
-			query += " and obj.permitClass.id=" + permitClassId;
+	private List<Permit> retrievePermit(String permitId, String permitClassId, String permitTypeId, String deliveryDateStr) {
+		String requiredEndDateStr = StringUtils.EMPTY;
+		if (StringUtils.isNotEmpty(deliveryDateStr)) {
+			SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+			try {
+				Date deliveryDate = formatter.parse(deliveryDateStr);
+				String permitTypeQuery = "select obj from PermitType obj where obj.id="+ permitTypeId;
+				List<PermitType> requestedPermitTypes = genericDAO.executeSimpleQuery(permitTypeQuery);
+				
+				String requestedPermitDaysTokens[] = requestedPermitTypes.get(0).getPermitType().split("\\s");
+				int requestedPermitDays = new Integer(requestedPermitDaysTokens[0]);
+				Date requiredEndDate = DateUtils.addDays(deliveryDate, requestedPermitDays);
+				
+				//2015-10-03 00:00:00.0
+				formatter.applyPattern("yyyy-MM-dd 00:00:00.0");
+				requiredEndDateStr = formatter.format(requiredEndDate);
+			} catch (ParseException pe) {
+				//TODO: handle error
+				pe.printStackTrace();
+			}
 		}
 		
-		return genericDAO.executeSimpleQuery(query);
+		String permitsQuery = "select obj from Permit obj where ";
+		if (StringUtils.isNotEmpty(permitId)) {
+			permitsQuery += "obj.id=" + permitId;
+		} else {
+			permitsQuery += "obj.permitType.id=" + permitTypeId
+				    		  + " and obj.permitClass.id=" + permitClassId
+				    		  + " and obj.endDate >= '" + requiredEndDateStr + "'";
+		}
+		permitsQuery += " and obj.status.status = 'Available'";
+		
+		List<Permit> permits = genericDAO.executeSimpleQuery(permitsQuery);
+		return permits;
+	}
+	
+	@RequestMapping(method = RequestMethod.GET, value = "/retrieveDumpsterPrice.do")
+	public @ResponseBody String retrieveDumpsterPrice(ModelMap model, HttpServletRequest request,
+														    @RequestParam(value = "dumpsterSizeId") String dumpsterSizeId,
+															 @RequestParam(value = "materialCategoryId") String materialCategoryId) {
+		BigDecimal dumpsterPrice = retrieveDumpsterPrice(dumpsterSizeId, materialCategoryId);
+		
+		ObjectMapper objectMapper = new ObjectMapper();
+		String json = StringUtils.EMPTY;
+		try {
+			json = objectMapper.writeValueAsString(dumpsterPrice);
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return json;
+		//String json = (new Gson()).toJson(permitList);
+		//return json;
+	}
+	
+	private BigDecimal retrieveDumpsterPrice(String dumpsterSizeId, String materialCategoryId) {
+		String dumpsterPriceQuery = "select obj from DumpsterPrice obj where ";
+		dumpsterPriceQuery += "obj.dumpsterSize.id=" + dumpsterSizeId
+				    		  	 + " and obj.materialCategory.id=" + materialCategoryId;
+		
+		List<DumpsterPrice> dumsterPriceList = genericDAO.executeSimpleQuery(dumpsterPriceQuery);
+		return dumsterPriceList.get(0).getPrice();
+	}
+	
+	@RequestMapping(method = RequestMethod.GET, value = "/retrieveCityFee.do")
+	public @ResponseBody String retrieveCityFee(ModelMap model, HttpServletRequest request,
+														    @RequestParam(value = "cityFeeId") String cityFeeId) {
+		BigDecimal cityFee = retrieveCityFee(cityFeeId);
+		
+		ObjectMapper objectMapper = new ObjectMapper();
+		String json = StringUtils.EMPTY;
+		try {
+			json = objectMapper.writeValueAsString(cityFee);
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return json;
+		//String json = (new Gson()).toJson(permitList);
+		//return json;
+	}
+	
+	private BigDecimal retrieveCityFee(String cityFeeId) {
+		String cityFeeQuery = "select obj from CityFee obj where ";
+		cityFeeQuery += "obj.id=" + cityFeeId;
+		
+		List<CityFee> cityFeeList = genericDAO.executeSimpleQuery(cityFeeQuery);
+		return cityFeeList.get(0).getFee();
+	}
+	
+	@RequestMapping(method = RequestMethod.GET, value = "/retrieveOverweightFee.do")
+	public @ResponseBody String retrieveOverweightFee(ModelMap model, HttpServletRequest request,
+			 													     @RequestParam(value = "dumpsterSizeId") String dumpsterSizeId,
+			 													     @RequestParam(value = "materialCategoryId") String materialCategoryId,
+			 													     @RequestParam(value = "netWeightTonnage") String netWeightTonnage) {
+		BigDecimal cityFee = retrieveOverweightFee(dumpsterSizeId, materialCategoryId, netWeightTonnage);
+		
+		ObjectMapper objectMapper = new ObjectMapper();
+		String json = StringUtils.EMPTY;
+		try {
+			json = objectMapper.writeValueAsString(cityFee);
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return json;
+		//String json = (new Gson()).toJson(permitList);
+		//return json;
+	}
+	
+	private BigDecimal retrieveOverweightFee(String dumpsterSizeId, String materialCategoryId, String netWeightTonnage) {
+		String overweightFeeQuery = "select obj from OverweightFee obj where ";
+		overweightFeeQuery += "obj.dumpsterSize.id=" + dumpsterSizeId
+								 +  " and obj.materialCategory.id=" + materialCategoryId
+								 +  " and obj.tonLimit=" + netWeightTonnage;
+		
+		List<OverweightFee> overweightFeeList = genericDAO.executeSimpleQuery(overweightFeeQuery);
+		return overweightFeeList.get(0).getFee();
 	}
 	
 	@Override
@@ -563,7 +679,7 @@ public class OrderController extends CRUDController<Order> {
 			if (aChosenPermit != null && aChosenPermit.getId() != null) {
 				String aChosenPermitClassId =  aChosenPermit.getPermitClass().getId().toString();
 				String aChosenPermitTypeId =  aChosenPermit.getPermitType().getId().toString();
-				List<Permit> aPermitsOfChosenTypeList = retrievePermit(StringUtils.EMPTY, aChosenPermitClassId, aChosenPermitTypeId);
+				List<Permit> aPermitsOfChosenTypeList = retrievePermit(StringUtils.EMPTY, aChosenPermitClassId, aChosenPermitTypeId, StringUtils.EMPTY);
 				
 				allPermitsOfChosenTypesList.add(aPermitsOfChosenTypeList);
 			}
@@ -794,7 +910,7 @@ public class OrderController extends CRUDController<Order> {
 			if (aChosenPermit != null && aChosenPermit.getId() != null) {
 				String aChosenPermitClassId =  aChosenPermit.getPermitClass().getId().toString();
 				String aChosenPermitTypeId =  aChosenPermit.getPermitType().getId().toString();
-				List<Permit> aPermitsOfChosenTypeList = retrievePermit(StringUtils.EMPTY, aChosenPermitClassId, aChosenPermitTypeId);
+				List<Permit> aPermitsOfChosenTypeList = retrievePermit(StringUtils.EMPTY, aChosenPermitClassId, aChosenPermitTypeId, StringUtils.EMPTY);
 				
 				allPermitsOfChosenTypesList.add(aPermitsOfChosenTypeList);
 			}

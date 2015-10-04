@@ -107,12 +107,89 @@ function appendCustomer(customer) {
 	selectDeliveryAddressOption(customer.address[0].id);
 }
 
+function populateDusmpsterPrice() {
+	var dumpsterSizeSelect = $("#dumpsterSize");
+	var dumpsterSizeId = dumpsterSizeSelect.val();
+	
+	var materialCategorySelect = $("#materialCategory");
+	var materialCategoryId = materialCategorySelect.val();
+	
+	if (dumpsterSizeId == "" || materialCategoryId == "") {
+		return false;
+	}
+	
+	var dumpsterPriceInput = $("#orderPaymentInfo\\.dumpsterPrice");
+	
+	$.ajax({
+  		url: "retrieveDumpsterPrice.do?" + "dumpsterSizeId=" + dumpsterSizeId 
+  								  		 + "\&materialCategoryId=" + materialCategoryId,
+  								  
+       	type: "GET",
+       	success: function(responseData, textStatus, jqXHR) {
+       		dumpsterPriceInput.val(responseData);
+		}
+	});
+}
+
+function populateOverweightFee() {
+	var dumpsterSizeSelect = $("#dumpsterSize");
+	var dumpsterSizeId = dumpsterSizeSelect.val();
+	
+	var materialCategorySelect = $("#materialCategory");
+	var materialCategoryId = materialCategorySelect.val();
+	
+	var netWeightTonnage = $("#netWeightTonnage").val();
+	
+	if (dumpsterSizeId == "" || materialCategoryId == "" || netWeightTonnage == "") {
+		return false;
+	}
+	
+	var overweightFeeInput = $("#orderPaymentInfo\\.overweightFee");
+	
+	$.ajax({
+  		url: "retrieveOverweightFee.do?" + "dumpsterSizeId=" + dumpsterSizeId 
+  								  		 + "\&materialCategoryId=" + materialCategoryId
+  								  		 + "\&netWeightTonnage=" + netWeightTonnage,
+  								  
+       	type: "GET",
+       	success: function(responseData, textStatus, jqXHR) {
+       		overweightFeeInput.val(responseData);
+		}
+	});
+}
+
+function populateCityFee() {
+	var cityFeeDescriptionSelect = $("#orderPaymentInfo\\.cityFeeType");
+	var cityFeeId = cityFeeDescriptionSelect.val();
+	
+	if (cityFeeDescriptionSelect == "") {
+		return false;
+	}
+	
+	var cityFeeInput = $("#orderPaymentInfo\\.cityFee");
+	
+	$.ajax({
+  		url: "retrieveCityFee.do?" + "cityFeeId=" + cityFeeId ,
+  								  
+       	type: "GET",
+       	success: function(responseData, textStatus, jqXHR) {
+       		cityFeeInput.val(responseData);
+		}
+	});
+}
+
 function populatePermitNumbers(index) {
 	var permitClassSelect = $("#permitClasses" + index);
 	var permitClassId = permitClassSelect.val();
 	
 	var permitTypeSelect = $("#permitTypes" + index);
 	var permitTypeId = permitTypeSelect.val();
+	
+	var deliveryDate = $("[name='deliveryDate']").val();
+	
+	if (permitClassId == "" || permitTypeId == "" || deliveryDate == "") {
+		return false;
+	}
 	
 	var permitNumbersSelect = $("#permits\\[" + (index-1) + "\\]");
 	permitNumbersSelect.empty();
@@ -121,10 +198,18 @@ function populatePermitNumbers(index) {
 	permitNumbersSelect.append(firstOption);
 	
 	$.ajax({
-  		url: "retrievePermit.do?" + "permitClassId=" + permitClassId + "\&permitTypeId=" + permitTypeId,
+  		url: "retrievePermit.do?" + "permitClassId=" + permitClassId 
+  								  + "\&permitTypeId=" + permitTypeId
+  								  + "\&deliveryDate=" + deliveryDate,
+  								  
        	type: "GET",
        	success: function(responseData, textStatus, jqXHR) {
        		var permitList = jQuery.parseJSON(responseData);
+			if (jQuery.isEmptyObject(permitList)) {
+    	   		alert("No permits available for seleted criteria.");
+    	   		return false;
+    	   	}
+    	   	
     	   	$.each(permitList, function () {
     	   	    $("<option />", {
     	   	        val: this.id,
@@ -393,7 +478,7 @@ $("#confirmExchangeOrderDialogYes").click(function (ev) {
 		<tr>
 			<td class="form-left"><transys:label code="Material Category"/><span class="errorMessage">*</span></td>
 			<td align="${left}">
-				<form:select id="materialCategory" cssClass="flat form-control input-sm" style="width:172px !important" path="materialCategory"> 
+				<form:select id="materialCategory" cssClass="flat form-control input-sm" style="width:172px !important" path="materialCategory" onChange="return populateDusmpsterPrice();"> 
 					<form:option value="">-------Please Select------</form:option>
 					<form:options items="${materialCategories}" itemValue="id" itemLabel="category" />
 				</form:select> 
@@ -663,7 +748,7 @@ $("#confirmExchangeOrderDialogYes").click(function (ev) {
 			</td>
 			<td class="form-left"><transys:label code="Net Tonnage"/><span class="errorMessage">*</span></td>
 			<td align="${left}">
-				<form:input path="netWeightTonnage" cssClass="flat" />
+				<form:input path="netWeightTonnage" cssClass="flat" onChange="return populateOverweightFee();"/>
 				<br><form:errors path="netWeightTonnage" cssClass="errorMessage" />
 			</td>
 		</tr>
@@ -700,7 +785,7 @@ $("#confirmExchangeOrderDialogYes").click(function (ev) {
 		<tr>
 			<td class="form-left"><transys:label code="City Fee Description"/><span class="errorMessage">*</span></td>
 				<td align="${left}">
-				<form:select id="cityFeeDescription" cssClass="flat form-control input-sm" style="width:172px !important" path="orderPaymentInfo.cityFeeType"> 
+				<form:select id="orderPaymentInfo.cityFeeType" cssClass="flat form-control input-sm" style="width:172px !important" path="orderPaymentInfo.cityFeeType" onChange="return populateCityFee();"> 
 					<form:option value="">-------Please Select------</form:option>
 					<form:options items="${cityFeeDetails}" itemValue="id" itemLabel="suburbName" />
 				</form:select>
