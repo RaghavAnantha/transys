@@ -95,7 +95,7 @@
 		editable="true" insertable="true" baseObjects="${list}"
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
 		pagingLink="search.do" multipleDelete="false" searcheable="false"
-		exportPdf="true" exportXls="true">
+		exportPdf="true" exportXls="true" dataQualifier="employee">
 		<transys:textcolumn headerText="Employee ID" dataField="employeeID" />
 		<transys:textcolumn headerText="Employee First Name" dataField="firstName" />
 		<transys:textcolumn headerText="Employee Last Name" dataField="lastName" />
