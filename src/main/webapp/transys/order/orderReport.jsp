@@ -119,7 +119,7 @@
 		<transys:textcolumn headerText="Status" dataField="orderStatus.status" />
 		<transys:textcolumn headerText="Delivery Date" dataField="deliveryDate" />
 		<transys:textcolumn headerText="Pickup Date" dataField="pickupDate" />
-		<transys:textcolumn headerText="Pymt. method" dataField="orderPaymentInfo.paymentMethod" />	
+		<transys:textcolumn headerText="Pymt. method" dataField="orderPaymentInfo.paymentMethod.method" />	
 		<transys:textcolumn headerText="Dumpster Price" dataField="orderPaymentInfo.dumpsterPrice" />
 		<transys:textcolumn headerText="City Fee" dataField="orderPaymentInfo.cityFee" />
 		<transys:textcolumn headerText="Permit Fee" dataField="orderPaymentInfo.permitFees" />

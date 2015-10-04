@@ -1,6 +1,6 @@
 <%@include file="/common/taglibs.jsp"%>
 
-<form:form action="/customer/saveDeliveryAddressModal.do" name="deliveryAddressForm" commandName="deliveryAddressModelObject" method="post" id="deliveryAddressForm">
+<form:form action="/customer/saveDeliveryAddressModal.do" name="deliveryAddressModalForm" commandName="deliveryAddressModelObject" method="post" id="deliveryAddressForm">
 	<form:hidden path="customer.id" id="custID" />
 	<table id="form-table" class="table delivery">
 		<tr>
@@ -105,7 +105,7 @@ function validateForm() {
 	return true;
 };
 
-$("#deliveryAddressForm").submit(function (ev) {
+$("#deliveryAddressModalForm").submit(function (ev) {
 	var $this = $(this);
 	
     $.ajax({
