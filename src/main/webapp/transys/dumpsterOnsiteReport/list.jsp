@@ -48,8 +48,8 @@
 	</table>
 </form:form>
 
-<a href="/dumpsterOnsiteReports/generateDumpsterOnsiteReport.do?type=xls"><img src="/images/excel.png" border="0" style="float:right" class="toolbarButton"></a>
-<a href="/dumpsterOnsiteReports/generateDumpsterOnsiteReport.do?type=pdf"><img src="/images/pdf.png" border="0" style="float:right" class="toolbarButton"></a>
+<a href="/dumpsterOnsiteReport/generateDumpsterOnsiteReport.do?type=xls"><img src="/images/excel.png" border="0" style="float:right" class="toolbarButton"></a>
+<a href="/dumpsterOnsiteReport/generateDumpsterOnsiteReport.do?type=pdf"><img src="/images/pdf.png" border="0" style="float:right" class="toolbarButton"></a>
 <form:form name="dumpsterOnsiteReport" id="dumpsterOnsiteReport" class="tab-color">
 	<transys:datatable urlContext="dumpsterOnsiteReports"  baseObjects="${dumpsterInfoList}"
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
