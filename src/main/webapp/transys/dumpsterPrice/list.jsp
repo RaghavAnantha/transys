@@ -21,20 +21,20 @@
 			</td>	
 		</tr>
 		<tr>
-			<td align="${left}" class="form-left"><transys:label code="Material Type" /></td>
+			<td align="${left}" class="form-left"><transys:label code="Material Category" /></td>
 			<td align="${left}" class="wide"><select
-				class="flat form-control input-sm" id="materialType" name="materialType"
+				class="flat form-control input-sm" id="materialCategory" name="materialCategory"
 				style="width: 175px">
 					<option value="">------
 						<transys:label code="Please Select" />------
 					</option>
-					<c:forEach items="${materialTypes}" var="aType">
+					<c:forEach items="${materialCategory}" var="aType">
 						<c:set var="selected" value="" />
 						<c:if
-							test="${sessionScope.searchCriteria.searchMap['materialType'] == aType.id}">
+							test="${sessionScope.searchCriteria.searchMap['materialCategory'] == aType.id}">
 							<c:set var="selected" value="selected" />
 						</c:if>
-						<option value="${aType.id}" ${selected}>${aType.type}</option>
+						<option value="${aType.id}" ${selected}>${aType.category}</option>
 					</c:forEach>
 			</select></td>	
 		</tr>
@@ -70,9 +70,9 @@
 		editable="true" insertable="true" baseObjects="${list}"
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
 		pagingLink="search.do" multipleDelete="false" searcheable="false"
-		exportPdf="true" exportXls="true">
+		exportPdf="true" exportXls="true" dataQualifier="dumpsterPrice">
 		<transys:textcolumn headerText="Dumpster Size" dataField="dumpsterSize.size" />
-		<transys:textcolumn headerText="Material Type" dataField="materialType.type" />
+		<transys:textcolumn headerText="Material Category" dataField="materialCategory.category" />
 		<transys:textcolumn headerText="Dumpster Price" dataField="price" />
 	</transys:datatable>
 	<%session.setAttribute("columnPropertyList", pageContext.getAttribute("columnPropertyList"));%>

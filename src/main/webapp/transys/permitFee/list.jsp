@@ -73,7 +73,7 @@
 		editable="true" insertable="true" baseObjects="${list}"
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
 		pagingLink="search.do" multipleDelete="false" searcheable="false"
-		exportPdf="true" exportXls="true">
+		exportPdf="true" exportXls="true" dataQualifier="permitFee">
 		<transys:textcolumn headerText="Permit Class" dataField="permitClass.permitClass" />
 		<transys:textcolumn headerText="Permit Type" dataField="permitType.permitType" />
 		<transys:textcolumn headerText="Permit Fee" dataField="fee" />

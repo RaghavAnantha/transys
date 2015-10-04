@@ -7,16 +7,16 @@
 		<tr>
 			<td align="${left}" class="form-left"><transys:label code="City" /></td>
 			<td align="${left}" class="wide">
-				<select class="flat form-control input-sm" id="city" name="city" style="width: 175px">
+				<select class="flat form-control input-sm" id="suburbName" name="suburbName" style="width: 175px">
 					<option value="">------
 						<transys:label code="Please Select" />------
 					</option>
 					<c:forEach items="${cityFees}" var="aCity">
 						<c:set var="selected" value="" />
-						<c:if test="${sessionScope.searchCriteria.searchMap['city'] == aCity.city}">
+						<c:if test="${sessionScope.searchCriteria.searchMap['suburbName'] == aCity.suburbName}">
 							<c:set var="selected" value="selected" />
 						</c:if>
-						<option value="${aCity.city}" ${selected}>${aCity.city}</option>
+						<option value="${aCity.suburbName}" ${selected}>${aCity.suburbName}</option>
 					</c:forEach>
 				</select>
 			</td>	
@@ -53,7 +53,7 @@
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
 		pagingLink="search.do" multipleDelete="false" searcheable="false"
 		exportPdf="true" exportXls="true" dataQualifier="cityFee">
-		<transys:textcolumn headerText="City" dataField="city" />
+		<transys:textcolumn headerText="City" dataField="suburbName" />
 		<transys:textcolumn headerText="Fee" dataField="fee" />
 	</transys:datatable>
 	<%session.setAttribute("cityFeeColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>

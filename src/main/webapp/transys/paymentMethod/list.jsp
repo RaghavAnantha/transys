@@ -55,7 +55,7 @@
 		editable="true" insertable="true" baseObjects="${list}"
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
 		pagingLink="search.do" multipleDelete="false" searcheable="false"
-		exportPdf="true" exportXls="true">
+		exportPdf="true" exportXls="true" dataQualifier="paymentMethod">
 		<transys:textcolumn headerText="Payment Method ID" dataField="id" />
 		<transys:textcolumn headerText="Payment Method" dataField="method" />
 	</transys:datatable>

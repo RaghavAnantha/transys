@@ -55,9 +55,9 @@
 		editable="true" insertable="true" baseObjects="${list}"
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
 		pagingLink="search.do" multipleDelete="false" searcheable="false"
-		exportPdf="true" exportXls="true" dataQualifier="materialType">
+		exportPdf="true" exportXls="true" dataQualifier="materialType" >
 		<transys:textcolumn headerText="Material ID" dataField="id" />
-		<transys:textcolumn headerText="Material Type" dataField="type" />
+		<transys:textcolumn headerText="Material Name" dataField="materialName" />
 	</transys:datatable>
 	<%session.setAttribute("materialTypeColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
 </form:form>
