@@ -25,6 +25,7 @@
         <!--<pattern>/transys/order/form.jsp</pattern>-->
         <pattern>/transys/customer/formModal.jsp</pattern>
         <pattern>/transys/customer/deliveryAddressModal.jsp</pattern>
+        <pattern>/transys/permit/formModal.jsp</pattern>
     </decorator>
    <decorator name="customer" page="singleColumnLayout.jsp">
         <pattern>/transys/customer/**</pattern>
