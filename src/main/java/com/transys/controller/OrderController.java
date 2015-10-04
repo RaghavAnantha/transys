@@ -7,6 +7,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -56,10 +57,12 @@ import com.transys.model.MaterialType;
 import com.transys.model.Order;
 import com.transys.model.OrderNotes;
 import com.transys.model.OrderPaymentInfo;
+import com.transys.model.OrderPermits;
 import com.transys.model.OrderStatus;
 import com.transys.model.OverweightFee;
 import com.transys.model.PaymentMethodType;
 import com.transys.model.Permit;
+import com.transys.model.PermitClass;
 import com.transys.model.PermitNotes;
 import com.transys.model.PermitStatus;
 import com.transys.model.PermitType;
@@ -259,7 +262,7 @@ public class OrderController extends CRUDController<Order> {
 			if (aChosenPermit != null && aChosenPermit.getId() != null) {
 				String aChosenPermitClassId =  aChosenPermit.getPermitClass().getId().toString();
 				String aChosenPermitTypeId =  aChosenPermit.getPermitType().getId().toString();
-				List<Permit> aPermitsOfChosenTypeList = retrievePermit(StringUtils.EMPTY, aChosenPermitClassId, aChosenPermitTypeId, StringUtils.EMPTY);
+				List<Permit> aPermitsOfChosenTypeList = retrievePermit(aChosenPermitClassId, aChosenPermitTypeId);
 				
 				allPermitsOfChosenTypesList.add(aPermitsOfChosenTypeList);
 			}
@@ -331,7 +334,7 @@ public class OrderController extends CRUDController<Order> {
 			if (aChosenPermit != null && aChosenPermit.getId() != null) {
 				String aChosenPermitClassId =  aChosenPermit.getPermitClass().getId().toString();
 				String aChosenPermitTypeId =  aChosenPermit.getPermitType().getId().toString();
-				List<Permit> aPermitsOfChosenTypeList = retrievePermit(StringUtils.EMPTY, aChosenPermitClassId, aChosenPermitTypeId, StringUtils.EMPTY);
+				List<Permit> aPermitsOfChosenTypeList = retrievePermit(aChosenPermitClassId, aChosenPermitTypeId);
 				
 				allPermitsOfChosenTypesList.add(aPermitsOfChosenTypeList);
 			}
@@ -408,7 +411,7 @@ public class OrderController extends CRUDController<Order> {
 			if (aChosenPermit != null && aChosenPermit.getId() != null) {
 				String aChosenPermitClassId =  aChosenPermit.getPermitClass().getId().toString();
 				String aChosenPermitTypeId =  aChosenPermit.getPermitType().getId().toString();
-				List<Permit> aPermitsOfChosenTypeList = retrievePermit(StringUtils.EMPTY, aChosenPermitClassId, aChosenPermitTypeId, StringUtils.EMPTY);
+				List<Permit> aPermitsOfChosenTypeList = retrievePermit(aChosenPermitClassId, aChosenPermitTypeId);
 				
 				allPermitsOfChosenTypesList.add(aPermitsOfChosenTypeList);
 			}
@@ -518,7 +521,13 @@ public class OrderController extends CRUDController<Order> {
 															 @RequestParam(value = "permitClassId", required = false) String permitClassId,
 															 @RequestParam(value = "permitTypeId", required = false) String permitTypeId,
 															 @RequestParam(value = "deliveryDate", required = false) String deliveryDate) {
-		List<Permit> permitList = retrievePermit(permitId, permitClassId, permitTypeId, deliveryDate);
+		List<Permit> permitList = new ArrayList<Permit>();
+		
+		if (StringUtils.isNotEmpty(permitId)) {
+			permitList = retrievePermit(permitId); 
+		} else {
+			permitList = retrievePermit(permitClassId, permitTypeId, deliveryDate);
+		}
 		
 		ObjectMapper objectMapper = new ObjectMapper();
 		String json = StringUtils.EMPTY;
@@ -533,17 +542,26 @@ public class OrderController extends CRUDController<Order> {
 		//return json;
 	}
 	
-	private List<Permit> retrievePermit(String permitId, String permitClassId, String permitTypeId, String deliveryDateStr) {
+	private List<Permit> retrievePermit(String permitId) {
+		String permitsQuery = "select obj from Permit obj where ";
+		permitsQuery += "obj.id=" + permitId;
+		
+		List<Permit> permits = genericDAO.executeSimpleQuery(permitsQuery);
+		return permits;
+	}
+	
+	private List<Permit> retrievePermit(String permitClassId, String permitTypeId, String deliveryDateStr) {
 		String requiredEndDateStr = StringUtils.EMPTY;
 		if (StringUtils.isNotEmpty(deliveryDateStr)) {
 			SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
 			try {
-				Date deliveryDate = formatter.parse(deliveryDateStr);
 				String permitTypeQuery = "select obj from PermitType obj where obj.id="+ permitTypeId;
 				List<PermitType> requestedPermitTypes = genericDAO.executeSimpleQuery(permitTypeQuery);
 				
 				String requestedPermitDaysTokens[] = requestedPermitTypes.get(0).getPermitType().split("\\s");
 				int requestedPermitDays = new Integer(requestedPermitDaysTokens[0]);
+				
+				Date deliveryDate = formatter.parse(deliveryDateStr);
 				Date requiredEndDate = DateUtils.addDays(deliveryDate, requestedPermitDays);
 				
 				//2015-10-03 00:00:00.0
@@ -556,17 +574,49 @@ public class OrderController extends CRUDController<Order> {
 		}
 		
 		String permitsQuery = "select obj from Permit obj where ";
-		if (StringUtils.isNotEmpty(permitId)) {
-			permitsQuery += "obj.id=" + permitId;
-		} else {
-			permitsQuery += "obj.permitType.id=" + permitTypeId
+		permitsQuery += "obj.permitType.id=" + permitTypeId
 				    		  + " and obj.permitClass.id=" + permitClassId
-				    		  + " and obj.endDate >= '" + requiredEndDateStr + "'";
-		}
-		permitsQuery += " and obj.status.status = 'Available'";
+				    		  + " and obj.endDate >= '" + requiredEndDateStr + "'"
+				    		  + " and obj.status.status=";
 		
-		List<Permit> permits = genericDAO.executeSimpleQuery(permitsQuery);
-		return permits;
+		List<Permit> availablePermits = genericDAO.executeSimpleQuery(permitsQuery + "'Available'");
+		//return availablePermits;
+		
+		List<Permit> pendingPermits = genericDAO.executeSimpleQuery(permitsQuery + "'Pending'");
+		if (pendingPermits.isEmpty()) {
+			return availablePermits;
+		}
+		
+		StringBuffer pendingPermitIdsBuff = new StringBuffer();
+		Map<Long, Permit> pendingPermitsMap = new HashMap<Long, Permit>();
+		for (Permit aPendingPermit : pendingPermits) {
+			pendingPermitIdsBuff.append(aPendingPermit.getId().toString() + " ,");
+			pendingPermitsMap.put(aPendingPermit.getId(), aPendingPermit);
+		}
+		
+		String pendingPermitIds = pendingPermitIdsBuff.substring(0, (pendingPermitIdsBuff.length() - 2));
+		String orderPermitsQuery = "select obj from OrderPermits obj where obj.id in (" 
+											+ pendingPermitIds
+											+ ")";
+		List<OrderPermits> orderPermitsList = genericDAO.executeSimpleQuery(orderPermitsQuery);
+		for (OrderPermits aOrderPermit : orderPermitsList) {
+			pendingPermitsMap.remove(aOrderPermit.getPermit().getId());
+		}
+		
+		Collection<Permit> filteredPendingPermits = pendingPermitsMap.values();
+		
+		availablePermits.addAll(filteredPendingPermits);
+		return availablePermits;
+	}
+	
+	private List<Permit> retrievePermit(String permitClassId, String permitTypeId) {
+		String permitsQuery = "select obj from Permit obj where ";
+		permitsQuery += "obj.permitType.id=" + permitTypeId
+				    		  + " and obj.permitClass.id=" + permitClassId
+				    		  + " and obj.status.status=" + "'Available'";
+		
+		List<Permit> availablePermits = genericDAO.executeSimpleQuery(permitsQuery);
+		return availablePermits;
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/retrieveDumpsterPrice.do")
@@ -606,6 +656,24 @@ public class OrderController extends CRUDController<Order> {
 		String json = StringUtils.EMPTY;
 		try {
 			json = objectMapper.writeValueAsString(cityFee);
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return json;
+		//String json = (new Gson()).toJson(permitList);
+		//return json;
+	}
+	
+	@RequestMapping(method = RequestMethod.GET, value = "/retrievePermitClass.do")
+	public @ResponseBody String retrievePermitClass(ModelMap model, HttpServletRequest request,
+														    @RequestParam(value = "dumpsterSizeId") String dumpsterSizeId) {
+		List<PermitClass> permitClassList = retrievePermitClass(dumpsterSizeId);
+		
+		ObjectMapper objectMapper = new ObjectMapper();
+		String json = StringUtils.EMPTY;
+		try {
+			json = objectMapper.writeValueAsString(permitClassList);
 		} catch (JsonProcessingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -661,6 +729,18 @@ public class OrderController extends CRUDController<Order> {
 		}
 	}
 	
+	private List<PermitClass> retrievePermitClass(String dumpsterSizeId) {
+		String permitClassQuery = "select obj from DumpsterSize obj where ";
+		permitClassQuery += "obj.size.id=" + dumpsterSizeId;
+		
+		List<DumpsterSize> dumpsterSizeList = genericDAO.executeSimpleQuery(permitClassQuery);
+		
+		List<PermitClass> permitClassList = new ArrayList<PermitClass>();
+		permitClassList.add(dumpsterSizeList.get(0).getPermitClass());
+		
+		return permitClassList;
+	}
+	
 	@Override
 	public String edit2(ModelMap model, HttpServletRequest request) {
 		setupUpdate(model, request);
@@ -688,9 +768,11 @@ public class OrderController extends CRUDController<Order> {
 			if (aChosenPermit != null && aChosenPermit.getId() != null) {
 				String aChosenPermitClassId =  aChosenPermit.getPermitClass().getId().toString();
 				String aChosenPermitTypeId =  aChosenPermit.getPermitType().getId().toString();
-				List<Permit> aPermitsOfChosenTypeList = retrievePermit(StringUtils.EMPTY, aChosenPermitClassId, aChosenPermitTypeId, StringUtils.EMPTY);
+				List<Permit> aPermitOfChosenTypeList = retrievePermit(aChosenPermitClassId, aChosenPermitTypeId);
 				
-				allPermitsOfChosenTypesList.add(aPermitsOfChosenTypeList);
+				aPermitOfChosenTypeList.add(aChosenPermit);
+				
+				allPermitsOfChosenTypesList.add(aPermitOfChosenTypeList);
 			}
 		}
 		model.addAttribute("allPermitsOfChosenTypesList", allPermitsOfChosenTypesList);
@@ -930,7 +1012,7 @@ public class OrderController extends CRUDController<Order> {
 			if (aChosenPermit != null && aChosenPermit.getId() != null) {
 				String aChosenPermitClassId =  aChosenPermit.getPermitClass().getId().toString();
 				String aChosenPermitTypeId =  aChosenPermit.getPermitType().getId().toString();
-				List<Permit> aPermitsOfChosenTypeList = retrievePermit(StringUtils.EMPTY, aChosenPermitClassId, aChosenPermitTypeId, StringUtils.EMPTY);
+				List<Permit> aPermitsOfChosenTypeList = retrievePermit(aChosenPermitClassId, aChosenPermitTypeId);
 				
 				allPermitsOfChosenTypesList.add(aPermitsOfChosenTypeList);
 			}

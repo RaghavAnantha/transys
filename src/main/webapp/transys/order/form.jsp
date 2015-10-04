@@ -54,13 +54,65 @@ function populateDeliveryAddress(addressList) {
 	var firstOption = $('<option value="">'+ "-------Please Select------" +'</option>');
 	deliveryAddressSelect.append(firstOption);
 	
-	var selected = "";
-   	$.each(addressList, function () {
+	$.each(addressList, function () {
    		$("<option />", {
    	        val: this.id,
    	        text: this.line1 + " " + this.line2
    	    }).appendTo(deliveryAddressSelect);
    	});
+}
+
+function populatePermitClass() {
+	var dumpsterSizeSelect =  $('#dumpsterSize');
+	var dumpsterSizeId = dumpsterSizeSelect.val();
+	
+	if (dumpsterSizeId == "") {
+		return false;
+	}
+	
+	var permitClassSelect1 = $("#permitClasses" + 1);
+	var permitClassSelect2 = $('#permitClasses' + 2);
+	var permitClassSelect3 = $('#permitClasses' + 3);
+	
+	permitClassSelect1.empty();
+	permitClassSelect2.empty();
+	permitClassSelect3.empty();
+	
+	var firstOption1 = $('<option value="">'+ "-------Please Select------" +'</option>');
+	permitClassSelect1.append(firstOption1);
+	var firstOption2 = $('<option value="">'+ "-------Please Select------" +'</option>');
+	permitClassSelect2.append(firstOption2);
+	var firstOption3 = $('<option value="">'+ "-------Please Select------" +'</option>');
+	permitClassSelect3.append(firstOption3);
+	
+	$.ajax({
+  		url: "retrievePermitClass.do?dumpsterSizeId=" + dumpsterSizeId,
+       	type: "GET",
+       	success: function(responseData, textStatus, jqXHR) {
+    	   	var permitClassList = jQuery.parseJSON(responseData);
+    	   	
+    	   	$.each(permitClassList, function () {
+    	   		$("<option />", {
+    	   	        val: this.id,
+    	   	        text: this.permitClass
+    	   	    }).appendTo(permitClassSelect1);
+    	   	});
+    	   	
+    	   	$.each(permitClassList, function () {
+    	   		$("<option />", {
+    	   	        val: this.id,
+    	   	        text: this.permitClass
+    	   	    }).appendTo(permitClassSelect2);
+    	   	});
+    	   	
+    	   	$.each(permitClassList, function () {
+    	   		$("<option />", {
+    	   	        val: this.id,
+    	   	        text: this.permitClass
+    	   	    }).appendTo(permitClassSelect3);
+    	   	});
+		}
+	});
 }
 
 function selectDeliveryAddressOption(value) {
@@ -501,7 +553,7 @@ $("#confirmExchangeOrderDialogYes").click(function (ev) {
 			</td>
 			<td class="form-left"><transys:label code="Dumpster Size"/><span class="errorMessage">*</span></td>
 			<td align="${left}">
-				<form:select id="dumpsterSize" cssClass="flat form-control input-sm" style="width:172px !important" path="dumpsterSize"> 
+				<form:select id="dumpsterSize" cssClass="flat form-control input-sm" style="width:172px !important" path="dumpsterSize" onchange="return populatePermitClass();"> 
 					<form:option value="">-------Please Select------</form:option>
 					<form:options items="${dumpsterSizes}" itemValue="id" itemLabel="size" />
 				</form:select> 
