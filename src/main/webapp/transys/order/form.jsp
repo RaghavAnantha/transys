@@ -252,8 +252,41 @@ function populatePermitDetails(index) {
     	   	        text: this.line1 + " " + this.line2
     	   	    }).appendTo(permitAddressSelect);
     	   	});
+    	   	
+    	   	populateTotalPermitFees();
 		}
 	}); 
+}
+
+function populateTotalPermitFees() {
+	var permitFee1 = $("#orderPaymentInfo\\.permitFee" + 1).val();
+	var permitFee2 = $("#orderPaymentInfo\\.permitFee" + 2).val();
+	var permitFee3 = $("#orderPaymentInfo\\.permitFee" + 3).val();
+	var totalPermitFees = permitFee1 + permitFee2 + permitFee3;
+	$("#orderPaymentInfo\\.totalPermitFees").val(totalPermitFees);
+}
+
+function populateTotalAdditionalFees() {
+	var additionalFee1 = $("#orderPaymentInfo\\.additionalFee" + 1).val();
+	var additionalFee2 = $("#orderPaymentInfo\\.additionalFee" + 2).val();
+	var additionalFee3 = $("#orderPaymentInfo\\.additionalFee" + 3).val();
+	var totalAdditionalFees = additionalFee1 + additionalFee2 + additionalFee3;
+	$("#orderPaymentInfo\\.totalAdditionalFees").val(totalAdditionalFees);
+}
+
+function populateTotalFees() {
+	var dumpsterPrice = $("#orderPaymentInfo\\.dumpsterPrice").val();
+	var overweightFee = $("#orderPaymentInfo\\.overweightFee").val();
+	var cityFee = $("#orderPaymentInfo\\.cityFee").val();
+	var permitFees = $("#orderPaymentInfo\\.totalPermitFees").val();
+	var totalAdditionalFees = $("#orderPaymentInfo\\.totalAdditionalFees").val();
+	var discountPercentage = $("#orderPaymentInfo\\.discountPercentage").val();
+	
+	var totalFees = parseFloat(dumpsterPrice) + parseFloat(overweightFee) + parseFloat(cityFee) + parseFloat(permitFees) + parseFloat(totalAdditionalFees);
+	var discountAmount = ((totalFees * parseFloat(discountPercentage))/parseFloat(100.00));
+	
+	$("#orderPaymentInfo\\.discountAmount").val(discountAmount);
+	$("#orderPaymentInfo\\.totalFees").val(totalFees - discountAmount);
 }
 
 $("#addDeliveryAddressModal").on("show.bs.modal", function(e) {
@@ -808,7 +841,7 @@ $("#confirmExchangeOrderDialogYes").click(function (ev) {
 			</td>
 			<td class="form-left"><transys:label code="Additional Fee1"/><span class="errorMessage">*</span></td>
 			<td align="${left}">
-				<form:input path="orderPaymentInfo.additionalFee1" cssClass="flat" />
+				<form:input path="orderPaymentInfo.additionalFee1" cssClass="flat" onchange="return populateTotalAdditionalFees();"/>
 				<br><form:errors path="orderPaymentInfo.additionalFee1" cssClass="errorMessage" />
 			</td>
 		</tr>
@@ -851,7 +884,7 @@ $("#confirmExchangeOrderDialogYes").click(function (ev) {
 		<tr>
 			<td class="form-left"><transys:label code="Discount %"/><span class="errorMessage">*</span></td>
 			<td align="${left}">
-				<form:input path="orderPaymentInfo.discountPercentage" cssClass="flat" />
+				<form:input path="orderPaymentInfo.discountPercentage" cssClass="flat" onchange="return populateTotalFees();"/>
 				<br><form:errors path="orderPaymentInfo.discountPercentage" cssClass="errorMessage" />
 			</td>
 			<td class="form-left"><transys:label code="Discount Amount"/></td>

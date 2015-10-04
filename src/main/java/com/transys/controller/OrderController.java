@@ -646,10 +646,18 @@ public class OrderController extends CRUDController<Order> {
 		String overweightFeeQuery = "select obj from OverweightFee obj where ";
 		overweightFeeQuery += "obj.dumpsterSize.id=" + dumpsterSizeId
 								 +  " and obj.materialCategory.id=" + materialCategoryId
-								 +  " and obj.tonLimit=" + netWeightTonnage;
+								 +  " and obj.tonLimit<" + netWeightTonnage;
 		
 		List<OverweightFee> overweightFeeList = genericDAO.executeSimpleQuery(overweightFeeQuery);
-		return overweightFeeList.get(0).getFee();
+		if (overweightFeeList.isEmpty()) {
+			return new BigDecimal(0.0);
+		} else {
+			OverweightFee overweightFee = overweightFeeList.get(0);
+			
+			BigDecimal requestedWeight = new BigDecimal(netWeightTonnage);
+			BigDecimal differentialWeight = requestedWeight.subtract(overweightFee.getTonLimit());
+			return differentialWeight.multiply(overweightFee.getFee());
+		}
 	}
 	
 	@Override
