@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -839,6 +840,17 @@ public class OrderController extends CRUDController<Order> {
 		entity.getOrderNotes().get(0).setModifiedBy(entity.getModifiedBy());
 
 		genericDAO.saveOrUpdate(entity);
+		
+		String permitStatusQuery = "select obj from PermitStatus obj where obj.status=" + "'Assigned'";
+		List<PermitStatus> permitStatusList = genericDAO.executeSimpleQuery(permitStatusQuery);
+		for (Permit aPermit : permitList) {
+			aPermit.setStatus(permitStatusList.get(0));
+			aPermit.setModifiedAt(Calendar.getInstance().getTime());
+			aPermit.setModifiedBy(getUser(request).getId());
+			
+			genericDAO.saveOrUpdate(aPermit);
+		}
+		
 		cleanUp(request);
 		
 		//return "redirect:/" + urlContext + "/list.do";
