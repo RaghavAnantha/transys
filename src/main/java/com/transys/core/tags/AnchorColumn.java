@@ -169,12 +169,15 @@ public final class AnchorColumn extends AbstractColumnTag
 		}
         objBuf.append(newLinkUrl);
         objBuf.append("\"");
-        if (this.target != null)
-            	objBuf.append(" target=\"" + this.target + "\"");
+        if (this.target != null) {
+            	objBuf.append(" data-target=\"" + this.target + "\"");
+            	objBuf.append(" data-backdrop=\"static\" data-remote=\"false\" data-toggle=\"modal\"");
+        }
         objBuf.append(">");
-        if (this.linkText != null)
-            objBuf.append(CacheUtil.getText("messageResourceCache","label_"+this.linkText+"_"+locale));
-        else
+        if (this.linkText != null) {
+//            objBuf.append(CacheUtil.getText("messageResourceCache","label_"+this.linkText+"_"+locale));
+      	  objBuf.append(this.linkText);
+        } else
             objBuf.append(formatField(value, this.dataFormat));
 
         objBuf.append("</a>");

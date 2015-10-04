@@ -22,6 +22,7 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -267,6 +268,63 @@ public class PermitController extends CRUDController<Permit> {
 		return urlContext + "/permit";
 	}
 	
+	@RequestMapping(method = RequestMethod.GET, value = "/permitCreateModal.do")
+	public String deliveryAddressCreateModal(ModelMap model, HttpServletRequest request, @RequestParam(value = "id") Long orderPermitId) {
+	
+		setupUpdate(model, request);
+		System.out.println("OrderPermit Id being edited = " + orderPermitId);
+
+		Map<String, Object> criterias = new HashMap<String, Object>();
+		criterias.put("id", orderPermitId);
+		OrderPermits orderPermitToBeEdited = genericDAO.findByCriteria(OrderPermits.class, criterias, "id", false).get(0);
+		Permit permitToBeEdited = orderPermitToBeEdited.getPermit();
+		permitToBeEdited.setNumber(StringUtils.EMPTY); // empty the permit number
+		
+	/*	PermitStatus permitStatus = new PermitStatus(); // will it automatically be done on permit save?
+		permitStatus.setStatus("PENDING");
+		permitToBeEdited.setStatus(permitStatus); */
+		
+		model.put("modelObject", permitToBeEdited);
+		
+		List<BaseModel> orderPermits = (List<BaseModel>)genericDAO.executeSimpleQuery("select obj from OrderPermits obj where obj.permit.id=" +  permitToBeEdited.getId() + " order by obj.id desc");
+		if (orderPermits != null && orderPermits.size() > 0) {
+			BaseModel orderPermitObj = orderPermits.get(0);
+			model.addAttribute("associatedOrderID", orderPermitObj);
+		}
+		
+		/*Permit permitToBeEdited = (Permit)model.get("modelObject");
+		
+		if (permitToBeEdited == null) { // OrderPermitAlert Screen - Add New Permit, should do a new add, not an update - clear out the id field?
+			OrderPermits orderPermitToBeEdited = setupOrderPermitModel(request);
+			permitToBeEdited = orderPermitToBeEdited.getPermit();
+			System.out.println("Got the new permit number " + permitToBeEdited.getNumber());
+			model.put("modelObject", permitToBeEdited);
+		} 
+		
+		System.out.println("Permit to be edited = " + permitToBeEdited.getId());
+		PermitNotes notes = new PermitNotes();
+		notes.setPermit(permitToBeEdited); 
+		model.addAttribute("notesModelObject", notes);
+		List<BaseModel> notesList = genericDAO.executeSimpleQuery("select obj from PermitNotes obj where obj.permit.id=" +  permitToBeEdited.getId() + " order by obj.id asc");
+		model.addAttribute("notesList", notesList);
+	
+		PermitAddress permitAddress = new PermitAddress();
+		permitAddress.setPermit(permitToBeEdited); 
+		model.addAttribute("permitAddressModelObject", permitAddress);
+		List<BaseModel> permitAddressList = genericDAO.executeSimpleQuery("select obj from PermitAddress obj where obj.permit.id=" +  permitToBeEdited.getId() + " order by obj.id asc");
+		model.addAttribute("permitAddressList", permitAddressList);
+		
+		// only in cases of Edit, an order ID can be associated with the permit
+		List<BaseModel> orderPermits = (List<BaseModel>)genericDAO.executeSimpleQuery("select obj from OrderPermits obj where obj.permit.id=" +  permitToBeEdited.getId() + " order by obj.id desc");
+		if (orderPermits != null && orderPermits.size() > 0) {
+			BaseModel orderPermitObj = orderPermits.get(0);
+			model.addAttribute("associatedOrderID", orderPermitObj);
+		}
+	*/
+		
+		return urlContext + "/formModal";
+	}
+	
 	@Override
 	public String edit2(ModelMap model, HttpServletRequest request) {
 		setupUpdate(model, request);
@@ -341,7 +399,7 @@ public class PermitController extends CRUDController<Permit> {
 	public String save(HttpServletRequest request,
 			@ModelAttribute("modelObject") Permit entity,
 			BindingResult bindingResult, ModelMap model) {
-		
+
 			String status = "Pending";
 			if (entity.getNumber() != null && entity.getNumber().length() > 0) {
 				status = "Available";
@@ -376,9 +434,30 @@ public class PermitController extends CRUDController<Permit> {
 			
 			beforeSave(request, entity, model);
 			genericDAO.saveOrUpdate(entity);
+			
+			// If new permit initiated from OrderPermitAlert screen, the permit should be associated with the corresponding orderID
+			associateToOrder(entity);
+			
 			cleanUp(request);
 			
 			return saveSuccess(model, request, entity);
+	}
+
+	private void associateToOrder(Permit entity) {
+		if (entity.getOrderID() == null) { // Its a new permit, not triggered from OrderPermit Screen
+			return;
+		}
+		
+		// existing permit details, chk order association
+		List<BaseModel> orderPermits = (List<BaseModel>)genericDAO.executeSimpleQuery("select obj from OrderPermits obj where obj.id=" +  entity.getOrderID()+ " order by obj.id desc");
+		if (orderPermits != null && orderPermits.size() > 0) {
+			OrderPermits associatedOrderPermit = (OrderPermits)orderPermits.get(0);
+			Map<String, Object> criterias = new HashMap<String, Object>();
+			criterias.put("number", entity.getNumber());
+			Permit newPermit = genericDAO.findByCriteria(Permit.class, criterias, "id", false).get(0);
+			associatedOrderPermit.setPermit(newPermit);
+			genericDAO.saveOrUpdate(associatedOrderPermit);
+		}
 	}
 	
 	public String saveSuccess(ModelMap model, HttpServletRequest request, Permit entity) {

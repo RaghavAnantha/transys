@@ -710,7 +710,19 @@ public final class Datatable extends BodyTagSupport {
 						objCol = (IColumnTag) iterCol.next();
 						if (objCol instanceof RowNumColumn)
 							objCol.renderDetail(new Integer(i + 1));
-						else {
+						else if (objCol instanceof AnchorColumn) {
+							// set the link url with the id
+							String linkUrl = ((AnchorColumn)objCol).getLinkUrl();
+							linkUrl += "?id=" + PropertyUtils.getProperty(currItem, "id");
+							((AnchorColumn)objCol).setLinkUrl(linkUrl);
+							
+							strFld = objCol.getDataField();
+							Object value = getColumnValue(strFld);
+							if (value !=null)
+								objCol.renderDetail(value);
+							else
+								objCol.renderDetail(objCol.getBodyContent());
+						} else {
 							strFld = objCol.getDataField();
 							Object value = getColumnValue(strFld);
 							if (value !=null)

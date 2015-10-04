@@ -131,8 +131,8 @@
 </form:form>
 
 <form:form name="delete.do" id="serviceForm" class="tab-color">
-	<transys:datatable urlContext="permit" deletable="true"
-		editable="true" baseObjects="${orderPermitList}"
+	<transys:datatable urlContext="permit" deletable="false"
+		baseObjects="${orderPermitList}"
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
 		pagingLink="search.do" multipleDelete="false" searcheable="false" 
 		exportPdf="true" exportXls="true" dataQualifier="orderPermitAlert">
@@ -148,8 +148,30 @@
 		<transys:textcolumn headerText="PermitStatus" dataField="permit.status.status" />
 		<transys:textcolumn headerText="StartDate" dataField="permit.startDate" />
 		<transys:textcolumn headerText="EndDate" dataField="permit.endDate" />
+		<transys:anchorcolumn headerText="New Permit" linkText="Add New Permit" linkUrl="/permit/permitCreateModal.do" target="#addNewPermitModal" />
+		<transys:anchorcolumn headerText="Order Notes" linkText="Add Order Notes" linkUrl="/permit/permitCreateModal.do" target="#addNewPermitModal" />
 	</transys:datatable>
 	<%session.setAttribute("orderPermitAlertColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
 </form:form>
 
+<div class="modal fade" id="addNewPermitModal" role="dialog" data-backdrop="static" data-remote="false" data-toggle="modal">
+	<div class="modal-dialog" style="width:90% !important">
+		<div class="modal-content">
+		 	<div class="modal-header">
+        		<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+       			<h4 class="modal-title">Add New Permit</h4>
+       			<!-- <div id="permitValidations" style="color:red"></div> -->
+      		 </div>	
+			
+			<div class="modal-body" id="addNewPermitModalBody"></div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+$("#addNewPermitModal").on("show.bs.modal", function(e) {
+    var link = $(e.relatedTarget).attr("href");
+    $(this).find("#addNewPermitModalBody").load(link);
+});
+</script>
 
