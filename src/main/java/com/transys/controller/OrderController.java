@@ -626,8 +626,8 @@ public class OrderController extends CRUDController<Order> {
 	public @ResponseBody String retrieveOverweightFee(ModelMap model, HttpServletRequest request,
 			 													     @RequestParam(value = "dumpsterSizeId") String dumpsterSizeId,
 			 													     @RequestParam(value = "materialCategoryId") String materialCategoryId,
-			 													     @RequestParam(value = "netTonnage") String netTonnage) {
-		BigDecimal cityFee = retrieveOverweightFee(dumpsterSizeId, materialCategoryId, netTonnage);
+			 													     @RequestParam(value = "netWeightTonnage") String netWeightTonnage) {
+		BigDecimal cityFee = retrieveOverweightFee(dumpsterSizeId, materialCategoryId, netWeightTonnage);
 		
 		ObjectMapper objectMapper = new ObjectMapper();
 		String json = StringUtils.EMPTY;
@@ -642,9 +642,11 @@ public class OrderController extends CRUDController<Order> {
 		//return json;
 	}
 	
-	private BigDecimal retrieveOverweightFee(String dumpsterSizeId, String materialCategoryId, String netTonnage) {
+	private BigDecimal retrieveOverweightFee(String dumpsterSizeId, String materialCategoryId, String netWeightTonnage) {
 		String overweightFeeQuery = "select obj from OverweightFee obj where ";
-		overweightFeeQuery += "obj.id=" + dumpsterSizeId;
+		overweightFeeQuery += "obj.dumpsterSize.id=" + dumpsterSizeId
+								 +  " and obj.materialCategory.id=" + materialCategoryId
+								 +  " and obj.tonLimit=" + netWeightTonnage;
 		
 		List<OverweightFee> overweightFeeList = genericDAO.executeSimpleQuery(overweightFeeQuery);
 		return overweightFeeList.get(0).getFee();

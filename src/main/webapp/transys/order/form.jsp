@@ -131,6 +131,33 @@ function populateDusmpsterPrice() {
 	});
 }
 
+function populateOverweightFee() {
+	var dumpsterSizeSelect = $("#dumpsterSize");
+	var dumpsterSizeId = dumpsterSizeSelect.val();
+	
+	var materialCategorySelect = $("#materialCategory");
+	var materialCategoryId = materialCategorySelect.val();
+	
+	var netWeightTonnage = $("#netWeightTonnage").val();
+	
+	if (dumpsterSizeId == "" || materialCategoryId == "" || netWeightTonnage == "") {
+		return false;
+	}
+	
+	var overweightFeeInput = $("#orderPaymentInfo\\.overweightFee");
+	
+	$.ajax({
+  		url: "retrieveOverweightFee.do?" + "dumpsterSizeId=" + dumpsterSizeId 
+  								  		 + "\&materialCategoryId=" + materialCategoryId
+  								  		 + "\&netWeightTonnage=" + netWeightTonnage,
+  								  
+       	type: "GET",
+       	success: function(responseData, textStatus, jqXHR) {
+       		overweightFeeInput.val(responseData);
+		}
+	});
+}
+
 function populateCityFee() {
 	var cityFeeDescriptionSelect = $("#orderPaymentInfo\\.cityFeeType");
 	var cityFeeId = cityFeeDescriptionSelect.val();
@@ -721,7 +748,7 @@ $("#confirmExchangeOrderDialogYes").click(function (ev) {
 			</td>
 			<td class="form-left"><transys:label code="Net Tonnage"/><span class="errorMessage">*</span></td>
 			<td align="${left}">
-				<form:input path="netWeightTonnage" cssClass="flat" />
+				<form:input path="netWeightTonnage" cssClass="flat" onChange="return populateOverweightFee();"/>
 				<br><form:errors path="netWeightTonnage" cssClass="errorMessage" />
 			</td>
 		</tr>
