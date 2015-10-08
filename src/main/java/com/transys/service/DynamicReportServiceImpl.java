@@ -358,21 +358,17 @@ public class DynamicReportServiceImpl implements DynamicReportService {
 		List<Field> displayableFieldList = new ArrayList<Field>();
 		try {
 			if (entityClass.getSuperclass() != Object.class) {
-				Field[] superClassfields = entityClass.getSuperclass()
-						.getDeclaredFields();
+				Field[] superClassfields = entityClass.getSuperclass().getDeclaredFields();
 				for (IColumnTag objCol : columnPropertyList) {
 					for (Field field : superClassfields) {
-						if (field.getName().equalsIgnoreCase(
-								objCol.getDataField())) {
-							displayableFieldList.add(field);
-						}
-						if (objCol.getDataField().indexOf(".") != -1
-								&& field.getName().equalsIgnoreCase(
-										objCol.getDataField().substring(
-												0,
-												objCol.getDataField().indexOf(
-														".")))) {
-							displayableFieldList.add(field);
+						if (objCol.getDataField() != null) {
+							if (field.getName().equalsIgnoreCase(objCol.getDataField())) {
+								displayableFieldList.add(field);
+							}
+							if (objCol.getDataField().indexOf(".") != -1
+									&& field.getName().equalsIgnoreCase(objCol.getDataField().substring(0, objCol.getDataField().indexOf(".")))) {
+								displayableFieldList.add(field);
+							}
 						}
 					}
 				}
@@ -383,14 +379,12 @@ public class DynamicReportServiceImpl implements DynamicReportService {
 					if (field.getName().equalsIgnoreCase(objCol.getDataField())) {
 						displayableFieldList.add(field);
 					}
-					if (objCol.getDataField().indexOf(".") != -1
-							&& field.getName()
-									.equalsIgnoreCase(
-											objCol.getDataField().substring(
-													0,
-													objCol.getDataField()
-															.indexOf(".")))) {
-						displayableFieldList.add(field);
+					if (objCol.getDataField() != null) {
+						if (objCol.getDataField().indexOf(".") != -1
+								&& field.getName().equalsIgnoreCase(
+												objCol.getDataField().substring(0, objCol.getDataField().indexOf(".")))) {
+							displayableFieldList.add(field);
+						}
 					}
 				}
 			}
@@ -398,14 +392,16 @@ public class DynamicReportServiceImpl implements DynamicReportService {
 			List<Field> orderedDisplayableFieldList = new ArrayList<Field>();
 			for (IColumnTag objCol : columnPropertyList) {
 				for (Field aField : displayableFieldList) {
-					if (aField.getName().equalsIgnoreCase(objCol.getDataField())) {
-						orderedDisplayableFieldList.add(aField);
-						break;
-					}
-					if (objCol.getDataField().indexOf(".") != -1
-							&& aField.getName().equalsIgnoreCase(objCol.getDataField().substring(0, objCol.getDataField().indexOf(".")))) {
-						orderedDisplayableFieldList.add(aField);
-						break;
+					if (objCol.getDataField() != null) {
+						if (aField.getName().equalsIgnoreCase(objCol.getDataField())) {
+							orderedDisplayableFieldList.add(aField);
+							break;
+						}
+						if (objCol.getDataField().indexOf(".") != -1
+								&& aField.getName().equalsIgnoreCase(objCol.getDataField().substring(0, objCol.getDataField().indexOf(".")))) {
+							orderedDisplayableFieldList.add(aField);
+							break;
+						}
 					}
 				}
 			}
@@ -441,12 +437,10 @@ public class DynamicReportServiceImpl implements DynamicReportService {
 							Object value=((Object[]) objectList.get(i))[j];
 							StaticDataColumn column = (StaticDataColumn)columnPropertyList.get(j);
 							Object data = StaticDataUtil.getText(column.getDataType(), value.toString());
-							((Map) obj[i]).put(columnPropertyList.get(j)
-									.getDataField(),data);
+							((Map) obj[i]).put(columnPropertyList.get(j).getDataField(),data);
 						}
 						else {
-							((Map) obj[i]).put(columnPropertyList.get(j)
-									.getDataField(), ((Object[]) objectList.get(i))[j]);
+							((Map) obj[i]).put(columnPropertyList.get(j).getDataField(), ((Object[]) objectList.get(i))[j]);
 						}
 					}
 				}
