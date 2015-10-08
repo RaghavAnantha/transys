@@ -1,6 +1,6 @@
 <%@include file="/common/taglibs.jsp"%>
 
-<form:form action="/customer/saveDeliveryAddressModal.do" name="deliveryAddressModalForm" commandName="deliveryAddressModelObject" method="post" id="deliveryAddressForm">
+<form:form action="/customer/saveDeliveryAddressModal.do" name="deliveryAddressModalForm" commandName="deliveryAddressModelObject" method="post" id="deliveryAddressModalForm">
 	<form:hidden path="customer.id" id="custID" />
 	<table id="form-table" class="table delivery">
 		<tr>

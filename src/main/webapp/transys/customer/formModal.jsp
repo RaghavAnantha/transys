@@ -1,47 +1,5 @@
 <%@include file="/common/taglibs.jsp"%>
 <script type="text/javascript">
-function formatPhone(){	
-	var phone = $("#phone").val();
-	if(phone != ""){
-		if(phone.length < 10){
-			alert("Invalid Phone Number");
-			document.getElementById("phone").value = "";
-			return true;
-		}
-		else{
-			var str = new String(phone);
-			if(!str.match("-")){
-				var p1 = str.substring(0,3);
-				var p2 = str.substring(3,6);
-				var p3 = str.substring(6,10);				
-				var phone = p1 + "-" + p2 + "-" + p3;
-				document.getElementById("phone").value = phone;
-			}
-		}
-	}	
-}
-
-function formatFax(){
-	var fax = document.getElementById("fax").value;
-	if(fax != ""){
-		if(fax.length < 10){
-			alert("Invalid Phone Number");
-			document.getElementById("fax").value = "";
-			return true;
-		}
-		else{
-			var str = new String(fax);
-			if(!str.match("-")){
-				var p1 = str.substring(0,3);
-				var p2 = str.substring(3,6);
-				var p3 = str.substring(6,10);				
-				var fax = p1 + "-" + p2 + "-" + p3;
-				document.getElementById("fax").value = fax;
-			}
-		}
-	}	
-}	
-
 $("#customerModalForm").submit(function (ev) {
 	var $this = $(this);
 	
@@ -59,7 +17,7 @@ $("#customerModalForm").submit(function (ev) {
 });
 </script>
 
-<form:form action="/customer/saveModal.do" name="customerModalForm" commandName="modelObject" method="post" id="customerForm">
+<form:form action="/customer/saveModal.do" name="customerModalForm" commandName="modelObject" method="post" id="customerModalForm">
 	<table id="form-table" class="table">
 		<tr>
 			<td class="form-left"><transys:label code="Company Name" /><span class="errorMessage">*</span></td>
@@ -160,7 +118,7 @@ $("#customerModalForm").submit(function (ev) {
 		<td class="form-left"><transys:label code="Alt Phone1" /></td>
 			<td align="${left}">
 				<form:input path="altPhone1" cssClass="flat"  maxlength="12" 
-					id="altPhone1" onkeypress="return onlyNumbers(event, false)" onblur="return formatPhone();"/>
+					id="altPhone1" onkeypress="return onlyNumbers(event, false)" onblur="return validateAndFormatPhone('altPhone1');"/>
 			 	<br><form:errors path="altPhone1" cssClass="errorMessage" />
 			</td>
 		</tr>
@@ -168,13 +126,13 @@ $("#customerModalForm").submit(function (ev) {
 			<td class="form-left"><transys:label code="Phone" /></td>
 			<td align="${left}">
 				<form:input path="phone" cssClass="flat"  maxlength="12" 
-					id="phone" onkeypress="return onlyNumbers(event, false)" onblur="return formatPhone();"/>
+					id="phone" onkeypress="return onlyNumbers(event, false)" onblur="return validateAndFormatPhone('phone');"/>
 			 	<br><form:errors path="phone" cssClass="errorMessage" />
 			</td>
 			<td class="form-left"><transys:label code="Alt Phone2" /></td>
 			<td align="${left}">
 				<form:input path="altPhone2" cssClass="flat"  maxlength="12" 
-					id="altPhone2" onkeypress="return onlyNumbers(event, false)" onblur="return formatPhone();"/>
+					id="altPhone2" onkeypress="return onlyNumbers(event, false)" onblur="return validateAndFormatPhone('altPhone2');"/>
 			 	<br><form:errors path="altPhone2" cssClass="errorMessage" />
 			</td>
 		</tr>
@@ -187,7 +145,7 @@ $("#customerModalForm").submit(function (ev) {
 			<td class="form-left"><transys:label code="Fax" /></td>
 			<td align="${left}">
 				<form:input path="fax" cssClass="flat" maxlength="12" 
-					id="fax" onkeypress="return onlyNumbers(event, false)" onblur="return formatFax();"/>
+					id="fax" onkeypress="return onlyNumbers(event, false)" onblur="return validateAndFormatPhone('fax');"/>
 				 <br><form:errors path="fax" cssClass="errorMessage" />
 			</td>
 		</tr>
