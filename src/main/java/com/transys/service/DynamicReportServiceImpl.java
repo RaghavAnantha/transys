@@ -5,6 +5,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -394,6 +395,21 @@ public class DynamicReportServiceImpl implements DynamicReportService {
 				}
 			}
 			
+			List<Field> orderedDisplayableFieldList = new ArrayList<Field>();
+			for (IColumnTag objCol : columnPropertyList) {
+				for (Field aField : displayableFieldList) {
+					if (aField.getName().equalsIgnoreCase(objCol.getDataField())) {
+						orderedDisplayableFieldList.add(aField);
+						break;
+					}
+					if (objCol.getDataField().indexOf(".") != -1
+							&& aField.getName().equalsIgnoreCase(objCol.getDataField().substring(0, objCol.getDataField().indexOf(".")))) {
+						orderedDisplayableFieldList.add(aField);
+						break;
+					}
+				}
+			}
+			
 			String query = "select ";
 			for (int i = 0; i < columnPropertyList.size(); i++) {
 				query += columnPropertyList.get(i).getDataField();
@@ -437,7 +453,7 @@ public class DynamicReportServiceImpl implements DynamicReportService {
 			}
 			
 			JasperPrint jp = getJasperPrint(reportName, obj,
-					columnPropertyList, displayableFieldList, request,type,entityClass);
+					columnPropertyList, orderedDisplayableFieldList, request,type,entityClass);
 			out = getStreamByType(type, jp, request);
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -887,14 +903,25 @@ public class DynamicReportServiceImpl implements DynamicReportService {
 					LabelUtil.getText(columnTag.getHeaderText(), locale),
 					Integer.valueOf("100"), headerStyle, timeStyle);
 			report.addColumn(longColumn);
+		} else if (field.getType() == BigDecimal.class) {
+			Style bigDecimalStyle = new Style();
+			//doubleStyle.setBorder(Border.THIN);
+			bigDecimalStyle.setHorizontalAlign(HorizontalAlign.RIGHT);
+			bigDecimalStyle.setPattern("####.000");
+			bigDecimalStyle.setTextColor(Color.RED);
+			AbstractColumn doubleColumn = getColumn(columnTag.getDataField(), BigDecimal.class,
+					LabelUtil.getText(columnTag.getHeaderText(), locale),
+					Integer.valueOf("100"), headerStyle, bigDecimalStyle);
+			report.addColumn(doubleColumn);
 		} else {
 			String type= columnTag.getType();
 			Class fieldType = String.class;
 			if ("int".equalsIgnoreCase(type)) {
 				fieldType = Integer.class;
-			}
-			if ("double".equalsIgnoreCase(type)) {
+			} else if ("double".equalsIgnoreCase(type)) {
 				fieldType = Double.class;
+			} else if ("java.math.BigDecimal".equalsIgnoreCase(type)){
+				fieldType = BigDecimal.class;
 			}
 			AbstractColumn genericColumn = getColumn(columnTag.getDataField(), fieldType,
 					LabelUtil.getText(columnTag.getHeaderText(), locale),
