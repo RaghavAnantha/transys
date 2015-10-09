@@ -247,7 +247,7 @@ CREATE TABLE `dumpsterStatus` (
 
 LOCK TABLES `dumpsterStatus` WRITE;
 /*!40000 ALTER TABLE `dumpsterStatus` DISABLE KEYS */;
-INSERT INTO `dumpsterStatus` VALUES (1,'Available',NULL,NULL,NULL,NULL,NULL,1),(2,'In-Repair',NULL,NULL,NULL,NULL,NULL,1),(3,'Dropped-Off',NULL,NULL,NULL,NULL,NULL,1);
+INSERT INTO `dumpsterStatus` VALUES (1,'Available',NULL,NULL,NULL,NULL,NULL,1),(2,'In-Repair',NULL,NULL,NULL,NULL,NULL,1),(3,'Dropped Off',NULL,NULL,NULL,NULL,NULL,1);
 /*!40000 ALTER TABLE `dumpsterStatus` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -678,7 +678,7 @@ CREATE TABLE `orderStatus` (
 LOCK TABLES `orderStatus` WRITE;
 /*!40000 ALTER TABLE `orderStatus` DISABLE KEYS */;
 INSERT INTO `transys`.`orderstatus` (`id`, `status`, `comments`) VALUES ('1', 'Open', NULL);
-INSERT INTO `orderStatus` VALUES (2,'Dropped-off',NULL,NULL,NULL,NULL,NULL,1),(3,'Picked Up',NULL,NULL,NULL,NULL,NULL,1),(4,'Closed',NULL,NULL,NULL,NULL,NULL,1);
+INSERT INTO `orderStatus` VALUES (2,'Dropped Off',NULL,NULL,NULL,NULL,NULL,1),(3,'Picked Up',NULL,NULL,NULL,NULL,NULL,1),(4,'Closed',NULL,NULL,NULL,NULL,NULL,1);
 /*!40000 ALTER TABLE `orderStatus` ENABLE KEYS */;
 UNLOCK TABLES;
 
