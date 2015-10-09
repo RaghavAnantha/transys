@@ -140,6 +140,7 @@ public class PermitController extends CRUDController<Permit> {
 			
 		} else {
 			searchMap.put("order.orderStatus.status", "Open");
+			searchMap.put("||order.orderStatus.status", "Dropped-off");
 		}
 		
 		// permit EndDate <= Today + 7 days
@@ -280,11 +281,9 @@ public class PermitController extends CRUDController<Permit> {
 		Permit permitToBeEdited = orderPermitToBeEdited.getPermit();
 		permitToBeEdited.setNumber(StringUtils.EMPTY); // empty the permit number
 		
-	/*	PermitStatus permitStatus = new PermitStatus(); // will it automatically be done on permit save?
-		permitStatus.setStatus("PENDING");
-		permitToBeEdited.setStatus(permitStatus); */
-		
 		model.put("modelObject", permitToBeEdited);
+		
+		model.addAttribute("deliveryAddress", permitToBeEdited.getCustomer().getDeliveryAddress());
 		
 		List<BaseModel> orderPermits = (List<BaseModel>)genericDAO.executeSimpleQuery("select obj from OrderPermits obj where obj.permit.id=" +  permitToBeEdited.getId() + " order by obj.id desc");
 		if (orderPermits != null && orderPermits.size() > 0) {
@@ -342,6 +341,9 @@ public class PermitController extends CRUDController<Permit> {
 			model.put("modelObject", permitToBeEdited);
 		} 
 		
+		// get the delivery address
+		model.addAttribute("editDeliveryAddress", permitToBeEdited.getCustomer().getDeliveryAddress());
+		
 		PermitNotes notes = new PermitNotes();
 		notes.setPermit(permitToBeEdited); 
 		model.addAttribute("notesModelObject", notes);
@@ -378,7 +380,7 @@ public class PermitController extends CRUDController<Permit> {
 		Map criterias = new HashMap();
 		
 		List<DeliveryAddress> addresses = genericDAO.findUniqueByCriteria(DeliveryAddress.class, criterias, "line1", false);
-	   model.addAttribute("deliveryAddress", addresses);
+	   model.addAttribute("allDeliveryAddresses", addresses);
 		model.addAttribute("customer", genericDAO.findByCriteria(Customer.class, criterias, "contactName", false));
 		model.addAttribute("locationType", genericDAO.findByCriteria(LocationType.class, criterias, "id", false));
 		model.addAttribute("order", genericDAO.findByCriteria(Order.class, criterias, "id", false));
@@ -435,12 +437,33 @@ public class PermitController extends CRUDController<Permit> {
 			beforeSave(request, entity, model);
 			genericDAO.saveOrUpdate(entity);
 			
+			// The delivery address entered will automatically be stored as one of the Permit Addresses. Users can add more.
+			addDeliveryAddAsPermitAdd(request, entity);
+			
 			// If new permit initiated from OrderPermitAlert screen, the permit should be associated with the corresponding orderID
 			associateToOrder(entity);
 			
 			cleanUp(request);
 			
 			return saveSuccess(model, request, entity);
+	}
+
+	private void addDeliveryAddAsPermitAdd(HttpServletRequest request, Permit entity) {
+		DeliveryAddress deliveryAddress =  (DeliveryAddress)genericDAO.executeSimpleQuery("select obj from DeliveryAddress obj where obj.id='" + entity.getDeliveryAddress().getId() + "'").get(0);
+		PermitAddress permitAddress = new PermitAddress();
+		permitAddress.setLine1(deliveryAddress.getLine1());
+		permitAddress.setLine2(deliveryAddress.getLine2());
+		permitAddress.setCity(deliveryAddress.getCity());
+		permitAddress.setState(deliveryAddress.getState());
+		permitAddress.setZipcode(deliveryAddress.getZipcode());
+		permitAddress.setPermit(entity);
+		
+		permitAddress.setCreatedAt(Calendar.getInstance().getTime());
+		if (permitAddress.getCreatedBy()==null) {
+			permitAddress.setCreatedBy(getUser(request).getId());
+		}
+		
+		genericDAO.save(permitAddress);
 	}
 
 	private void associateToOrder(Permit entity) {

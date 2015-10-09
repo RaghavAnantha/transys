@@ -78,7 +78,7 @@ function populateEndDate() {
 			<td align="${left}">
 				<form:select id="deliveryAddressSelect" cssClass="flat form-control input-sm" path="deliveryAddress" style="width: 175px !important" >
 					<form:option value="">------Please Select--------</form:option>
-					<form:options items="${deliveryAddress}" itemValue="id" itemLabel="line1" />
+					<form:options items="${deliveryAddress}" itemValue="id" itemLabel="fullLine" />
 				</form:select> 
 			 	<br><form:errors path="deliveryAddress" cssClass="errorMessage" />
 			</td> 

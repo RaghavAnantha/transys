@@ -21,6 +21,7 @@ function populateDeliveryAddress() {
     	   	        text: this.line1 + ", " + this.line2
     	   	    }).appendTo(deliveryAddressSelect);
     	   	});
+    
 		}
 	}); 
 }
@@ -76,9 +77,9 @@ function populateEndDate() {
 		<tr>
 			<td class="form-left"><transys:label code="Delivery Address" /><span class="errorMessage">*</span></td>
 			<td align="${left}">
-				<form:select id="deliveryAddressSelect" cssClass="flat form-control input-sm" path="deliveryAddress" style="width: 175px !important" >
+				<form:select id="deliveryAddressSelect" cssClass="flat form-control input-sm" path="deliveryAddress" style="width: 175px !important" onClick="return populateDeliveryAddress();">
 					<form:option value="">------Please Select--------</form:option>
-					<form:options items="${deliveryAddress}" itemValue="id" itemLabel="line1" />
+					<form:options items="${editDeliveryAddress}" itemValue="id" itemLabel="fullLine" />
 				</form:select> 
 			 	<br><form:errors path="deliveryAddress" cssClass="errorMessage" />
 			</td> 

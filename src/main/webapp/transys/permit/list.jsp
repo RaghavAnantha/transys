@@ -7,7 +7,7 @@
 		  <td align="${left}" class="form-left"><transys:label code="Delivery Address #"/></td>
 				<td align="${left}"><select class="flat form-control input-sm" id="deliveryAddress" name="deliveryAddress.line1" style="width: 175px">
 					<option value="">------<transys:label code="Please Select"/>------</option>
-					<c:forEach items="${deliveryAddress}" var="deliveryAddressVar">
+					<c:forEach items="${allDeliveryAddresses}" var="deliveryAddressVar">
 						 <c:set var="selected" value=""/>
 						 <c:if test="${sessionScope.searchCriteria.searchMap['deliveryAddress.line1'] == deliveryAddressVar.line1}">
 							<c:set var="selected" value="selected"/>
@@ -20,7 +20,7 @@
 			<td align="${left}" class="form-left"><transys:label code="Delivery Street"/></td>
 			<td align="${left}"><select class="flat form-control input-sm" id="deliveryStreet" name="deliveryAddress.line2" style="width: 175px">
 				<option value="">------<transys:label code="Please Select"/>------</option>
-				<c:forEach items="${deliveryAddress}" var="deliveryAddress">
+				<c:forEach items="${allDeliveryAddresses}" var="deliveryAddress">
 						<c:set var="selected" value=""/>
 						<c:if test="${sessionScope.searchCriteria.searchMap['deliveryAddress.line2'] == deliveryAddress.line2}">
 							<c:set var="selected" value="selected"/>
@@ -60,18 +60,18 @@
 	 </tr>
 	 <tr>
 		  <td align="${left}" class="form-left"><transys:label code="Start Date From"/></td>
-		  <td align="${left}" class="wide"><input class="flat" id="datepicker1" name="startDateFrom" style="width: 175px" /></td>
+		  <td align="${left}" class="wide"><input class="flat" id="datepicker1" name="startDateFrom" value="${sessionScope.searchCriteria.searchMap['startDateFrom']}" style="width: 175px" /></td>
 				
 		  <td align="${left}" class="form-left"><transys:label code="Start Date To"/></td>
-	      <td align="${left}" class="wide"><input class="flat" id="datepicker2" name="startDateTo" style="width: 175px" /></td>
+	      <td align="${left}" class="wide"><input class="flat" id="datepicker2" name="startDateTo" value="${sessionScope.searchCriteria.searchMap['startDateTo']}" style="width: 175px" /></td>
 			
 	 </tr>
 	 <tr>
 		  <td align="${left}" class="form-left"><transys:label code="End Date From"/></td>
-		  <td align="${left}" class="wide"><input class="flat" id="datepicker3" name="endDateFrom" style="width: 175px" /></td>
+		  <td align="${left}" class="wide"><input class="flat" id="datepicker3" name="endDateFrom" value="${sessionScope.searchCriteria.searchMap['endDateFrom']}" style="width: 175px" /></td>
 				
 		  <td align="${left}" class="form-left"><transys:label code="End Date To"/></td>
-	      <td align="${left}" class="wide"><input class="flat" id="datepicker4" name="endDateTo" style="width: 175px" /></td>
+	      <td align="${left}" class="wide"><input class="flat" id="datepicker4" name="endDateTo" value="${sessionScope.searchCriteria.searchMap['endDateTo']}" style="width: 175px" /></td>
 			
 	 </tr>
 	 <tr>
@@ -108,7 +108,7 @@
 					<c:forEach items="${permit}" var="permit">
 						<c:if test="${not empty permit.number}">
 							<c:set var="selected" value=""/>
-							<c:if test="${sessionScope.searchCriteria.searchMap['permit.number'] == permit.number}">
+							<c:if test="${sessionScope.searchCriteria.searchMap['number'] == permit.number}">
 								<c:set var="selected" value="selected"/>
 							</c:if>
 								<option value="${permit.number}" ${selected}>${permit.number}</option>
@@ -174,8 +174,8 @@
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
 		pagingLink="search.do" multipleDelete="false" searcheable="false" 
 		exportPdf="true" exportXls="true" dataQualifier="managePermit">
-		<transys:textcolumn headerText="Delivery#" dataField="deliveryAddress.line1" />
-		<transys:textcolumn headerText="DeliveryStreet" dataField="deliveryAddress.line2" />
+		<transys:textcolumn headerText="Delivery Address" dataField="deliveryAddress.fullLine" />
+		<%-- <transys:textcolumn headerText="DeliveryStreet" dataField="deliveryAddress.line2" /> --%>
 		<transys:textcolumn headerText="Locn. Type" dataField="locationType.locationType" />
 		<transys:textcolumn headerText="PermitType" dataField="permitType.permitType" />
 		<transys:textcolumn headerText="PermitClass" dataField="permitClass.permitClass" />

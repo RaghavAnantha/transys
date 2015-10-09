@@ -6,10 +6,10 @@
 	<table width="100%" id="form-table">
 		<tr>
 		  <td align="${left}" class="form-left"><transys:label code="End Date From"/></td>
-		  <td align="${left}" class="wide"><input class="flat" id="datepicker3" name="endDateFrom" style="width: 175px" /></td>
+		  <td align="${left}" class="wide"><input class="flat" id="datepicker6" name="permit.endDateFrom" value="${sessionScope.searchCriteria.searchMap['permit.endDateFrom']}" style="width: 175px" /></td>
 				
 		  <td align="${left}" class="form-left"><transys:label code="End Date To"/></td>
-	      <td align="${left}" class="wide"><input class="flat" id="datepicker4" name="endDateTo" style="width: 175px" /></td>
+	      <td align="${left}" class="wide"><input class="flat" id="datepicker7" name="permit.endDateTo" value="${sessionScope.searchCriteria.searchMap['permit.endDateTo']}" style="width: 175px" /></td>
 			
 	 	</tr>
 		 <tr>
@@ -55,14 +55,14 @@
 				</td>
 			
 			<td align="${left}" class="form-left"><transys:label code="Phone Number"/></td>
-			<td align="${left}"><select class="flat form-control input-sm" id="phoneNum" name="order.customer.phone" style="width: 175px">
+			<td align="${left}"><select class="flat form-control input-sm" id="phone" name="order.customer.phone" style="width: 175px">
 				<option value="">------<transys:label code="Please Select"/>------</option>
 				<c:forEach items="${customer}" var="customer">
 						<c:set var="selected" value=""/>
 						<c:if test="${sessionScope.searchCriteria.searchMap['order.customer.phone'] == customer.phone}">
 							<c:set var="selected" value="selected"/>
-							<option value="${customer.phone}" ${selected}>${customer.phone}</option>
-					</c:if>
+						</c:if>
+						<option value="${customer.phone}" ${selected}>${customer.phone}</option>
 				</c:forEach>
 			</select>
 			</td>
@@ -113,7 +113,7 @@
 				<option value="">------<transys:label code="Please Select"/>------</option>
 				<c:forEach items="${orderStatuses}" var="anOrderStatus">
 					<c:set var="selected" value=""/>
-					<c:if test="${sessionScope.searchCriteria.searchMap['orderStatus'] == anOrderStatus.id}">
+					<c:if test="${sessionScope.searchCriteria.searchMap['order.orderStatus'] == anOrderStatus.id}">
 						<c:set var="selected" value="selected" />
 					</c:if>
 					<option value="${anOrderStatus.id}" ${selected}>${anOrderStatus.status}</option>
@@ -136,8 +136,7 @@
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
 		pagingLink="search.do" multipleDelete="false" searcheable="false" 
 		exportPdf="true" exportXls="true" dataQualifier="orderPermitAlert">
-		<transys:textcolumn headerText="Delivery#" dataField="order.deliveryAddress.line1" />
-		<transys:textcolumn headerText="DeliveryStreet" dataField="order.deliveryAddress.line2" />
+		<transys:textcolumn headerText="Delivery Address" dataField="order.deliveryAddress.fullLine" />
 		<transys:textcolumn headerText="CustomerName" dataField="order.customer.companyName" />
 		<transys:textcolumn headerText="Order#" dataField="order.id" />
 		<transys:textcolumn headerText="Contact" dataField="order.customer.contactName" />
