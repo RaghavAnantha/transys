@@ -353,7 +353,7 @@ public class OrderController extends CRUDController<Order> {
 	}
 	
 	private void updatePermitStatus(List<Permit> permitList, String status, Long modifiedBy) {
-		String permitStatusQuery = "select obj from PermitStatus obj where obj.status=" + status;
+		String permitStatusQuery = "select obj from PermitStatus obj where obj.status='" + status + "'";
 		List<PermitStatus> permitStatusList = genericDAO.executeSimpleQuery(permitStatusQuery);
 		
 		for (Permit aPermit : permitList) {
@@ -365,9 +365,13 @@ public class OrderController extends CRUDController<Order> {
 		}
 	}
 	
-	private void updateDumpsterStatus(DumpsterInfo dumpsterInfo, String status, Long modifiedBy) {
-		String dumpsterStatusQuery = "select obj from DumpsterStatus obj where obj.status=" + status;
+	private void updateDumpsterStatus(DumpsterInfo dumpsterInfoPassed, String status, Long modifiedBy) {
+		String dumpsterStatusQuery = "select obj from DumpsterStatus obj where obj.status='" + status + "'";
 		List<DumpsterStatus> dumpsterStatusList = genericDAO.executeSimpleQuery(dumpsterStatusQuery);
+		
+		String dumpsterQuery = "select obj from DumpsterInfo obj where obj.id=" + dumpsterInfoPassed.getId();
+		List<DumpsterInfo> dumpsterInfoList = genericDAO.executeSimpleQuery(dumpsterQuery);
+		DumpsterInfo dumpsterInfo = dumpsterInfoList.get(0);
 		
 		dumpsterInfo.setStatus(dumpsterStatusList.get(0));
 		dumpsterInfo.setModifiedAt(Calendar.getInstance().getTime());
@@ -1048,9 +1052,11 @@ public class OrderController extends CRUDController<Order> {
 			if (aChosenPermit != null && aChosenPermit.getId() != null) {
 				String aChosenPermitClassId =  aChosenPermit.getPermitClass().getId().toString();
 				String aChosenPermitTypeId =  aChosenPermit.getPermitType().getId().toString();
-				List<Permit> aPermitsOfChosenTypeList = retrievePermit(aChosenPermitClassId, aChosenPermitTypeId);
+				List<Permit> aPermitOfChosenTypeList = retrievePermit(aChosenPermitClassId, aChosenPermitTypeId);
 				
-				allPermitsOfChosenTypesList.add(aPermitsOfChosenTypeList);
+				aPermitOfChosenTypeList.add(aChosenPermit);
+				
+				allPermitsOfChosenTypesList.add(aPermitOfChosenTypeList);
 			}
 		}
 		model.addAttribute("allPermitsOfChosenTypesList", allPermitsOfChosenTypesList);
