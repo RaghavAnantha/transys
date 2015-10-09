@@ -1,25 +1,28 @@
 <%@include file="/common/taglibs.jsp"%>
 <script type="text/javascript">
-function validateAndFormatPhone() {	
-	var phone = document.getElementById("deliveryContactPhone1").value;
-	if(phone != ""){
-		if(phone.length < 10) {
-			alert("Invalid Phone Number");
-			document.getElementById("phone").value = "";
-			return true;
-		} else {
-			var formattedPhone = formatPhone(phone);
-			document.getElementById("deliveryContactPhone1").value = formattedPhone;
-		}
+function validateAndFormatPhone(phoneId) {	
+	var phone = document.getElementById(phoneId).value;
+	if(phone == "") {
+		return;
+	}
+	
+	if(phone.length < 10) {
+		alert("Invalid Phone Number");
+		document.getElementById(phoneId).value = "";
+		return true;
+	} else {
+		var formattedPhone = formatPhone(phone);
+		document.getElementById(phoneId).value = formattedPhone;
 	}	
 }
 
 function formatPhone(phone) {
-	var str = new String(phone);
-	if(str.match("-")) {
+	if(phone.length < 10) {
 		return phone;
 	}
-	if(phone.length < 10) {
+	
+	var str = new String(phone);
+	if(str.match("-")) {
 		return phone;
 	}
 	
@@ -30,6 +33,12 @@ function formatPhone(phone) {
 }
 
 function populateCustomerInfo() {
+	var customerSelect =  $('#customerSelect');
+	var customerId = customerSelect.val();
+	if (customerId == "") {
+		return false;
+	}
+	
 	retrieveAndPopulateDeliveryAddress();
 	retrieveAndPopulateCustomerBillingAddress();
 }
@@ -155,8 +164,8 @@ function appendCustomer(customer) {
 	
 	populateCustomerBillingAddress(customer);
 	
-	populateDeliveryAddress(customer.address);
-	selectDeliveryAddressOption(customer.address[0].id);
+	populateDeliveryAddress(customer.deliveryAddress);
+	selectDeliveryAddressOption(customer.deliveryAddress[0].id);
 }
 
 function populateDusmpsterPrice() {
@@ -499,7 +508,7 @@ $("#confirmExchangeOrderDialogYes").click(function (ev) {
 			<td class="form-left"><transys:label code="Phone1"/><span class="errorMessage">*</span></td>
 			<td align="${left}">
 				<form:input path="deliveryContactPhone1" cssClass="flat" maxlength="12" 
-					id="deliveryContactPhone1" onkeypress="return onlyNumbers(event, false)" onblur="return validateAndFormatPhone();"/>
+					id="deliveryContactPhone1" onkeypress="return onlyNumbers(event, false)" onblur="return validateAndFormatPhone('deliveryContactPhone1');"/>
 				<br><form:errors path="deliveryContactPhone1" cssClass="errorMessage" />
 			</td>
 			<td class="form-left"><transys:label code="Phone2"/></td>

@@ -180,12 +180,12 @@ function populateCustomerDeliveryAddress() {
 		<transys:textcolumn headerText="Dmpstr #" dataField="dumpster.dumpsterNum" />
 		<transys:textcolumn headerText="Delivery Date" dataField="deliveryDate" />
 		<transys:textcolumn headerText="Pickup Date" dataField="pickupDate" />
-		<transys:textcolumn headerText="Dmpstr Price" dataField="orderPaymentInfo.dumpsterPrice" />
-		<transys:textcolumn headerText="Permit Fee" dataField="orderPaymentInfo.totalPermitFees" />
-		<transys:textcolumn headerText="City Fee" dataField="orderPaymentInfo.cityFee" />
-		<transys:textcolumn headerText="OverWt Fee" dataField="orderPaymentInfo.overweightFee" />
-		<transys:textcolumn headerText="Addnl Fee" dataField="orderPaymentInfo.totalAdditionalFees" />
-		<transys:textcolumn headerText="Total Amt" dataField="orderPaymentInfo.totalFees" />
+		<transys:textcolumn headerText="Dmpstr Price" dataField="orderPaymentInfo.dumpsterPrice" type="java.math.BigDecimal"/>
+		<transys:textcolumn headerText="Permit Fee" dataField="orderPaymentInfo.totalPermitFees" type="java.math.BigDecimal"/>
+		<transys:textcolumn headerText="City Fee" dataField="orderPaymentInfo.cityFee" type="java.math.BigDecimal"/>
+		<transys:textcolumn headerText="OverWt Fee" dataField="orderPaymentInfo.overweightFee" type="java.math.BigDecimal"/>
+		<transys:textcolumn headerText="Addnl Fee" dataField="orderPaymentInfo.totalAdditionalFees" type="java.math.BigDecimal"/>
+		<transys:textcolumn headerText="Total Amt" dataField="orderPaymentInfo.totalFees"type="java.math.BigDecimal" />
 		<transys:textcolumn headerText="Status" dataField="orderStatus.status" />
 	</transys:datatable>
 	<%session.setAttribute("manageOrdersColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>

@@ -846,9 +846,13 @@ public final class Datatable extends BodyTagSupport {
 				objCol = null;
 				objCol = (IColumnTag) iterCol.next();
 				objCol.renderHeader();
+				
 				//populating columnPropertyList with IColumnTag to be exported to jasper report
-				if (!(objCol instanceof ImageColumn))
-					columnPropertyList.add(objCol);
+				if ((objCol instanceof ImageColumn) || (objCol instanceof AnchorColumn)) {
+					continue;
+				}
+				
+				columnPropertyList.add(objCol);
 			}
 			this.pageContext.setAttribute("columnPropertyList", columnPropertyList);
 			//User user = (User)pageContext.getSession().getAttribute("userInfo");

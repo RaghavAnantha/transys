@@ -51,6 +51,7 @@ import com.transys.model.Customer;
 import com.transys.model.DumpsterInfo;
 import com.transys.model.DumpsterPrice;
 import com.transys.model.DumpsterSize;
+import com.transys.model.DumpsterStatus;
 import com.transys.model.LocationType;
 import com.transys.model.MaterialCategory;
 import com.transys.model.MaterialType;
@@ -287,6 +288,7 @@ public class OrderController extends CRUDController<Order> {
 			setupCreate(model, request);
 			return urlContext + "/form";
 		}
+		
 		//beforeSave(request, entity, model);
 		if (entity instanceof AbstractBaseModel) {
 			AbstractBaseModel baseModel = (AbstractBaseModel) entity;
@@ -303,7 +305,13 @@ public class OrderController extends CRUDController<Order> {
 			}
 		}
 		
+		OrderStatus orderStatus = retrieveOrderStatus("Dropped Off");
+		entity.setOrderStatus(orderStatus);
+		
 		genericDAO.saveOrUpdate(entity);
+		
+		updateDumpsterStatus(entity.getDumpster(), "Dropped Off", getUser(request).getId());
+		
 		cleanUp(request);
 
 		setupCreate(model, request);
@@ -344,6 +352,39 @@ public class OrderController extends CRUDController<Order> {
 		return urlContext + "/order";
 	}
 	
+	private void updatePermitStatus(List<Permit> permitList, String status, Long modifiedBy) {
+		String permitStatusQuery = "select obj from PermitStatus obj where obj.status='" + status + "'";
+		List<PermitStatus> permitStatusList = genericDAO.executeSimpleQuery(permitStatusQuery);
+		
+		for (Permit aPermit : permitList) {
+			aPermit.setStatus(permitStatusList.get(0));
+			aPermit.setModifiedAt(Calendar.getInstance().getTime());
+			aPermit.setModifiedBy(modifiedBy);
+			
+			genericDAO.saveOrUpdate(aPermit);
+		}
+	}
+	
+	private void updateDumpsterStatus(DumpsterInfo dumpsterInfoPassed, String status, Long modifiedBy) {
+		String dumpsterStatusQuery = "select obj from DumpsterStatus obj where obj.status='" + status + "'";
+		List<DumpsterStatus> dumpsterStatusList = genericDAO.executeSimpleQuery(dumpsterStatusQuery);
+		
+		String dumpsterQuery = "select obj from DumpsterInfo obj where obj.id=" + dumpsterInfoPassed.getId();
+		List<DumpsterInfo> dumpsterInfoList = genericDAO.executeSimpleQuery(dumpsterQuery);
+		DumpsterInfo dumpsterInfo = dumpsterInfoList.get(0);
+		
+		dumpsterInfo.setStatus(dumpsterStatusList.get(0));
+		dumpsterInfo.setModifiedAt(Calendar.getInstance().getTime());
+		dumpsterInfo.setModifiedBy(modifiedBy);
+		
+		genericDAO.saveOrUpdate(dumpsterInfo);
+	}
+	
+	private OrderStatus retrieveOrderStatus(String status) {
+		OrderStatus orderStatus = (OrderStatus)genericDAO.executeSimpleQuery("select obj from OrderStatus obj where obj.status='" + status + "'").get(0);
+		return orderStatus;
+	}
+	
 	@RequestMapping(method = RequestMethod.POST, value = "/savePickupDriver.do")
 	public String savePickupDriver(HttpServletRequest request,
 			@ModelAttribute("modelObject") Order entity,
@@ -380,7 +421,15 @@ public class OrderController extends CRUDController<Order> {
 		entity.getOrderPaymentInfo().setCreatedBy(entity.getCreatedBy());
 		entity.getOrderPaymentInfo().setModifiedBy(entity.getModifiedBy());
 		
+		OrderStatus orderStatus = retrieveOrderStatus("Picked Up");
+		entity.setOrderStatus(orderStatus);
+		
 		genericDAO.saveOrUpdate(entity);
+		
+		Long modifiedBy = getUser(request).getId();
+		updateDumpsterStatus(entity.getDumpster(), "Available", modifiedBy);
+		updatePermitStatus(entity.getPermits(), "Available", modifiedBy);
+		
 		cleanUp(request);
 
 		setupCreate(model, request);
@@ -907,8 +956,7 @@ public class OrderController extends CRUDController<Order> {
 																					+ ")");
 		entity.setPermits(permitList);
 		
-		String initOrderStatus = "Open";
-		OrderStatus orderStatus = (OrderStatus)genericDAO.executeSimpleQuery("select obj from OrderStatus obj where obj.status='" + initOrderStatus + "'").get(0);
+		OrderStatus orderStatus = retrieveOrderStatus("Open");
 		entity.setOrderStatus(orderStatus);
 		
 		// TODO: Why both created by and modified by and why set if not changed?
@@ -923,15 +971,7 @@ public class OrderController extends CRUDController<Order> {
 
 		genericDAO.saveOrUpdate(entity);
 		
-		String permitStatusQuery = "select obj from PermitStatus obj where obj.status=" + "'Assigned'";
-		List<PermitStatus> permitStatusList = genericDAO.executeSimpleQuery(permitStatusQuery);
-		for (Permit aPermit : permitList) {
-			aPermit.setStatus(permitStatusList.get(0));
-			aPermit.setModifiedAt(Calendar.getInstance().getTime());
-			aPermit.setModifiedBy(getUser(request).getId());
-			
-			genericDAO.saveOrUpdate(aPermit);
-		}
+		updatePermitStatus(permitList, "Assigned", getUser(request).getId());
 		
 		cleanUp(request);
 		
@@ -1012,9 +1052,11 @@ public class OrderController extends CRUDController<Order> {
 			if (aChosenPermit != null && aChosenPermit.getId() != null) {
 				String aChosenPermitClassId =  aChosenPermit.getPermitClass().getId().toString();
 				String aChosenPermitTypeId =  aChosenPermit.getPermitType().getId().toString();
-				List<Permit> aPermitsOfChosenTypeList = retrievePermit(aChosenPermitClassId, aChosenPermitTypeId);
+				List<Permit> aPermitOfChosenTypeList = retrievePermit(aChosenPermitClassId, aChosenPermitTypeId);
 				
-				allPermitsOfChosenTypesList.add(aPermitsOfChosenTypeList);
+				aPermitOfChosenTypeList.add(aChosenPermit);
+				
+				allPermitsOfChosenTypesList.add(aPermitOfChosenTypeList);
 			}
 		}
 		model.addAttribute("allPermitsOfChosenTypesList", allPermitsOfChosenTypesList);

@@ -1,48 +1,6 @@
 <%@include file="/common/taglibs.jsp"%>
 <script type="text/javascript">
-function formatPhone(){	
-	var phone = $("#phone").val();
-	if(phone != ""){
-		if(phone.length < 10){
-			alert("Invalid Phone Number");
-			document.getElementById("phone").value = "";
-			return true;
-		}
-		else{
-			var str = new String(phone);
-			if(!str.match("-")){
-				var p1 = str.substring(0,3);
-				var p2 = str.substring(3,6);
-				var p3 = str.substring(6,10);				
-				var phone = p1 + "-" + p2 + "-" + p3;
-				document.getElementById("phone").value = phone;
-			}
-		}
-	}	
-}
-
-function formatFax(){
-	var fax = document.getElementById("fax").value;
-	if(fax != ""){
-		if(fax.length < 10){
-			alert("Invalid Phone Number");
-			document.getElementById("fax").value = "";
-			return true;
-		}
-		else{
-			var str = new String(fax);
-			if(!str.match("-")){
-				var p1 = str.substring(0,3);
-				var p2 = str.substring(3,6);
-				var p3 = str.substring(6,10);				
-				var fax = p1 + "-" + p2 + "-" + p3;
-				document.getElementById("fax").value = fax;
-			}
-		}
-	}	
-}	
-
-$("#customerForm").submit(function (ev) {
+$("#customerModalForm").submit(function (ev) {
 	var $this = $(this);
 	
     $.ajax({
@@ -59,7 +17,7 @@ $("#customerForm").submit(function (ev) {
 });
 </script>
 
-<form:form action="/customer/saveModal.do" name="customerForm" commandName="modelObject" method="post" id="customerForm">
+<form:form action="/customer/saveModal.do" name="customerModalForm" commandName="modelObject" method="post" id="customerModalForm">
 	<table id="form-table" class="table">
 		<tr>
 			<td class="form-left"><transys:label code="Company Name" /><span class="errorMessage">*</span></td>
@@ -160,7 +118,7 @@ $("#customerForm").submit(function (ev) {
 		<td class="form-left"><transys:label code="Alt Phone1" /></td>
 			<td align="${left}">
 				<form:input path="altPhone1" cssClass="flat"  maxlength="12" 
-					id="altPhone1" onkeypress="return onlyNumbers(event, false)" onblur="return formatPhone();"/>
+					id="altPhone1" onkeypress="return onlyNumbers(event, false)" onblur="return validateAndFormatPhone('altPhone1');"/>
 			 	<br><form:errors path="altPhone1" cssClass="errorMessage" />
 			</td>
 		</tr>
@@ -168,13 +126,13 @@ $("#customerForm").submit(function (ev) {
 			<td class="form-left"><transys:label code="Phone" /></td>
 			<td align="${left}">
 				<form:input path="phone" cssClass="flat"  maxlength="12" 
-					id="phone" onkeypress="return onlyNumbers(event, false)" onblur="return formatPhone();"/>
+					id="phone" onkeypress="return onlyNumbers(event, false)" onblur="return validateAndFormatPhone('phone');"/>
 			 	<br><form:errors path="phone" cssClass="errorMessage" />
 			</td>
 			<td class="form-left"><transys:label code="Alt Phone2" /></td>
 			<td align="${left}">
 				<form:input path="altPhone2" cssClass="flat"  maxlength="12" 
-					id="altPhone2" onkeypress="return onlyNumbers(event, false)" onblur="return formatPhone();"/>
+					id="altPhone2" onkeypress="return onlyNumbers(event, false)" onblur="return validateAndFormatPhone('altPhone2');"/>
 			 	<br><form:errors path="altPhone2" cssClass="errorMessage" />
 			</td>
 		</tr>
@@ -187,7 +145,7 @@ $("#customerForm").submit(function (ev) {
 			<td class="form-left"><transys:label code="Fax" /></td>
 			<td align="${left}">
 				<form:input path="fax" cssClass="flat" maxlength="12" 
-					id="fax" onkeypress="return onlyNumbers(event, false)" onblur="return formatFax();"/>
+					id="fax" onkeypress="return onlyNumbers(event, false)" onblur="return validateAndFormatPhone('fax');"/>
 				 <br><form:errors path="fax" cssClass="errorMessage" />
 			</td>
 		</tr>
@@ -206,39 +164,39 @@ $("#customerForm").submit(function (ev) {
 		<tr>
 			<td class="form-left"><transys:label code="Delivery Address #" /><span class="errorMessage">*</span></td>
 			<td align="${left}">
-				<form:input path="address[0].line1" cssClass="flat"/>
-			 	<br><form:errors path="address[0].line1" cssClass="errorMessage" />
+				<form:input path="deliveryAddress[0].line1" cssClass="flat"/>
+			 	<br><form:errors path="deliveryAddress[0].line1" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Delivery Street" /><span class="errorMessage">*</span></td>
 			<td align="${left}">
-				<form:input path="address[0].line2" cssClass="flat"/>
-			 	<br><form:errors path="address[0].line2" cssClass="errorMessage" />
+				<form:input path="deliveryAddress[0].line2" cssClass="flat"/>
+			 	<br><form:errors path="deliveryAddress[0].line2" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="City" /><span class="errorMessage">*</span></td>
 			<td align="${left}">
-				<form:input path="address[0].city" cssClass="flat"/>
-			 	<br><form:errors path="address[0].city" cssClass="errorMessage" />
+				<form:input path="deliveryAddress[0].city" cssClass="flat"/>
+			 	<br><form:errors path="deliveryAddress[0].city" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="State" /><span class="errorMessage">*</span></td>
 			<td align="${left}">
-				<form:select cssClass="flat form-control input-sm" style="width: 174px !important" path="address[0].state">
+				<form:select cssClass="flat form-control input-sm" style="width: 174px !important" path="deliveryAddress[0].state">
 					<form:option value="">------Please Select--------</form:option>
 					<form:options items="${state}" itemValue="id" itemLabel="name" />
 				</form:select> 
-				<br><form:errors path="address[0].state" cssClass="errorMessage" />
+				<br><form:errors path="deliveryAddress[0].state" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Zipcode" /><span class="errorMessage">*</span></td>
 			<td align="${left}">
-				<form:input path="address[0].zipcode" cssClass="flat"/>
-			 	<br><form:errors path="address[0].zipcode" cssClass="errorMessage" />
+				<form:input path="deliveryAddress[0].zipcode" cssClass="flat"/>
+			 	<br><form:errors path="deliveryAddress[0].zipcode" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>

@@ -55,8 +55,7 @@
 					<option value="">------<transys:label code="Please Select" />------</option>
 					<c:forEach items="${customerIds}" var="phone">
 						<c:set var="selected" value="" />
-						<c:if
-							test="${sessionScope.searchCriteria.searchMap['phone'] == phone.phone}">
+						<c:if test="${sessionScope.searchCriteria.searchMap['phone'] == phone.phone}">
 							<c:set var="selected" value="selected" />
 						</c:if>
 						<option value="${phone.phone}" ${selected}>${phone.phone}</option>
@@ -92,10 +91,10 @@
 		</tr>
 		<tr>
 			<td align="${left}"></td>
-			<td align="${left}"><input type="button"
-				class="btn btn-primary btn-sm"
+			<td align="${left}"><input type="button" class="btn btn-primary btn-sm"
 				onclick="document.forms['searchForm'].submit();"
-				value="<transys:label code="Search"/>" /></td>
+				value="<transys:label code="Search"/>" />
+			</td>
 		</tr>
 	</table>
 </form:form>
@@ -106,10 +105,10 @@
 		pagingLink="search.do" multipleDelete="false" searcheable="false"
 		exportPdf="true" exportXls="true" dataQualifier="manageCustomer">
 		<transys:textcolumn headerText="Customer ID" dataField="id" />
-		<transys:textcolumn headerText="Created Date" dataField="createdAt" />
 		<transys:textcolumn headerText="Company Name" dataField="companyName" />
 		<transys:textcolumn headerText="ContactName" dataField="contactName" />
 		<transys:textcolumn headerText="Phone" dataField="phone" />
+		<transys:textcolumn headerText="Created Date" dataField="createdAt" />
 		<transys:textcolumn headerText="Status" dataField="customerStatus.status" />
 	</transys:datatable>
 	<%session.setAttribute("manageCustomerColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
