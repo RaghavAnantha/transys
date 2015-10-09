@@ -216,7 +216,7 @@ CREATE TABLE `dumpsterInfo` (
 
 LOCK TABLES `dumpsterInfo` WRITE;
 /*!40000 ALTER TABLE `dumpsterInfo` DISABLE KEYS */;
-INSERT INTO `dumpsterInfo` VALUES (2,1,'20W-113-21',1,NULL,NULL,NULL,NULL,1);
+INSERT INTO `dumpsterInfo` VALUES (2,1,'20W-113-21',3,NULL,NULL,NULL,NULL,1);
 INSERT INTO `dumpsterInfo` VALUES (3,2,'30W-456-31',1,NULL,NULL,NULL,NULL,1);
 /*!40000 ALTER TABLE `dumpsterInfo` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -407,6 +407,7 @@ CREATE TABLE `trans_order` (
   `deliveryMinutesFrom` varchar(5) DEFAULT NULL,
   `deliveryMinutesTo` varchar(5) DEFAULT NULL,
   `pickupOrderId` bigint(20) DEFAULT NULL,
+  `materialCategoryId` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `keyCustId_idx` (`custID`),
   -- KEY `deliveryAddressRef_idx` (`deliveryAddressId`),
@@ -423,6 +424,7 @@ CREATE TABLE `trans_order` (
   -- CONSTRAINT `weightInfoRef` FOREIGN KEY (`weightInfo`) REFERENCES `orderWeightInfo` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
   CONSTRAINT `orderDumpsterRef` FOREIGN KEY (`dumpsterId`) REFERENCES `dumpsterInfo` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `orderMaterialTypeRef` FOREIGN KEY (`materialTypeId`) REFERENCES `materialType` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `orderMaterialCategoryRef` FOREIGN KEY (`materialCategoryId`) REFERENCES `materialCategory` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `orderDumpsterLocationRef` FOREIGN KEY (`locationTypeId`) REFERENCES `locationType` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `orderDumpsterSizeRef` FOREIGN KEY (`dumpsterSizeId`) REFERENCES `dumpsterSize` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `orderPickupDriverRef` FOREIGN KEY (`pickUpDriverId`) REFERENCES `user_info` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
@@ -436,7 +438,7 @@ CREATE TABLE `trans_order` (
 
 LOCK TABLES `trans_order` WRITE;
 /*!40000 ALTER TABLE `trans_order` DISABLE KEYS */;
-INSERT INTO `transys`.`trans_order` (`id`, `custID`, `deliveryContactName`, `deliveryContactPhone1`, `deliveryContactPhone2`, `deliveryDate`, `deliveryAddressId`, `locationTypeId`, `dumpsterSizeId`, `materialTypeId`, `created_at`, `delete_flag`, `grossWeight`, `netWeightLb`, `netWeightTonnage`, `tare`, `dumpsterId`, `pickupDate`, `orderStatusId` , `created_by`) VALUES (1, 5, 'Raghav', '123-456-7890', '123-456-7890', curdate(), 3, 1, 1, 1, curdate(), 1, '10.0', '10.0', '10.0', '10.0', 2, curdate(), 1, 1);
+INSERT INTO `trans_order` (`id`,`custID`,`deliveryContactName`,`deliveryContactPhone1`,`deliveryContactPhone2`,`deliveryDate`,`deliveryAddressId`,`locationTypeId`,`dumpsterSizeId`,`materialTypeId`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`,`grossWeight`,`netWeightLb`,`netWeightTonnage`,`tare`,`dumpsterId`,`pickupDate`,`orderStatusId`,`pickUpDriverId`,`dropOffDriverId`,`deliveryHourFrom`,`deliveryHourTo`,`deliveryMinutesFrom`,`deliveryMinutesTo`,`pickupOrderId`,`materialCategoryId`) VALUES (1,5,'Raghav','123-456-7890','123-456-7890','2015-10-09 00:00:00',3,1,1,1,'2015-10-09 00:00:00',1,'2015-10-09 23:00:51',1,1,10.00,10.00,10.00,10.00,2,NULL,2,NULL,2,'12:00 AM','1:00 AM','00','15',NULL,1);
 /*!40000 ALTER TABLE `trans_order` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -614,6 +616,7 @@ CREATE TABLE `orderPaymentInfo` (
 
 LOCK TABLES `orderPaymentInfo` WRITE;
 /*!40000 ALTER TABLE `orderPaymentInfo` DISABLE KEYS */;
+INSERT INTO `orderPaymentInfo` (`id`,`orderId`,`dumpsterPrice`,`cityFee`,`cityFeeId`,`permitFee1`,`permitFee2`,`permitFee3`,`totalPermitFees`,`overweightFee`,`additionalFee1Id`,`additionalFee1`,`additionalFee2Id`,`additionalFee2`,`additionalFee3Id`,`additionalFee3`,`totalAdditionalFees`,`discountPercentage`,`discountAmount`,`paymentMethodId`,`ccReferenceNum`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`,`totalFees`,`checkNum`) VALUES (1,1,240.00,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,2.00,4.80,1,'123','2015-10-09 19:19:03',1,NULL,1,1,235.20,'123');
 /*!40000 ALTER TABLE `orderPaymentInfo` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -727,7 +730,6 @@ CREATE TABLE `permit` (
   `fee` decimal(6,2) DEFAULT NULL,
   `startDate` datetime DEFAULT NULL,
   `endDate` datetime DEFAULT NULL,
-  `permitAddress` varchar(100) DEFAULT NULL,
   `locationType` bigint(20) DEFAULT NULL,
   `status` bigint(20) NOT NULL DEFAULT '1',
   `created_at` datetime DEFAULT NULL,
@@ -762,7 +764,8 @@ CREATE TABLE `permit` (
 
 LOCK TABLES `permit` WRITE;
 /*!40000 ALTER TABLE `permit` DISABLE KEYS */;
- INSERT INTO `permit` VALUES (1,1,'1301-11W',50,'2015-09-22 00:00:00','2015-09-25 00:00:00','4818W VAN BUREN',1,2,'2015-09-22 00:00:00',NULL,'2015-09-22 21:51:56', NULL, 1,5,1,'Yes',1.0,1),(2,1,'5667890',90,'2015-09-22 00:00:00','2015-09-25 00:00:00','1890 Chesterfield Ct',1,2,'2015-09-23 12:27:14',1,NULL,NULL,1,6,4,'Yes',90,1);
+ INSERT INTO `permit` VALUES (1,1,'1301-11W',50,'2015-09-22 00:00:00','2015-09-25 00:00:00',1,3,'2015-09-22 00:00:00',NULL,'2015-09-22 21:51:56', NULL, 1,5,1,'Yes',1.0,1),(2,1,'5667890',90,'2015-09-22 00:00:00','2015-09-25 00:00:00',1,2,'2015-09-23 12:27:14',1,NULL,NULL,1,6,4,'Yes',90,1),
+ (3,2,'1987-34E',90,'2015-09-22 00:00:00','2015-09-25 00:00:00',1,2,'2015-09-23 12:27:14',1,NULL,NULL,1,6,4,'Yes',90,1);
 -- INSERT INTO `permit` VALUES (1,1,1,'1234','50',curdate(),'1301-11W',1,2,'Test',NULL,NULL,NULL,NULL,1,5,1,NULL);
 -- ,(9,1,1,'6','0.0',curdate(),NULL,1,1,NULL,'2015-09-15 16:25:46',1,NULL,NULL,1,6,1,'yes')
 -- ,(10,2,2,'9','0.0',curdate(),NULL,2,1,NULL,'2015-09-15 16:28:40',1,NULL,NULL,1,6,1,'no')

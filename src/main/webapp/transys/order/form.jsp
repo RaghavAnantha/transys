@@ -66,7 +66,7 @@ function populateDeliveryAddress(addressList) {
 	$.each(addressList, function () {
    		$("<option />", {
    	        val: this.id,
-   	        text: this.line1 + " " + this.line2
+   	        text: this.fullLine
    	    }).appendTo(deliveryAddressSelect);
    	});
 }
@@ -141,19 +141,16 @@ function retrieveAndPopulateCustomerBillingAddress() {
 }
 
 function populateCustomerBillingAddress(customer) {
-   	var billingAddress = customer.billingAddressLine1 + ", " 
-   						 + customer.city + ", " + customer.state.name + ", " + customer.zipcode
-   	$('#billingAddressTd').html(billingAddress);
-   	
+	$('#billingAddressTd').html(customer.billingAddress);
 	$('#billingContactTd').html(customer.contactName);
-	$('#billingPhoneTd').html(formatPhone(customer.phone));
-	$('#billingFaxTd').html(formatPhone(customer.fax));
+	$('#billingPhoneTd').html(customer.formattedPhone);
+	$('#billingFaxTd').html(customer.formattedFax);
 	$('#billingEmailTd').html(customer.email);
 }
 
 function appendDeliveryAddress(address) {
 	var deliveryAddressSelect = $('#deliveryAddressSelect');
-	var newAddressOption = $('<option value=' + address.id + ' selected>'+ address.line1 + " " + address.line2 +'</option>');
+	var newAddressOption = $('<option value=' + address.id + ' selected>'+ address.fullLine +'</option>');
 	deliveryAddressSelect.append(newAddressOption);
 }
 
@@ -240,6 +237,12 @@ function populateCityFee() {
 }
 
 function populatePermitNumbers(index) {
+	var customerSelect = $('#customerSelect');
+	var customerId = customerSelect.val();
+	
+	var deliveryAddressSelect = $('#deliveryAddressSelect');
+	var deliveryAddressId = deliveryAddressSelect.val();
+	
 	var permitClassSelect = $("#permitClasses" + index);
 	var permitClassId = permitClassSelect.val();
 	
@@ -259,7 +262,9 @@ function populatePermitNumbers(index) {
 	permitNumbersSelect.append(firstOption);
 	
 	$.ajax({
-  		url: "retrievePermit.do?" + "permitClassId=" + permitClassId 
+  		url: "retrievePermit.do?" + "customerId=" + customerId
+  								  + "\&deliveryAddressId=" + deliveryAddressId
+  								  + "\&permitClassId=" + permitClassId
   								  + "\&permitTypeId=" + permitTypeId
   								  + "\&deliveryDate=" + deliveryDate,
   								  
@@ -292,9 +297,6 @@ function populatePermitDetails(index) {
 	var permitAddressSelect = $("#permitAddress" + index);
 	permitAddressSelect.empty();
 	
-	var firstOption = $('<option value="">'+ "-------Please Select------" +'</option>');
-	permitAddressSelect.append(firstOption);
-	
 	$.ajax({
   		url: "retrievePermit.do?" + "permitId=" + permitId,
        	type: "GET",
@@ -304,34 +306,61 @@ function populatePermitDetails(index) {
     	   	
     	   	permitValidFrom.html(permit.startDate);
     	   	permitValidTo.html(permit.endDate);
-    	   	permitFee.val(permit.fee);
+    	   	
+    		if (permit.status.status == 'Pending') {
+    			permitFee.val(permit.fee);
+    	   	}
     	   	
     	   	var permitAddressList = permit.permitAddress;
     	   	$.each(permitAddressList, function () {
     	   	    $("<option />", {
     	   	        val: this.id,
-    	   	        text: this.line1 + " " + this.line2
+    	   	        text: this.fullLine
     	   	    }).appendTo(permitAddressSelect);
     	   	});
-    	   	
+    	
     	   	populateTotalPermitFees();
 		}
 	}); 
 }
 
 function populateTotalPermitFees() {
+	var totalPermitFees = parseFloat(0.00);
+	
 	var permitFee1 = $("#orderPaymentInfo\\.permitFee" + 1).val();
+	if (permitFee1 != "") {
+		totalPermitFees += parseFloat(permitFee1);
+	}
 	var permitFee2 = $("#orderPaymentInfo\\.permitFee" + 2).val();
+	if (permitFee2 != "") {
+		totalPermitFees += parseFloat(permitFee2);
+	}
 	var permitFee3 = $("#orderPaymentInfo\\.permitFee" + 3).val();
-	var totalPermitFees = permitFee1 + permitFee2 + permitFee3;
+	if (permitFee3 != "") {
+		totalPermitFees += parseFloat(permitFee3);
+	}
+	
 	$("#orderPaymentInfo\\.totalPermitFees").val(totalPermitFees);
 }
 
 function populateTotalAdditionalFees() {
+	var totalAdditionalFees = parseFloat(0.00);
+	
 	var additionalFee1 = $("#orderPaymentInfo\\.additionalFee" + 1).val();
+	if (additionalFee1 != "") {
+		totalAdditionalFees += parseFloat(additionalFee1);
+	}
+	
 	var additionalFee2 = $("#orderPaymentInfo\\.additionalFee" + 2).val();
+	if (additionalFee2 != "") {
+		totalAdditionalFees += parseFloat(additionalFee2);
+	}
+	
 	var additionalFee3 = $("#orderPaymentInfo\\.additionalFee" + 3).val();
-	var totalAdditionalFees = additionalFee1 + additionalFee2 + additionalFee3;
+	if (additionalFee3 != "") {
+		totalAdditionalFees += parseFloat(additionalFee3);
+	}
+	
 	$("#orderPaymentInfo\\.totalAdditionalFees").val(totalAdditionalFees);
 }
 
@@ -339,12 +368,27 @@ function populateTotalFees() {
 	var dumpsterPrice = $("#orderPaymentInfo\\.dumpsterPrice").val();
 	var overweightFee = $("#orderPaymentInfo\\.overweightFee").val();
 	var cityFee = $("#orderPaymentInfo\\.cityFee").val();
-	var permitFees = $("#orderPaymentInfo\\.totalPermitFees").val();
+	var totalPermitFees = $("#orderPaymentInfo\\.totalPermitFees").val();
 	var totalAdditionalFees = $("#orderPaymentInfo\\.totalAdditionalFees").val();
 	var discountPercentage = $("#orderPaymentInfo\\.discountPercentage").val();
 	
-	var totalFees = parseFloat(dumpsterPrice) + parseFloat(overweightFee) + parseFloat(cityFee) + parseFloat(permitFees) + parseFloat(totalAdditionalFees);
-	var discountAmount = ((totalFees * parseFloat(discountPercentage))/parseFloat(100.00));
+	var totalFees = parseFloat(dumpsterPrice);
+	if (overweightFee != "") {
+		totalFees += parseFloat(overweightFee);
+	}
+	if (cityFee != "") {
+		totalFees += parseFloat(cityFee);
+	}
+	if (totalPermitFees != "") {
+		totalFees += parseFloat(totalPermitFees);
+	}
+	if (totalAdditionalFees != "") {
+		totalFees += parseFloat(totalAdditionalFees);
+	}
+	var discountAmount = parseFloat(0.00);
+	if (discountPercentage != "") {
+		discountAmount = ((totalFees * parseFloat(discountPercentage))/parseFloat(100.00));
+	}
 	
 	$("#orderPaymentInfo\\.discountAmount").val(discountAmount);
 	$("#orderPaymentInfo\\.totalFees").val(totalFees - discountAmount);
@@ -771,7 +815,6 @@ $("#confirmExchangeOrderDialogYes").click(function (ev) {
 	      <td class="form-left"><transys:label code="Permit1 Address"/></td>
 	      <td align="${left}">
         	<select class="flat form-control input-sm" id="permitAddress1" name="permitAddress1" style="width:172px !important">
-				<option value="">------Please Select------</option>
 				<c:if test="${modelObject.permits != null and modelObject.permits[0] != null and modelObject.permits[0].number != null}">
 					<c:forEach items="${modelObject.permits[0].permitAddress}" var="aPermitAddress">
 						<option value="${aPermitAddress.id}" ${selected}>${aPermitAddress.fullLine}</option>
@@ -782,7 +825,6 @@ $("#confirmExchangeOrderDialogYes").click(function (ev) {
 	      <td class="form-left"><transys:label code="Permit2 Address"/></td>
 	      <td align="${left}">
         	<select class="flat form-control input-sm" id="permitAddress2" name="permitAddress2" style="width:172px !important">
-				<option value="">------Please Select------</option>
 				<c:if test="${modelObject.permits != null and modelObject.permits[1] != null and modelObject.permits[1].number != null}">
 					<c:forEach items="${modelObject.permits[1].permitAddress}" var="aPermitAddress">
 						<option value="${aPermitAddress.id}" ${selected}>${aPermitAddress.fullLine}</option>
@@ -793,7 +835,6 @@ $("#confirmExchangeOrderDialogYes").click(function (ev) {
 	      <td class="form-left"><transys:label code="Permit3 Address"/></td>
 	      <td align="${left}">
         	<select class="flat form-control input-sm" id="permitAddress3" name="permitAddress3" style="width:172px !important">
-				<option value="">------Please Select------</option>
 				<c:if test="${modelObject.permits != null and modelObject.permits[2] != null and modelObject.permits[2].number != null}">
 					<c:forEach items="${modelObject.permits[2].permitAddress}" var="aPermitAddress">
 						<option value="${aPermitAddress.id}" ${selected}>${aPermitAddress.fullLine}</option>

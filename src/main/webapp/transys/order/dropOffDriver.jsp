@@ -18,7 +18,7 @@
 			<td align="${left}">
 				<form:select id="dumpsterNum" cssClass="flat form-control input-sm" path="dumpster" style="width:172px !important">
 					<form:option value="">-------Please Select------</form:option>
-					<form:options items="${dumpsters}" itemValue="id" itemLabel="dumpsterNum" />
+					<form:options items="${orderDumpsters}" itemValue="id" itemLabel="dumpsterNum" />
 				</form:select> 
 				<br><form:errors path="dumpster" cssClass="errorMessage" />
 			</td>
