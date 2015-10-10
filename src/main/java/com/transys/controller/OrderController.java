@@ -1020,6 +1020,15 @@ public class OrderController extends CRUDController<Order> {
 		orderPaymentInfo.setCreatedBy(order.getCreatedBy());
 		orderPaymentInfo.setModifiedBy(order.getModifiedBy());
 		
+		if (orderPaymentInfo.getAdditionalFee1() == null) {
+			orderPaymentInfo.setAdditionalFee1(new BigDecimal(0.00));
+		}
+		if (orderPaymentInfo.getAdditionalFee2() == null) {
+			orderPaymentInfo.setAdditionalFee2(new BigDecimal(0.00));
+		}
+		if (orderPaymentInfo.getAdditionalFee3() == null) {
+			orderPaymentInfo.setAdditionalFee3(new BigDecimal(0.00));
+		}
 		if (orderPaymentInfo.getTotalAdditionalFees() == null) {
 			orderPaymentInfo.setTotalAdditionalFees(new BigDecimal(0.00));
 		}
@@ -1034,6 +1043,15 @@ public class OrderController extends CRUDController<Order> {
 		}
 		if (orderPaymentInfo.getOverweightFee() == null) {
 			orderPaymentInfo.setOverweightFee(new BigDecimal(0.00));
+		}
+		if (orderPaymentInfo.getPermitFee1() == null) {
+			orderPaymentInfo.setPermitFee1(new BigDecimal(0.00));
+		}
+		if (orderPaymentInfo.getPermitFee2() == null) {
+			orderPaymentInfo.setPermitFee2(new BigDecimal(0.00));
+		}
+		if (orderPaymentInfo.getPermitFee3() == null) {
+			orderPaymentInfo.setPermitFee3(new BigDecimal(0.00));
 		}
 		if (orderPaymentInfo.getTotalPermitFees() == null) {
 			orderPaymentInfo.setTotalPermitFees(new BigDecimal(0.00));
