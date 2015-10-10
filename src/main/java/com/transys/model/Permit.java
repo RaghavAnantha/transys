@@ -21,7 +21,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 public class Permit  extends AbstractBaseModel {
 
 	@ManyToOne
-	@JoinColumn(name="customerID")
+	@JoinColumn(name="customerId")
 	private Customer customer;
 	
 	@ManyToOne
@@ -69,14 +69,14 @@ public class Permit  extends AbstractBaseModel {
 	private BigDecimal parkingMeterFee;
 	
 	@Transient
-	private Long orderID;
-	
-	public Long getOrderID() {
-		return orderID;
+	private Long orderId;
+
+	public Long getOrderId() {
+		return orderId;
 	}
 
-	public void setOrderID(Long orderID) {
-		this.orderID = orderID;
+	public void setOrderId(Long orderId) {
+		this.orderId = orderId;
 	}
 
 	public Customer getCustomer() {

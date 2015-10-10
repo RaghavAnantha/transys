@@ -10,11 +10,11 @@ import javax.persistence.Table;
 public class OrderPermits extends AbstractBaseModel {
 
 	@ManyToOne
-	@JoinColumn(name="orderID")
+	@JoinColumn(name="orderId")
 	private Order order;
 	
 	@ManyToOne
-	@JoinColumn(name="permitID")
+	@JoinColumn(name="permitId")
 	private Permit permit;
 
 	public Order getOrder() {

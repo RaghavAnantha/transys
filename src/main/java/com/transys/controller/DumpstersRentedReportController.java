@@ -59,7 +59,7 @@ public class DumpstersRentedReportController extends CRUDController<DumpsterInfo
 
 	private void setDeliveryDetailsForDumpster(List<DumpsterInfo> dumpsterInfoList) {
 		for (DumpsterInfo aDumpster : dumpsterInfoList) {
-			// get the latest delivery address & delivery date for the corresponding dumpster# from trans_order table
+			// get the latest delivery address & delivery date for the corresponding dumpster# from transysOrder table
 			
 			Map<String, Object> criterias = new HashMap<String, Object>();
 			criterias.put("dumpster.id", aDumpster.getId());

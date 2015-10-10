@@ -60,8 +60,8 @@ public class Employee extends AbstractBaseModel {
 	@JoinColumn(name="status")
 	private EmployeeStatus status;
 	
-	@Column(name="employeeID")
-	private String employeeID;
+	@Column(name="employeeId")
+	private String employeeId;
 
 	public String getFirstName() {
 		return firstName;
@@ -184,12 +184,11 @@ public class Employee extends AbstractBaseModel {
 		this.status = status;
 	}
 
-	public String getEmployeeID() {
-		return employeeID;
+	public String getEmployeeId() {
+		return employeeId;
 	}
 
-	public void setEmployeeID(String employeeID) {
-		this.employeeID = employeeID;
+	public void setEmployeeId(String employeeId) {
+		this.employeeId = employeeId;
 	}
-	
 }

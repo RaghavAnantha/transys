@@ -11,7 +11,7 @@ import javax.persistence.Table;
 public class PermitNotes extends AbstractBaseModel {
 
 	@ManyToOne
-	@JoinColumn(name="permitID")
+	@JoinColumn(name="permitId")
 	private Permit permit;
 	
 	@Column(name="notes")

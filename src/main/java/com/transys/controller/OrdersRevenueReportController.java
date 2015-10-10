@@ -71,16 +71,16 @@ public class OrdersRevenueReportController extends CRUDController<Order> {
 	}
 
 	private String[] getOrdersRevenueData(List<Order> orderList) {
-		StringBuffer selectedOrderIDs = new StringBuffer();
+		StringBuffer selectedOrderIds = new StringBuffer();
 		if (orderList == null && orderList.size() == 0) {
 			// throw Exception??
 			System.out.println("No orders matching criteria, report will be empty.");
 		}
 		
 		for(Order o : orderList) {
-			selectedOrderIDs.append(o.getId() + ",");
+			selectedOrderIds.append(o.getId() + ",");
 		}
-		List<?> aggregationResults = genericDAO.executeSimpleQuery("select SUM(p.dumpsterPrice) as totalDumpsterPrice, SUM(p.totalPermitFees) as totalPermitFees, SUM(p.cityFee) as totalCityFees, SUM(p.overweightFee) as totalOverweightFees, SUM(p.totalFees) as totalFees from OrderPaymentInfo p where p.order IN (" + selectedOrderIDs.substring(0,selectedOrderIDs.lastIndexOf(",")) + ")");
+		List<?> aggregationResults = genericDAO.executeSimpleQuery("select SUM(p.dumpsterPrice) as totalDumpsterPrice, SUM(p.totalPermitFees) as totalPermitFees, SUM(p.cityFee) as totalCityFees, SUM(p.overweightFee) as totalOverweightFees, SUM(p.totalFees) as totalFees from OrderPaymentInfo p where p.order IN (" + selectedOrderIds.substring(0,selectedOrderIds.lastIndexOf(",")) + ")");
 		//String jSonResponse =new Gson().toJson(aggregationResults.get(0));
 		ObjectMapper objectMapper = new ObjectMapper();
 		String jsonResponse = StringUtils.EMPTY;
