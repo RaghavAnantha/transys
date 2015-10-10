@@ -8,7 +8,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "role_privilege")
+@Table(name = "rolePrivilege")
 @SuppressWarnings("serial")
 public class RolePrivilege extends AbstractBaseModel {
 
@@ -16,17 +16,17 @@ public class RolePrivilege extends AbstractBaseModel {
 	 * Attribute businessObject
 	 */
 	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name = "business_object_id")
+	@JoinColumn(name = "businessObjectId")
 	private BusinessObject businessObject;
 
 	/**
 	 * Attribute userRole
 	 */
 	@ManyToOne
-	@JoinColumn(name = "role_id")
+	@JoinColumn(name = "roleId")
 	private Role role;
 
-	@Column(name = "permission_type")
+	@Column(name = "permissionType")
 	private Integer permissionType;
 
 	/**

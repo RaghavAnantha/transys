@@ -97,43 +97,43 @@ INSERT INTO `permitAddress` VALUES (1,NULL,NULL,NULL,NULL,1,'4818 W','VAN BUREN'
 UNLOCK TABLES;
 
 --
--- Table structure for table `business_object`
+-- Table structure for table `businessObject`
 --
 
-DROP TABLE IF EXISTS `business_object`;
+DROP TABLE IF EXISTS `businessObject`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `business_object` (
-  `ID` bigint(20) NOT NULL AUTO_INCREMENT,
-  `ACTION` varchar(200) DEFAULT NULL,
-  `DISPLAY_TAG` varchar(60) DEFAULT NULL,
-  `OBJECT_LEVEL` int(11) DEFAULT NULL,
-  `OBJECT_NAME` varchar(60) DEFAULT NULL,
-  `URL` varchar(5000) DEFAULT NULL,
+CREATE TABLE `businessObject` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `action` varchar(200) DEFAULT NULL,
+  `displayTag` varchar(60) DEFAULT NULL,
+  `objectLevel` int(11) DEFAULT NULL,
+  `objectName` varchar(60) DEFAULT NULL,
+  `url` varchar(5000) DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   `created_by` bigint(20) DEFAULT NULL,
   `modified_at` datetime DEFAULT NULL,
   `modified_by` bigint(20) DEFAULT NULL,
-  `default_flag` int(11) DEFAULT NULL,
-  `display_order` int(11) DEFAULT NULL,
+  `defaultFlag` int(11) DEFAULT NULL,
+  `displayOrder` int(11) DEFAULT NULL,
   `hidden` int(11) DEFAULT NULL,
-  `parent_id` bigint(20) DEFAULT NULL,
+  `parentId` bigint(20) DEFAULT NULL,
   `hierarchy` varchar(255) DEFAULT NULL,
-  `url_context` varchar(255) DEFAULT NULL,
+  `urlContext` varchar(255) DEFAULT NULL,
   `delete_flag` int(11) DEFAULT NULL,
-  PRIMARY KEY (`ID`),
-  KEY `FKF1A8A89E816B01E9` (`parent_id`),
-  CONSTRAINT `FKF1A8A89E816B01E9` FOREIGN KEY (`parent_id`) REFERENCES `business_object` (`ID`)
+  PRIMARY KEY (`id`),
+  KEY `businessObjectParentRef_Idx` (`parentId`),
+  CONSTRAINT `businessObjectParentRef` FOREIGN KEY (`parentId`) REFERENCES `businessObject` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `business_object`
+-- Dumping data for table `businessObject`
 --
 
-LOCK TABLES `business_object` WRITE;
-/*!40000 ALTER TABLE `business_object` DISABLE KEYS */;
-/*!40000 ALTER TABLE `business_object` ENABLE KEYS */;
+LOCK TABLES `businessObject` WRITE;
+/*!40000 ALTER TABLE `businessObject` DISABLE KEYS */;
+/*!40000 ALTER TABLE `businessObject` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -382,24 +382,18 @@ CREATE TABLE `transysOrder` (
   `locationTypeId` bigint(20) NOT NULL,
   `dumpsterSizeId` bigint(20) DEFAULT NULL,
   `materialTypeId` bigint(20) DEFAULT NULL,
-  -- `dumpsterPrice` double DEFAULT NULL,
-  -- `paymentInfo` bigint(20) DEFAULT NULL,
-  -- `notes` int(11) DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   `created_by` bigint(20) DEFAULT NULL,
   `modified_at` datetime DEFAULT NULL,
   `modified_by` bigint(20) DEFAULT NULL,
   `delete_flag` int(11) NOT NULL DEFAULT '1',
-  -- `weightInfo` bigint(20) DEFAULT '0',
   `grossWeight` decimal(6,2) DEFAULT NULL,
   `netWeightLb` decimal(6,2) DEFAULT NULL,
   `netWeightTonnage` decimal(6,2) DEFAULT NULL,
   `tare` decimal(6,2) DEFAULT NULL,
   `dumpsterId` bigint(20) DEFAULT NULL,
-  -- `driverInfo` bigint(20) DEFAULT NULL,
   `pickupDate` datetime DEFAULT NULL,
   `orderStatusId` bigint(20) NOT NULL,
-  -- `permits` bigint(20) DEFAULT NULL,
   `pickUpDriverId` bigint(20) DEFAULT NULL,
   `dropOffDriverId` bigint(20) DEFAULT NULL,
   `deliveryHourFrom` varchar(10) DEFAULT NULL,
@@ -410,18 +404,9 @@ CREATE TABLE `transysOrder` (
   `materialCategoryId` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `orderCustomerRef_idx` (`customerId`),
-  -- KEY `deliveryAddressRef_idx` (`deliveryAddressId`),
-  -- KEY `orderStatusRef_idx` (`orderStatusId`),
-  -- KEY `driverInfoRef_idx` (`driverInfo`),
-  -- KEY `weightInfoRef_idx` (`weightInfo`),
-  -- KEY `paymentInfoRef_idx` (`paymentInfo`),
   CONSTRAINT `orderCustomerRef` FOREIGN KEY (`customerId`) REFERENCES `customer` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  -- CONSTRAINT `maerialTypeRef` FOREIGN KEY (`materialTypeId`) REFERENCES `material_type` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `orderDeliveryAddressRef` FOREIGN KEY (`deliveryAddressId`) REFERENCES `deliveryAddress` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  -- CONSTRAINT `driverInfoRef` FOREIGN KEY (`driverInfo`) REFERENCES `orderDriverInfo` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `orderStatusRef` FOREIGN KEY (`orderStatusId`) REFERENCES `orderStatus` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  -- CONSTRAINT `paymentInfoRef` FOREIGN KEY (`paymentInfo`) REFERENCES `orderPaymentInfo` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  -- CONSTRAINT `weightInfoRef` FOREIGN KEY (`weightInfo`) REFERENCES `orderWeightInfo` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
   CONSTRAINT `orderDumpsterRef` FOREIGN KEY (`dumpsterId`) REFERENCES `dumpsterInfo` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `orderMaterialTypeRef` FOREIGN KEY (`materialTypeId`) REFERENCES `materialType` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `orderMaterialCategoryRef` FOREIGN KEY (`materialCategoryId`) REFERENCES `materialCategory` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
@@ -766,12 +751,6 @@ LOCK TABLES `permit` WRITE;
 /*!40000 ALTER TABLE `permit` DISABLE KEYS */;
  INSERT INTO `permit` VALUES (1,1,'1301-11W',50,'2015-09-22 00:00:00','2015-09-25 00:00:00',1,3,'2015-09-22 00:00:00',NULL,'2015-09-22 21:51:56', NULL, 1,5,1,'Yes',1.0,1),(2,1,'5667890',90,'2015-09-22 00:00:00','2015-09-25 00:00:00',1,2,'2015-09-23 12:27:14',1,NULL,NULL,1,6,4,'Yes',90,1),
  (3,2,'1987-34E',90,'2015-09-22 00:00:00','2015-09-25 00:00:00',1,2,'2015-09-23 12:27:14',1,NULL,NULL,1,6,4,'Yes',90,1);
--- INSERT INTO `permit` VALUES (1,1,1,'1234','50',curdate(),'1301-11W',1,2,'Test',NULL,NULL,NULL,NULL,1,5,1,NULL);
--- ,(9,1,1,'6','0.0',curdate(),NULL,1,1,NULL,'2015-09-15 16:25:46',1,NULL,NULL,1,6,1,'yes')
--- ,(10,2,2,'9','0.0',curdate(),NULL,2,1,NULL,'2015-09-15 16:28:40',1,NULL,NULL,1,6,1,'no')
--- ,(11,2,2,'123','0.0',curdate(),NULL,2,2,NULL,'2015-09-15 17:18:54',1,NULL,NULL,1,6,1,'yes')
--- ,(12,2,2,'12345','0.0',curdate(),NULL,2,1,NULL,'2015-09-15 17:23:22',1,NULL,NULL,1,6,1,'ywa')
--- ,(13,2,2,'56','0.0',curdate(),NULL,2,1,NULL,'2015-09-15 17:28:14',1,NULL,NULL,1,5,1,'yes');
 /*!40000 ALTER TABLE `permit` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -899,38 +878,38 @@ INSERT INTO `transys`.`role` (`id`, `default_flag`, `name`) VALUES ('6', '1', 'D
 UNLOCK TABLES;
 
 --
--- Table structure for table `role_privilege`
+-- Table structure for table `rolePrivilege`
 --
 
-DROP TABLE IF EXISTS `role_privilege`;
+DROP TABLE IF EXISTS `rolePrivilege`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `role_privilege` (
+CREATE TABLE `rolePrivilege` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `created_at` datetime DEFAULT NULL,
   `created_by` bigint(20) DEFAULT NULL,
   `modified_at` datetime DEFAULT NULL,
   `modified_by` bigint(20) DEFAULT NULL,
   `default_flag` int(11) DEFAULT NULL,
-  `permission_type` int(11) DEFAULT NULL,
-  `business_object_id` bigint(20) DEFAULT NULL,
-  `role_id` bigint(20) DEFAULT NULL,
+  `permissionType` int(11) DEFAULT NULL,
+  `businessObjectId` bigint(20) DEFAULT NULL,
+  `roleId` bigint(20) DEFAULT NULL,
   `delete_flag` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `FK45FBD6283F28F717` (`role_id`),
-  KEY `FK45FBD628708FFC58` (`business_object_id`),
-  CONSTRAINT `FK45FBD6283F28F717` FOREIGN KEY (`role_id`) REFERENCES `role` (`id`),
-  CONSTRAINT `FK45FBD628708FFC58` FOREIGN KEY (`business_object_id`) REFERENCES `business_object` (`ID`)
+  KEY `rolePrivelegeRoleRef_Idx` (`roleId`),
+  KEY `rolePrivelegeBusinessObjectRef_Idx` (`businessObjectId`),
+  CONSTRAINT `rolePrivelegeRoleRef` FOREIGN KEY (`roleId`) REFERENCES `role` (`id`),
+  CONSTRAINT `rolePrivelegeBusinessObjectRef` FOREIGN KEY (`businessObjectId`) REFERENCES `businessObject` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `role_privilege`
+-- Dumping data for table `rolePrivilege`
 --
 
-LOCK TABLES `role_privilege` WRITE;
-/*!40000 ALTER TABLE `role_privilege` DISABLE KEYS */;
-/*!40000 ALTER TABLE `role_privilege` ENABLE KEYS */;
+LOCK TABLES `rolePrivilege` WRITE;
+/*!40000 ALTER TABLE `rolePrivilege` DISABLE KEYS */;
+/*!40000 ALTER TABLE `rolePrivilege` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
