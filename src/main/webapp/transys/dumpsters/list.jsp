@@ -76,7 +76,7 @@
 		<transys:textcolumn headerText="Dumpster Number" dataField="dumpsterNum" />
 		<transys:textcolumn headerText="Status" dataField="status.status" />
 	</transys:datatable>
-	<%session.setAttribute("columnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
+	<%session.setAttribute("dumpstersColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
 </form:form>
 
 

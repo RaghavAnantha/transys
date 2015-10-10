@@ -59,7 +59,7 @@
 		<transys:textcolumn headerText="Customer" dataField="customer.companyName" />
 		<transys:textcolumn headerText="Dumpster Price" dataField="dumpsterPrice" />
 	</transys:datatable>
-	<%session.setAttribute("columnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
+	<%session.setAttribute("customerDumpsterPriceColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
 </form:form>
 
 

@@ -154,7 +154,7 @@ public class OrderController extends CRUDController<Order> {
       populateDeliveryTimeSettings(model);
       
       String driverRole = "DRIVER";
-      List<BaseModel> driversList = genericDAO.executeSimpleQuery("select obj from User obj where obj.id!=0 and obj.role.name='" + driverRole + "' order by obj.id asc");
+      List<BaseModel> driversList = genericDAO.executeSimpleQuery("select obj from User obj where obj.id!=0 and obj.accountStatus=1 and obj.role.name='" + driverRole + "' order by obj.id asc");
       model.addAttribute("drivers", driversList);
 	}
 	

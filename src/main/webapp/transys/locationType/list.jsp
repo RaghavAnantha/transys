@@ -59,7 +59,7 @@
 		<transys:textcolumn headerText="Location Type ID" dataField="id" />
 		<transys:textcolumn headerText="Location Type" dataField="locationType" />
 	</transys:datatable>
-	<%session.setAttribute("columnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
+	<%session.setAttribute("locationTypeColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
 </form:form>
 
 

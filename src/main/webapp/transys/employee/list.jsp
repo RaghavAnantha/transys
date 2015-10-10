@@ -103,7 +103,7 @@
 
 
 	</transys:datatable>
-	<%session.setAttribute("columnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
+	<%session.setAttribute("employeeColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
 </form:form>
 
 

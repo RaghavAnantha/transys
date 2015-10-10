@@ -78,7 +78,7 @@
 		<transys:textcolumn headerText="Permit Type" dataField="permitType.permitType" />
 		<transys:textcolumn headerText="Permit Fee" dataField="fee" />
 	</transys:datatable>
-	<%session.setAttribute("columnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
+	<%session.setAttribute("permitFeeColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
 </form:form>
 
 
