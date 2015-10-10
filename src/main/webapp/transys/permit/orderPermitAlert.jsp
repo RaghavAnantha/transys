@@ -148,7 +148,7 @@
 		<transys:textcolumn headerText="StartDate" dataField="permit.startDate" />
 		<transys:textcolumn headerText="EndDate" dataField="permit.endDate" />
 		<transys:anchorcolumn headerText="New Permit" linkText="Add New Permit" linkUrl="/permit/permitCreateModal.do" target="#addNewPermitModal" />
-		<transys:anchorcolumn headerText="Order Notes" linkText="Add Order Notes" linkUrl="/permit/permitCreateModal.do" target="#addNewPermitModal" />
+		<transys:anchorcolumn headerText="Add Order Notes" linkText="Add Order Notes" linkUrl="/order/orderNotesCreateModal.do" target="#addOrderNotesModal" />
 	</transys:datatable>
 	<%session.setAttribute("orderPermitAlertColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
 </form:form>
@@ -167,10 +167,29 @@
 	</div>
 </div>
 
+<div class="modal fade" id="addOrderNotesModal" role="dialog" data-backdrop="static" data-remote="false" data-toggle="modal">
+	<div class="modal-dialog" style="width:90% !important">
+		<div class="modal-content">
+		 	<div class="modal-header">
+        		<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+       			<h4 class="modal-title">Add Order Notes</h4>
+       			<div id="addOrderNotesModalValidations" style="color:red"></div>
+      		 </div>	
+			
+			<div class="modal-body" id="addOrderNotesModalBody"></div>
+		</div>
+	</div>
+</div>
+
 <script type="text/javascript">
 $("#addNewPermitModal").on("show.bs.modal", function(e) {
     var link = $(e.relatedTarget).attr("href");
     $(this).find("#addNewPermitModalBody").load(link);
+});
+
+$("#addOrderNotesModal").on("show.bs.modal", function(e) {
+    var link = $(e.relatedTarget).attr("href");
+    $(this).find("#addOrderNotesModalBody").load(link);
 });
 </script>
 
