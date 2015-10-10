@@ -10,6 +10,10 @@ function populateCustomerDeliveryAddress() {
 	deliveryAddressSelect.append(firstOption);
 	
 	var customerId = customerSelect.val();
+	if (customerId == "") {
+		return false;
+	}
+	
 	$.ajax({
   		url: "customerDeliveryAddress.do?id=" + customerId,
        	type: "GET",
@@ -65,8 +69,7 @@ function populateCustomerDeliveryAddress() {
 					<option value="">------<transys:label code="Please Select" />------</option>
 					<c:forEach items="${customers}" var="aCustomer">
 						<c:set var="selected" value="" />
-						<c:if
-							test="${sessionScope.searchCriteria.searchMap['customer'] == aCustomer.id}">
+						<c:if test="${sessionScope.searchCriteria.searchMap['customer'] == aCustomer.id}">
 							<c:set var="selected" value="selected" />
 						</c:if>
 						<option value="${aCustomer.id}" ${selected}>${aCustomer.companyName}</option>
@@ -76,16 +79,14 @@ function populateCustomerDeliveryAddress() {
 			<td align="${left}" class="form-left"><transys:label code="Delivery Address" /></td>
 			<td align="${left}">
 				<select class="flat form-control input-sm" id="deliveryAddress" name="deliveryAddress" style="width: 175px">
-					<option value="">------<transys:label code="Please Select" />------</option>
-					<!--  
+					<option value="">------Please Select------</option>
 					<c:forEach items="${deliveryAddresses}" var="aDeliveryAddress">
 						<c:set var="selected" value=""/>
 						<c:if test="${sessionScope.searchCriteria.searchMap['deliveryAddress'] == aDeliveryAddress.id}">
 							<c:set var="selected" value="selected" />
 						</c:if>
-						<option value="${aDeliveryAddress.id}" ${selected}>${aDeliveryAddress.line1} + " " + ${aDeliveryAddress.line2}</option>
+						<option value="${aDeliveryAddress.id}" ${selected}>${aDeliveryAddress.fullLine}</option>
 					</c:forEach>
-					-->
 				</select>
 			</td>
 		</tr>

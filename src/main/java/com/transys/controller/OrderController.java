@@ -177,10 +177,20 @@ public class OrderController extends CRUDController<Order> {
 	@Override
 	public String list(ModelMap model, HttpServletRequest request) {
 		setupList(model, request);
+		
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		//criteria.getSearchMap().put("id!",0l);
 		//TODO fix me
 		criteria.getSearchMap().remove("_csrf");
+		
+		if (criteria.getSearchMap().get("customer") != null) {
+			String customerId = (String)criteria.getSearchMap().get("customer");
+			if (StringUtils.isNotEmpty(customerId)) {
+				String deliveryAddressQuery = "select obj from DeliveryAddress obj where obj.customer.id=" + customerId  + " order by obj.line1 asc";
+				model.addAttribute("deliveryAddresses", genericDAO.executeSimpleQuery(deliveryAddressQuery));
+			}
+	   }
+		
 		model.addAttribute("list",genericDAO.search(getEntityClass(), criteria,"id",null,null));
 		model.addAttribute("activeTab", "manageOrders");
 		//model.addAttribute("activeSubTab", "orderDetails");
@@ -500,8 +510,16 @@ public class OrderController extends CRUDController<Order> {
 	@Override
 	public String search2(ModelMap model, HttpServletRequest request) {
 		setupList(model, request);
+		
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		//criteria.getSearchMap().put("id!",0l);
+		
+		/*if (criteria.getSearchMap().get("customer") != null) {
+			String customerId = (String)criteria.getSearchMap().get("customer");
+			String deliveryAddressQuery = "select obj from DeliveryAddress obj where obj.customer.id=" + customerId  + " order by obj.line1 asc";
+			model.addAttribute("deliveryAddresses", genericDAO.executeSimpleQuery(deliveryAddressQuery));
+	   }*/
+		
 		model.addAttribute("list", genericDAO.search(getEntityClass(), criteria, "id", null, null));
 		model.addAttribute("activeTab", "manageOrder");
 		return urlContext + "/order";
@@ -516,8 +534,7 @@ public class OrderController extends CRUDController<Order> {
 			if (StringUtils.isEmpty(type))
 				type = "xlsx";
 			if (!type.equals("html") && !(type.equals("print"))) {
-				response.setHeader("Content-Disposition",
-						"attachment;filename= ordersReport." + type);
+				response.setHeader("Content-Disposition", "attachment;filename= ordersReport." + type);
 			}
 			response.setContentType(MimeUtil.getContentType(type));
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
