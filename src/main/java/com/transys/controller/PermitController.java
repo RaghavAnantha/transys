@@ -285,6 +285,10 @@ public class PermitController extends CRUDController<Permit> {
 		
 		model.addAttribute("deliveryAddress", permitToBeEdited.getCustomer().getDeliveryAddress());
 		
+		criterias = new HashMap<String, Object>();
+		criterias.put("permit", permitToBeEdited);
+		model.addAttribute("permitAddress", genericDAO.findByCriteria(PermitAddress.class, criterias, "id", false));
+		
 		List<BaseModel> orderPermits = (List<BaseModel>)genericDAO.executeSimpleQuery("select obj from OrderPermits obj where obj.permit.id=" +  permitToBeEdited.getId() + " order by obj.id desc");
 		if (orderPermits != null && orderPermits.size() > 0) {
 			BaseModel orderPermitObj = orderPermits.get(0);

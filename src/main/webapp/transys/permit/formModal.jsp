@@ -152,6 +152,15 @@ function populateEndDate() {
 			 	<br><form:errors path="parkingMeterFee" cssClass="errorMessage" />
 			</td>
 		</tr>
+		<tr>
+		<td class="form-left"><transys:label code="Permit Addresses" /><span class="errorMessage">*</span></td>
+			<td align="${left}">
+				<form:select cssClass="flat form-control input-sm" path="parkingMeter" style="width: 175px !important" >
+					<form:options items="${permitAddress}" itemValue="id" itemLabel="fullLine" />
+				 	<br><form:errors path="permitAddress" cssClass="errorMessage" />
+			 	</form:select>
+			</td>
+		</tr>
 	   
 		<tr><td colspan="2"></td></tr>
 		<tr>
