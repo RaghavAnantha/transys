@@ -474,6 +474,13 @@ $("#addDeliveryAddressLink").click(function (ev) {
 	
 	ev.preventDefault();
 });
+
+$("#addPermitLink").click(function (ev) {
+	var url = $(this).attr("href");
+	showPopupDialog("Add Permit", url);
+	
+	ev.preventDefault();
+});
 </script>
 <br/>
 <form:form action="save.do" name="orderAddEditForm" commandName="modelObject" method="post" id="orderAddEditForm">
@@ -767,7 +774,7 @@ $("#addDeliveryAddressLink").click(function (ev) {
 				</label>
 				<label style="display: inline-block; font-weight: normal">
 					&nbsp;
-					<a href="/permit/createModal.do" id="addPermitLink" data-backdrop="static" data-remote="false" data-toggle="modal" data-target="#addPermitModal">
+					<a href="/permit/permitCreateModal.do" id="addPermitLink" >
 						<img src="/images/addnew.png" border="0" style="float:bottom" class="toolbarButton">
 					</a>
 				</label>
