@@ -451,9 +451,7 @@ public class OrderController extends CRUDController<Order> {
 		}
 		
 		//TODO: why is this reqd?
-		entity.getOrderPaymentInfo().setOrder(entity);
-		entity.getOrderPaymentInfo().setCreatedBy(entity.getCreatedBy());
-		entity.getOrderPaymentInfo().setModifiedBy(entity.getModifiedBy());
+		setupOrderPaymentInfo(entity);
 		
 		OrderStatus orderStatus = retrieveOrderStatus("Picked Up");
 		entity.setOrderStatus(orderStatus);
@@ -560,13 +558,11 @@ public class OrderController extends CRUDController<Order> {
 				OrderPaymentInfo paymentInfo = order.getOrderPaymentInfo();
 				if (paymentInfo != null) {
 					map.put("paymentMethod", StringUtils.defaultIfEmpty(paymentInfo.getPaymentMethod().getMethod(), StringUtils.EMPTY));
-					map.put("dumpsterPrice", paymentInfo.getDumpsterPrice().toString());
-					map.put("cityFee", paymentInfo.getCityFee().toString());
-					map.put("permitFees", paymentInfo.getPermitFee1().toString());
-					map.put("overweightFee", paymentInfo.getOverweightFee().toString());
-					if (paymentInfo.getTotalFees() != null ) {
-						map.put("totalFees", order.getOrderPaymentInfo().getTotalFees().toString());
-					}
+					map.put("dumpsterPrice", StringUtils.defaultIfEmpty(paymentInfo.getDumpsterPrice().toString(), "0.00"));
+					map.put("cityFee", StringUtils.defaultIfEmpty(paymentInfo.getCityFee().toString(), "0.00"));
+					map.put("permitFees", StringUtils.defaultIfEmpty(paymentInfo.getTotalPermitFees().toString(), "0.00"));
+					map.put("overweightFee", StringUtils.defaultIfEmpty(paymentInfo.getOverweightFee().toString(), "0.00"));
+					map.put("totalFees", StringUtils.defaultIfEmpty(paymentInfo.getTotalFees().toString(), "0.00"));
 				}
 				
 				newList.add(map);
@@ -982,9 +978,7 @@ public class OrderController extends CRUDController<Order> {
 		entity.setOrderStatus(orderStatus);
 		
 		// TODO: Why both created by and modified by and why set if not changed?
-		entity.getOrderPaymentInfo().setOrder(entity);
-		entity.getOrderPaymentInfo().setCreatedBy(entity.getCreatedBy());
-		entity.getOrderPaymentInfo().setModifiedBy(entity.getModifiedBy());
+		setupOrderPaymentInfo(entity);
 		
 		// TODO: Why both created by and modified by and why set if not changed?
 		entity.getOrderNotes().get(0).setOrder(entity);
@@ -1017,6 +1011,33 @@ public class OrderController extends CRUDController<Order> {
 		
 		//return list(model, request);
 		return saveSuccess(model, request, entity);
+	}
+	
+	private void setupOrderPaymentInfo(Order order) {
+		OrderPaymentInfo orderPaymentInfo = order.getOrderPaymentInfo();
+		
+		orderPaymentInfo.setOrder(order);
+		orderPaymentInfo.setCreatedBy(order.getCreatedBy());
+		orderPaymentInfo.setModifiedBy(order.getModifiedBy());
+		
+		if (orderPaymentInfo.getTotalAdditionalFees() == null) {
+			orderPaymentInfo.setTotalAdditionalFees(new BigDecimal(0.00));
+		}
+		if (orderPaymentInfo.getCityFee() == null) {
+			orderPaymentInfo.setCityFee(new BigDecimal(0.00));
+		}
+		if (orderPaymentInfo.getDiscountPercentage() == null) {
+			orderPaymentInfo.setDiscountPercentage(new BigDecimal(0.00));
+		}
+		if (orderPaymentInfo.getDiscountAmount() == null) {
+			orderPaymentInfo.setDiscountAmount(new BigDecimal(0.00));
+		}
+		if (orderPaymentInfo.getOverweightFee() == null) {
+			orderPaymentInfo.setOverweightFee(new BigDecimal(0.00));
+		}
+		if (orderPaymentInfo.getTotalPermitFees() == null) {
+			orderPaymentInfo.setTotalPermitFees(new BigDecimal(0.00));
+		}
 	}
 	
 	/*@Override

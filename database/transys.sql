@@ -387,10 +387,10 @@ CREATE TABLE `transysOrder` (
   `modified_at` datetime DEFAULT NULL,
   `modified_by` bigint(20) DEFAULT NULL,
   `delete_flag` int(11) NOT NULL DEFAULT '1',
-  `grossWeight` decimal(6,2) DEFAULT NULL,
-  `netWeightLb` decimal(6,2) DEFAULT NULL,
-  `netWeightTonnage` decimal(6,2) DEFAULT NULL,
-  `tare` decimal(6,2) DEFAULT NULL,
+  `grossWeight` decimal(6,2) DEFAULT 0.00,
+  `netWeightLb` decimal(6,2) DEFAULT 0.00,
+  `netWeightTonnage` decimal(6,2) DEFAULT 0.00,
+  `tare` decimal(6,2) DEFAULT 0.00,
   `dumpsterId` bigint(20) DEFAULT NULL,
   `pickupDate` datetime DEFAULT NULL,
   `orderStatusId` bigint(20) NOT NULL,
@@ -412,8 +412,8 @@ CREATE TABLE `transysOrder` (
   CONSTRAINT `orderMaterialCategoryRef` FOREIGN KEY (`materialCategoryId`) REFERENCES `materialCategory` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `orderDumpsterLocationRef` FOREIGN KEY (`locationTypeId`) REFERENCES `locationType` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `orderDumpsterSizeRef` FOREIGN KEY (`dumpsterSizeId`) REFERENCES `dumpsterSize` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `orderPickupDriverRef` FOREIGN KEY (`pickUpDriverId`) REFERENCES `user_info` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `orderDropOffDriverRef` FOREIGN KEY (`dropOffDriverId`) REFERENCES `user_info` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `orderPickupDriverUserInfoRef` FOREIGN KEY (`pickUpDriverId`) REFERENCES `userInfo` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `orderDropOffDriverUserInfoRef` FOREIGN KEY (`dropOffDriverId`) REFERENCES `userInfo` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -423,7 +423,7 @@ CREATE TABLE `transysOrder` (
 
 LOCK TABLES `transysOrder` WRITE;
 /*!40000 ALTER TABLE `transysOrder` DISABLE KEYS */;
-INSERT INTO `transysOrder` (`id`,`customerId`,`deliveryContactName`,`deliveryContactPhone1`,`deliveryContactPhone2`,`deliveryDate`,`deliveryAddressId`,`locationTypeId`,`dumpsterSizeId`,`materialTypeId`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`,`grossWeight`,`netWeightLb`,`netWeightTonnage`,`tare`,`dumpsterId`,`pickupDate`,`orderStatusId`,`pickUpDriverId`,`dropOffDriverId`,`deliveryHourFrom`,`deliveryHourTo`,`deliveryMinutesFrom`,`deliveryMinutesTo`,`pickupOrderId`,`materialCategoryId`) VALUES (1,5,'Raghav','123-456-7890','123-456-7890','2015-10-09 00:00:00',3,1,1,1,'2015-10-09 00:00:00',1,'2015-10-09 23:00:51',1,1,10.00,10.00,10.00,10.00,2,NULL,2,NULL,2,'12:00 AM','1:00 AM','00','15',NULL,1);
+INSERT INTO `transysOrder` (`id`,`customerId`,`deliveryContactName`,`deliveryContactPhone1`,`deliveryContactPhone2`,`deliveryDate`,`deliveryAddressId`,`locationTypeId`,`dumpsterSizeId`,`materialTypeId`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`,`grossWeight`,`netWeightLb`,`netWeightTonnage`,`tare`,`dumpsterId`,`pickupDate`,`orderStatusId`,`pickUpDriverId`,`dropOffDriverId`,`deliveryHourFrom`,`deliveryHourTo`,`deliveryMinutesFrom`,`deliveryMinutesTo`,`pickupOrderId`,`materialCategoryId`) VALUES (1,5,'Raghav','123-456-7890','123-456-7890','2015-10-09 00:00:00',3,1,1,1,'2015-10-09 00:00:00',1,'2015-10-10 18:42:41',1,1,10.00,10.00,10.00,10.00,2,NULL,1,NULL,2,'12:00 AM','1:00 AM','00','15',NULL,1);
 /*!40000 ALTER TABLE `transysOrder` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -559,23 +559,23 @@ DROP TABLE IF EXISTS `orderPaymentInfo`;
 CREATE TABLE `orderPaymentInfo` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `orderId` bigint(20) NOT NULL,
-  `dumpsterPrice` decimal(6,2) DEFAULT NULL,
-  `cityFee` decimal(6,2) DEFAULT NULL,
+  `dumpsterPrice` decimal(6,2) DEFAULT 0.00,
+  `cityFee` decimal(6,2) DEFAULT 0.00,
   `cityFeeId` bigint(20) DEFAULT NULL,
-  `permitFee1` decimal(6,2) DEFAULT NULL,
-  `permitFee2` decimal(6,2) DEFAULT NULL,
-  `permitFee3` decimal(6,2) DEFAULT NULL,
-  `totalPermitFees` decimal(6,2) DEFAULT NULL,
-  `overweightFee` decimal(6,2) DEFAULT NULL,
+  `permitFee1` decimal(6,2) DEFAULT 0.00,
+  `permitFee2` decimal(6,2) DEFAULT 0.00,
+  `permitFee3` decimal(6,2) DEFAULT 0.00,
+  `totalPermitFees` decimal(6,2) DEFAULT 0.00,
+  `overweightFee` decimal(6,2) DEFAULT 0.00,
   `additionalFee1Id` bigint(20) DEFAULT NULL,
-  `additionalFee1` decimal(6,2) DEFAULT NULL,
+  `additionalFee1` decimal(6,2) DEFAULT 0.00,
   `additionalFee2Id` bigint(20) DEFAULT NULL,
-  `additionalFee2` decimal(6,2) DEFAULT NULL,
+  `additionalFee2` decimal(6,2) DEFAULT 0.00,
   `additionalFee3Id` bigint(20) DEFAULT NULL,
-  `additionalFee3` decimal(6,2) DEFAULT NULL,
-  `totalAdditionalFees` decimal(6,2) DEFAULT NULL,
-  `discountPercentage` decimal(6,2) DEFAULT NULL,
-  `discountAmount` decimal(6,2) DEFAULT NULL,
+  `additionalFee3` decimal(6,2) DEFAULT 0.00,
+  `totalAdditionalFees` decimal(6,2) DEFAULT 0.00,
+  `discountPercentage` decimal(6,2) DEFAULT 0.00,
+  `discountAmount` decimal(6,2) DEFAULT 0.00,
   `paymentMethodId` bigint(20) DEFAULT NULL,
   `ccReferenceNum` varchar(50) DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
@@ -583,7 +583,7 @@ CREATE TABLE `orderPaymentInfo` (
   `modified_at` datetime DEFAULT NULL,
   `modified_by` bigint(20) DEFAULT NULL,
   `delete_flag` int(11) NOT NULL DEFAULT '1',
-  `totalFees` decimal(6,2) DEFAULT NULL,
+  `totalFees` decimal(6,2) DEFAULT 0.00,
   `checkNum` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id`),
   CONSTRAINT `orderPaymentOrderRef` FOREIGN KEY (`orderId`) REFERENCES `transysOrder` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
@@ -601,7 +601,7 @@ CREATE TABLE `orderPaymentInfo` (
 
 LOCK TABLES `orderPaymentInfo` WRITE;
 /*!40000 ALTER TABLE `orderPaymentInfo` DISABLE KEYS */;
-INSERT INTO `orderPaymentInfo` (`id`,`orderId`,`dumpsterPrice`,`cityFee`,`cityFeeId`,`permitFee1`,`permitFee2`,`permitFee3`,`totalPermitFees`,`overweightFee`,`additionalFee1Id`,`additionalFee1`,`additionalFee2Id`,`additionalFee2`,`additionalFee3Id`,`additionalFee3`,`totalAdditionalFees`,`discountPercentage`,`discountAmount`,`paymentMethodId`,`ccReferenceNum`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`,`totalFees`,`checkNum`) VALUES (1,1,240.00,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,2.00,4.80,1,'123','2015-10-09 19:19:03',1,NULL,1,1,235.20,'123');
+INSERT INTO `orderPaymentInfo` (`id`,`orderId`,`dumpsterPrice`,`cityFee`,`cityFeeId`,`permitFee1`,`permitFee2`,`permitFee3`,`totalPermitFees`,`overweightFee`,`additionalFee1Id`,`additionalFee1`,`additionalFee2Id`,`additionalFee2`,`additionalFee3Id`,`additionalFee3`,`totalAdditionalFees`,`discountPercentage`,`discountAmount`,`paymentMethodId`,`ccReferenceNum`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`,`totalFees`,`checkNum`) VALUES (1,1,240.00,0.00,NULL,NULL,NULL,NULL,0.00,0.00,NULL,NULL,NULL,NULL,NULL,NULL,0.00,2.00,4.80,1,'123','2015-10-09 19:19:03',1,NULL,1,1,235.20,'123');
 /*!40000 ALTER TABLE `orderPaymentInfo` ENABLE KEYS */;
 UNLOCK TABLES;
 
