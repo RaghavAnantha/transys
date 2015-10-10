@@ -1,5 +1,5 @@
 <%@include file="/common/taglibs.jsp"%>
-<%@include file="/common/alert.jsp"%>
+<%@include file="/common/modal.jsp"%>
 
 <script type="text/javascript">
 function validateAndFormatPhone(phoneId) {	
@@ -10,7 +10,7 @@ function validateAndFormatPhone(phoneId) {
 	
 	if(phone.length < 10) {
 		var alertMsg = "<p>Invalid Phone Number.</p>";
-		showAlert("Data validation", alertMsg);
+		showAlertDialog("Data validation", alertMsg);
 		
 		document.getElementById(phoneId).value = "";
 		return true;
@@ -277,7 +277,7 @@ function populatePermitNumbers(index) {
        		var permitList = jQuery.parseJSON(responseData);
 			if (jQuery.isEmptyObject(permitList)) {
 				var alertMsg = "<p>No permits available for seleted criteria.</p>";
-				showAlert("No permits", alertMsg);
+				showAlertDialog("No permits", alertMsg);
 				
 				return false;
     	   	}
@@ -400,21 +400,6 @@ function populateTotalFees() {
 	$("#orderPaymentInfo\\.totalFees").val(totalFees - discountAmount);
 }
 
-$("#addDeliveryAddressModal").on("show.bs.modal", function(e) {
-	var customerId = $('#customerSelect').val();
-	
-    var link = $(e.relatedTarget).attr("href");
-    link += "?customerId=" + customerId;
-    
-    $(this).find("#addDeliveryAddressModalBody").load(link);
-});
-
-$("#addCustomerModal").on("show.bs.modal", function(e) {
-	var link = $(e.relatedTarget).attr("href");
-    
-    $(this).find("#addCustomerModalBody").load(link);
-});
-
 function validateForm() {
 	return true;
 }
@@ -452,8 +437,7 @@ function verifyExchangeOrderAndSubmit() {
     			  		   	  + " and can be picked up as an Exchange Order.<br><br>"
     			  		   	  + "Would you like to create an Exchange Order?</p>";
     			  	
-        		$('#confirmExchangeOrderDialogBody').html(exchMsg);
-        		$("#confirmExchangeOrderDialog").modal('show');
+        		showConfirmDialog("Confirm Exchange Order", exchMsg);
         	} else {
         		isExchangeIndicator.val("false");
         		$('#existingDroppedOffOrderId').val("");
@@ -465,12 +449,30 @@ function verifyExchangeOrderAndSubmit() {
     return false;
 }
 
-$("#confirmExchangeOrderDialogYes").click(function (ev) {
+$("#confirmDialogYes").click(function (ev) {
 	var isExchangeIndicator = $('#isExchange');
 	isExchangeIndicator.val("true");
 	
 	var orderAddEditForm = $("#orderAddEditForm");
 	orderAddEditForm.submit();
+});
+
+$("#addCustomerLink").click(function (ev) {
+	var url = $(this).attr("href");
+	showPopupDialog("Add Customer", url);
+	
+	ev.preventDefault();
+});
+
+$("#addDeliveryAddressLink").click(function (ev) {
+	var customerId = $('#customerSelect').val();
+	
+	var url = $(this).attr("href");
+	url += "?customerId=" + customerId;
+	
+	showPopupDialog("Add Delivery Address", url);
+	
+	ev.preventDefault();
 });
 </script>
 <br/>
@@ -494,7 +496,7 @@ $("#confirmExchangeOrderDialogYes").click(function (ev) {
 				</label>
 				<label style="display: inline-block; font-weight: normal">
 					&nbsp;
-					<a href="/customer/createModal.do" id="addCustomerLink" data-backdrop="static" data-remote="false" data-toggle="modal" data-target="#addCustomerModal">
+					<a href="/customer/createModal.do" id="addCustomerLink">
 						<img src="/images/addnew.png" border="0" style="float:bottom" class="toolbarButton">
 					</a>
 				</label> 
@@ -540,7 +542,7 @@ $("#confirmExchangeOrderDialogYes").click(function (ev) {
 				</label>
 				<label style="display: inline-block; font-weight: normal">
 					&nbsp;
-					<a href="/customer/deliveryAddressCreateModal.do" id="addDeliveryAddressLink" data-backdrop="static" data-remote="false" data-toggle="modal" data-target="#addDeliveryAddressModal">
+					<a href="/customer/deliveryAddressCreateModal.do" id="addDeliveryAddressLink" >
 						<img src="/images/addnew.png" border="0" style="float:bottom" class="toolbarButton">
 					</a>
 				</label>
@@ -1071,45 +1073,4 @@ $("#confirmExchangeOrderDialogYes").click(function (ev) {
 	</table>
 </form:form>
 
-<div class="modal fade" id="addDeliveryAddressModal" role="dialog">
-	<div class="modal-dialog" style="width:90% !important">
-		<div class="modal-content">
-		 	<div class="modal-header">
-        		<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-       			<h4 class="modal-title">Add Delivery Address</h4>
-       			<div id="deliveryAddressValidations" style="color:red"></div>
-      		 </div>	
-			
-			<div class="modal-body" id="addDeliveryAddressModalBody"></div>
-		</div>
-	</div>
-</div>
 
-<div class="modal fade" id="addCustomerModal" role="dialog">
-	<div class="modal-dialog" style="width:90% !important">
-		<div class="modal-content">
-		 	<div class="modal-header">
-        		<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-       			<h4 class="modal-title">Add Customer</h4>
-       			<div id="customerValidations" style="color:red"></div>
-      		 </div>	
-			
-			<div class="modal-body" id="addCustomerModalBody"></div>
-		</div>
-	</div>
-</div>
-
-<div class="modal fade" id="confirmExchangeOrderDialog" role="dialog" data-backdrop="static" data-keyboard="false">
-	<div class="modal-dialog" style="width:50% !important">
-		<div class="modal-content">
-		 	<div class="modal-header">
-		 		<h4 class="modal-title">Confirm Exchange Order</h4>
-		 	</div>	
-			<div class="modal-body" id="confirmExchangeOrderDialogBody"></div>
-			<div class="modal-footer">
-			   <button type="button" data-dismiss="modal" class="btn btn-primary" id="confirmExchangeOrderDialogYes">Yes</button>
-			   <button type="button" data-dismiss="modal" class="btn">No</button>
-			</div>
-		</div>
-	</div>
-</div>
