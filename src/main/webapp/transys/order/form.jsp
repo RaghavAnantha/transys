@@ -1,4 +1,6 @@
 <%@include file="/common/taglibs.jsp"%>
+<%@include file="/common/alert.jsp"%>
+
 <script type="text/javascript">
 function validateAndFormatPhone(phoneId) {	
 	var phone = document.getElementById(phoneId).value;
@@ -7,7 +9,9 @@ function validateAndFormatPhone(phoneId) {
 	}
 	
 	if(phone.length < 10) {
-		alert("Invalid Phone Number");
+		var alertMsg = "<p>Invalid Phone Number.</p>";
+		showAlert("Data validation", alertMsg);
+		
 		document.getElementById(phoneId).value = "";
 		return true;
 	} else {
@@ -272,8 +276,10 @@ function populatePermitNumbers(index) {
        	success: function(responseData, textStatus, jqXHR) {
        		var permitList = jQuery.parseJSON(responseData);
 			if (jQuery.isEmptyObject(permitList)) {
-    	   		alert("No permits available for seleted criteria.");
-    	   		return false;
+				var alertMsg = "<p>No permits available for seleted criteria.</p>";
+				showAlert("No permits", alertMsg);
+				
+				return false;
     	   	}
     	   	
     	   	$.each(permitList, function () {
