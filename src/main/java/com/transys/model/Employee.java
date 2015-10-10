@@ -12,14 +12,14 @@ import javax.persistence.Table;
 @Table(name="employee")
 public class Employee extends AbstractBaseModel {
 	
-	@Column(name="fname")
+	@Column(name="firstName")
 	private String firstName;
 	
-	@Column(name="lname")
+	@Column(name="lastName")
 	private String lastName;
 	
 	@ManyToOne
-	@JoinColumn(name="jobTitle")
+	@JoinColumn(name="jobTitleId")
 	private JobTitle jobTitle; 
 	
 	@Column(name="address")

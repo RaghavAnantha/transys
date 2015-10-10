@@ -261,17 +261,17 @@ DROP TABLE IF EXISTS `employee`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `employee` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `fname` varchar(50) DEFAULT NULL,
-  `lname` varchar(50) DEFAULT NULL,
-  `jobTitle` bigint(20) DEFAULT NULL,
+  `firstName` varchar(50) DEFAULT NULL,
+  `lastName` varchar(50) DEFAULT NULL,
+  `jobTitleId` bigint(20) DEFAULT NULL,
   `address` tinytext,
   `city` varchar(50) DEFAULT NULL,
   `state` bigint(20) DEFAULT NULL,
   `zip` varchar(12) DEFAULT NULL,
   `phone` varchar(20) DEFAULT NULL,
   `email` varchar(150) DEFAULT NULL,
-  `hiredate` datetime DEFAULT NULL,
-  `leavedate` datetime DEFAULT NULL,
+  `hireDate` datetime DEFAULT NULL,
+  `leaveDate` datetime DEFAULT NULL,
   `comments` longtext,
   `username` varchar(50) DEFAULT NULL,
   `password` varchar(12) DEFAULT NULL,
@@ -284,12 +284,12 @@ CREATE TABLE `employee` (
   `employeeId` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `employeeId_UNIQUE` (`employeeId`),
-  KEY `jobTitleRef_idx` (`jobTitle`),
+  KEY `employeeJobTitleRef_idx` (`jobTitleId`),
   KEY `employeeStateRef_idx` (`state`),
   KEY `employeeStatusRef_idx` (`status`),
   CONSTRAINT `employeeStateRef` FOREIGN KEY (`state`) REFERENCES `state` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `employeeStatusRef` FOREIGN KEY (`status`) REFERENCES `employeeStatus` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `jobTitleRef` FOREIGN KEY (`jobTitle`) REFERENCES `jobTitle` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `employeeJobTitleRef` FOREIGN KEY (`jobTitleId`) REFERENCES `jobTitle` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -964,50 +964,49 @@ INSERT INTO `state` VALUES (1,NULL,NULL,1,NULL,NULL,'IL','Illinois'),(2,NULL,NUL
 UNLOCK TABLES;
 
 --
--- Table structure for table `user_info`
+-- Table structure for table `userInfo`
 --
 
-DROP TABLE IF EXISTS `user_info`;
+DROP TABLE IF EXISTS `userInfo`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `user_info` (
+CREATE TABLE `userInfo` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `created_at` datetime DEFAULT NULL,
   `created_by` bigint(20) DEFAULT NULL,
   `modified_at` datetime DEFAULT NULL,
   `modified_by` bigint(20) DEFAULT NULL,
-  `account_status` int(11) DEFAULT NULL,
-  `agree_terms` tinyint(4) DEFAULT NULL,
+  `accountStatus` int(11) DEFAULT NULL,
+  `agreeTerms` tinyint(4) DEFAULT NULL,
   `email` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `first_name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `last_login_date` datetime DEFAULT NULL,
-  `last_name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `login_attempts` int(11) DEFAULT NULL,
-  `mobile_no` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `firstName` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `lastLoginDate` datetime DEFAULT NULL,
+  `lastName` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `loginAttempts` int(11) DEFAULT NULL,
+  `mobileNo` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `password` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `phone_number` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `user_type` int(11) DEFAULT NULL,
+  `phoneNumber` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `userType` int(11) DEFAULT NULL,
   `username` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `role_id` bigint(20) DEFAULT NULL,
-  `bill_batch_date` datetime DEFAULT NULL,
+  `roleId` bigint(20) DEFAULT NULL,
+  `billBatchDate` datetime DEFAULT NULL,
   `delete_flag` int(11) DEFAULT '1',
   PRIMARY KEY (`id`),
-  KEY `FK1437D8A23F28F717` (`role_id`),
-  CONSTRAINT `FK1437D8A23F28F717` FOREIGN KEY (`role_id`) REFERENCES `role` (`id`)
+  CONSTRAINT `userInfoRole_Ref` FOREIGN KEY (`roleId`) REFERENCES `role` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `user_info`
+-- Dumping data for table `userInfo`
 --
 
-LOCK TABLES `user_info` WRITE;
-/*!40000 ALTER TABLE `user_info` DISABLE KEYS */;
-INSERT INTO `user_info` VALUES (1,NULL,NULL,NULL,NULL,1,NULL,NULL,'admin','2015-09-10 21:32:56','admin',NULL,NULL,'admin','admin',NULL,NULL,'admin',1,NULL,1);
-INSERT INTO `transys`.`user_info` (`id`, `account_status`, `first_name`, `last_login_date`, `last_name`, `name`, `password`, `username`, `role_id`, `delete_flag`) VALUES ('2', '1', 'Robert', '2015-09-19 12:41:30', 'De La Rosa', 'Robert De La Rosa', 'robert', 'robert', '6', '1');
-INSERT INTO `transys`.`user_info` (`id`, `account_status`, `first_name`, `last_login_date`, `last_name`, `name`, `password`, `username`, `role_id`, `delete_flag`) VALUES ('3', '1', 'Thomas', '2015-09-19 12:41:30', 'De Silva', 'Thomas de Silva', 'thomas', 'thomas', '6', '1');
-/*!40000 ALTER TABLE `user_info` ENABLE KEYS */;
+LOCK TABLES `userInfo` WRITE;
+/*!40000 ALTER TABLE `userInfo` DISABLE KEYS */;
+INSERT INTO `userInfo` VALUES (1,NULL,NULL,NULL,NULL,1,NULL,NULL,'admin','2015-09-10 21:32:56','admin',NULL,NULL,'admin','admin',NULL,NULL,'admin',1,NULL,1);
+INSERT INTO `transys`.`userInfo` (`id`, `accountStatus`, `firstName`, `lastLoginDate`, `lastName`, `name`, `password`, `username`, `roleId`, `delete_flag`) VALUES ('2', '1', 'Robert', '2015-09-19 12:41:30', 'De La Rosa', 'Robert De La Rosa', 'robert', 'robert', '6', '1');
+INSERT INTO `transys`.`userInfo` (`id`, `accountStatus`, `firstName`, `lastLoginDate`, `lastName`, `name`, `password`, `username`, `roleId`, `delete_flag`) VALUES ('3', '1', 'Thomas', '2015-09-19 12:41:30', 'De Silva', 'Thomas de Silva', 'thomas', 'thomas', '6', '1');
+/*!40000 ALTER TABLE `userInfo` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
