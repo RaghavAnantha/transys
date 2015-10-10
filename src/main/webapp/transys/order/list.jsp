@@ -186,7 +186,7 @@ function populateCustomerDeliveryAddress() {
 		<transys:textcolumn headerText="City Fee" dataField="orderPaymentInfo.cityFee" type="java.math.BigDecimal"/>
 		<transys:textcolumn headerText="OverWt Fee" dataField="orderPaymentInfo.overweightFee" type="java.math.BigDecimal"/>
 		<transys:textcolumn headerText="Addnl Fee" dataField="orderPaymentInfo.totalAdditionalFees" type="java.math.BigDecimal"/>
-		<transys:textcolumn headerText="Total Amt" dataField="orderPaymentInfo.totalFees"type="java.math.BigDecimal" />
+		<transys:textcolumn headerText="Total Amt" dataField="orderPaymentInfo.totalFees" type="java.math.BigDecimal" />
 		<transys:textcolumn headerText="Status" dataField="orderStatus.status" />
 	</transys:datatable>
 	<%session.setAttribute("manageOrdersColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>

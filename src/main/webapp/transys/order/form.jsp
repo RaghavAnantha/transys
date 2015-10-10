@@ -378,7 +378,7 @@ function populateTotalFees() {
 	}
 	if (cityFee != "") {
 		totalFees += parseFloat(cityFee);
-	}
+	} 
 	if (totalPermitFees != "") {
 		totalFees += parseFloat(totalPermitFees);
 	}
@@ -420,15 +420,15 @@ function processForm() {
 }
 
 function verifyExchangeOrderAndSubmit() {
-	var orderAddEditForm = $("#orderAddEditForm");
+	var isExchangeIndicator = $('#isExchange');
+	isExchangeIndicator.val("false");
 	
+	var orderAddEditForm = $("#orderAddEditForm");
 	var id = orderAddEditForm.find("#id");
 	if (id.val() != "") {
 		orderAddEditForm.submit();
 		return false;
 	}
-	
-	var isExchangeIndicator = $('#isExchange');
 	
 	var selectedCustomerId = $('#customerSelect').val();
 	var selectedDeliveryAddressId = $('#deliveryAddressSelect').val();
@@ -439,6 +439,8 @@ function verifyExchangeOrderAndSubmit() {
         success: function(responseData, textStatus, jqXHR) {
         	var existingDroppedOffOrderId = responseData;
         	if (existingDroppedOffOrderId != "") {
+        		$('#existingDroppedOffOrderId').val(existingDroppedOffOrderId);
+        		
         		var exchMsg = "<p>There is already a Dumpster delivered to this address with the Order# "
       			  		   	  + existingDroppedOffOrderId
     			  		   	  + " and can be picked up as an Exchange Order.<br><br>"
@@ -448,6 +450,7 @@ function verifyExchangeOrderAndSubmit() {
         		$("#confirmExchangeOrderDialog").modal('show');
         	} else {
         		isExchangeIndicator.val("false");
+        		$('#existingDroppedOffOrderId').val("");
         		orderAddEditForm.submit();
         	}
         }
@@ -457,10 +460,10 @@ function verifyExchangeOrderAndSubmit() {
 }
 
 $("#confirmExchangeOrderDialogYes").click(function (ev) {
-	var orderAddEditForm = $("#orderAddEditForm");
 	var isExchangeIndicator = $('#isExchange');
-	
 	isExchangeIndicator.val("true");
+	
+	var orderAddEditForm = $("#orderAddEditForm");
 	orderAddEditForm.submit();
 });
 </script>
@@ -468,6 +471,7 @@ $("#confirmExchangeOrderDialogYes").click(function (ev) {
 <form:form action="save.do" name="orderAddEditForm" commandName="modelObject" method="post" id="orderAddEditForm">
 	<form:hidden path="id" id="id" />
 	<input type="hidden" name="isExchange" id="isExchange" value="false" />
+	<input type="hidden" name="existingDroppedOffOrderId" id="existingDroppedOffOrderId" value="" />
 	<table id="form-table" class="table">
 		<tr>
 			<td class="form-left"><transys:label code="Order #" /><span class="errorMessage">*</span></td>
@@ -538,7 +542,7 @@ $("#confirmExchangeOrderDialogYes").click(function (ev) {
 			</td>
 			<td class="form-left"><span style="color:blue">Pickup Order #</span></td>
 			<td align="${left}">
-				<span style="color:blue">${modelObject.pickupOrderId}</span>
+				<span style="color:blue;">${modelObject.pickupOrderId}</span>
 			</td>
 		</tr>
 		<tr>

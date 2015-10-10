@@ -660,6 +660,7 @@ public class OrderController extends CRUDController<Order> {
 		permitsQuery += " obj.customer.id=" + customerId
 						 +  " and obj.deliveryAddress.id=" + deliveryAddressId
 				    	 +  " and obj.permitClass.id=" + permitClassId
+				    	 +  " and obj.permitType.id=" + permitTypeId
 				    	 +  " and obj.endDate >= '" + requiredEndDateStr + "'"
 				    	 +  " and obj.status.status=";
 		
@@ -944,7 +945,8 @@ public class OrderController extends CRUDController<Order> {
 	
 		String isExchange = request.getParameter("isExchange");
 		if (BooleanUtils.toBoolean(isExchange)) {
-			
+			String existingDroppedOffOrderId = request.getParameter("existingDroppedOffOrderId");
+			entity.setPickupOrderId(new Long(existingDroppedOffOrderId));
 		}
 		
 		try {
