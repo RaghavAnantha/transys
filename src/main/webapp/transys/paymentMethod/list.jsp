@@ -59,7 +59,7 @@
 		<transys:textcolumn headerText="Payment Method ID" dataField="id" />
 		<transys:textcolumn headerText="Payment Method" dataField="method" />
 	</transys:datatable>
-	<%session.setAttribute("columnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
+	<%session.setAttribute("paymentMethodColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
 </form:form>
 
 

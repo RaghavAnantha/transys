@@ -80,7 +80,7 @@ public class PermitController extends CRUDController<Permit> {
 			List<BaseModel> orders = (List<BaseModel>)genericDAO.executeSimpleQuery("select obj.order from OrderPermits obj where obj.permit.id=" +  p.getId() + " order by obj.id desc");
 			if (orders != null && orders.size() > 0) {
 				BaseModel order = orders.get(0);
-				p.setOrderID(order.getId());
+				p.setOrderId(order.getId());
 			}
 		}
 		
@@ -198,7 +198,7 @@ public class PermitController extends CRUDController<Permit> {
 			List<BaseModel> orders = (List<BaseModel>)genericDAO.executeSimpleQuery("select obj.order from OrderPermits obj where obj.permit.id=" +  p.getId() + " order by obj.id desc");
 			if (orders != null && orders.size() > 0) {
 				BaseModel order = orders.get(0);
-				p.setOrderID(order.getId());
+				p.setOrderId(order.getId());
 			}
 		}
 		
@@ -471,12 +471,12 @@ public class PermitController extends CRUDController<Permit> {
 	}
 
 	private void associateToOrder(Permit entity) {
-		if (entity.getOrderID() == null) { // Its a new permit, not triggered from OrderPermit Screen
+		if (entity.getOrderId() == null) { // Its a new permit, not triggered from OrderPermit Screen
 			return;
 		}
 		
 		// existing permit details, chk order association
-		List<BaseModel> orderPermits = (List<BaseModel>)genericDAO.executeSimpleQuery("select obj from OrderPermits obj where obj.id=" +  entity.getOrderID()+ " order by obj.id desc");
+		List<BaseModel> orderPermits = (List<BaseModel>)genericDAO.executeSimpleQuery("select obj from OrderPermits obj where obj.id=" +  entity.getOrderId()+ " order by obj.id desc");
 		if (orderPermits != null && orderPermits.size() > 0) {
 			OrderPermits associatedOrderPermit = (OrderPermits)orderPermits.get(0);
 			Map<String, Object> criterias = new HashMap<String, Object>();
@@ -490,7 +490,7 @@ public class PermitController extends CRUDController<Permit> {
 	public String saveSuccess(ModelMap model, HttpServletRequest request, Permit entity) {
 		setupCreate(model, request);
 		
-		if (entity.getOrderID() != null) {
+		if (entity.getOrderId() != null) {
 			model.addAttribute("activeTab", "orderPermitAlert");
 		} else {
 			model.addAttribute("activeTab", "managePermits");

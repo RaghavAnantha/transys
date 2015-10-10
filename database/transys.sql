@@ -97,43 +97,43 @@ INSERT INTO `permitAddress` VALUES (1,NULL,NULL,NULL,NULL,1,'4818 W','VAN BUREN'
 UNLOCK TABLES;
 
 --
--- Table structure for table `business_object`
+-- Table structure for table `businessObject`
 --
 
-DROP TABLE IF EXISTS `business_object`;
+DROP TABLE IF EXISTS `businessObject`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `business_object` (
-  `ID` bigint(20) NOT NULL AUTO_INCREMENT,
-  `ACTION` varchar(200) DEFAULT NULL,
-  `DISPLAY_TAG` varchar(60) DEFAULT NULL,
-  `OBJECT_LEVEL` int(11) DEFAULT NULL,
-  `OBJECT_NAME` varchar(60) DEFAULT NULL,
-  `URL` varchar(5000) DEFAULT NULL,
+CREATE TABLE `businessObject` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `action` varchar(200) DEFAULT NULL,
+  `displayTag` varchar(60) DEFAULT NULL,
+  `objectLevel` int(11) DEFAULT NULL,
+  `objectName` varchar(60) DEFAULT NULL,
+  `url` varchar(5000) DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   `created_by` bigint(20) DEFAULT NULL,
   `modified_at` datetime DEFAULT NULL,
   `modified_by` bigint(20) DEFAULT NULL,
-  `default_flag` int(11) DEFAULT NULL,
-  `display_order` int(11) DEFAULT NULL,
+  `defaultFlag` int(11) DEFAULT NULL,
+  `displayOrder` int(11) DEFAULT NULL,
   `hidden` int(11) DEFAULT NULL,
-  `parent_id` bigint(20) DEFAULT NULL,
+  `parentId` bigint(20) DEFAULT NULL,
   `hierarchy` varchar(255) DEFAULT NULL,
-  `url_context` varchar(255) DEFAULT NULL,
+  `urlContext` varchar(255) DEFAULT NULL,
   `delete_flag` int(11) DEFAULT NULL,
-  PRIMARY KEY (`ID`),
-  KEY `FKF1A8A89E816B01E9` (`parent_id`),
-  CONSTRAINT `FKF1A8A89E816B01E9` FOREIGN KEY (`parent_id`) REFERENCES `business_object` (`ID`)
+  PRIMARY KEY (`id`),
+  KEY `businessObjectParentRef_Idx` (`parentId`),
+  CONSTRAINT `businessObjectParentRef` FOREIGN KEY (`parentId`) REFERENCES `businessObject` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `business_object`
+-- Dumping data for table `businessObject`
 --
 
-LOCK TABLES `business_object` WRITE;
-/*!40000 ALTER TABLE `business_object` DISABLE KEYS */;
-/*!40000 ALTER TABLE `business_object` ENABLE KEYS */;
+LOCK TABLES `businessObject` WRITE;
+/*!40000 ALTER TABLE `businessObject` DISABLE KEYS */;
+/*!40000 ALTER TABLE `businessObject` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -150,19 +150,19 @@ CREATE TABLE `customer` (
   `modified_at` datetime DEFAULT NULL,
   `modified_by` bigint(20) DEFAULT NULL,
   `customerStatusId` bigint(20) DEFAULT NULL,
-  `billing_address_line1` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `billingAddressLine1` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `customerTypeId` bigint(20) DEFAULT NULL,
-  `billing_address_line2` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `billingAddressLine2` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `city` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `company_name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `companyName` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `fax` varchar(15) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `contact_name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `contactName` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `phone` varchar(25) COLLATE utf8_unicode_ci DEFAULT NULL,
   `zipcode` varchar(25) COLLATE utf8_unicode_ci DEFAULT NULL,
   `state` bigint(20) DEFAULT NULL,
   `email` varchar(25) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `alt_phone_1` varchar(25) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `alt_phone_2` varchar(25) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `altPhone1` varchar(25) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `altPhone2` varchar(25) COLLATE utf8_unicode_ci DEFAULT NULL,
   `chargeCompany` varchar(5) DEFAULT NULL,
   `delete_flag` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
@@ -216,7 +216,7 @@ CREATE TABLE `dumpsterInfo` (
 
 LOCK TABLES `dumpsterInfo` WRITE;
 /*!40000 ALTER TABLE `dumpsterInfo` DISABLE KEYS */;
-INSERT INTO `dumpsterInfo` VALUES (2,1,'20W-113-21',1,NULL,NULL,NULL,NULL,1);
+INSERT INTO `dumpsterInfo` VALUES (2,1,'20W-113-21',3,NULL,NULL,NULL,NULL,1);
 INSERT INTO `dumpsterInfo` VALUES (3,2,'30W-456-31',1,NULL,NULL,NULL,NULL,1);
 /*!40000 ALTER TABLE `dumpsterInfo` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -261,17 +261,17 @@ DROP TABLE IF EXISTS `employee`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `employee` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `fname` varchar(50) DEFAULT NULL,
-  `lname` varchar(50) DEFAULT NULL,
-  `jobTitle` bigint(20) DEFAULT NULL,
+  `firstName` varchar(50) DEFAULT NULL,
+  `lastName` varchar(50) DEFAULT NULL,
+  `jobTitleId` bigint(20) DEFAULT NULL,
   `address` tinytext,
   `city` varchar(50) DEFAULT NULL,
   `state` bigint(20) DEFAULT NULL,
   `zip` varchar(12) DEFAULT NULL,
   `phone` varchar(20) DEFAULT NULL,
   `email` varchar(150) DEFAULT NULL,
-  `hiredate` datetime DEFAULT NULL,
-  `leavedate` datetime DEFAULT NULL,
+  `hireDate` datetime DEFAULT NULL,
+  `leaveDate` datetime DEFAULT NULL,
   `comments` longtext,
   `username` varchar(50) DEFAULT NULL,
   `password` varchar(12) DEFAULT NULL,
@@ -281,15 +281,15 @@ CREATE TABLE `employee` (
   `modified_by` bigint(20) DEFAULT NULL,
   `delete_flag` int(11) NOT NULL DEFAULT '1',
   `status` bigint(20) DEFAULT NULL,
-  `employeeID` varchar(45) DEFAULT NULL,
+  `employeeId` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `employeeID_UNIQUE` (`employeeID`),
-  KEY `jobTitleRef_idx` (`jobTitle`),
-  KEY `stateRef_idx` (`state`),
+  UNIQUE KEY `employeeId_UNIQUE` (`employeeId`),
+  KEY `employeeJobTitleRef_idx` (`jobTitleId`),
+  KEY `employeeStateRef_idx` (`state`),
   KEY `employeeStatusRef_idx` (`status`),
   CONSTRAINT `employeeStateRef` FOREIGN KEY (`state`) REFERENCES `state` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `employeeStatusRef` FOREIGN KEY (`status`) REFERENCES `employeeStatus` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `jobTitleRef` FOREIGN KEY (`jobTitle`) REFERENCES `jobTitle` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `employeeJobTitleRef` FOREIGN KEY (`jobTitleId`) REFERENCES `jobTitle` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -365,15 +365,15 @@ UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 --
--- Table structure for table `trans_order`
+-- Table structure for table `transysOrder`
 --
 
-DROP TABLE IF EXISTS `trans_order`;
+DROP TABLE IF EXISTS `transysOrder`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `trans_order` (
+CREATE TABLE `transysOrder` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `custID` bigint(20) NOT NULL,
+  `customerId` bigint(20) NOT NULL,
   `deliveryContactName` varchar(150) DEFAULT NULL,
   `deliveryContactPhone1` varchar(25) DEFAULT NULL,
   `deliveryContactPhone2` varchar(25) DEFAULT NULL,
@@ -382,24 +382,18 @@ CREATE TABLE `trans_order` (
   `locationTypeId` bigint(20) NOT NULL,
   `dumpsterSizeId` bigint(20) DEFAULT NULL,
   `materialTypeId` bigint(20) DEFAULT NULL,
-  -- `dumpsterPrice` double DEFAULT NULL,
-  -- `paymentInfo` bigint(20) DEFAULT NULL,
-  -- `notes` int(11) DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   `created_by` bigint(20) DEFAULT NULL,
   `modified_at` datetime DEFAULT NULL,
   `modified_by` bigint(20) DEFAULT NULL,
   `delete_flag` int(11) NOT NULL DEFAULT '1',
-  -- `weightInfo` bigint(20) DEFAULT '0',
-  `grossWeight` decimal(6,2) DEFAULT NULL,
-  `netWeightLb` decimal(6,2) DEFAULT NULL,
-  `netWeightTonnage` decimal(6,2) DEFAULT NULL,
-  `tare` decimal(6,2) DEFAULT NULL,
+  `grossWeight` decimal(6,2) DEFAULT 0.00,
+  `netWeightLb` decimal(6,2) DEFAULT 0.00,
+  `netWeightTonnage` decimal(6,2) DEFAULT 0.00,
+  `tare` decimal(6,2) DEFAULT 0.00,
   `dumpsterId` bigint(20) DEFAULT NULL,
-  -- `driverInfo` bigint(20) DEFAULT NULL,
   `pickupDate` datetime DEFAULT NULL,
   `orderStatusId` bigint(20) NOT NULL,
-  -- `permits` bigint(20) DEFAULT NULL,
   `pickUpDriverId` bigint(20) DEFAULT NULL,
   `dropOffDriverId` bigint(20) DEFAULT NULL,
   `deliveryHourFrom` varchar(10) DEFAULT NULL,
@@ -407,37 +401,30 @@ CREATE TABLE `trans_order` (
   `deliveryMinutesFrom` varchar(5) DEFAULT NULL,
   `deliveryMinutesTo` varchar(5) DEFAULT NULL,
   `pickupOrderId` bigint(20) DEFAULT NULL,
+  `materialCategoryId` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `keyCustId_idx` (`custID`),
-  -- KEY `deliveryAddressRef_idx` (`deliveryAddressId`),
-  -- KEY `orderStatusRef_idx` (`orderStatusId`),
-  -- KEY `driverInfoRef_idx` (`driverInfo`),
-  -- KEY `weightInfoRef_idx` (`weightInfo`),
-  -- KEY `paymentInfoRef_idx` (`paymentInfo`),
-  CONSTRAINT `customerRef` FOREIGN KEY (`custID`) REFERENCES `customer` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  -- CONSTRAINT `maerialTypeRef` FOREIGN KEY (`materialTypeId`) REFERENCES `material_type` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `deliveryAddressRef` FOREIGN KEY (`deliveryAddressId`) REFERENCES `deliveryAddress` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  -- CONSTRAINT `driverInfoRef` FOREIGN KEY (`driverInfo`) REFERENCES `orderDriverInfo` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  KEY `orderCustomerRef_idx` (`customerId`),
+  CONSTRAINT `orderCustomerRef` FOREIGN KEY (`customerId`) REFERENCES `customer` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `orderDeliveryAddressRef` FOREIGN KEY (`deliveryAddressId`) REFERENCES `deliveryAddress` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `orderStatusRef` FOREIGN KEY (`orderStatusId`) REFERENCES `orderStatus` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  -- CONSTRAINT `paymentInfoRef` FOREIGN KEY (`paymentInfo`) REFERENCES `orderPaymentInfo` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  -- CONSTRAINT `weightInfoRef` FOREIGN KEY (`weightInfo`) REFERENCES `orderWeightInfo` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
   CONSTRAINT `orderDumpsterRef` FOREIGN KEY (`dumpsterId`) REFERENCES `dumpsterInfo` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `orderMaterialTypeRef` FOREIGN KEY (`materialTypeId`) REFERENCES `materialType` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `orderMaterialCategoryRef` FOREIGN KEY (`materialCategoryId`) REFERENCES `materialCategory` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `orderDumpsterLocationRef` FOREIGN KEY (`locationTypeId`) REFERENCES `locationType` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `orderDumpsterSizeRef` FOREIGN KEY (`dumpsterSizeId`) REFERENCES `dumpsterSize` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `orderPickupDriverRef` FOREIGN KEY (`pickUpDriverId`) REFERENCES `user_info` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `orderDropOffDriverRef` FOREIGN KEY (`dropOffDriverId`) REFERENCES `user_info` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `orderPickupDriverUserInfoRef` FOREIGN KEY (`pickUpDriverId`) REFERENCES `userInfo` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `orderDropOffDriverUserInfoRef` FOREIGN KEY (`dropOffDriverId`) REFERENCES `userInfo` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `trans_order`
+-- Dumping data for table `transysOrder`
 --
 
-LOCK TABLES `trans_order` WRITE;
-/*!40000 ALTER TABLE `trans_order` DISABLE KEYS */;
-INSERT INTO `transys`.`trans_order` (`id`, `custID`, `deliveryContactName`, `deliveryContactPhone1`, `deliveryContactPhone2`, `deliveryDate`, `deliveryAddressId`, `locationTypeId`, `dumpsterSizeId`, `materialTypeId`, `created_at`, `delete_flag`, `grossWeight`, `netWeightLb`, `netWeightTonnage`, `tare`, `dumpsterId`, `pickupDate`, `orderStatusId` , `created_by`) VALUES (1, 5, 'Raghav', '123-456-7890', '123-456-7890', curdate(), 3, 1, 1, 1, curdate(), 1, '10.0', '10.0', '10.0', '10.0', 2, curdate(), 1, 1);
-/*!40000 ALTER TABLE `trans_order` ENABLE KEYS */;
+LOCK TABLES `transysOrder` WRITE;
+/*!40000 ALTER TABLE `transysOrder` DISABLE KEYS */;
+INSERT INTO `transysOrder` (`id`,`customerId`,`deliveryContactName`,`deliveryContactPhone1`,`deliveryContactPhone2`,`deliveryDate`,`deliveryAddressId`,`locationTypeId`,`dumpsterSizeId`,`materialTypeId`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`,`grossWeight`,`netWeightLb`,`netWeightTonnage`,`tare`,`dumpsterId`,`pickupDate`,`orderStatusId`,`pickUpDriverId`,`dropOffDriverId`,`deliveryHourFrom`,`deliveryHourTo`,`deliveryMinutesFrom`,`deliveryMinutesTo`,`pickupOrderId`,`materialCategoryId`) VALUES (1,5,'Raghav','123-456-7890','123-456-7890','2015-10-09 00:00:00',3,1,1,1,'2015-10-09 00:00:00',1,'2015-10-10 18:42:41',1,1,10.00,10.00,10.00,10.00,2,NULL,1,NULL,2,'12:00 AM','1:00 AM','00','15',NULL,1);
+/*!40000 ALTER TABLE `transysOrder` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -549,7 +536,7 @@ CREATE TABLE `orderNotes` (
   `delete_flag` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   KEY `orderNotesOrderRef_idx` (`orderId`),
-  CONSTRAINT `orderNotesOrderRef` FOREIGN KEY (`orderId`) REFERENCES `trans_order` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `orderNotesOrderRef` FOREIGN KEY (`orderId`) REFERENCES `transysOrder` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -572,23 +559,23 @@ DROP TABLE IF EXISTS `orderPaymentInfo`;
 CREATE TABLE `orderPaymentInfo` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `orderId` bigint(20) NOT NULL,
-  `dumpsterPrice` decimal(6,2) DEFAULT NULL,
-  `cityFee` decimal(6,2) DEFAULT NULL,
+  `dumpsterPrice` decimal(6,2) DEFAULT 0.00,
+  `cityFee` decimal(6,2) DEFAULT 0.00,
   `cityFeeId` bigint(20) DEFAULT NULL,
-  `permitFee1` decimal(6,2) DEFAULT NULL,
-  `permitFee2` decimal(6,2) DEFAULT NULL,
-  `permitFee3` decimal(6,2) DEFAULT NULL,
-  `totalPermitFees` decimal(6,2) DEFAULT NULL,
-  `overweightFee` decimal(6,2) DEFAULT NULL,
+  `permitFee1` decimal(6,2) DEFAULT 0.00,
+  `permitFee2` decimal(6,2) DEFAULT 0.00,
+  `permitFee3` decimal(6,2) DEFAULT 0.00,
+  `totalPermitFees` decimal(6,2) DEFAULT 0.00,
+  `overweightFee` decimal(6,2) DEFAULT 0.00,
   `additionalFee1Id` bigint(20) DEFAULT NULL,
-  `additionalFee1` decimal(6,2) DEFAULT NULL,
+  `additionalFee1` decimal(6,2) DEFAULT 0.00,
   `additionalFee2Id` bigint(20) DEFAULT NULL,
-  `additionalFee2` decimal(6,2) DEFAULT NULL,
+  `additionalFee2` decimal(6,2) DEFAULT 0.00,
   `additionalFee3Id` bigint(20) DEFAULT NULL,
-  `additionalFee3` decimal(6,2) DEFAULT NULL,
-  `totalAdditionalFees` decimal(6,2) DEFAULT NULL,
-  `discountPercentage` decimal(6,2) DEFAULT NULL,
-  `discountAmount` decimal(6,2) DEFAULT NULL,
+  `additionalFee3` decimal(6,2) DEFAULT 0.00,
+  `totalAdditionalFees` decimal(6,2) DEFAULT 0.00,
+  `discountPercentage` decimal(6,2) DEFAULT 0.00,
+  `discountAmount` decimal(6,2) DEFAULT 0.00,
   `paymentMethodId` bigint(20) DEFAULT NULL,
   `ccReferenceNum` varchar(50) DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
@@ -596,10 +583,10 @@ CREATE TABLE `orderPaymentInfo` (
   `modified_at` datetime DEFAULT NULL,
   `modified_by` bigint(20) DEFAULT NULL,
   `delete_flag` int(11) NOT NULL DEFAULT '1',
-  `totalFees` decimal(6,2) DEFAULT NULL,
+  `totalFees` decimal(6,2) DEFAULT 0.00,
   `checkNum` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  CONSTRAINT `orderPaymentOrderRef` FOREIGN KEY (`orderId`) REFERENCES `trans_order` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `orderPaymentOrderRef` FOREIGN KEY (`orderId`) REFERENCES `transysOrder` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `orderPaymentCityFeeRef` FOREIGN KEY (`cityFeeId`) REFERENCES `cityFee` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `orderPaymentPaymentMethodRef` FOREIGN KEY (`paymentMethodId`) REFERENCES `paymentMethodType` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `orderPaymentAddnlFee1Ref` FOREIGN KEY (`additionalFee1Id`) REFERENCES `additionalFee` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
@@ -614,6 +601,7 @@ CREATE TABLE `orderPaymentInfo` (
 
 LOCK TABLES `orderPaymentInfo` WRITE;
 /*!40000 ALTER TABLE `orderPaymentInfo` DISABLE KEYS */;
+INSERT INTO `orderPaymentInfo` (`id`,`orderId`,`dumpsterPrice`,`cityFee`,`cityFeeId`,`permitFee1`,`permitFee2`,`permitFee3`,`totalPermitFees`,`overweightFee`,`additionalFee1Id`,`additionalFee1`,`additionalFee2Id`,`additionalFee2`,`additionalFee3Id`,`additionalFee3`,`totalAdditionalFees`,`discountPercentage`,`discountAmount`,`paymentMethodId`,`ccReferenceNum`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`,`totalFees`,`checkNum`) VALUES (1,1,240.00,0.00,NULL,NULL,NULL,NULL,0.00,0.00,NULL,NULL,NULL,NULL,NULL,NULL,0.00,2.00,4.80,1,'123','2015-10-09 19:19:03',1,NULL,1,1,235.20,'123');
 /*!40000 ALTER TABLE `orderPaymentInfo` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -626,18 +614,18 @@ DROP TABLE IF EXISTS `orderPermits`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `orderPermits` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `orderID` bigint(20) NOT NULL,
-  `permitID` bigint(20) NOT NULL,
+  `orderId` bigint(20) NOT NULL,
+  `permitId` bigint(20) NOT NULL,
   `created_at` datetime DEFAULT NULL,
   `created_by` bigint(20) DEFAULT NULL,
   `modified_at` datetime DEFAULT NULL,
   `modified_by` bigint(20) DEFAULT NULL,
   `delete_flag` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
-  KEY `orderPermitRef_idx` (`orderID`),
-  KEY `permitRef_idx` (`permitID`),
-  CONSTRAINT `orderPermitOrderRef` FOREIGN KEY (`orderID`) REFERENCES `trans_order` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `permitRef` FOREIGN KEY (`permitID`) REFERENCES `permit` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  KEY `orderPermitRef_idx` (`orderId`),
+  KEY `permitRef_idx` (`permitId`),
+  CONSTRAINT `orderPermitOrderRef` FOREIGN KEY (`orderId`) REFERENCES `transysOrder` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `orderPermitPermitRef` FOREIGN KEY (`permitId`) REFERENCES `permit` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -727,7 +715,6 @@ CREATE TABLE `permit` (
   `fee` decimal(6,2) DEFAULT NULL,
   `startDate` datetime DEFAULT NULL,
   `endDate` datetime DEFAULT NULL,
-  `permitAddress` varchar(100) DEFAULT NULL,
   `locationType` bigint(20) DEFAULT NULL,
   `status` bigint(20) NOT NULL DEFAULT '1',
   `created_at` datetime DEFAULT NULL,
@@ -735,20 +722,20 @@ CREATE TABLE `permit` (
   `modified_at` datetime DEFAULT NULL,
   `modified_by` bigint(20) DEFAULT NULL,
   `delete_flag` int(11) NOT NULL DEFAULT '1',
-  `customerID` bigint(20) DEFAULT NULL,
+  `customerId` bigint(20) DEFAULT NULL,
   `deliveryAddress` bigint(20) NOT NULL,
   `parkingMeter` varchar(3) DEFAULT NULL,
   `parkingMeterFee` decimal(6,2) DEFAULT NULL,
   `permitClass` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `permitStatusRef_idx` (`status`),
-  KEY `customerPermitRef_idx` (`customerID`),
+  KEY `customerPermitRef_idx` (`customerId`),
   KEY `deliveryAddressPermitRef_idx` (`deliveryAddress`),
   KEY `locationTypeRef_idx` (`locationType`),
   KEY `permitTypeRef_idx` (`permitType`),
   KEY `permitClassRef_Idx` (`permitClass`),
   CONSTRAINT `permitClassRef` FOREIGN KEY (`permitClass`) REFERENCES `permitClass` (`id`),
-  CONSTRAINT `customerPermitRef` FOREIGN KEY (`customerID`) REFERENCES `customer` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `customerPermitRef` FOREIGN KEY (`customerId`) REFERENCES `customer` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `deliveryAddressPermitRef` FOREIGN KEY (`deliveryAddress`) REFERENCES `deliveryAddress` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `locationTypeRef` FOREIGN KEY (`locationType`) REFERENCES `locationType` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `permitStatusRef` FOREIGN KEY (`status`) REFERENCES `permitStatus` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
@@ -762,13 +749,8 @@ CREATE TABLE `permit` (
 
 LOCK TABLES `permit` WRITE;
 /*!40000 ALTER TABLE `permit` DISABLE KEYS */;
- INSERT INTO `permit` VALUES (1,1,'1301-11W',50,'2015-09-22 00:00:00','2015-09-25 00:00:00','4818W VAN BUREN',1,2,'2015-09-22 00:00:00',NULL,'2015-09-22 21:51:56', NULL, 1,5,1,'Yes',1.0,1),(2,1,'5667890',90,'2015-09-22 00:00:00','2015-09-25 00:00:00','1890 Chesterfield Ct',1,2,'2015-09-23 12:27:14',1,NULL,NULL,1,6,4,'Yes',90,1);
--- INSERT INTO `permit` VALUES (1,1,1,'1234','50',curdate(),'1301-11W',1,2,'Test',NULL,NULL,NULL,NULL,1,5,1,NULL);
--- ,(9,1,1,'6','0.0',curdate(),NULL,1,1,NULL,'2015-09-15 16:25:46',1,NULL,NULL,1,6,1,'yes')
--- ,(10,2,2,'9','0.0',curdate(),NULL,2,1,NULL,'2015-09-15 16:28:40',1,NULL,NULL,1,6,1,'no')
--- ,(11,2,2,'123','0.0',curdate(),NULL,2,2,NULL,'2015-09-15 17:18:54',1,NULL,NULL,1,6,1,'yes')
--- ,(12,2,2,'12345','0.0',curdate(),NULL,2,1,NULL,'2015-09-15 17:23:22',1,NULL,NULL,1,6,1,'ywa')
--- ,(13,2,2,'56','0.0',curdate(),NULL,2,1,NULL,'2015-09-15 17:28:14',1,NULL,NULL,1,5,1,'yes');
+ INSERT INTO `permit` VALUES (1,1,'1301-11W',50,'2015-09-22 00:00:00','2015-09-25 00:00:00',1,3,'2015-09-22 00:00:00',NULL,'2015-09-22 21:51:56', NULL, 1,5,1,'Yes',1.0,1),(2,1,'5667890',90,'2015-09-22 00:00:00','2015-09-25 00:00:00',1,2,'2015-09-23 12:27:14',1,NULL,NULL,1,6,4,'Yes',90,1),
+ (3,2,'1987-34E',90,'2015-09-22 00:00:00','2015-09-25 00:00:00',1,2,'2015-09-23 12:27:14',1,NULL,NULL,1,6,4,'Yes',90,1);
 /*!40000 ALTER TABLE `permit` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -896,38 +878,38 @@ INSERT INTO `transys`.`role` (`id`, `default_flag`, `name`) VALUES ('6', '1', 'D
 UNLOCK TABLES;
 
 --
--- Table structure for table `role_privilege`
+-- Table structure for table `rolePrivilege`
 --
 
-DROP TABLE IF EXISTS `role_privilege`;
+DROP TABLE IF EXISTS `rolePrivilege`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `role_privilege` (
+CREATE TABLE `rolePrivilege` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `created_at` datetime DEFAULT NULL,
   `created_by` bigint(20) DEFAULT NULL,
   `modified_at` datetime DEFAULT NULL,
   `modified_by` bigint(20) DEFAULT NULL,
   `default_flag` int(11) DEFAULT NULL,
-  `permission_type` int(11) DEFAULT NULL,
-  `business_object_id` bigint(20) DEFAULT NULL,
-  `role_id` bigint(20) DEFAULT NULL,
+  `permissionType` int(11) DEFAULT NULL,
+  `businessObjectId` bigint(20) DEFAULT NULL,
+  `roleId` bigint(20) DEFAULT NULL,
   `delete_flag` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `FK45FBD6283F28F717` (`role_id`),
-  KEY `FK45FBD628708FFC58` (`business_object_id`),
-  CONSTRAINT `FK45FBD6283F28F717` FOREIGN KEY (`role_id`) REFERENCES `role` (`id`),
-  CONSTRAINT `FK45FBD628708FFC58` FOREIGN KEY (`business_object_id`) REFERENCES `business_object` (`ID`)
+  KEY `rolePrivelegeRoleRef_Idx` (`roleId`),
+  KEY `rolePrivelegeBusinessObjectRef_Idx` (`businessObjectId`),
+  CONSTRAINT `rolePrivelegeRoleRef` FOREIGN KEY (`roleId`) REFERENCES `role` (`id`),
+  CONSTRAINT `rolePrivelegeBusinessObjectRef` FOREIGN KEY (`businessObjectId`) REFERENCES `businessObject` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `role_privilege`
+-- Dumping data for table `rolePrivilege`
 --
 
-LOCK TABLES `role_privilege` WRITE;
-/*!40000 ALTER TABLE `role_privilege` DISABLE KEYS */;
-/*!40000 ALTER TABLE `role_privilege` ENABLE KEYS */;
+LOCK TABLES `rolePrivilege` WRITE;
+/*!40000 ALTER TABLE `rolePrivilege` DISABLE KEYS */;
+/*!40000 ALTER TABLE `rolePrivilege` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -961,50 +943,49 @@ INSERT INTO `state` VALUES (1,NULL,NULL,1,NULL,NULL,'IL','Illinois'),(2,NULL,NUL
 UNLOCK TABLES;
 
 --
--- Table structure for table `user_info`
+-- Table structure for table `userInfo`
 --
 
-DROP TABLE IF EXISTS `user_info`;
+DROP TABLE IF EXISTS `userInfo`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `user_info` (
+CREATE TABLE `userInfo` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `created_at` datetime DEFAULT NULL,
   `created_by` bigint(20) DEFAULT NULL,
   `modified_at` datetime DEFAULT NULL,
   `modified_by` bigint(20) DEFAULT NULL,
-  `account_status` int(11) DEFAULT NULL,
-  `agree_terms` tinyint(4) DEFAULT NULL,
+  `accountStatus` int(11) DEFAULT NULL,
+  `agreeTerms` tinyint(4) DEFAULT NULL,
   `email` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `first_name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `last_login_date` datetime DEFAULT NULL,
-  `last_name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `login_attempts` int(11) DEFAULT NULL,
-  `mobile_no` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `firstName` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `lastLoginDate` datetime DEFAULT NULL,
+  `lastName` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `loginAttempts` int(11) DEFAULT NULL,
+  `mobileNo` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `password` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `phone_number` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `user_type` int(11) DEFAULT NULL,
+  `phoneNumber` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `userType` int(11) DEFAULT NULL,
   `username` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `role_id` bigint(20) DEFAULT NULL,
-  `bill_batch_date` datetime DEFAULT NULL,
+  `roleId` bigint(20) DEFAULT NULL,
+  `billBatchDate` datetime DEFAULT NULL,
   `delete_flag` int(11) DEFAULT '1',
   PRIMARY KEY (`id`),
-  KEY `FK1437D8A23F28F717` (`role_id`),
-  CONSTRAINT `FK1437D8A23F28F717` FOREIGN KEY (`role_id`) REFERENCES `role` (`id`)
+  CONSTRAINT `userInfoRole_Ref` FOREIGN KEY (`roleId`) REFERENCES `role` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `user_info`
+-- Dumping data for table `userInfo`
 --
 
-LOCK TABLES `user_info` WRITE;
-/*!40000 ALTER TABLE `user_info` DISABLE KEYS */;
-INSERT INTO `user_info` VALUES (1,NULL,NULL,NULL,NULL,1,NULL,NULL,'admin','2015-09-10 21:32:56','admin',NULL,NULL,'admin','admin',NULL,NULL,'admin',1,NULL,1);
-INSERT INTO `transys`.`user_info` (`id`, `account_status`, `first_name`, `last_login_date`, `last_name`, `name`, `password`, `username`, `role_id`, `delete_flag`) VALUES ('2', '1', 'Robert', '2015-09-19 12:41:30', 'De La Rosa', 'Robert De La Rosa', 'robert', 'robert', '6', '1');
-INSERT INTO `transys`.`user_info` (`id`, `account_status`, `first_name`, `last_login_date`, `last_name`, `name`, `password`, `username`, `role_id`, `delete_flag`) VALUES ('3', '1', 'Thomas', '2015-09-19 12:41:30', 'De Silva', 'Thomas de Silva', 'thomas', 'thomas', '6', '1');
-/*!40000 ALTER TABLE `user_info` ENABLE KEYS */;
+LOCK TABLES `userInfo` WRITE;
+/*!40000 ALTER TABLE `userInfo` DISABLE KEYS */;
+INSERT INTO `userInfo` VALUES (1,NULL,NULL,NULL,NULL,1,NULL,NULL,'admin','2015-09-10 21:32:56','admin',NULL,NULL,'admin','admin',NULL,NULL,'admin',1,NULL,1);
+INSERT INTO `transys`.`userInfo` (`id`, `accountStatus`, `firstName`, `lastLoginDate`, `lastName`, `name`, `password`, `username`, `roleId`, `delete_flag`) VALUES ('2', '1', 'Robert', '2015-09-19 12:41:30', 'De La Rosa', 'Robert De La Rosa', 'robert', 'robert', '6', '1');
+INSERT INTO `transys`.`userInfo` (`id`, `accountStatus`, `firstName`, `lastLoginDate`, `lastName`, `name`, `password`, `username`, `roleId`, `delete_flag`) VALUES ('3', '1', 'Thomas', '2015-09-19 12:41:30', 'De Silva', 'Thomas de Silva', 'thomas', 'thomas', '6', '1');
+/*!40000 ALTER TABLE `userInfo` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -1017,7 +998,7 @@ DROP TABLE IF EXISTS `permitNotes`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `permitNotes` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `permitID` bigint(20) NOT NULL,
+  `permitId` bigint(20) NOT NULL,
   `notes` varchar(250) DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   `created_by` bigint(20) DEFAULT NULL,
@@ -1025,8 +1006,8 @@ CREATE TABLE `permitNotes` (
   `modified_by` bigint(20) DEFAULT NULL,
   `delete_flag` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
-  KEY `permitNotesRef` (`permitID`),
-  CONSTRAINT `permitNotesRef` FOREIGN KEY (`permitID`) REFERENCES `permit` (`id`)
+  KEY `permitNotesPermitRef_Idx` (`permitId`),
+  CONSTRAINT `permitNotesPermitRef` FOREIGN KEY (`permitId`) REFERENCES `permit` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 

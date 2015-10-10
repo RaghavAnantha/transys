@@ -17,14 +17,14 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 @Entity
-@Table(name="trans_order")
+@Table(name="transysOrder")
 public class Order extends AbstractBaseModel {
 
 	// TODO: Do we need table size restriction here?
 	
 	/******** Customer Info ************/
 	@ManyToOne
-	@JoinColumn(name="custID") 
+	@JoinColumn(name="customerId") 
 	private Customer customer;
 	
 	/******** Delivery Info ************/
@@ -71,9 +71,9 @@ public class Order extends AbstractBaseModel {
 	@ManyToMany(cascade = CascadeType.ALL)
 	@JoinTable(
      name = "orderPermits",
-     joinColumns = @JoinColumn(name = "orderID"),
-     inverseJoinColumns = @JoinColumn(name = "permitID"),
-     uniqueConstraints = @UniqueConstraint(columnNames = {"orderID", "permitID"})
+     joinColumns = @JoinColumn(name = "orderId"),
+     inverseJoinColumns = @JoinColumn(name = "permitId"),
+     uniqueConstraints = @UniqueConstraint(columnNames = {"orderId", "permitId"})
 	)
 	private List<Permit> permits;
 	 

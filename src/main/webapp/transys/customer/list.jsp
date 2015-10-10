@@ -4,16 +4,13 @@
 <form:form action="list.do" method="get" name="searchForm">
 	<table width="100%" id="form-table">
 		<tr>
-			<td align="${left}" class="form-left"><transys:label
-					code="Company Name" /></td>
-			<td align="${left}" class="wide"><select
-				class="flat form-control input-sm" id="companyName"
-				name="companyName" style="width:175px !important">
+			<td align="${left}" class="form-left">Company Name</td>
+			<td align="${left}" class="wide">
+				<select class="flat form-control input-sm" id="companyName" name="companyName" style="width:175px !important">
 					<option value="">------Please Select------</option>
 					<c:forEach items="${customer}" var="customer">
 						<c:set var="selected" value="" />
-						<c:if
-							test="${sessionScope.searchCriteria.searchMap['companyName'] == customer.companyName}">
+						<c:if test="${sessionScope.searchCriteria.searchMap['companyName'] == customer.companyName}">
 							<c:set var="selected" value="selected" />
 						</c:if>
 						<option value="${customer.companyName}" ${selected}>${customer.companyName}</option>

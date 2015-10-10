@@ -58,7 +58,7 @@
 		<transys:textcolumn headerText="Description" dataField="description" />
 		<transys:textcolumn headerText="Fee" dataField="fee" />
 	</transys:datatable>
-	<%session.setAttribute("columnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
+	<%session.setAttribute("additionalFeeColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
 </form:form>
 
 

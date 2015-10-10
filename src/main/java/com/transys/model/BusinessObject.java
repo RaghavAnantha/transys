@@ -17,9 +17,9 @@ import javax.persistence.Table;
  * 
  */
 @Entity
-@Table(name = "business_object")
+@Table(name = "businessObject")
 @SuppressWarnings("serial")
-public class BusinessObject extends AbstractBaseModel implements Comparable<BusinessObject>{	
+public class BusinessObject extends AbstractBaseModel implements Comparable<BusinessObject> {	
 
 	@Override
 	public int compareTo(BusinessObject obj) {
@@ -30,12 +30,12 @@ public class BusinessObject extends AbstractBaseModel implements Comparable<Busi
 		return this.displayOrder-obj.displayOrder;
 	}
 	
-	@Column(name="url_context")
+	@Column(name="urlContext")
 	private String urlContext;
 	/**
 	 * Attribute objectName.
 	 */
-	@Column(name = "object_name", length = 60)
+	@Column(name = "objectName", length = 60)
 	private String objectName;
 
 	@Column(name="action")
@@ -53,13 +53,13 @@ public class BusinessObject extends AbstractBaseModel implements Comparable<Busi
 	 * Attribute objectParent.
 	 */
 	@ManyToOne
-	@JoinColumn(name = "parent_id")
+	@JoinColumn(name = "parentId")
 	private BusinessObject parent;
 
 	/**
 	 * Attribute objectLevel.
 	 */
-	@Column(name="object_level")
+	@Column(name="objectLevel")
 	private Integer objectLevel;
 	
 	
@@ -78,7 +78,7 @@ public class BusinessObject extends AbstractBaseModel implements Comparable<Busi
 	/**
 	 * Attribute dispayOrder.
 	 */
-	@Column(name="display_order")
+	@Column(name="displayOrder")
 	private Integer displayOrder;
 	/**
 	 * <p>

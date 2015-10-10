@@ -75,7 +75,7 @@
 		<transys:textcolumn headerText="Material Category" dataField="materialCategory.category" />
 		<transys:textcolumn headerText="Dumpster Price" dataField="price" />
 	</transys:datatable>
-	<%session.setAttribute("columnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
+	<%session.setAttribute("dumpsterPriceColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
 </form:form>
 
 

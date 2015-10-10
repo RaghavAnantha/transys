@@ -101,6 +101,22 @@ public class OrderController extends CRUDController<Order> {
 		super.initBinder(binder);
 	}
 	
+	public void setupCreate(ModelMap model, HttpServletRequest request, Order order) {
+		setupCreate(model, request);
+		
+		String dumpsterQuery = "select obj from DumpsterInfo obj where obj.status.status='Available' order by obj.id asc";
+		List<DumpsterInfo> dumpsterInfoList = genericDAO.executeSimpleQuery(dumpsterQuery);
+		
+		if (order != null) {
+			if (order.getDumpster() != null && order.getDumpster().getId() != null) {
+				List<DumpsterInfo> assignedDumpsterList = genericDAO.executeSimpleQuery("select obj from DumpsterInfo obj where obj.id=" + order.getDumpster().getId());
+				dumpsterInfoList.add(assignedDumpsterList.get(0));
+			}
+		}
+		
+		model.addAttribute("orderDumpsters", dumpsterInfoList);
+   }
+	
 	/*
 	 * (non-Javadoc)
 	 * @see com.primovision.lutransport.controller.CRUDController#setupCreate(org.springframework.ui.ModelMap, javax.servlet.http.HttpServletRequest)
@@ -118,7 +134,7 @@ public class OrderController extends CRUDController<Order> {
       //model.addAttribute("permits", genericDAO.executeSimpleQuery("select obj from Permit obj where obj.id!=0 order by obj.id asc"));
       //model.addAttribute("permits", genericDAO.findByCriteria(Permit.class, criterias, "id", false));
       
-      model.addAttribute("dumpsters", genericDAO.executeSimpleQuery("select obj from DumpsterInfo obj where obj.id!=0 order by obj.id asc"));
+		model.addAttribute("dumpsters", genericDAO.executeSimpleQuery("select obj from DumpsterInfo obj where obj.id!=0 order by obj.id asc"));
       model.addAttribute("dumpsterSizes", genericDAO.executeSimpleQuery("select obj from DumpsterSize obj where obj.id!=0 order by obj.size asc"));
       
       model.addAttribute("dusmpsterLocationTypes", genericDAO.executeSimpleQuery("select obj from LocationType obj where obj.id!=0 order by obj.id asc"));
@@ -138,7 +154,7 @@ public class OrderController extends CRUDController<Order> {
       populateDeliveryTimeSettings(model);
       
       String driverRole = "DRIVER";
-      List<BaseModel> driversList = genericDAO.executeSimpleQuery("select obj from User obj where obj.id!=0 and obj.role.name='" + driverRole + "' order by obj.id asc");
+      List<BaseModel> driversList = genericDAO.executeSimpleQuery("select obj from User obj where obj.id!=0 and obj.accountStatus=1 and obj.role.name='" + driverRole + "' order by obj.id asc");
       model.addAttribute("drivers", driversList);
 	}
 	
@@ -161,10 +177,20 @@ public class OrderController extends CRUDController<Order> {
 	@Override
 	public String list(ModelMap model, HttpServletRequest request) {
 		setupList(model, request);
+		
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		//criteria.getSearchMap().put("id!",0l);
 		//TODO fix me
 		criteria.getSearchMap().remove("_csrf");
+		
+		if (criteria.getSearchMap().get("customer") != null) {
+			String customerId = (String)criteria.getSearchMap().get("customer");
+			if (StringUtils.isNotEmpty(customerId)) {
+				String deliveryAddressQuery = "select obj from DeliveryAddress obj where obj.customer.id=" + customerId  + " order by obj.line1 asc";
+				model.addAttribute("deliveryAddresses", genericDAO.executeSimpleQuery(deliveryAddressQuery));
+			}
+	   }
+		
 		model.addAttribute("list",genericDAO.search(getEntityClass(), criteria,"id",null,null));
 		model.addAttribute("activeTab", "manageOrders");
 		//model.addAttribute("activeSubTab", "orderDetails");
@@ -189,7 +215,8 @@ public class OrderController extends CRUDController<Order> {
 	
 	@Override
 	public String create(ModelMap model, HttpServletRequest request) {
-		setupCreate(model, request);
+		setupCreate(model, request, null);
+		
 		model.addAttribute("activeTab", "manageOrders");
 		model.addAttribute("mode", "ADD");
 		model.addAttribute("activeSubTab", "orderDetails");
@@ -212,7 +239,7 @@ public class OrderController extends CRUDController<Order> {
 		}
 		// return to form if we had errors
 		if (bindingResult.hasErrors()) {
-			setupCreate(model, request);
+			setupCreate(model, request, null);
 			return urlContext + "/form";
 		}
 		//beforeSave(request, entity, model);
@@ -233,18 +260,18 @@ public class OrderController extends CRUDController<Order> {
 		
 		genericDAO.saveOrUpdate(entity);
 		cleanUp(request);
-
-		setupCreate(model, request);
-		
-		//model.addAttribute("modelObject", entity);
-		model.addAttribute("activeTab", "manageOrders");
-		model.addAttribute("mode", "ADD");
-		model.addAttribute("activeSubTab", "orderNotesTab");
 		
 		Long orderId = entity.getOrder().getId();
 		List<Order> orderList = genericDAO.executeSimpleQuery("select obj from Order obj where obj.id=" + orderId);
 		Order savedOrder = orderList.get(0);
 		model.addAttribute("modelObject", savedOrder);
+
+		setupCreate(model, request, savedOrder);
+		
+		//model.addAttribute("modelObject", entity);
+		model.addAttribute("activeTab", "manageOrders");
+		model.addAttribute("mode", "ADD");
+		model.addAttribute("activeSubTab", "orderNotesTab");
 		
 		Order emptyOrder = new Order();
 		emptyOrder.setId(orderId);
@@ -258,19 +285,35 @@ public class OrderController extends CRUDController<Order> {
 		String query = "select obj from DeliveryAddress obj where obj.customer.id=" +  savedOrder.getCustomer().getId() + " order by obj.line1 asc";
 		model.addAttribute("deliveryAddresses", genericDAO.executeSimpleQuery(query));
 		
-		List<List<Permit>> allPermitsOfChosenTypesList = new ArrayList<List<Permit>>();
-		for(Permit aChosenPermit : savedOrder.getPermits()) {
-			if (aChosenPermit != null && aChosenPermit.getId() != null) {
-				String aChosenPermitClassId =  aChosenPermit.getPermitClass().getId().toString();
-				String aChosenPermitTypeId =  aChosenPermit.getPermitType().getId().toString();
-				List<Permit> aPermitsOfChosenTypeList = retrievePermit(aChosenPermitClassId, aChosenPermitTypeId);
-				
-				allPermitsOfChosenTypesList.add(aPermitsOfChosenTypeList);
-			}
-		}
+		List<List<Permit>> allPermitsOfChosenTypesList = retrievePermitsOfChosenType(savedOrder);
 		model.addAttribute("allPermitsOfChosenTypesList", allPermitsOfChosenTypesList);
 		
 		return urlContext + "/order";
+	}
+
+	private List<List<Permit>> retrievePermitsOfChosenType(Order order) {
+		List<List<Permit>> allPermitsOfChosenTypesList = new ArrayList<List<Permit>>();
+		
+		for(Permit aChosenPermit : order.getPermits()) {
+			if (aChosenPermit != null && aChosenPermit.getId() != null) {
+				String aChosenPermitClassId = aChosenPermit.getPermitClass().getId().toString();
+				String aChosenPermitTypeId = aChosenPermit.getPermitType().getId().toString();
+				String aChosenPermitCustomerId = aChosenPermit.getCustomer().getId().toString();
+				String aChosenPermitDeliveryAddressId = aChosenPermit.getDeliveryAddress().getId().toString();
+				
+				SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+				String deliveryDateStr = formatter.format(order.getDeliveryDate());
+				
+				List<Permit> aPermitOfChosenTypeList = retrievePermit(aChosenPermitCustomerId, 
+						aChosenPermitDeliveryAddressId, aChosenPermitClassId,  aChosenPermitTypeId, deliveryDateStr);
+					
+				aPermitOfChosenTypeList.add(aChosenPermit);
+				
+				allPermitsOfChosenTypesList.add(aPermitOfChosenTypeList);
+			}
+		}
+		
+		return allPermitsOfChosenTypesList;
 	}
 	
 	@RequestMapping(method = RequestMethod.POST, value = "/saveDropOffDriver.do")
@@ -285,7 +328,7 @@ public class OrderController extends CRUDController<Order> {
 		}
 		// return to form if we had errors
 		if (bindingResult.hasErrors()) {
-			setupCreate(model, request);
+			setupCreate(model, request, entity);
 			return urlContext + "/form";
 		}
 		
@@ -314,7 +357,7 @@ public class OrderController extends CRUDController<Order> {
 		
 		cleanUp(request);
 
-		setupCreate(model, request);
+		setupCreate(model, request, entity);
 		
 		//model.addAttribute("modelObject", entity);
 		model.addAttribute("activeTab", "manageOrders");
@@ -337,16 +380,7 @@ public class OrderController extends CRUDController<Order> {
 		String query = "select obj from DeliveryAddress obj where obj.customer.id=" +  entity.getCustomer().getId() + " order by obj.line1 asc";
 		model.addAttribute("deliveryAddresses", genericDAO.executeSimpleQuery(query));
 		
-		List<List<Permit>> allPermitsOfChosenTypesList = new ArrayList<List<Permit>>();
-		for(Permit aChosenPermit : entity.getPermits()) {
-			if (aChosenPermit != null && aChosenPermit.getId() != null) {
-				String aChosenPermitClassId =  aChosenPermit.getPermitClass().getId().toString();
-				String aChosenPermitTypeId =  aChosenPermit.getPermitType().getId().toString();
-				List<Permit> aPermitsOfChosenTypeList = retrievePermit(aChosenPermitClassId, aChosenPermitTypeId);
-				
-				allPermitsOfChosenTypesList.add(aPermitsOfChosenTypeList);
-			}
-		}
+		List<List<Permit>> allPermitsOfChosenTypesList = retrievePermitsOfChosenType(entity);
 		model.addAttribute("allPermitsOfChosenTypesList", allPermitsOfChosenTypesList);
 		
 		return urlContext + "/order";
@@ -397,7 +431,7 @@ public class OrderController extends CRUDController<Order> {
 		}
 		// return to form if we had errors
 		if (bindingResult.hasErrors()) {
-			setupCreate(model, request);
+			setupCreate(model, request, entity);
 			return urlContext + "/form";
 		}
 		//beforeSave(request, entity, model);
@@ -417,9 +451,7 @@ public class OrderController extends CRUDController<Order> {
 		}
 		
 		//TODO: why is this reqd?
-		entity.getOrderPaymentInfo().setOrder(entity);
-		entity.getOrderPaymentInfo().setCreatedBy(entity.getCreatedBy());
-		entity.getOrderPaymentInfo().setModifiedBy(entity.getModifiedBy());
+		setupOrderPaymentInfo(entity);
 		
 		OrderStatus orderStatus = retrieveOrderStatus("Picked Up");
 		entity.setOrderStatus(orderStatus);
@@ -432,7 +464,7 @@ public class OrderController extends CRUDController<Order> {
 		
 		cleanUp(request);
 
-		setupCreate(model, request);
+		setupCreate(model, request, entity);
 		
 		//model.addAttribute("modelObject", entity);
 		model.addAttribute("activeTab", "manageOrders");
@@ -455,16 +487,7 @@ public class OrderController extends CRUDController<Order> {
 		String query = "select obj from DeliveryAddress obj where obj.customer.id=" +  entity.getCustomer().getId() + " order by obj.line1 asc";
 		model.addAttribute("deliveryAddresses", genericDAO.executeSimpleQuery(query));
 		
-		List<List<Permit>> allPermitsOfChosenTypesList = new ArrayList<List<Permit>>();
-		for(Permit aChosenPermit : entity.getPermits()) {
-			if (aChosenPermit != null && aChosenPermit.getId() != null) {
-				String aChosenPermitClassId =  aChosenPermit.getPermitClass().getId().toString();
-				String aChosenPermitTypeId =  aChosenPermit.getPermitType().getId().toString();
-				List<Permit> aPermitsOfChosenTypeList = retrievePermit(aChosenPermitClassId, aChosenPermitTypeId);
-				
-				allPermitsOfChosenTypesList.add(aPermitsOfChosenTypeList);
-			}
-		}
+		List<List<Permit>> allPermitsOfChosenTypesList = retrievePermitsOfChosenType(entity);
 		model.addAttribute("allPermitsOfChosenTypesList", allPermitsOfChosenTypesList);
 		
 		return urlContext + "/order";
@@ -485,8 +508,16 @@ public class OrderController extends CRUDController<Order> {
 	@Override
 	public String search2(ModelMap model, HttpServletRequest request) {
 		setupList(model, request);
+		
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		//criteria.getSearchMap().put("id!",0l);
+		
+		/*if (criteria.getSearchMap().get("customer") != null) {
+			String customerId = (String)criteria.getSearchMap().get("customer");
+			String deliveryAddressQuery = "select obj from DeliveryAddress obj where obj.customer.id=" + customerId  + " order by obj.line1 asc";
+			model.addAttribute("deliveryAddresses", genericDAO.executeSimpleQuery(deliveryAddressQuery));
+	   }*/
+		
 		model.addAttribute("list", genericDAO.search(getEntityClass(), criteria, "id", null, null));
 		model.addAttribute("activeTab", "manageOrder");
 		return urlContext + "/order";
@@ -501,8 +532,7 @@ public class OrderController extends CRUDController<Order> {
 			if (StringUtils.isEmpty(type))
 				type = "xlsx";
 			if (!type.equals("html") && !(type.equals("print"))) {
-				response.setHeader("Content-Disposition",
-						"attachment;filename= ordersReport." + type);
+				response.setHeader("Content-Disposition", "attachment;filename= ordersReport." + type);
 			}
 			response.setContentType(MimeUtil.getContentType(type));
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -528,13 +558,11 @@ public class OrderController extends CRUDController<Order> {
 				OrderPaymentInfo paymentInfo = order.getOrderPaymentInfo();
 				if (paymentInfo != null) {
 					map.put("paymentMethod", StringUtils.defaultIfEmpty(paymentInfo.getPaymentMethod().getMethod(), StringUtils.EMPTY));
-					map.put("dumpsterPrice", paymentInfo.getDumpsterPrice().toString());
-					map.put("cityFee", paymentInfo.getCityFee().toString());
-					map.put("permitFees", paymentInfo.getPermitFee1().toString());
-					map.put("overweightFee", paymentInfo.getOverweightFee().toString());
-					if (paymentInfo.getTotalFees() != null ) {
-						map.put("totalFees", order.getOrderPaymentInfo().getTotalFees().toString());
-					}
+					map.put("dumpsterPrice", StringUtils.defaultIfEmpty(paymentInfo.getDumpsterPrice().toString(), "0.00"));
+					map.put("cityFee", StringUtils.defaultIfEmpty(paymentInfo.getCityFee().toString(), "0.00"));
+					map.put("permitFees", StringUtils.defaultIfEmpty(paymentInfo.getTotalPermitFees().toString(), "0.00"));
+					map.put("overweightFee", StringUtils.defaultIfEmpty(paymentInfo.getOverweightFee().toString(), "0.00"));
+					map.put("totalFees", StringUtils.defaultIfEmpty(paymentInfo.getTotalFees().toString(), "0.00"));
 				}
 				
 				newList.add(map);
@@ -566,6 +594,8 @@ public class OrderController extends CRUDController<Order> {
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/retrievePermit.do")
 	public @ResponseBody String retrievePermit(ModelMap model, HttpServletRequest request,
+															 @RequestParam(value = "customerId", required = false) String customerId,
+															 @RequestParam(value = "deliveryAddressId", required = false) String deliveryAddressId,
 														    @RequestParam(value = "permitId", required = false) String permitId,
 															 @RequestParam(value = "permitClassId", required = false) String permitClassId,
 															 @RequestParam(value = "permitTypeId", required = false) String permitTypeId,
@@ -575,7 +605,7 @@ public class OrderController extends CRUDController<Order> {
 		if (StringUtils.isNotEmpty(permitId)) {
 			permitList = retrievePermit(permitId); 
 		} else {
-			permitList = retrievePermit(permitClassId, permitTypeId, deliveryDate);
+			permitList = retrievePermit(customerId, deliveryAddressId, permitClassId, permitTypeId, deliveryDate);
 		}
 		
 		ObjectMapper objectMapper = new ObjectMapper();
@@ -599,7 +629,7 @@ public class OrderController extends CRUDController<Order> {
 		return permits;
 	}
 	
-	private List<Permit> retrievePermit(String permitClassId, String permitTypeId, String deliveryDateStr) {
+	private List<Permit> retrievePermit(String customerId, String deliveryAddressId, String permitClassId, String permitTypeId, String deliveryDateStr) {
 		String requiredEndDateStr = StringUtils.EMPTY;
 		if (StringUtils.isNotEmpty(deliveryDateStr)) {
 			SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
@@ -622,11 +652,13 @@ public class OrderController extends CRUDController<Order> {
 			}
 		}
 		
-		String permitsQuery = "select obj from Permit obj where ";
-		permitsQuery += "obj.permitType.id=" + permitTypeId
-				    		  + " and obj.permitClass.id=" + permitClassId
-				    		  + " and obj.endDate >= '" + requiredEndDateStr + "'"
-				    		  + " and obj.status.status=";
+		String permitsQuery = "select obj from Permit obj where";
+		permitsQuery += " obj.customer.id=" + customerId
+						 +  " and obj.deliveryAddress.id=" + deliveryAddressId
+				    	 +  " and obj.permitClass.id=" + permitClassId
+				    	 +  " and obj.permitType.id=" + permitTypeId
+				    	 +  " and obj.endDate >= '" + requiredEndDateStr + "'"
+				    	 +  " and obj.status.status=";
 		
 		List<Permit> availablePermits = genericDAO.executeSimpleQuery(permitsQuery + "'Available'");
 		//return availablePermits;
@@ -658,15 +690,7 @@ public class OrderController extends CRUDController<Order> {
 		return availablePermits;
 	}
 	
-	private List<Permit> retrievePermit(String permitClassId, String permitTypeId) {
-		String permitsQuery = "select obj from Permit obj where ";
-		permitsQuery += "obj.permitType.id=" + permitTypeId
-				    		  + " and obj.permitClass.id=" + permitClassId
-				    		  + " and obj.status.status=" + "'Available'";
-		
-		List<Permit> availablePermits = genericDAO.executeSimpleQuery(permitsQuery);
-		return availablePermits;
-	}
+	
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/retrieveDumpsterPrice.do")
 	public @ResponseBody String retrieveDumpsterPrice(ModelMap model, HttpServletRequest request,
@@ -790,15 +814,19 @@ public class OrderController extends CRUDController<Order> {
 		return permitClassList;
 	}
 	
+	public void setupUpdate(ModelMap model, HttpServletRequest request, Order order) {
+		setupCreate(model, request, order);
+	}
+	
 	@Override
 	public String edit2(ModelMap model, HttpServletRequest request) {
-		setupUpdate(model, request);
+		Order orderToBeEdited = (Order)model.get("modelObject");
+		
+		setupUpdate(model, request, orderToBeEdited);
 		
 		model.addAttribute("activeTab", "manageOrders");
 		model.addAttribute("mode", "ADD");
 		model.addAttribute("activeSubTab", "orderDetails");
-		 
-		Order orderToBeEdited = (Order)model.get("modelObject");
 		
 		String query = "select obj from DeliveryAddress obj where obj.customer.id=" +  orderToBeEdited.getCustomer().getId() + " order by obj.line1 asc";
 		model.addAttribute("deliveryAddresses", genericDAO.executeSimpleQuery(query));
@@ -812,18 +840,7 @@ public class OrderController extends CRUDController<Order> {
 		List<BaseModel> notesList = genericDAO.executeSimpleQuery("select obj from OrderNotes obj where obj.order.id=" +  orderToBeEdited.getId() + " order by obj.id asc");
 		model.addAttribute("notesList", notesList);
 		
-		List<List<Permit>> allPermitsOfChosenTypesList = new ArrayList<List<Permit>>();
-		for(Permit aChosenPermit : orderToBeEdited.getPermits()) {
-			if (aChosenPermit != null && aChosenPermit.getId() != null) {
-				String aChosenPermitClassId =  aChosenPermit.getPermitClass().getId().toString();
-				String aChosenPermitTypeId =  aChosenPermit.getPermitType().getId().toString();
-				List<Permit> aPermitOfChosenTypeList = retrievePermit(aChosenPermitClassId, aChosenPermitTypeId);
-				
-				aPermitOfChosenTypeList.add(aChosenPermit);
-				
-				allPermitsOfChosenTypesList.add(aPermitOfChosenTypeList);
-			}
-		}
+		List<List<Permit>> allPermitsOfChosenTypesList = retrievePermitsOfChosenType(orderToBeEdited);
 		model.addAttribute("allPermitsOfChosenTypesList", allPermitsOfChosenTypesList);
 		
 		//return urlContext + "/form";
@@ -924,7 +941,8 @@ public class OrderController extends CRUDController<Order> {
 	
 		String isExchange = request.getParameter("isExchange");
 		if (BooleanUtils.toBoolean(isExchange)) {
-			
+			String existingDroppedOffOrderId = request.getParameter("existingDroppedOffOrderId");
+			entity.setPickupOrderId(new Long(existingDroppedOffOrderId));
 		}
 		
 		try {
@@ -936,7 +954,7 @@ public class OrderController extends CRUDController<Order> {
 		
 		// return to form if we had errors
 		if (bindingResult.hasErrors()) {
-			setupCreate(model, request);
+			setupCreate(model, request, entity);
 			return urlContext + "/order";
 		}
 		
@@ -960,9 +978,7 @@ public class OrderController extends CRUDController<Order> {
 		entity.setOrderStatus(orderStatus);
 		
 		// TODO: Why both created by and modified by and why set if not changed?
-		entity.getOrderPaymentInfo().setOrder(entity);
-		entity.getOrderPaymentInfo().setCreatedBy(entity.getCreatedBy());
-		entity.getOrderPaymentInfo().setModifiedBy(entity.getModifiedBy());
+		setupOrderPaymentInfo(entity);
 		
 		// TODO: Why both created by and modified by and why set if not changed?
 		entity.getOrderNotes().get(0).setOrder(entity);
@@ -995,6 +1011,51 @@ public class OrderController extends CRUDController<Order> {
 		
 		//return list(model, request);
 		return saveSuccess(model, request, entity);
+	}
+	
+	private void setupOrderPaymentInfo(Order order) {
+		OrderPaymentInfo orderPaymentInfo = order.getOrderPaymentInfo();
+		
+		orderPaymentInfo.setOrder(order);
+		orderPaymentInfo.setCreatedBy(order.getCreatedBy());
+		orderPaymentInfo.setModifiedBy(order.getModifiedBy());
+		
+		if (orderPaymentInfo.getAdditionalFee1() == null) {
+			orderPaymentInfo.setAdditionalFee1(new BigDecimal(0.00));
+		}
+		if (orderPaymentInfo.getAdditionalFee2() == null) {
+			orderPaymentInfo.setAdditionalFee2(new BigDecimal(0.00));
+		}
+		if (orderPaymentInfo.getAdditionalFee3() == null) {
+			orderPaymentInfo.setAdditionalFee3(new BigDecimal(0.00));
+		}
+		if (orderPaymentInfo.getTotalAdditionalFees() == null) {
+			orderPaymentInfo.setTotalAdditionalFees(new BigDecimal(0.00));
+		}
+		if (orderPaymentInfo.getCityFee() == null) {
+			orderPaymentInfo.setCityFee(new BigDecimal(0.00));
+		}
+		if (orderPaymentInfo.getDiscountPercentage() == null) {
+			orderPaymentInfo.setDiscountPercentage(new BigDecimal(0.00));
+		}
+		if (orderPaymentInfo.getDiscountAmount() == null) {
+			orderPaymentInfo.setDiscountAmount(new BigDecimal(0.00));
+		}
+		if (orderPaymentInfo.getOverweightFee() == null) {
+			orderPaymentInfo.setOverweightFee(new BigDecimal(0.00));
+		}
+		if (orderPaymentInfo.getPermitFee1() == null) {
+			orderPaymentInfo.setPermitFee1(new BigDecimal(0.00));
+		}
+		if (orderPaymentInfo.getPermitFee2() == null) {
+			orderPaymentInfo.setPermitFee2(new BigDecimal(0.00));
+		}
+		if (orderPaymentInfo.getPermitFee3() == null) {
+			orderPaymentInfo.setPermitFee3(new BigDecimal(0.00));
+		}
+		if (orderPaymentInfo.getTotalPermitFees() == null) {
+			orderPaymentInfo.setTotalPermitFees(new BigDecimal(0.00));
+		}
 	}
 	
 	/*@Override
@@ -1030,7 +1091,8 @@ public class OrderController extends CRUDController<Order> {
 	}*/
 	
 	public String saveSuccess(ModelMap model, HttpServletRequest request, Order entity) {
-		setupCreate(model, request);
+		setupCreate(model, request, entity);
+		
 		model.addAttribute("modelObject", entity);
 		model.addAttribute("activeTab", "manageOrders");
 		model.addAttribute("activeSubTab", "orderDetails");
@@ -1047,18 +1109,7 @@ public class OrderController extends CRUDController<Order> {
 		String query = "select obj from DeliveryAddress obj where obj.customer.id=" +  entity.getCustomer().getId() + " order by obj.line1 asc";
 		model.addAttribute("deliveryAddresses", genericDAO.executeSimpleQuery(query));
 		
-		List<List<Permit>> allPermitsOfChosenTypesList = new ArrayList<List<Permit>>();
-		for(Permit aChosenPermit : entity.getPermits()) {
-			if (aChosenPermit != null && aChosenPermit.getId() != null) {
-				String aChosenPermitClassId =  aChosenPermit.getPermitClass().getId().toString();
-				String aChosenPermitTypeId =  aChosenPermit.getPermitType().getId().toString();
-				List<Permit> aPermitOfChosenTypeList = retrievePermit(aChosenPermitClassId, aChosenPermitTypeId);
-				
-				aPermitOfChosenTypeList.add(aChosenPermit);
-				
-				allPermitsOfChosenTypesList.add(aPermitOfChosenTypeList);
-			}
-		}
+		List<List<Permit>> allPermitsOfChosenTypesList = retrievePermitsOfChosenType(entity);
 		model.addAttribute("allPermitsOfChosenTypesList", allPermitsOfChosenTypesList);
 		
 		Long customerId = entity.getCustomer().getId();

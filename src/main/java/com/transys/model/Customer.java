@@ -26,10 +26,10 @@ public class Customer extends AbstractBaseModel {
 	/*private String name;*/
 	@Size(max=40)
 	
-	@Column(name="company_name")
+	@Column(name="companyName")
 	private String companyName;
 	
-	@Column(name="contact_name")
+	@Column(name="contactName")
 	private String contactName;
 	
 	@ManyToOne
@@ -48,17 +48,17 @@ public class Customer extends AbstractBaseModel {
 	@Column(name="phone")
 	private String phone;
 	
-	@Column(name="alt_phone_1")
+	@Column(name="altPhone1")
 	private String altPhone1;
 	
-	@Column(name="alt_phone_2")
+	@Column(name="altPhone2")
 	private String altPhone2;
 	
 	@NotEmpty
-	@Column(name="billing_address_line1")
+	@Column(name="billingAddressLine1")
 	private String billingAddressLine1;
 	
-	@Column(name="billing_address_line2")
+	@Column(name="billingAddressLine2")
 	private String billingAddressLine2;
 	
 	@NotEmpty

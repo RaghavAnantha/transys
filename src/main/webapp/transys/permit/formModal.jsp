@@ -44,7 +44,7 @@ function populateEndDate() {
 </script>
 <br/>
 <form:form action="save.do" name="typeForm" commandName="modelObject" method="post" >
-	<form:hidden path="orderID" value="${associatedOrderID.id}" />
+	<form:hidden path="orderId" value="${associatedOrderID.id}" />
 	<table id="form-table" width="100%">
 		<tr>
 			<td class="form-left"><transys:label code="Permit Number" /><span class="errorMessage">*</span></td>

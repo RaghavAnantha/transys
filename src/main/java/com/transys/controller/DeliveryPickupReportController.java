@@ -66,16 +66,16 @@ public class DeliveryPickupReportController extends CRUDController<Order> {
 	}
 	
 	private String setDumpsterSizeAggregation(ModelMap model, List<Order> orderList) {
-		StringBuffer selectedOrderIDs = new StringBuffer();
+		StringBuffer selectedOrderIds = new StringBuffer();
 		if (orderList == null || orderList.size() == 0) {
 			// throw Exception??
 			System.out.println("No orders matching criteria, report will be empty.");
 		}
 		
 		for(Order o : orderList) {
-			selectedOrderIDs.append(o.getId() + ",");
+			selectedOrderIds.append(o.getId() + ",");
 		}
-		List<?> aggregationResults = genericDAO.executeSimpleQuery("select dumpsterSize.size, count(*) from Order p where p.id IN (" + selectedOrderIDs.substring(0,selectedOrderIDs.lastIndexOf(",")) + ") group by p.dumpsterSize.size");
+		List<?> aggregationResults = genericDAO.executeSimpleQuery("select dumpsterSize.size, count(*) from Order p where p.id IN (" + selectedOrderIds.substring(0,selectedOrderIds.lastIndexOf(",")) + ") group by p.dumpsterSize.size");
 		List<String> dumpsterSizes = new ArrayList<String>();
 		List<String> count = new ArrayList<String>();
 		

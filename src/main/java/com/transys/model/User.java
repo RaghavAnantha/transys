@@ -20,10 +20,9 @@ import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
-@Table(name = "user_info")
+@Table(name = "userInfo")
 @NamedQueries({@NamedQuery(name = "user.getByName", query = "select obj from User obj where obj.username=:name")})
-public class User extends AbstractBaseModel implements Comparable, Auditable{
-	
+public class User extends AbstractBaseModel implements Comparable, Auditable {
 	private static final long serialVersionUID = 1807241954265797561L;
 	
 	@Column(name = "username")
@@ -43,48 +42,48 @@ public class User extends AbstractBaseModel implements Comparable, Auditable{
 	@Email(message = "Invalid email")
 	private String email;
 	
-	@Column(name = "first_name")
+	@Column(name = "firstName")
 	@NotEmpty(message = "First Name is required.")
 	private String firstName;
 	
 	@NotEmpty(message = "Last Name is required.")
-	@Column(name = "last_name")
+	@Column(name = "lastName")
 	private String lastName;
 	
 	@Column(name = "name")
 	private String name;
 	
-	@Column(name = "phone_number")
+	@Column(name = "phoneNumber")
 	@Pattern(regexp = "[0-9]*", message = "Phone number should be numeric.")
 	private String phoneNumber;
 	
 	@Pattern(regexp = "[0-9]*", message = "Mobile number should be numeric.")
-	@Column(name = "mobile_no")
+	@Column(name = "mobileNo")
 	private String mobileNo;
 	
-	@Column(name = "last_login_date")
+	@Column(name = "lastLoginDate")
 	private Date lastLoginDate;
 	
-	@Column(name = "bill_batch_date")
+	@Column(name = "billBatchDate")
 	private Date billBatchDate;
 	
-	@Column(name = "login_attempts")
+	@Column(name = "loginAttempts")
 	private Integer loginAttempts = 0;
 	
-	@Column(name = "account_status")
+	@Column(name = "accountStatus")
 	private Integer accountStatus = 0;
 	
-	@Column(name = "user_type")
+	@Column(name = "userType")
 	private Integer userType;
 	
 	@Transient
 	private String membershipType;
 	
-	@Column(name = "agree_terms")
+	@Column(name = "agreeTerms")
 	private Byte agreeTerms = 0;
 	
 	@ManyToOne
-	@JoinColumn(name="role_id")
+	@JoinColumn(name="roleId")
 	private Role role;
 	
 	public String getName() {

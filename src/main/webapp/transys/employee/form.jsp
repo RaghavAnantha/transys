@@ -33,8 +33,8 @@ function formatPhone(){
 		<tr>
 			<td class="form-left"><transys:label code="Employee ID" /><span
 				class="errorMessage">*</span></td>
-			<td align="${left}"><form:input path="employeeID" cssClass="flat" /> <br>
-			<form:errors path="employeeID" cssClass="errorMessage" /></td>
+			<td align="${left}"><form:input path="employeeId" cssClass="flat" /> <br>
+			<form:errors path="employeeId" cssClass="errorMessage" /></td>
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="First Name" /></td>

@@ -6,19 +6,15 @@
 	<table width="100%" id="form-table">
 		<tr>
 			<td align="${left}" class="form-left"><transys:label code="Employee ID" /></td>
-			<td align="${left}" class="wide"><select
-				class="flat form-control input-sm" id="status" name="employeeID"
-				style="width: 175px">
-					<option value="">------
-						<transys:label code="Please Select" />------
-					</option>
+			<td align="${left}" class="wide">
+				<select class="flat form-control input-sm" id="status" name="employeeId" style="width: 175px">
+					<option value="">------Please Select------</option>
 					<c:forEach items="${employee}" var="anEmployee">
 						<c:set var="selected" value="" />
-						<c:if
-							test="${sessionScope.searchCriteria.searchMap['employeeID'] == anEmployee.employeeID}">
+						<c:if test="${sessionScope.searchCriteria.searchMap['employeeId'] == anEmployee.employeeId}">
 							<c:set var="selected" value="selected" />
 						</c:if>
-						<option value="${anEmployee.employeeID}" ${selected}>${anEmployee.employeeID}</option>
+						<option value="${anEmployee.employeeId}" ${selected}>${anEmployee.employeeId}</option>
 					</c:forEach>
 			</select></td>	
 		</tr>
@@ -96,7 +92,7 @@
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
 		pagingLink="search.do" multipleDelete="false" searcheable="false"
 		exportPdf="true" exportXls="true" dataQualifier="employee">
-		<transys:textcolumn headerText="Employee ID" dataField="employeeID" />
+		<transys:textcolumn headerText="Employee ID" dataField="employeeId" />
 		<transys:textcolumn headerText="Employee First Name" dataField="firstName" />
 		<transys:textcolumn headerText="Employee Last Name" dataField="lastName" />
 		<transys:textcolumn headerText="Job Title" dataField="jobTitle.jobTitle" />
@@ -107,7 +103,7 @@
 
 
 	</transys:datatable>
-	<%session.setAttribute("columnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
+	<%session.setAttribute("employeeColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
 </form:form>
 
 
