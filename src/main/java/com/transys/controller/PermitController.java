@@ -294,7 +294,7 @@ public class PermitController extends CRUDController<Permit> {
 		model.addAttribute("permitStatus", genericDAO.findByCriteria(PermitStatus.class, criterias, "status", false));
 		model.addAttribute("state", genericDAO.findAll(State.class));
 		
-		return urlContext + "/formModal";
+		return urlContext + "/formForCustomerModal";
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/permitCreateModal.do")
@@ -478,6 +478,53 @@ public class PermitController extends CRUDController<Permit> {
 			cleanUp(request);
 			
 			return saveSuccess(model, request, entity);
+	}
+	
+	@RequestMapping(method = RequestMethod.POST, value = "/saveForCustomerModal.do")
+	public @ResponseBody String saveForCustomerModal(HttpServletRequest request,
+			@ModelAttribute("modelObject") Permit entity,
+			BindingResult bindingResult, ModelMap model) {
+		try {
+			getValidator().validate(entity, bindingResult);
+		} catch (ValidationException e) {
+			e.printStackTrace();
+			System.out.println("Error in validation " + e);
+			log.warn("Error in validation :" + e);
+		}
+		
+		// Return to form if we had errors
+		if (bindingResult.hasErrors()) {
+			List<ObjectError> errors = bindingResult.getAllErrors();
+			for(ObjectError e : errors) {
+				System.out.println("Error: " + e.getDefaultMessage());
+			}
+			
+			setupCreate(model, request);
+			return urlContext + "/form";
+		}
+		
+		String status = "Pending";
+		PermitStatus permitStatus = (PermitStatus)genericDAO.executeSimpleQuery("select obj from PermitStatus obj where obj.status='" + status + "'").get(0);
+		entity.setStatus(permitStatus);
+		
+		beforeSave(request, entity, model);
+		genericDAO.saveOrUpdate(entity);
+		
+		// The delivery address entered will automatically be stored as one of the Permit Addresses. Users can add more.
+		addDeliveryAddAsPermitAdd(request, entity);
+		
+		cleanUp(request);
+		
+		ObjectMapper objectMapper = new ObjectMapper();
+		String json = StringUtils.EMPTY;
+		try {
+			json = objectMapper.writeValueAsString(entity);
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return json;
 	}
 
 	private void addDeliveryAddAsPermitAdd(HttpServletRequest request, Permit entity) {
