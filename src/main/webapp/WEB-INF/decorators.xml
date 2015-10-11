@@ -66,6 +66,9 @@
     <decorator name="additionalFee" page="singleColumnLayout.jsp">
         <pattern>/transys/additionalFee/**</pattern>
     </decorator>
+    <decorator name="materialIntakeForRecycle" page="singleColumnLayout.jsp">
+        <pattern>/transys/materialIntakeForRecycle/**</pattern>
+    </decorator>
     <decorator name="report" page="singleColumnLayout.jsp">
         <pattern>/transys/dumpsterOnsiteReport/**</pattern>
     </decorator>
@@ -78,6 +81,9 @@
     <decorator name="report" page="singleColumnLayout.jsp">
         <pattern>/transys/deliveryPickupReport/**</pattern>
     </decorator>
+    <decorator name="report" page="singleColumnLayout.jsp">
+        <pattern>/transys/materialIntakeDailyReport/**</pattern>
+    </decorator>    
     <decorator name="login" page="singleColumnLayoutLogin.jsp">
         <pattern>/transys/login/**</pattern>
     </decorator>

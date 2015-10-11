@@ -25,6 +25,7 @@
 					<li><a href="/dumpsterOnsiteReport/main.do">Dumpster On-site Report</a></li>
 					<li><a href="/dumpstersRentedReport/main.do">Dumpsters Rented Report</a></li>
 					<li><a href="/recycleReports/main.do">Recycle Reports</a></li>
+					<li><a href="/materialIntakeDailyReport/main.do">Material Intake Daily Report</a></li>
 				</ul>
 				</li>
 				<li id="masterDataPage"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Master Data
@@ -40,6 +41,7 @@
 					<li><a href="/cityFee/main.do">City Fee</a></li>
 					<li><a href="/permitFee/main.do">Permit Fee</a></li>
 					<li><a href="/additionalFee/main.do">Additional Fee</a></li>
+					<li><a href="/materialIntakeForRecycle/main.do">Material Intake For Recycle</a></li>
 				</ul>
 				
 				</li>

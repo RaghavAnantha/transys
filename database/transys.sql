@@ -1378,6 +1378,45 @@ INSERT INTO `additionalFee` VALUES (5,'Move Box',190.00,NULL,'2015-09-25 15:38:1
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
+--
+-- Table structure for table `materialIntakeForRecycle`
+--
+
+DROP TABLE IF EXISTS `materialIntakeForRecycle`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `materialIntakeForRecycle` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `materialTypeId` bigint(20) NOT NULL,
+  `intakeDate` datetime NOT NULL,
+  `comments` varchar(500) DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `created_by` bigint(20) DEFAULT NULL,
+  `modified_at` datetime DEFAULT NULL,
+  `modified_by` bigint(20) DEFAULT NULL,
+  `delete_flag` int(11) NOT NULL DEFAULT '1',
+  `netWeightTonnage` decimal(6,2) DEFAULT NULL,
+  `materialType` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `materialTypeForRecycleRef_idx` (`materialTypeId`),
+  KEY `FK_tbcako5k9drl0fehr1ciwfdm6` (`materialType`),
+  CONSTRAINT `FK_tbcako5k9drl0fehr1ciwfdm6` FOREIGN KEY (`materialType`) REFERENCES `materialType` (`id`),
+  CONSTRAINT `materialTypeForRecycleRef` FOREIGN KEY (`materialTypeId`) REFERENCES `materialType` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `materialIntakeForRecycle`
+--
+
+LOCK TABLES `materialIntakeForRecycle` WRITE;
+/*!40000 ALTER TABLE `materialIntakeForRecycle` DISABLE KEYS */;
+INSERT INTO `materialIntakeForRecycle` VALUES (4,1,'2015-10-10 00:00:00',NULL,'2015-10-11 11:04:37',1,NULL,NULL,1,30.00,NULL),(5,2,'2015-10-10 00:00:00',NULL,'2015-10-11 11:06:54',1,NULL,NULL,1,12.00,NULL);
+/*!40000 ALTER TABLE `materialIntakeForRecycle` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
 /*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
