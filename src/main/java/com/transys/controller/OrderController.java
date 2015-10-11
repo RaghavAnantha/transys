@@ -232,12 +232,8 @@ public class OrderController extends CRUDController<Order> {
 												   @RequestParam(value = "id") Long orderPermitId) {
 		Map<String, Object> criterias = new HashMap<String, Object>();
 		criterias.put("id", orderPermitId);
-		OrderPermits orderPermitToBeEdited = genericDAO.findByCriteria(OrderPermits.class, criterias, "id", false).get(0);
-		Long orderId = orderPermitToBeEdited.getOrder().getId();
-		
-		model.addAttribute("activeTab", "manageOrders");
-		model.addAttribute("mode", "ADD");
-		model.addAttribute("activeSubTab", "orderNotesTab");
+		OrderPermits orderPermit = genericDAO.findByCriteria(OrderPermits.class, criterias, "id", false).get(0);
+		Long orderId = orderPermit.getOrder().getId();
 		
 		Order emptyOrder = new Order();
 		emptyOrder.setId(orderId);
@@ -249,6 +245,58 @@ public class OrderController extends CRUDController<Order> {
 		model.addAttribute("notesList", notesList);
 		
 		return urlContext + "/notesModal";
+	}
+	
+	@RequestMapping(method = RequestMethod.POST, value = "/saveOrderNotesModal.do")
+	public @ResponseBody String saveOrderNotesModal(HttpServletRequest request,
+			@ModelAttribute("notesModelObject") OrderNotes entity,
+			BindingResult bindingResult, ModelMap model) {
+		try {
+			getValidator().validate(entity, bindingResult);
+		} catch (ValidationException e) {
+			e.printStackTrace();
+			log.warn("Error in validation :" + e);
+		}
+		
+		// Return to form if we had errors
+		if (bindingResult.hasErrors()) {
+			setupCreate(model, request, null);
+			return urlContext + "/notesModal";
+		}
+		
+		//beforeSave(request, entity, model);
+		if (entity instanceof AbstractBaseModel) {
+			AbstractBaseModel baseModel = (AbstractBaseModel) entity;
+			if (baseModel.getId() == null) {
+				baseModel.setCreatedAt(Calendar.getInstance().getTime());
+				if (baseModel.getCreatedBy() == null) {
+					baseModel.setCreatedBy(getUser(request).getId());
+				}
+			} else {
+				baseModel.setModifiedAt(Calendar.getInstance().getTime());
+				if (baseModel.getModifiedBy() == null) {
+					baseModel.setModifiedBy(getUser(request).getId());
+				}
+			}
+		}
+		
+		genericDAO.saveOrUpdate(entity);
+		cleanUp(request);
+		
+		return "Saved successfully";
+		
+		/*Long orderId = entity.getOrder().getId();
+		
+		Order emptyOrder = new Order();
+		emptyOrder.setId(orderId);
+		OrderNotes notes = new OrderNotes();
+		notes.setOrder(emptyOrder);
+		model.addAttribute("notesModelObject", notes);
+	
+		List<BaseModel> notesList = genericDAO.executeSimpleQuery("select obj from OrderNotes obj where obj.order.id=" +  orderId + " order by obj.id asc");
+		model.addAttribute("notesList", notesList);
+		
+		return urlContext + "/notesModal";*/
 	}
 	
 	@RequestMapping(method = RequestMethod.POST, value = "/saveOrderNotes.do")

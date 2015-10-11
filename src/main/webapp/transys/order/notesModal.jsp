@@ -1,5 +1,10 @@
 <%@include file="/common/taglibs.jsp"%>
+
 <script type="text/javascript">
+function validateForm() {
+	return true;
+}
+
 $("#orderNotesModalForm").submit(function (ev) {
 	var $this = $(this);
 	
@@ -8,8 +13,7 @@ $("#orderNotesModalForm").submit(function (ev) {
         url: $this.attr('action'),
         data: $this.serialize(),
         success: function(responseData, textStatus, jqXHR) {
-        	//var customer = jQuery.parseJSON(responseData);
-        	//appendCustomer(customer);
+        	$this.find("#closeOrderNotes").click();
         }
     });
     
@@ -31,14 +35,14 @@ $("#orderNotesModalForm").submit(function (ev) {
 		<tr>
 			<td>&nbsp;</td>
 			<td align="${left}" colspan="2">
-				<input type="submit" id="create" onclick="return validateform()" value="<transys:label code="Save"/>" class="flat btn btn-primary btn-sm" /> 
-				<input type="button" id="cancelBtn" value="<transys:label code="Cancel"/>" class="flat btn btn-primary btn-sm" onClick="location.href='main.do'" />
+				<input type="submit" id="submitOrderNotes" onclick="return validateForm()" value="<transys:label code="Save"/>" class="flat btn btn-primary btn-sm" /> 
+				<input type="button" id="closeOrderNotes" value="Close" class="flat btn btn-primary btn-sm" data-dismiss="modal" />
 			</td>
 		</tr>
 	</table>
 </form:form>
 
-<form:form name="delete.do" id="serviceForm" class="tab-color">
+<form:form name="orderNotesServiceForm" id="orderNotesServiceForm" class="tab-color">
 	<transys:datatable urlContext="order" baseObjects="${notesList}"
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
 		pagingLink="search.do" searcheable="false" dataQualifier="manageNotes">
