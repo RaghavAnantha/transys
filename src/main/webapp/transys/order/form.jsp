@@ -1106,9 +1106,28 @@ $("#addDeliveryAddressLink").click(function (ev) {
 $("#addPermitLink").click(function (ev) {
 	var customerId = $('#customerSelect').val();
 	var deliveryAddressId = $('#deliveryAddressSelect').val();
+	var locationTypeId = $('#dumpsterLocationSelect').val();
+	
+	var permitClassSelect = $("#permitClasses" + 1);
+	var permitClassId = permitClassSelect.val();
+	
+	var permitTypeSelect = $("#permitTypes" + 1);
+	var permitTypeId = permitTypeSelect.val();
+	
+	var deliveryDate = $("[name='deliveryDate']").val();
+	
+	if (customerId == "" || deliveryAddressId == "" || locationTypeId == "" 
+			|| permitClassId == "" || permitTypeId == "" || deliveryDate == "") {
+		return false;
+	}
 	
 	var url = $(this).attr("href");
-	url += "?customerId=" + customerId + "&deliveryAddressId=" + deliveryAddressId ;
+	url += "?customerId=" + customerId 
+		+  "&deliveryAddressId=" + deliveryAddressId
+		+  "&locationTypeId=" + locationTypeId
+		+  "&permitClassId=" + permitClassId
+		+  "&permitTypeId=" + permitTypeId;
+		//+  "&deliveryDate=" + deliveryDate;
 	
 	showPopupDialog("Add Permit", url);
 	

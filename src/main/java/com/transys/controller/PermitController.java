@@ -272,7 +272,11 @@ public class PermitController extends CRUDController<Permit> {
 	@RequestMapping(method = RequestMethod.GET, value = "/createForCustomerModal.do")
 	public String createForCustomerModal(ModelMap model, HttpServletRequest request, 
 			@RequestParam(value = "customerId") Long customerId,
-			@RequestParam(value = "deliveryAddressId") Long deliveryAddressId) {
+			@RequestParam(value = "deliveryAddressId") Long deliveryAddressId,
+			@RequestParam(value = "locationTypeId") Long locationTypeId,
+			@RequestParam(value = "permitClassId") Long permitClassId,
+			@RequestParam(value = "permitTypeId") Long permitTypeId) {
+			//@RequestParam(value = "deliveryDate") Long deliveryDate) {
 		String customerQuery = "select obj from Customer obj where obj.id=" + customerId;
 		List<Customer> customerList = genericDAO.executeSimpleQuery(customerQuery);
 		model.put("customer", customerList);
@@ -281,18 +285,20 @@ public class PermitController extends CRUDController<Permit> {
 		List<DeliveryAddress> deliveryAddressList = genericDAO.executeSimpleQuery(deliveryAddressQuery);
 		model.addAttribute("deliveryAddress", deliveryAddressList);
 		
+		String locationTypesQuery = "select obj from LocationType obj where obj.id=" + locationTypeId;
+		List<LocationType> locationTypeList = genericDAO.executeSimpleQuery(locationTypesQuery);
+		model.addAttribute("locationType", locationTypeList);
+		
+		String permitClassQuery = "select obj from PermitClass obj where obj.id=" + permitClassId;
+		List<PermitClass> permitClassList = genericDAO.executeSimpleQuery(permitClassQuery);
+		model.addAttribute("permitClass", permitClassList);
+		
+		String permitTypeQuery = "select obj from PermitType obj where obj.id=" + permitTypeId;
+		List<PermitType> permitTypeList = genericDAO.executeSimpleQuery(permitTypeQuery);
+		model.addAttribute("permitType", permitTypeList);
+		
 		Permit emptyPermit = new Permit();
 		model.put("modelObject", emptyPermit);
-		
-		model.addAttribute("notesModelObject", new PermitNotes());
-		model.addAttribute("permitAddressModelObject", new PermitAddress());
-		
-		Map criterias = new HashMap();
-		model.addAttribute("locationType", genericDAO.findByCriteria(LocationType.class, criterias, "id", false));
-		model.addAttribute("permitClass", genericDAO.findByCriteria(PermitClass.class, criterias, "permitClass", false));
-		model.addAttribute("permitType", genericDAO.findByCriteria(PermitType.class, criterias, "permitType", false));
-		model.addAttribute("permitStatus", genericDAO.findByCriteria(PermitStatus.class, criterias, "status", false));
-		model.addAttribute("state", genericDAO.findAll(State.class));
 		
 		return urlContext + "/formForCustomerModal";
 	}

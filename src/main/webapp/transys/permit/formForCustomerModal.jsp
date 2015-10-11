@@ -36,10 +36,10 @@ $("#permitForCustomerModalForm").submit(function (ev) {
 </script>
 <br/>
 <form:form action="/permit/saveForCustomerModal.do" name="permitForCustomerModalForm" id="permitForCustomerModalForm" commandName="modelObject" method="post" >
-	<table id="form-table" width="100%">
+	<table id="form-table" class="table">
 		<tr>
 			<td class="form-left"><transys:label code="Permit Number" /><span class="errorMessage">*</span></td>
-			<td align="${left}" class="wide">
+			<td align="${left}">
 				<form:input path="number" cssClass="flat" style="width: 175px" />
 			 	<br><form:errors path="number" cssClass="errorMessage" />
 			</td>
@@ -69,7 +69,6 @@ $("#permitForCustomerModalForm").submit(function (ev) {
 			<td class="form-left"><transys:label code="Location Type" /><span class="errorMessage">*</span></td>
 			<td align="${left}">
 				<form:select id="locationTypeSelect" cssClass="flat form-control input-sm" path="locationType" style="width: 175px !important" >
-					<form:option value="">------Please Select--------</form:option>
 					<form:options items="${locationType}" itemValue="id" itemLabel="locationType" />
 				</form:select> 
 			 	<br><form:errors path="locationType" cssClass="errorMessage" />
@@ -79,29 +78,27 @@ $("#permitForCustomerModalForm").submit(function (ev) {
 			<td class="form-left"><transys:label code="Permit Class" /><span class="errorMessage">*</span></td>
 			<td align="${left}">
 				<form:select cssClass="flat form-control input-sm" path="permitClass" style="width: 175px !important" >
-					<form:option value="">------Please Select--------</form:option>
 					<form:options items="${permitClass}" itemValue="id" itemLabel="permitClass" />
 				</form:select> 
 			 	<br><form:errors path="permitClass" cssClass="errorMessage" />
 			</td>
 			<td class="form-left"><transys:label code="Permit Type" /></td>
 			<td align="${left}">
-				<form:select id="permitTypeSelect" cssClass="flat form-control input-sm" path="permitType" style="width: 175px !important"  onChange="return populatePermitEndDate();" >
-					<form:option value="">------Please Select--------</form:option>
+				<form:select id="permitTypeSelect" cssClass="flat form-control input-sm" path="permitType" style="width: 175px !important" >
 					<form:options items="${permitType}" itemValue="id" itemLabel="permitType" />
 				</form:select> 
 			 	<br><form:errors path="permitType" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>
-			<td align="${left}" class="form-left"><transys:label code="Start Date" /></td>
-			<td align="${left}" class="wide">
-				<form:input path="startDate" class="flat" style="width: 175px" />
+			<td class="form-left"><transys:label code="Start Date" /></td>
+			<td align="${left}">
+				<form:input path="startDate" class="flat" style="width: 175px" onChange="return populatePermitEndDate();" />
 				<br><form:errors path="startDate" cssClass="errorMessage" />
 			</td>
 			<td class="form-left"><transys:label code="End Date" /></td>
 			<td align="${left}">
-				<form:input path="endDate" cssClass="flat" style="width: 175px" readonly="true" />
+				<form:input path="endDate" cssClass="form-control" readonly="true" style="width:172px;height:25px !important" />
 			</td>
 		</tr>
 		<tr>
