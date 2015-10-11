@@ -476,7 +476,12 @@ $("#addDeliveryAddressLink").click(function (ev) {
 });
 
 $("#addPermitLink").click(function (ev) {
+	var customerId = $('#customerSelect').val();
+	var deliveryAddressId = $('#deliveryAddressSelect').val();
+	
 	var url = $(this).attr("href");
+	url += "?customerId=" + customerId + "&deliveryAddressId=" + deliveryAddressId ;
+	
 	showPopupDialog("Add Permit", url);
 	
 	ev.preventDefault();
@@ -774,7 +779,7 @@ $("#addPermitLink").click(function (ev) {
 				</label>
 				<label style="display: inline-block; font-weight: normal">
 					&nbsp;
-					<a href="/permit/permitCreateModal.do" id="addPermitLink" >
+					<a href="/permit/createForCustomerModal.do" id="addPermitLink" >
 						<img src="/images/addnew.png" border="0" style="float:bottom" class="toolbarButton">
 					</a>
 				</label>

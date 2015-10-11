@@ -269,6 +269,34 @@ public class PermitController extends CRUDController<Permit> {
 		return urlContext + "/permit";
 	}
 	
+	@RequestMapping(method = RequestMethod.GET, value = "/createForCustomerModal.do")
+	public String createForCustomerModal(ModelMap model, HttpServletRequest request, 
+			@RequestParam(value = "customerId") Long customerId,
+			@RequestParam(value = "deliveryAddressId") Long deliveryAddressId) {
+		String customerQuery = "select obj from Customer obj where obj.id=" + customerId;
+		List<Customer> customerList = genericDAO.executeSimpleQuery(customerQuery);
+		model.put("customer", customerList);
+		
+		String deliveryAddressQuery = "select obj from DeliveryAddress obj where obj.id=" + deliveryAddressId;
+		List<DeliveryAddress> deliveryAddressList = genericDAO.executeSimpleQuery(deliveryAddressQuery);
+		model.addAttribute("deliveryAddress", deliveryAddressList);
+		
+		Permit emptyPermit = new Permit();
+		model.put("modelObject", emptyPermit);
+		
+		model.addAttribute("notesModelObject", new PermitNotes());
+		model.addAttribute("permitAddressModelObject", new PermitAddress());
+		
+		Map criterias = new HashMap();
+		model.addAttribute("locationType", genericDAO.findByCriteria(LocationType.class, criterias, "id", false));
+		model.addAttribute("permitClass", genericDAO.findByCriteria(PermitClass.class, criterias, "permitClass", false));
+		model.addAttribute("permitType", genericDAO.findByCriteria(PermitType.class, criterias, "permitType", false));
+		model.addAttribute("permitStatus", genericDAO.findByCriteria(PermitStatus.class, criterias, "status", false));
+		model.addAttribute("state", genericDAO.findAll(State.class));
+		
+		return urlContext + "/formModal";
+	}
+	
 	@RequestMapping(method = RequestMethod.GET, value = "/permitCreateModal.do")
 	public String deliveryAddressCreateModal(ModelMap model, HttpServletRequest request, @RequestParam(value = "id") Long orderPermitId) {
 	
