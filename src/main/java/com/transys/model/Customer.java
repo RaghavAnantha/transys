@@ -213,8 +213,10 @@ public class Customer extends AbstractBaseModel {
 		if (StringUtils.isNotEmpty(getCity())) {
 			addressBuff.append(", " + getCity());
 		}
-		if (StringUtils.isNotEmpty(getState().getName())) {
-			addressBuff.append(", " + getState().getName());
+		if (getState() != null) {
+			if (StringUtils.isNotEmpty(getState().getName())) {
+				addressBuff.append(", " + getState().getName());
+			}
 		}
 		if (StringUtils.isNotEmpty(getZipcode())) {
 			addressBuff.append(", " + getZipcode());
