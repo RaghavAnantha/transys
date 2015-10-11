@@ -543,6 +543,10 @@ public class PermitController extends CRUDController<Permit> {
 		}
 		
 		genericDAO.save(permitAddress);
+		
+		List<PermitAddress> permitAddressList = new ArrayList<PermitAddress>();
+		permitAddressList.add(permitAddress);
+		entity.setPermitAddress(permitAddressList);
 	}
 
 	private void associateToOrder(Permit entity) {

@@ -174,12 +174,9 @@ function appendPermit(permit) {
 	var newPermitOption = $('<option value=' + permit.id + ' selected>'+ permit.number +'</option>');
 	permitNumbersSelect.append(newPermitOption);
 	
-	var permitValidFrom = $("#permitValidFrom" + index);
-	var permitValidTo = $("#permitValidTo" + index);
-	var permitFee = $("#orderPaymentInfo\\.permitFee" + index);
-	
-	var permitAddressSelect = $("#permitAddress" + index);
-	permitAddressSelect.empty();
+	var permitValidFrom = $("#permitValidFrom" + 1);
+	var permitValidTo = $("#permitValidTo" + 1);
+	var permitFee = $("#orderPaymentInfo\\.permitFee" + 1);
 	
 	permitValidFrom.html(permit.startDate);
    	permitValidTo.html(permit.endDate);
@@ -188,6 +185,8 @@ function appendPermit(permit) {
 		permitFee.val(permit.fee);
    	}
    	
+	var permitAddressSelect = $("#permitAddress" + 1);
+	permitAddressSelect.empty();
    	var permitAddressList = permit.permitAddress;
    	$.each(permitAddressList, function () {
    	    $("<option />", {
