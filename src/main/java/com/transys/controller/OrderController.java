@@ -227,6 +227,30 @@ public class OrderController extends CRUDController<Order> {
 		return urlContext + "/order";
 	}
 	
+	@RequestMapping(method = RequestMethod.GET, value = "/orderNotesCreateModal.do")
+	public String orderNotesCreateModal(ModelMap model, HttpServletRequest request,
+												   @RequestParam(value = "id") Long orderPermitId) {
+		Map<String, Object> criterias = new HashMap<String, Object>();
+		criterias.put("id", orderPermitId);
+		OrderPermits orderPermitToBeEdited = genericDAO.findByCriteria(OrderPermits.class, criterias, "id", false).get(0);
+		Long orderId = orderPermitToBeEdited.getOrder().getId();
+		
+		model.addAttribute("activeTab", "manageOrders");
+		model.addAttribute("mode", "ADD");
+		model.addAttribute("activeSubTab", "orderNotesTab");
+		
+		Order emptyOrder = new Order();
+		emptyOrder.setId(orderId);
+		OrderNotes notes = new OrderNotes();
+		notes.setOrder(emptyOrder);
+		model.addAttribute("notesModelObject", notes);
+	
+		List<BaseModel> notesList = genericDAO.executeSimpleQuery("select obj from OrderNotes obj where obj.order.id=" +  orderId + " order by obj.id asc");
+		model.addAttribute("notesList", notesList);
+		
+		return urlContext + "/notesModal";
+	}
+	
 	@RequestMapping(method = RequestMethod.POST, value = "/saveOrderNotes.do")
 	public String saveOrderNotes(HttpServletRequest request,
 			@ModelAttribute("notesModelObject") OrderNotes entity,
