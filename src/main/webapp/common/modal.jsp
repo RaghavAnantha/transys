@@ -64,3 +64,20 @@ function showPopupDialog(title, url) {
 		</div>
 	</div>
 </div>
+
+<script type="text/javascript">
+$("#alertDialog").on("hidden.bs.modal", function(e) {
+	$("#alertDialogTitle").html("");
+	$("#alertDialogBody").html("");
+});
+
+$("#confirmDialog").on("hidden.bs.modal", function(e) {
+	$("#confirmDialogTitle").html("");
+	$("#confirmDialogBody").html("");
+});	
+
+$("#popupDialog").on("hidden.bs.modal", function(e) {
+	$("#popupDialogTitle").html("");
+	$("#popupDialogBody").html("");
+});	
+</script>

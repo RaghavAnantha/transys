@@ -47,7 +47,7 @@ $("#permitForCustomerModalForm").submit(function (ev) {
 		<tr>
 			<td class="form-left"><transys:label code="Customer Name" /><span class="errorMessage">*</span></td>
 			<td align="${left}">
-				<form:select id="customerSelect" cssClass="flat form-control input-sm" path="customer" style="width: 175px !important"> 
+				<form:select id="permitCustomerSelect" cssClass="flat form-control input-sm" path="customer" style="width: 175px !important"> 
 					<form:options items="${customer}" itemValue="id" itemLabel="companyName" />
 				</form:select> 
 			 	<br><form:errors path="customer" cssClass="errorMessage" />
@@ -61,14 +61,14 @@ $("#permitForCustomerModalForm").submit(function (ev) {
 		<tr>
 			<td class="form-left"><transys:label code="Delivery Address" /><span class="errorMessage">*</span></td>
 			<td align="${left}">
-				<form:select id="deliveryAddressSelect" cssClass="flat form-control input-sm" path="deliveryAddress" style="width: 175px !important" >
+				<form:select id="permitDeliveryAddressSelect" cssClass="flat form-control input-sm" path="deliveryAddress" style="width: 175px !important" >
 					<form:options items="${deliveryAddress}" itemValue="id" itemLabel="fullLine" />
 				</form:select> 
 			 	<br><form:errors path="deliveryAddress" cssClass="errorMessage" />
 			</td> 
 			<td class="form-left"><transys:label code="Location Type" /><span class="errorMessage">*</span></td>
 			<td align="${left}">
-				<form:select id="locationTypeSelect" cssClass="flat form-control input-sm" path="locationType" style="width: 175px !important" >
+				<form:select id="permitLocationTypeSelect" cssClass="flat form-control input-sm" path="locationType" style="width: 175px !important" >
 					<form:options items="${locationType}" itemValue="id" itemLabel="locationType" />
 				</form:select> 
 			 	<br><form:errors path="locationType" cssClass="errorMessage" />
@@ -77,7 +77,7 @@ $("#permitForCustomerModalForm").submit(function (ev) {
 		<tr>
 			<td class="form-left"><transys:label code="Permit Class" /><span class="errorMessage">*</span></td>
 			<td align="${left}">
-				<form:select cssClass="flat form-control input-sm" path="permitClass" style="width: 175px !important" >
+				<form:select id="permitClassSelect" cssClass="flat form-control input-sm" path="permitClass" style="width: 175px !important" >
 					<form:options items="${permitClass}" itemValue="id" itemLabel="permitClass" />
 				</form:select> 
 			 	<br><form:errors path="permitClass" cssClass="errorMessage" />
