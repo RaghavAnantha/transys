@@ -8,7 +8,6 @@
 <body>
 	<ul class="nav nav-tabs" id="permit_main_tabs">
 		<li><a href="#managePermits" data-toggle="tab">Permits</a></li>
-	<!-- 	<li><a href="#orderPermitAlert" data-toggle="tab">Order Permits Alert</a></li> -->
 		<li><a href="/orderPermitAlert/main.do">Order Permits Alert</a></li>
 		<li><a href="#permitsReport" data-toggle="tab">Permits Report</a></li>
 	</ul>
@@ -22,10 +21,6 @@
 				<%@include file="addEdit.jsp"%>
 			</c:if>
 		</div>	
-		<div id="orderPermitAlert" class="tab-pane">
- 			<br/>
-			<%@include file="orderPermitAlert.jsp"%>
-		</div> 
 		<div id="permitsReport" class="tab-pane">
 			<br/>
 			<p>Placeholder for permit reports</p>
