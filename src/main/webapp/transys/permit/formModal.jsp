@@ -43,7 +43,7 @@ function populateEndDate() {
 
 </script>
 <br/>
-<form:form action="save.do" name="typeForm" commandName="modelObject" method="post" >
+<form:form action="/permit/save.do" name="typeForm" commandName="modelObject" method="post" >
 	<form:hidden path="orderId" value="${associatedOrderID.id}" />
 	<table id="form-table" width="100%">
 		<tr>
@@ -91,20 +91,6 @@ function populateEndDate() {
 			 	<br><form:errors path="locationType" cssClass="errorMessage" />
 			</td>
 		</tr>
-		 <%--<tr>
-			<td class="form-left"><transys:label code="Permit Address" /><span class="errorMessage">*</span></td>
-			<td align="${left}">
-				<form:input path="permitAddress" cssClass="flat" style="min-width:350px; max-width:350px"  />
-			 	<br><form:errors path="permitAddress" cssClass="errorMessage" />
-			</td>
-			
-			<td class="form-left"><transys:label code="Permit Street" /></td>
-			<td align="${left}">
-				<form:input path="permit.permitStreet" cssClass="flat" style="min-width:350px; max-width:350px"  />
-			 	<br><form:errors path="permit.permitStreet" cssClass="errorMessage" />
-			</td>
-		</tr> --%>
-
 		<tr>
 			<td class="form-left"><transys:label code="Permit Class" /><span class="errorMessage">*</span></td>
 			<td align="${left}">

@@ -38,6 +38,9 @@
     <decorator name="permit" page="singleColumnLayout.jsp">
         <pattern>/transys/permit/**</pattern>
     </decorator>
+    <decorator name="orderPermitsAlert" page="singleColumnLayout.jsp">
+        <pattern>/transys/orderPermitAlert/**</pattern>
+    </decorator>
     <decorator name="employee" page="singleColumnLayout.jsp">
         <pattern>/transys/employee/**</pattern>
     </decorator>

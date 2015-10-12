@@ -51,6 +51,8 @@ import com.transys.model.State;
 @RequestMapping("/permit")
 public class PermitController extends CRUDController<Permit> {
 	
+	public static final int MAX_NUMBER_OF_ASSOCIATED_PERMITS = 3;
+	
 	public PermitController(){
 		setUrlContext("permit");
 	}
@@ -91,81 +93,9 @@ public class PermitController extends CRUDController<Permit> {
 		return urlContext + "/permit";
 	}
 	
-	@RequestMapping(method = RequestMethod.GET, value = "/listOrderPermit.do")
-	public String displayOrderPermitsAlert(ModelMap model, HttpServletRequest request) {
-		request.getSession().removeAttribute("searchCriteria");
-		setupList(model, request);
-		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
-		
-		// Search for permits corresponding to open orders and status=expired or expiring in the next 7 days
-		List<OrderPermits> orderPermits = getToBeAlertedPermits(criteria);
-		model.addAttribute("orderPermitList", orderPermits);
-		
-		model.addAttribute("activeTab", "orderPermitAlert");
-		return urlContext + "/permit";
-	}
-	
 	@RequestMapping(method = RequestMethod.GET, value = "/notes.do")
 	public String displayNotes(ModelMap model, HttpServletRequest request) {
 		return urlContext + "/permit";
-	}
-	
-	/**
-	 * Return the list of permits associated with open orders, expired or expiring in the next 7 days
-	 * 
-	 * @param searchCriteria
-	 * @return
-	 */
-	private List<OrderPermits> getToBeAlertedPermits(SearchCriteria searchCriteria) {
-			// TODO: open orders --> include DroppedOff?
-			Object existingSearchValue = setupOrderPermitSearchCriteria(searchCriteria);
-			
-			List<OrderPermits> orderPermits = genericDAO.search(OrderPermits.class, searchCriteria, "id", null, null);
-			System.out.println("Order Permits Size = " + orderPermits.size());
-
-			cleanOrderPermitSearchCriteria(searchCriteria, existingSearchValue);
-	
-			return orderPermits;
-			
-	}
-
-	private Object setupOrderPermitSearchCriteria(SearchCriteria searchCriteria) {
-		
-		Object existingSearchValue = null;
-		Map searchMap = searchCriteria.getSearchMap();
-		
-		if (searchMap.containsKey("order.orderStatus.status")) {
-			existingSearchValue = searchMap.get("order.orderStatus.status");
-			// append these to it, store the existing search to be reset after the search
-			
-		} else {
-			searchMap.put("order.orderStatus.status", "Open");
-			searchMap.put("||order.orderStatus.status", "Dropped-off");
-		}
-		
-		// permit EndDate <= Today + 7 days
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(new Date());
-		cal.add(Calendar.DATE, 7);
-		searchMap.put("permit.endDate", "<=" + BaseController.dateFormat.format(cal.getTime()));
-		
-		searchCriteria.setSearchMap(searchMap);
-		return existingSearchValue;
-	}
-
-	private void cleanOrderPermitSearchCriteria(SearchCriteria searchCriteria, Object existingSearchValue) {
-		Map searchMap = searchCriteria.getSearchMap();
-		if (existingSearchValue == null) {
-			// remove the key
-			searchMap.remove("existingSearchValue");
-		} else {
-			// reset the value
-			searchMap.put("order.orderStatus.status", existingSearchValue);
-		}
-		
-		// TODO: Filter on endDate already available in SearchCriteria
-		searchMap.remove("permit.endDate");
-		searchCriteria.setSearchMap(searchMap);
 	}
 	
 	/*
@@ -298,14 +228,19 @@ public class PermitController extends CRUDController<Permit> {
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/permitCreateModal.do")
-	public String deliveryAddressCreateModal(ModelMap model, HttpServletRequest request, @RequestParam(value = "id") Long orderPermitId) {
+	public String permitCreateModal(ModelMap model, HttpServletRequest request, @RequestParam(value = "id") Long orderPermitId) {
 	
 		setupUpdate(model, request);
 		System.out.println("OrderPermit Id being edited = " + orderPermitId);
-
+		
 		Map<String, Object> criterias = new HashMap<String, Object>();
 		criterias.put("id", orderPermitId);
 		OrderPermits orderPermitToBeEdited = genericDAO.findByCriteria(OrderPermits.class, criterias, "id", false).get(0);
+		
+		if (!validateMaxPermitsAllowable(model, orderPermitToBeEdited)) {
+			return urlContext + "/formModal"; //TODO: Check
+		}
+		
 		Permit permitToBeEdited = orderPermitToBeEdited.getPermit();
 		permitToBeEdited.setNumber(StringUtils.EMPTY); // empty the permit number
 		
@@ -323,37 +258,19 @@ public class PermitController extends CRUDController<Permit> {
 			model.addAttribute("associatedOrderID", orderPermitObj);
 		}
 		
-		/*Permit permitToBeEdited = (Permit)model.get("modelObject");
-		
-		if (permitToBeEdited == null) { // OrderPermitAlert Screen - Add New Permit, should do a new add, not an update - clear out the id field?
-			OrderPermits orderPermitToBeEdited = setupOrderPermitModel(request);
-			permitToBeEdited = orderPermitToBeEdited.getPermit();
-			System.out.println("Got the new permit number " + permitToBeEdited.getNumber());
-			model.put("modelObject", permitToBeEdited);
-		} 
-		
-		System.out.println("Permit to be edited = " + permitToBeEdited.getId());
-		PermitNotes notes = new PermitNotes();
-		notes.setPermit(permitToBeEdited); 
-		model.addAttribute("notesModelObject", notes);
-		List<BaseModel> notesList = genericDAO.executeSimpleQuery("select obj from PermitNotes obj where obj.permit.id=" +  permitToBeEdited.getId() + " order by obj.id asc");
-		model.addAttribute("notesList", notesList);
-	
-		PermitAddress permitAddress = new PermitAddress();
-		permitAddress.setPermit(permitToBeEdited); 
-		model.addAttribute("permitAddressModelObject", permitAddress);
-		List<BaseModel> permitAddressList = genericDAO.executeSimpleQuery("select obj from PermitAddress obj where obj.permit.id=" +  permitToBeEdited.getId() + " order by obj.id asc");
-		model.addAttribute("permitAddressList", permitAddressList);
-		
-		// only in cases of Edit, an order ID can be associated with the permit
-		List<BaseModel> orderPermits = (List<BaseModel>)genericDAO.executeSimpleQuery("select obj from OrderPermits obj where obj.permit.id=" +  permitToBeEdited.getId() + " order by obj.id desc");
-		if (orderPermits != null && orderPermits.size() > 0) {
-			BaseModel orderPermitObj = orderPermits.get(0);
-			model.addAttribute("associatedOrderID", orderPermitObj);
-		}
-	*/
-		
 		return urlContext + "/formModal";
+	}
+
+	private boolean validateMaxPermitsAllowable(ModelMap model, OrderPermits orderPermitToBeEdited) {
+		// validate if this order has < 3 permits, else show alert
+		List<BaseModel> orderPermitsForThisOrder = (List<BaseModel>)genericDAO.executeSimpleQuery("select obj from OrderPermits obj where obj.order.id=" +  orderPermitToBeEdited.getOrder().getId());
+		if (orderPermitsForThisOrder != null && orderPermitsForThisOrder.size() >= MAX_NUMBER_OF_ASSOCIATED_PERMITS) {
+			//do not create modal, show alert
+			model.addAttribute("error", "There are already " + MAX_NUMBER_OF_ASSOCIATED_PERMITS + " for this order.");
+			return false;
+		}
+		
+		return true;
 	}
 	
 	@Override
@@ -423,9 +340,6 @@ public class PermitController extends CRUDController<Permit> {
 		model.addAttribute("orderStatuses", genericDAO.findByCriteria(OrderStatus.class, criterias, "status", false));
 		model.addAttribute("state", genericDAO.findAll(State.class));
 
-		List<OrderPermits> orderPermits = getToBeAlertedPermits(new SearchCriteria());
-		model.addAttribute("orderPermitList", orderPermits);
-
 	}
 	
 	@Override
@@ -433,11 +347,19 @@ public class PermitController extends CRUDController<Permit> {
 	public String save(HttpServletRequest request,
 			@ModelAttribute("modelObject") Permit entity,
 			BindingResult bindingResult, ModelMap model) {
-
+		
+			boolean isNewPermitFromAlertScreen = isNewPermitFromAlertScreen(entity);
 			String status = "Pending";
-			if (entity.getNumber() != null && entity.getNumber().length() > 0) {
-				status = "Available";
-			} 
+			OrderPermits associatedOrderPermitEntry = null;
+			
+			if (isNewPermitFromAlertScreen) { // Its a new permit, triggered from OrderPermit Screen
+				status = "Assigned"; // TODO: Is this ok?
+				associatedOrderPermitEntry = validatePermitEndDate(entity);
+			} else {
+				if (entity.getNumber() != null && entity.getNumber().length() > 0) {
+					status = "Available";
+				} 
+			}
 			
 			PermitStatus permitStatus = (PermitStatus)genericDAO.executeSimpleQuery("select obj from PermitStatus obj where obj.status='" + status + "'").get(0);
 			entity.setStatus(permitStatus);
@@ -466,6 +388,13 @@ public class PermitController extends CRUDController<Permit> {
 				return urlContext + "/form";
 			}
 			
+			System.out.println("Permits parking meter = " + entity.getParkingMeter());
+			//TODO: REMOVE THIS HACK
+			if (entity.getParkingMeter().startsWith("Yes")) {
+				entity.setParkingMeter("Yes");
+			} else {
+				entity.setParkingMeter("No");
+			}
 			beforeSave(request, entity, model);
 			genericDAO.saveOrUpdate(entity);
 			
@@ -473,13 +402,40 @@ public class PermitController extends CRUDController<Permit> {
 			addDeliveryAddAsPermitAdd(request, entity);
 			
 			// If new permit initiated from OrderPermitAlert screen, the permit should be associated with the corresponding orderID
-			associateToOrder(entity);
+			if (isNewPermitFromAlertScreen) {
+				System.out.println("About to associate OrderId");
+				associateToOrder(entity, associatedOrderPermitEntry);
+			}
 			
 			cleanUp(request);
 			
 			return saveSuccess(model, request, entity);
 	}
+
+	private OrderPermits validatePermitEndDate(Permit entity) {
+		OrderPermits associatedOrderPermitEntry = null;
+		// check the dates, endDate >= Order's delivery date
+		List<BaseModel> orderPermits = (List<BaseModel>)genericDAO.executeSimpleQuery("select obj from OrderPermits obj where obj.id=" +  entity.getOrderId()+ " order by obj.id desc");
+		System.out.println(">> Found the items " + orderPermits.size());
+		if (orderPermits != null && orderPermits.size() > 0) {
+			associatedOrderPermitEntry = (OrderPermits) orderPermits.get(0);
+			if (entity.getEndDate().before(associatedOrderPermitEntry.getOrder().getDeliveryDate())) {
+				// validation error must be thrown
+				System.out.println("Permit End Date does not match the Order's Delivery Date, please check.");
+			}
+		}
+		return associatedOrderPermitEntry;
+	}
 	
+	private boolean isNewPermitFromAlertScreen(Permit entity) {
+		System.out.println("Entity = " + entity.getOrderId());
+		if (entity.getOrderId() != null) { // Its
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	@RequestMapping(method = RequestMethod.POST, value = "/saveForCustomerModal.do")
 	public @ResponseBody String saveForCustomerModal(HttpServletRequest request,
 			@ModelAttribute("modelObject") Permit entity,
@@ -545,20 +501,16 @@ public class PermitController extends CRUDController<Permit> {
 		genericDAO.save(permitAddress);
 	}
 
-	private void associateToOrder(Permit entity) {
-		if (entity.getOrderId() == null) { // Its a new permit, not triggered from OrderPermit Screen
-			return;
-		}
-		
+	private void associateToOrder(Permit entity, OrderPermits associatedOrderPermit) {
 		// existing permit details, chk order association
-		List<BaseModel> orderPermits = (List<BaseModel>)genericDAO.executeSimpleQuery("select obj from OrderPermits obj where obj.id=" +  entity.getOrderId()+ " order by obj.id desc");
-		if (orderPermits != null && orderPermits.size() > 0) {
-			OrderPermits associatedOrderPermit = (OrderPermits)orderPermits.get(0);
+		if (associatedOrderPermit != null) {
 			Map<String, Object> criterias = new HashMap<String, Object>();
 			criterias.put("number", entity.getNumber());
 			Permit newPermit = genericDAO.findByCriteria(Permit.class, criterias, "id", false).get(0);
 			associatedOrderPermit.setPermit(newPermit);
 			genericDAO.saveOrUpdate(associatedOrderPermit);
+		} else {
+			System.out.println("For some reason associatedOrderPermit is null. Check Me!");
 		}
 	}
 	
@@ -585,7 +537,11 @@ public class PermitController extends CRUDController<Permit> {
 		List<BaseModel> permitAddressList = genericDAO.executeSimpleQuery("select obj from PermitAddress obj where obj.permit.id=" +  entity.getId() + " order by obj.id asc");
 		model.addAttribute("permitAddressList", permitAddressList);
 		
-		return urlContext + "/permit";
+		if (entity.getOrderId() != null) {
+			return "orderPermitAlert/list";
+		} else {
+			return urlContext + "/permit";
+		}
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/customerDeliveryAddress")

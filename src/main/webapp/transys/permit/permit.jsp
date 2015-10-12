@@ -8,7 +8,8 @@
 <body>
 	<ul class="nav nav-tabs" id="permit_main_tabs">
 		<li><a href="#managePermits" data-toggle="tab">Permits</a></li>
-		<li><a href="#orderPermitAlert" data-toggle="tab">Order Permits Alert</a></li>
+	<!-- 	<li><a href="#orderPermitAlert" data-toggle="tab">Order Permits Alert</a></li> -->
+		<li><a href="/orderPermitAlert/main.do">Order Permits Alert</a></li>
 		<li><a href="#permitsReport" data-toggle="tab">Permits Report</a></li>
 	</ul>
 
