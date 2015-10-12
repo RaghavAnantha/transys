@@ -1109,8 +1109,8 @@ $("#addPermitLink").click(function (ev) {
 		+  "&deliveryAddressId=" + deliveryAddressId
 		+  "&locationTypeId=" + locationTypeId
 		+  "&permitClassId=" + permitClassId
-		+  "&permitTypeId=" + permitTypeId;
-		//+  "&deliveryDate=" + deliveryDate;
+		+  "&permitTypeId=" + permitTypeId
+		+  "&deliveryDate=" + deliveryDate;
 	
 	showPopupDialog("Add Permit", url);
 	

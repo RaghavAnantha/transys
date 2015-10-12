@@ -5,17 +5,19 @@ function populatePermitEndDate() {
 	permitEndDateInput.val("");
 	
 	var startDate = $('#startDate').val();
-	var permitType = $('#permitTypeSelect').val();
+	var permitTypeId = $('#permitTypeSelect').val();
 	
-	if (startDate != '' && permitType != '') {
-		$.ajax({
-	  		url: "/permit/calculatePermitEndDate.do?startDate=" + startDate + "&permitType=" + permitType,
-	       	type: "GET",
-	       	success: function(responseData, textStatus, jqXHR) {
-	       		permitEndDateInput.val(responseData);
-			}
-		});
+	if (startDate == '' || permitTypeId == '') {
+		return false;
 	}
+	
+	$.ajax({
+  		url: "/permit/calculatePermitEndDate.do?startDate=" + startDate + "&permitTypeId=" + permitTypeId,
+       	type: "GET",
+       	success: function(responseData, textStatus, jqXHR) {
+       		permitEndDateInput.val(responseData);
+		}
+	});
 }
 
 $("#permitForCustomerModalForm").submit(function (ev) {

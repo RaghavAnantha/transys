@@ -205,8 +205,8 @@ public class PermitController extends CRUDController<Permit> {
 			@RequestParam(value = "deliveryAddressId") Long deliveryAddressId,
 			@RequestParam(value = "locationTypeId") Long locationTypeId,
 			@RequestParam(value = "permitClassId") Long permitClassId,
-			@RequestParam(value = "permitTypeId") Long permitTypeId) {
-			//@RequestParam(value = "deliveryDate") Long deliveryDate) {
+			@RequestParam(value = "permitTypeId") Long permitTypeId,
+			@RequestParam(value = "deliveryDate") Date deliveryDate) {
 		String customerQuery = "select obj from Customer obj where obj.id=" + customerId;
 		List<Customer> customerList = genericDAO.executeSimpleQuery(customerQuery);
 		model.put("customer", customerList);
@@ -228,6 +228,10 @@ public class PermitController extends CRUDController<Permit> {
 		model.addAttribute("permitType", permitTypeList);
 		
 		Permit emptyPermit = new Permit();
+		emptyPermit.setStartDate(deliveryDate);
+		Date endDate = calculatePermitEndDate(permitTypeId, deliveryDate);
+		emptyPermit.setEndDate(endDate);
+		
 		model.put("modelObject", emptyPermit);
 		
 		return urlContext + "/formForCustomerModal";
@@ -573,27 +577,40 @@ public class PermitController extends CRUDController<Permit> {
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/calculatePermitEndDate")
-	public @ResponseBody String calculatePermitEndDate(ModelMap model, HttpServletRequest request) {
-		SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
-		String dateInString = request.getParameter("startDate");
-		Date startDateObj = null;
+	public @ResponseBody String calculatePermitEndDate(ModelMap model, HttpServletRequest request,
+			@RequestParam(value = "permitTypeId") Long permitTypeId,
+			@RequestParam(value = "startDate") Date startDate) {
+		/*SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+		
+		String startDateStr = request.getParameter("startDate");
+		Date startDate = null;
 		try {
-			startDateObj = formatter.parse(dateInString);
+			startDate = formatter.parse(startDateStr);
 		} catch (ParseException e) {
+			//TODO
 			e.printStackTrace();
-		}
-				
-		String permitType = request.getParameter("permitType");
-		PermitType permitTypeObj = (PermitType) genericDAO.executeSimpleQuery("select obj from PermitType obj where obj.id=" + permitType).get(0);
-		if (startDateObj != null && permitTypeObj.getPermitType() != null) {
-			String tokens[] = permitTypeObj.getPermitType().split("\\s");
-			int noOfDays = new Integer(tokens[0]).intValue();
-			Date endDate = DateUtils.addDays(startDateObj, noOfDays);
-			System.out.println("End date = " + endDate);
-			return formatter.format(endDate);
-		} else {
+		}*/
+			
+		
+		Date endDate = calculatePermitEndDate(permitTypeId, startDate);
+		SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+		return formatter.format(endDate);
+	}
+
+	private Date calculatePermitEndDate(Long permitTypeId, Date startDate) {
+		if (startDate == null) {
 			return null;
 		}
+		
+		PermitType permitTypeObj = (PermitType) genericDAO.executeSimpleQuery("select obj from PermitType obj where obj.id=" + permitTypeId).get(0);
+		if (permitTypeObj.getPermitType() == null) {
+			return null;
+		}
+		
+		String tokens[] = permitTypeObj.getPermitType().split("\\s");
+		int noOfDays = new Integer(tokens[0]).intValue();
+		Date endDate = DateUtils.addDays(startDate, noOfDays);
+		return endDate;
 	}
 	
 	@RequestMapping(method = RequestMethod.POST, value = "/savePermitNotes.do")
