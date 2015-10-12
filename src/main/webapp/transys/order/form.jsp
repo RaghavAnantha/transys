@@ -169,6 +169,35 @@ function appendCustomer(customer) {
 	selectDeliveryAddressOption(customer.deliveryAddress[0].id);
 }
 
+function appendPermit(permit) {
+	var permitNumbersSelect = $("#permits\\[" + 0 + "\\]");
+	var newPermitOption = $('<option value=' + permit.id + ' selected>'+ permit.number +'</option>');
+	permitNumbersSelect.append(newPermitOption);
+	
+	var permitValidFrom = $("#permitValidFrom" + 1);
+	var permitValidTo = $("#permitValidTo" + 1);
+	var permitFee = $("#orderPaymentInfo\\.permitFee" + 1);
+	
+	permitValidFrom.html(permit.startDate);
+   	permitValidTo.html(permit.endDate);
+   	
+	if (permit.status.status == 'Pending') {
+		permitFee.val(permit.fee);
+   	}
+   	
+	var permitAddressSelect = $("#permitAddress" + 1);
+	permitAddressSelect.empty();
+   	var permitAddressList = permit.permitAddress;
+   	$.each(permitAddressList, function () {
+   	    $("<option />", {
+   	        val: this.id,
+   	        text: this.fullLine
+   	    }).appendTo(permitAddressSelect);
+   	});
+	
+	populateTotalPermitFees(); 
+}
+
 function populateDusmpsterPrice() {
 	var dumpsterSizeSelect = $("#dumpsterSize");
 	var dumpsterSizeId = dumpsterSizeSelect.val();
@@ -448,44 +477,6 @@ function verifyExchangeOrderAndSubmit() {
     
     return false;
 }
-
-$("#confirmDialogYes").click(function (ev) {
-	var isExchangeIndicator = $('#isExchange');
-	isExchangeIndicator.val("true");
-	
-	var orderAddEditForm = $("#orderAddEditForm");
-	orderAddEditForm.submit();
-});
-
-$("#addCustomerLink").click(function (ev) {
-	var url = $(this).attr("href");
-	showPopupDialog("Add Customer", url);
-	
-	ev.preventDefault();
-});
-
-$("#addDeliveryAddressLink").click(function (ev) {
-	var customerId = $('#customerSelect').val();
-	
-	var url = $(this).attr("href");
-	url += "?customerId=" + customerId;
-	
-	showPopupDialog("Add Delivery Address", url);
-	
-	ev.preventDefault();
-});
-
-$("#addPermitLink").click(function (ev) {
-	var customerId = $('#customerSelect').val();
-	var deliveryAddressId = $('#deliveryAddressSelect').val();
-	
-	var url = $(this).attr("href");
-	url += "?customerId=" + customerId + "&deliveryAddressId=" + deliveryAddressId ;
-	
-	showPopupDialog("Add Permit", url);
-	
-	ev.preventDefault();
-});
 </script>
 <br/>
 <form:form action="save.do" name="orderAddEditForm" commandName="modelObject" method="post" id="orderAddEditForm">
@@ -1084,5 +1075,64 @@ $("#addPermitLink").click(function (ev) {
 		</tr>
 	</table>
 </form:form>
+
+<script type="text/javascript">
+$("#confirmDialogYes").click(function (ev) {
+	var isExchangeIndicator = $('#isExchange');
+	isExchangeIndicator.val("true");
+	
+	var orderAddEditForm = $("#orderAddEditForm");
+	orderAddEditForm.submit();
+});
+
+$("#addCustomerLink").click(function (ev) {
+	var url = $(this).attr("href");
+	showPopupDialog("Add Customer", url);
+	
+	ev.preventDefault();
+});
+
+$("#addDeliveryAddressLink").click(function (ev) {
+	var customerId = $('#customerSelect').val();
+	
+	var url = $(this).attr("href");
+	url += "?customerId=" + customerId;
+	
+	showPopupDialog("Add Delivery Address", url);
+	
+	ev.preventDefault();
+});
+
+$("#addPermitLink").click(function (ev) {
+	var customerId = $('#customerSelect').val();
+	var deliveryAddressId = $('#deliveryAddressSelect').val();
+	var locationTypeId = $('#dumpsterLocationSelect').val();
+	
+	var permitClassSelect = $("#permitClasses" + 1);
+	var permitClassId = permitClassSelect.val();
+	
+	var permitTypeSelect = $("#permitTypes" + 1);
+	var permitTypeId = permitTypeSelect.val();
+	
+	var deliveryDate = $("[name='deliveryDate']").val();
+	
+	if (customerId == "" || deliveryAddressId == "" || locationTypeId == "" 
+			|| permitClassId == "" || permitTypeId == "" || deliveryDate == "") {
+		return false;
+	}
+	
+	var url = $(this).attr("href");
+	url += "?customerId=" + customerId 
+		+  "&deliveryAddressId=" + deliveryAddressId
+		+  "&locationTypeId=" + locationTypeId
+		+  "&permitClassId=" + permitClassId
+		+  "&permitTypeId=" + permitTypeId;
+		//+  "&deliveryDate=" + deliveryDate;
+	
+	showPopupDialog("Add Permit", url);
+	
+	ev.preventDefault();
+});
+</script>
 
 
