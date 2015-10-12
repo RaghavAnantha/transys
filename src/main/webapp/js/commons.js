@@ -101,6 +101,24 @@ $(function() {
 		changeYear: true,
 		showButtonPanel: true
 	});
+	$( "#datepicker8" ).datepicker({
+		dateFormat: 'mm/dd/yy',
+		changeMonth: true,
+		changeYear: true,
+		showButtonPanel: true
+	});
+	$( "#datepicker9" ).datepicker({
+		dateFormat: 'mm/dd/yy',
+		changeMonth: true,
+		changeYear: true,
+		showButtonPanel: true
+	});
+	$( "#datepicker10" ).datepicker({
+		dateFormat: 'mm/dd/yy',
+		changeMonth: true,
+		changeYear: true,
+		showButtonPanel: true
+	});
 	
 });
 

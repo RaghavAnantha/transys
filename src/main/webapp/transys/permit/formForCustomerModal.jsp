@@ -4,7 +4,7 @@ function populatePermitEndDate() {
 	var permitEndDateInput = $('#endDate');
 	permitEndDateInput.val("");
 	
-	var startDate = $('#startDate').val();
+	var startDate = $("[name='startDate']").val();
 	var permitTypeId = $('#permitTypeSelect').val();
 	
 	if (startDate == '' || permitTypeId == '') {
@@ -95,7 +95,7 @@ $("#permitForCustomerModalForm").submit(function (ev) {
 		<tr>
 			<td class="form-left"><transys:label code="Start Date" /></td>
 			<td align="${left}">
-				<form:input path="startDate" class="flat" style="width: 175px" onChange="return populatePermitEndDate();" />
+				<form:input path="startDate" id="datepicker8" class="flat" style="width: 175px" onChange="return populatePermitEndDate();" />
 				<br><form:errors path="startDate" cssClass="errorMessage" />
 			</td>
 			<td class="form-left"><transys:label code="End Date" /></td>
