@@ -121,7 +121,7 @@ function validateForm() {
 		}	
 	} 
 	
-	if (bool){
+	if (bool) {
 		return false;
 	}
 	

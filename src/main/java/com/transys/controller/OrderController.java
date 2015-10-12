@@ -704,6 +704,10 @@ public class OrderController extends CRUDController<Order> {
 		permitsQuery += "obj.id=" + permitId;
 		
 		List<Permit> permits = genericDAO.executeSimpleQuery(permitsQuery);
+		Permit aPermit = permits.get(0);
+		if ("Available".equals(aPermit.getStatus().getStatus())) {
+			aPermit.setFee(new BigDecimal(0.00));
+		}
 		return permits;
 	}
 	

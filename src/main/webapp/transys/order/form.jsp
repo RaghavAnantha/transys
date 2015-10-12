@@ -326,11 +326,11 @@ function populatePermitDetails(index, permit) {
 	permitValidFrom.html(permit.startDate);
    	permitValidTo.html(permit.endDate);
    	
-   	var permitFeeVal = "0.00"
+   	/*var permitFeeVal = "0.00"
 	if (permit.status.status == 'Pending') {
 		permitFeeVal = permit.fee;
-   	}
-   	permitFee.val(permitFeeVal);
+   	}*/
+   	permitFee.val(permit.fee);
    	
 	permitAddressSelect.empty();
    	var permitAddressList = permit.permitAddress;

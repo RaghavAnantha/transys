@@ -6,6 +6,7 @@ import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -897,16 +898,25 @@ public class DynamicReportServiceImpl implements DynamicReportService {
 					LabelUtil.getText(columnTag.getHeaderText(), locale),
 					Integer.valueOf("100"), headerStyle, timeStyle);
 			report.addColumn(longColumn);
+		} else if (field.getType() == Timestamp.class) {
+			Style timeStyle = new Style("Timestamp");
+			//timeStyle.setBorder(Border.THIN);
+			timeStyle.setHorizontalAlign(HorizontalAlign.LEFT);
+			timeStyle.setPattern("MM/dd/yyyy");
+			AbstractColumn timeStampColumn = getColumn(columnTag.getDataField(), Timestamp.class,
+					LabelUtil.getText(columnTag.getHeaderText(), locale),
+					Integer.valueOf("100"), headerStyle, timeStyle);
+			report.addColumn(timeStampColumn);
 		} else if (field.getType() == BigDecimal.class) {
 			Style bigDecimalStyle = new Style();
 			//doubleStyle.setBorder(Border.THIN);
 			bigDecimalStyle.setHorizontalAlign(HorizontalAlign.RIGHT);
 			bigDecimalStyle.setPattern("####.000");
 			bigDecimalStyle.setTextColor(Color.RED);
-			AbstractColumn doubleColumn = getColumn(columnTag.getDataField(), BigDecimal.class,
+			AbstractColumn bigDecimalColumn = getColumn(columnTag.getDataField(), BigDecimal.class,
 					LabelUtil.getText(columnTag.getHeaderText(), locale),
 					Integer.valueOf("100"), headerStyle, bigDecimalStyle);
-			report.addColumn(doubleColumn);
+			report.addColumn(bigDecimalColumn);
 		} else {
 			String type= columnTag.getType();
 			Class fieldType = String.class;
@@ -916,6 +926,10 @@ public class DynamicReportServiceImpl implements DynamicReportService {
 				fieldType = Double.class;
 			} else if ("java.math.BigDecimal".equalsIgnoreCase(type)){
 				fieldType = BigDecimal.class;
+			} else if ("java.sql.Timestamp".equalsIgnoreCase(type)){
+				fieldType = Timestamp.class;
+			} else if ("java.lang.Long".equalsIgnoreCase(type)){
+				fieldType = Long.class;
 			}
 			AbstractColumn genericColumn = getColumn(columnTag.getDataField(), fieldType,
 					LabelUtil.getText(columnTag.getHeaderText(), locale),
