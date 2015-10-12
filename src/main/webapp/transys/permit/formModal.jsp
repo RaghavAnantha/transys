@@ -27,15 +27,16 @@ function populateDeliveryAddress() {
 
 function populateEndDate() {
 	$('#endDateInput').empty();
-	var startDateValue = $('#datepicker7').val();
+	var startDateValue = $('#datepicker1').val();
 	var permitTypeValue = $('#permitTypeSelect').val();
 	
 	if (startDateValue != '' && permitTypeValue != '') {
+		
 		$.ajax({
 	  		url: "calculatePermitEndDate.do?startDate=" + startDateValue + "&permitType=" + permitTypeValue,
 	       	type: "GET",
 	       	success: function(responseData, textStatus, jqXHR) {
-	    	   	$('#endDateInput').val(responseData);
+	    	   	$('#endDateInputPopUp').val(responseData);
 			}
 		});
 	}
@@ -112,14 +113,13 @@ function populateEndDate() {
 		</tr>
 		
 		<tr>
-			<td align="${left}" class="form-left"><transys:label
-					code="Start Date" /></td>
+			<td align="${left}" class="form-left"><transys:label code="Start Date" /></td>
 			<td align="${left}" class="wide"><form:input path="startDate" class="flat"
-				id="datepicker7" name="startDate" style="width: 175px"  onChange="return populateEndDate();"/></td>
+				id="datepicker1" name="startDate" style="width: 175px"  onChange="return populateEndDate();"/></td>
 				
 			<td class="form-left"><transys:label code="End Date" /></td>
 			<td align="${left}">
-				<form:input id="endDateInput" path="endDate" cssClass="flat" style="width: 175px" readonly="true" />
+				<form:input id="endDateInputPopUp" path="endDate" cssClass="flat" style="width: 175px" readonly="true" />
 			 	<br><form:errors path="endDate" cssClass="errorMessage" />
 			</td>
 		</tr>

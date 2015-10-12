@@ -713,6 +713,10 @@ public final class Datatable extends BodyTagSupport {
 						else if (objCol instanceof AnchorColumn) {
 							// set the link url with the id
 							String linkUrl = ((AnchorColumn)objCol).getLinkUrl();
+							if (linkUrl.contains("?id=")) {
+								// remove the existing parameter and replace with new one
+								linkUrl = linkUrl.substring(0, linkUrl.lastIndexOf("?id="));
+							}
 							linkUrl += "?id=" + PropertyUtils.getProperty(currItem, "id");
 							((AnchorColumn)objCol).setLinkUrl(linkUrl);
 							

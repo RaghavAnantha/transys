@@ -1,5 +1,6 @@
 package com.transys.controller;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -29,12 +30,14 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 //import com.google.gson.Gson;
 import com.transys.controller.editor.AbstractModelEditor;
+import com.transys.core.dao.GenericJpaDAO;
 import com.transys.model.AbstractBaseModel;
 import com.transys.model.BaseModel;
 import com.transys.model.Customer;
 import com.transys.model.DeliveryAddress;
 import com.transys.model.LocationType;
 import com.transys.model.Order;
+import com.transys.model.OrderPaymentInfo;
 import com.transys.model.OrderPermits;
 import com.transys.model.OrderStatus;
 import com.transys.model.Permit;
@@ -409,8 +412,9 @@ public class PermitController extends CRUDController<Permit> {
 			
 			// If new permit initiated from OrderPermitAlert screen, the permit should be associated with the corresponding orderID
 			if (isNewPermitFromAlertScreen) {
-				System.out.println("About to associate OrderId");
-				associateToOrder(entity, associatedOrderPermitEntry);
+				
+				associateToOrder(entity, associatedOrderPermitEntry, request);
+				updatePermitAndTotalFeesInOrder(entity, associatedOrderPermitEntry);
 			}
 			
 			cleanUp(request);
@@ -418,11 +422,34 @@ public class PermitController extends CRUDController<Permit> {
 			return saveSuccess(model, request, entity);
 	}
 
+	private void updatePermitAndTotalFeesInOrder(Permit entity, OrderPermits associatedOrderPermitEntry) {
+		// update permit fees in Order
+		OrderPaymentInfo orderPaymentInfo = associatedOrderPermitEntry.getOrder().getOrderPaymentInfo();
+		int numberOfPermits = associatedOrderPermitEntry.getOrder().getPermits().size();
+		BigDecimal permitFees = entity.getFee();
+		
+		if (numberOfPermits == 1) { // minimum 1, as this step is after associating this permit to the order
+			// first permit
+			orderPaymentInfo.setPermitFee1(permitFees);
+		} else if (numberOfPermits == 2) {
+			// second permit
+			orderPaymentInfo.setPermitFee2(permitFees);
+		} else if (numberOfPermits == 3) {
+			// thirdPermit
+			orderPaymentInfo.setPermitFee3(permitFees);
+		}
+		
+		orderPaymentInfo.setTotalPermitFees(orderPaymentInfo.getTotalPermitFees().add(permitFees));
+		orderPaymentInfo.setTotalFees(orderPaymentInfo.getTotalFees().add(permitFees));
+		
+		genericDAO.saveOrUpdate(orderPaymentInfo);
+		System.out.println("Permit Fees updated for Order with Id = " + associatedOrderPermitEntry.getOrder().getId());
+	}
+
 	private OrderPermits validatePermitEndDate(Permit entity) {
 		OrderPermits associatedOrderPermitEntry = null;
 		// check the dates, endDate >= Order's delivery date
 		List<BaseModel> orderPermits = (List<BaseModel>)genericDAO.executeSimpleQuery("select obj from OrderPermits obj where obj.id=" +  entity.getOrderId()+ " order by obj.id desc");
-		System.out.println(">> Found the items " + orderPermits.size());
 		if (orderPermits != null && orderPermits.size() > 0) {
 			associatedOrderPermitEntry = (OrderPermits) orderPermits.get(0);
 			if (entity.getEndDate().before(associatedOrderPermitEntry.getOrder().getDeliveryDate())) {
@@ -511,14 +538,33 @@ public class PermitController extends CRUDController<Permit> {
 		entity.setPermitAddress(permitAddressList);
 	}
 
-	private void associateToOrder(Permit entity, OrderPermits associatedOrderPermit) {
+	private void associateToOrder(Permit entity, OrderPermits associatedOrderPermit, HttpServletRequest request) {
 		// existing permit details, chk order association
 		if (associatedOrderPermit != null) {
 			Map<String, Object> criterias = new HashMap<String, Object>();
 			criterias.put("number", entity.getNumber());
 			Permit newPermit = genericDAO.findByCriteria(Permit.class, criterias, "id", false).get(0);
-			associatedOrderPermit.setPermit(newPermit);
-			genericDAO.saveOrUpdate(associatedOrderPermit);
+			OrderPermits newOrderPermits = new OrderPermits();
+			
+			newOrderPermits.setOrder(associatedOrderPermit.getOrder());
+			newOrderPermits.setPermit(newPermit);
+			if (newOrderPermits instanceof AbstractBaseModel) {
+				AbstractBaseModel baseModel = (AbstractBaseModel) entity;
+				if (baseModel.getId() == null) {
+					baseModel.setCreatedAt(Calendar.getInstance().getTime());
+					if (baseModel.getCreatedBy()==null) {
+						baseModel.setCreatedBy(getUser(request).getId());
+					}
+				} else {
+					baseModel.setModifiedAt(Calendar.getInstance().getTime());
+					if (baseModel.getModifiedBy()==null) {
+						baseModel.setModifiedBy(getUser(request).getId());
+					}
+				}
+			}
+			
+			genericDAO.save(newOrderPermits);
+			
 		} else {
 			System.out.println("For some reason associatedOrderPermit is null. Check Me!");
 		}

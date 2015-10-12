@@ -1,5 +1,8 @@
 package com.transys.controller;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -7,17 +10,15 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.ValidationException;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.transys.model.BaseModel;
 import com.transys.model.Customer;
 import com.transys.model.DeliveryAddress;
 import com.transys.model.LocationType;
@@ -25,9 +26,7 @@ import com.transys.model.Order;
 import com.transys.model.OrderPermits;
 import com.transys.model.OrderStatus;
 import com.transys.model.Permit;
-import com.transys.model.PermitAddress;
 import com.transys.model.PermitClass;
-import com.transys.model.PermitNotes;
 import com.transys.model.PermitStatus;
 import com.transys.model.PermitType;
 import com.transys.model.SearchCriteria;
@@ -117,12 +116,76 @@ public class OrderPermitAlertController extends CRUDController<OrderPermits> {
 			List<OrderPermits> orderPermits = genericDAO.search(OrderPermits.class, searchCriteria, "id", null, null);
 			System.out.println("Order Permits Size = " + orderPermits.size());
 
-			cleanOrderPermitSearchCriteria(searchCriteria, existingSearchValue);
-	
-			return orderPermits;
+			/**
+			 *  for each orderPermit,
+			 *  a) get orderID
+			 *  b) get # of permits associated with this orderID, if count == 3, AlertFlag
+			 *  c) for each of the permits associated, if atleast 1 valid permit available, do not add to list
+			 */
 			
+			List<OrderPermits> expiredOrderPermits = new ArrayList<>();
+			Map<Long, List<OrderPermits>> orderPermitsSortedOnOrderId = new HashMap<>();
+			
+			List<OrderPermits> expiredOrderPermitEntriesForOrder = null;
+			
+			for (OrderPermits op : orderPermits) {
+				if (!orderPermitsSortedOnOrderId.containsKey(op.getOrder().getId())) {
+					expiredOrderPermitEntriesForOrder = new ArrayList<>();
+					expiredOrderPermitEntriesForOrder.add(op);
+					
+				} else {
+					expiredOrderPermitEntriesForOrder = orderPermitsSortedOnOrderId.get(op.getOrder().getId());
+					expiredOrderPermitEntriesForOrder.add(op);
+				}
+				orderPermitsSortedOnOrderId.put(op.getOrder().getId(), expiredOrderPermitEntriesForOrder);
+			}
+			
+			// for each orderPermitsSortedOnOrderId, ensure that the corresponding permits for this order has atleast 1 unexpired permit
+			for (Long orderId : orderPermitsSortedOnOrderId.keySet()) {
+				List<OrderPermits> orderPermitsForThisOrder = orderPermitsSortedOnOrderId.get(orderId);
+				if (unExpiredPermitAvailable(orderId, orderPermitsForThisOrder)) {
+					continue;
+				}
+				
+				expiredOrderPermits.addAll(orderPermitsForThisOrder);
+			}
+			
+			System.out.println("Order Permits Size (after expiry logic) = " + expiredOrderPermits.size());
+			
+			cleanOrderPermitSearchCriteria(searchCriteria, existingSearchValue);
+			return expiredOrderPermits;
 	}
 	
+	private boolean unExpiredPermitAvailable(Long orderId, List<OrderPermits> orderPermits) {
+		
+		if (orderPermits.size() == 1) {
+			// this is the only permit available for this order and it is expired
+			return false;
+		}
+		
+		Order currentOrder = orderPermits.get(0).getOrder();
+		if (currentOrder.getPermits().size() == orderPermits.size()) {
+			// all permits of the current order are expired
+			return false;
+		}
+		
+		boolean isExpiredPermit = false;
+		for (Permit p : currentOrder.getPermits()) { // for every permit of the order
+			for (OrderPermits expiredP : orderPermits) { // check if the permit is in the expired list
+				if (p.getId() == expiredP.getId()) {
+					isExpiredPermit = true;
+				}
+			}
+			
+			if (!isExpiredPermit) {
+				// atleast 1 non-expired permit is available, return
+				return true;
+			}
+		}
+			
+		return false;
+	}
+
 	private Object setupOrderPermitSearchCriteria(SearchCriteria searchCriteria) {
 		
 		Object existingSearchValue = null;
@@ -146,6 +209,30 @@ public class OrderPermitAlertController extends CRUDController<OrderPermits> {
 		
 		searchCriteria.setSearchMap(searchMap);
 		return existingSearchValue;
+	}
+	
+	@RequestMapping(method = RequestMethod.GET, value = "/calculatePermitEndDate")
+	public @ResponseBody String calculatePermitEndDate(ModelMap model, HttpServletRequest request) {
+		SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+		String dateInString = request.getParameter("startDate");
+		Date startDateObj = null;
+		try {
+			startDateObj = formatter.parse(dateInString);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+				
+		String permitType = request.getParameter("permitType");
+		PermitType permitTypeObj = (PermitType) genericDAO.executeSimpleQuery("select obj from PermitType obj where obj.id=" + permitType).get(0);
+		if (startDateObj != null && permitTypeObj.getPermitType() != null) {
+			String tokens[] = permitTypeObj.getPermitType().split("\\s");
+			int noOfDays = new Integer(tokens[0]).intValue();
+			Date endDate = DateUtils.addDays(startDateObj, noOfDays);
+			System.out.println("End date = " + endDate);
+			return formatter.format(endDate);
+		} else {
+			return null;
+		}
 	}
 	
 	private void cleanOrderPermitSearchCriteria(SearchCriteria searchCriteria, Object existingSearchValue) {

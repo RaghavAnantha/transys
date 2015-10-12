@@ -136,7 +136,8 @@
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
 		pagingLink="search.do" multipleDelete="false" searcheable="false" 
 		exportPdf="true" exportXls="true" dataQualifier="orderPermitAlert">
-		<transys:textcolumn headerText="Delivery Address" dataField="order.deliveryAddress.fullLine" />
+		<transys:textcolumn headerText="Delivery Address #" dataField="order.deliveryAddress.line1" />
+		<transys:textcolumn headerText="Delivery Address Street" dataField="order.deliveryAddress.line2" />
 		<transys:textcolumn headerText="CustomerName" dataField="order.customer.companyName" />
 		<transys:textcolumn headerText="Order#" dataField="order.id" />
 		<transys:textcolumn headerText="Contact" dataField="order.customer.contactName" />
