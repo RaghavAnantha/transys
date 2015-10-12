@@ -66,9 +66,9 @@
 		<transys:textcolumn headerText="CC Reference #" dataField="orderPaymentInfo.ccReferenceNum" />
 		<transys:textcolumn headerText="Dumpster Price" dataField="orderPaymentInfo.dumpsterPrice" />
 		<transys:textcolumn headerText="City Fee" dataField="orderPaymentInfo.cityFee" />
-		<transys:textcolumn headerText="Permit Fee" dataField="orderPaymentInfo.permitFees" />
+		<transys:textcolumn headerText="Permit Fee" dataField="orderPaymentInfo.totalPermitFees" />
 		<transys:textcolumn headerText="Overweight Fee" dataField="orderPaymentInfo.overweightFee" />
-		<transys:textcolumn headerText="Additional Fee" dataField="orderPaymentInfo.additionalFee" />
+		<transys:textcolumn headerText="Additional Fee" dataField="orderPaymentInfo.totalAdditionalFees" />
 		<transys:textcolumn headerText="Total Fees" dataField="orderPaymentInfo.totalFees" />
 	</transys:datatable>
 	<%session.setAttribute("orderRevenueReportColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>

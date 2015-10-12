@@ -1,11 +1,12 @@
 <%@include file="/common/taglibs.jsp"%>
 <br/>
 <h4 style="margin-top: -15px; !important">Manage Permits</h4>
-<form:form action="list.do" method="get" name="searchForm" id="permitSearchForm">
+<form:form action="list.do" method="get" name="permitSearchForm" id="permitSearchForm">
 	<table width="100%" id="form-table">
 		<tr>
-		  <td align="${left}" class="form-left"><transys:label code="Delivery Address #"/></td>
-				<td align="${left}"><select class="flat form-control input-sm" id="deliveryAddress" name="deliveryAddress.line1" style="width: 175px">
+		  	<td align="${left}" class="form-left"><transys:label code="Delivery Address #"/></td>
+			<td align="${left}">
+				<select class="flat form-control input-sm" id="deliveryAddress" name="deliveryAddress.line1" style="width: 175px">
 					<option value="">------<transys:label code="Please Select"/>------</option>
 					<c:forEach items="${allDeliveryAddresses}" var="deliveryAddressVar">
 						 <c:set var="selected" value=""/>
@@ -15,8 +16,7 @@
 							<option value="${deliveryAddressVar.line1}" ${selected}>${deliveryAddressVar.line1}</option>
 					</c:forEach>
 				</select>
-				</td>
-			
+			</td>
 			<td align="${left}" class="form-left"><transys:label code="Delivery Street"/></td>
 			<td align="${left}"><select class="flat form-control input-sm" id="deliveryStreet" name="deliveryAddress.line2" style="width: 175px">
 				<option value="">------<transys:label code="Please Select"/>------</option>
@@ -29,9 +29,9 @@
 				</c:forEach>
 			</select>
 			</td>
-	 </tr>
+	 	</tr>
 	 
- 	 <tr>
+ 	 	<tr>
 		  <td align="${left}" class="form-left"><transys:label code="Contact Name"/></td>
 				<td align="${left}"><select class="flat form-control input-sm" id="contactName" name="customer.contactName" style="width: 175px">
 					<option value="">------<transys:label code="Please Select"/>------</option>
@@ -162,7 +162,7 @@
 		<tr>
 			<td align="${left}"></td>
 			<td align="${left}"><input type="button" class="btn btn-primary btn-sm"
-				onclick="document.forms['searchForm'].submit();"
+				onclick="document.forms['permitSearchForm'].submit();"
 				value="<transys:label code="Search"/>" /></td>
 		</tr>
 	</table>
@@ -173,7 +173,7 @@
 		editable="true" insertable="true" baseObjects="${list}"
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
 		pagingLink="search.do" multipleDelete="false" searcheable="false" 
-		exportPdf="true" exportXls="true" dataQualifier="managePermit">
+		exportPdf="true" exportXls="true" dataQualifier="managePermits">
 		<transys:textcolumn headerText="Delivery Address" dataField="deliveryAddress.fullLine" />
 		<%-- <transys:textcolumn headerText="DeliveryStreet" dataField="deliveryAddress.line2" /> --%>
 		<transys:textcolumn headerText="Locn. Type" dataField="locationType.locationType" />
@@ -187,7 +187,7 @@
 		<transys:textcolumn headerText="Order#" dataField="orderId" />
 		<transys:textcolumn headerText="Status" dataField="status.status" />
 	</transys:datatable>
-	<%session.setAttribute("managePermitColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
+	<%session.setAttribute("managePermitsColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
 </form:form>
 
 

@@ -1,34 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <decorators defaultdir="/layout">
-	<!--  
-	<decorator name="admin" page="twoColumnLayout.jsp">
-        <pattern>/transys/admin/**</pattern>
-    </decorator>
-    <decorator name="admin" page="twoColumnLayout.jsp">
-        <pattern>/transys/hr/**</pattern>
-    </decorator>
-    <decorator name="operator" page="twoColumnLayout.jsp">
-    	<pattern>/transys/operator/**</pattern>
-    </decorator>
-    <decorator name="reportuser" page="twoColumnLayout.jsp">
-    	<pattern>/transys/reportuser/**</pattern>
-    </decorator>
-    <decorator name="blank" page="blankLayout.jsp">
-    	<pattern>/transys/blank/**</pattern>
-    </decorator>
-    <decorator name="billbatchdate" page="blankLayout.jsp">
-        <pattern>/transys/billbatch/**</pattern>
-    </decorator>
-    -->
-    <decorator name="popUp" page="popUpLayout.jsp">
-        <!--<pattern>/transys/customer/form.jsp</pattern>-->
-        <!--<pattern>/transys/order/form.jsp</pattern>-->
-        <pattern>/transys/order/notesModal.jsp</pattern>
-        <pattern>/transys/customer/formModal.jsp</pattern>
-        <pattern>/transys/customer/deliveryAddressModal.jsp</pattern>
-        <pattern>/transys/permit/formModal.jsp</pattern>
-        <pattern>/transys/permit/formForCustomerModal.jsp</pattern>
-    </decorator>
+   <decorator name="login" page="singleColumnLayoutLogin.jsp">
+        <pattern>/transys/login/**</pattern>
+   </decorator>
+   <decorator name="home" page="singleColumnLayout.jsp">
+        <pattern>/transys/home*</pattern>
+   </decorator>
    <decorator name="customer" page="singleColumnLayout.jsp">
         <pattern>/transys/customer/**</pattern>
     </decorator>
@@ -37,9 +14,6 @@
     </decorator>
     <decorator name="permit" page="singleColumnLayout.jsp">
         <pattern>/transys/permit/**</pattern>
-    </decorator>
-    <decorator name="orderPermitsAlert" page="singleColumnLayout.jsp">
-        <pattern>/transys/orderPermitAlert/**</pattern>
     </decorator>
     <decorator name="employee" page="singleColumnLayout.jsp">
         <pattern>/transys/employee/**</pattern>
@@ -88,11 +62,14 @@
     </decorator>
     <decorator name="report" page="singleColumnLayout.jsp">
         <pattern>/transys/materialIntakeDailyReport/**</pattern>
-    </decorator>    
-    <decorator name="login" page="singleColumnLayoutLogin.jsp">
-        <pattern>/transys/login/**</pattern>
-    </decorator>
-    <decorator name="home" page="singleColumnLayout.jsp">
-        <pattern>/transys/home*</pattern>
-    </decorator>
+    </decorator> 
+    <decorator name="popUp" page="popUpLayout.jsp">
+        <pattern>/transys/order/notesModal.jsp</pattern>
+        <pattern>/transys/customer/formModal.jsp</pattern>
+        <pattern>/transys/customer/deliveryAddressModal.jsp</pattern>
+        <pattern>/transys/permit/formModal.jsp</pattern>
+        <pattern>/transys/permit/formForCustomerModal.jsp</pattern>
+        
+        <pattern>/transys/orderPermitAlert/**</pattern>
+    </decorator> 
 </decorators> 

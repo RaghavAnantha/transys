@@ -1,8 +1,7 @@
 <%@include file="/common/taglibs.jsp"%>
 <br/>
 <h4 style="margin-top: -15px; !important">Order Permits Alert</h4>
-
-<form:form action="list.do" method="get" name="searchFormPermitOrder" id="orderPermitSearchForm">
+<form:form action="/orderPermitAlert/list.do" method="get" name="orderPermitsAlertSearchForm" id="orderPermitsAlertSearchForm">
 	<table width="100%" id="form-table">
 		<tr>
 		  <td align="${left}" class="form-left"><transys:label code="End Date From"/></td>
@@ -10,9 +9,8 @@
 				
 		  <td align="${left}" class="form-left"><transys:label code="End Date To"/></td>
 	      <td align="${left}" class="wide"><input class="flat" id="datepicker7" name="permit.endDateTo" value="${sessionScope.searchCriteria.searchMap['permit.endDateTo']}" style="width: 175px" /></td>
-			
 	 	</tr>
-		 <tr>
+		<tr>
 		  <td align="${left}" class="form-left"><transys:label code="Delivery Address #"/></td>
 				<td align="${left}"><select class="flat form-control input-sm" id="deliveryAddress" name="order.deliveryAddress.line1" style="width: 175px">
 					<option value="">------<transys:label code="Please Select"/>------</option>
@@ -123,14 +121,14 @@
 	 </tr>
 		<tr>
 			<td align="${left}"></td>
-			<td align="${left}"><input type="button" class="btn btn-primary btn-sm"
-				onclick="document.forms['searchFormPermitOrder'].submit();"
-				value="<transys:label code="Search"/>" /></td>
+			<td align="${left}">
+				<input type="submit" id="submitOrderPermitsAlertSearch" onclick="return validateForm()" value="<transys:label code="Search"/>" class="btn btn-primary btn-sm" /> 
+			</td>
 		</tr>
 	</table>
 </form:form>
 
-<form:form name="delete.do" id="serviceForm" class="tab-color">
+<form:form name="orderPrrmitsAlertServiceForm" id="orderPrrmitsAlertServiceForm" class="tab-color">
 	<transys:datatable urlContext="orderPermitAlert" deletable="false"
 		baseObjects="${orderPermitList}"
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
@@ -162,7 +160,6 @@
        			<h4 class="modal-title">Add New Permit</h4>
        			<!-- <div id="permitValidations" style="color:red"></div> -->
       		 </div>	
-			
 			<div class="modal-body" id="addNewPermitModalBody"></div>
 		</div>
 	</div>
@@ -176,13 +173,31 @@
        			<h4 class="modal-title">Add Order Notes</h4>
        			<div id="addOrderNotesModalValidations" style="color:red"></div>
       		 </div>	
-			
 			<div class="modal-body" id="addOrderNotesModalBody"></div>
 		</div>
 	</div>
 </div>
 
 <script type="text/javascript">
+function validateForm() {
+	return true;
+}
+
+$("#orderPermitsAlertSearchForm").submit(function (ev) {
+	var $this = $(this);
+	
+    $.ajax({
+        type: $this.attr('method'),
+        url: $this.attr('action'),
+        data: $this.serialize(),
+        success: function(responseData, textStatus, jqXHR) {
+        	$("#orderPermitsAlert").html(responseData)
+        }
+    });
+    
+    ev.preventDefault();
+});
+
 $("#addNewPermitModal").on("show.bs.modal", function(e) {
     var link = $(e.relatedTarget).attr("href");
     $(this).find("#addNewPermitModalBody").load(link);
