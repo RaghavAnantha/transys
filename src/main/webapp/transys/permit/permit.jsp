@@ -8,7 +8,7 @@
 <body>
 	<ul class="nav nav-tabs" id="permit_main_tabs">
 		<li><a href="#managePermits" data-toggle="tab">Permits</a></li>
-		<li><a href="/orderPermitAlert/main.do">Order Permits Alert</a></li>
+		<li><a href="/orderPermitAlert/main.do" id="orderPermitAlertTab" data-toggle="tabajax" data-target="#orderPermitsAlert">Order Permits Alert</a></li>
 		<li><a href="#permitsReport" data-toggle="tab">Permits Report</a></li>
 	</ul>
 
@@ -20,37 +20,23 @@
 			<c:if test="${mode == 'ADD'}">
 				<%@include file="addEdit.jsp"%>
 			</c:if>
-		</div>	
+		</div>
+		<div id="orderPermitsAlert" class="tab-pane"></div>	
 		<div id="permitsReport" class="tab-pane">
 			<br/>
 			<p>Placeholder for permit reports</p>
 		</div>
 	</div>
 	
-	<div class="modal fade" id="editModal" role="dialog">
-		<div class="modal-dialog" style="width:90% !important">
-			<div class="modal-content">
-				<div class="modal-header">		
-					<h4 class="modal-title">Add Permit</h4>
-				</div>
-				<div class="modal-body"> 
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-				</div>
-			</div>
-		</div>
-	</div>	
-	
 <script type="text/javascript">
 	function showTab(tab){
-		    $('.nav-tabs a[href="#' + tab + '"]').tab('show');
+		$('.nav-tabs a[href="#' + tab + '"]').tab('show');
 	};
 	
 	showTab('${activeTab}');
 	showTab('${activeSubTab}');
 	
-	$('[data-toggle="tabajax"]').click(function(e) {
+	$('#orderPermitAlertTab').click(function(e) {
 	    var $this = $(this),
 	        loadurl = $this.attr('href'),
 	        targ = $this.attr('data-target');
@@ -62,12 +48,6 @@
 	    $this.tab('show');
 	    return false;
 	});
-	
-	$("#editModal").on("show.bs.modal", function(e) {
-	    var link = $(e.relatedTarget);
-	    $(this).find(".modal-body").load(link.attr("href"));
-	    
-	});	
 </script>
 
 </body>

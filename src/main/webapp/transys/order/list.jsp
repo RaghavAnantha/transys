@@ -31,7 +31,7 @@ function populateCustomerDeliveryAddress() {
 </script>
 <br />
 <h4 style="margin-top: -15px; !important">Manage Orders</h4>
-<form:form action="list.do" method="get" name="searchForm" id="orderSearchForm">
+<form:form action="list.do" method="get" name="orderSearchForm" id="orderSearchForm">
 	<table width="100%" id="form-table">
 		<tr>
 			<td align="${left}" class="form-left"><transys:label code="Order #" /></td>
@@ -40,8 +40,7 @@ function populateCustomerDeliveryAddress() {
 					<option value="">------<transys:label code="Please Select" />------</option>
 					<c:forEach items="${orderIds}" var="anOrderId">
 						<c:set var="selected" value="" />
-						<c:if
-							test="${sessionScope.searchCriteria.searchMap['id'] == anOrderId.id}">
+						<c:if test="${sessionScope.searchCriteria.searchMap['id'] == anOrderId.id}">
 							<c:set var="selected" value="selected" />
 						</c:if>
 						<option value="${anOrderId.id}" ${selected}>${anOrderId.id}</option>
@@ -157,7 +156,7 @@ function populateCustomerDeliveryAddress() {
 		<tr>
 			<td align="${left}"></td>
 			<td align="${left}">
-				<input type="button" class="btn btn-primary btn-sm" onclick="document.forms['searchForm'].submit();"
+				<input type="button" class="btn btn-primary btn-sm" onclick="document.forms['orderSearchForm'].submit();"
 					value="<transys:label code="Search"/>" />
 			</td>
 		</tr>

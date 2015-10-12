@@ -12,10 +12,11 @@
 <body dir="${dir}">
 <table width="100%" cellpadding="0" cellspacing="0" style="height:100%;min-height:100%" border="0">
 	<tr>
-		<td height="25px"><%--<jsp:include page="topMenu.jsp" /></td>--%>
+		<td height="25px"></td>
 	</tr>
 	<tr>
-		<td valign="top"> <decorator:body />
+		<td valign="top">
+			<decorator:body />
 		</td>
 	</tr>
 	<tr>

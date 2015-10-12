@@ -12,10 +12,13 @@
 <body dir="${dir}">
 <table class="table">	
 	<tr>
-		<td height="55px"><jsp:include page="topMenu1.jsp" /></td>
+		<td height="55px">
+			<jsp:include page="topMenu1.jsp" />
+		</td>
 	</tr>
 	<tr>
-		<td valign="top"><jsp:include page="/common/messages.jsp" /> <decorator:body />
+		<td valign="top">
+			<jsp:include page="/common/messages.jsp" /><decorator:body />
 		</td>
 	</tr>
 	<tr>
