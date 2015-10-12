@@ -595,9 +595,7 @@ public class GenericJpaDAO implements GenericDAO {
 			else
 				searchString.append("p." + criteriaKey + " IS NULL");
 		} else if (criterias.get(param.toString()).toString().contains(",")) {
-			if (!orQuery) {
-				searchString.append(" and ");
-			}
+			
 			StringBuilder valBuilder = new StringBuilder();
 			String[] values = criterias.get(param.toString()).toString().trim().split(",");
 			for (int i = 0; i < values.length; i++) {
@@ -605,6 +603,9 @@ public class GenericJpaDAO implements GenericDAO {
 				valBuilder.append(values[i]);
 			}
 			if (valBuilder.length() > 1) {
+				if (!orQuery) {
+					searchString.append(" and ");
+				}
 				valBuilder = valBuilder.deleteCharAt(valBuilder.length() - 1);
 				searchString.append("UPPER(p." + criteriaKey + ") IN (" + valBuilder.toString() + ")");
 			}
@@ -631,9 +632,7 @@ public class GenericJpaDAO implements GenericDAO {
 		} else if (param.toString().toUpperCase().contains("DATE")
 				|| param.toString().toUpperCase().startsWith("CREATEDAT")
 				|| param.toString().toUpperCase().startsWith("MODIFIEDAT")) {
-			if (!orQuery) {
-				searchString.append(" and ");
-			}
+			
 			appendSearchStringWithDateRange(criterias, searchString, param);
 		} else {
 			if (!orQuery) {
