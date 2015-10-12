@@ -33,7 +33,7 @@ function populateEndDate() {
 	
 	if (startDateValue != '' && permitTypeValue != '') {
 		$.ajax({
-	  		url: "calculatePermitEndDate.do?startDate=" + startDateValue + "&permitType=" + permitTypeValue,
+	  		url: "calculatePermitEndDate.do?startDate=" + startDateValue + "&permitTypeId=" + permitTypeValue,
 	       	type: "GET",
 	       	success: function(responseData, textStatus, jqXHR) {
 	    	   	$('#endDateInput').val(responseData);

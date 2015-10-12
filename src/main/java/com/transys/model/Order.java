@@ -28,16 +28,16 @@ public class Order extends AbstractBaseModel {
 	private Customer customer;
 	
 	/******** Delivery Info ************/
-	@Column(name="deliverycontactname")
+	@Column(name="deliveryContactName")
 	private String deliveryContactName;
 	
-	@Column(name="deliverycontactphone1")
+	@Column(name="deliveryContactPhone1")
 	private String deliveryContactPhone1;
 
-	@Column(name="deliverycontactphone2")
+	@Column(name="deliveryContactPhone2")
 	private String deliveryContactPhone2;
 	
-	@Column(name="deliverydate")
+	@Column(name="deliveryDate")
 	private Date deliveryDate;
 	
 	@Column(name="deliveryHourFrom")

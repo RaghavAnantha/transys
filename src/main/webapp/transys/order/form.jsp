@@ -174,28 +174,7 @@ function appendPermit(permit) {
 	var newPermitOption = $('<option value=' + permit.id + ' selected>'+ permit.number +'</option>');
 	permitNumbersSelect.append(newPermitOption);
 	
-	var permitValidFrom = $("#permitValidFrom" + 1);
-	var permitValidTo = $("#permitValidTo" + 1);
-	var permitFee = $("#orderPaymentInfo\\.permitFee" + 1);
-	
-	permitValidFrom.html(permit.startDate);
-   	permitValidTo.html(permit.endDate);
-   	
-	if (permit.status.status == 'Pending') {
-		permitFee.val(permit.fee);
-   	}
-   	
-	var permitAddressSelect = $("#permitAddress" + 1);
-	permitAddressSelect.empty();
-   	var permitAddressList = permit.permitAddress;
-   	$.each(permitAddressList, function () {
-   	    $("<option />", {
-   	        val: this.id,
-   	        text: this.fullLine
-   	    }).appendTo(permitAddressSelect);
-   	});
-	
-	populateTotalPermitFees(); 
+	populatePermitDetails(1, permit);
 }
 
 function populateDusmpsterPrice() {
@@ -321,16 +300,9 @@ function populatePermitNumbers(index) {
 	}); 
 }
 
-function populatePermitDetails(index) {
+function retrievePermitDetails(index) {
 	var permitNumbersSelect = $("#permits\\[" + (index-1) + "\\]");
 	var permitId = permitNumbersSelect.val();
-	
-	var permitValidFrom = $("#permitValidFrom" + index);
-	var permitValidTo = $("#permitValidTo" + index);
-	var permitFee = $("#orderPaymentInfo\\.permitFee" + index);
-	
-	var permitAddressSelect = $("#permitAddress" + index);
-	permitAddressSelect.empty();
 	
 	$.ajax({
   		url: "retrievePermit.do?" + "permitId=" + permitId,
@@ -339,24 +311,37 @@ function populatePermitDetails(index) {
        		var permitList = jQuery.parseJSON(responseData);
     	   	var permit = permitList[0];
     	   	
-    	   	permitValidFrom.html(permit.startDate);
-    	   	permitValidTo.html(permit.endDate);
-    	   	
-    		if (permit.status.status == 'Pending') {
-    			permitFee.val(permit.fee);
-    	   	}
-    	   	
-    	   	var permitAddressList = permit.permitAddress;
-    	   	$.each(permitAddressList, function () {
-    	   	    $("<option />", {
-    	   	        val: this.id,
-    	   	        text: this.fullLine
-    	   	    }).appendTo(permitAddressSelect);
-    	   	});
-    	
-    	   	populateTotalPermitFees();
+    	   	populatePermitDetails(index, permit);
 		}
 	}); 
+}
+
+function populatePermitDetails(index, permit) {
+	var permitValidFrom = $("#permitValidFrom" + index);
+	var permitValidTo = $("#permitValidTo" + index);
+	var permitFee = $("#orderPaymentInfo\\.permitFee" + index);
+	
+	var permitAddressSelect = $("#permitAddress" + index);
+	
+	permitValidFrom.html(permit.startDate);
+   	permitValidTo.html(permit.endDate);
+   	
+   	var permitFeeVal = "0.00"
+	if (permit.status.status == 'Pending') {
+		permitFeeVal = permit.fee;
+   	}
+   	permitFee.val(permitFeeVal);
+   	
+	permitAddressSelect.empty();
+   	var permitAddressList = permit.permitAddress;
+   	$.each(permitAddressList, function () {
+   	    $("<option />", {
+   	        val: this.id,
+   	        text: this.fullLine
+   	    }).appendTo(permitAddressSelect);
+   	});
+
+   	populateTotalPermitFees();
 }
 
 function populateTotalPermitFees() {
@@ -753,7 +738,7 @@ function verifyExchangeOrderAndSubmit() {
 	    	<td class="form-left"><transys:label code="Permit1 Number"/><span class="errorMessage">*</span></td>
 	        <td align="${left}">
 	        	<label style="display: inline-block; font-weight: normal">
-		        	<select class="flat form-control input-sm" id="permits[0]" name="permits[0]" style="width:172px !important" onChange="return populatePermitDetails(1);">
+		        	<select class="flat form-control input-sm" id="permits[0]" name="permits[0]" style="width:172px !important" onChange="return retrievePermitDetails(1);">
 						<option value="">------<transys:label code="Please Select" />------</option>
 						<c:if test="${modelObject.permits != null and modelObject.permits[0] != null and modelObject.permits[0].number != null}">
 							<c:set var="chosenPermit" value="${modelObject.permits[0]}" />
@@ -777,7 +762,7 @@ function verifyExchangeOrderAndSubmit() {
 	        </td>
 	        <td class="form-left"><transys:label code="Permit2 Number"/><span class="errorMessage">*</span></td>
 	        <td align="${left}">
-	        	<select class="flat form-control input-sm" id="permits[1]" name="permits[1]" style="width:172px !important" onChange="return populatePermitDetails(2);">
+	        	<select class="flat form-control input-sm" id="permits[1]" name="permits[1]" style="width:172px !important" onChange="return retrievePermitDetails(2);">
 					<option value="">------<transys:label code="Please Select" />------</option>
 					<c:if test="${modelObject.permits != null and modelObject.permits[1] != null and modelObject.permits[1].number != null}">
 						<c:set var="chosenPermit" value="${modelObject.permits[1]}" />
@@ -794,7 +779,7 @@ function verifyExchangeOrderAndSubmit() {
 	        </td>
 	        <td class="form-left"><transys:label code="Permit3 Number"/><span class="errorMessage">*</span></td>
 	        <td align="${left}">
-	        	<select class="flat form-control input-sm" id="permits[2]" name="permits[2]" style="width:172px !important" onChange="return populatePermitDetails(3);">
+	        	<select class="flat form-control input-sm" id="permits[2]" name="permits[2]" style="width:172px !important" onChange="return retrievePermitDetails(3);">
 					<option value="">------<transys:label code="Please Select" />------</option>
 					<c:if test="${modelObject.permits != null and modelObject.permits[2] != null and modelObject.permits[2].number != null}">
 						<c:set var="chosenPermit" value="${modelObject.permits[2]}" />
@@ -860,11 +845,11 @@ function verifyExchangeOrderAndSubmit() {
 		</tr>
 	    <tr>
 	    	<td class="form-left">Permit1 Fee<span class="errorMessage">*</span></td>
-	        <td align="${left}"><form:input path="orderPaymentInfo.permitFee1" cssClass="flat" /></td>
+	        <td align="${left}"><form:input path="orderPaymentInfo.permitFee1" cssClass="flat" onChange="return populateTotalPermitFees();"/></td>
 	        <td class="form-left">Permit2 Fee<span class="errorMessage">*</span></td>
-	        <td align="${left}"><form:input path="orderPaymentInfo.permitFee2" cssClass="flat" /></td>
+	        <td align="${left}"><form:input path="orderPaymentInfo.permitFee2" cssClass="flat" onChange="return populateTotalPermitFees();"/></td>
 	        <td class="form-left">Permit3 Fee<span class="errorMessage">*</span></td>
-	        <td align="${left}"><form:input path="orderPaymentInfo.permitFee3" cssClass="flat" /></td>
+	        <td align="${left}"><form:input path="orderPaymentInfo.permitFee3" cssClass="flat" onChange="return populateTotalPermitFees();"/></td>
 	    </tr>
 	    <tr>
 			<td colspan=10></td>
@@ -1126,8 +1111,8 @@ $("#addPermitLink").click(function (ev) {
 		+  "&deliveryAddressId=" + deliveryAddressId
 		+  "&locationTypeId=" + locationTypeId
 		+  "&permitClassId=" + permitClassId
-		+  "&permitTypeId=" + permitTypeId;
-		//+  "&deliveryDate=" + deliveryDate;
+		+  "&permitTypeId=" + permitTypeId
+		+  "&deliveryDate=" + deliveryDate;
 	
 	showPopupDialog("Add Permit", url);
 	

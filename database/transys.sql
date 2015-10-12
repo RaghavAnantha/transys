@@ -601,7 +601,7 @@ CREATE TABLE `orderPaymentInfo` (
 
 LOCK TABLES `orderPaymentInfo` WRITE;
 /*!40000 ALTER TABLE `orderPaymentInfo` DISABLE KEYS */;
-INSERT INTO `orderPaymentInfo` (`id`,`orderId`,`dumpsterPrice`,`cityFee`,`cityFeeId`,`permitFee1`,`permitFee2`,`permitFee3`,`totalPermitFees`,`overweightFee`,`additionalFee1Id`,`additionalFee1`,`additionalFee2Id`,`additionalFee2`,`additionalFee3Id`,`additionalFee3`,`totalAdditionalFees`,`discountPercentage`,`discountAmount`,`paymentMethodId`,`ccReferenceNum`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`,`totalFees`,`checkNum`) VALUES (1,1,240.00,0.00,NULL,NULL,NULL,NULL,0.00,0.00,NULL,NULL,NULL,NULL,NULL,NULL,0.00,2.00,4.80,1,'123','2015-10-09 19:19:03',1,NULL,1,1,235.20,'123');
+INSERT INTO `orderPaymentInfo` (`id`,`orderId`,`dumpsterPrice`,`cityFee`,`cityFeeId`,`permitFee1`,`permitFee2`,`permitFee3`,`totalPermitFees`,`overweightFee`,`additionalFee1Id`,`additionalFee1`,`additionalFee2Id`,`additionalFee2`,`additionalFee3Id`,`additionalFee3`,`totalAdditionalFees`,`discountPercentage`,`discountAmount`,`paymentMethodId`,`ccReferenceNum`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`,`totalFees`,`checkNum`) VALUES (1,1,240.00,0.00,NULL,50.00,NULL,NULL,50.00,0.00,NULL,NULL,NULL,NULL,NULL,NULL,0.00,2.00,4.80,1,'123','2015-10-09 19:19:03',1,NULL,1,1,235.20,'123');
 /*!40000 ALTER TABLE `orderPaymentInfo` ENABLE KEYS */;
 UNLOCK TABLES;
 

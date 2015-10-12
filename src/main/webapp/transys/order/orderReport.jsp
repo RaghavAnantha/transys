@@ -122,7 +122,7 @@
 		<transys:textcolumn headerText="Pymt. method" dataField="orderPaymentInfo.paymentMethod.method" />	
 		<transys:textcolumn headerText="Dumpster Price" dataField="orderPaymentInfo.dumpsterPrice" />
 		<transys:textcolumn headerText="City Fee" dataField="orderPaymentInfo.cityFee" />
-		<transys:textcolumn headerText="Permit Fee" dataField="orderPaymentInfo.permitFees" />
+		<transys:textcolumn headerText="Permit Fee" dataField="orderPaymentInfo.totalPermitFees" />
 		<transys:textcolumn headerText="OvrWt. Fee" dataField="orderPaymentInfo.overweightFee" />
 		<transys:textcolumn headerText="Total Fees" dataField="orderPaymentInfo.totalFees" />	
 	</transys:datatable>

@@ -62,7 +62,7 @@
 
 <form:form name="deliveryAddressServiceForm" id="deliveryAddressServiceForm" class="tab-color">
 	<transys:datatable urlContext="customer" deletable="true"
-		editable="true" editableInScreen="true"   baseObjects="${deliveryAddressList}"
+		editable="true" editableInScreen="true" baseObjects="${deliveryAddressList}"
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
 		pagingLink="search.do" multipleDelete="false" searcheable="false" 
 		dataQualifier="manageDeliveryAddress">
@@ -114,13 +114,14 @@ function validateForm() {
 	var ids = ["line1", "line2", "city", "zipcode", "state"];
 	var bool = false	
 	for (var i = 0; i < ids.length; i++) {		
-	if ($("table.delivery").find('#'+ids[i]).val().length == 0 ) {	
-		
-		$("table.delivery").find('#'+ids[i]).addClass("border");
-		bool = true;
-	}
-				
-	} if (bool){
+		if ($("table.delivery").find('#'+ids[i]).val().length == 0 ) {	
+			
+			$("table.delivery").find('#'+ids[i]).addClass("border");
+			bool = true;
+		}	
+	} 
+	
+	if (bool){
 		return false;
 	}
 	
