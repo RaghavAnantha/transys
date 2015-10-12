@@ -622,10 +622,16 @@ public class OrderController extends CRUDController<Order> {
 				map.put("phone", order.getCustomer().getPhone());
 				map.put("line1", order.getDeliveryAddress().getLine1());
 				map.put("city", order.getDeliveryAddress().getCity());
-				map.put("line1", order.getDeliveryAddress().getLine1());
+				map.put("line2", order.getDeliveryAddress().getLine2());
 				map.put("status", order.getOrderStatus().getStatus());
-				map.put("deliveryDate", order.getDeliveryDate().toString());
-				map.put("pickupDate", order.getPickupDate().toString());
+				
+				if (order.getDeliveryDate() != null) {
+					map.put("deliveryDate", order.getDeliveryDate().toString());
+				}
+				
+				if (order.getPickupDate() != null) {
+					map.put("pickupDate", order.getPickupDate().toString());
+				}
 				
 				OrderPaymentInfo paymentInfo = order.getOrderPaymentInfo();
 				if (paymentInfo != null) {
@@ -1092,7 +1098,7 @@ public class OrderController extends CRUDController<Order> {
 		orderPaymentInfo.setCreatedBy(order.getCreatedBy());
 		orderPaymentInfo.setModifiedBy(order.getModifiedBy());
 		
-		if (orderPaymentInfo.getAdditionalFee1() == null) {
+		/*if (orderPaymentInfo.getAdditionalFee1() == null) {
 			orderPaymentInfo.setAdditionalFee1(new BigDecimal(0.00));
 		}
 		if (orderPaymentInfo.getAdditionalFee2() == null) {
@@ -1100,7 +1106,7 @@ public class OrderController extends CRUDController<Order> {
 		}
 		if (orderPaymentInfo.getAdditionalFee3() == null) {
 			orderPaymentInfo.setAdditionalFee3(new BigDecimal(0.00));
-		}
+		}*/
 		if (orderPaymentInfo.getTotalAdditionalFees() == null) {
 			orderPaymentInfo.setTotalAdditionalFees(new BigDecimal(0.00));
 		}
@@ -1116,7 +1122,7 @@ public class OrderController extends CRUDController<Order> {
 		if (orderPaymentInfo.getOverweightFee() == null) {
 			orderPaymentInfo.setOverweightFee(new BigDecimal(0.00));
 		}
-		if (orderPaymentInfo.getPermitFee1() == null) {
+		/*if (orderPaymentInfo.getPermitFee1() == null) {
 			orderPaymentInfo.setPermitFee1(new BigDecimal(0.00));
 		}
 		if (orderPaymentInfo.getPermitFee2() == null) {
@@ -1124,7 +1130,7 @@ public class OrderController extends CRUDController<Order> {
 		}
 		if (orderPaymentInfo.getPermitFee3() == null) {
 			orderPaymentInfo.setPermitFee3(new BigDecimal(0.00));
-		}
+		}*/
 		if (orderPaymentInfo.getTotalPermitFees() == null) {
 			orderPaymentInfo.setTotalPermitFees(new BigDecimal(0.00));
 		}

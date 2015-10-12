@@ -580,18 +580,6 @@ public class PermitController extends CRUDController<Permit> {
 	public @ResponseBody String calculatePermitEndDate(ModelMap model, HttpServletRequest request,
 			@RequestParam(value = "permitTypeId") Long permitTypeId,
 			@RequestParam(value = "startDate") Date startDate) {
-		/*SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
-		
-		String startDateStr = request.getParameter("startDate");
-		Date startDate = null;
-		try {
-			startDate = formatter.parse(startDateStr);
-		} catch (ParseException e) {
-			//TODO
-			e.printStackTrace();
-		}*/
-			
-		
 		Date endDate = calculatePermitEndDate(permitTypeId, startDate);
 		SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
 		return formatter.format(endDate);

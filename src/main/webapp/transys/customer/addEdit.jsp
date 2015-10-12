@@ -10,6 +10,5 @@
 	</div>
 	<div id="delivery" class="tab-pane">
 		<%@include file="deliveryAddress.jsp"%>
-		<!--<li><a href="/customer/main.do" data-toggle="tabajax" data-target="#manageCustomer">Customers</a></li>-->
 	</div>
 </div>

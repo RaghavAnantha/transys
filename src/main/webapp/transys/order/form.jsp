@@ -326,9 +326,11 @@ function populatePermitDetails(index, permit) {
 	permitValidFrom.html(permit.startDate);
    	permitValidTo.html(permit.endDate);
    	
+   	var permitFeeVal = "0.00"
 	if (permit.status.status == 'Pending') {
-		permitFee.val(permit.fee);
+		permitFeeVal = permit.fee;
    	}
+   	permitFee.val(permitFeeVal);
    	
 	permitAddressSelect.empty();
    	var permitAddressList = permit.permitAddress;
@@ -843,11 +845,11 @@ function verifyExchangeOrderAndSubmit() {
 		</tr>
 	    <tr>
 	    	<td class="form-left">Permit1 Fee<span class="errorMessage">*</span></td>
-	        <td align="${left}"><form:input path="orderPaymentInfo.permitFee1" cssClass="flat" /></td>
+	        <td align="${left}"><form:input path="orderPaymentInfo.permitFee1" cssClass="flat" onChange="return populateTotalPermitFees();"/></td>
 	        <td class="form-left">Permit2 Fee<span class="errorMessage">*</span></td>
-	        <td align="${left}"><form:input path="orderPaymentInfo.permitFee2" cssClass="flat" /></td>
+	        <td align="${left}"><form:input path="orderPaymentInfo.permitFee2" cssClass="flat" onChange="return populateTotalPermitFees();"/></td>
 	        <td class="form-left">Permit3 Fee<span class="errorMessage">*</span></td>
-	        <td align="${left}"><form:input path="orderPaymentInfo.permitFee3" cssClass="flat" /></td>
+	        <td align="${left}"><form:input path="orderPaymentInfo.permitFee3" cssClass="flat" onChange="return populateTotalPermitFees();"/></td>
 	    </tr>
 	    <tr>
 			<td colspan=10></td>
