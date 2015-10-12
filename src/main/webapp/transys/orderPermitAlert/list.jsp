@@ -139,15 +139,15 @@
 		<transys:textcolumn headerText="Delivery Address #" dataField="order.deliveryAddress.line1" />
 		<transys:textcolumn headerText="Delivery Address Street" dataField="order.deliveryAddress.line2" />
 		<transys:textcolumn headerText="CustomerName" dataField="order.customer.companyName" />
-		<transys:textcolumn headerText="Order#" dataField="order.id" />
+		<transys:textcolumn headerText="Order#" dataField="order.id" type="java.lang.Long" />
 		<transys:textcolumn headerText="Contact" dataField="order.customer.contactName" />
 		<transys:textcolumn headerText="Phone#" dataField="order.customer.phone" />
 		<%-- <transys:textcolumn headerText="OrderStatus" dataField="order.status" /> --%>
-		<transys:textcolumn headerText="Delivery Date" dataField="order.deliveryDate" />
+		<transys:textcolumn headerText="Delivery Date" dataField="order.deliveryDate" type="java.sql.Timestamp"/>
 		<transys:textcolumn headerText="Permit#" dataField="permit.number" />
 		<transys:textcolumn headerText="PermitStatus" dataField="permit.status.status" />
-		<transys:textcolumn headerText="StartDate" dataField="permit.startDate" />
-		<transys:textcolumn headerText="EndDate" dataField="permit.endDate" />
+		<transys:textcolumn headerText="StartDate" dataField="permit.startDate" type="java.sql.Timestamp"/>
+		<transys:textcolumn headerText="EndDate" dataField="permit.endDate" type="java.sql.Timestamp"/>
 		<transys:anchorcolumn headerText="New Permit" linkText="Add New Permit" linkUrl="/permit/permitCreateModal.do" target="#addNewPermitModal" />
 		<transys:anchorcolumn headerText="Add Order Notes" linkText="Add Order Notes" linkUrl="/order/orderNotesCreateModal.do" target="#addOrderNotesModal" />
 	</transys:datatable>
