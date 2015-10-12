@@ -552,49 +552,8 @@ public class GenericJpaDAO implements GenericDAO {
 							searchString.append(" and ( ");
 						else
 							searchString.append(" or ");
-						String criteriaKey = param.toString().replace("||", "");
-						if (criterias.get(param.toString()) instanceof Integer
-								|| criterias.get(param.toString()) instanceof Long) {
-							searchString.append(" p." + criteriaKey + "=" + criterias.get(param.toString()));
-						} else if (!criterias.get(param.toString()).toString().contains("null")) {
-							if (criterias.get(param.toString()).toString().contains("!"))
-								searchString.append(" p." + criteriaKey + " IS NOT NULL");
-							else
-								searchString.append(" p." + criteriaKey + " IS NULL");
-						} else if (criterias.get(param.toString()).toString().contains(",")) {
-							StringBuilder valBuilder = new StringBuilder();
-							String[] values = criterias.get(param.toString()).toString().trim().split(",");
-							for (int i = 0; i < values.length; i++) {
-								values[i] = "'" + values[i] + "',";
-								valBuilder.append(values[i]);
-							}
-							if (valBuilder.length() > 1) {
-								valBuilder = valBuilder.deleteCharAt(valBuilder.length() - 1);
-								searchString.append(" UPPER(p." + criteriaKey + ") IN (" + valBuilder.toString() + ")");
-							}
-						} else if (criterias.get(param.toString()).toString().startsWith("<=")) {
-							try {
-								searchString.append(" p." + param + " <= '"
-										+ new Timestamp(((Date) BaseController.dateFormat
-												.parse(criterias.get(param.toString()).toString().trim().substring(2))).getTime())
-										+ "'");
-							} catch (ParseException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-						} else if (criterias.get(param.toString()).toString().startsWith("!=")
-								|| criterias.get(param.toString()).toString().startsWith("<>")) {
-							searchString.append(" p." + criteriaKey + " <> '"
-									+ criterias.get(param.toString()).toString().trim().substring(2) + "'");
-						} else if (param.toString().toUpperCase().contains("DATE")
-								|| param.toString().toUpperCase().startsWith("CREATEDAT")
-								|| param.toString().toUpperCase().startsWith("MODIFIEDAT")) {
-							appendSearchStringWithDateRange(criterias, searchString, param);
-						} else {
-							if (!"dateField".equalsIgnoreCase(param.toString()))
-								searchString.append(
-										" UPPER(p." + criteriaKey + ") like UPPER('" + criterias.get(param.toString()) + "%') ");
-						}
+						
+						createSingleSearchCriteria(criterias, searchString, param);
 						count++;
 					}
 				}
@@ -607,75 +566,104 @@ public class GenericJpaDAO implements GenericDAO {
 				else if (param.toString().toUpperCase().startsWith("EXCLUDE.")) {
 					continue;
 				} else {
-					if (criterias.get(param.toString()) instanceof Integer
-							|| criterias.get(param.toString()) instanceof Long) {
-						searchString.append(" and p." + param + "=" + criterias.get(param.toString()));
-					} else if (StringUtils.isEmpty(criterias.get(param.toString()).toString())) {
-						searchString.append("");
-					} else if (criterias.get(param.toString()).toString().contains("null")) {
-						if (criterias.get(param.toString()).toString().contains("!"))
-							searchString.append(" and p." + param + " IS NOT NULL");
-						else
-							searchString.append(" and p." + param + " IS NULL");
-					} else if (criterias.get(param.toString()).toString().contains(",")) {
-						StringBuilder valBuilder = new StringBuilder();
-						String[] values = criterias.get(param.toString()).toString().trim().split(",");
-						for (int i = 0; i < values.length; i++) {
-							values[i] = "'" + values[i] + "',";
-							valBuilder.append(values[i]);
-						}
-						if (valBuilder.length() > 1) {
-							valBuilder = valBuilder.deleteCharAt(valBuilder.length() - 1);
-							searchString.append(" and UPPER(p." + param + ") IN (" + valBuilder.toString() + ")");
-						}
-					} else if (criterias.get(param.toString()).toString().startsWith("<=")) {
-						try {
-							searchString.append(" and p." + param + " <= '"
-									+ new Timestamp(((Date) BaseController.dateFormat
-											.parse(criterias.get(param.toString()).toString().trim().substring(2))).getTime())
-									+ "'");
-						} catch (ParseException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-					} else if (criterias.get(param.toString()).toString().startsWith("!=")
-							|| criterias.get(param.toString()).toString().startsWith("<>")) {
-						searchString.append(" and p." + param + " <> '"
-								+ criterias.get(param.toString()).toString().trim().substring(2) + "'");
-					} else if (param.toString().toUpperCase().contains("DATE")
-							|| param.toString().toUpperCase().startsWith("CREATEDAT")
-							|| param.toString().toUpperCase().startsWith("MODIFIEDAT")) {
-						appendSearchStringWithDateRange(criterias, searchString, param);
-					} else {
-						if (!"dateField".equalsIgnoreCase(param.toString())) {
-							if (criterias.get(param).toString().contains("-")) {
-								if ("weekOfDate".equalsIgnoreCase(param.toString())) {
-									searchString.append(" and UPPER(p.weekOfDate" + ") >= UPPER('"
-											+ criterias.get(param.toString()) + " 00:00:00') ");
-								} else if ("weekOfDateTo".equalsIgnoreCase(param.toString())) {
-									searchString.append(" and UPPER(p.weekOfDate" + ") <= UPPER('"
-											+ criterias.get(param.toString()) + " 00:00:00') ");
-								} else if ("weekDate".equalsIgnoreCase(param.toString())) {
-									searchString.append(" and UPPER(p.weekDate" + ") >= UPPER('"
-											+ criterias.get(param.toString()) + " 00:00:00') ");
-								} else if ("weekDateTo".equalsIgnoreCase(param.toString())) {
-									searchString.append(" and UPPER(p.weekDate" + ") <= UPPER('"
-											+ criterias.get(param.toString()) + " 00:00:00') ");
-								} else {
-									searchString.append(
-											" and UPPER(p." + param + ") like UPPER('" + criterias.get(param.toString()) + "%') ");
-								}
-							} else {
-								searchString.append(" and UPPER(p." + param + ") like UPPER('"
-								// + criterias.get(param.toString()) + "%') ");
-										+ criterias.get(param.toString()) + "') ");
-							}
-						}
-					}
+					createSingleSearchCriteria(criterias, searchString, param);
 				}
 			}
 		}
 		return searchString;
+	}
+
+	private void createSingleSearchCriteria(Map criterias, StringBuffer searchString, Object param) {
+		
+		boolean orQuery = param.toString().startsWith("||") ? true : false;
+		String criteriaKey = (orQuery ? param.toString().replace("||", "").substring(1) : param.toString());
+		
+		if (criterias.get(param.toString()) instanceof Integer
+				|| criterias.get(param.toString()) instanceof Long) {
+			if (!orQuery) {
+				searchString.append(" and ");
+			}
+			searchString.append("p." + criteriaKey + "=" + criterias.get(param.toString()));
+		} else if (StringUtils.isEmpty(criterias.get(param.toString()).toString())) {
+			searchString.append("");
+		} else if (criterias.get(param.toString()).toString().contains("null")) {
+			if (!orQuery) {
+				searchString.append(" and ");
+			}
+			if (criterias.get(param.toString()).toString().contains("!"))
+				searchString.append("p." + criteriaKey + " IS NOT NULL");
+			else
+				searchString.append("p." + criteriaKey + " IS NULL");
+		} else if (criterias.get(param.toString()).toString().contains(",")) {
+			if (!orQuery) {
+				searchString.append(" and ");
+			}
+			StringBuilder valBuilder = new StringBuilder();
+			String[] values = criterias.get(param.toString()).toString().trim().split(",");
+			for (int i = 0; i < values.length; i++) {
+				values[i] = "'" + values[i] + "',";
+				valBuilder.append(values[i]);
+			}
+			if (valBuilder.length() > 1) {
+				valBuilder = valBuilder.deleteCharAt(valBuilder.length() - 1);
+				searchString.append("UPPER(p." + criteriaKey + ") IN (" + valBuilder.toString() + ")");
+			}
+		} else if (criterias.get(param.toString()).toString().startsWith("<=")) {
+			if (!orQuery) {
+				searchString.append(" and ");
+			}
+			try {
+				searchString.append("p." + criteriaKey + " <= '"
+						+ new Timestamp(((Date) BaseController.dateFormat
+								.parse(criterias.get(param.toString()).toString().trim().substring(2))).getTime())
+						+ "'");
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} else if (criterias.get(param.toString()).toString().startsWith("!=")
+				|| criterias.get(param.toString()).toString().startsWith("<>")) {
+			if (!orQuery) {
+				searchString.append(" and ");
+			}
+			searchString.append("p." + criteriaKey + " <> '"
+					+ criterias.get(param.toString()).toString().trim().substring(2) + "'");
+		} else if (param.toString().toUpperCase().contains("DATE")
+				|| param.toString().toUpperCase().startsWith("CREATEDAT")
+				|| param.toString().toUpperCase().startsWith("MODIFIEDAT")) {
+			if (!orQuery) {
+				searchString.append(" and ");
+			}
+			appendSearchStringWithDateRange(criterias, searchString, param);
+		} else {
+			if (!orQuery) {
+				searchString.append(" and ");
+			}
+			if (!"dateField".equalsIgnoreCase(param.toString())) {
+				if (criterias.get(param).toString().contains("-")) {
+					if ("weekOfDate".equalsIgnoreCase(param.toString())) {
+						searchString.append("UPPER(p.weekOfDate" + ") >= UPPER('"
+								+ criterias.get(param.toString()) + " 00:00:00') ");
+					} else if ("weekOfDateTo".equalsIgnoreCase(param.toString())) {
+						searchString.append("UPPER(p.weekOfDate" + ") <= UPPER('"
+								+ criterias.get(param.toString()) + " 00:00:00') ");
+					} else if ("weekDate".equalsIgnoreCase(param.toString())) {
+						searchString.append("UPPER(p.weekDate" + ") >= UPPER('"
+								+ criterias.get(param.toString()) + " 00:00:00') ");
+					} else if ("weekDateTo".equalsIgnoreCase(param.toString())) {
+						searchString.append("UPPER(p.weekDate" + ") <= UPPER('"
+								+ criterias.get(param.toString()) + " 00:00:00') ");
+					} else {
+						searchString.append(
+								"UPPER(p." + criteriaKey + ") like UPPER('" + criterias.get(param.toString()) + "%') ");
+					}
+				} else {
+					searchString.append("UPPER(p." + criteriaKey + ") like UPPER('"
+					// + criterias.get(param.toString()) + "%') ");
+							+ criterias.get(param.toString()) + "') ");
+				}
+			}
+		}
 	}
 
 	/**

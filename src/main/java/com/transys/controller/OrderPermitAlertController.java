@@ -92,8 +92,6 @@ public class OrderPermitAlertController extends CRUDController<OrderPermits> {
 		setupList(model, request);
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		
-		System.out.println(criteria.getSearchMap());
-		
 		// Search for permits corresponding to open orders and status=expired or expiring in the next 7 days
 		List<OrderPermits> orderPermits = getToBeAlertedPermits(criteria);
 		System.out.println("Number of matching permits = " + orderPermits.size());
@@ -197,8 +195,8 @@ public class OrderPermitAlertController extends CRUDController<OrderPermits> {
 			// append these to it, store the existing search to be reset after the search
 			
 		} else {
-			searchMap.put("order.orderStatus.status", "Open");
-			//searchMap.put("||order.orderStatus.status", "Dropped-off");
+			searchMap.put("||1order.orderStatus.status", "Open");
+			searchMap.put("||2order.orderStatus.status", "Dropped Off");
 		}
 		
 		// permit EndDate <= Today + 7 days
