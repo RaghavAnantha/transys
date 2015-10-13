@@ -27,7 +27,7 @@ function populateDeliveryAddress() {
 
 function populateEndDate() {
 	$('#endDateInput').empty();
-	var startDateValue = $('#datepicker1').val();
+	var startDateValue = $('#datepicker8').val();
 	var permitTypeValue = $('#permitTypeSelect').val();
 	
 	if (startDateValue != '' && permitTypeValue != '') {
@@ -115,7 +115,7 @@ function populateEndDate() {
 		<tr>
 			<td align="${left}" class="form-left"><transys:label code="Start Date" /></td>
 			<td align="${left}" class="wide"><form:input path="startDate" class="flat"
-				id="datepicker1" name="startDate" style="width: 175px"  onChange="return populateEndDate();"/></td>
+				id="datepicker8" name="startDate" style="width: 175px"  onChange="return populateEndDate();"/></td>
 				
 			<td class="form-left"><transys:label code="End Date" /></td>
 			<td align="${left}">
