@@ -112,6 +112,15 @@ public class OrderController extends CRUDController<Order> {
 				List<DumpsterInfo> assignedDumpsterList = genericDAO.executeSimpleQuery("select obj from DumpsterInfo obj where obj.id=" + order.getDumpster().getId());
 				dumpsterInfoList.add(assignedDumpsterList.get(0));
 			}
+			
+			Long dumsterSizeId = order.getDumpsterSize().getId();
+			Long materialCategoryId = order.getMaterialType().getMaterialCategory().getId();
+			
+			List<MaterialCategory> materialCategoryList = retrieveMaterialCategories(dumsterSizeId);
+			model.addAttribute("materialCategories", materialCategoryList);
+			
+			List<MaterialType> materialTypeList = retrieveMaterialTypes(dumsterSizeId, materialCategoryId);
+			model.addAttribute("materialTypes", materialTypeList);
 		}
 		
 		model.addAttribute("orderDumpsters", dumpsterInfoList);
@@ -144,8 +153,8 @@ public class OrderController extends CRUDController<Order> {
       
       model.addAttribute("additionalFeeTypes", genericDAO.executeSimpleQuery("select obj from AdditionalFee obj where obj.id!=0 order by obj.id asc"));
      
-      model.addAttribute("materialCategories", genericDAO.executeSimpleQuery("select obj from MaterialCategory obj where obj.id!=0 order by obj.id asc"));
-      model.addAttribute("materialTypes", genericDAO.executeSimpleQuery("select obj from MaterialType obj where obj.id!=0 order by obj.id asc"));
+      //model.addAttribute("materialCategories", genericDAO.executeSimpleQuery("select obj from MaterialCategory obj where obj.id!=0 order by obj.id asc"));
+      //model.addAttribute("materialTypes", genericDAO.executeSimpleQuery("select obj from MaterialType obj where obj.id!=0 order by obj.id asc"));
       
       model.addAttribute("paymentMethods", genericDAO.executeSimpleQuery("select obj from PaymentMethodType obj where obj.id!=0 order by obj.id asc"));
       
@@ -802,7 +811,7 @@ public class OrderController extends CRUDController<Order> {
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/retrieveMaterialCategories.do")
 	public @ResponseBody String retrieveMaterialCategories(ModelMap model, HttpServletRequest request,
-														    @RequestParam(value = "dumpsterSizeId") String dumpsterSizeId) {
+														    @RequestParam(value = "dumpsterSizeId") Long dumpsterSizeId) {
 		List<MaterialCategory> materialCategories = retrieveMaterialCategories(dumpsterSizeId);
 		
 		ObjectMapper objectMapper = new ObjectMapper();
@@ -818,7 +827,7 @@ public class OrderController extends CRUDController<Order> {
 		//return json;
 	}
 	
-	private List<MaterialCategory> retrieveMaterialCategories(String dumpsterSizeId) {
+	private List<MaterialCategory> retrieveMaterialCategories(Long dumpsterSizeId) {
 		String dumpsterPriceQuery = "select obj from DumpsterPrice obj where";
 		dumpsterPriceQuery += " obj.dumpsterSize.id=" + dumpsterSizeId;
 		
@@ -833,8 +842,8 @@ public class OrderController extends CRUDController<Order> {
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/retrieveMaterialTypes.do")
 	public @ResponseBody String retrieveMaterialTypes(ModelMap model, HttpServletRequest request,
-														    @RequestParam(value = "dumpsterSizeId") String dumpsterSizeId,
-															 @RequestParam(value = "materialCategoryId") String materialCategoryId) {
+														    @RequestParam(value = "dumpsterSizeId") Long dumpsterSizeId,
+															 @RequestParam(value = "materialCategoryId") Long materialCategoryId) {
 		List<MaterialType> materialTypes = retrieveMaterialTypes(dumpsterSizeId, materialCategoryId);
 		
 		ObjectMapper objectMapper = new ObjectMapper();
@@ -850,7 +859,7 @@ public class OrderController extends CRUDController<Order> {
 		//return json;
 	}
 	
-	private List<MaterialType> retrieveMaterialTypes(String dumpsterSizeId, String materialCategoryId) {
+	private List<MaterialType> retrieveMaterialTypes(Long dumpsterSizeId, Long materialCategoryId) {
 		String dumpsterPriceQuery = "select obj from DumpsterPrice obj where";
 		dumpsterPriceQuery += " obj.dumpsterSize.id=" + dumpsterSizeId
 				    		  	 +  " and obj.materialType.materialCategory.id=" + materialCategoryId;
