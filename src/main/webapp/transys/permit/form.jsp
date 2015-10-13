@@ -142,8 +142,8 @@ function populateEndDate() {
 		<td class="form-left"><transys:label code="Parking Meter" /><span class="errorMessage">*</span></td>
 			<td align="${left}">
 				<form:select cssClass="flat form-control input-sm" path="parkingMeter" style="width: 175px !important" >
-					<form:option value="Yes"></form:option>
-					<form:option value="No"></form:option>
+					<form:option value="Yes" label="Yes"></form:option>
+					<form:option value="No" label="No"></form:option>
 				</form:select> 
 			 	<br><form:errors path="parkingMeter" cssClass="errorMessage" />
 			</td>

@@ -42,9 +42,22 @@ function populateEndDate() {
 	}
 }
 
+$("#permitModalFromAlertForm").submit(function (ev) {
+	var $this = $(this);
+    $.ajax({
+        type: $this.attr('method'),
+        url: $this.attr('action'),
+        data: $this.serialize(),
+        success: function(responseData, textStatus, jqXHR) {
+        	var permit = jQuery.parseJSON(responseData);
+        }
+    });
+    
+    ev.preventDefault();
+});
 </script>
 <br/>
-<form:form action="/permit/save.do" name="typeForm" commandName="modelObject" method="post" >
+<form:form action="/permit/savePermitFromAlert.do" name="permitModalFromAlertForm" id="permitModalFromAlertForm" commandName="modelObject" method="post" >
 	<form:hidden path="orderId" value="${associatedOrderID.id}" />
 	<table id="form-table" class="table">
 		<tr>
@@ -145,11 +158,10 @@ function populateEndDate() {
 		<tr>
 			<td>&nbsp;</td>
 			<td align="${left}" colspan="2">
-				<input type="submit"  id="create" onclick="return true" value="<transys:label code="Save"/>" class="flat btn btn-primary btn-sm" /> 
+				<input type="submit" id="createPermitFromAlert" onclick="return true;" value="<transys:label code="Save"/>" class="flat btn btn-primary btn-sm" />
 				<input type="reset" id="resetBtn" value="<transys:label code="Reset"/> "class="flat btn btn-primary btn-sm" /> 
-				<input type="button" id="cancelBtn" value="<transys:label code="Cancel"/>" class="flat btn btn-primary btn-sm" onClick="location.href='main.do'" />
+				<input type="button" id="closePermitFromAlertClose" value="Close" class="flat btn btn-primary btn-sm" data-dismiss="modal" />		
 			</td>
 		</tr>
 	</table>
-</form:form>
-	
+</form:form>	

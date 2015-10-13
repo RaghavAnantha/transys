@@ -120,7 +120,11 @@ public class PermitController extends CRUDController<Permit> {
 		if (!injectOrderSearchCriteria(criteria)) {
 			// search yielded no results
 			model.addAttribute("list", new ArrayList<Permit>());
-			return urlContext + "/list";
+			
+			model.addAttribute("activeTab", "managePermits");
+			model.addAttribute("mode", "MANAGE");
+			
+			return urlContext + "/permit";
 		}
 		
 		List<Permit> listOfPermits = genericDAO.search(getEntityClass(), criteria);
@@ -134,7 +138,11 @@ public class PermitController extends CRUDController<Permit> {
 		}
 		
 		model.addAttribute("list",listOfPermits);
-		return urlContext + "/list";
+		
+		model.addAttribute("activeTab", "managePermits");
+		model.addAttribute("mode", "MANAGE");
+		
+		return urlContext + "/permit";
 	}
 
 	private boolean injectOrderSearchCriteria(SearchCriteria criteria) {
@@ -370,18 +378,57 @@ public class PermitController extends CRUDController<Permit> {
 			@ModelAttribute("modelObject") Permit entity,
 			BindingResult bindingResult, ModelMap model) {
 		
-			boolean isNewPermitFromAlertScreen = isNewPermitFromAlertScreen(entity);
 			String status = "Pending";
-			OrderPermits associatedOrderPermitEntry = null;
+			if (entity.getNumber() != null && entity.getNumber().length() > 0) {
+				status = "Available";
+			} 
+
+			PermitStatus permitStatus = (PermitStatus)genericDAO.executeSimpleQuery("select obj from PermitStatus obj where obj.status='" + status + "'").get(0);
+			entity.setStatus(permitStatus);
 			
-			if (isNewPermitFromAlertScreen) { // Its a new permit, triggered from OrderPermit Screen
-				status = "Assigned"; // TODO: Is this ok?
-				associatedOrderPermitEntry = validatePermitEndDate(entity);
-			} else {
-				if (entity.getNumber() != null && entity.getNumber().length() > 0) {
-					status = "Available";
-				} 
+			try {
+				getValidator().validate(entity, bindingResult);
+			} catch (ValidationException e) {
+				e.printStackTrace();
+				System.out.println("Error in validation " + e);
+				log.warn("Error in validation :" + e);
 			}
+			
+			SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
+			criteria.getSearchMap().put("id!",0l);
+			//TODO: Fix me 
+			criteria.getSearchMap().remove("_csrf");
+			
+			// return to form if we had errors
+			if (bindingResult.hasErrors()) {
+				List<ObjectError> errors = bindingResult.getAllErrors();
+				for(ObjectError e : errors) {
+					System.out.println("Error: " + e.getDefaultMessage());
+				}
+				
+				setupCreate(model, request);
+				return urlContext + "/form";
+			}
+			
+			beforeSave(request, entity, model);
+			genericDAO.saveOrUpdate(entity);
+			
+			// The delivery address entered will automatically be stored as one of the Permit Addresses. Users can add more.
+			addDeliveryAddAsPermitAdd(request, entity);
+			
+			cleanUp(request);
+			
+			return saveSuccess(model, request, entity);
+	}
+
+	
+	@RequestMapping(method = RequestMethod.POST, value = "/savePermitFromAlert.do")
+	public @ResponseBody String savePermitFromAlert(HttpServletRequest request,
+			@ModelAttribute("modelObject") Permit entity,
+			BindingResult bindingResult, ModelMap model) {
+		
+			String status = "Assigned";
+			OrderPermits associatedOrderPermitEntry = validatePermitEndDate(entity);
 			
 			PermitStatus permitStatus = (PermitStatus)genericDAO.executeSimpleQuery("select obj from PermitStatus obj where obj.status='" + status + "'").get(0);
 			entity.setStatus(permitStatus);
@@ -424,17 +471,24 @@ public class PermitController extends CRUDController<Permit> {
 			addDeliveryAddAsPermitAdd(request, entity);
 			
 			// If new permit initiated from OrderPermitAlert screen, the permit should be associated with the corresponding orderID
-			if (isNewPermitFromAlertScreen) {
-				
-				associateToOrder(entity, associatedOrderPermitEntry, request);
-				updatePermitAndTotalFeesInOrder(entity, associatedOrderPermitEntry);
-			}
+			associateToOrder(entity, associatedOrderPermitEntry, request);
+			updatePermitAndTotalFeesInOrder(entity, associatedOrderPermitEntry);
 			
 			cleanUp(request);
 			
-			return saveSuccess(model, request, entity);
+			ObjectMapper objectMapper = new ObjectMapper();
+			String json = StringUtils.EMPTY;
+			try {
+				json = objectMapper.writeValueAsString(entity);
+			} catch (JsonProcessingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			return json;
 	}
 
+	
 	private void updatePermitAndTotalFeesInOrder(Permit entity, OrderPermits associatedOrderPermitEntry) {
 		// update permit fees in Order
 		OrderPaymentInfo orderPaymentInfo = associatedOrderPermitEntry.getOrder().getOrderPaymentInfo();
@@ -471,15 +525,6 @@ public class PermitController extends CRUDController<Permit> {
 			}
 		}
 		return associatedOrderPermitEntry;
-	}
-	
-	private boolean isNewPermitFromAlertScreen(Permit entity) {
-		System.out.println("Entity = " + entity.getOrderId());
-		if (entity.getOrderId() != null) { // Its
-			return true;
-		} else {
-			return false;
-		}
 	}
 
 	@RequestMapping(method = RequestMethod.POST, value = "/saveForCustomerModal.do")
@@ -554,13 +599,14 @@ public class PermitController extends CRUDController<Permit> {
 	private void associateToOrder(Permit entity, OrderPermits associatedOrderPermit, HttpServletRequest request) {
 		// existing permit details, chk order association
 		if (associatedOrderPermit != null) {
-			Map<String, Object> criterias = new HashMap<String, Object>();
+			System.out.println("Associated Permit number = " + entity.getId());
+			/*Map<String, Object> criterias = new HashMap<String, Object>();
 			criterias.put("number", entity.getNumber());
-			Permit newPermit = genericDAO.findByCriteria(Permit.class, criterias, "id", false).get(0);
+			Permit newPermit = genericDAO.findByCriteria(Permit.class, criterias, "id", false).get(0);*/
 			OrderPermits newOrderPermits = new OrderPermits();
 			
 			newOrderPermits.setOrder(associatedOrderPermit.getOrder());
-			newOrderPermits.setPermit(newPermit);
+			newOrderPermits.setPermit(entity);
 			if (newOrderPermits instanceof AbstractBaseModel) {
 				AbstractBaseModel baseModel = (AbstractBaseModel) entity;
 				if (baseModel.getId() == null) {
@@ -586,13 +632,9 @@ public class PermitController extends CRUDController<Permit> {
 	public String saveSuccess(ModelMap model, HttpServletRequest request, Permit entity) {
 		setupCreate(model, request);
 		
-		if (entity.getOrderId() != null) {
-			model.addAttribute("activeTab", "orderPermitAlert");
-		} else {
-			model.addAttribute("activeTab", "managePermits");
-			model.addAttribute("activeSubTab", "permitNotes"); // Permit Address?
-			model.addAttribute("mode", "ADD");
-		}
+		model.addAttribute("activeTab", "managePermits");
+		model.addAttribute("activeSubTab", "permitNotes"); // Permit Address?
+		model.addAttribute("mode", "ADD");
 		
 		PermitNotes notes = new PermitNotes();
 		notes.setPermit(entity);
@@ -606,11 +648,7 @@ public class PermitController extends CRUDController<Permit> {
 		List<BaseModel> permitAddressList = genericDAO.executeSimpleQuery("select obj from PermitAddress obj where obj.permit.id=" +  entity.getId() + " order by obj.id asc");
 		model.addAttribute("permitAddressList", permitAddressList);
 		
-		if (entity.getOrderId() != null) {
-			return "orderPermitAlert/list";
-		} else {
-			return urlContext + "/permit";
-		}
+		return urlContext + "/permit";
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/customerDeliveryAddress")
