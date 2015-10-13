@@ -600,9 +600,6 @@ public class PermitController extends CRUDController<Permit> {
 		// existing permit details, chk order association
 		if (associatedOrderPermit != null) {
 			System.out.println("Associated Permit number = " + entity.getId());
-			/*Map<String, Object> criterias = new HashMap<String, Object>();
-			criterias.put("number", entity.getNumber());
-			Permit newPermit = genericDAO.findByCriteria(Permit.class, criterias, "id", false).get(0);*/
 			OrderPermits newOrderPermits = new OrderPermits();
 			
 			newOrderPermits.setOrder(associatedOrderPermit.getOrder());
