@@ -11,8 +11,11 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
@@ -144,7 +147,7 @@ public class OrderController extends CRUDController<Order> {
       //model.addAttribute("permits", genericDAO.findByCriteria(Permit.class, criterias, "id", false));
       
 		model.addAttribute("dumpsters", genericDAO.executeSimpleQuery("select obj from DumpsterInfo obj where obj.id!=0 order by obj.id asc"));
-      model.addAttribute("dumpsterSizes", genericDAO.executeSimpleQuery("select obj from DumpsterSize obj where obj.id!=0 order by obj.size asc"));
+      model.addAttribute("dumpsterSizes", genericDAO.executeSimpleQuery("select obj from DumpsterSize obj where obj.id!=0 order by obj.id asc"));
       
       model.addAttribute("dusmpsterLocationTypes", genericDAO.executeSimpleQuery("select obj from LocationType obj where obj.id!=0 order by obj.id asc"));
       
@@ -834,8 +837,14 @@ public class OrderController extends CRUDController<Order> {
 		List<DumpsterPrice> dumsterPriceList = genericDAO.executeSimpleQuery(dumpsterPriceQuery);
 		List<MaterialCategory> materialCategories = new ArrayList<MaterialCategory>();
 		for (DumpsterPrice aDumpsterPrice : dumsterPriceList) {
-			materialCategories.add(aDumpsterPrice.getMaterialType().getMaterialCategory());
+			MaterialCategory aMaterialCategory = aDumpsterPrice.getMaterialType().getMaterialCategory();
+			if (!materialCategories.contains(aMaterialCategory)) {
+				materialCategories.add(aMaterialCategory);
+			}
 		}
+		
+		//Set<MaterialCategory> sortedWithoutDupes = new LinkedHashSet<MaterialCategory>(materialCategories);
+		//List<MaterialCategory> materialCategoryList2 = new ArrayList<MaterialCategory>(sortedWithoutDupes);
 		
 		return materialCategories;
 	}

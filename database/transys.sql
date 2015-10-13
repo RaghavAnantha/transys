@@ -1048,8 +1048,12 @@ CREATE TABLE `materialType` (
 
 LOCK TABLES `materialType` WRITE;
 /*!40000 ALTER TABLE `materialType` DISABLE KEYS */;
-INSERT INTO `materialType` VALUES (1,1,'Concrete',NULL,NULL,NULL,NULL,NULL,1),
-(2,1,'Dirt',NULL,NULL,NULL,NULL,NULL,1),(3,1,'Bricks',NULL,NULL,NULL,NULL,NULL,1);
+INSERT INTO `materialType` (`id`,`materialCategoryId`,`materialName`,`comments`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (1,1,'Concrete',NULL,NULL,NULL,NULL,NULL,1);
+INSERT INTO `materialType` (`id`,`materialCategoryId`,`materialName`,`comments`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (2,1,'Dirt',NULL,NULL,NULL,NULL,NULL,1);
+INSERT INTO `materialType` (`id`,`materialCategoryId`,`materialName`,`comments`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (3,1,'Bricks',NULL,NULL,NULL,NULL,NULL,1);
+INSERT INTO `materialType` (`id`,`materialCategoryId`,`materialName`,`comments`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (4,2,'Cardboard',NULL,NULL,NULL,NULL,NULL,1);
+INSERT INTO `materialType` (`id`,`materialCategoryId`,`materialName`,`comments`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (5,2,'Carpet',NULL,NULL,NULL,NULL,NULL,1);
+INSERT INTO `materialType` (`id`,`materialCategoryId`,`materialName`,`comments`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (6,3,'Flat Roofing',NULL,NULL,NULL,NULL,NULL,1);
 /*!40000 ALTER TABLE `materialType` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -1081,7 +1085,9 @@ CREATE TABLE `materialCategory` (
 
 LOCK TABLES `materialCategory` WRITE;
 /*!40000 ALTER TABLE `materialCategory` DISABLE KEYS */;
-INSERT INTO `materialCategory` VALUES (1,'Construction Debris',NULL,NULL,NULL,NULL,NULL,1),(2,'Household Debris',NULL,NULL,NULL,NULL,NULL,1),(3,'Shingles',NULL,NULL,NULL,NULL,NULL,1);
+INSERT INTO `materialCategory` (`id`,`category`,`comments`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (1,'Clean Construction Demolition Debris (CCDD)',NULL,NULL,NULL,NULL,NULL,1);
+INSERT INTO `materialCategory` (`id`,`category`,`comments`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (2,'Contruction/Demolition Debris (C&D)',NULL,NULL,NULL,NULL,NULL,1);
+INSERT INTO `materialCategory` (`id`,`category`,`comments`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (3,'Roofing',NULL,NULL,NULL,NULL,NULL,1);
 /*!40000 ALTER TABLE `materialCategory` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -1114,7 +1120,8 @@ CREATE TABLE `dumpsterSize` (
 
 LOCK TABLES `dumpsterSize` WRITE;
 /*!40000 ALTER TABLE `dumpsterSize` DISABLE KEYS */;
-INSERT INTO `dumpsterSize` VALUES (1,'20 yd', 1, NULL, NULL,NULL,NULL,NULL,1),(2,'30 yd', 1, NULL,NULL,NULL,NULL,NULL,1);
+INSERT INTO `dumpsterSize` (`id`,`size`,`permitClassId`,`comments`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (1,'6 yd',1,NULL,NULL,NULL,NULL,NULL,1);
+INSERT INTO `dumpsterSize` (`id`,`size`,`permitClassId`,`comments`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (2,'10 yd',1,NULL,NULL,NULL,NULL,NULL,1);
 /*!40000 ALTER TABLE `dumpsterSize` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -1183,8 +1190,18 @@ CREATE TABLE `dumpsterPrice` (
 
 LOCK TABLES `dumpsterPrice` WRITE;
 /*!40000 ALTER TABLE `dumpsterPrice` DISABLE KEYS */;
-INSERT INTO `dumpsterPrice` VALUES (1,1,1,240.00,NULL,'2015-09-25 12:31:34', '2020-09-25 12:31:34', NULL,NULL,NULL,NULL,1),
-(2,2,2,300.00,NULL,'2015-09-25 12:31:34', '2020-09-25 12:31:34',NULL,NULL,NULL,NULL,1);
+INSERT INTO `dumpsterPrice` (`id`,`dumpsterSizeId`,`materialTypeId`,`price`,`comments`,`effectiveDateFrom`,`effectiveDateTo`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (1,1,1,240.00,NULL,'2015-09-25 12:31:34','2020-09-25 12:31:34',NULL,NULL,NULL,NULL,1);
+INSERT INTO `dumpsterPrice` (`id`,`dumpsterSizeId`,`materialTypeId`,`price`,`comments`,`effectiveDateFrom`,`effectiveDateTo`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (2,1,2,240.00,NULL,'2015-09-25 12:31:34','2020-09-25 12:31:34',NULL,NULL,NULL,NULL,1);
+INSERT INTO `dumpsterPrice` (`id`,`dumpsterSizeId`,`materialTypeId`,`price`,`comments`,`effectiveDateFrom`,`effectiveDateTo`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (3,1,3,240.00,NULL,'2015-09-25 12:31:34','2020-09-25 12:31:34',NULL,NULL,NULL,NULL,1);
+INSERT INTO `dumpsterPrice` (`id`,`dumpsterSizeId`,`materialTypeId`,`price`,`comments`,`effectiveDateFrom`,`effectiveDateTo`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (4,2,1,300.00,NULL,'2015-09-25 12:31:34','2020-09-25 12:31:34',NULL,NULL,NULL,NULL,1);
+INSERT INTO `dumpsterPrice` (`id`,`dumpsterSizeId`,`materialTypeId`,`price`,`comments`,`effectiveDateFrom`,`effectiveDateTo`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (5,2,2,300.00,NULL,'2015-09-25 12:31:34','2020-09-25 12:31:34',NULL,NULL,NULL,NULL,1);
+INSERT INTO `dumpsterPrice` (`id`,`dumpsterSizeId`,`materialTypeId`,`price`,`comments`,`effectiveDateFrom`,`effectiveDateTo`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (6,2,3,300.00,NULL,'2015-09-25 12:31:34','2020-09-25 12:31:34',NULL,NULL,NULL,NULL,1);
+INSERT INTO `dumpsterPrice` (`id`,`dumpsterSizeId`,`materialTypeId`,`price`,`comments`,`effectiveDateFrom`,`effectiveDateTo`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (7,1,4,240.00,NULL,'2015-09-25 12:31:34','2020-09-25 12:31:34',NULL,NULL,NULL,NULL,1);
+INSERT INTO `dumpsterPrice` (`id`,`dumpsterSizeId`,`materialTypeId`,`price`,`comments`,`effectiveDateFrom`,`effectiveDateTo`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (8,1,5,240.00,NULL,'2015-09-25 12:31:34','2020-09-25 12:31:34',NULL,NULL,NULL,NULL,1);
+INSERT INTO `dumpsterPrice` (`id`,`dumpsterSizeId`,`materialTypeId`,`price`,`comments`,`effectiveDateFrom`,`effectiveDateTo`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (9,2,4,300.00,NULL,'2015-09-25 12:31:34','2020-09-25 12:31:34',NULL,NULL,NULL,NULL,1);
+INSERT INTO `dumpsterPrice` (`id`,`dumpsterSizeId`,`materialTypeId`,`price`,`comments`,`effectiveDateFrom`,`effectiveDateTo`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (10,2,5,300.00,NULL,'2015-09-25 12:31:34','2020-09-25 12:31:34',NULL,NULL,NULL,NULL,1);
+INSERT INTO `dumpsterPrice` (`id`,`dumpsterSizeId`,`materialTypeId`,`price`,`comments`,`effectiveDateFrom`,`effectiveDateTo`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (11,1,6,320.00,NULL,'2015-09-25 12:31:34','2020-09-25 12:31:34',NULL,NULL,NULL,NULL,1);
+INSERT INTO `dumpsterPrice` (`id`,`dumpsterSizeId`,`materialTypeId`,`price`,`comments`,`effectiveDateFrom`,`effectiveDateTo`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (12,2,6,380.00,NULL,'2015-09-25 12:31:34','2020-09-25 12:31:34',NULL,NULL,NULL,NULL,1);
 /*!40000 ALTER TABLE `dumpsterPrice` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
