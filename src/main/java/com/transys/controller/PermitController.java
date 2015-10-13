@@ -1,7 +1,6 @@
 package com.transys.controller;
 
 import java.math.BigDecimal;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -30,7 +29,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 //import com.google.gson.Gson;
 import com.transys.controller.editor.AbstractModelEditor;
-import com.transys.core.dao.GenericJpaDAO;
 import com.transys.model.AbstractBaseModel;
 import com.transys.model.BaseModel;
 import com.transys.model.Customer;
@@ -241,7 +239,8 @@ public class PermitController extends CRUDController<Permit> {
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/permitCreateModal.do")
-	public String permitCreateModal(ModelMap model, HttpServletRequest request, @RequestParam(value = "id") Long orderPermitId) {
+	public String permitCreateModal(ModelMap model, HttpServletRequest request, 
+			@RequestParam(value = "id") Long orderPermitId)  {
 	
 		setupUpdate(model, request);
 		System.out.println("OrderPermit Id being edited = " + orderPermitId);
@@ -259,17 +258,27 @@ public class PermitController extends CRUDController<Permit> {
 		
 		model.put("modelObject", permitToBeEdited);
 		
-		model.addAttribute("deliveryAddress", permitToBeEdited.getCustomer().getDeliveryAddress());
+		List<Customer> customers = new ArrayList<>();
+		customers.add(permitToBeEdited.getCustomer());
+		model.put("customer", customers);
+		
+		List<DeliveryAddress> deliveryAddress = new ArrayList<>();
+		deliveryAddress.add(orderPermitToBeEdited.getOrder().getDeliveryAddress());
+		model.addAttribute("deliveryAddress", deliveryAddress);
+		
+		List<LocationType> locationType = new ArrayList<>();
+		locationType.add(permitToBeEdited.getLocationType());
+		model.addAttribute("locationType", locationType);
+		
+		List<PermitClass> permitClass = new ArrayList<>();
+		permitClass.add(permitToBeEdited.getPermitClass());
+		model.addAttribute("permitClass", permitClass);
 		
 		criterias = new HashMap<String, Object>();
 		criterias.put("permit", permitToBeEdited);
 		model.addAttribute("permitAddress", genericDAO.findByCriteria(PermitAddress.class, criterias, "id", false));
 		
-		List<BaseModel> orderPermits = (List<BaseModel>)genericDAO.executeSimpleQuery("select obj from OrderPermits obj where obj.permit.id=" +  permitToBeEdited.getId() + " order by obj.id desc");
-		if (orderPermits != null && orderPermits.size() > 0) {
-			BaseModel orderPermitObj = orderPermits.get(0);
-			model.addAttribute("associatedOrderID", orderPermitObj);
-		}
+		model.addAttribute("associatedOrderID", orderPermitToBeEdited);
 		
 		return urlContext + "/formModal";
 	}
