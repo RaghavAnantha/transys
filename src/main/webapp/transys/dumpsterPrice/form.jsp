@@ -22,7 +22,7 @@
 			<td align="${left}">
 				<form:select cssClass="flat form-control input-sm" style="width:172px !important" path="materialType" >
 					<form:option value="">------Please Select--------</form:option>
-					<form:options items="${materialTypes}" itemValue="id" itemLabel="type" />
+					<form:options items="${materialTypes}" itemValue="id" itemLabel="materialName" />
 				</form:select> 
 				<br><form:errors path="materialType" cssClass="errorMessage" />
 			</td> 

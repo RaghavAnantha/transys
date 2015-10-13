@@ -401,7 +401,6 @@ CREATE TABLE `transysOrder` (
   `deliveryMinutesFrom` varchar(5) DEFAULT NULL,
   `deliveryMinutesTo` varchar(5) DEFAULT NULL,
   `pickupOrderId` bigint(20) DEFAULT NULL,
-  `materialCategoryId` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `orderCustomerRef_idx` (`customerId`),
   CONSTRAINT `orderCustomerRef` FOREIGN KEY (`customerId`) REFERENCES `customer` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
@@ -409,7 +408,6 @@ CREATE TABLE `transysOrder` (
   CONSTRAINT `orderStatusRef` FOREIGN KEY (`orderStatusId`) REFERENCES `orderStatus` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `orderDumpsterRef` FOREIGN KEY (`dumpsterId`) REFERENCES `dumpsterInfo` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `orderMaterialTypeRef` FOREIGN KEY (`materialTypeId`) REFERENCES `materialType` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `orderMaterialCategoryRef` FOREIGN KEY (`materialCategoryId`) REFERENCES `materialCategory` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `orderDumpsterLocationRef` FOREIGN KEY (`locationTypeId`) REFERENCES `locationType` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `orderDumpsterSizeRef` FOREIGN KEY (`dumpsterSizeId`) REFERENCES `dumpsterSize` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `orderPickupDriverUserInfoRef` FOREIGN KEY (`pickUpDriverId`) REFERENCES `userInfo` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
@@ -423,7 +421,8 @@ CREATE TABLE `transysOrder` (
 
 LOCK TABLES `transysOrder` WRITE;
 /*!40000 ALTER TABLE `transysOrder` DISABLE KEYS */;
-INSERT INTO `transysOrder` (`id`,`customerId`,`deliveryContactName`,`deliveryContactPhone1`,`deliveryContactPhone2`,`deliveryDate`,`deliveryAddressId`,`locationTypeId`,`dumpsterSizeId`,`materialTypeId`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`,`grossWeight`,`netWeightLb`,`netWeightTonnage`,`tare`,`dumpsterId`,`pickupDate`,`orderStatusId`,`pickUpDriverId`,`dropOffDriverId`,`deliveryHourFrom`,`deliveryHourTo`,`deliveryMinutesFrom`,`deliveryMinutesTo`,`pickupOrderId`,`materialCategoryId`) VALUES (1,5,'Raghav','123-456-7890','123-456-7890','2015-10-09 00:00:00',3,1,1,1,'2015-10-09 00:00:00',1,'2015-10-10 18:42:41',1,1,10.00,10.00,10.00,10.00,2,NULL,2,NULL,2,'12:00 AM','1:00 AM','00','15',NULL,1);
+INSERT INTO `transysOrder` (`id`,`customerId`,`deliveryContactName`,`deliveryContactPhone1`,`deliveryContactPhone2`,`deliveryDate`,`deliveryAddressId`,`locationTypeId`,`dumpsterSizeId`,`materialTypeId`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`,`grossWeight`,`netWeightLb`,`netWeightTonnage`,`tare`,`dumpsterId`,`pickupDate`,`orderStatusId`,`pickUpDriverId`,`dropOffDriverId`,`deliveryHourFrom`,`deliveryHourTo`,`deliveryMinutesFrom`,`deliveryMinutesTo`,`pickupOrderId`) 
+VALUES (1,5,'Raghav','123-456-7890','123-456-7890','2015-10-09 00:00:00',3,1,1,1,'2015-10-09 00:00:00',1,'2015-10-10 18:42:41',1,1,10.00,10.00,10.00,10.00,2,NULL,2,NULL,2,'12:00 AM','1:00 AM','00','15',NULL);
 /*!40000 ALTER TABLE `transysOrder` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1030,6 +1029,7 @@ DROP TABLE IF EXISTS `materialType`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `materialType` (
   `id` bigint(20) NOT NULL,
+  `materialCategoryId` bigint(20) NOT NULL,
   `materialName` varchar(50) DEFAULT NULL,
   `comments` varchar(500) DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
@@ -1037,7 +1037,8 @@ CREATE TABLE `materialType` (
   `modified_at` datetime DEFAULT NULL,
   `modified_by` bigint(20) DEFAULT NULL,
   `delete_flag` int(11) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  CONSTRAINT `materialTypeMaterialCategoryRef` FOREIGN KEY (`materialCategoryId`) REFERENCES `materialCategory` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -1047,7 +1048,8 @@ CREATE TABLE `materialType` (
 
 LOCK TABLES `materialType` WRITE;
 /*!40000 ALTER TABLE `materialType` DISABLE KEYS */;
-INSERT INTO `materialType` VALUES (1,'Concrete',NULL,NULL,NULL,NULL,NULL,1),(2,'Dirt',NULL,NULL,NULL,NULL,NULL,1),(3,'Bricks',NULL,NULL,NULL,NULL,NULL,1);
+INSERT INTO `materialType` VALUES (1,1,'Concrete',NULL,NULL,NULL,NULL,NULL,1),
+(2,1,'Dirt',NULL,NULL,NULL,NULL,NULL,1),(3,1,'Bricks',NULL,NULL,NULL,NULL,NULL,1);
 /*!40000 ALTER TABLE `materialType` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -1158,7 +1160,7 @@ DROP TABLE IF EXISTS `dumpsterPrice`;
 CREATE TABLE `dumpsterPrice` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `dumpsterSizeId` bigint(20) NOT NULL,
-  `materialCategoryId` bigint(20) NOT NULL,
+  `materialTypeId` bigint(20) NOT NULL,
   `price` decimal(6,2) NOT NULL,
   `comments` varchar(500) DEFAULT NULL,
   `effectiveDateFrom` datetime DEFAULT NULL,
@@ -1169,8 +1171,8 @@ CREATE TABLE `dumpsterPrice` (
   `modified_by` bigint(20) DEFAULT NULL,
   `delete_flag` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
-  KEY `dumpsterPriceMaterialCategoryRef_idx` (`materialCategoryId`),
-  CONSTRAINT `dumpsterPriceMaterialCategoryRef` FOREIGN KEY (`materialCategoryId`) REFERENCES `materialCategory` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  KEY `dumpsterPriceMaterialTypeRef_idx` (`materialTypeId`),
+  CONSTRAINT `dumpsterPriceMaterialTypeRef` FOREIGN KEY (`materialTypeId`) REFERENCES `materialType` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `dumpsterPriceDumpsterSizeRef` FOREIGN KEY (`dumpsterSizeId`) REFERENCES `dumpsterSize` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -1198,7 +1200,7 @@ CREATE TABLE `customerDumpsterPrice` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `customerId` bigint(20) NOT NULL,
   `dumpsterSizeId` bigint(20) NOT NULL,
-  `materialCategoryId` bigint(20) NOT NULL,
+  `materialTypeId` bigint(20) NOT NULL,
   `price` decimal(6,2) NOT NULL,
   `comments` varchar(500) DEFAULT NULL,
   `effectiveDateFrom` datetime DEFAULT NULL,
@@ -1209,9 +1211,9 @@ CREATE TABLE `customerDumpsterPrice` (
   `modified_by` bigint(20) DEFAULT NULL,
   `delete_flag` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
-  KEY `customerDumpsterPriceRef_idx` (`customerId`),
-  CONSTRAINT `customerDumpsterPriceRef` FOREIGN KEY (`customerId`) REFERENCES `customer` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `customerDumpsterPriceMaterialCategoryRef` FOREIGN KEY (`materialCategoryId`) REFERENCES `materialCategory` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  KEY `customerDumpsterPriceCustomerRef_idx` (`customerId`),
+  CONSTRAINT `customerDumpsterPriceCustomerRef` FOREIGN KEY (`customerId`) REFERENCES `customer` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `customerDumpsterPriceMaterialTypeRef` FOREIGN KEY (`materialTypeId`) REFERENCES `materialType` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `customerDumpsterPriceDumpsterSizeRef` FOREIGN KEY (`dumpsterSizeId`) REFERENCES `dumpsterSize` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -1222,7 +1224,7 @@ CREATE TABLE `customerDumpsterPrice` (
 
 LOCK TABLES `customerDumpsterPrice` WRITE;
 /*!40000 ALTER TABLE `customerDumpsterPrice` DISABLE KEYS */;
-INSERT INTO `customerDumpsterPrice` VALUES (5,6,1, 1, 300.00,NULL,'2015-09-25 11:48:14', '2025-09-25 11:48:14','2015-09-25 11:48:14',1,'2015-09-25 11:50:40',1,1);
+INSERT INTO `customerDumpsterPrice` VALUES (5,6,1,1, 300.00,NULL,'2015-09-25 11:48:14', '2025-09-25 11:48:14','2015-09-25 11:48:14',1,'2015-09-25 11:50:40',1,1);
 /*!40000 ALTER TABLE `customerDumpsterPrice` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -1379,13 +1381,13 @@ UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 --
--- Table structure for table `materialIntakeForRecycle`
+-- Table structure for table `materialIntake`
 --
 
-DROP TABLE IF EXISTS `materialIntakeForRecycle`;
+DROP TABLE IF EXISTS `materialIntake`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `materialIntakeForRecycle` (
+CREATE TABLE `materialIntake` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `materialTypeId` bigint(20) NOT NULL,
   `intakeDate` datetime NOT NULL,
@@ -1396,23 +1398,21 @@ CREATE TABLE `materialIntakeForRecycle` (
   `modified_by` bigint(20) DEFAULT NULL,
   `delete_flag` int(11) NOT NULL DEFAULT '1',
   `netWeightTonnage` decimal(6,2) DEFAULT NULL,
-  `materialType` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `materialTypeForRecycleRef_idx` (`materialTypeId`),
-  KEY `FK_tbcako5k9drl0fehr1ciwfdm6` (`materialType`),
-  CONSTRAINT `FK_tbcako5k9drl0fehr1ciwfdm6` FOREIGN KEY (`materialType`) REFERENCES `materialType` (`id`),
-  CONSTRAINT `materialTypeForRecycleRef` FOREIGN KEY (`materialTypeId`) REFERENCES `materialType` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  KEY `materialIntakeMaterialTypeRef_idx` (`materialTypeId`),
+  CONSTRAINT `materialIntakeMaterialTypeRef` FOREIGN KEY (`materialTypeId`) REFERENCES `materialType` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `materialIntakeForRecycle`
+-- Dumping data for table `materialIntake`
 --
 
-LOCK TABLES `materialIntakeForRecycle` WRITE;
-/*!40000 ALTER TABLE `materialIntakeForRecycle` DISABLE KEYS */;
-INSERT INTO `materialIntakeForRecycle` VALUES (4,1,'2015-10-10 00:00:00',NULL,'2015-10-11 11:04:37',1,NULL,NULL,1,30.00,NULL),(5,2,'2015-10-10 00:00:00',NULL,'2015-10-11 11:06:54',1,NULL,NULL,1,12.00,NULL);
-/*!40000 ALTER TABLE `materialIntakeForRecycle` ENABLE KEYS */;
+LOCK TABLES `materialIntake` WRITE;
+/*!40000 ALTER TABLE `materialIntake` DISABLE KEYS */;
+INSERT INTO `materialIntake` VALUES (4,1,'2015-10-10 00:00:00',NULL,'2015-10-11 11:04:37',1,NULL,NULL,1,30.00),
+(5,2,'2015-10-10 00:00:00',NULL,'2015-10-11 11:06:54',1,NULL,NULL,1,12.00);
+/*!40000 ALTER TABLE `materialIntake` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 

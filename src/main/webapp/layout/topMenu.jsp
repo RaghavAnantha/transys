@@ -40,7 +40,7 @@
 							<li><a href="/cityFee/main.do">City Fee</a></li>
 							<li><a href="/permitFee/main.do">Permit Fee</a></li>
 							<li><a href="/additionalFee/main.do">Additional Fee</a></li>
-							<li><a href="/materialIntakeForRecycle/main.do">Material Intake For Recycle</a></li>
+							<li><a href="/materialIntake/main.do">Material Intake For Recycle</a></li>
 						</ul>
 					</li>
 				</ul>

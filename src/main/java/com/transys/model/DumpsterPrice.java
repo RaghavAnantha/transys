@@ -12,14 +12,17 @@ import javax.persistence.Table;
 @Entity
 @Table(name="dumpsterPrice")
 public class DumpsterPrice extends AbstractBaseModel {
-	
 	@ManyToOne
 	@JoinColumn(name="dumpsterSizeId") //Enum?
 	private DumpsterSize dumpsterSize;
 	
 	@ManyToOne
+	@JoinColumn(name="materialTypeId")
+	private MaterialCategory materialType;
+	
+	/*@ManyToOne
 	@JoinColumn(name="materialCategoryId")
-	private MaterialCategory materialCategory;
+	private MaterialCategory materialCategory;*/
 	
 	@Column(name="price")
 	private BigDecimal price;
@@ -40,15 +43,7 @@ public class DumpsterPrice extends AbstractBaseModel {
 	public void setDumpsterSize(DumpsterSize dumpsterSize) {
 		this.dumpsterSize = dumpsterSize;
 	}
-
-	public MaterialCategory getMaterialCategory() {
-		return materialCategory;
-	}
-
-	public void setMaterialCategory(MaterialCategory materialCategory) {
-		this.materialCategory = materialCategory;
-	}
-
+	
 	public String getComments() {
 		return comments;
 	}
@@ -80,5 +75,12 @@ public class DumpsterPrice extends AbstractBaseModel {
 	public void setPrice(BigDecimal price) {
 		this.price = price;
 	}
-	
+
+	public MaterialCategory getMaterialType() {
+		return materialType;
+	}
+
+	public void setMaterialType(MaterialCategory materialType) {
+		this.materialType = materialType;
+	}
 }

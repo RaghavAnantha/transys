@@ -777,8 +777,8 @@ public class OrderController extends CRUDController<Order> {
 	@RequestMapping(method = RequestMethod.GET, value = "/retrieveDumpsterPrice.do")
 	public @ResponseBody String retrieveDumpsterPrice(ModelMap model, HttpServletRequest request,
 														    @RequestParam(value = "dumpsterSizeId") String dumpsterSizeId,
-															 @RequestParam(value = "materialCategoryId") String materialCategoryId) {
-		BigDecimal dumpsterPrice = retrieveDumpsterPrice(dumpsterSizeId, materialCategoryId);
+															 @RequestParam(value = "materialTypeId") String materialTypeId) {
+		BigDecimal dumpsterPrice = retrieveDumpsterPrice(dumpsterSizeId, materialTypeId);
 		
 		ObjectMapper objectMapper = new ObjectMapper();
 		String json = StringUtils.EMPTY;
@@ -793,10 +793,10 @@ public class OrderController extends CRUDController<Order> {
 		//return json;
 	}
 	
-	private BigDecimal retrieveDumpsterPrice(String dumpsterSizeId, String materialCategoryId) {
+	private BigDecimal retrieveDumpsterPrice(String dumpsterSizeId, String materialTypeId) {
 		String dumpsterPriceQuery = "select obj from DumpsterPrice obj where ";
 		dumpsterPriceQuery += "obj.dumpsterSize.id=" + dumpsterSizeId
-				    		  	 + " and obj.materialCategory.id=" + materialCategoryId;
+				    		  	 + " and obj.materialType.id=" + materialTypeId;
 		
 		List<DumpsterPrice> dumsterPriceList = genericDAO.executeSimpleQuery(dumpsterPriceQuery);
 		return dumsterPriceList.get(0).getPrice();

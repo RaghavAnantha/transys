@@ -181,10 +181,10 @@ function populateDusmpsterPrice() {
 	var dumpsterSizeSelect = $("#dumpsterSize");
 	var dumpsterSizeId = dumpsterSizeSelect.val();
 	
-	var materialCategorySelect = $("#materialCategory");
-	var materialCategoryId = materialCategorySelect.val();
+	var materialTypeSelect = $("#materialType");
+	var materialTypeId = materialTypeSelect.val();
 	
-	if (dumpsterSizeId == "" || materialCategoryId == "") {
+	if (dumpsterSizeId == "" || materialTypeId == "") {
 		return false;
 	}
 	
@@ -192,7 +192,7 @@ function populateDusmpsterPrice() {
 	
 	$.ajax({
   		url: "retrieveDumpsterPrice.do?" + "dumpsterSizeId=" + dumpsterSizeId 
-  								  		 + "\&materialCategoryId=" + materialCategoryId,
+  								  		 + "\&materialTypeId=" + materialTypeId,
   								  
        	type: "GET",
        	success: function(responseData, textStatus, jqXHR) {
@@ -616,15 +616,20 @@ function verifyExchangeOrderAndSubmit() {
 		<tr>
 			<td class="form-left"><transys:label code="Material Category"/><span class="errorMessage">*</span></td>
 			<td align="${left}">
-				<form:select id="materialCategory" cssClass="flat form-control input-sm" style="width:172px !important" path="materialCategory" onChange="return populateDusmpsterPrice();"> 
-					<form:option value="">-------Please Select------</form:option>
-					<form:options items="${materialCategories}" itemValue="id" itemLabel="category" />
-				</form:select> 
-			 	<br><form:errors path="materialCategory" cssClass="errorMessage" />
+				<select class="flat form-control input-sm" id="id" name="materialCategory" id="materialCategory" style="width: 175px">
+					<option value="">------Please Select------</option>
+					<c:forEach items="${materialCategories}" var="aMaterialCategory">
+						<c:set var="selected" value="" />
+						<c:if test="${modelObject.materialType.materialCategory.id == aMaterialCategory.id}">
+							<c:set var="selected" value="selected" />
+						</c:if>
+						<option value="${aMaterialCategory.id}" ${selected}>${aMaterialCategory.category}</option>
+					</c:forEach>
+				</select>
 			</td>
 			<td class="form-left"><transys:label code="Material Type"/></td>
 			<td align="${left}">
-				<form:select id="materialType" cssClass="flat form-control input-sm" style="width:172px !important" path="materialType"> 
+				<form:select id="materialType" cssClass="flat form-control input-sm" style="width:172px !important" path="materialType"  onChange="return populateDusmpsterPrice();"> 
 					<form:option value="">-------Please Select------</form:option>
 					<form:options items="${materialTypes}" itemValue="id" itemLabel="materialName" />
 				</form:select> 

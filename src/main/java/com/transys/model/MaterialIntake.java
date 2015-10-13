@@ -11,11 +11,11 @@ import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
-@Table(name="materialIntakeForRecycle")
-public class MaterialIntakeForRecycle extends AbstractBaseModel {
+@Table(name="materialIntake")
+public class MaterialIntake extends AbstractBaseModel {
 	
 	@ManyToOne
-	@JoinColumn(name="materialType")
+	@JoinColumn(name="materialTypeId")
 	private MaterialType materialType;
 	
 	@Column(name="netWeightTonnage")

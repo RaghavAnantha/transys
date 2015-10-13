@@ -21,8 +21,8 @@ public class CustomerDumpsterPrice extends AbstractBaseModel {
 	private DumpsterSize dumpsterSize;
 	
 	@ManyToOne
-	@JoinColumn(name="materialCategoryId")
-	private MaterialCategory materialCategory;
+	@JoinColumn(name="materialTypeId")
+	private MaterialType materialType;
 	
 	public DumpsterSize getDumpsterSize() {
 		return dumpsterSize;
@@ -31,14 +31,15 @@ public class CustomerDumpsterPrice extends AbstractBaseModel {
 	public void setDumpsterSize(DumpsterSize dumpsterSize) {
 		this.dumpsterSize = dumpsterSize;
 	}
-
-	public MaterialCategory getMaterialCategory() {
-		return materialCategory;
+	
+	public MaterialType getMaterialType() {
+		return materialType;
 	}
 
-	public void setMaterialCategory(MaterialCategory materialCategory) {
-		this.materialCategory = materialCategory;
+	public void setMaterialType(MaterialType materialType) {
+		this.materialType = materialType;
 	}
+
 
 	@Column(name="dumpsterPrice")
 	private String dumpsterPrice;
