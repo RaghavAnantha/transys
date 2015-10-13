@@ -1,161 +1,90 @@
-<%@ include file="/common/taglibs.jsp" %>
-<%@page import="java.util.List,
-			    java.util.ArrayList,
-			    com.transys.model.BusinessObject,
-			    com.transys.model.menu.*"%>
-<c:if test="${sessionScope.userInfo.role.id == 1}">
-<div style="width:100%" id="navigation" class="navmenu">
-<%
-    MenuTree menuTree = (MenuTree) session.getAttribute("menuTree");
-	BusinessObject bo = new BusinessObject();
-	bo.setAction("customer");
-	bo.setId(1l);
-	bo.setUrl("customer");
-	List<BusinessObject> businessObjects = new ArrayList<BusinessObject>();
-	businessObjects.add(bo);
-    //List<BusinessObject> businessObjects = MenuHelper.getMenuForLevel(menuTree, 2);
-if (menuTree!=null) {
-%>
-<ul>
-    <%
-	    String cssClass="";
-		BusinessObject currentBo = (BusinessObject)session.getAttribute("curObj"); 
-		String hierarchy ="";
-		if (currentBo!=null) {
-			hierarchy = currentBo.getObjectHierarchy();
+<%@ include file="/common/taglibs.jsp"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Transys</title>
+</head>
+<body>
+	<nav class="navbar navbar-inverse navbar-fixed-top navheight" role="navigation">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<a class="navbar-brand active" href="/home.do">Transys</a>
+			</div>
+			<div>
+				<ul class="nav navbar-nav">
+					<li id="orderPage"><a href="/order/main.do">Orders</a></li>
+					<li id="permitPage"><a href="/permit/main.do">Permits</a></li>
+					<li id="customerPage"><a href="/customer/main.do">Customers</a></li>
+					<li id="reportPage">
+						<a href="#" data-toggle="dropdown" class="dropdown-toggle">Reports<b class="caret"></b></a>
+						<ul class="dropdown-menu">
+							<li><a href="/ordersRevenueReport/main.do">Revenue Report</a></li>
+							<li><a href="/deliveryPickupReport/main.do">Delivery/Pickup Reports</a></li>
+							<li><a href="/dumpsterOnsiteReport/main.do">Dumpsters On-site Report</a></li>
+							<li><a href="/dumpstersRentedReport/main.do">Dumpsters Rented Report</a></li>
+							<li><a href="/recycleReports/main.do">Recycle Reports</a></li>
+							<li><a href="/materialIntakeDailyReport/main.do">Material Intake Daily Report</a></li>
+						</ul>
+					</li>
+					<li id="masterDataPage">
+						<a href="#" data-toggle="dropdown" class="dropdown-toggle">Master Data<b class="caret"></b></a>
+						<ul class="dropdown-menu">
+							<li><a href="/employee/main.do">Employees</a></li>
+							<li><a href="/dumpsters/main.do">Dumpsters</a></li>
+							<li><a href="/materialType/main.do">Material Type</a></li>
+							<li><a href="/paymentMethod/main.do">Payment Method</a></li>
+							<li><a href="/locationType/main.do">Location Type</a></li>
+							<li><a href="/dumpsterPrice/main.do">Dumpster Price</a></li>
+							<!-- <li><a href="/customerDumpsterPrice/main.do">Customer Dumpster Price</a></li> -->
+							<li><a href="/cityFee/main.do">City Fee</a></li>
+							<li><a href="/permitFee/main.do">Permit Fee</a></li>
+							<li><a href="/additionalFee/main.do">Additional Fee</a></li>
+							<li><a href="/materialIntakeForRecycle/main.do">Material Intake For Recycle</a></li>
+						</ul>
+					</li>
+				</ul>
+				<ul class="nav navbar-nav navbar-right">
+					<li>
+						<a href="#">
+							<transys:label code="Welcome" />
+							<c:if test="${userInfo==null}">
+								<b><transys:label code="Guest!" /></b>
+							</c:if> 
+							<c:if test="${userInfo!=null}">
+								<b>${userInfo.name}!</b>
+								<br />
+								<span style="font-size: 10px">
+									<transys:label code="Last Login" /> : 
+									<fmt:formatDate value="${userInfo.lastLoginDate}" pattern="MM-dd-yyyy HH:mm:ss" />
+								</span>
+							</c:if>
+						</a>
+					</li>
+					<li>
+						<c:if test="${sessionScope.userInfo !=null}">
+							<a href="${ctx}/j_spring_security_logout">Logout</a>
+						</c:if>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+</body>
+<script type="text/javascript">
+	$(function() {
+		var loc = window.location.href;
+		if (loc.match('/order')) {
+			$('#orderPage').addClass("active");
+		} else if (loc.match('/permit')) {
+			$('#permitPage').addClass("active");
+		} else if (loc.match('/customer')) {
+			$('#customerPage').addClass("active");
+		} else if (loc.match('/reports')) {
+			$('#reportPage').addClass("active");
+		} else if (loc.match('/masterData')) {
+			$('#masterDataPage').addClass("active");
 		}
-		for (BusinessObject businessObject : businessObjects) {
-			if(businessObject.getId()==110 || businessObject.getId()==120 || businessObject.getId()==130 
-			   || businessObject.getId()==140 || businessObject.getId()==150 || businessObject.getId()==201 
-			   || businessObject.getId()==202 || businessObject.getId()==203 || businessObject.getId()==204
-			   || businessObject.getId()==205 || businessObject.getId()==206 || businessObject.getId()==301 
-			   || businessObject.getId()==306 || businessObject.getId()==20012 || businessObject.getId()==1005
-			   || businessObject.getId()==600110){ 
-			
-				if (hierarchy.contains("/"+businessObject.getId()+"/")) {
-				cssClass="selected";
-			}
-			else {
-				cssClass="";
-			}
-			BusinessObject bo2=null;
-    		List<BusinessObject> submenus = MenuHelper.getMenuForParent(menuTree, businessObject.getId());
-    		if (submenus!=null && submenus.size()>0) {
-    			bo2 = submenus.get(0);
-    		}
-    		else {
-    			bo2 = businessObject;
-    		}
-	%>
-    <li>
-    <c:set var="obj" value="<%=businessObject.getObjectName()%>"></c:set>
-       <a href="${ctx}<%=bo2.getAction()%>" class="<%=cssClass%>">${obj}</a>
-    </li>
-    <%}}%>
-</ul>
-<% }
-%>
-</div>
-<div style="width:100%" id="navigation" class="navmenu">
-<%
-    MenuTree menuTree2 = (MenuTree) session.getAttribute("menuTree");
- 	BusinessObject bot = new BusinessObject();
- 	bot.setAction("customer");
- 	bot.setId(1l);
- 	bot.setUrl("customer");
- 	List<BusinessObject> businessObjects2 = new ArrayList<BusinessObject>();
- 	businessObjects2.add(bot);
-     //List<BusinessObject> businessObjects2 = MenuHelper.getMenuForLevel(menuTree2, 2);
-if (menuTree!=null) {
-%>
-<ul>
-    <%
-	    String cssClass="";
-		BusinessObject currentBo = (BusinessObject)session.getAttribute("curObj"); 
-		String hierarchy ="";
-		if (currentBo!=null) {
-			hierarchy = currentBo.getObjectHierarchy();
-		}
-		for (BusinessObject businessObject : businessObjects2) {
-			if(businessObject.getId()==401 || businessObject.getId()==406 || businessObject.getId()==501 
-			|| businessObject.getId()==601 || businessObject.getId()==701 || businessObject.getId()==801 
-			|| businessObject.getId()==901 || businessObject.getId()==902 || businessObject.getId()==903 
-			|| businessObject.getId()==904 || businessObject.getId()==905 || businessObject.getId()==908 
-			|| businessObject.getId()==1001 || businessObject.getId()==2222){
-			if (hierarchy.contains("/"+businessObject.getId()+"/")) {
-				cssClass="selected";
-			}
-			else {
-				cssClass="";
-			}
-			BusinessObject bo2=null;
-    		List<BusinessObject> submenus = MenuHelper.getMenuForParent(menuTree2, businessObject.getId());
-    		if (submenus!=null && submenus.size()>0) {
-    			bo2 = submenus.get(0);
-    		}
-    		else {
-    			bo2 = businessObject;
-    		}
-	%>
-    <li>
-    <c:set var="obj" value="<%=businessObject.getObjectName()%>"></c:set>
-       <a href="${ctx}<%=bo2.getAction()%>" class="<%=cssClass%>">${obj}</a>
-    </li>
-    <%}}%>
-</ul>
-<% }
-%>
-</div>
-</c:if>
-
-
-<c:if test="${sessionScope.userInfo.role.id != 1}">
-<div style="width:100%" id="navigation" class="navmenu">
-<%
-	MenuTree menuTree = (MenuTree) session.getAttribute("menuTree");
-	BusinessObject bo = new BusinessObject();
-	bo.setId(1l);
-	bo.setObjectName("Customer");
-	bo.setAction("customer");
-	bo.setUrl("customer");
-	bo.setObjectHierarchy("/1/");
-	List<BusinessObject> businessObjects = new ArrayList<BusinessObject>();
- 	businessObjects.add(bo);
-     //List<BusinessObject> businessObjects2 = MenuHelper.getMenuForLevel(menuTree2, 2);
-	
-if (menuTree!=null) {
-%>
-<ul>
-    <%
-	    String cssClass="";
-		BusinessObject currentBo = (BusinessObject)session.getAttribute("curObj"); 
-		String hierarchy ="";
-		if (currentBo!=null) {
-			hierarchy = currentBo.getObjectHierarchy();
-		}
-		for (BusinessObject businessObject : businessObjects) {			
-			if (hierarchy.contains("/"+businessObject.getId()+"/")) {
-				cssClass="selected";
-			}
-			else {
-				cssClass="";
-			}
-			BusinessObject bo2=null;
-    		List<BusinessObject> submenus = MenuHelper.getMenuForParent(menuTree, businessObject.getId());
-    		if (submenus!=null && submenus.size()>0) {
-    			bo2 = submenus.get(0);
-    		}
-    		else {
-    			bo2 = businessObject;
-    		}
-	%>
-    <li>
-    <c:set var="obj" value="<%=businessObject.getObjectName()%>"></c:set>
-       <a href="${ctx}<%=bo2.getAction()%>" class="<%=cssClass%>">${obj}</a>
-    </li>
-    <%}%>
-</ul>
-<% }
-%>
-</div>
-</c:if>
+	});
+</script>
+</html>
