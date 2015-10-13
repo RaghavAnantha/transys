@@ -18,7 +18,7 @@ public class DumpsterPrice extends AbstractBaseModel {
 	
 	@ManyToOne
 	@JoinColumn(name="materialTypeId")
-	private MaterialCategory materialType;
+	private MaterialType materialType;
 	
 	/*@ManyToOne
 	@JoinColumn(name="materialCategoryId")
@@ -76,11 +76,11 @@ public class DumpsterPrice extends AbstractBaseModel {
 		this.price = price;
 	}
 
-	public MaterialCategory getMaterialType() {
+	public MaterialType getMaterialType() {
 		return materialType;
 	}
 
-	public void setMaterialType(MaterialCategory materialType) {
+	public void setMaterialType(MaterialType materialType) {
 		this.materialType = materialType;
 	}
 }

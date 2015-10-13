@@ -772,8 +772,6 @@ public class OrderController extends CRUDController<Order> {
 		return availablePermits;
 	}
 	
-	
-	
 	@RequestMapping(method = RequestMethod.GET, value = "/retrieveDumpsterPrice.do")
 	public @ResponseBody String retrieveDumpsterPrice(ModelMap model, HttpServletRequest request,
 														    @RequestParam(value = "dumpsterSizeId") String dumpsterSizeId,
@@ -794,12 +792,76 @@ public class OrderController extends CRUDController<Order> {
 	}
 	
 	private BigDecimal retrieveDumpsterPrice(String dumpsterSizeId, String materialTypeId) {
-		String dumpsterPriceQuery = "select obj from DumpsterPrice obj where ";
-		dumpsterPriceQuery += "obj.dumpsterSize.id=" + dumpsterSizeId
-				    		  	 + " and obj.materialType.id=" + materialTypeId;
+		String dumpsterPriceQuery = "select obj from DumpsterPrice obj where";
+		dumpsterPriceQuery += " obj.dumpsterSize.id=" + dumpsterSizeId
+				    		  	 +  " and obj.materialType.id=" + materialTypeId;
 		
 		List<DumpsterPrice> dumsterPriceList = genericDAO.executeSimpleQuery(dumpsterPriceQuery);
 		return dumsterPriceList.get(0).getPrice();
+	}
+	
+	@RequestMapping(method = RequestMethod.GET, value = "/retrieveMaterialCategories.do")
+	public @ResponseBody String retrieveMaterialCategories(ModelMap model, HttpServletRequest request,
+														    @RequestParam(value = "dumpsterSizeId") String dumpsterSizeId) {
+		List<MaterialCategory> materialCategories = retrieveMaterialCategories(dumpsterSizeId);
+		
+		ObjectMapper objectMapper = new ObjectMapper();
+		String json = StringUtils.EMPTY;
+		try {
+			json = objectMapper.writeValueAsString(materialCategories);
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return json;
+		//String json = (new Gson()).toJson(permitList);
+		//return json;
+	}
+	
+	private List<MaterialCategory> retrieveMaterialCategories(String dumpsterSizeId) {
+		String dumpsterPriceQuery = "select obj from DumpsterPrice obj where";
+		dumpsterPriceQuery += " obj.dumpsterSize.id=" + dumpsterSizeId;
+		
+		List<DumpsterPrice> dumsterPriceList = genericDAO.executeSimpleQuery(dumpsterPriceQuery);
+		List<MaterialCategory> materialCategories = new ArrayList<MaterialCategory>();
+		for (DumpsterPrice aDumpsterPrice : dumsterPriceList) {
+			materialCategories.add(aDumpsterPrice.getMaterialType().getMaterialCategory());
+		}
+		
+		return materialCategories;
+	}
+	
+	@RequestMapping(method = RequestMethod.GET, value = "/retrieveMaterialTypes.do")
+	public @ResponseBody String retrieveMaterialTypes(ModelMap model, HttpServletRequest request,
+														    @RequestParam(value = "dumpsterSizeId") String dumpsterSizeId,
+															 @RequestParam(value = "materialCategoryId") String materialCategoryId) {
+		List<MaterialType> materialTypes = retrieveMaterialTypes(dumpsterSizeId, materialCategoryId);
+		
+		ObjectMapper objectMapper = new ObjectMapper();
+		String json = StringUtils.EMPTY;
+		try {
+			json = objectMapper.writeValueAsString(materialTypes);
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return json;
+		//String json = (new Gson()).toJson(permitList);
+		//return json;
+	}
+	
+	private List<MaterialType> retrieveMaterialTypes(String dumpsterSizeId, String materialCategoryId) {
+		String dumpsterPriceQuery = "select obj from DumpsterPrice obj where";
+		dumpsterPriceQuery += " obj.dumpsterSize.id=" + dumpsterSizeId
+				    		  	 +  " and obj.materialType.materialCategory.id=" + materialCategoryId;
+		
+		List<DumpsterPrice> dumsterPriceList = genericDAO.executeSimpleQuery(dumpsterPriceQuery);
+		List<MaterialType> materialTypes = new ArrayList<MaterialType>();
+		for (DumpsterPrice aDumpsterPrice : dumsterPriceList) {
+			materialTypes.add(aDumpsterPrice.getMaterialType());
+		}
+		
+		return materialTypes;
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/retrieveCityFee.do")
