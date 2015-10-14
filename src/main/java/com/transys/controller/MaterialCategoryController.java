@@ -22,7 +22,7 @@ import com.transys.model.SearchCriteria;
 public class MaterialCategoryController extends CRUDController<MaterialCategory> {
 
 	public MaterialCategoryController() {
-		setUrlContext("/masterData/materialCategory");
+		setUrlContext("masterData/materialCategory");
 	}
 
 	@Override
