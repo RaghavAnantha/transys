@@ -650,11 +650,12 @@ CREATE TABLE `orderPermits` (
   `modified_by` bigint(20) DEFAULT NULL,
   `delete_flag` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
+  UNIQUE KEY `UK_OrderPermit` (`orderId`,`permitId`),
   KEY `orderPermitRef_idx` (`orderId`),
   KEY `permitRef_idx` (`permitId`),
   CONSTRAINT `orderPermitOrderRef` FOREIGN KEY (`orderId`) REFERENCES `transysOrder` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `orderPermitPermitRef` FOREIGN KEY (`permitId`) REFERENCES `permit` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --

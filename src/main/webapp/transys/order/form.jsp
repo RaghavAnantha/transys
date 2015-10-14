@@ -1083,26 +1083,85 @@ function verifyExchangeOrderAndSubmit() {
 			<td colspan="10"></td>
 		</tr>
 		<tr>
-			<td class="form-left"><transys:label code="Payment Method"/><span class="errorMessage">*</span></td>
+			<td class="form-left"><transys:label code="Payment1 Method"/><span class="errorMessage">*</span></td>
 			<td align="${left}">
-				<form:select id="paymentMethod" cssClass="flat form-control input-sm" style="width:172px !important" path="orderPayment[0].paymentMethod"> 
+				<form:select cssClass="flat form-control input-sm" style="width:172px !important" path="orderPayment[0].paymentMethod"> 
 					<form:option value="">-------Please Select------</form:option>
 					<form:options items="${paymentMethods}" itemValue="id" itemLabel="method" />
 				</form:select>
 				<br><form:errors path="orderPayment[0].paymentMethod" cssClass="errorMessage" />
 			</td>
-		</tr>
-		<tr>
-			<td class="form-left"><transys:label code="CC Refernce #"/><span class="errorMessage">*</span></td>
+			<td class="form-left"><transys:label code="Amount1"/><span class="errorMessage">*</span></td>
+			<td align="${left}">
+				<form:input path="orderPayment[0].amountPaid" cssClass="flat" />
+				<br><form:errors path="orderPayment[0].amountPaid" cssClass="errorMessage" />
+			</td>
+			<td class="form-left"><transys:label code="CC Refernce1 #"/><span class="errorMessage">*</span></td>
 			<td align="${left}">
 				<form:input path="orderPayment[0].ccReferenceNum" cssClass="flat" />
 				<br><form:errors path="orderPayment[0].ccReferenceNum" cssClass="errorMessage" />
 			</td>
-			<td class="form-left"><transys:label code="Check #"/><span class="errorMessage">*</span></td>
+			<td class="form-left"><transys:label code="Check1 #"/><span class="errorMessage">*</span></td>
 			<td align="${left}">
 				<form:input path="orderPayment[0].checkNum" cssClass="flat" />
 				<br><form:errors path="orderPayment[0].checkNum" cssClass="errorMessage" />
 			</td>
+		</tr>
+		<tr>
+			<td class="form-left"><transys:label code="Payment2 Method"/><span class="errorMessage">*</span></td>
+			<td align="${left}">
+				<form:select cssClass="flat form-control input-sm" style="width:172px !important" path="orderPayment[1].paymentMethod"> 
+					<form:option value="">-------Please Select------</form:option>
+					<form:options items="${paymentMethods}" itemValue="id" itemLabel="method" />
+				</form:select>
+				<br><form:errors path="orderPayment[1].paymentMethod" cssClass="errorMessage" />
+			</td>
+			<td class="form-left"><transys:label code="Amount2"/><span class="errorMessage">*</span></td>
+			<td align="${left}">
+				<form:input path="orderPayment[1].amountPaid" cssClass="flat" />
+				<br><form:errors path="orderPayment[1].amountPaid" cssClass="errorMessage" />
+			</td>
+			<td class="form-left"><transys:label code="CC Refernce2 #"/><span class="errorMessage">*</span></td>
+			<td align="${left}">
+				<form:input path="orderPayment[1].ccReferenceNum" cssClass="flat" />
+				<br><form:errors path="orderPayment[1].ccReferenceNum" cssClass="errorMessage" />
+			</td>
+			<td class="form-left"><transys:label code="Check2 #"/><span class="errorMessage">*</span></td>
+			<td align="${left}">
+				<form:input path="orderPayment[1].checkNum" cssClass="flat" />
+				<br><form:errors path="orderPayment[1].checkNum" cssClass="errorMessage" />
+			</td>
+		</tr>
+		<tr>
+			<td class="form-left"><transys:label code="Payment3 Method"/><span class="errorMessage">*</span></td>
+			<td align="${left}">
+				<form:select cssClass="flat form-control input-sm" style="width:172px !important" path="orderPayment[2].paymentMethod"> 
+					<form:option value="">-------Please Select------</form:option>
+					<form:options items="${paymentMethods}" itemValue="id" itemLabel="method" />
+				</form:select>
+				<br><form:errors path="orderPayment[2].paymentMethod" cssClass="errorMessage" />
+			</td>
+			<td class="form-left"><transys:label code="Amount3"/><span class="errorMessage">*</span></td>
+			<td align="${left}">
+				<form:input path="orderPayment[2].amountPaid" cssClass="flat" />
+				<br><form:errors path="orderPayment[2].amountPaid" cssClass="errorMessage" />
+			</td>
+			<td class="form-left"><transys:label code="CC Refernce3 #"/><span class="errorMessage">*</span></td>
+			<td align="${left}">
+				<form:input path="orderPayment[2].ccReferenceNum" cssClass="flat" />
+				<br><form:errors path="orderPayment[2].ccReferenceNum" cssClass="errorMessage" />
+			</td>
+			<td class="form-left"><transys:label code="Check3 #"/><span class="errorMessage">*</span></td>
+			<td align="${left}">
+				<form:input path="orderPayment[2].checkNum" cssClass="flat" />
+				<br><form:errors path="orderPayment[2].checkNum" cssClass="errorMessage" />
+			</td>
+		</tr>
+		<tr>
+			<td class="form-left">Total Amount Paid</td>
+			<td align="${left}"></td>
+			<td class="form-left">Balance Due</td>
+			<td align="${left}"></td>
 		</tr>
 		<tr>
 			<td colspan=10></td>

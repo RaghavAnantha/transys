@@ -112,23 +112,35 @@ public class OrderController extends CRUDController<Order> {
 		String dumpsterQuery = "select obj from Dumpster obj where obj.status.status='Available' order by obj.id asc";
 		List<Dumpster> dumpsterInfoList = genericDAO.executeSimpleQuery(dumpsterQuery);
 		
-		if (order != null) {
-			if (order.getDumpster() != null && order.getDumpster().getId() != null) {
-				List<Dumpster> assignedDumpsterList = genericDAO.executeSimpleQuery("select obj from Dumpster obj where obj.id=" + order.getDumpster().getId());
-				dumpsterInfoList.add(assignedDumpsterList.get(0));
-			}
-			
-			Long dumsterSizeId = order.getDumpsterSize().getId();
-			Long materialCategoryId = order.getMaterialType().getMaterialCategory().getId();
-			
-			List<MaterialCategory> materialCategoryList = retrieveMaterialCategories(dumsterSizeId);
-			model.addAttribute("materialCategories", materialCategoryList);
-			
-			List<MaterialType> materialTypeList = retrieveMaterialTypes(dumsterSizeId, materialCategoryId);
-			model.addAttribute("materialTypes", materialTypeList);
+		if (order == null) {
+			model.addAttribute("orderDumpsters", dumpsterInfoList);
+			return;
+		}
+		
+		if (order.getDumpster() != null && order.getDumpster().getId() != null) {
+			List<Dumpster> assignedDumpsterList = genericDAO.executeSimpleQuery("select obj from Dumpster obj where obj.id=" + order.getDumpster().getId());
+			dumpsterInfoList.add(assignedDumpsterList.get(0));
 		}
 		
 		model.addAttribute("orderDumpsters", dumpsterInfoList);
+			
+		Long materialCategoryId = null;
+		if (order.getMaterialType().getMaterialCategory() == null) {
+			Long materialTypeId = order.getMaterialType().getId();
+			String materialTypeQuery = "select obj from MaterialType obj where obj.id=" + materialTypeId;
+			List<MaterialType> materialTypeList = genericDAO.executeSimpleQuery(materialTypeQuery);
+			materialCategoryId = materialTypeList.get(0).getMaterialCategory().getId();
+		} else {
+			materialCategoryId = order.getMaterialType().getMaterialCategory().getId();
+		}
+		
+		Long dumsterSizeId = order.getDumpsterSize().getId();
+		
+		List<MaterialCategory> materialCategoryList = retrieveMaterialCategories(dumsterSizeId);
+		model.addAttribute("materialCategories", materialCategoryList);
+		
+		List<MaterialType> materialTypeList = retrieveMaterialTypes(dumsterSizeId, materialCategoryId);
+		model.addAttribute("materialTypes", materialTypeList);
    }
 	
 	/*
@@ -1135,6 +1147,8 @@ public class OrderController extends CRUDController<Order> {
 		entity.getOrderNotes().get(0).setOrder(entity);
 		entity.getOrderNotes().get(0).setCreatedBy(entity.getCreatedBy());
 		entity.getOrderNotes().get(0).setModifiedBy(entity.getModifiedBy());
+		
+		setupOrderPayment(entity);
 
 		genericDAO.saveOrUpdate(entity);
 		
@@ -1162,6 +1176,26 @@ public class OrderController extends CRUDController<Order> {
 		
 		//return list(model, request);
 		return saveSuccess(model, request, entity);
+	}
+	
+	private void setupOrderPayment(Order order) {
+		List<OrderPayment> orderPaymentList = order.getOrderPayment();
+		if (orderPaymentList == null) {
+			return;
+		}
+		
+		List<OrderPayment> filteredOrderPaymentList = new ArrayList<OrderPayment>();
+		for (OrderPayment anOrderPayment : orderPaymentList) {
+			if (anOrderPayment.getPaymentMethod() != null) {
+				anOrderPayment.setOrder(order);
+				anOrderPayment.setCreatedBy(order.getCreatedBy());
+				anOrderPayment.setModifiedBy(order.getModifiedBy());
+				
+				filteredOrderPaymentList.add(anOrderPayment);
+			}
+		}
+		
+		order.setOrderPayment(filteredOrderPaymentList);
 	}
 	
 	private void setupOrderFees(Order order) {
