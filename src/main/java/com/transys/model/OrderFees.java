@@ -10,8 +10,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="orderPaymentInfo")
-public class OrderPaymentInfo extends AbstractBaseModel {
+@Table(name="orderFees")
+public class OrderFees extends AbstractBaseModel {
 		@OneToOne
 		@JoinColumn(name="orderId") 
 		private Order order;
@@ -73,16 +73,6 @@ public class OrderPaymentInfo extends AbstractBaseModel {
 		
 		@Column(name="totalFees")
 		private BigDecimal totalFees;
-		
-		@ManyToOne
-		@JoinColumn(name="paymentMethodId") 
-		private PaymentMethodType paymentMethod;
-		
-		@Column(name="ccReferenceNum")
-		private String ccReferenceNum;
-		
-		@Column(name="checkNum")
-		private String checkNum;
 
 		public Order getOrder() {
 			return order;
@@ -210,31 +200,7 @@ public class OrderPaymentInfo extends AbstractBaseModel {
 		public void setTotalFees(BigDecimal totalFees) {
 			this.totalFees = totalFees;
 		}
-
-		public PaymentMethodType getPaymentMethod() {
-			return paymentMethod;
-		}
-
-		public void setPaymentMethod(PaymentMethodType paymentMethod) {
-			this.paymentMethod = paymentMethod;
-		}
-
-		public String getCcReferenceNum() {
-			return ccReferenceNum;
-		}
-
-		public void setCcReferenceNum(String ccReferenceNum) {
-			this.ccReferenceNum = ccReferenceNum;
-		}
-
-		public String getCheckNum() {
-			return checkNum;
-		}
-
-		public void setCheckNum(String checkNum) {
-			this.checkNum = checkNum;
-		}
-
+		
 		public CityFee getCityFeeType() {
 			return cityFeeType;
 		}

@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.transys.model.DumpsterInfo;
+import com.transys.model.Dumpster;
 import com.transys.model.DumpsterSize;
 import com.transys.model.DumpsterStatus;
 import com.transys.model.Order;
@@ -26,7 +26,7 @@ import com.transys.model.SearchCriteria;
 
 @Controller
 @RequestMapping("/dumpstersRentedReport")
-public class DumpstersRentedReportController extends CRUDController<DumpsterInfo> {
+public class DumpstersRentedReportController extends CRUDController<Dumpster> {
 	
 	
 	public DumpstersRentedReportController(){	
@@ -49,7 +49,7 @@ public class DumpstersRentedReportController extends CRUDController<DumpsterInfo
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		//TODO fix me
 		criteria.getSearchMap().remove("_csrf");
-		List<DumpsterInfo> dumpsterInfoList = genericDAO.search(getEntityClass(), criteria,"id",null,null);
+		List<Dumpster> dumpsterInfoList = genericDAO.search(getEntityClass(), criteria,"id",null,null);
 		model.addAttribute("dumpsterInfoList", dumpsterInfoList);
 		
 		setDeliveryDetailsForDumpster(dumpsterInfoList);
@@ -57,8 +57,8 @@ public class DumpstersRentedReportController extends CRUDController<DumpsterInfo
 	}
 
 
-	private void setDeliveryDetailsForDumpster(List<DumpsterInfo> dumpsterInfoList) {
-		for (DumpsterInfo aDumpster : dumpsterInfoList) {
+	private void setDeliveryDetailsForDumpster(List<Dumpster> dumpsterInfoList) {
+		for (Dumpster aDumpster : dumpsterInfoList) {
 			// get the latest delivery address & delivery date for the corresponding dumpster# from transysOrder table
 			
 			Map<String, Object> criterias = new HashMap<String, Object>();
@@ -130,11 +130,11 @@ public class DumpstersRentedReportController extends CRUDController<DumpsterInfo
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		criteria.getSearchMap().remove("_csrf");
 	
-		List<DumpsterInfo> dumpsterInfoList = genericDAO.search(getEntityClass(), criteria, "id", null, null);
+		List<Dumpster> dumpsterInfoList = genericDAO.search(getEntityClass(), criteria, "id", null, null);
 		setDeliveryDetailsForDumpster(dumpsterInfoList);
 		
 		List<Map<String, Object>> reportData = new ArrayList<Map<String, Object>>();
-		for (DumpsterInfo aDumpster : dumpsterInfoList) {
+		for (Dumpster aDumpster : dumpsterInfoList) {
 			
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("dumpsterSize", aDumpster.getDumpsterSize().getSize());

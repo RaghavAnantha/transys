@@ -1,5 +1,6 @@
 package com.transys.model;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -10,8 +11,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="customerDumpsterPrice")
-public class CustomerDumpsterPrice extends AbstractBaseModel {
-	
+public class CustomerDumpsterPrice extends AbstractFeeMasterData {
 	@ManyToOne
 	@JoinColumn(name="customerId")
 	private Customer customer;
@@ -39,20 +39,10 @@ public class CustomerDumpsterPrice extends AbstractBaseModel {
 	public void setMaterialType(MaterialType materialType) {
 		this.materialType = materialType;
 	}
-
-
-	@Column(name="dumpsterPrice")
-	private String dumpsterPrice;
 	
-	@Column(name="comments")
-	private String comments;
+	@Column(name="price")
+	private BigDecimal price;
 	
-	@Column(name="effectiveDateFrom")
-	private Date effectiveDateFrom;
-	
-	@Column(name="effectiveDateTo")
-	private Date effectiveDateTo;
-
 	public Customer getCustomer() {
 		return customer;
 	}
@@ -61,35 +51,11 @@ public class CustomerDumpsterPrice extends AbstractBaseModel {
 		this.customer = customer;
 	}
 
-	public String getDumpsterPrice() {
-		return dumpsterPrice;
+	public BigDecimal getPrice() {
+		return price;
 	}
 
-	public void setDumpsterPrice(String dumpsterPrice) {
-		this.dumpsterPrice = dumpsterPrice;
-	}
-
-	public String getComments() {
-		return comments;
-	}
-
-	public void setComments(String comments) {
-		this.comments = comments;
-	}
-
-	public Date getEffectiveDateFrom() {
-		return effectiveDateFrom;
-	}
-
-	public void setEffectiveDateFrom(Date effectiveDateFrom) {
-		this.effectiveDateFrom = effectiveDateFrom;
-	}
-
-	public Date getEffectiveDateTo() {
-		return effectiveDateTo;
-	}
-
-	public void setEffectiveDateTo(Date effectiveDateTo) {
-		this.effectiveDateTo = effectiveDateTo;
+	public void setPrice(BigDecimal price) {
+		this.price = price;
 	}
 }

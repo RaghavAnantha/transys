@@ -1,7 +1,7 @@
 <%@include file="/common/taglibs.jsp"%>
 
 <form:form action="/customer/saveDeliveryAddressModal.do" name="deliveryAddressModalForm" commandName="deliveryAddressModelObject" method="post" id="deliveryAddressModalForm">
-	<form:hidden path="customer.id" id="custID" />
+	<form:hidden path="customer.id" id="customerId" />
 	<table id="form-table" class="table delivery">
 		<tr>
 			<td class="form-left"><transys:label code="Customer ID" /><span class="errorMessage">*</span></td>

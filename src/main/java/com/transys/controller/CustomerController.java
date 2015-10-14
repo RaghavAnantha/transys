@@ -35,7 +35,8 @@ import com.transys.model.Customer;
 import com.transys.model.CustomerStatus;
 import com.transys.model.CustomerType;
 import com.transys.model.Order;
-import com.transys.model.OrderPaymentInfo;
+import com.transys.model.OrderFees;
+import com.transys.model.OrderPayment;
 //import com.transys.model.FuelVendor;
 //import com.transys.model.Location;
 import com.transys.model.SearchCriteria;
@@ -183,45 +184,44 @@ public class CustomerController extends CRUDController<Customer> {
 		List<Customer> customerList =  genericDAO.search(getEntityClass(), criteria, "companyName", null, null);
 		
 		Map<Long, Customer> customerMap = new HashMap<Long, Customer>();
-        StringBuffer Ids = new StringBuffer("(");
-        Integer count = 0;
-        for (Customer customer : customerList) {
-                count++;
-                Ids.append(customer.getId());
-                if (count < customerList.size()) {
-                        Ids.append(",");
-                }
-                else {
-                        Ids.append(")");
-                        }
-                customerMap.put(customer.getId(), customer);
-        }
-        //Query
-        
-        List<OrderPaymentInfo> orderPymntInfoList = genericDAO.executeSimpleQuery("select obj from OrderPaymentInfo obj where obj.order.customer.id IN " + Ids.toString());
-        List<CustomerReportVO> customerReportVOList = new ArrayList<CustomerReportVO>() ;
-
-        for (Long key : customerMap.keySet()) {
-                CustomerReportVO customerReportVO =  new CustomerReportVO();
-                BigDecimal sum = new BigDecimal("0.0");
-                Integer Ordercount = 0;
-            for (OrderPaymentInfo orderPymntInfo: orderPymntInfoList ) {
-                if (orderPymntInfo.getOrder().getCustomer().getId() == key) {
-                     sum =  sum.add(orderPymntInfo.getTotalFees());
-                     Ordercount++;
-                }
-            }
-            customerReportVO.setCompanyName(customerMap.get(key).getCompanyName());
-                customerReportVO.setContactName(customerMap.get(key).getContactName());
-                customerReportVO.setPhoneNumber(customerMap.get(key).getPhone());
-                customerReportVO.setTotalAmount(sum);
-                customerReportVO.setTotalOrders(Ordercount);
-                customerReportVO.setId(customerMap.get(key).getId());
-                customerReportVO.setStatus(customerMap.get(key).getCustomerStatus().getStatus());
-
-                customerReportVOList.add(customerReportVO);
-        }
 		
+		StringBuffer Ids = new StringBuffer("(");
+		Integer count = 0;
+		for (Customer customer : customerList) {
+			count++;
+			Ids.append(customer.getId());
+			if (count < customerList.size()) {
+				Ids.append(",");
+			}
+			else {
+				Ids.append(")");
+			}
+			customerMap.put(customer.getId(), customer);
+		}
+        
+      List<OrderFees> orderFeesList = genericDAO.executeSimpleQuery("select obj from OrderFees obj where obj.order.customer.id IN " + Ids.toString());
+      List<CustomerReportVO> customerReportVOList = new ArrayList<CustomerReportVO>() ;
+      for (Long key : customerMap.keySet()) {
+      	CustomerReportVO customerReportVO =  new CustomerReportVO();
+			BigDecimal sum = new BigDecimal("0.0");
+			Integer Ordercount = 0;
+			for (OrderFees anOrderFees: orderFeesList ) {
+	          if (anOrderFees.getOrder().getCustomer().getId() == key) {
+	               sum = sum.add(anOrderFees.getTotalFees());
+	               Ordercount++;
+	          }
+	      }
+	      customerReportVO.setCompanyName(customerMap.get(key).getCompanyName());
+         customerReportVO.setContactName(customerMap.get(key).getContactName());
+         customerReportVO.setPhoneNumber(customerMap.get(key).getPhone());
+         customerReportVO.setTotalAmount(sum);
+         customerReportVO.setTotalOrders(Ordercount);
+         customerReportVO.setId(customerMap.get(key).getId());
+         customerReportVO.setStatus(customerMap.get(key).getCustomerStatus().getStatus());
+
+         customerReportVOList.add(customerReportVO);
+	   }
+
 		
 		//model.addAttribute("customerReportVOList",customerReportVOList);
 		request.getSession().setAttribute("customerReportVOList", customerReportVOList);

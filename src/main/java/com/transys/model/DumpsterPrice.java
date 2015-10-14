@@ -11,7 +11,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="dumpsterPrice")
-public class DumpsterPrice extends AbstractBaseModel {
+public class DumpsterPrice extends AbstractFeeMasterData {
 	@ManyToOne
 	@JoinColumn(name="dumpsterSizeId") //Enum?
 	private DumpsterSize dumpsterSize;
@@ -27,45 +27,12 @@ public class DumpsterPrice extends AbstractBaseModel {
 	@Column(name="price")
 	private BigDecimal price;
 	
-	@Column(name="comments")
-	private String comments;
-	
-	@Column(name="effectiveDateFrom")
-	private Date effectiveDateFrom;
-	
-	@Column(name="effectiveDateTo")
-	private Date effectiveDateTo;
-
 	public DumpsterSize getDumpsterSize() {
 		return dumpsterSize;
 	}
 
 	public void setDumpsterSize(DumpsterSize dumpsterSize) {
 		this.dumpsterSize = dumpsterSize;
-	}
-	
-	public String getComments() {
-		return comments;
-	}
-
-	public void setComments(String comments) {
-		this.comments = comments;
-	}
-
-	public Date getEffectiveDateFrom() {
-		return effectiveDateFrom;
-	}
-
-	public void setEffectiveDateFrom(Date effectiveDateFrom) {
-		this.effectiveDateFrom = effectiveDateFrom;
-	}
-
-	public Date getEffectiveDateTo() {
-		return effectiveDateTo;
-	}
-
-	public void setEffectiveDateTo(Date effectiveDateTo) {
-		this.effectiveDateTo = effectiveDateTo;
 	}
 
 	public BigDecimal getPrice() {

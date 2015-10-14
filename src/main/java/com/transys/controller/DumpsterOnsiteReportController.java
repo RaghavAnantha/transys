@@ -21,7 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.transys.core.util.MimeUtil;
 import com.transys.model.Customer;
 import com.transys.model.DeliveryAddress;
-import com.transys.model.DumpsterInfo;
+import com.transys.model.Dumpster;
 import com.transys.model.DumpsterSize;
 import com.transys.model.DumpsterStatus;
 import com.transys.model.Order;
@@ -29,7 +29,7 @@ import com.transys.model.SearchCriteria;
 
 @Controller
 @RequestMapping("/dumpsterOnsiteReport")
-public class DumpsterOnsiteReportController extends CRUDController<DumpsterInfo> {
+public class DumpsterOnsiteReportController extends CRUDController<Dumpster> {
 	
 	
 	public DumpsterOnsiteReportController(){	
@@ -107,10 +107,10 @@ public class DumpsterOnsiteReportController extends CRUDController<DumpsterInfo>
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		criteria.getSearchMap().remove("_csrf");
 	
-		List<DumpsterInfo> dumpsterInfoList = genericDAO.search(getEntityClass(), criteria, "id", null, null);
+		List<Dumpster> dumpsterInfoList = genericDAO.search(getEntityClass(), criteria, "id", null, null);
 		List<Map<String, Object>> reportData = new ArrayList<Map<String, Object>>();
 
-		for (DumpsterInfo aDumpster : dumpsterInfoList) {
+		for (Dumpster aDumpster : dumpsterInfoList) {
 			
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("dumpsterSize", aDumpster.getDumpsterSize().getSize());

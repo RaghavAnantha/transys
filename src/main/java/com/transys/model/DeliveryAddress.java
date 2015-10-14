@@ -15,7 +15,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 @Table(name="deliveryAddress")
 public class DeliveryAddress extends AbstractBaseModel {
 	@ManyToOne
-	@JoinColumn(name="custID")
+	@JoinColumn(name="customerId")
 	@JsonBackReference
 	private Customer customer;
 	

@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.transys.controller.editor.AbstractModelEditor;
-import com.transys.model.DumpsterInfo;
+import com.transys.model.Dumpster;
 import com.transys.model.DumpsterSize;
 import com.transys.model.DumpsterStatus;
 import com.transys.model.SearchCriteria;
@@ -22,7 +22,7 @@ import com.transys.model.SearchCriteria;
 @SuppressWarnings("unchecked")
 @Controller
 @RequestMapping("/dumpsters")
-public class DumpsterController extends CRUDController<DumpsterInfo> {
+public class DumpsterController extends CRUDController<Dumpster> {
 	
 	public DumpsterController() {
 		setUrlContext("dumpsters");
@@ -39,7 +39,7 @@ public class DumpsterController extends CRUDController<DumpsterInfo> {
 		request.getSession().removeAttribute("searchCriteria");
 		setupList(model, request);
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
-		model.addAttribute("list", genericDAO.search(DumpsterInfo.class, criteria, "id", null, null));
+		model.addAttribute("list", genericDAO.search(Dumpster.class, criteria, "id", null, null));
 		return urlContext + "/list";
 	}
 
@@ -50,7 +50,7 @@ public class DumpsterController extends CRUDController<DumpsterInfo> {
 		// TODO:
 		criteria.getSearchMap().remove("_csrf");
 		criteria.setPageSize(25);
-		model.addAttribute("list", genericDAO.search(DumpsterInfo.class, criteria));
+		model.addAttribute("list", genericDAO.search(Dumpster.class, criteria));
 		return urlContext + "/list";
 	}
 
@@ -69,13 +69,13 @@ public class DumpsterController extends CRUDController<DumpsterInfo> {
 	@Override
 	public void setupCreate(ModelMap model, HttpServletRequest request) {
 		Map criterias = new HashMap();
-		model.addAttribute("dumpsters", genericDAO.findByCriteria(DumpsterInfo.class, criterias, "id", false));
+		model.addAttribute("dumpsters", genericDAO.findByCriteria(Dumpster.class, criterias, "id", false));
 		model.addAttribute("dumpsterStatus", genericDAO.findByCriteria(DumpsterStatus.class, criterias, "id", false));
 		model.addAttribute("dumpsterSizes", genericDAO.findUniqueByCriteria(DumpsterSize.class, criterias, "size", false));
 	}
 
 	@RequestMapping(method = RequestMethod.POST, value = "/save.do")
-	public String save(HttpServletRequest request, @ModelAttribute("modelObject") DumpsterInfo entity,
+	public String save(HttpServletRequest request, @ModelAttribute("modelObject") Dumpster entity,
 			BindingResult bindingResult, ModelMap model) {
 
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");

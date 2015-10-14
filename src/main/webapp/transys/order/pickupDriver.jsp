@@ -25,8 +25,8 @@
 		<tr>
 			<td class="form-left"><transys:label code="Check #"/><span class="errorMessage">*</span></td>
 			<td align="${left}">
-				<form:input path="orderPaymentInfo.checkNum" cssClass="flat" />
-				<br><form:errors path="orderPaymentInfo.checkNum" cssClass="errorMessage" />
+				<form:input path="orderPayment[0].checkNum" cssClass="flat" />
+				<br><form:errors path="orderPayment[0].checkNum" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr><td colspan="2"></td></tr>

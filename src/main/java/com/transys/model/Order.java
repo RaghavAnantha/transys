@@ -101,22 +101,32 @@ public class Order extends AbstractBaseModel {
 		this.orderNotes = orderNotes;
 	}
 	
-	/******** Order payment info ************/
-	@OneToOne(mappedBy="order", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy="order", cascade = CascadeType.ALL)
 	/*@JoinTable(
-     name = "orderPaymentInfo",
+     name = "OrderPayment",
      joinColumns = @JoinColumn(name = "orderId")
 	)*/
-	private OrderPaymentInfo orderPaymentInfo;
+	private List<OrderPayment> orderPayment;
 	
-	public OrderPaymentInfo getOrderPaymentInfo() {
-		return orderPaymentInfo;
+	@OneToOne(mappedBy="order", cascade = CascadeType.ALL)
+	private OrderFees orderFees;
+
+	public List<OrderPayment> getOrderPayment() {
+		return orderPayment;
 	}
 
-	public void setOrderPaymentInfo(OrderPaymentInfo orderPaymentInfo) {
-		this.orderPaymentInfo = orderPaymentInfo;
+	public void setOrderPayment(List<OrderPayment> orderPayment) {
+		this.orderPayment = orderPayment;
 	}
-	
+
+	public OrderFees getOrderFees() {
+		return orderFees;
+	}
+
+	public void setOrderFees(OrderFees orderFees) {
+		this.orderFees = orderFees;
+	}
+
 	@ManyToOne
 	@JoinColumn(name="pickupDriverId") 
 	private User pickupDriver;
@@ -148,11 +158,7 @@ public class Order extends AbstractBaseModel {
 	
 	@ManyToOne
 	@JoinColumn(name="dumpsterId") 
-	private DumpsterInfo dumpster;
-	
-	/******** Payment Info ************/
-	/*@JoinColumn(name="paymentInfo")
-	private OrderPaymentInfo paymentInfo;*/
+	private Dumpster dumpster;
 	
 	@Column(name="pickupOrderId")
 	private Long pickupOrderId;
@@ -334,14 +340,7 @@ public class Order extends AbstractBaseModel {
 		this.dumpsterLocation = dumpsterLocation;
 	}
 	
-	/*public OrderPaymentInfo getPaymentInfo() {
-		return paymentInfo;
-	}
-
-	public void setPaymentInfo(OrderPaymentInfo paymentInfo) {
-		this.paymentInfo = paymentInfo;
-	}
-
+	/*
 	public OrderWeightInfo getWeightInfo() {
 		return weightInfo;
 	}
@@ -382,11 +381,11 @@ public class Order extends AbstractBaseModel {
 		this.materialType = materialType;
 	}
 
-	public DumpsterInfo getDumpster() {
+	public Dumpster getDumpster() {
 		return dumpster;
 	}
 
-	public void setDumpster(DumpsterInfo dumpster) {
+	public void setDumpster(Dumpster dumpster) {
 		this.dumpster = dumpster;
 	}
 

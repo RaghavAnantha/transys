@@ -35,7 +35,8 @@ import com.transys.model.Customer;
 import com.transys.model.DeliveryAddress;
 import com.transys.model.LocationType;
 import com.transys.model.Order;
-import com.transys.model.OrderPaymentInfo;
+import com.transys.model.OrderFees;
+import com.transys.model.OrderPayment;
 import com.transys.model.OrderPermits;
 import com.transys.model.OrderStatus;
 import com.transys.model.Permit;
@@ -491,25 +492,25 @@ public class PermitController extends CRUDController<Permit> {
 	
 	private void updatePermitAndTotalFeesInOrder(Permit entity, OrderPermits associatedOrderPermitEntry) {
 		// update permit fees in Order
-		OrderPaymentInfo orderPaymentInfo = associatedOrderPermitEntry.getOrder().getOrderPaymentInfo();
+		OrderFees orderFees = associatedOrderPermitEntry.getOrder().getOrderFees();
 		int numberOfPermits = associatedOrderPermitEntry.getOrder().getPermits().size();
 		BigDecimal permitFees = entity.getFee();
 		
 		if (numberOfPermits == 1) { // minimum 1, as this step is after associating this permit to the order
 			// first permit
-			orderPaymentInfo.setPermitFee1(permitFees);
+			orderFees.setPermitFee1(permitFees);
 		} else if (numberOfPermits == 2) {
 			// second permit
-			orderPaymentInfo.setPermitFee2(permitFees);
+			orderFees.setPermitFee2(permitFees);
 		} else if (numberOfPermits == 3) {
 			// thirdPermit
-			orderPaymentInfo.setPermitFee3(permitFees);
+			orderFees.setPermitFee3(permitFees);
 		}
 		
-		orderPaymentInfo.setTotalPermitFees(orderPaymentInfo.getTotalPermitFees().add(permitFees));
-		orderPaymentInfo.setTotalFees(orderPaymentInfo.getTotalFees().add(permitFees));
+		orderFees.setTotalPermitFees(orderFees.getTotalPermitFees().add(permitFees));
+		orderFees.setTotalFees(orderFees.getTotalFees().add(permitFees));
 		
-		genericDAO.saveOrUpdate(orderPaymentInfo);
+		genericDAO.saveOrUpdate(orderFees);
 		System.out.println("Permit Fees updated for Order with Id = " + associatedOrderPermitEntry.getOrder().getId());
 	}
 

@@ -51,7 +51,7 @@ import com.transys.model.DeliveryAddress;
 import com.transys.model.BaseModel;
 import com.transys.model.CityFee;
 import com.transys.model.Customer;
-import com.transys.model.DumpsterInfo;
+import com.transys.model.Dumpster;
 import com.transys.model.DumpsterPrice;
 import com.transys.model.DumpsterSize;
 import com.transys.model.DumpsterStatus;
@@ -59,8 +59,9 @@ import com.transys.model.LocationType;
 import com.transys.model.MaterialCategory;
 import com.transys.model.MaterialType;
 import com.transys.model.Order;
+import com.transys.model.OrderFees;
 import com.transys.model.OrderNotes;
-import com.transys.model.OrderPaymentInfo;
+import com.transys.model.OrderPayment;
 import com.transys.model.OrderPermits;
 import com.transys.model.OrderStatus;
 import com.transys.model.OverweightFee;
@@ -90,9 +91,9 @@ public class OrderController extends CRUDController<Order> {
 		binder.registerCustomEditor(DeliveryAddress.class, new AbstractModelEditor(DeliveryAddress.class));
 		binder.registerCustomEditor(Permit.class, new AbstractModelEditor(Permit.class));
 		binder.registerCustomEditor(LocationType.class, new AbstractModelEditor(LocationType.class));
-		binder.registerCustomEditor(OrderPaymentInfo.class, new AbstractModelEditor(OrderPaymentInfo.class));
+		binder.registerCustomEditor(OrderPayment.class, new AbstractModelEditor(OrderPayment.class));
 		binder.registerCustomEditor(OrderNotes.class, new AbstractModelEditor(OrderNotes.class));
-		binder.registerCustomEditor(DumpsterInfo.class, new AbstractModelEditor(DumpsterInfo.class));
+		binder.registerCustomEditor(Dumpster.class, new AbstractModelEditor(Dumpster.class));
 		binder.registerCustomEditor(User.class, new AbstractModelEditor(User.class));
 		binder.registerCustomEditor(MaterialType.class, new AbstractModelEditor(MaterialType.class));
 		binder.registerCustomEditor(MaterialCategory.class, new AbstractModelEditor(MaterialCategory.class));
@@ -100,6 +101,7 @@ public class OrderController extends CRUDController<Order> {
 		binder.registerCustomEditor(DumpsterSize.class, new AbstractModelEditor(DumpsterSize.class));
 		binder.registerCustomEditor(CityFee.class, new AbstractModelEditor(CityFee.class));
 		binder.registerCustomEditor(PaymentMethodType.class, new AbstractModelEditor(PaymentMethodType.class));
+		binder.registerCustomEditor(OrderFees.class, new AbstractModelEditor(OrderFees.class));
 		
 		super.initBinder(binder);
 	}
@@ -107,12 +109,12 @@ public class OrderController extends CRUDController<Order> {
 	public void setupCreate(ModelMap model, HttpServletRequest request, Order order) {
 		setupCreate(model, request);
 		
-		String dumpsterQuery = "select obj from DumpsterInfo obj where obj.status.status='Available' order by obj.id asc";
-		List<DumpsterInfo> dumpsterInfoList = genericDAO.executeSimpleQuery(dumpsterQuery);
+		String dumpsterQuery = "select obj from Dumpster obj where obj.status.status='Available' order by obj.id asc";
+		List<Dumpster> dumpsterInfoList = genericDAO.executeSimpleQuery(dumpsterQuery);
 		
 		if (order != null) {
 			if (order.getDumpster() != null && order.getDumpster().getId() != null) {
-				List<DumpsterInfo> assignedDumpsterList = genericDAO.executeSimpleQuery("select obj from DumpsterInfo obj where obj.id=" + order.getDumpster().getId());
+				List<Dumpster> assignedDumpsterList = genericDAO.executeSimpleQuery("select obj from Dumpster obj where obj.id=" + order.getDumpster().getId());
 				dumpsterInfoList.add(assignedDumpsterList.get(0));
 			}
 			
@@ -146,7 +148,7 @@ public class OrderController extends CRUDController<Order> {
       //model.addAttribute("permits", genericDAO.executeSimpleQuery("select obj from Permit obj where obj.id!=0 order by obj.id asc"));
       //model.addAttribute("permits", genericDAO.findByCriteria(Permit.class, criterias, "id", false));
       
-		model.addAttribute("dumpsters", genericDAO.executeSimpleQuery("select obj from DumpsterInfo obj where obj.id!=0 order by obj.id asc"));
+		model.addAttribute("dumpsters", genericDAO.executeSimpleQuery("select obj from Dumpster obj where obj.id!=0 order by obj.id asc"));
       model.addAttribute("dumpsterSizes", genericDAO.executeSimpleQuery("select obj from DumpsterSize obj where obj.id!=0 order by obj.id asc"));
       
       model.addAttribute("dusmpsterLocationTypes", genericDAO.executeSimpleQuery("select obj from LocationType obj where obj.id!=0 order by obj.id asc"));
@@ -483,13 +485,13 @@ public class OrderController extends CRUDController<Order> {
 		}
 	}
 	
-	private void updateDumpsterStatus(DumpsterInfo dumpsterInfoPassed, String status, Long modifiedBy) {
+	private void updateDumpsterStatus(Dumpster dumpsterInfoPassed, String status, Long modifiedBy) {
 		String dumpsterStatusQuery = "select obj from DumpsterStatus obj where obj.status='" + status + "'";
 		List<DumpsterStatus> dumpsterStatusList = genericDAO.executeSimpleQuery(dumpsterStatusQuery);
 		
-		String dumpsterQuery = "select obj from DumpsterInfo obj where obj.id=" + dumpsterInfoPassed.getId();
-		List<DumpsterInfo> dumpsterInfoList = genericDAO.executeSimpleQuery(dumpsterQuery);
-		DumpsterInfo dumpsterInfo = dumpsterInfoList.get(0);
+		String dumpsterQuery = "select obj from Dumpster obj where obj.id=" + dumpsterInfoPassed.getId();
+		List<Dumpster> dumpsterInfoList = genericDAO.executeSimpleQuery(dumpsterQuery);
+		Dumpster dumpsterInfo = dumpsterInfoList.get(0);
 		
 		dumpsterInfo.setStatus(dumpsterStatusList.get(0));
 		dumpsterInfo.setModifiedAt(Calendar.getInstance().getTime());
@@ -535,7 +537,7 @@ public class OrderController extends CRUDController<Order> {
 		}
 		
 		//TODO: why is this reqd?
-		setupOrderPaymentInfo(entity);
+		setupOrderFees(entity);
 		
 		OrderStatus orderStatus = retrieveOrderStatus("Picked Up");
 		entity.setOrderStatus(orderStatus);
@@ -645,14 +647,19 @@ public class OrderController extends CRUDController<Order> {
 					map.put("pickupDate", order.getPickupDate().toString());
 				}
 				
-				OrderPaymentInfo paymentInfo = order.getOrderPaymentInfo();
-				if (paymentInfo != null) {
-					map.put("paymentMethod", StringUtils.defaultIfEmpty(paymentInfo.getPaymentMethod().getMethod(), StringUtils.EMPTY));
-					map.put("dumpsterPrice", StringUtils.defaultIfEmpty(paymentInfo.getDumpsterPrice().toString(), "0.00"));
-					map.put("cityFee", StringUtils.defaultIfEmpty(paymentInfo.getCityFee().toString(), "0.00"));
-					map.put("permitFees", StringUtils.defaultIfEmpty(paymentInfo.getTotalPermitFees().toString(), "0.00"));
-					map.put("overweightFee", StringUtils.defaultIfEmpty(paymentInfo.getOverweightFee().toString(), "0.00"));
-					map.put("totalFees", StringUtils.defaultIfEmpty(paymentInfo.getTotalFees().toString(), "0.00"));
+				List<OrderPayment> orderPaymentList = order.getOrderPayment();
+				if (orderPaymentList != null && !orderPaymentList.isEmpty()) {
+					OrderPayment anOrderPayment = orderPaymentList.get(0);
+					map.put("paymentMethod", StringUtils.defaultIfEmpty(anOrderPayment.getPaymentMethod().getMethod(), StringUtils.EMPTY));
+				}
+				
+				OrderFees orderFees = order.getOrderFees();
+				if (orderFees != null) {
+					map.put("dumpsterPrice", StringUtils.defaultIfEmpty(orderFees.getDumpsterPrice().toString(), "0.00"));
+					map.put("cityFee", StringUtils.defaultIfEmpty(orderFees.getCityFee().toString(), "0.00"));
+					map.put("permitFees", StringUtils.defaultIfEmpty(orderFees.getTotalPermitFees().toString(), "0.00"));
+					map.put("overweightFee", StringUtils.defaultIfEmpty(orderFees.getOverweightFee().toString(), "0.00"));
+					map.put("totalFees", StringUtils.defaultIfEmpty(orderFees.getTotalFees().toString(), "0.00"));
 				}
 				
 				newList.add(map);
@@ -1122,7 +1129,7 @@ public class OrderController extends CRUDController<Order> {
 		entity.setOrderStatus(orderStatus);
 		
 		// TODO: Why both created by and modified by and why set if not changed?
-		setupOrderPaymentInfo(entity);
+		setupOrderFees(entity);
 		
 		// TODO: Why both created by and modified by and why set if not changed?
 		entity.getOrderNotes().get(0).setOrder(entity);
@@ -1157,48 +1164,48 @@ public class OrderController extends CRUDController<Order> {
 		return saveSuccess(model, request, entity);
 	}
 	
-	private void setupOrderPaymentInfo(Order order) {
-		OrderPaymentInfo orderPaymentInfo = order.getOrderPaymentInfo();
+	private void setupOrderFees(Order order) {
+		OrderFees orderFees = order.getOrderFees();
 		
-		orderPaymentInfo.setOrder(order);
-		orderPaymentInfo.setCreatedBy(order.getCreatedBy());
-		orderPaymentInfo.setModifiedBy(order.getModifiedBy());
+		orderFees.setOrder(order);
+		orderFees.setCreatedBy(order.getCreatedBy());
+		orderFees.setModifiedBy(order.getModifiedBy());
 		
-		/*if (orderPaymentInfo.getAdditionalFee1() == null) {
-			orderPaymentInfo.setAdditionalFee1(new BigDecimal(0.00));
+		/*if (orderFees.getAdditionalFee1() == null) {
+			orderFees.setAdditionalFee1(new BigDecimal(0.00));
 		}
-		if (orderPaymentInfo.getAdditionalFee2() == null) {
-			orderPaymentInfo.setAdditionalFee2(new BigDecimal(0.00));
+		if (orderFees.getAdditionalFee2() == null) {
+			orderFees.setAdditionalFee2(new BigDecimal(0.00));
 		}
-		if (orderPaymentInfo.getAdditionalFee3() == null) {
-			orderPaymentInfo.setAdditionalFee3(new BigDecimal(0.00));
+		if (orderFees.getAdditionalFee3() == null) {
+			orderFees.setAdditionalFee3(new BigDecimal(0.00));
 		}*/
-		if (orderPaymentInfo.getTotalAdditionalFees() == null) {
-			orderPaymentInfo.setTotalAdditionalFees(new BigDecimal(0.00));
+		if (orderFees.getTotalAdditionalFees() == null) {
+			orderFees.setTotalAdditionalFees(new BigDecimal(0.00));
 		}
-		if (orderPaymentInfo.getCityFee() == null) {
-			orderPaymentInfo.setCityFee(new BigDecimal(0.00));
+		if (orderFees.getCityFee() == null) {
+			orderFees.setCityFee(new BigDecimal(0.00));
 		}
-		if (orderPaymentInfo.getDiscountPercentage() == null) {
-			orderPaymentInfo.setDiscountPercentage(new BigDecimal(0.00));
+		if (orderFees.getDiscountPercentage() == null) {
+			orderFees.setDiscountPercentage(new BigDecimal(0.00));
 		}
-		if (orderPaymentInfo.getDiscountAmount() == null) {
-			orderPaymentInfo.setDiscountAmount(new BigDecimal(0.00));
+		if (orderFees.getDiscountAmount() == null) {
+			orderFees.setDiscountAmount(new BigDecimal(0.00));
 		}
-		if (orderPaymentInfo.getOverweightFee() == null) {
-			orderPaymentInfo.setOverweightFee(new BigDecimal(0.00));
+		if (orderFees.getOverweightFee() == null) {
+			orderFees.setOverweightFee(new BigDecimal(0.00));
 		}
-		/*if (orderPaymentInfo.getPermitFee1() == null) {
-			orderPaymentInfo.setPermitFee1(new BigDecimal(0.00));
+		/*if (orderFees.getPermitFee1() == null) {
+			orderFees.setPermitFee1(new BigDecimal(0.00));
 		}
-		if (orderPaymentInfo.getPermitFee2() == null) {
-			orderPaymentInfo.setPermitFee2(new BigDecimal(0.00));
+		if (orderFees.getPermitFee2() == null) {
+			orderFees.setPermitFee2(new BigDecimal(0.00));
 		}
-		if (orderPaymentInfo.getPermitFee3() == null) {
-			orderPaymentInfo.setPermitFee3(new BigDecimal(0.00));
+		if (orderFees.getPermitFee3() == null) {
+			orderFees.setPermitFee3(new BigDecimal(0.00));
 		}*/
-		if (orderPaymentInfo.getTotalPermitFees() == null) {
-			orderPaymentInfo.setTotalPermitFees(new BigDecimal(0.00));
+		if (orderFees.getTotalPermitFees() == null) {
+			orderFees.setTotalPermitFees(new BigDecimal(0.00));
 		}
 	}
 	

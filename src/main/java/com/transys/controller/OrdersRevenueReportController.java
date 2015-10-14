@@ -22,7 +22,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.transys.core.util.MimeUtil;
 import com.transys.model.DeliveryAddress;
 import com.transys.model.Order;
-import com.transys.model.OrderPaymentInfo;
+import com.transys.model.OrderFees;
+import com.transys.model.OrderPayment;
 import com.transys.model.SearchCriteria;
 
 @Controller
@@ -80,7 +81,7 @@ public class OrdersRevenueReportController extends CRUDController<Order> {
 		for(Order o : orderList) {
 			selectedOrderIds.append(o.getId() + ",");
 		}
-		List<?> aggregationResults = genericDAO.executeSimpleQuery("select SUM(p.dumpsterPrice) as totalDumpsterPrice, SUM(p.totalPermitFees) as totalPermitFees, SUM(p.cityFee) as totalCityFees, SUM(p.overweightFee) as totalOverweightFees, SUM(p.totalFees) as totalFees from OrderPaymentInfo p where p.order IN (" + selectedOrderIds.substring(0,selectedOrderIds.lastIndexOf(",")) + ")");
+		List<?> aggregationResults = genericDAO.executeSimpleQuery("select SUM(p.dumpsterPrice) as totalDumpsterPrice, SUM(p.totalPermitFees) as totalPermitFees, SUM(p.cityFee) as totalCityFees, SUM(p.overweightFee) as totalOverweightFees, SUM(p.totalFees) as totalFees from OrderFees p where p.order IN (" + selectedOrderIds.substring(0,selectedOrderIds.lastIndexOf(",")) + ")");
 		//String jSonResponse =new Gson().toJson(aggregationResults.get(0));
 		ObjectMapper objectMapper = new ObjectMapper();
 		String jsonResponse = StringUtils.EMPTY;
@@ -138,26 +139,29 @@ public class OrdersRevenueReportController extends CRUDController<Order> {
 		
 		List<Map<String, Object>> reportData = new ArrayList<Map<String, Object>>();
 		for (Order anOrder : orderList) {
-			
 			DeliveryAddress deliveryAddress = anOrder.getDeliveryAddress();
-			OrderPaymentInfo orderPaymentInfo = anOrder.getOrderPaymentInfo();
-			
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("id", StringUtils.EMPTY + anOrder.getId().toString());
 			map.put("customer", StringUtils.EMPTY + anOrder.getCustomer().getCompanyName());
 			map.put("deliveryAddress", StringUtils.EMPTY + deliveryAddress.getFullLine());
 			map.put("city", StringUtils.EMPTY + deliveryAddress.getCity());
 			
-			if (orderPaymentInfo != null) {
-				map.put("paymentMethod", StringUtils.EMPTY + orderPaymentInfo.getPaymentMethod().getMethod());
-				map.put("checkNum", StringUtils.EMPTY + orderPaymentInfo.getCheckNum());
-				map.put("ccReferenceNum", StringUtils.EMPTY + orderPaymentInfo.getCcReferenceNum());
-				map.put("dumpsterPrice", StringUtils.EMPTY + orderPaymentInfo.getDumpsterPrice());
-				map.put("cityFee", StringUtils.EMPTY + orderPaymentInfo.getCityFee());
-				map.put("permitFees", StringUtils.EMPTY + orderPaymentInfo.getPermitFee1());
-				map.put("overweightFee", StringUtils.EMPTY + orderPaymentInfo.getOverweightFee());
-				map.put("additionalFee", StringUtils.EMPTY + orderPaymentInfo.getAdditionalFee1());
-				map.put("totalFees", StringUtils.EMPTY + orderPaymentInfo.getTotalFees());
+			List<OrderPayment> orderPaymentList = anOrder.getOrderPayment();
+			if (orderPaymentList != null && !orderPaymentList.isEmpty()) {
+				OrderPayment anOrderPayment = orderPaymentList.get(0);
+				map.put("paymentMethod", StringUtils.defaultIfEmpty(anOrderPayment.getPaymentMethod().getMethod(), StringUtils.EMPTY));
+				map.put("checkNum", StringUtils.EMPTY + anOrderPayment.getCheckNum());
+				map.put("ccReferenceNum", StringUtils.EMPTY + anOrderPayment.getCcReferenceNum());
+			}
+			
+			OrderFees anOrderFees = anOrder.getOrderFees();
+			if (anOrderFees != null) {
+				map.put("dumpsterPrice", StringUtils.EMPTY + anOrderFees.getDumpsterPrice());
+				map.put("cityFee", StringUtils.EMPTY + anOrderFees.getCityFee());
+				map.put("permitFees", StringUtils.EMPTY + anOrderFees.getPermitFee1());
+				map.put("overweightFee", StringUtils.EMPTY + anOrderFees.getOverweightFee());
+				map.put("additionalFee", StringUtils.EMPTY + anOrderFees.getAdditionalFee1());
+				map.put("totalFees", StringUtils.EMPTY + anOrderFees.getTotalFees());
 			}
 			
 			map.put("orderDateFrom", "" + criteria.getSearchMap().get("createdAtFrom"));

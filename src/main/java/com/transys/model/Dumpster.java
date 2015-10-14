@@ -10,8 +10,8 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 @Entity
-@Table(name="dumpsterInfo")
-public class DumpsterInfo extends AbstractBaseModel {
+@Table(name="dumpster")
+public class Dumpster extends AbstractBaseModel {
 	
 	// TODO: Do we need table size restriction here?
 	
@@ -25,6 +25,9 @@ public class DumpsterInfo extends AbstractBaseModel {
 	@ManyToOne
 	@JoinColumn(name="status")
 	private DumpsterStatus status;
+	
+	@Column(name="comments")
+	private String comments;
 	
 	@Transient
 	private String deliveryAddress;
@@ -73,20 +76,31 @@ public class DumpsterInfo extends AbstractBaseModel {
 		this.status = status;
 	}
 
+	@Transient
 	public String getDeliveryAddress() {
 		return deliveryAddress;
 	}
 
+	@Transient
 	public void setDeliveryAddress(String deliveryAddress) {
 		this.deliveryAddress = deliveryAddress;
 	}
 
+	@Transient
 	public String getDeliveryDate() {
 		return deliveryDate;
 	}
 
+	@Transient
 	public void setDeliveryDate(String deliveryDate) {
 		this.deliveryDate = deliveryDate;
 	}
-	
+
+	public String getComments() {
+		return comments;
+	}
+
+	public void setComments(String comments) {
+		this.comments = comments;
+	}
 }

@@ -61,15 +61,15 @@
 		<transys:textcolumn headerText="Customer" dataField="customer.companyName" />
 		<transys:textcolumn headerText="Delivery Address" dataField="deliveryAddress.line1" />
 		<transys:textcolumn headerText="City" dataField="deliveryAddress.city" />
-		<transys:textcolumn headerText="Payment Method" dataField="orderPaymentInfo.paymentMethod.method" />
-		<transys:textcolumn headerText="Check #" dataField="orderPaymentInfo.checkNum" />
-		<transys:textcolumn headerText="CC Reference #" dataField="orderPaymentInfo.ccReferenceNum" />
-		<transys:textcolumn headerText="Dumpster Price" dataField="orderPaymentInfo.dumpsterPrice" />
-		<transys:textcolumn headerText="City Fee" dataField="orderPaymentInfo.cityFee" />
-		<transys:textcolumn headerText="Permit Fee" dataField="orderPaymentInfo.totalPermitFees" />
-		<transys:textcolumn headerText="Overweight Fee" dataField="orderPaymentInfo.overweightFee" />
-		<transys:textcolumn headerText="Additional Fee" dataField="orderPaymentInfo.totalAdditionalFees" />
-		<transys:textcolumn headerText="Total Fees" dataField="orderPaymentInfo.totalFees" />
+		<transys:textcolumn headerText="Payment Method" dataField="orderPayment[0].paymentMethod.method" />
+		<transys:textcolumn headerText="Check #" dataField="orderPayment[0].checkNum" />
+		<transys:textcolumn headerText="CC Reference #" dataField="orderPayment[0].ccReferenceNum" />
+		<transys:textcolumn headerText="Dumpster Price" dataField="orderFees.dumpsterPrice" />
+		<transys:textcolumn headerText="City Fee" dataField="orderFees.cityFee" />
+		<transys:textcolumn headerText="Permit Fee" dataField="orderFees.totalPermitFees" />
+		<transys:textcolumn headerText="Overweight Fee" dataField="orderFees.overweightFee" />
+		<transys:textcolumn headerText="Additional Fee" dataField="orderFees.totalAdditionalFees" />
+		<transys:textcolumn headerText="Total Fees" dataField="orderFees.totalFees" />
 	</transys:datatable>
 	<%session.setAttribute("orderRevenueReportColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
 </form:form>

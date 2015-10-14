@@ -253,7 +253,7 @@ function populateDusmpsterPrice() {
 		return false;
 	}
 	
-	var dumpsterPriceInput = $("#orderPaymentInfo\\.dumpsterPrice");
+	var dumpsterPriceInput = $("#orderFees\\.dumpsterPrice");
 	
 	$.ajax({
   		url: "retrieveDumpsterPrice.do?" + "dumpsterSizeId=" + dumpsterSizeId 
@@ -279,7 +279,7 @@ function populateOverweightFee() {
 		return false;
 	}
 	
-	var overweightFeeInput = $("#orderPaymentInfo\\.overweightFee");
+	var overweightFeeInput = $("#orderFees\\.overweightFee");
 	
 	$.ajax({
   		url: "retrieveOverweightFee.do?" + "dumpsterSizeId=" + dumpsterSizeId 
@@ -294,14 +294,14 @@ function populateOverweightFee() {
 }
 
 function populateCityFee() {
-	var cityFeeDescriptionSelect = $("#orderPaymentInfo\\.cityFeeType");
+	var cityFeeDescriptionSelect = $("#orderFees\\.cityFeeType");
 	var cityFeeId = cityFeeDescriptionSelect.val();
 	
 	if (cityFeeDescriptionSelect == "") {
 		return false;
 	}
 	
-	var cityFeeInput = $("#orderPaymentInfo\\.cityFee");
+	var cityFeeInput = $("#orderFees\\.cityFee");
 	
 	$.ajax({
   		url: "retrieveCityFee.do?" + "cityFeeId=" + cityFeeId ,
@@ -384,7 +384,7 @@ function retrievePermitDetails(index) {
 function populatePermitDetails(index, permit) {
 	var permitValidFrom = $("#permitValidFrom" + index);
 	var permitValidTo = $("#permitValidTo" + index);
-	var permitFee = $("#orderPaymentInfo\\.permitFee" + index);
+	var permitFee = $("#orderFees\\.permitFee" + index);
 	
 	var permitAddressSelect = $("#permitAddress" + index);
 	
@@ -412,50 +412,50 @@ function populatePermitDetails(index, permit) {
 function populateTotalPermitFees() {
 	var totalPermitFees = parseFloat(0.00);
 	
-	var permitFee1 = $("#orderPaymentInfo\\.permitFee" + 1).val();
+	var permitFee1 = $("#orderFees\\.permitFee" + 1).val();
 	if (permitFee1 != "") {
 		totalPermitFees += parseFloat(permitFee1);
 	}
-	var permitFee2 = $("#orderPaymentInfo\\.permitFee" + 2).val();
+	var permitFee2 = $("#orderFees\\.permitFee" + 2).val();
 	if (permitFee2 != "") {
 		totalPermitFees += parseFloat(permitFee2);
 	}
-	var permitFee3 = $("#orderPaymentInfo\\.permitFee" + 3).val();
+	var permitFee3 = $("#orderFees\\.permitFee" + 3).val();
 	if (permitFee3 != "") {
 		totalPermitFees += parseFloat(permitFee3);
 	}
 	
-	$("#orderPaymentInfo\\.totalPermitFees").val(totalPermitFees);
+	$("#orderFees\\.totalPermitFees").val(totalPermitFees);
 }
 
 function populateTotalAdditionalFees() {
 	var totalAdditionalFees = parseFloat(0.00);
 	
-	var additionalFee1 = $("#orderPaymentInfo\\.additionalFee" + 1).val();
+	var additionalFee1 = $("#orderFees\\.additionalFee" + 1).val();
 	if (additionalFee1 != "") {
 		totalAdditionalFees += parseFloat(additionalFee1);
 	}
 	
-	var additionalFee2 = $("#orderPaymentInfo\\.additionalFee" + 2).val();
+	var additionalFee2 = $("#orderFees\\.additionalFee" + 2).val();
 	if (additionalFee2 != "") {
 		totalAdditionalFees += parseFloat(additionalFee2);
 	}
 	
-	var additionalFee3 = $("#orderPaymentInfo\\.additionalFee" + 3).val();
+	var additionalFee3 = $("#orderFees\\.additionalFee" + 3).val();
 	if (additionalFee3 != "") {
 		totalAdditionalFees += parseFloat(additionalFee3);
 	}
 	
-	$("#orderPaymentInfo\\.totalAdditionalFees").val(totalAdditionalFees);
+	$("#orderFees\\.totalAdditionalFees").val(totalAdditionalFees);
 }
 
 function populateTotalFees() {
-	var dumpsterPrice = $("#orderPaymentInfo\\.dumpsterPrice").val();
-	var overweightFee = $("#orderPaymentInfo\\.overweightFee").val();
-	var cityFee = $("#orderPaymentInfo\\.cityFee").val();
-	var totalPermitFees = $("#orderPaymentInfo\\.totalPermitFees").val();
-	var totalAdditionalFees = $("#orderPaymentInfo\\.totalAdditionalFees").val();
-	var discountPercentage = $("#orderPaymentInfo\\.discountPercentage").val();
+	var dumpsterPrice = $("#orderFees\\.dumpsterPrice").val();
+	var overweightFee = $("#orderFees\\.overweightFee").val();
+	var cityFee = $("#orderFees\\.cityFee").val();
+	var totalPermitFees = $("#orderFees\\.totalPermitFees").val();
+	var totalAdditionalFees = $("#orderFees\\.totalAdditionalFees").val();
+	var discountPercentage = $("#orderFees\\.discountPercentage").val();
 	
 	var totalFees = parseFloat(dumpsterPrice);
 	if (overweightFee != "") {
@@ -475,8 +475,8 @@ function populateTotalFees() {
 		discountAmount = ((totalFees * parseFloat(discountPercentage))/parseFloat(100.00));
 	}
 	
-	$("#orderPaymentInfo\\.discountAmount").val(discountAmount);
-	$("#orderPaymentInfo\\.totalFees").val(totalFees - discountAmount);
+	$("#orderFees\\.discountAmount").val(discountAmount);
+	$("#orderFees\\.totalFees").val(totalFees - discountAmount);
 }
 
 function validateForm() {
@@ -915,11 +915,11 @@ function verifyExchangeOrderAndSubmit() {
 		</tr>
 	    <tr>
 	    	<td class="form-left">Permit1 Fee<span class="errorMessage">*</span></td>
-	        <td align="${left}"><form:input path="orderPaymentInfo.permitFee1" cssClass="flat" onChange="return populateTotalPermitFees();"/></td>
+	        <td align="${left}"><form:input path="orderFees.permitFee1" cssClass="flat" onChange="return populateTotalPermitFees();"/></td>
 	        <td class="form-left">Permit2 Fee<span class="errorMessage">*</span></td>
-	        <td align="${left}"><form:input path="orderPaymentInfo.permitFee2" cssClass="flat" onChange="return populateTotalPermitFees();"/></td>
+	        <td align="${left}"><form:input path="orderFees.permitFee2" cssClass="flat" onChange="return populateTotalPermitFees();"/></td>
 	        <td class="form-left">Permit3 Fee<span class="errorMessage">*</span></td>
-	        <td align="${left}"><form:input path="orderPaymentInfo.permitFee3" cssClass="flat" onChange="return populateTotalPermitFees();"/></td>
+	        <td align="${left}"><form:input path="orderFees.permitFee3" cssClass="flat" onChange="return populateTotalPermitFees();"/></td>
 	    </tr>
 	    <tr>
 			<td colspan=10></td>
@@ -972,102 +972,102 @@ function verifyExchangeOrderAndSubmit() {
 		<tr>
 			<td class="form-left"><transys:label code="Dumpster Price"/><span class="errorMessage">*</span></td>
 			<td align="${left}">
-				<form:input path="orderPaymentInfo.dumpsterPrice" cssClass="form-control" readonly="true" style="width:172px;height:25px !important" />
-				<br><form:errors path="orderPaymentInfo.dumpsterPrice" cssClass="errorMessage" />
+				<form:input path="orderFees.dumpsterPrice" cssClass="form-control" readonly="true" style="width:172px;height:25px !important" />
+				<br><form:errors path="orderFees.dumpsterPrice" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Total Permit Fees"/></td>
 			<td align="${left}">
-				<form:input path="orderPaymentInfo.totalPermitFees" cssClass="form-control" readonly="true" style="width:172px;height:25px !important"/>
+				<form:input path="orderFees.totalPermitFees" cssClass="form-control" readonly="true" style="width:172px;height:25px !important"/>
 			</td>
 			<td class="form-left"><transys:label code="Overweight Fee"/><span class="errorMessage">*</span></td>
 			<td align="${left}">
-				<form:input path="orderPaymentInfo.overweightFee" cssClass="form-control" readonly="true" style="width:172px;height:25px !important" />
-				<br><form:errors path="orderPaymentInfo.overweightFee" cssClass="errorMessage" />
+				<form:input path="orderFees.overweightFee" cssClass="form-control" readonly="true" style="width:172px;height:25px !important" />
+				<br><form:errors path="orderFees.overweightFee" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="City Fee Description"/><span class="errorMessage">*</span></td>
 				<td align="${left}">
-				<form:select id="orderPaymentInfo.cityFeeType" cssClass="flat form-control input-sm" style="width:172px !important" path="orderPaymentInfo.cityFeeType" onChange="return populateCityFee();"> 
+				<form:select id="orderFees.cityFeeType" cssClass="flat form-control input-sm" style="width:172px !important" path="orderFees.cityFeeType" onChange="return populateCityFee();"> 
 					<form:option value="">-------Please Select------</form:option>
 					<form:options items="${cityFeeDetails}" itemValue="id" itemLabel="suburbName" />
 				</form:select>
-				<br><form:errors path="orderPaymentInfo.cityFeeType" cssClass="errorMessage" />
+				<br><form:errors path="orderFees.cityFeeType" cssClass="errorMessage" />
 			</td>
 			<td class="form-left"><transys:label code="City Fee"/><span class="errorMessage">*</span></td>
 			<td align="${left}">
-				<form:input path="orderPaymentInfo.cityFee" cssClass="form-control" readonly="true" style="width:172px;height:25px !important" />
-				<br><form:errors path="orderPaymentInfo.cityFee" cssClass="errorMessage" />
+				<form:input path="orderFees.cityFee" cssClass="form-control" readonly="true" style="width:172px;height:25px !important" />
+				<br><form:errors path="orderFees.cityFee" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Additional Fee1 Description"/><span class="errorMessage">*</span></td>
 				<td align="${left}">
-				<form:select id="additionalFee1Type" cssClass="flat form-control input-sm" style="width:172px !important" path="orderPaymentInfo.additionalFee1Type"> 
+				<form:select id="additionalFee1Type" cssClass="flat form-control input-sm" style="width:172px !important" path="orderFees.additionalFee1Type"> 
 					<form:option value="">-------Please Select------</form:option>
 					<form:options items="${additionalFeeTypes}" itemValue="id" itemLabel="description" />
 				</form:select>
-				<br><form:errors path="orderPaymentInfo.additionalFee1Type" cssClass="errorMessage" />
+				<br><form:errors path="orderFees.additionalFee1Type" cssClass="errorMessage" />
 			</td>
 			<td class="form-left"><transys:label code="Additional Fee1"/><span class="errorMessage">*</span></td>
 			<td align="${left}">
-				<form:input path="orderPaymentInfo.additionalFee1" cssClass="flat" onchange="return populateTotalAdditionalFees();"/>
-				<br><form:errors path="orderPaymentInfo.additionalFee1" cssClass="errorMessage" />
+				<form:input path="orderFees.additionalFee1" cssClass="flat" onchange="return populateTotalAdditionalFees();"/>
+				<br><form:errors path="orderFees.additionalFee1" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Additional Fee2 Description"/><span class="errorMessage">*</span></td>
 				<td align="${left}">
-				<form:select id="additionalFee2Type" cssClass="flat form-control input-sm" style="width:172px !important" path="orderPaymentInfo.additionalFee2Type"> 
+				<form:select id="additionalFee2Type" cssClass="flat form-control input-sm" style="width:172px !important" path="orderFees.additionalFee2Type"> 
 					<form:option value="">-------Please Select------</form:option>
 					<form:options items="${additionalFeeTypes}" itemValue="id" itemLabel="description" />
 				</form:select>
-				<br><form:errors path="orderPaymentInfo.additionalFee2Type" cssClass="errorMessage" />
+				<br><form:errors path="orderFees.additionalFee2Type" cssClass="errorMessage" />
 			</td>
 			<td class="form-left"><transys:label code="Additional Fee2"/><span class="errorMessage">*</span></td>
 			<td align="${left}">
-				<form:input path="orderPaymentInfo.additionalFee2" cssClass="flat" />
-				<br><form:errors path="orderPaymentInfo.additionalFee2" cssClass="errorMessage" />
+				<form:input path="orderFees.additionalFee2" cssClass="flat" />
+				<br><form:errors path="orderFees.additionalFee2" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Additional Fee3 Description"/><span class="errorMessage">*</span></td>
 				<td align="${left}">
-				<form:select id="additionalFee3Type" cssClass="flat form-control input-sm" style="width:172px !important" path="orderPaymentInfo.additionalFee3Type"> 
+				<form:select id="additionalFee3Type" cssClass="flat form-control input-sm" style="width:172px !important" path="orderFees.additionalFee3Type"> 
 					<form:option value="">-------Please Select------</form:option>
 					<form:options items="${additionalFeeTypes}" itemValue="id" itemLabel="description" />
 				</form:select>
-				<br><form:errors path="orderPaymentInfo.additionalFee3Type" cssClass="errorMessage" />
+				<br><form:errors path="orderFees.additionalFee3Type" cssClass="errorMessage" />
 			</td>
 			<td class="form-left"><transys:label code="Additional Fee3"/><span class="errorMessage">*</span></td>
 			<td align="${left}">
-				<form:input path="orderPaymentInfo.additionalFee3" cssClass="flat" />
-				<br><form:errors path="orderPaymentInfo.additionalFee3" cssClass="errorMessage" />
+				<form:input path="orderFees.additionalFee3" cssClass="flat" />
+				<br><form:errors path="orderFees.additionalFee3" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Total Additional Fees"/></td>
 			<td align="${left}">
-				<form:input path="orderPaymentInfo.totalAdditionalFees" cssClass="form-control" readonly="true" style="width:172px;height:25px !important"/>
+				<form:input path="orderFees.totalAdditionalFees" cssClass="form-control" readonly="true" style="width:172px;height:25px !important"/>
 			</td>
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Discount %"/><span class="errorMessage">*</span></td>
 			<td align="${left}">
-				<form:input path="orderPaymentInfo.discountPercentage" cssClass="flat" onchange="return populateTotalFees();"/>
-				<br><form:errors path="orderPaymentInfo.discountPercentage" cssClass="errorMessage" />
+				<form:input path="orderFees.discountPercentage" cssClass="flat" onchange="return populateTotalFees();"/>
+				<br><form:errors path="orderFees.discountPercentage" cssClass="errorMessage" />
 			</td>
 			<td class="form-left"><transys:label code="Discount Amount"/></td>
 			<td align="${left}">
-				<form:input path="orderPaymentInfo.discountAmount" cssClass="form-control" readonly="true" style="width:172px;height:25px !important"/>
+				<form:input path="orderFees.discountAmount" cssClass="form-control" readonly="true" style="width:172px;height:25px !important"/>
 			</td>
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Total Fees"/><span class="errorMessage">*</span></td>
 			<td align="${left}">
-				<form:input path="orderPaymentInfo.totalFees" cssClass="form-control" readonly="true" style="width:172px;height:25px !important"/>
+				<form:input path="orderFees.totalFees" cssClass="form-control" readonly="true" style="width:172px;height:25px !important"/>
 			</td>
 		</tr>
 		<tr>
@@ -1085,23 +1085,23 @@ function verifyExchangeOrderAndSubmit() {
 		<tr>
 			<td class="form-left"><transys:label code="Payment Method"/><span class="errorMessage">*</span></td>
 			<td align="${left}">
-				<form:select id="paymentMethod" cssClass="flat form-control input-sm" style="width:172px !important" path="orderPaymentInfo.paymentMethod"> 
+				<form:select id="paymentMethod" cssClass="flat form-control input-sm" style="width:172px !important" path="orderPayment[0].paymentMethod"> 
 					<form:option value="">-------Please Select------</form:option>
 					<form:options items="${paymentMethods}" itemValue="id" itemLabel="method" />
 				</form:select>
-				<br><form:errors path="orderPaymentInfo.paymentMethod" cssClass="errorMessage" />
+				<br><form:errors path="orderPayment[0].paymentMethod" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="CC Refernce #"/><span class="errorMessage">*</span></td>
 			<td align="${left}">
-				<form:input path="orderPaymentInfo.ccReferenceNum" cssClass="flat" />
-				<br><form:errors path="orderPaymentInfo.ccReferenceNum" cssClass="errorMessage" />
+				<form:input path="orderPayment[0].ccReferenceNum" cssClass="flat" />
+				<br><form:errors path="orderPayment[0].ccReferenceNum" cssClass="errorMessage" />
 			</td>
 			<td class="form-left"><transys:label code="Check #"/><span class="errorMessage">*</span></td>
 			<td align="${left}">
-				<form:input path="orderPaymentInfo.checkNum" cssClass="flat" />
-				<br><form:errors path="orderPaymentInfo.checkNum" cssClass="errorMessage" />
+				<form:input path="orderPayment[0].checkNum" cssClass="flat" />
+				<br><form:errors path="orderPayment[0].checkNum" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>
