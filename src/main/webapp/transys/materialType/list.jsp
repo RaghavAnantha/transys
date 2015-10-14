@@ -23,6 +23,21 @@
 			</select></td>	
 		</tr>
 		<tr>
+			<td align="${left}" class="form-left"><transys:label code="Material Category" /></td>
+			<td align="${left}" class="wide">
+				<select class="flat form-control input-sm" id="materialType" name="materialCategory" style="width: 175px">
+					<option value="">------Please Select------</option>
+					<c:forEach items="${materialCategories}" var="aCategory">
+						<c:set var="selected" value="" />
+						<c:if
+							test="${sessionScope.searchCriteria.searchMap['materialCategory'] == aCategory.id}">
+							<c:set var="selected" value="selected" />
+						</c:if>
+						<option value="${aCategory.id}" ${selected}>${aCategory.category}</option>
+					</c:forEach>
+			</select></td>	
+		</tr>
+		<tr>
 			<td align="${left}" class="form-left"><transys:label code="Material Type" /></td>
 			<td align="${left}" class="wide"><select
 				class="flat form-control input-sm" id="materialName" name="materialName"
@@ -56,7 +71,9 @@
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
 		pagingLink="search.do" multipleDelete="false" searcheable="false"
 		exportPdf="true" exportXls="true" dataQualifier="materialType" >
+		
 		<transys:textcolumn headerText="Material ID" dataField="id" />
+		<transys:textcolumn headerText="Material Category" dataField="materialCategory.category" />
 		<transys:textcolumn headerText="Material Name" dataField="materialName" />
 	</transys:datatable>
 	<%session.setAttribute("materialTypeColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.transys.controller.editor.AbstractModelEditor;
+import com.transys.model.MaterialCategory;
 import com.transys.model.MaterialType;
 import com.transys.model.SearchCriteria;
 
@@ -67,6 +68,7 @@ public class MaterialTypeController extends CRUDController<MaterialType> {
 	public void setupCreate(ModelMap model, HttpServletRequest request) {
 		Map criterias = new HashMap();
 		model.addAttribute("materialType", genericDAO.findByCriteria(MaterialType.class, criterias, "id", false));
+		model.addAttribute("materialCategories", genericDAO.findByCriteria(MaterialCategory.class, criterias, "id", false));
 	}
 
 	@RequestMapping(method = RequestMethod.POST, value = "/save.do")
