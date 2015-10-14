@@ -33,6 +33,7 @@
 							<li><a href="/employee/main.do">Employees</a></li>
 							<li><a href="/dumpsters/main.do">Dumpsters</a></li>
 							<li><a href="/materialType/main.do">Material Type</a></li>
+							<li><a href="/masterData/materialCategory/main.do">Material Category</a></li>
 							<li><a href="/paymentMethod/main.do">Payment Method</a></li>
 							<li><a href="/locationType/main.do">Location Type</a></li>
 							<li><a href="/dumpsterPrice/main.do">Dumpster Price</a></li>

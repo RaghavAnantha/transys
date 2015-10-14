@@ -24,6 +24,9 @@
     <decorator name="materialType" page="singleColumnLayout.jsp">
         <pattern>/transys/materialType/**</pattern>
     </decorator>
+    <decorator name="materialCategory" page="singleColumnLayout.jsp">
+        <pattern>/transys/masterData/**</pattern>
+    </decorator>   
     <decorator name="paymentMethod" page="singleColumnLayout.jsp">
         <pattern>/transys/paymentMethod/**</pattern>
     </decorator>
