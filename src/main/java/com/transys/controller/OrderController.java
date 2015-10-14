@@ -831,21 +831,9 @@ public class OrderController extends CRUDController<Order> {
 	}
 	
 	private List<MaterialCategory> retrieveMaterialCategories(Long dumpsterSizeId) {
-		String dumpsterPriceQuery = "select obj from DumpsterPrice obj where";
+		String dumpsterPriceQuery = "select distinct obj.materialType.materialCategory from DumpsterPrice obj where";
 		dumpsterPriceQuery += " obj.dumpsterSize.id=" + dumpsterSizeId;
-		
-		List<DumpsterPrice> dumsterPriceList = genericDAO.executeSimpleQuery(dumpsterPriceQuery);
-		List<MaterialCategory> materialCategories = new ArrayList<MaterialCategory>();
-		for (DumpsterPrice aDumpsterPrice : dumsterPriceList) {
-			MaterialCategory aMaterialCategory = aDumpsterPrice.getMaterialType().getMaterialCategory();
-			if (!materialCategories.contains(aMaterialCategory)) {
-				materialCategories.add(aMaterialCategory);
-			}
-		}
-		
-		//Set<MaterialCategory> sortedWithoutDupes = new LinkedHashSet<MaterialCategory>(materialCategories);
-		//List<MaterialCategory> materialCategoryList2 = new ArrayList<MaterialCategory>(sortedWithoutDupes);
-		
+		List<MaterialCategory> materialCategories = genericDAO.executeSimpleQuery(dumpsterPriceQuery);
 		return materialCategories;
 	}
 	
@@ -869,16 +857,10 @@ public class OrderController extends CRUDController<Order> {
 	}
 	
 	private List<MaterialType> retrieveMaterialTypes(Long dumpsterSizeId, Long materialCategoryId) {
-		String dumpsterPriceQuery = "select obj from DumpsterPrice obj where";
+		String dumpsterPriceQuery = "select obj.materialType from DumpsterPrice obj where";
 		dumpsterPriceQuery += " obj.dumpsterSize.id=" + dumpsterSizeId
 				    		  	 +  " and obj.materialType.materialCategory.id=" + materialCategoryId;
-		
-		List<DumpsterPrice> dumsterPriceList = genericDAO.executeSimpleQuery(dumpsterPriceQuery);
-		List<MaterialType> materialTypes = new ArrayList<MaterialType>();
-		for (DumpsterPrice aDumpsterPrice : dumsterPriceList) {
-			materialTypes.add(aDumpsterPrice.getMaterialType());
-		}
-		
+		List<MaterialType> materialTypes = genericDAO.executeSimpleQuery(dumpsterPriceQuery);
 		return materialTypes;
 	}
 	
