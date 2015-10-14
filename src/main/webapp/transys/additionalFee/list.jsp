@@ -57,6 +57,8 @@
 		exportPdf="true" exportXls="true" dataQualifier="additionalFee">
 		<transys:textcolumn headerText="Description" dataField="description" />
 		<transys:textcolumn headerText="Fee" dataField="fee" />
+		<transys:textcolumn headerText="Effective Date From" dataField="effectiveDateFrom" />
+		<transys:textcolumn headerText="Effective Date To" dataField="effectiveDateTo" />
 	</transys:datatable>
 	<%session.setAttribute("additionalFeeColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
 </form:form>

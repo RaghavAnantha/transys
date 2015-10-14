@@ -115,8 +115,14 @@ public class BaseController {
 
 	protected void populateSearchCriteria(HttpServletRequest request,
 			Map<String, String[]> params) {
+		
+		populateSearchCriteria(request, params, "searchCriteria");
+	}
+	
+	protected void populateSearchCriteria(HttpServletRequest request,
+			Map<String, String[]> params, String searchCriteriaName) {
 
-		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
+		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute(searchCriteriaName);
 		if (criteria == null) {
 			criteria = new SearchCriteria();
 			criteria.setPageSize(25);

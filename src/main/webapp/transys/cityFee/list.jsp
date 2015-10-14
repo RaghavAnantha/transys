@@ -13,7 +13,7 @@
 					</option>
 					<c:forEach items="${cityFees}" var="aCity">
 						<c:set var="selected" value="" />
-						<c:if test="${sessionScope.searchCriteria.searchMap['suburbName'] == aCity.suburbName}">
+						<c:if test="${sessionScope.cityFeeSearchCriteria.searchMap['suburbName'] == aCity.suburbName}">
 							<c:set var="selected" value="selected" />
 						</c:if>
 						<option value="${aCity.suburbName}" ${selected}>${aCity.suburbName}</option>
@@ -30,7 +30,7 @@
 					</option>
 					<c:forEach items="${cityFees}" var="aCityFee">
 						<c:set var="selected" value="" />
-						<c:if test="${sessionScope.searchCriteria.searchMap['fee'] == aCityFee.fee}">
+						<c:if test="${sessionScope.cityFeeSearchCriteria.searchMap['fee'] == aCityFee.fee}">
 							<c:set var="selected" value="selected" />
 						</c:if>
 						<option value="${aCityFee.fee}" ${selected}>${aCityFee.fee}</option>
@@ -50,11 +50,13 @@
 <form:form name="cityFee.do" id="cityFeeObj" class="tab-color">
 	<transys:datatable urlContext="cityFee" deletable="true"
 		editable="true" insertable="true" baseObjects="${list}"
-		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
+		searchCriteria="${sessionScope['cityFeeSearchCriteria']}" cellPadding="2"
 		pagingLink="search.do" multipleDelete="false" searcheable="false"
 		exportPdf="true" exportXls="true" dataQualifier="cityFee">
 		<transys:textcolumn headerText="City" dataField="suburbName" />
 		<transys:textcolumn headerText="Fee" dataField="fee" />
+		<transys:textcolumn headerText="Effective Date From" dataField="effectiveDateFrom" />
+		<transys:textcolumn headerText="Effective Date To" dataField="effectiveDateTo" />
 	</transys:datatable>
 	<%session.setAttribute("cityFeeColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
 </form:form>

@@ -9,15 +9,43 @@
 	
 		<tr>
 			<td class="form-left"><transys:label code="City" /></td>
-			<td align="${left}"><form:input path="city" cssClass="flat" />
+			<td align="${left}"><form:input path="suburbName" cssClass="flat" />
 				<br>
-			<form:errors path="city" cssClass="errorMessage" /></td>
+			<form:errors path="suburbName" cssClass="errorMessage" /></td>
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Fee" /></td>
 			<td align="${left}"><form:input path="fee" cssClass="flat" />
 				<br>
 			<form:errors path="fee" cssClass="errorMessage" /></td>
+		</tr>
+		<tr>
+			<td align="${left}" class="form-left"><transys:label code="Effective Date From" /></td>
+			<td align="${left}">
+			<form:input path="effectiveDateFrom" class="flat" id="datepicker7" name="effectiveDateFrom" /></td>
+		</tr>
+		<tr>
+			<td class="form-left"><transys:label code="Effective Date To" /></td>
+			<td align="${left}">
+			<form:input path="effectiveDateTo" class="flat" id="datepicker8" name="effectiveDateTo"  /></td>
+		</tr>
+		<tr>
+			<td colspan=10></td>
+		</tr>
+		<tr>
+			<td colspan=10 class="danger" style="font-size: 13px;font-weight: bold;color: white;">Notes/Comments</td>
+		</tr>
+		<tr>
+			<td colspan=10></td>
+		</tr>
+		<tr>
+			<td colspan=10>
+				<form:textarea row="5" path="comments" cssClass="flat" id="cityFeeComments" style="width:100%; height:150%;"/>
+				<br><form:errors path="comments" cssClass="errorMessage" />
+			</td>
+		</tr>
+		<tr>
+			<td colspan=10></td>
 		</tr>
 		<tr>
 			<td colspan="2"></td>

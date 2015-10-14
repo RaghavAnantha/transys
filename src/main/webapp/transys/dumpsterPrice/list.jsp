@@ -19,6 +19,9 @@
 					</c:forEach>
 				</select>
 			</td>	
+<%-- 			<td align="${left}" class="form-left"><transys:label code="Effective Date From"/></td>
+			<td align="${left}" class="wide"><input class="flat" id="datepicker6" name="effectiveDateFrom" value="${sessionScope.searchCriteria.searchMap['effectiveDateFrom']}" style="width: 175px" /></td>
+ --%>					
 		</tr>
 		<tr>
 			<td align="${left}" class="form-left"><transys:label code="Material Type" /></td>
@@ -34,6 +37,8 @@
 						<option value="${aType.id}" ${selected}>${aType.materialName}</option>
 					</c:forEach>
 			</select></td>	
+			 <%-- <td align="${left}" class="form-left"><transys:label code="Effective Date To"/></td>
+		     <td align="${left}" class="wide"><input class="flat" id="datepicker7" name="effectiveDateTo" value="${sessionScope.searchCriteria.searchMap['effectiveDateTo']}" style="width: 175px" /></td> --%>
 		</tr>
 		<tr>
 			<td align="${left}" class="form-left"><transys:label code="Dumpster Price" /></td>
@@ -71,6 +76,8 @@
 		<transys:textcolumn headerText="Dumpster Size" dataField="dumpsterSize.size" />
 		<transys:textcolumn headerText="Material Type" dataField="materialType.materialName" />
 		<transys:textcolumn headerText="Dumpster Price" dataField="price" />
+		<transys:textcolumn headerText="Effective Date From" dataField="effectiveDateFrom" />
+		<transys:textcolumn headerText="Effective Date To" dataField="effectiveDateTo" />
 	</transys:datatable>
 	<%session.setAttribute("dumpsterPriceColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
 </form:form>

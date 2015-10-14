@@ -77,6 +77,8 @@
 		<transys:textcolumn headerText="Permit Class" dataField="permitClass.permitClass" />
 		<transys:textcolumn headerText="Permit Type" dataField="permitType.permitType" />
 		<transys:textcolumn headerText="Permit Fee" dataField="fee" />
+		<transys:textcolumn headerText="Effective Date From" dataField="effectiveDateFrom" />
+		<transys:textcolumn headerText="Effective Date To" dataField="effectiveDateTo" />
 	</transys:datatable>
 	<%session.setAttribute("permitFeeColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
 </form:form>
