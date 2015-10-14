@@ -46,7 +46,7 @@
         <pattern>/transys/additionalFee/**</pattern>
     </decorator>
     <decorator name="materialIntakeForRecycle" page="singleColumnLayout.jsp">
-        <pattern>/transys/materialIntakeForRecycle/**</pattern>
+        <pattern>/transys/materialIntake/**</pattern>
     </decorator>
     <decorator name="report" page="singleColumnLayout.jsp">
         <pattern>/transys/dumpsterOnsiteReport/**</pattern>

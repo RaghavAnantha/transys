@@ -75,6 +75,11 @@ function populateDeliveryAddress(addressList) {
    	});
 }
 
+function handleDumpsterSizeChange() {
+	populatePermitClass();
+	populateMaterialCategories();
+}
+
 function populatePermitClass() {
 	var dumpsterSizeSelect =  $('#dumpsterSize');
 	var dumpsterSizeId = dumpsterSizeSelect.val();
@@ -177,7 +182,35 @@ function appendPermit(permit) {
 	populatePermitDetails(1, permit);
 }
 
-function populateDusmpsterPrice() {
+function populateMaterialCategories() {
+	var dumpsterSizeSelect = $("#dumpsterSize");
+	var dumpsterSizeId = dumpsterSizeSelect.val();
+	if (dumpsterSizeId == "") {
+		return false;
+	}
+	
+	var materialCategorySelect = $("#materialCategory");
+	materialCategorySelect.empty();
+	
+	var firstOption = $('<option value="">'+ "-------Please Select------" +'</option>');
+	materialCategorySelect.append(firstOption);
+	
+	$.ajax({
+  		url: "retrieveMaterialCategories.do?" + "dumpsterSizeId=" + dumpsterSizeId,
+       	type: "GET",
+       	success: function(responseData, textStatus, jqXHR) {
+       		var materialCategoriesList = jQuery.parseJSON(responseData);
+       		$.each(materialCategoriesList, function () {
+    	   		$("<option />", {
+    	   	        val: this.id,
+    	   	        text: this.category
+    	   	    }).appendTo(materialCategorySelect);
+    	   	});
+		}
+	});
+}
+
+function populateMaterialTypes() {
 	var dumpsterSizeSelect = $("#dumpsterSize");
 	var dumpsterSizeId = dumpsterSizeSelect.val();
 	
@@ -188,11 +221,43 @@ function populateDusmpsterPrice() {
 		return false;
 	}
 	
+	var materialTypeSelect = $("#materialType");
+	materialTypeSelect.empty();
+	
+	var firstOption = $('<option value="">'+ "-------Please Select------" +'</option>');
+	materialTypeSelect.append(firstOption);
+	
+	$.ajax({
+  		url: "retrieveMaterialTypes.do?" + "dumpsterSizeId=" + dumpsterSizeId + "&materialCategoryId=" + materialCategoryId,
+       	type: "GET",
+       	success: function(responseData, textStatus, jqXHR) {
+       		var materialTypesList = jQuery.parseJSON(responseData);
+       		$.each(materialTypesList, function () {
+    	   		$("<option />", {
+    	   	        val: this.id,
+    	   	        text: this.materialName
+    	   	    }).appendTo(materialTypeSelect);
+    	   	});
+		}
+	});
+}
+
+function populateDusmpsterPrice() {
+	var dumpsterSizeSelect = $("#dumpsterSize");
+	var dumpsterSizeId = dumpsterSizeSelect.val();
+	
+	var materialTypeSelect = $("#materialType");
+	var materialTypeId = materialTypeSelect.val();
+	
+	if (dumpsterSizeId == "" || materialTypeId == "") {
+		return false;
+	}
+	
 	var dumpsterPriceInput = $("#orderPaymentInfo\\.dumpsterPrice");
 	
 	$.ajax({
   		url: "retrieveDumpsterPrice.do?" + "dumpsterSizeId=" + dumpsterSizeId 
-  								  		 + "\&materialCategoryId=" + materialCategoryId,
+  								  		 + "&materialTypeId=" + materialTypeId,
   								  
        	type: "GET",
        	success: function(responseData, textStatus, jqXHR) {
@@ -218,8 +283,8 @@ function populateOverweightFee() {
 	
 	$.ajax({
   		url: "retrieveOverweightFee.do?" + "dumpsterSizeId=" + dumpsterSizeId 
-  								  		 + "\&materialCategoryId=" + materialCategoryId
-  								  		 + "\&netWeightTonnage=" + netWeightTonnage,
+  								  		 + "&materialCategoryId=" + materialCategoryId
+  								  		 + "&netWeightTonnage=" + netWeightTonnage,
   								  
        	type: "GET",
        	success: function(responseData, textStatus, jqXHR) {
@@ -275,10 +340,10 @@ function populatePermitNumbers(index) {
 	
 	$.ajax({
   		url: "retrievePermit.do?" + "customerId=" + customerId
-  								  + "\&deliveryAddressId=" + deliveryAddressId
-  								  + "\&permitClassId=" + permitClassId
-  								  + "\&permitTypeId=" + permitTypeId
-  								  + "\&deliveryDate=" + deliveryDate,
+  								  + "&deliveryAddressId=" + deliveryAddressId
+  								  + "&permitClassId=" + permitClassId
+  								  + "&permitTypeId=" + permitTypeId
+  								  + "&deliveryDate=" + deliveryDate,
   								  
        	type: "GET",
        	success: function(responseData, textStatus, jqXHR) {
@@ -606,7 +671,7 @@ function verifyExchangeOrderAndSubmit() {
 			</td>
 			<td class="form-left"><transys:label code="Dumpster Size"/><span class="errorMessage">*</span></td>
 			<td align="${left}">
-				<form:select id="dumpsterSize" cssClass="flat form-control input-sm" style="width:172px !important" path="dumpsterSize" onchange="return populatePermitClass();"> 
+				<form:select id="dumpsterSize" cssClass="flat form-control input-sm" style="width:172px !important" path="dumpsterSize" onchange="return handleDumpsterSizeChange(); "> 
 					<form:option value="">-------Please Select------</form:option>
 					<form:options items="${dumpsterSizes}" itemValue="id" itemLabel="size" />
 				</form:select> 
@@ -616,15 +681,20 @@ function verifyExchangeOrderAndSubmit() {
 		<tr>
 			<td class="form-left"><transys:label code="Material Category"/><span class="errorMessage">*</span></td>
 			<td align="${left}">
-				<form:select id="materialCategory" cssClass="flat form-control input-sm" style="width:172px !important" path="materialCategory" onChange="return populateDusmpsterPrice();"> 
-					<form:option value="">-------Please Select------</form:option>
-					<form:options items="${materialCategories}" itemValue="id" itemLabel="category" />
-				</form:select> 
-			 	<br><form:errors path="materialCategory" cssClass="errorMessage" />
+				<select class="flat form-control input-sm" id="materialCategory" name="materialCategory" id="materialCategory" style="width: 175px" onChange="return populateMaterialTypes();">
+					<option value="">------Please Select------</option>
+					<c:forEach items="${materialCategories}" var="aMaterialCategory">
+						<c:set var="selected" value="" />
+						<c:if test="${modelObject.materialType.materialCategory.id == aMaterialCategory.id}">
+							<c:set var="selected" value="selected" />
+						</c:if>
+						<option value="${aMaterialCategory.id}" ${selected}>${aMaterialCategory.category}</option>
+					</c:forEach>
+				</select>
 			</td>
 			<td class="form-left"><transys:label code="Material Type"/></td>
 			<td align="${left}">
-				<form:select id="materialType" cssClass="flat form-control input-sm" style="width:172px !important" path="materialType"> 
+				<form:select id="materialType" cssClass="flat form-control input-sm" style="width:172px !important" path="materialType"  onChange="return populateDusmpsterPrice();"> 
 					<form:option value="">-------Please Select------</form:option>
 					<form:options items="${materialTypes}" itemValue="id" itemLabel="materialName" />
 				</form:select> 
