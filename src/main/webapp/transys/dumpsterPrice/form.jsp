@@ -30,10 +30,9 @@
 		<tr>
 			<td class="form-left"><transys:label code="Dumpster Price" /></td>
 			<td align="${left}"><form:input path="price" cssClass="flat" />
-				<br>
+			<br>
 			<form:errors path="price" cssClass="errorMessage" /></td>
 		</tr>
-		
 		<tr>
 			<td colspan="2"></td>
 		</tr>
