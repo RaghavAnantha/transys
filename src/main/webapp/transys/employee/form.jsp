@@ -118,7 +118,24 @@ function formatPhone(){
 				<br><form:errors path="status" cssClass="errorMessage" />
 			</td>
 		</tr>
-		
+		<tr>
+			<td colspan=10></td>
+		</tr>
+		<tr>
+			<td colspan=10 class="danger" style="font-size: 13px;font-weight: bold;color: white;">Notes/Comments</td>
+		</tr>
+		<tr>
+			<td colspan=10></td>
+		</tr>
+		<tr>
+			<td colspan=10>
+				<form:textarea row="5" path="comments" cssClass="flat" id="employeeComments" style="width:100%; height:150%;"/>
+				<br><form:errors path="comments" cssClass="errorMessage" />
+			</td>
+		</tr>
+		<tr>
+			<td colspan=10></td>
+		</tr>		
 		<tr>
 			<td colspan="2"></td>
 		</tr>

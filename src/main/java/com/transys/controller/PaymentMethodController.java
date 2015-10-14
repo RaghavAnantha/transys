@@ -33,6 +33,7 @@ public class PaymentMethodController extends CRUDController<PaymentMethodType> {
 
 	@RequestMapping(method = RequestMethod.GET, value = "/main.do")
 	public String displayMain(ModelMap model, HttpServletRequest request) {
+		request.getSession().removeAttribute("searchCriteria");
 		setupList(model, request);
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		model.addAttribute("list", genericDAO.search(PaymentMethodType.class, criteria, "id", null, null));

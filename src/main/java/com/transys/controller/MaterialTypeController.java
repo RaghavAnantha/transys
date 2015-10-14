@@ -33,6 +33,7 @@ public class MaterialTypeController extends CRUDController<MaterialType> {
 
 	@RequestMapping(method = RequestMethod.GET, value = "/main.do")
 	public String displayMain(ModelMap model, HttpServletRequest request) {
+		request.getSession().removeAttribute("searchCriteria");
 		setupList(model, request);
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		model.addAttribute("list", genericDAO.search(MaterialType.class, criteria, "id", null, null));
