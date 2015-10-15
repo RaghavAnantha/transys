@@ -579,11 +579,11 @@ CREATE TABLE `orderFees` (
   `modified_by` bigint(20) DEFAULT NULL,
   `delete_flag` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
-  CONSTRAINT `orderPaymentOrderRef` FOREIGN KEY (`orderId`) REFERENCES `transysOrder` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `orderPaymentCityFeeRef` FOREIGN KEY (`cityFeeId`) REFERENCES `cityFee` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `orderPaymentAddnlFee1Ref` FOREIGN KEY (`additionalFee1Id`) REFERENCES `additionalFee` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `orderPaymentAddnlFee2Ref` FOREIGN KEY (`additionalFee2Id`) REFERENCES `additionalFee` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `orderPaymentAddnlFee3Ref` FOREIGN KEY (`additionalFee3Id`) REFERENCES `additionalFee` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `orderFeesOrderRef` FOREIGN KEY (`orderId`) REFERENCES `transysOrder` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `orderFeesCityFeeRef` FOREIGN KEY (`cityFeeId`) REFERENCES `cityFee` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `orderFeesAddnlFee1Ref` FOREIGN KEY (`additionalFee1Id`) REFERENCES `additionalFee` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `orderFeesAddnlFee2Ref` FOREIGN KEY (`additionalFee2Id`) REFERENCES `additionalFee` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `orderFeesAddnlFee3Ref` FOREIGN KEY (`additionalFee3Id`) REFERENCES `additionalFee` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -608,7 +608,7 @@ DROP TABLE IF EXISTS `orderPayment`;
 CREATE TABLE `orderPayment` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `orderId` bigint(20) NOT NULL,
-  `paymentMethodId` bigint(20) DEFAULT NULL,
+  `paymentMethodId` bigint(20) NOT NULL,
   `ccReferenceNum` varchar(50) DEFAULT NULL,
   `checkNum` varchar(50) DEFAULT NULL,
   `amountPaid` decimal(6,2) DEFAULT 0.00,
@@ -618,7 +618,8 @@ CREATE TABLE `orderPayment` (
   `modified_by` bigint(20) DEFAULT NULL,
   `delete_flag` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
-  CONSTRAINT `orderPaymentPaymentMethodRef` FOREIGN KEY (`paymentMethodId`) REFERENCES `paymentMethodType` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `orderPaymentPaymentMethodRef` FOREIGN KEY (`paymentMethodId`) REFERENCES `paymentMethodType` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `orderPaymentOrderRef` FOREIGN KEY (`orderId`) REFERENCES `transysOrder` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -628,13 +629,14 @@ CREATE TABLE `orderPayment` (
 
 LOCK TABLES `orderPayment` WRITE;
 /*!40000 ALTER TABLE `orderPayment` DISABLE KEYS */;
-INSERT INTO `orderPayment` 
-VALUES (1,1,1,'123',NULL,240.00,'2015-10-09 19:19:03',1,NULL,NULL,1);
+INSERT INTO `orderPayment` (`id`,`orderId`,`paymentMethodId`,`ccReferenceNum`,`checkNum`,`amountPaid`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (1,1,1,'','123',240.00,'2015-10-09 19:19:03',1,NULL,1,1);
+INSERT INTO `orderPayment` (`id`,`orderId`,`paymentMethodId`,`ccReferenceNum`,`checkNum`,`amountPaid`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (2,1,2,'','',45.00,'2015-10-15 12:11:36',1,NULL,1,1);
+INSERT INTO `orderPayment` (`id`,`orderId`,`paymentMethodId`,`ccReferenceNum`,`checkNum`,`amountPaid`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (3,1,3,'67','',45.00,'2015-10-15 12:14:37',1,NULL,1,1);
 /*!40000 ALTER TABLE `orderPayment` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `orderPayment`
+-- Table structure for table `orderPermits`
 --
 
 DROP TABLE IF EXISTS `orderPermits`;
