@@ -77,7 +77,7 @@ function populateEndDate() {
 		<tr>
 			<td class="form-left"><transys:label code="Delivery Address" /><span class="errorMessage">*</span></td>
 			<td align="${left}">
-				<form:select id="deliveryAddressSelect" cssClass="flat form-control input-sm" path="deliveryAddress" style="width: 175px !important" onClick="return populateDeliveryAddress();">
+				<form:select id="deliveryAddressSelect" cssClass="flat form-control input-sm" path="deliveryAddress" style="width: 175px !important" >
 					<form:option value="">------Please Select--------</form:option>
 					<form:options items="${editDeliveryAddress}" itemValue="id" itemLabel="fullLine" />
 				</form:select> 

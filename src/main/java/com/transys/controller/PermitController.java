@@ -36,7 +36,6 @@ import com.transys.model.DeliveryAddress;
 import com.transys.model.LocationType;
 import com.transys.model.Order;
 import com.transys.model.OrderFees;
-import com.transys.model.OrderPayment;
 import com.transys.model.OrderPermits;
 import com.transys.model.OrderStatus;
 import com.transys.model.Permit;
@@ -473,7 +472,7 @@ public class PermitController extends CRUDController<Permit> {
 			
 			// If new permit initiated from OrderPermitAlert screen, the permit should be associated with the corresponding orderID
 			associateToOrder(entity, associatedOrderPermitEntry, request);
-			updatePermitAndTotalFeesInOrder(entity, associatedOrderPermitEntry);
+			updatePermitAndTotalFeesInOrder(request, entity, associatedOrderPermitEntry);
 			
 			cleanUp(request);
 			
@@ -490,7 +489,7 @@ public class PermitController extends CRUDController<Permit> {
 	}
 
 	
-	private void updatePermitAndTotalFeesInOrder(Permit entity, OrderPermits associatedOrderPermitEntry) {
+	private void updatePermitAndTotalFeesInOrder(HttpServletRequest request, Permit entity, OrderPermits associatedOrderPermitEntry) {
 		// update permit fees in Order
 		OrderFees orderFees = associatedOrderPermitEntry.getOrder().getOrderFees();
 		int numberOfPermits = associatedOrderPermitEntry.getOrder().getPermits().size();
@@ -510,6 +509,7 @@ public class PermitController extends CRUDController<Permit> {
 		orderFees.setTotalPermitFees(orderFees.getTotalPermitFees().add(permitFees));
 		orderFees.setTotalFees(orderFees.getTotalFees().add(permitFees));
 		
+		updateBaseProperties(request, orderFees);
 		genericDAO.saveOrUpdate(orderFees);
 		System.out.println("Permit Fees updated for Order with Id = " + associatedOrderPermitEntry.getOrder().getId());
 	}
@@ -707,22 +707,8 @@ public class PermitController extends CRUDController<Permit> {
 			setupCreate(model, request);
 			return urlContext + "/form";
 		}
-		//beforeSave(request, entity, model);
-		if (entity instanceof AbstractBaseModel) {
-			AbstractBaseModel baseModel = (AbstractBaseModel) entity;
-			if (baseModel.getId() == null) {
-				baseModel.setCreatedAt(Calendar.getInstance().getTime());
-				if (baseModel.getCreatedBy()==null) {
-					baseModel.setCreatedBy(getUser(request).getId());
-				}
-			} else {
-				baseModel.setModifiedAt(Calendar.getInstance().getTime());
-				if (baseModel.getModifiedBy()==null) {
-					baseModel.setModifiedBy(getUser(request).getId());
-				}
-			}
-		}
 		
+		updateBaseProperties(request, entity);
 		genericDAO.saveOrUpdate(entity);
 		cleanUp(request);
 
@@ -745,7 +731,17 @@ public class PermitController extends CRUDController<Permit> {
 			setupCreate(model, request);
 			return urlContext + "/form";
 		}
-		//beforeSave(request, entity, model);
+
+		updateBaseProperties(request, entity);
+		genericDAO.saveOrUpdate(entity);
+		cleanUp(request);
+
+		setupCreate(model, request);
+		return urlContext + "/list";
+	}
+	
+	private void updateBaseProperties(HttpServletRequest request,
+			AbstractBaseModel entity) {
 		if (entity instanceof AbstractBaseModel) {
 			AbstractBaseModel baseModel = (AbstractBaseModel) entity;
 			if (baseModel.getId() == null) {
@@ -760,11 +756,5 @@ public class PermitController extends CRUDController<Permit> {
 				}
 			}
 		}
-		
-		genericDAO.saveOrUpdate(entity);
-		cleanUp(request);
-
-		setupCreate(model, request);
-		return urlContext + "/list";
 	}
 }

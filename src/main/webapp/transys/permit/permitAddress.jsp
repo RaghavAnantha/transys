@@ -56,13 +56,41 @@
 </form:form>
 
 <form:form name="delete.do" id="serviceForm" class="tab-color">
-	<transys:datatable urlContext="permit" baseObjects="${permitAddressList}"
+	<transys:datatable urlContext="permit" deletable="true"
+		editable="true" editableInScreen="true" baseObjects="${permitAddressList}"
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
 		pagingLink="search.do" searcheable="false" dataQualifier="manageNotes">
-		<transys:textcolumn headerText="Address" dataField="fullLine" />
+		<transys:textcolumn headerText="Address #" dataField="line1" />
+		<transys:textcolumn headerText="Address Street" dataField="line2" />
 		<transys:textcolumn headerText="City" dataField="city" />
 		<transys:textcolumn headerText="State" dataField="state.name" />
 		<transys:textcolumn headerText="Zipcode" dataField="zipcode" />
 	</transys:datatable>
 	<%session.setAttribute("managePermitAddressColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
 </form:form>
+
+<script type="text/javascript">
+	function validate() {
+		return true;
+	};
+	
+	$("tr a").click(function() {	
+		var ids = ["line1", "line2", "city", "zipcode", "state"];
+		
+		for (var i= 0; i<ids.length; i++) {		
+			$("table.delivery").find('#'+ids[i]).removeClass("border");	
+		}
+		
+	    var tableData = $(this).parent().parent().children("td").map(function() {
+	        return $(this).text();
+	    }).get();
+	    
+	    $('#line1').val($.trim(tableData[0]));
+	    $('#line2').val($.trim(tableData[1])); 
+	    $('table.delivery').find('#city').val($.trim(tableData[2]));
+	    $('table.delivery').find('#zipcode').val($.trim(tableData[4]));
+		$("table.delivery select option").filter(function() {
+		    return this.text == $.trim(tableData[3]); 
+		}).attr('selected', true);
+	});
+</script>
