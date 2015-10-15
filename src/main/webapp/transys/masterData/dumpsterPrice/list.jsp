@@ -68,7 +68,7 @@
 	</table>
 </form:form>
 <form:form name="dumpsterPrice.do" id="dumpsterPriceObj" class="tab-color">
-	<transys:datatable urlContext="dumpsterPrice" deletable="true"
+	<transys:datatable urlContext="masterData/dumpsterPrice" deletable="true"
 		editable="true" insertable="true" baseObjects="${list}"
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
 		pagingLink="search.do" multipleDelete="false" searcheable="false"
@@ -76,8 +76,8 @@
 		<transys:textcolumn headerText="Dumpster Size" dataField="dumpsterSize.size" />
 		<transys:textcolumn headerText="Material Type" dataField="materialType.materialName" />
 		<transys:textcolumn headerText="Dumpster Price" dataField="price" />
-		<transys:textcolumn headerText="Effective Date From" dataField="effectiveDateFrom" />
-		<transys:textcolumn headerText="Effective Date To" dataField="effectiveDateTo" />
+		<transys:textcolumn headerText="Effective Date From" dataField="effectiveStartDate" />
+		<transys:textcolumn headerText="Effective Date To" dataField="effectiveEndDate" />
 	</transys:datatable>
 	<%session.setAttribute("dumpsterPriceColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
 </form:form>

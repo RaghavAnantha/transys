@@ -16,11 +16,11 @@ import com.transys.model.CityFee;
 import com.transys.model.SearchCriteria;
 
 @Controller
-@RequestMapping("/cityFee")
+@RequestMapping("/masterData/cityFee")
 public class CityFeeController extends CRUDController<CityFee> {
 
 	public CityFeeController() {
-		setUrlContext("cityFee");
+		setUrlContext("masterData/cityFee");
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/main.do")
@@ -39,7 +39,7 @@ public class CityFeeController extends CRUDController<CityFee> {
 		// TODO:
 		criteria.getSearchMap().remove("_csrf");
 		criteria.setPageSize(25);
-		model.addAttribute("list", genericDAO.search(CityFee.class, criteria));
+		model.addAttribute("list", genericDAO.search(CityFee.class, criteria, "id", false));
 		return urlContext + "/list";
 	}
 

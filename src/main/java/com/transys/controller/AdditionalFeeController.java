@@ -17,11 +17,11 @@ import com.transys.model.SearchCriteria;
 
 @SuppressWarnings("unchecked")
 @Controller
-@RequestMapping("/additionalFee")
+@RequestMapping("/masterData/additionalFee")
 public class AdditionalFeeController extends CRUDController<AdditionalFee> {
 	
 	public AdditionalFeeController() {
-		setUrlContext("additionalFee");
+		setUrlContext("masterData/additionalFee");
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/main.do")
@@ -40,7 +40,7 @@ public class AdditionalFeeController extends CRUDController<AdditionalFee> {
 		// TODO:
 		criteria.getSearchMap().remove("_csrf");
 		criteria.setPageSize(25);
-		model.addAttribute("list", genericDAO.search(AdditionalFee.class, criteria));
+		model.addAttribute("list", genericDAO.search(AdditionalFee.class, criteria, "id", false));
 		return urlContext + "/list";
 	}
 

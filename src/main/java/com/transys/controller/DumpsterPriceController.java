@@ -21,11 +21,11 @@ import com.transys.model.MaterialType;
 import com.transys.model.SearchCriteria;
 
 @Controller
-@RequestMapping("/dumpsterPrice")
+@RequestMapping("/masterData/dumpsterPrice")
 public class DumpsterPriceController extends CRUDController<DumpsterPrice> {
 
 	public DumpsterPriceController() {
-		setUrlContext("dumpsterPrice");
+		setUrlContext("masterData/dumpsterPrice");
 	}
 
 	@Override
@@ -52,7 +52,7 @@ public class DumpsterPriceController extends CRUDController<DumpsterPrice> {
 		// TODO:
 		criteria.getSearchMap().remove("_csrf");
 		criteria.setPageSize(25);
-		model.addAttribute("list", genericDAO.search(DumpsterPrice.class, criteria));
+		model.addAttribute("list", genericDAO.search(DumpsterPrice.class, criteria, "id", false));
 		return urlContext + "/list";
 	}
 

@@ -48,15 +48,15 @@
 	</table>
 </form:form>
 <form:form name="cityFee.do" id="cityFeeObj" class="tab-color">
-	<transys:datatable urlContext="cityFee" deletable="true"
+	<transys:datatable urlContext="masterData/cityFee" deletable="true"
 		editable="true" insertable="true" baseObjects="${list}"
 		searchCriteria="${sessionScope['cityFeeSearchCriteria']}" cellPadding="2"
 		pagingLink="search.do" multipleDelete="false" searcheable="false"
 		exportPdf="true" exportXls="true" dataQualifier="cityFee">
 		<transys:textcolumn headerText="City" dataField="suburbName" />
 		<transys:textcolumn headerText="Fee" dataField="fee" />
-		<transys:textcolumn headerText="Effective Date From" dataField="effectiveDateFrom" />
-		<transys:textcolumn headerText="Effective Date To" dataField="effectiveDateTo" />
+		<transys:textcolumn headerText="Effective Date From" dataField="effectiveStartDate" />
+		<transys:textcolumn headerText="Effective Date To" dataField="effectiveEndDate" />
 	</transys:datatable>
 	<%session.setAttribute("cityFeeColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
 </form:form>

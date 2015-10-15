@@ -18,11 +18,11 @@ import com.transys.model.LocationType;
 import com.transys.model.SearchCriteria;
 
 @Controller
-@RequestMapping("/locationType")
+@RequestMapping("/masterData/locationType")
 public class LocationTypeController extends CRUDController<LocationType> {
 
 	public LocationTypeController() {
-		setUrlContext("locationType");
+		setUrlContext("masterData/locationType");
 	}
 
 	@Override
@@ -47,7 +47,7 @@ public class LocationTypeController extends CRUDController<LocationType> {
 		// TODO:
 		criteria.getSearchMap().remove("_csrf");
 		criteria.setPageSize(25);
-		model.addAttribute("list", genericDAO.search(LocationType.class, criteria));
+		model.addAttribute("list", genericDAO.search(LocationType.class, criteria, "id", false));
 		return urlContext + "/list";
 	}
 

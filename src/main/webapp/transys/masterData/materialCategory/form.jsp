@@ -9,7 +9,7 @@
 		<tr>
 			<td class="form-left"><transys:label code="Material Category" /></td>
 			<td align="${left}">
-				<form:input path="category" cssClass="flat" />
+				<form:input path="category" cssClass="flat" style="width:350px"/>
 				<br>
 				<form:errors path="category" cssClass="errorMessage" />
 			</td>

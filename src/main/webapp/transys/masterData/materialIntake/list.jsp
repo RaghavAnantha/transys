@@ -38,8 +38,8 @@
 		</tr>
 	</table>
 </form:form>
-<form:form name="materialIntakeForRecycle.do" id="materialIntakeForRecycleObj" class="tab-color">
-	<transys:datatable urlContext="materialIntakeForRecycle" deletable="true"
+<form:form name="materialIntake.do" id="materialIntakeObj" class="tab-color">
+	<transys:datatable urlContext="masterData/materialIntake" deletable="true"
 		editable="true" insertable="true" baseObjects="${list}"
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
 		pagingLink="search.do" multipleDelete="false" searcheable="false"

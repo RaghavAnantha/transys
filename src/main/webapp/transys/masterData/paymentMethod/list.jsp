@@ -5,24 +5,6 @@
 <form:form action="list.do" method="get" name="searchForm">
 	<table width="100%" id="form-table">
 		<tr>
-			<td align="${left}" class="form-left"><transys:label code="Payment Method ID" /></td>
-			<td align="${left}" class="wide"><select
-				class="flat form-control input-sm" id="id" name="id"
-				style="width: 175px">
-					<option value="">------
-						<transys:label code="Please Select" />------
-					</option>
-					<c:forEach items="${paymentMethods}" var="apaymentMethod">
-						<c:set var="selected" value="" />
-						<c:if
-							test="${sessionScope.searchCriteria.searchMap['id'] == apaymentMethod.id}">
-							<c:set var="selected" value="selected" />
-						</c:if>
-						<option value="${apaymentMethod.id}" ${selected}>${apaymentMethod.id}</option>
-					</c:forEach>
-			</select></td>	
-		</tr>
-		<tr>
 			<td align="${left}" class="form-left"><transys:label code="Payment Method" /></td>
 			<td align="${left}" class="wide"><select
 				class="flat form-control input-sm" id="method" name="method"
@@ -51,7 +33,7 @@
 	</table>
 </form:form>
 <form:form name="paymentMethod.do" id="paymentMethod" class="tab-color">
-	<transys:datatable urlContext="paymentMethod" deletable="true"
+	<transys:datatable urlContext="masterData/paymentMethod" deletable="true"
 		editable="true" insertable="true" baseObjects="${list}"
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
 		pagingLink="search.do" multipleDelete="false" searcheable="false"

@@ -7,12 +7,6 @@
 	<form:hidden path="id" id="id" />
 	<table id="form-table" class="table">
 		<tr>
-			<td class="form-left"><transys:label code="Material ID" /><span
-				class="errorMessage">*</span></td>
-			<td align="${left}"><form:input path="id" cssClass="flat" /> <br>
-			<form:errors path="id" cssClass="errorMessage" /></td>
-		</tr>
-		<tr>
 			<td class="form-left"><transys:label code="Material Category" /></td>
 			<td align="${left}">
 				<form:select cssClass="flat form-control input-sm" style="width:172px !important" path="materialCategory" >
@@ -30,7 +24,7 @@
 				<form:errors path="materialName" cssClass="errorMessage" />
 			</td>
 		</tr>
-			<tr>
+		<tr>
 			<td colspan=10></td>
 		</tr>
 		<tr>

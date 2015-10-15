@@ -15,41 +15,11 @@
     <decorator name="permit" page="singleColumnLayout.jsp">
         <pattern>/transys/permit/**</pattern>
     </decorator>
-    <decorator name="employee" page="singleColumnLayout.jsp">
-        <pattern>/transys/employee/**</pattern>
-    </decorator>
-    <decorator name="dumpsters" page="singleColumnLayout.jsp">
-        <pattern>/transys/dumpsters/**</pattern>
-    </decorator>
-    <decorator name="materialType" page="singleColumnLayout.jsp">
-        <pattern>/transys/materialType/**</pattern>
-    </decorator>
     <decorator name="masterData" page="singleColumnLayout.jsp">
         <pattern>/transys/masterData/**</pattern>
     </decorator>   
-    <decorator name="paymentMethod" page="singleColumnLayout.jsp">
-        <pattern>/transys/paymentMethod/**</pattern>
-    </decorator>
-    <decorator name="locationType" page="singleColumnLayout.jsp">
-        <pattern>/transys/locationType/**</pattern>
-    </decorator>
-    <decorator name="dumpsterPrice" page="singleColumnLayout.jsp">
-        <pattern>/transys/dumpsterPrice/**</pattern>
-    </decorator>
     <decorator name="customerDumpsterPrice" page="singleColumnLayout.jsp">
         <pattern>/transys/customerDumpsterPrice/**</pattern>
-    </decorator>
-    <decorator name="cityFee" page="singleColumnLayout.jsp">
-        <pattern>/transys/cityFee/**</pattern>
-    </decorator>
-    <decorator name="permitFee" page="singleColumnLayout.jsp">
-        <pattern>/transys/permitFee/**</pattern>
-    </decorator>
-    <decorator name="additionalFee" page="singleColumnLayout.jsp">
-        <pattern>/transys/additionalFee/**</pattern>
-    </decorator>
-    <decorator name="materialIntakeForRecycle" page="singleColumnLayout.jsp">
-        <pattern>/transys/materialIntake/**</pattern>
     </decorator>
     <decorator name="report" page="singleColumnLayout.jsp">
         <pattern>/transys/dumpsterOnsiteReport/**</pattern>

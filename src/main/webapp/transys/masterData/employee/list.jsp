@@ -87,7 +87,7 @@
 	</table>
 </form:form>
 <form:form name="employee.do" id="employee" class="tab-color">
-	<transys:datatable urlContext="employee" deletable="true"
+	<transys:datatable urlContext="masterData/employee" deletable="true"
 		editable="true" insertable="true" baseObjects="${list}"
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
 		pagingLink="search.do" multipleDelete="false" searcheable="false"

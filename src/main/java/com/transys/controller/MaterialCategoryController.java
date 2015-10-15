@@ -47,7 +47,7 @@ public class MaterialCategoryController extends CRUDController<MaterialCategory>
 		// TODO:
 		criteria.getSearchMap().remove("_csrf");
 		criteria.setPageSize(25);
-		model.addAttribute("list", genericDAO.search(MaterialCategory.class, criteria));
+		model.addAttribute("list", genericDAO.search(MaterialCategory.class, criteria, "id", false));
 		return urlContext + "/list";
 	}
 

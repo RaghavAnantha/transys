@@ -18,11 +18,11 @@ import com.transys.model.PaymentMethodType;
 import com.transys.model.SearchCriteria;
 
 @Controller
-@RequestMapping("/paymentMethod")
+@RequestMapping("/masterData/paymentMethod")
 public class PaymentMethodController extends CRUDController<PaymentMethodType> {
 
 	public PaymentMethodController() {
-		setUrlContext("paymentMethod");
+		setUrlContext("masterData/paymentMethod");
 	}
 
 	@Override
@@ -47,7 +47,7 @@ public class PaymentMethodController extends CRUDController<PaymentMethodType> {
 		// TODO:
 		criteria.getSearchMap().remove("_csrf");
 		criteria.setPageSize(25);
-		model.addAttribute("list", genericDAO.search(PaymentMethodType.class, criteria));
+		model.addAttribute("list", genericDAO.search(PaymentMethodType.class, criteria, "id", false));
 		return urlContext + "/list";
 	}
 

@@ -30,18 +30,18 @@
 					<li id="masterDataPage">
 						<a href="#" data-toggle="dropdown" class="dropdown-toggle">Master Data<b class="caret"></b></a>
 						<ul class="dropdown-menu">
-							<li><a href="/employee/main.do">Employees</a></li>
-							<li><a href="/dumpsters/main.do">Dumpsters</a></li>
-							<li><a href="/materialType/main.do">Material Type</a></li>
+							<li><a href="/masterData/employee/main.do">Employees</a></li>
+							<li><a href="/masterData/dumpsters/main.do">Dumpsters</a></li>
+							<li><a href="/masterData/materialType/main.do">Material Type</a></li>
 							<li><a href="/masterData/materialCategory/main.do">Material Category</a></li>
-							<li><a href="/paymentMethod/main.do">Payment Method</a></li>
-							<li><a href="/locationType/main.do">Location Type</a></li>
-							<li><a href="/dumpsterPrice/main.do">Dumpster Price</a></li>
+							<li><a href="/masterData/paymentMethod/main.do">Payment Method</a></li>
+							<li><a href="/masterData/locationType/main.do">Location Type</a></li>
+							<li><a href="/masterData/dumpsterPrice/main.do">Dumpster Price</a></li>
 							<!-- <li><a href="/customerDumpsterPrice/main.do">Customer Dumpster Price</a></li> -->
-							<li><a href="/cityFee/main.do">City Fee</a></li>
-							<li><a href="/permitFee/main.do">Permit Fee</a></li>
-							<li><a href="/additionalFee/main.do">Additional Fee</a></li>
-							<li><a href="/materialIntake/main.do">Material Intake For Recycle</a></li>
+							<li><a href="/masterData/cityFee/main.do">City Fee</a></li>
+							<li><a href="/masterData/permitFee/main.do">Permit Fee</a></li>
+							<li><a href="/masterData/additionalFee/main.do">Additional Fee</a></li>
+							<li><a href="/masterData/materialIntake/main.do">Material Intake For Recycle</a></li>
 						</ul>
 					</li>
 				</ul>
