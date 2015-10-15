@@ -75,15 +75,15 @@
 <script type="text/javascript">
 	$(function() {
 		var loc = window.location.href;
-		if (loc.match('/order')) {
+		if (loc.match('/order/')) {
 			$('#orderPage').addClass("active");
-		} else if (loc.match('/permit')) {
+		} else if (loc.match('/permit/')) {
 			$('#permitPage').addClass("active");
-		} else if (loc.match('/customer')) {
+		} else if (loc.match('/customer/')) {
 			$('#customerPage').addClass("active");
-		} else if (loc.match('/reports')) {
+		} else if (loc.match('/reports/')) {
 			$('#reportPage').addClass("active");
-		} else if (loc.match('/masterData')) {
+		} else if (loc.match('/masterData/')) {
 			$('#masterDataPage').addClass("active");
 		}
 	});
