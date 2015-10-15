@@ -21,7 +21,7 @@
 			</c:if>
 		</div>
 		<div id="orderReports" class="tab-pane">
-			<%@include file="orderReport.jsp"%>
+			<%@include file="ordersReport.jsp"%>
 		</div>
 	</div>
 	

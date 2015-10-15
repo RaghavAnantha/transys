@@ -1,7 +1,7 @@
 <%@include file="/common/taglibs.jsp"%>
 <br />
 <h4 style="margin-top: -15px; !important">Dumpsters Rented Report</h4>
-<form:form action="list.do" method="get" name="dumpstersRentedReportsearchForm">
+<form:form action="list.do" method="get" name="dumpsterRentedReportsearchForm">
 	<table width="100%" id="form-table">
 		<tr>
 			<td align="${left}" class="form-left"><transys:label
@@ -42,16 +42,16 @@
 			<td align="${left}"></td>
 			<td align="${left}"><input type="button"
 				class="btn btn-primary btn-sm"
-				onclick="document.forms['dumpstersRentedReportsearchForm'].submit();"
+				onclick="document.forms['dumpsterRentedReportsearchForm'].submit();"
 				value="<transys:label code="Preview"/>" /></td>
 		</tr>
 	</table>
 </form:form>
 
-<a href="/reports/dumpstersRentedReport/generateDumpstersRentedReport.do?type=xls"><img src="/images/excel.png" border="0" style="float:right" class="toolbarButton"></a>
-<a href="/reports/dumpstersRentedReport/generateDumpstersRentedReport.do?type=pdf"><img src="/images/pdf.png" border="0" style="float:right" class="toolbarButton"></a>
-<form:form name="dumpstersRentedReport" id="dumpstersRentedReport" class="tab-color">
-	<transys:datatable urlContext="reports/dumpstersRentedReports"  baseObjects="${dumpsterInfoList}"
+<a href="/reports/dumpsterRentedReport/generateDumpsterRentedReport.do?type=xls"><img src="/images/excel.png" border="0" style="float:right" class="toolbarButton"></a>
+<a href="/reports/dumpsterRentedReport/generateDumpsterRentedReport.do?type=pdf"><img src="/images/pdf.png" border="0" style="float:right" class="toolbarButton"></a>
+<form:form name="dumpsterRentedReport" id="dumpsterRentedReport" class="tab-color">
+	<transys:datatable urlContext="reports/dumpsterRentedReports"  baseObjects="${dumpsterInfoList}"
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
 		pagingLink="search.do" dataQualifier="dumpsterOnsiteReport">
 		<transys:textcolumn headerText="Dumpster Size" dataField="dumpsterSize.size" />

@@ -442,21 +442,10 @@ public class OrderController extends CRUDController<Order> {
 			return urlContext + "/form";
 		}
 		
+		entity.setModifiedAt(Calendar.getInstance().getTime());
+		entity.setModifiedBy(getUser(request).getId());
+		
 		//beforeSave(request, entity, model);
-		if (entity instanceof AbstractBaseModel) {
-			AbstractBaseModel baseModel = (AbstractBaseModel) entity;
-			if (baseModel.getId() == null) {
-				baseModel.setCreatedAt(Calendar.getInstance().getTime());
-				if (baseModel.getCreatedBy()==null) {
-					baseModel.setCreatedBy(getUser(request).getId());
-				}
-			} else {
-				baseModel.setModifiedAt(Calendar.getInstance().getTime());
-				if (baseModel.getModifiedBy()==null) {
-					baseModel.setModifiedBy(getUser(request).getId());
-				}
-			}
-		}
 		
 		OrderStatus orderStatus = retrieveOrderStatus("Dropped Off");
 		entity.setOrderStatus(orderStatus);
@@ -544,24 +533,13 @@ public class OrderController extends CRUDController<Order> {
 			setupCreate(model, request, entity);
 			return urlContext + "/form";
 		}
+		
 		//beforeSave(request, entity, model);
-		if (entity instanceof AbstractBaseModel) {
-			AbstractBaseModel baseModel = (AbstractBaseModel) entity;
-			if (baseModel.getId() == null) {
-				baseModel.setCreatedAt(Calendar.getInstance().getTime());
-				if (baseModel.getCreatedBy()==null) {
-					baseModel.setCreatedBy(getUser(request).getId());
-				}
-			} else {
-				baseModel.setModifiedAt(Calendar.getInstance().getTime());
-				if (baseModel.getModifiedBy()==null) {
-					baseModel.setModifiedBy(getUser(request).getId());
-				}
-			}
-		}
+		entity.setModifiedAt(Calendar.getInstance().getTime());
+		entity.setModifiedBy(getUser(request).getId());
 		
 		//TODO: why is this reqd?
-		setupOrderFees(entity);
+		//setupOrderFees(entity);
 		
 		OrderStatus orderStatus = retrieveOrderStatus("Picked Up");
 		entity.setOrderStatus(orderStatus);
@@ -689,9 +667,10 @@ public class OrderController extends CRUDController<Order> {
 				newList.add(map);
 			}
 			
-			if (!type.equals("print") && !type.equals("pdf")) {
-				out = dynamicReportService.generateStaticReport("ordersReport",
-						newList, params, type, request);
+			out = dynamicReportService.generateStaticReport("ordersReport", newList, params, type, request);
+			
+			/*if (!type.equals("print") && !type.equals("pdf")) {
+				out = dynamicReportService.generateStaticReport("ordersReport", newList, params, type, request);
 			}
 			else if(type.equals("pdf")){
 				out = dynamicReportService.generateStaticReport("ordersReportPdf",
@@ -700,7 +679,7 @@ public class OrderController extends CRUDController<Order> {
 			else {
 				out = dynamicReportService.generateStaticReport("ordersReport"+"print",
 						newList, params, type, request);
-			}
+			}*/
 		
 			out.writeTo(response.getOutputStream());
 			out.close();
@@ -1142,7 +1121,8 @@ public class OrderController extends CRUDController<Order> {
 			}
 		}
 		
-		// TODO: why is permit updating even when not changed?
+		// TODO: why is permit updating even when not changed? Changeto list of order permits instead?
+		// TODO: create/modified date not updated
 		String permitIds = permitIdsBuff.substring(0, (permitIdsBuff.length() - 2));
 		List<Permit> permitList = genericDAO.executeSimpleQuery("select obj from Permit obj where obj.id in (" 
 																					+ permitIds
@@ -1156,9 +1136,7 @@ public class OrderController extends CRUDController<Order> {
 		setupOrderFees(entity);
 		
 		// TODO: Why both created by and modified by and why set if not changed?
-		entity.getOrderNotes().get(0).setOrder(entity);
-		entity.getOrderNotes().get(0).setCreatedBy(entity.getCreatedBy());
-		entity.getOrderNotes().get(0).setModifiedBy(entity.getModifiedBy());
+		setupOrderNotes(entity);
 		
 		setupOrderPayment(entity);
 
@@ -1195,7 +1173,7 @@ public class OrderController extends CRUDController<Order> {
 		order.setBalanceAmountDue(new BigDecimal(0.00));
 		
 		List<OrderPayment> orderPaymentList = order.getOrderPayment();
-		if (orderPaymentList == null) {
+		if (orderPaymentList == null || orderPaymentList.isEmpty()) {
 			return;
 		}
 		
@@ -1204,8 +1182,10 @@ public class OrderController extends CRUDController<Order> {
 		for (OrderPayment anOrderPayment : orderPaymentList) {
 			if (anOrderPayment.getPaymentMethod() != null) {
 				anOrderPayment.setOrder(order);
+				anOrderPayment.setCreatedAt(order.getCreatedAt());
 				anOrderPayment.setCreatedBy(order.getCreatedBy());
-				anOrderPayment.setModifiedBy(order.getModifiedBy());
+				//anOrderPayment.setModifiedAt(order.getModifiedAt());
+				//anOrderPayment.setModifiedBy(order.getModifiedBy());
 				
 				filteredOrderPaymentList.add(anOrderPayment);
 				
@@ -1226,7 +1206,9 @@ public class OrderController extends CRUDController<Order> {
 		
 		orderFees.setOrder(order);
 		orderFees.setCreatedBy(order.getCreatedBy());
-		orderFees.setModifiedBy(order.getModifiedBy());
+		orderFees.setCreatedAt(order.getCreatedAt());
+		//orderFees.setModifiedBy(order.getModifiedBy());
+		//orderFees.setModifiedAt(order.getModifiedAt());
 		
 		/*if (orderFees.getAdditionalFee1() == null) {
 			orderFees.setAdditionalFee1(new BigDecimal(0.00));
@@ -1264,6 +1246,33 @@ public class OrderController extends CRUDController<Order> {
 		if (orderFees.getTotalPermitFees() == null) {
 			orderFees.setTotalPermitFees(new BigDecimal(0.00));
 		}
+	}
+	
+	private void setupOrderNotes(Order order) {
+		List<OrderNotes> orderNotesList = order.getOrderNotes();
+		if (order.getId() != null) {
+			// First notes should not be editable
+			/*if (orderNotesList != null) {
+				orderNotesList.clear();
+			}*/
+			return;
+		}
+		
+		if (orderNotesList == null || orderNotesList.isEmpty()) {
+			return;
+		}
+		
+		OrderNotes anOrderNotes = orderNotesList.get(0);
+		if (StringUtils.isEmpty(anOrderNotes.getNotes())) {
+			orderNotesList.clear();
+			return;
+		}
+		
+		anOrderNotes.setOrder(order);
+		anOrderNotes.setCreatedBy(order.getCreatedBy());
+		anOrderNotes.setCreatedAt(order.getCreatedAt());
+		//anOrderNotes.setModifiedBy(order.getModifiedBy());
+		//anOrderNotes.setModifiedAt(order.getModifiedAt());
 	}
 	
 	/*@Override

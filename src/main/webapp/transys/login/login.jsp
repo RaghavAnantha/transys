@@ -6,33 +6,25 @@
 
 <html>
 <head>
-
-<title>Login</title>
-
-<link rel="stylesheet" type="text/css" href="/resources/css/bootstrap.min.css"  />
-<link rel="stylesheet" type="text/css" href="/resources/css/main.css"  />
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-<script src="/resources/js/bootstrap.min.js"></script>
-
+<title>Transys Login</title>
 </head>
 <body>
 <div class="container-fluid text-center">
 	<h2>Welcome to Transys</h2>
-<!-- URL for Spring Security Validation, should post form details to /login -->
-<c:url value="/login" var="loginUrl"/>
+	<!-- URL for Spring Security Validation, should post form details to /login -->
+	<c:url value="/login" var="loginUrl"/>
 
     <form:form class="form-signin" action="${loginUrl}" method="post">  
-		
 		<%
-			if (session.getAttribute(WebAttributes.AUTHENTICATION_EXCEPTION) != null) {
-			%>
-				<div class="errorMessage" align="center">
-				 <br />
-				 <h4>Authentication Failed!</h4>
-				 <%session.removeAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);%>
-				</div>
+		if (session.getAttribute(WebAttributes.AUTHENTICATION_EXCEPTION) != null) {
+		%>
+			<div class="errorMessage" align="center">
+				<br />
+			 	<h4>Authentication Failed!</h4>
+			 	<%session.removeAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);%>
+			</div>
 			<br/>
-			<%		
+		<%		
 			}
 		%>  
 		
@@ -40,7 +32,7 @@
       <input type="text" class="form-control" name="username" placeholder="Username" required="" autofocus="" />
       <br />
       <input type="password" class="form-control" name="password" placeholder="Password" required=""/>      
-     <br />
+      <br />
       <button class="btn btn-lg btn-primary btn-block" type="submit">Login</button>   
     </form:form>
   </div>

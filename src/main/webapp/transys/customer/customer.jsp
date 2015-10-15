@@ -31,7 +31,7 @@
 					<%@include file="customerListReport.jsp"%>
 				</div>
 				<div id="customerOrderReport" class="tab-pane">
-					<p>Placeholder for Customer Order Reports</p>
+					<p>Placeholder for Customer Order Report</p>
 				</div>
 
 			</div>

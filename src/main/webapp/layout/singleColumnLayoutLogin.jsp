@@ -20,7 +20,7 @@
 		</td>
 	</tr>
 	<tr>
-		<td class="footer"><jsp:include page="footer.jsp" /></td>
+		<td class="footer navbar-fixed-bottom"><jsp:include page="footer.jsp" /></td>
 	</tr>
 </table>
 </body>

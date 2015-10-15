@@ -25,12 +25,12 @@ import com.transys.model.Order;
 import com.transys.model.SearchCriteria;
 
 @Controller
-@RequestMapping("/reports/dumpstersRentedReport")
-public class DumpstersRentedReportController extends CRUDController<Dumpster> {
+@RequestMapping("/reports/dumpsterRentedReport")
+public class DumpsterRentedReportController extends CRUDController<Dumpster> {
 	
 	
-	public DumpstersRentedReportController(){	
-		setUrlContext("reports/dumpstersRentedReport");
+	public DumpsterRentedReportController(){	
+		setUrlContext("reports/dumpsterRentedReport");
 	}
 	
 	
@@ -95,7 +95,7 @@ public class DumpstersRentedReportController extends CRUDController<Dumpster> {
 		setupCreate(model, request);
 	}
 	
-	@RequestMapping(method = RequestMethod.GET, value = "/generateDumpstersRentedReport.do")
+	@RequestMapping(method = RequestMethod.GET, value = "/generateDumpsterRentedReport.do")
 	public void export(ModelMap model, HttpServletRequest request,
 			HttpServletResponse response, @RequestParam("type") String type,
 			Object objectDAO, Class clazz) {
@@ -103,14 +103,14 @@ public class DumpstersRentedReportController extends CRUDController<Dumpster> {
 		try {
 
 			List<Map<String,Object>> reportData = prepareReportData(model, request);
-			type = setRequestHeaders(response, type, "dumpstersRentedReport");
+			type = setRequestHeaders(response, type, "dumpsterRentedReport");
 			
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
 			Map<String, Object> params = new HashMap<String, Object>();
 
-			out = dynamicReportService.generateStaticReport("dumpstersRentedReport", reportData, params, type, request);
+			out = dynamicReportService.generateStaticReport("dumpsterRentedReport", reportData, params, type, request);
 			/*} else {
-				out = dynamicReportService.generateStaticReport("ordersRevenueReport" + "print", reportData, params, type,
+				out = dynamicReportService.generateStaticReport("dumpsterRentedReport" + "print", reportData, params, type,
 						request);
 			}*/
 

@@ -204,18 +204,18 @@ public class CustomerController extends CRUDController<Customer> {
       for (Long key : customerMap.keySet()) {
       	CustomerReportVO customerReportVO =  new CustomerReportVO();
 			BigDecimal sum = new BigDecimal("0.0");
-			Integer Ordercount = 0;
+			Integer ordercount = 0;
 			for (OrderFees anOrderFees: orderFeesList ) {
 	          if (anOrderFees.getOrder().getCustomer().getId() == key) {
 	               sum = sum.add(anOrderFees.getTotalFees());
-	               Ordercount++;
+	               ordercount++;
 	          }
 	      }
 	      customerReportVO.setCompanyName(customerMap.get(key).getCompanyName());
          customerReportVO.setContactName(customerMap.get(key).getContactName());
          customerReportVO.setPhoneNumber(customerMap.get(key).getPhone());
          customerReportVO.setTotalAmount(sum);
-         customerReportVO.setTotalOrders(Ordercount);
+         customerReportVO.setTotalOrders(ordercount);
          customerReportVO.setId(customerMap.get(key).getId());
          customerReportVO.setStatus(customerMap.get(key).getCustomerStatus().getStatus());
 
@@ -268,16 +268,17 @@ public class CustomerController extends CRUDController<Customer> {
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
 			Map<String, Object> params = new HashMap<String,Object>();
 			
-			if (!type.equals("print") && !type.equals("pdf")) {
-				out = dynamicReportService.generateStaticReport("customerListReport",
-						reportData, params, type, request);
+			out = dynamicReportService.generateStaticReport("customerListReport", reportData, params, type, request);
+			
+			/*if (!type.equals("print") && !type.equals("pdf")) {
+				out = dynamicReportService.generateStaticReport("customerListReport", reportData, params, type, request);
 			} else if (type.equals("pdf")){
 				out = dynamicReportService.generateStaticReport("customerListReportPdf",
 						reportData, params, type, request);
 			} else {
 				out = dynamicReportService.generateStaticReport("customerListReport"+"print",
 						reportData, params, type, request);
-			}
+			}*/
 		
 			out.writeTo(response.getOutputStream());
 			out.close();

@@ -13,7 +13,7 @@
 	<security:http>
 		<!-- Login & Resources page should be accessible to all -->
 		<security:intercept-url pattern="/**/login.do" access="isAnonymous()" />
-		<security:intercept-url pattern="/resources/**" access="isAnonymous()" />
+		<!--<security:intercept-url pattern="/resources/**" access="isAnonymous()" />-->
 		
 		<!-- Rest all pages currently are accessible by Role-Admin -->
 		<security:intercept-url pattern="/**/home.do" access="hasRole('ADMIN')" />

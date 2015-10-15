@@ -1,7 +1,7 @@
 <%@include file="/common/taglibs.jsp"%>
 
 <br/>
-<h4 style="margin-top: -15px; !important">Delivery/ Pickup Report</h4>
+<h4 style="margin-top: -15px; !important">Delivery/Pickup Report</h4>
 <form:form action="list.do" method="get" name="searchForm" id="deliveryPickUpReportSearchForm" >
 	<table width="100%" id="form-table">
 	 <tr>

@@ -22,7 +22,7 @@
 							<li><a href="/reports/ordersRevenueReport/main.do">Revenue Report</a></li>
 							<li><a href="/reports/deliveryPickupReport/main.do">Delivery/Pickup Report</a></li>
 							<li><a href="/reports/dumpsterOnsiteReport/main.do">Dumpsters On-site Report</a></li>
-							<li><a href="/reports/dumpstersRentedReport/main.do">Dumpsters Rented Report</a></li>
+							<li><a href="/reports/dumpsterRentedReport/main.do">Dumpsters Rented Report</a></li>
 							<li><a href="/reports/recycleReport/main.do">Recycle Report</a></li>
 							<li><a href="/reports/materialIntakeDailyReport/main.do">Material Intake Daily Report</a></li>
 						</ul>
