@@ -21,11 +21,11 @@ import com.transys.model.SearchCriteria;
 
 @SuppressWarnings("unchecked")
 @Controller
-@RequestMapping("/dumpsters")
+@RequestMapping("/masterData/dumpsters")
 public class DumpsterController extends CRUDController<Dumpster> {
 	
 	public DumpsterController() {
-		setUrlContext("dumpsters");
+		setUrlContext("masterData/dumpsters");
 	}
 
 	@Override

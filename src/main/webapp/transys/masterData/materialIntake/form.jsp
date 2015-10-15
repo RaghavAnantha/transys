@@ -23,7 +23,7 @@
 		<tr>
 			<td align="${left}" class="form-left"><transys:label code="Tons" /></td>
 			<td align="${left}" class="wide"><form:input path="netWeightTonnage" cssClass="flat" style="width: 175px"  /></td>
-		</tr>		
+		</tr>
 		<tr>
 			<td colspan="2"></td>
 		</tr>

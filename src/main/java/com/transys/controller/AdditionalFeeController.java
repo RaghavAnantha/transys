@@ -17,11 +17,11 @@ import com.transys.model.SearchCriteria;
 
 @SuppressWarnings("unchecked")
 @Controller
-@RequestMapping("/additionalFee")
+@RequestMapping("/masterData/additionalFee")
 public class AdditionalFeeController extends CRUDController<AdditionalFee> {
 	
 	public AdditionalFeeController() {
-		setUrlContext("additionalFee");
+		setUrlContext("masterData/additionalFee");
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/main.do")

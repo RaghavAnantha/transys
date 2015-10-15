@@ -69,7 +69,7 @@
 	</table>
 </form:form>
 <form:form name="permitFee.do" id="permitFeeObj" class="tab-color">
-	<transys:datatable urlContext="permitFee" deletable="true"
+	<transys:datatable urlContext="masterData/permitFee" deletable="true"
 		editable="true" insertable="true" baseObjects="${list}"
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
 		pagingLink="search.do" multipleDelete="false" searcheable="false"
@@ -77,8 +77,8 @@
 		<transys:textcolumn headerText="Permit Class" dataField="permitClass.permitClass" />
 		<transys:textcolumn headerText="Permit Type" dataField="permitType.permitType" />
 		<transys:textcolumn headerText="Permit Fee" dataField="fee" />
-		<transys:textcolumn headerText="Effective Date From" dataField="effectiveDateFrom" />
-		<transys:textcolumn headerText="Effective Date To" dataField="effectiveDateTo" />
+		<transys:textcolumn headerText="Effective Date From" dataField="effectiveStartDate" />
+		<transys:textcolumn headerText="Effective Date To" dataField="effectiveEndDate" />
 	</transys:datatable>
 	<%session.setAttribute("permitFeeColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
 </form:form>

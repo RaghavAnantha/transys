@@ -19,11 +19,11 @@ import com.transys.model.MaterialType;
 import com.transys.model.SearchCriteria;
 
 @Controller
-@RequestMapping("/materialType")
+@RequestMapping("/masterData/materialType")
 public class MaterialTypeController extends CRUDController<MaterialType> {
 
 	public MaterialTypeController() {
-		setUrlContext("materialType");
+		setUrlContext("masterData/materialType");
 	}
 
 	@Override

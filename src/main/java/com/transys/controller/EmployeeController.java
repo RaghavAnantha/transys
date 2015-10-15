@@ -22,11 +22,11 @@ import com.transys.model.State;
 
 @SuppressWarnings("unchecked")
 @Controller
-@RequestMapping("/employee")
+@RequestMapping("/masterData/employee")
 public class EmployeeController extends CRUDController<Employee> {
 	
 	public EmployeeController(){
-		setUrlContext("employee");
+		setUrlContext("masterData/employee");
 	}
 
 	@Override

@@ -18,11 +18,11 @@ import com.transys.model.PaymentMethodType;
 import com.transys.model.SearchCriteria;
 
 @Controller
-@RequestMapping("/paymentMethod")
+@RequestMapping("/masterData/paymentMethod")
 public class PaymentMethodController extends CRUDController<PaymentMethodType> {
 
 	public PaymentMethodController() {
-		setUrlContext("paymentMethod");
+		setUrlContext("masterData/paymentMethod");
 	}
 
 	@Override

@@ -16,11 +16,11 @@ import com.transys.model.CityFee;
 import com.transys.model.SearchCriteria;
 
 @Controller
-@RequestMapping("/cityFee")
+@RequestMapping("/masterData/cityFee")
 public class CityFeeController extends CRUDController<CityFee> {
 
 	public CityFeeController() {
-		setUrlContext("cityFee");
+		setUrlContext("masterData/cityFee");
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/main.do")

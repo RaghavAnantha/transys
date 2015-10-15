@@ -18,11 +18,11 @@ import com.transys.model.LocationType;
 import com.transys.model.SearchCriteria;
 
 @Controller
-@RequestMapping("/locationType")
+@RequestMapping("/masterData/locationType")
 public class LocationTypeController extends CRUDController<LocationType> {
 
 	public LocationTypeController() {
-		setUrlContext("locationType");
+		setUrlContext("masterData/locationType");
 	}
 
 	@Override

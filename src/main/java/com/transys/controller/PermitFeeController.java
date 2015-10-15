@@ -20,11 +20,11 @@ import com.transys.model.PermitType;
 import com.transys.model.SearchCriteria;
 
 @Controller
-@RequestMapping("/permitFee")
+@RequestMapping("/masterData/permitFee")
 public class PermitFeeController extends CRUDController<PermitFee> {
 
 	public PermitFeeController() {
-		setUrlContext("permitFee");
+		setUrlContext("masterData/permitFee");
 	}
 
 	@Override

@@ -67,7 +67,7 @@
 	</table>
 </form:form>
 <form:form name="dumpsters.do" id="dumpstersObj" class="tab-color">
-	<transys:datatable urlContext="dumpsters" deletable="true"
+	<transys:datatable urlContext="masterData/dumpsters" deletable="true"
 		editable="true" insertable="true" baseObjects="${list}"
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
 		pagingLink="search.do" multipleDelete="false" searcheable="false"

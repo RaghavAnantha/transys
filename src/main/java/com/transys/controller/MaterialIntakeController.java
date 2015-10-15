@@ -19,11 +19,11 @@ import com.transys.model.MaterialType;
 import com.transys.model.SearchCriteria;
 
 @Controller
-@RequestMapping("/materialIntake")
+@RequestMapping("/masterData/materialIntake")
 public class MaterialIntakeController extends CRUDController<MaterialIntake> {
 
 	public MaterialIntakeController(){	
-		setUrlContext("materialIntake");
+		setUrlContext("masterData/materialIntake");
 	}
 	
 	@Override
@@ -68,7 +68,6 @@ public class MaterialIntakeController extends CRUDController<MaterialIntake> {
 	public void setupCreate(ModelMap model, HttpServletRequest request) {
 		Map criterias = new HashMap();
 		model.addAttribute("materialTypes", genericDAO.findByCriteria(MaterialType.class, criterias, "id", false));
-		model.addAttribute("modelObject", genericDAO.findByCriteria(MaterialIntake.class, criterias, "id", false));
 	}
 
 	@RequestMapping(method = RequestMethod.POST, value = "/save.do")

@@ -1,46 +1,47 @@
 <%@include file="/common/taglibs.jsp"%>
 
 <br />
-<h4 style="margin-top: -15px; !important">Add/Edit Permit Fee</h4>
+<h4 style="margin-top: -15px; !important">Add/Edit Dumpster Price</h4>
 <form:form action="save.do" name="typeForm" commandName="modelObject"
 	method="post" id="typeForm">
 	<form:hidden path="id" id="id" />
 	<table id="form-table" class="table">
 	
 		<tr>
-			<td class="form-left"><transys:label code="Permit Class" /></td>
+			<td class="form-left"><transys:label code="Dumpster Size" /></td>
 			<td align="${left}">
-				<form:select cssClass="flat form-control input-sm" style="width:172px !important" path="permitClass.id" >
+				<form:select cssClass="flat form-control input-sm" style="width:172px !important" path="dumpsterSize" >
 					<form:option value="">------Please Select--------</form:option>
-					<form:options items="${permitClass}" itemValue="id"  itemLabel="permitClass" />
+					<form:options items="${dumpsterSizes}" itemValue="id"  itemLabel="size" />
 				</form:select> 
-				<br><form:errors path="permitClass.id" cssClass="errorMessage" />
+				<br><form:errors path="dumpsterSize" cssClass="errorMessage" />
 			</td> 
 		</tr>
 		<tr>
-			<td class="form-left"><transys:label code="Permit Type" /></td>
+			<td class="form-left"><transys:label code="Material Type" /></td>
 			<td align="${left}">
-				<form:select cssClass="flat form-control input-sm" style="width:172px !important" path="permitType.id" >
+				<form:select cssClass="flat form-control input-sm" style="width:172px !important" path="materialType" >
 					<form:option value="">------Please Select--------</form:option>
-					<form:options items="${permitType}" itemValue="id"  itemLabel="permitType" />
+					<form:options items="${materialTypes}" itemValue="id" itemLabel="materialName" />
 				</form:select> 
-				<br><form:errors path="permitType.id" cssClass="errorMessage" />
+				<br><form:errors path="materialType" cssClass="errorMessage" />
 			</td> 
 		</tr>
 		<tr>
-			<td class="form-left"><transys:label code="Permit Fee" /><span class="errorMessage">*</span></td>
-			<td align="${left}"><form:input path="fee" cssClass="flat" /> <br>
-			<form:errors path="fee" cssClass="errorMessage" /></td>
+			<td class="form-left"><transys:label code="Dumpster Price" /></td>
+			<td align="${left}"><form:input path="price" cssClass="flat" />
+			<br>
+			<form:errors path="price" cssClass="errorMessage" /></td>
 		</tr>
 		<tr>
 			<td align="${left}" class="form-left"><transys:label code="Effective Date From" /></td>
 			<td align="${left}">
-			<form:input path="effectiveDateFrom" class="flat" id="datepicker7" name="effectiveDateFrom" /></td>
+			<form:input path="effectiveStartDate" class="flat" id="datepicker7" name="effectiveStartDate" /></td>
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Effective Date To" /></td>
 			<td align="${left}">
-			<form:input path="effectiveDateTo" class="flat" id="datepicker8" name="effectiveDateTo"  /></td>
+			<form:input path="effectiveEndDate" class="flat" id="datepicker8" name="effectiveEndDate"  /></td>
 		</tr>
 		<tr>
 			<td colspan=10></td>
@@ -53,13 +54,13 @@
 		</tr>
 		<tr>
 			<td colspan=10>
-				<form:textarea row="5" path="comments" cssClass="flat" id="permitFeeComments" style="width:100%; height:150%;"/>
+				<form:textarea row="5" path="comments" cssClass="flat" id="dumpsterPriceComments" style="width:100%; height:150%;"/>
 				<br><form:errors path="comments" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>
 			<td colspan=10></td>
-		</tr>		
+		</tr>
 		<tr>
 			<td colspan="2"></td>
 		</tr>

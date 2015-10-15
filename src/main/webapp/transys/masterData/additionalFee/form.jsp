@@ -22,12 +22,12 @@
 			<tr>
 			<td align="${left}" class="form-left"><transys:label code="Effective Date From" /></td>
 			<td align="${left}">
-			<form:input path="effectiveDateFrom" class="flat" id="datepicker7" name="effectiveDateFrom" /></td>
+			<form:input path="effectiveStartDate" class="flat" id="datepicker7" name="effectiveStartDate" /></td>
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Effective Date To" /></td>
 			<td align="${left}">
-			<form:input path="effectiveDateTo" class="flat" id="datepicker8" name="effectiveDateTo"  /></td>
+			<form:input path="effectiveEndDate" class="flat" id="datepicker8" name="effectiveEndDate"  /></td>
 		</tr>
 		<tr>
 			<td colspan=10></td>

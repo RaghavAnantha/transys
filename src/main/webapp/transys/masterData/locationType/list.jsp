@@ -51,7 +51,7 @@
 	</table>
 </form:form>
 <form:form name="locationType.do" id="locationTypeObj" class="tab-color">
-	<transys:datatable urlContext="locationType" deletable="true"
+	<transys:datatable urlContext="masterData/locationType" deletable="true"
 		editable="true" insertable="true" baseObjects="${list}"
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
 		pagingLink="search.do" multipleDelete="false" searcheable="false"
