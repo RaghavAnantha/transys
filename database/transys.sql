@@ -398,6 +398,8 @@ CREATE TABLE `transysOrder` (
   `deliveryMinutesFrom` varchar(5) DEFAULT NULL,
   `deliveryMinutesTo` varchar(5) DEFAULT NULL,
   `pickupOrderId` bigint(20) DEFAULT NULL,
+  `totalAmountPaid` decimal(6,2) DEFAULT 0.00,
+  `balanceAmountDue` decimal(6,2) DEFAULT 0.00,
   PRIMARY KEY (`id`),
   KEY `orderCustomerRef_idx` (`customerId`),
   CONSTRAINT `orderCustomerRef` FOREIGN KEY (`customerId`) REFERENCES `customer` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
@@ -418,8 +420,7 @@ CREATE TABLE `transysOrder` (
 
 LOCK TABLES `transysOrder` WRITE;
 /*!40000 ALTER TABLE `transysOrder` DISABLE KEYS */;
-INSERT INTO `transysOrder` (`id`,`customerId`,`deliveryContactName`,`deliveryContactPhone1`,`deliveryContactPhone2`,`deliveryDate`,`deliveryAddressId`,`locationTypeId`,`dumpsterSizeId`,`materialTypeId`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`,`grossWeight`,`netWeightLb`,`netWeightTonnage`,`tare`,`dumpsterId`,`pickupDate`,`orderStatusId`,`pickUpDriverId`,`dropOffDriverId`,`deliveryHourFrom`,`deliveryHourTo`,`deliveryMinutesFrom`,`deliveryMinutesTo`,`pickupOrderId`) 
-VALUES (1,5,'Raghav','123-456-7890','123-456-7890','2015-10-09 00:00:00',3,1,1,1,'2015-10-09 00:00:00',1,'2015-10-10 18:42:41',1,1,10.00,10.00,10.00,10.00,2,NULL,2,NULL,2,'12:00 AM','1:00 AM','00','15',NULL);
+INSERT INTO `transysOrder` (`id`,`customerId`,`deliveryContactName`,`deliveryContactPhone1`,`deliveryContactPhone2`,`deliveryDate`,`deliveryAddressId`,`locationTypeId`,`dumpsterSizeId`,`materialTypeId`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`,`grossWeight`,`netWeightLb`,`netWeightTonnage`,`tare`,`dumpsterId`,`pickupDate`,`orderStatusId`,`pickUpDriverId`,`dropOffDriverId`,`deliveryHourFrom`,`deliveryHourTo`,`deliveryMinutesFrom`,`deliveryMinutesTo`,`pickupOrderId`,`totalAmountPaid`,`balanceAmountDue`) VALUES (1,5,'Raghav','123-456-7890','123-456-7890','2015-10-09 00:00:00',3,1,1,1,'2015-10-09 00:00:00',1,'2015-10-15 14:51:57',1,1,10.00,10.00,10.00,10.00,2,NULL,1,NULL,2,'12:00 AM','1:00 AM','00','15',NULL,190.00,45.20);
 /*!40000 ALTER TABLE `transysOrder` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -449,7 +450,7 @@ CREATE TABLE `locationType` (
 
 LOCK TABLES `locationType` WRITE;
 /*!40000 ALTER TABLE `locationType` DISABLE KEYS */;
-INSERT INTO `locationType` VALUES (1,'Alley',NULL,NULL,NULL,NULL,NULL,1),(2,'Street (curb)',NULL,NULL,NULL,NULL,NULL,1),(3,'Private Property',NULL,NULL,NULL,NULL,NULL,1);
+INSERT INTO `locationType` VALUES (1,'Alley',NULL,NULL,NULL,NULL,NULL,1),(2,'Street (Curb)',NULL,NULL,NULL,NULL,NULL,1),(3,'Driveway',NULL,NULL,NULL,NULL,NULL,1);
 /*!40000 ALTER TABLE `locationType` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -629,7 +630,7 @@ CREATE TABLE `orderPayment` (
 
 LOCK TABLES `orderPayment` WRITE;
 /*!40000 ALTER TABLE `orderPayment` DISABLE KEYS */;
-INSERT INTO `orderPayment` (`id`,`orderId`,`paymentMethodId`,`ccReferenceNum`,`checkNum`,`amountPaid`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (1,1,1,'','123',240.00,'2015-10-09 19:19:03',1,NULL,1,1);
+INSERT INTO `orderPayment` (`id`,`orderId`,`paymentMethodId`,`ccReferenceNum`,`checkNum`,`amountPaid`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (1,1,1,'','123',100.00,'2015-10-09 19:19:03',1,NULL,1,1);
 INSERT INTO `orderPayment` (`id`,`orderId`,`paymentMethodId`,`ccReferenceNum`,`checkNum`,`amountPaid`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (2,1,2,'','',45.00,'2015-10-15 12:11:36',1,NULL,1,1);
 INSERT INTO `orderPayment` (`id`,`orderId`,`paymentMethodId`,`ccReferenceNum`,`checkNum`,`amountPaid`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (3,1,3,'67','',45.00,'2015-10-15 12:14:37',1,NULL,1,1);
 /*!40000 ALTER TABLE `orderPayment` ENABLE KEYS */;
