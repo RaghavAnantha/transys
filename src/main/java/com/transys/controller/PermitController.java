@@ -713,13 +713,36 @@ public class PermitController extends CRUDController<Permit> {
 		cleanUp(request);
 
 		setupCreate(model, request);
-		return urlContext + "/list";
+
+		Permit permit = new Permit();
+		permit.setId(entity.getPermit().getId());
+		PermitNotes notes = new PermitNotes();
+		notes.setPermit(permit);
+		model.addAttribute("notesModelObject", notes);
+		
+		Long permitId = entity.getPermit().getId();
+		List<BaseModel> permitList = genericDAO.executeSimpleQuery("select obj from Permit obj where obj.id=" + permitId);
+		model.addAttribute("modelObject", permitList.get(0));
+		
+		List<BaseModel> notesList = genericDAO.executeSimpleQuery("select obj from PermitNotes obj where obj.permit.id=" +  permitId + " order by obj.id asc");
+		model.addAttribute("notesList", notesList);
+
+		List<BaseModel> addressList = genericDAO.executeSimpleQuery("select obj from PermitAddress obj where obj.permit.id=" +  permitId + " order by obj.id asc");
+		model.addAttribute("permitAddressList", addressList);
+		
+		model.addAttribute("permitAddressModelObject", new PermitAddress());
+		
+		model.addAttribute("activeTab", "managePermits");
+		model.addAttribute("activeSubTab", "permitNotes");
+		model.addAttribute("mode", "ADD");		
+		return urlContext + "/permit";
 	}
 	
 	@RequestMapping(method = RequestMethod.POST, value = "/savePermitAddress.do")
 	public String savePermitAddress(HttpServletRequest request,
 			@ModelAttribute("permitAddressModelObject") PermitAddress entity,
 			BindingResult bindingResult, ModelMap model) {
+		
 		try {
 			getValidator().validate(entity, bindingResult);
 		} catch (ValidationException e) {
@@ -737,7 +760,26 @@ public class PermitController extends CRUDController<Permit> {
 		cleanUp(request);
 
 		setupCreate(model, request);
-		return urlContext + "/list";
+		
+		Permit permit = new Permit();
+		permit.setId(entity.getPermit().getId());
+		PermitAddress address = new PermitAddress();
+		address.setPermit(permit);
+		model.addAttribute("permitAddressModelObject", address);
+		
+		Long permitId = entity.getPermit().getId();
+		List<BaseModel> permitList = genericDAO.executeSimpleQuery("select obj from Permit obj where obj.id=" + permitId);
+		model.addAttribute("modelObject", permitList.get(0));
+		
+		List<BaseModel> addressList = genericDAO.executeSimpleQuery("select obj from PermitAddress obj where obj.permit.id=" +  permitId + " order by obj.id asc");
+		model.addAttribute("permitAddressList", addressList);
+		
+		model.addAttribute("notesModelObject", new PermitNotes());
+		model.addAttribute("activeTab", "managePermits");
+		model.addAttribute("activeSubTab", "permitAddress");
+		model.addAttribute("mode", "ADD");
+		
+		return urlContext + "/permit";
 	}
 	
 	private void updateBaseProperties(HttpServletRequest request,

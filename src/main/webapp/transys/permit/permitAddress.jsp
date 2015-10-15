@@ -1,10 +1,10 @@
 <%@include file="/common/taglibs.jsp"%>
 <h5>Add Permit Address</h5>
 
-<form:form action="savePermitAddress.do" name="typeForm" commandName="permitAddressModelObject" method="post">
-	<form:hidden path="id" id="id" />
+<form:form id="permitAddressForm" action="savePermitAddress.do" name="permitAddressForm" commandName="permitAddressModelObject" method="post">
+	<form:hidden path="id" />
 	<form:hidden path="permit.id" id="permit.id" />
-	<table id="form-table" class="table delivery">
+	<table id="form-table" class="table editPermitAddress">
 		<tr>
 			<td class="form-left"><transys:label code="Permit Address #" /><span class="errorMessage">*</span></td>
 			<td align="${left}">
@@ -55,11 +55,12 @@
 	</table>
 </form:form>
 
-<form:form name="delete.do" id="serviceForm" class="tab-color">
+<form:form name="permitAddressServiceForm" id="permitAddressServiceForm" class="tab-color">
 	<transys:datatable urlContext="permit" deletable="true"
 		editable="true" editableInScreen="true" baseObjects="${permitAddressList}"
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
 		pagingLink="search.do" searcheable="false" dataQualifier="manageNotes">
+		<transys:textcolumn headerText="Id" dataField="id" />
 		<transys:textcolumn headerText="Address #" dataField="line1" />
 		<transys:textcolumn headerText="Address Street" dataField="line2" />
 		<transys:textcolumn headerText="City" dataField="city" />
@@ -74,23 +75,24 @@
 		return true;
 	};
 	
-	$("tr a").click(function() {	
-		var ids = ["line1", "line2", "city", "zipcode", "state"];
+	$("#permitAddressServiceForm").find("tr a").click(function() {	
+		var ids = ["id", "line1", "line2", "city", "zipcode", "state"];
 		
 		for (var i= 0; i<ids.length; i++) {		
-			$("table.delivery").find('#'+ids[i]).removeClass("border");	
+			$("table.editPermitAddress").find('#'+ids[i]).removeClass("border");	
 		}
 		
 	    var tableData = $(this).parent().parent().children("td").map(function() {
 	        return $(this).text();
 	    }).get();
 	    
-	    $('#line1').val($.trim(tableData[0]));
-	    $('#line2').val($.trim(tableData[1])); 
-	    $('table.delivery').find('#city').val($.trim(tableData[2]));
-	    $('table.delivery').find('#zipcode').val($.trim(tableData[4]));
-		$("table.delivery select option").filter(function() {
-		    return this.text == $.trim(tableData[3]); 
+	    $("#permitAddressForm").find('#id').val($.trim(tableData[0]));
+	    $('#line1').val($.trim(tableData[1]));
+	    $('#line2').val($.trim(tableData[2])); 
+	    $('table.editPermitAddress').find('#city').val($.trim(tableData[3]));
+	    $('table.editPermitAddress').find('#zipcode').val($.trim(tableData[5]));
+		$("table.editPermitAddress select option").filter(function() {
+		    return this.text == $.trim(tableData[4]); 
 		}).attr('selected', true);
 	});
 </script>

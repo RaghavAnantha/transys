@@ -1,8 +1,8 @@
 <%@include file="/common/taglibs.jsp"%>
 
 <br />
-<form:form action="saveDeliveryAddress.do" name="typeForm" commandName="deliveryAddressModelObject" method="post" id="typeForm">
-	<form:hidden path="id" id="id" />
+<form:form id="editDeliveryAddressForm" action="saveDeliveryAddress.do" name="typeForm" commandName="deliveryAddressModelObject" method="post" >
+	<form:hidden path="id" />
 	<form:hidden path="customer.id" id="customerId" />
 	<table id="form-table" class="table delivery">
 		<tr>
@@ -66,6 +66,7 @@
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
 		pagingLink="search.do" multipleDelete="false" searcheable="false" 
 		dataQualifier="manageDeliveryAddress">
+		<transys:textcolumn headerText="Id" dataField="id" />
 		<transys:textcolumn headerText="Delivery Address #" dataField="line1" />
 		<transys:textcolumn headerText="Delivery Street" dataField="line2" />
 		<transys:textcolumn headerText="City" dataField="city" />
@@ -80,8 +81,9 @@ function validate() {
 	return true;
 };
 
-$("tr a").click(function() {	
-	var ids = ["line1", "line2", "city", "zipcode", "state"];
+$("#deliveryAddressServiceForm").find("tr a").click(function() {		
+	
+	var ids = ["id", "line1", "line2", "city", "zipcode", "state"];
 	
 	for (var i= 0; i<ids.length; i++) {		
 		$("table.delivery").find('#'+ids[i]).removeClass("border");	
@@ -91,12 +93,13 @@ $("tr a").click(function() {
         return $(this).text();
     }).get();
     
-    $('#line1').val($.trim(tableData[0]));
-    $('#line2').val($.trim(tableData[1])); 
-    $('table.delivery').find('#city').val($.trim(tableData[2]));
-    $('table.delivery').find('#zipcode').val($.trim(tableData[4]));
+    $("#editDeliveryAddressForm").find('#id').val($.trim(tableData[0]));
+    $('#line1').val($.trim(tableData[1]));
+    $('#line2').val($.trim(tableData[2])); 
+    $('table.delivery').find('#city').val($.trim(tableData[3]));
+    $('table.delivery').find('#zipcode').val($.trim(tableData[5]));
 	$("table.delivery select option").filter(function() {
-	    return this.text == $.trim(tableData[3]); 
+	    return this.text == $.trim(tableData[4]); 
 	}).attr('selected', true);
 });
 
