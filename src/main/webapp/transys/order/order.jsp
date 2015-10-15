@@ -6,7 +6,6 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Orders</title>
 </head>
-
 <body>
 	<ul class="nav nav-tabs" id="order_main_tabs">
 		<li><a href="#manageOrders" data-toggle="tab" >Orders</a></li>
