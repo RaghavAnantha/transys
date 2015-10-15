@@ -72,8 +72,8 @@ public class Order extends AbstractBaseModel {
 	@JoinTable(
      name = "orderPermits",
      joinColumns = @JoinColumn(name = "orderId"),
-     inverseJoinColumns = @JoinColumn(name = "permitId"),
-     uniqueConstraints = @UniqueConstraint(columnNames = {"orderId", "permitId"})
+     inverseJoinColumns = @JoinColumn(name = "permitId")
+     //uniqueConstraints = @UniqueConstraint(columnNames = {"orderId", "permitId"})
 	)
 	private List<Permit> permits;
 	 
