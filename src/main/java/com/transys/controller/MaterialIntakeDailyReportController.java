@@ -1,8 +1,5 @@
 package com.transys.controller;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -24,11 +21,11 @@ import com.transys.model.Order;
 import com.transys.model.SearchCriteria;
 
 @Controller
-@RequestMapping("/materialIntakeDailyReport")
+@RequestMapping("/reports/materialIntakeDailyReport")
 public class MaterialIntakeDailyReportController extends CRUDController<Order> {
 
 	public MaterialIntakeDailyReportController(){	
-		setUrlContext("materialIntakeDailyReport");
+		setUrlContext("reports/materialIntakeDailyReport");
 	}
 	
 	@Override

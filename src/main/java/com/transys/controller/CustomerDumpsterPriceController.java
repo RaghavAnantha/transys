@@ -20,11 +20,11 @@ import com.transys.model.MaterialType;
 import com.transys.model.SearchCriteria;
 
 @Controller
-@RequestMapping("/customerDumpsterPrice")
+@RequestMapping("/masterData/customerDumpsterPrice")
 public class CustomerDumpsterPriceController extends CRUDController<CustomerDumpsterPrice> {
 
 	public CustomerDumpsterPriceController() {
-		setUrlContext("customerDumpsterPrice");
+		setUrlContext("masterData/customerDumpsterPrice");
 	}
 
 	@Override

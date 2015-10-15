@@ -25,12 +25,12 @@ import com.transys.model.Order;
 import com.transys.model.SearchCriteria;
 
 @Controller
-@RequestMapping("/dumpstersRentedReport")
+@RequestMapping("/reports/dumpstersRentedReport")
 public class DumpstersRentedReportController extends CRUDController<Dumpster> {
 	
 	
 	public DumpstersRentedReportController(){	
-		setUrlContext("dumpstersRentedReport");
+		setUrlContext("reports/dumpstersRentedReport");
 	}
 	
 	
@@ -103,7 +103,7 @@ public class DumpstersRentedReportController extends CRUDController<Dumpster> {
 		try {
 
 			List<Map<String,Object>> reportData = prepareReportData(model, request);
-			type = setRequestHeaders(response, type);
+			type = setRequestHeaders(response, type, "dumpstersRentedReport");
 			
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
 			Map<String, Object> params = new HashMap<String, Object>();

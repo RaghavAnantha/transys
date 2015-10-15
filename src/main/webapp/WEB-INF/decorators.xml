@@ -18,24 +18,9 @@
     <decorator name="masterData" page="singleColumnLayout.jsp">
         <pattern>/transys/masterData/**</pattern>
     </decorator>   
-    <decorator name="customerDumpsterPrice" page="singleColumnLayout.jsp">
-        <pattern>/transys/customerDumpsterPrice/**</pattern>
-    </decorator>
-    <decorator name="report" page="singleColumnLayout.jsp">
-        <pattern>/transys/dumpsterOnsiteReport/**</pattern>
-    </decorator>
-    <decorator name="report" page="singleColumnLayout.jsp">
-        <pattern>/transys/dumpstersRentedReport/**</pattern>
-    </decorator>
-    <decorator name="report" page="singleColumnLayout.jsp">
-        <pattern>/transys/ordersRevenueReport/**</pattern>
-    </decorator>
-    <decorator name="report" page="singleColumnLayout.jsp">
-        <pattern>/transys/deliveryPickupReport/**</pattern>
-    </decorator>
-    <decorator name="report" page="singleColumnLayout.jsp">
-        <pattern>/transys/materialIntakeDailyReport/**</pattern>
-    </decorator> 
+    <decorator name="reports" page="singleColumnLayout.jsp">
+        <pattern>/transys/reports/**</pattern>
+    </decorator>   
     <decorator name="popUp" page="popUpLayout.jsp">
         <pattern>/transys/order/notesModal.jsp</pattern>
         <pattern>/transys/customer/formModal.jsp</pattern>

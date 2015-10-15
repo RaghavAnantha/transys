@@ -19,12 +19,12 @@
 					<li id="reportPage">
 						<a href="#" data-toggle="dropdown" class="dropdown-toggle">Reports<b class="caret"></b></a>
 						<ul class="dropdown-menu">
-							<li><a href="/ordersRevenueReport/main.do">Revenue Report</a></li>
-							<li><a href="/deliveryPickupReport/main.do">Delivery/Pickup Reports</a></li>
-							<li><a href="/dumpsterOnsiteReport/main.do">Dumpsters On-site Report</a></li>
-							<li><a href="/dumpstersRentedReport/main.do">Dumpsters Rented Report</a></li>
-							<li><a href="/recycleReport/main.do">Recycle Report</a></li>
-							<li><a href="/materialIntakeDailyReport/main.do">Material Intake Daily Report</a></li>
+							<li><a href="/reports/ordersRevenueReport/main.do">Revenue Report</a></li>
+							<li><a href="/reports/deliveryPickupReport/main.do">Delivery/Pickup Reports</a></li>
+							<li><a href="/reports/dumpsterOnsiteReport/main.do">Dumpsters On-site Report</a></li>
+							<li><a href="/reports/dumpstersRentedReport/main.do">Dumpsters Rented Report</a></li>
+							<li><a href="/reports/recycleReport/main.do">Recycle Report</a></li>
+							<li><a href="/reports/materialIntakeDailyReport/main.do">Material Intake Daily Report</a></li>
 						</ul>
 					</li>
 					<li id="masterDataPage">

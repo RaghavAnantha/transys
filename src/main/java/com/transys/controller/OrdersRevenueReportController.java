@@ -18,8 +18,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-//import com.google.gson.Gson;
-import com.transys.core.util.MimeUtil;
 import com.transys.model.DeliveryAddress;
 import com.transys.model.Order;
 import com.transys.model.OrderFees;
@@ -27,11 +25,11 @@ import com.transys.model.OrderPayment;
 import com.transys.model.SearchCriteria;
 
 @Controller
-@RequestMapping("/ordersRevenueReport")
+@RequestMapping("/reports/ordersRevenueReport")
 public class OrdersRevenueReportController extends CRUDController<Order> {
 
 	public OrdersRevenueReportController(){	
-		setUrlContext("ordersRevenueReport");
+		setUrlContext("reports/ordersRevenueReport");
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/main.do")
@@ -106,7 +104,7 @@ public class OrdersRevenueReportController extends CRUDController<Order> {
 
 			List<Map<String,Object>> reportData = prepareReportData(request);
 
-			type = setRequestHeaders(response, type);
+			type = setRequestHeaders(response, type, "ordersRevenueReport");
 			
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
 			Map<String, Object> params = new HashMap<String, Object>();

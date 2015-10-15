@@ -25,11 +25,11 @@ import com.transys.model.Order;
 import com.transys.model.SearchCriteria;
 
 @Controller
-@RequestMapping("/deliveryPickupReport")
+@RequestMapping("/reports/deliveryPickupReport")
 public class DeliveryPickupReportController extends CRUDController<Order> {
 
 	public DeliveryPickupReportController(){	
-		setUrlContext("deliveryPickupReport");
+		setUrlContext("reports/deliveryPickupReport");
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/main.do")
@@ -113,7 +113,7 @@ public class DeliveryPickupReportController extends CRUDController<Order> {
 
 			List<Map<String,Object>> reportData = prepareReportData(model, request);
 
-			type = setRequestHeaders(response, type);
+			type = setRequestHeaders(response, type, "deliveryPickupReport");
 			
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
 			Map<String, Object> params = new HashMap<String, Object>();

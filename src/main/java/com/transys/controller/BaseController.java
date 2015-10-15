@@ -191,11 +191,11 @@ public class BaseController {
 		return buffer.toString();
 	}
 	
-	protected String setRequestHeaders(HttpServletResponse response, String type) {
+	protected String setRequestHeaders(HttpServletResponse response, String type, String reportName) {
 		if (StringUtils.isEmpty(type))
 			type = "xlsx";
 		if (!type.equals("html") && !(type.equals("print"))) {
-			response.setHeader("Content-Disposition", "attachment;filename= deliveryPickupReport." + type);
+			response.setHeader("Content-Disposition", "attachment;filename= " + reportName + "." + type);
 		}
 		response.setContentType(MimeUtil.getContentType(type));
 		return type;
