@@ -39,7 +39,7 @@ public class CityFeeController extends CRUDController<CityFee> {
 		// TODO:
 		criteria.getSearchMap().remove("_csrf");
 		criteria.setPageSize(25);
-		model.addAttribute("list", genericDAO.search(CityFee.class, criteria));
+		model.addAttribute("list", genericDAO.search(CityFee.class, criteria, "id", false));
 		return urlContext + "/list";
 	}
 

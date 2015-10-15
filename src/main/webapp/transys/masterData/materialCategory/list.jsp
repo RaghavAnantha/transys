@@ -7,15 +7,15 @@
 		<tr>
 			<td align="${left}" class="form-left"><transys:label code="Material Category" /></td>
 			<td align="${left}" class="wide">
-				<select class="flat form-control input-sm" id="materialType" name="materialCategory" style="width: 175px">
+				<select class="flat form-control input-sm" id="materialType" name="category" style="width: 175px">
 					<option value="">------Please Select------</option>
 					<c:forEach items="${materialCategories}" var="aCategory">
 						<c:set var="selected" value="" />
 						<c:if
-							test="${sessionScope.searchCriteria.searchMap['materialCategory'] == aCategory.id}">
+							test="${sessionScope.searchCriteria.searchMap['category'] == aCategory.category}">
 							<c:set var="selected" value="selected" />
 						</c:if>
-						<option value="${aCategory.id}" ${selected}>${aCategory.category}</option>
+						<option value="${aCategory.category}" ${selected}>${aCategory.category}</option>
 					</c:forEach>
 			</select></td>	
 		</tr>

@@ -48,7 +48,7 @@ public class MaterialIntakeController extends CRUDController<MaterialIntake> {
 		// TODO:
 		criteria.getSearchMap().remove("_csrf");
 		criteria.setPageSize(25);
-		model.addAttribute("list", genericDAO.search(MaterialIntake.class, criteria));
+		model.addAttribute("list", genericDAO.search(MaterialIntake.class, criteria, "id", false));
 		return urlContext + "/list";
 	}
 

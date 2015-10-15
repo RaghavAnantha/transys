@@ -24,6 +24,25 @@
 			<td align="${left}" class="form-left"><transys:label code="Tons" /></td>
 			<td align="${left}" class="wide"><form:input path="netWeightTonnage" cssClass="flat" style="width: 175px"  /></td>
 		</tr>
+			<tr>
+			<td colspan=10></td>
+		</tr>
+		<tr>
+			<td colspan=10 class="danger" style="font-size: 13px;font-weight: bold;color: white;">Notes/Comments</td>
+		</tr>
+		<tr>
+			<td colspan=10></td>
+		</tr>
+		<tr>
+			<td colspan=10>
+				<form:textarea row="5" path="comments" cssClass="flat" id="materialIntakeComments" style="width:100%; height:150%;"/>
+				<br><form:errors path="comments" cssClass="errorMessage" />
+			</td>
+		</tr>
+		<tr>
+			<td colspan=10></td>
+		</tr>
+	
 		<tr>
 			<td colspan="2"></td>
 		</tr>

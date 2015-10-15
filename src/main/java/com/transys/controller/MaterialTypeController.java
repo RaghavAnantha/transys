@@ -29,6 +29,7 @@ public class MaterialTypeController extends CRUDController<MaterialType> {
 	@Override
 	public void initBinder(WebDataBinder binder) {
 		binder.registerCustomEditor(MaterialType.class, new AbstractModelEditor(MaterialType.class));
+		binder.registerCustomEditor(MaterialCategory.class, new AbstractModelEditor(MaterialCategory.class));
 		super.initBinder(binder);
 	}
 
@@ -48,7 +49,7 @@ public class MaterialTypeController extends CRUDController<MaterialType> {
 		// TODO:
 		criteria.getSearchMap().remove("_csrf");
 		criteria.setPageSize(25);
-		model.addAttribute("list", genericDAO.search(MaterialType.class, criteria));
+		model.addAttribute("list", genericDAO.search(MaterialType.class, criteria, "id", false));
 		return urlContext + "/list";
 	}
 

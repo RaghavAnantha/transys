@@ -52,7 +52,7 @@ public class DumpsterPriceController extends CRUDController<DumpsterPrice> {
 		// TODO:
 		criteria.getSearchMap().remove("_csrf");
 		criteria.setPageSize(25);
-		model.addAttribute("list", genericDAO.search(DumpsterPrice.class, criteria));
+		model.addAttribute("list", genericDAO.search(DumpsterPrice.class, criteria, "id", false));
 		return urlContext + "/list";
 	}
 

@@ -5,24 +5,6 @@
 <form:form action="list.do" method="get" name="searchForm">
 	<table width="100%" id="form-table">
 		<tr>
-			<td align="${left}" class="form-left"><transys:label code="Location Type ID" /></td>
-			<td align="${left}" class="wide"><select
-				class="flat form-control input-sm" id="id" name="id"
-				style="width: 175px">
-					<option value="">------
-						<transys:label code="Please Select" />------
-					</option>
-					<c:forEach items="${locationTypes}" var="aLocationType">
-						<c:set var="selected" value="" />
-						<c:if
-							test="${sessionScope.searchCriteria.searchMap['id'] == aLocationType.id}">
-							<c:set var="selected" value="selected" />
-						</c:if>
-						<option value="${aLocationType.id}" ${selected}>${aLocationType.id}</option>
-					</c:forEach>
-			</select></td>	
-		</tr>
-		<tr>
 			<td align="${left}" class="form-left"><transys:label code="Location Type" /></td>
 			<td align="${left}" class="wide"><select
 				class="flat form-control input-sm" id="locationType" name="locationType"

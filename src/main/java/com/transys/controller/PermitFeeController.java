@@ -49,7 +49,7 @@ public class PermitFeeController extends CRUDController<PermitFee> {
 		// TODO:
 		criteria.getSearchMap().remove("_csrf");
 		criteria.setPageSize(25);
-		model.addAttribute("list", genericDAO.search(PermitFee.class, criteria));
+		model.addAttribute("list", genericDAO.search(PermitFee.class, criteria, "id", false));
 		return urlContext + "/list";
 	}
 

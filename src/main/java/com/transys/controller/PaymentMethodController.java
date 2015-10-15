@@ -47,7 +47,7 @@ public class PaymentMethodController extends CRUDController<PaymentMethodType> {
 		// TODO:
 		criteria.getSearchMap().remove("_csrf");
 		criteria.setPageSize(25);
-		model.addAttribute("list", genericDAO.search(PaymentMethodType.class, criteria));
+		model.addAttribute("list", genericDAO.search(PaymentMethodType.class, criteria, "id", false));
 		return urlContext + "/list";
 	}
 
