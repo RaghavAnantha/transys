@@ -629,7 +629,7 @@ public class GenericJpaDAO implements GenericDAO {
 			}
 			searchString.append("p." + criteriaKey + " <> '"
 					+ criterias.get(param.toString()).toString().trim().substring(2) + "'");
-		} else if (!param.toString().toUpperCase().startsWith("EFFECTIVEDATE") && (param.toString().toUpperCase().contains("DATE")
+		} else if ((param.toString().toUpperCase().contains("DATE")
 				|| param.toString().toUpperCase().startsWith("CREATEDAT")
 				|| param.toString().toUpperCase().startsWith("MODIFIEDAT"))) {
 			

@@ -9,7 +9,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="cityFee")
-public class CityFee extends AbstractFeeMasterData {
+public class CityFee extends AbstractFeeMasterData { 
 	@Column(name="suburbName")
 	private String suburbName;
 	

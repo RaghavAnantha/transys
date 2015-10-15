@@ -3,8 +3,11 @@ package com.transys.model;
 import java.util.Date;
 
 import javax.persistence.Column;
+import javax.persistence.MappedSuperclass;
 
+@MappedSuperclass
 public abstract class AbstractFeeMasterData extends AbstractBaseModel {
+	
 	@Column(name="comments")
 	private String comments;
 	
