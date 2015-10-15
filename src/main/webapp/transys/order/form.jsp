@@ -1091,6 +1091,8 @@ function verifyExchangeOrderAndSubmit() {
 				</form:select>
 				<br><form:errors path="orderPayment[0].paymentMethod" cssClass="errorMessage" />
 			</td>
+			<td class="form-left"><transys:label code="Payment1 Date"/><span class="errorMessage">*</span></td>
+			<td align="${left}">${modelObject.orderPayment[0].createdAt}</td>
 			<td class="form-left"><transys:label code="Amount1"/><span class="errorMessage">*</span></td>
 			<td align="${left}">
 				<form:input path="orderPayment[0].amountPaid" cssClass="flat" />
@@ -1116,6 +1118,8 @@ function verifyExchangeOrderAndSubmit() {
 				</form:select>
 				<br><form:errors path="orderPayment[1].paymentMethod" cssClass="errorMessage" />
 			</td>
+			<td class="form-left"><transys:label code="Payment2 Date"/><span class="errorMessage">*</span></td>
+			<td align="${left}">${modelObject.orderPayment[1].createdAt}</td>
 			<td class="form-left"><transys:label code="Amount2"/><span class="errorMessage">*</span></td>
 			<td align="${left}">
 				<form:input path="orderPayment[1].amountPaid" cssClass="flat" />
@@ -1141,6 +1145,8 @@ function verifyExchangeOrderAndSubmit() {
 				</form:select>
 				<br><form:errors path="orderPayment[2].paymentMethod" cssClass="errorMessage" />
 			</td>
+			<td class="form-left"><transys:label code="Payment3 Date"/><span class="errorMessage">*</span></td>
+			<td align="${left}">${modelObject.orderPayment[2].createdAt}</td>
 			<td class="form-left"><transys:label code="Amount3"/><span class="errorMessage">*</span></td>
 			<td align="${left}">
 				<form:input path="orderPayment[2].amountPaid" cssClass="flat" />
@@ -1159,9 +1165,13 @@ function verifyExchangeOrderAndSubmit() {
 		</tr>
 		<tr>
 			<td class="form-left">Total Amount Paid</td>
-			<td align="${left}"></td>
+			<td align="${left}">${modelObject.totalAmountPaid}</td>
 			<td class="form-left">Balance Due</td>
-			<td align="${left}"></td>
+			<c:set var="balanceDueAlertClass" value="" />
+			<c:if test="${modelObject.balanceAmountDue > 0}">
+				<c:set var="balanceDueAlertClass" value="errorMessage" />
+			</c:if>
+			<td align="${left}"><span class="${balanceDueAlertClass}">${modelObject.balanceAmountDue}</span></td>
 		</tr>
 		<tr>
 			<td colspan=10></td>

@@ -14,6 +14,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 
 @Entity
@@ -108,6 +109,28 @@ public class Order extends AbstractBaseModel {
 	)*/
 	private List<OrderPayment> orderPayment;
 	
+	@Column(name="totalAmountPaid")
+	private BigDecimal totalAmountPaid;
+	
+	@Column(name="balanceAmountDue")
+	private BigDecimal balanceAmountDue;
+	
+	public BigDecimal getTotalAmountPaid() {
+		return totalAmountPaid;
+	}
+
+	public void setTotalAmountPaid(BigDecimal totalAmountPaid) {
+		this.totalAmountPaid = totalAmountPaid;
+	}
+	
+	public BigDecimal getBalanceAmountDue() {
+		return balanceAmountDue;
+	}
+
+	public void setBalanceAmountDue(BigDecimal balanceAmountDue) {
+		this.balanceAmountDue = balanceAmountDue;
+	}
+
 	@OneToOne(mappedBy="order", cascade = CascadeType.ALL)
 	private OrderFees orderFees;
 

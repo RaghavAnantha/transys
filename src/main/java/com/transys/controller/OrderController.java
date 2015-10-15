@@ -141,6 +141,18 @@ public class OrderController extends CRUDController<Order> {
 		
 		List<MaterialType> materialTypeList = retrieveMaterialTypes(dumsterSizeId, materialCategoryId);
 		model.addAttribute("materialTypes", materialTypeList);
+		
+		/*BigDecimal totalAmountPaid = new BigDecimal(0.00);
+		if (order.getOrderPayment() != null) {
+			for (OrderPayment anOrderPayment : order.getOrderPayment()) {
+				totalAmountPaid = totalAmountPaid.add(anOrderPayment.getAmountPaid());
+			}
+			
+			order.setTotalAmountPaid(totalAmountPaid);
+			
+			BigDecimal balanceDue = order.getOrderFees().getTotalFees().subtract(totalAmountPaid);
+			order.setBalanceAmountDue(balanceDue);
+		}*/
    }
 	
 	/*
@@ -1179,11 +1191,15 @@ public class OrderController extends CRUDController<Order> {
 	}
 	
 	private void setupOrderPayment(Order order) {
+		order.setTotalAmountPaid(new BigDecimal(0.00));
+		order.setBalanceAmountDue(new BigDecimal(0.00));
+		
 		List<OrderPayment> orderPaymentList = order.getOrderPayment();
 		if (orderPaymentList == null) {
 			return;
 		}
 		
+		BigDecimal totalAmountPaid = new BigDecimal(0.00);
 		List<OrderPayment> filteredOrderPaymentList = new ArrayList<OrderPayment>();
 		for (OrderPayment anOrderPayment : orderPaymentList) {
 			if (anOrderPayment.getPaymentMethod() != null) {
@@ -1192,10 +1208,17 @@ public class OrderController extends CRUDController<Order> {
 				anOrderPayment.setModifiedBy(order.getModifiedBy());
 				
 				filteredOrderPaymentList.add(anOrderPayment);
+				
+				totalAmountPaid = totalAmountPaid.add(anOrderPayment.getAmountPaid());
 			}
 		}
 		
 		order.setOrderPayment(filteredOrderPaymentList);
+		
+		order.setTotalAmountPaid(totalAmountPaid);
+		
+		BigDecimal balanceDue = order.getOrderFees().getTotalFees().subtract(totalAmountPaid);
+		order.setBalanceAmountDue(balanceDue);
 	}
 	
 	private void setupOrderFees(Order order) {
