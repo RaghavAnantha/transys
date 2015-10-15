@@ -21,17 +21,16 @@
 			</c:if>
 		</div>
 		<div id="customerReports" class="tab-pane">
-			<br />
 			<ul class="nav nav-tabs" id="customer_reports_tabs">
 				<li><a href="#customerListReport" data-toggle="tab" class="active">Customer List Report</a></li>
-				<li><a href="#customerOrderReports" data-toggle="tab">Customer Order Reports</a></li>
+				<li><a href="#customerOrderReport" data-toggle="tab">Customer Order Report</a></li>
 			</ul>
 
 			<div class="tab-content tab-color">
 				<div id="customerListReport" class="tab-pane">
 					<%@include file="customerListReport.jsp"%>
 				</div>
-				<div id="customerOrderReports" class="tab-pane">
+				<div id="customerOrderReport" class="tab-pane">
 					<p>Placeholder for Customer Order Reports</p>
 				</div>
 
@@ -45,8 +44,6 @@
 	
 	showTab('${activeTab}');
 	showTab('${activeSubTab}');
-	
-	
 	
 	function validate() {
 		var ids = ["companyName", "billingAddressLine1", "city"];
@@ -67,6 +64,5 @@
 		return true;
 	};
 </script>
-
 </body>
 </html>
