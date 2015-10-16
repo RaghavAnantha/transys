@@ -1247,6 +1247,8 @@ INSERT INTO `dumpsterPrice` (`id`,`dumpsterSizeId`,`materialTypeId`,`price`,`com
 INSERT INTO `dumpsterPrice` (`id`,`dumpsterSizeId`,`materialTypeId`,`price`,`comments`,`effectiveStartDate`,`effectiveEndDate`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (18,4,5,390.00,NULL,'2015-09-25 12:31:34','2020-09-25 12:31:34',NULL,NULL,NULL,NULL,1);
 INSERT INTO `dumpsterPrice` (`id`,`dumpsterSizeId`,`materialTypeId`,`price`,`comments`,`effectiveStartDate`,`effectiveEndDate`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (19,5,5,440.00,NULL,'2015-09-25 12:31:34','2020-09-25 12:31:34',NULL,NULL,NULL,NULL,1);
 INSERT INTO `dumpsterPrice` (`id`,`dumpsterSizeId`,`materialTypeId`,`price`,`comments`,`effectiveStartDate`,`effectiveEndDate`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (20,6,5,470.00,NULL,'2015-09-25 12:31:34','2020-09-25 12:31:34',NULL,NULL,NULL,NULL,1);
+INSERT INTO `dumpsterPrice` (`id`,`dumpsterSizeId`,`materialTypeId`,`price`,`comments`,`effectiveStartDate`,`effectiveEndDate`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (21,3,6,430.00,NULL,'2015-09-25 12:31:34','2020-09-25 12:31:34',NULL,NULL,NULL,NULL,1);
+
 /*!40000 ALTER TABLE `dumpsterPrice` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
