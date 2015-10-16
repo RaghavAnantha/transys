@@ -188,7 +188,7 @@ public class OrderController extends CRUDController<Order> {
       model.addAttribute("paymentMethods", genericDAO.executeSimpleQuery("select obj from PaymentMethodType obj where obj.id!=0 order by obj.id asc"));
       
       model.addAttribute("cityFeeDetails", genericDAO.executeSimpleQuery("select obj from CityFee obj where obj.id!=0 order by obj.id asc"));
-      
+      		
       populateDeliveryTimeSettings(model);
       
       String driverRole = "DRIVER";
@@ -220,6 +220,15 @@ public class OrderController extends CRUDController<Order> {
 		//criteria.getSearchMap().put("id!",0l);
 		//TODO fix me
 		criteria.getSearchMap().remove("_csrf");
+		
+		String balanceAmountDueReqStr = (String) criteria.getSearchMap().get("balanceAmountDue");
+		if (StringUtils.isNotEmpty(balanceAmountDueReqStr)) {
+			if (BooleanUtils.toBoolean(balanceAmountDueReqStr)) {
+				criteria.getSearchMap().put("balanceAmountDue", "0.00");
+			} else {
+				criteria.getSearchMap().put("balanceAmountDue", "0.00");
+			}
+		}
 		
 		if (criteria.getSearchMap().get("customer") != null) {
 			String customerId = (String)criteria.getSearchMap().get("customer");

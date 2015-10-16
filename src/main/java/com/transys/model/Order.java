@@ -114,7 +114,7 @@ public class Order extends AbstractBaseModel {
 	
 	@Column(name="balanceAmountDue")
 	private BigDecimal balanceAmountDue;
-	
+
 	public BigDecimal getTotalAmountPaid() {
 		return totalAmountPaid;
 	}
