@@ -158,12 +158,12 @@ function populateCustomerDeliveryAddress() {
 			<td align="${left}" class="form-left"><transys:label code="Balance Amount Due" /></td>
 			<td align="${left}" class="wide">
 				<span>
-					<input id="balanceAmountDueYes" name="balanceAmountDue" type="radio" value="Yes"/>
+					<input id="balanceAmountDueYes" name="balanceAmountDue" type="radio" value="!=0.00"/>
 					&nbsp;<label style="font-weight: normal; font-size: 13px;" for="balanceAmountDueYes">Yes</label>
 				</span>
 				&nbsp;
 				<span>
-					<input id="balanceAmountDueNo" name="balanceAmountDue" type="radio" value="No"/>
+					<input id="balanceAmountDueNo" name="balanceAmountDue" type="radio" value="0.00"/>
 					&nbsp;<label style="font-weight: normal; font-size: 13px;" for="balanceAmountDueNo">No</label>
 				</span>
 			</td>
