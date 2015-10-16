@@ -36,7 +36,7 @@ function populateCustomerDeliveryAddress() {
 		<tr>
 			<td align="${left}" class="form-left"><transys:label code="Order #" /></td>
 			<td align="${left}" class="wide">
-				<select class="flat form-control input-sm" id="id" name="id" style="width: 175px">
+				<select class="flat form-control input-sm" id="id" name="id" style="width: 175px !important">
 					<option value="">------<transys:label code="Please Select" />------</option>
 					<c:forEach items="${orderIds}" var="anOrderId">
 						<c:set var="selected" value="" />
@@ -49,7 +49,7 @@ function populateCustomerDeliveryAddress() {
 			</td>
 			<td align="${left}" class="form-left"><transys:label code="Order Status" /></td>
 			<td align="${left}">
-				<select class="flat form-control input-sm" id="orderStatus" name="orderStatus" style="width: 175px">
+				<select class="flat form-control input-sm" id="orderStatus" name="orderStatus" style="width: 175px !important">
 					<option value="">------<transys:label code="Please Select" />------</option>
 					<c:forEach items="${orderStatuses}" var="anOrderStatus">
 						<c:set var="selected" value=""/>
@@ -60,11 +60,12 @@ function populateCustomerDeliveryAddress() {
 					</c:forEach>
 				</select>
 			</td>
+			<td colspan=10></td>
 		</tr>
 		<tr>
 			<td align="${left}" class="form-left"><transys:label code="Customer" /></td>
 			<td align="${left}" class="wide">
-				<select class="flat form-control input-sm" id="customer" name="customer" style="width: 175px" onChange="return populateCustomerDeliveryAddress();">
+				<select class="flat form-control input-sm" id="customer" name="customer" style="width: 175px !important" onChange="return populateCustomerDeliveryAddress();">
 					<option value="">------<transys:label code="Please Select" />------</option>
 					<c:forEach items="${customers}" var="aCustomer">
 						<c:set var="selected" value="" />
@@ -77,7 +78,7 @@ function populateCustomerDeliveryAddress() {
 			</td>
 			<td align="${left}" class="form-left"><transys:label code="Delivery Address" /></td>
 			<td align="${left}">
-				<select class="flat form-control input-sm" id="deliveryAddress" name="deliveryAddress" style="width: 175px">
+				<select class="flat form-control input-sm" id="deliveryAddress" name="deliveryAddress" style="width: 175px !important">
 					<option value="">------Please Select------</option>
 					<c:forEach items="${deliveryAddresses}" var="aDeliveryAddress">
 						<c:set var="selected" value=""/>
@@ -92,7 +93,7 @@ function populateCustomerDeliveryAddress() {
 		<tr>
 			<td align="${left}" class="form-left"><transys:label code="Phone Number" /></td>
 			<td align="${left}" class="wide">
-				<select class="flat form-control input-sm" id=deliveryContactPhone1 name="deliveryContactPhone1" style="width: 175px">
+				<select class="flat form-control input-sm" id=deliveryContactPhone1 name="deliveryContactPhone1" style="width: 175px !important">
 					<option value="">------<transys:label code="Please Select" />------</option>
 					<c:forEach items="${order}" var="anOrder">
 						<c:set var="selected" value="" />
@@ -107,7 +108,7 @@ function populateCustomerDeliveryAddress() {
 		<tr>
 			<td align="${left}" class="form-left"><transys:label code="Dumpster Size" /></td>
 			<td align="${left}" class="wide">
-				<select class="flat form-control input-sm" id="dumpsterSize" name="dumpsterSize" style="width: 175px">
+				<select class="flat form-control input-sm" id="dumpsterSize" name="dumpsterSize" style="width: 175px !important">
 					<option value="">------<transys:label code="Please Select" />------</option>
 					<c:forEach items="${dumpsterSizes}" var="aDumpsterSize">
 						<c:set var="selected" value="" />
@@ -121,7 +122,7 @@ function populateCustomerDeliveryAddress() {
 			</td>
 			<td align="${left}" class="form-left"><transys:label code="Dumpster #" /></td>
 			<td align="${left}">
-				<select class="flat form-control input-sm" id="dumpster" name="dumpster" style="width: 175px">
+				<select class="flat form-control input-sm" id="dumpster" name="dumpster" style="width: 175px !important">
 					<option value="">------<transys:label code="Please Select" />------</option>
 					<c:forEach items="${dumpsters}" var="aDumpster">
 						<c:set var="selected" value="" />
@@ -136,21 +137,21 @@ function populateCustomerDeliveryAddress() {
 		<tr>
 			<td align="${left}" class="form-left"><transys:label code="Delivery Date From" /></td>
 			<td align="${left}" class="wide">
-				<input class="flat" id="datepicker" name="deliveryDateFrom" value="${sessionScope.searchCriteria.searchMap['deliveryDateFrom']}" style="width: 175px" />
+				<input class="flat" id="datepicker" name="deliveryDateFrom" value="${sessionScope.searchCriteria.searchMap['deliveryDateFrom']}" style="width: 175px !important" />
 			</td>
 			<td align="${left}" class="form-left"><transys:label code="Delivery Date To" /></td>
 			<td align="${left}" class="wide">
-				<input class="flat" id="datepicker1" name="deliveryDateTo" value="${sessionScope.searchCriteria.searchMap['deliveryDateTo']}" style="width: 175px" />
+				<input class="flat" id="datepicker1" name="deliveryDateTo" value="${sessionScope.searchCriteria.searchMap['deliveryDateTo']}" style="width: 175px !important" />
 			</td>
 		</tr>
 		<tr>
 			<td align="${left}" class="form-left"><transys:label code="Pick Up Date From" /></td>
 			<td align="${left}" class="wide">
-				<input class="flat" id="datepicker2" name="pickupDateFrom" value="${sessionScope.searchCriteria.searchMap['pickupDateFrom']}" style="width: 175px" />
+				<input class="flat" id="datepicker2" name="pickupDateFrom" value="${sessionScope.searchCriteria.searchMap['pickupDateFrom']}" style="width: 175px !important" />
 			</td>
 			<td align="${left}" class="form-left"><transys:label code="Pick Up Date To" /></td>
 			<td align="${left}" class="wide">
-				<input class="flat" id="datepicker3" name="pickupDateTo" value="${sessionScope.searchCriteria.searchMap['pickupDateTo']}" style="width: 175px" />
+				<input class="flat" id="datepicker3" name="pickupDateTo" value="${sessionScope.searchCriteria.searchMap['pickupDateTo']}" style="width: 175px !important" />
 			</td>
 		</tr>
 		<tr>
