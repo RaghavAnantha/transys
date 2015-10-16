@@ -74,7 +74,7 @@
 		<tr>
 			<td align="${left}" class="form-left"><transys:label code="Status" /></td>
 			<td align="${left}" class="wide">
-				<select class="flat form-control input-sm" id="customerStatus" name="customerStatus" style="width: 175px">
+				<select class="flat form-control input-sm" id="customerStatus" name="customerStatus" style="width: 175px !important">
 					<option value="">------<transys:label code="Please Select" />------</option>
 					<c:forEach items="${customerStatuses}" var="aCustomerStatus">
 						<c:set var="selected" value=""/>
