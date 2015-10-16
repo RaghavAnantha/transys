@@ -175,8 +175,8 @@
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
 		pagingLink="search.do" multipleDelete="false" searcheable="false" 
 		exportPdf="true" exportXls="true" dataQualifier="managePermits">
-		<transys:textcolumn headerText="Delivery Address" dataField="deliveryAddress.fullLine" />
-		<%-- <transys:textcolumn headerText="DeliveryStreet" dataField="deliveryAddress.line2" /> --%>
+		<transys:textcolumn headerText="Delivery Address #" dataField="deliveryAddress.line1" />
+		<transys:textcolumn headerText="DeliveryStreet" dataField="deliveryAddress.line2" /> 
 		<transys:textcolumn headerText="Locn. Type" dataField="locationType.locationType" />
 		<transys:textcolumn headerText="PermitType" dataField="permitType.permitType" />
 		<transys:textcolumn headerText="PermitClass" dataField="permitClass.permitClass" />
