@@ -1155,7 +1155,11 @@ LOCK TABLES `dumpsterSize` WRITE;
 /*!40000 ALTER TABLE `dumpsterSize` DISABLE KEYS */;
 INSERT INTO `dumpsterSize` (`id`,`size`,`permitClassId`,`comments`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (1,'6 yd',1,NULL,NULL,NULL,NULL,NULL,1);
 INSERT INTO `dumpsterSize` (`id`,`size`,`permitClassId`,`comments`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (2,'10 yd',1,NULL,NULL,NULL,NULL,NULL,1);
-/*!40000 ALTER TABLE `dumpsterSize` ENABLE KEYS */;
+INSERT INTO `dumpsterSize` (`id`,`size`,`permitClassId`,`comments`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (3,'15 yd',1,NULL,NULL,NULL,NULL,NULL,1);
+INSERT INTO `dumpsterSize` (`id`,`size`,`permitClassId`,`comments`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (4,'20 yd',1,NULL,NULL,NULL,NULL,NULL,1);
+INSERT INTO `dumpsterSize` (`id`,`size`,`permitClassId`,`comments`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (5,'25 yd',1,NULL,NULL,NULL,NULL,NULL,1);
+INSERT INTO `dumpsterSize` (`id`,`size`,`permitClassId`,`comments`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (6,'30 yd',1,NULL,NULL,NULL,NULL,NULL,1);
+INSERT INTO `dumpsterSize` (`id`,`size`,`permitClassId`,`comments`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (7,'40 yd',2,NULL,NULL,NULL,NULL,NULL,1);
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
