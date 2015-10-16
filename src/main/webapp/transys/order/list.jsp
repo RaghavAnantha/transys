@@ -154,6 +154,20 @@ function populateCustomerDeliveryAddress() {
 			</td>
 		</tr>
 		<tr>
+			<td align="${left}" class="form-left"><transys:label code="Balance Amount Due" /></td>
+			<td align="${left}" class="wide">
+				<span>
+					<input id="balanceAmountDueYes" name="balanceAmountDue" type="radio" value="Yes"/>
+					&nbsp;<label style="font-weight: normal; font-size: 13px;" for="balanceAmountDueYes">Yes</label>
+				</span>
+				&nbsp;
+				<span>
+					<input id="balanceAmountDueNo" name="balanceAmountDue" type="radio" value="No"/>
+					&nbsp;<label style="font-weight: normal; font-size: 13px;" for="balanceAmountDueNo">No</label>
+				</span>
+			</td>
+		</tr>
+		<tr>
 			<td align="${left}"></td>
 			<td align="${left}">
 				<input type="button" class="btn btn-primary btn-sm" onclick="document.forms['orderSearchForm'].submit();"
