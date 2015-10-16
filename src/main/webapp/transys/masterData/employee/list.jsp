@@ -6,7 +6,7 @@
 	<table width="100%" id="form-table">
 		<tr>
 			<td align="${left}" class="form-left"><transys:label code="Employee ID" /></td>
-			<td align="${left}" class="wide">
+			<td align="${left}" >
 				<select class="flat form-control input-sm" id="status" name="employeeId" style="width: 175px">
 					<option value="">------Please Select------</option>
 					<c:forEach items="${employee}" var="anEmployee">
@@ -21,7 +21,7 @@
 		<tr>
 			<td align="${left}" class="form-left"><transys:label
 					code="Employee First Name" /></td>
-			<td align="${left}" class="wide"><select
+			<td align="${left}" ><select
 				class="flat form-control input-sm" id="status" name="firstName"
 				style="width: 175px">
 					<option value="">------
@@ -40,7 +40,7 @@
 		</tr>
 		<tr>
 			<td align="${left}" class="form-left"><transys:label code="Employee last Name" /></td>
-						<td align="${left}" class="wide"><select
+						<td align="${left}" ><select
 				class="flat form-control input-sm" id="lastName" name="lastName"
 				style="width: 175px">
 					<option value="">------
@@ -61,7 +61,7 @@
 		<tr>
 			<td align="${left}" class="form-left"><transys:label
 					code="Status" /></td>
-			<td align="${left}" class="wide"><select
+			<td align="${left}"><select
 				class="flat form-control input-sm" id="status" name="status.status"
 				style="width: 175px">
 					<option value="">------

@@ -50,13 +50,13 @@ function populateEndDate() {
 		<tr>
 			<td class="form-left"><transys:label code="Permit Number" /><span class="errorMessage">*</span></td>
 			<td align="${left}" class="wide">
-				<form:input path="number" cssClass="flat" style="width: 175px"  />
+				<form:input path="number" cssClass="flat" style="width: 175px !important"  />
 			 	<br><form:errors path="number" cssClass="errorMessage" />
 			</td>
 			
 			<td class="form-left"><transys:label code="Order Number" /></td>
 			<td align="${left}">
-				<input value="${associatedOrderID.order.id}" cssClass="flat" style="width: 175px" readOnly="true"/>
+				<input value="${associatedOrderID.order.id}" cssClass="flat" style="width: 175px !important" readOnly="true"/>
 			</td>
 		</tr>
 		<tr>
@@ -116,11 +116,11 @@ function populateEndDate() {
 			<td align="${left}" class="form-left"><transys:label
 					code="Start Date" /></td>
 			<td align="${left}" class="wide"><form:input path="startDate" class="flat"
-				id="datepicker7" name="startDate" style="width: 175px"  onChange="return populateEndDate();"/></td>
+				id="datepicker7" name="startDate" style="width: 175px !important"  onChange="return populateEndDate();"/></td>
 				
 			<td class="form-left"><transys:label code="End Date" /></td>
 			<td align="${left}">
-				<form:input id="endDateInput" path="endDate" cssClass="flat" style="width: 175px" readonly="true" />
+				<form:input id="endDateInput" path="endDate" cssClass="flat" style="width: 175px !important" readonly="true" />
 			 	<br><form:errors path="endDate" cssClass="errorMessage" />
 			</td>
 		</tr>
@@ -135,7 +135,7 @@ function populateEndDate() {
 			</td>
 			<td class="form-left"><transys:label code="Parking Meter Fee" /><span class="errorMessage">*</span></td>
 			<td align="${left}">
-				<form:input path="parkingMeterFee" cssClass="flat" style="width: 175px"  />
+				<form:input path="parkingMeterFee" cssClass="flat" style="width: 175px !important"  />
 			 	<br><form:errors path="parkingMeterFee" cssClass="errorMessage" />
 			</td>
 		</tr>

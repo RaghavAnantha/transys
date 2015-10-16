@@ -48,7 +48,7 @@
 			<td align="${left}" class="form-left"><transys:label
 					code="Phone Number" /></td>
 			<td align="${left}"><select class="flat form-control input-sm"
-				id="phone" name="phone" style="width: 175px">
+				id="phone" name="phone" style="width: 175px !important">
 					<option value="">------<transys:label code="Please Select" />------</option>
 					<c:forEach items="${customerIds}" var="phone">
 						<c:set var="selected" value="" />
