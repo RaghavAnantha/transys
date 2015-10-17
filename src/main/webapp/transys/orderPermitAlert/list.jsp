@@ -1,6 +1,6 @@
 <%@include file="/common/taglibs.jsp"%>
 <br/>
-<h4 style="margin-top: -15px; !important">Order Permits Alert</h4>
+<h5 style="margin-top: -15px; !important">Order Permits Alert</h5>
 <form:form action="/orderPermitAlert/list.do" method="get" name="orderPermitsAlertSearchForm" id="orderPermitsAlertSearchForm">
 	<table width="100%" id="form-table">
 		<tr>

@@ -23,7 +23,6 @@
 		</div>
 		<div id="orderPermitsAlert" class="tab-pane"></div>	
 		<div id="permitsReport" class="tab-pane">
-			<br/>
 			<p>Placeholder for permit reports</p>
 		</div>
 	</div>

@@ -1,6 +1,6 @@
 <%@include file="/common/taglibs.jsp"%>
-<script type="text/javascript">
 
+<script type="text/javascript">
 function populateDeliveryAddress() {
 	
 	var deliveryAddressSelect = $('#deliveryAddressSelect');
@@ -56,7 +56,6 @@ $("#permitModalFromAlertForm").submit(function (ev) {
     ev.preventDefault();
 });
 </script>
-<br/>
 <form:form action="/permit/savePermitFromAlert.do" name="permitModalFromAlertForm" id="permitModalFromAlertForm" commandName="modelObject" method="post" >
 	<form:hidden path="orderId" value="${associatedOrderID.id}" />
 	<table id="form-table" class="table">

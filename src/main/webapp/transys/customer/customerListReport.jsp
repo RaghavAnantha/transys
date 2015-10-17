@@ -1,8 +1,9 @@
 <%@include file="/common/taglibs.jsp"%>
 <br />
-<h4 style="margin-top: -15px; !important">Customers List Report</h4>
+<h5 style="margin-top: -15px; !important">Customers List Report</h5>
 <form:form action="customerListReport.do" method="get" name="customersListReport" id="customersListReport">
 	<table width="100%" id="form-table">
+		<tr><td colspan=10></td></tr>
 		<tr>
 			<td align="${left}" class="form-left"><transys:label
 					code="Company Name" /></td>

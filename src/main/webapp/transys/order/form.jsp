@@ -534,9 +534,7 @@ function verifyExchangeOrderAndSubmit() {
 	<input type="hidden" name="isExchange" id="isExchange" value="false" />
 	<input type="hidden" name="existingDroppedOffOrderId" id="existingDroppedOffOrderId" value="" />
 	<table id="form-table" class="table">
-		<tr>
-			<td colspan=10></td>
-		</tr>
+		<tr><td colspan=10></td></tr>
 		<tr>
 			<td class="form-left"><transys:label code="Order #" /><span class="errorMessage">*</span></td>
 			<td align="${left}">${modelObject.id}</td>

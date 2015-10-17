@@ -157,13 +157,21 @@ function populateCustomerDeliveryAddress() {
 		<tr>
 			<td align="${left}" class="form-left"><transys:label code="Balance Amount Due" /></td>
 			<td align="${left}" class="wide">
+				<c:set var="balanceAmountDueYesChecked" value="" />
+				<c:if test="${sessionScope.searchCriteria.searchMap['balanceAmountDue'] == '!=0.00'}">
+					<c:set var="balanceAmountDueYesChecked" value="checked" />
+				</c:if>
+				<c:set var="balanceAmountDueNoChecked" value="" />
+				<c:if test="${sessionScope.searchCriteria.searchMap['balanceAmountDue'] == '0.00'}">
+					<c:set var="balanceAmountDueNoChecked" value="checked" />
+				</c:if>
 				<span>
-					<input id="balanceAmountDueYes" name="balanceAmountDue" type="radio" value="Yes"/>
+					<input id="balanceAmountDueYes" name="balanceAmountDue" type="radio" value="!=0.00" ${balanceAmountDueYesChecked} />
 					&nbsp;<label style="font-weight: normal; font-size: 13px;" for="balanceAmountDueYes">Yes</label>
 				</span>
 				&nbsp;
 				<span>
-					<input id="balanceAmountDueNo" name="balanceAmountDue" type="radio" value="No"/>
+					<input id="balanceAmountDueNo" name="balanceAmountDue" type="radio" value="0.00"  ${balanceAmountDueNoChecked} />
 					&nbsp;<label style="font-weight: normal; font-size: 13px;" for="balanceAmountDueNo">No</label>
 				</span>
 			</td>

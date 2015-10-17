@@ -1,0 +1,9 @@
+.nav-tabs > li > a {
+    /* adjust padding for height*/
+    padding-top: 4px; 
+    padding-bottom: 4px;
+}
+
+.nav-tabs > li.active > a, .nav-tabs > li.active > a:focus, .nav-tabs > li.active > a:hover {
+    border-width: 2px;
+}

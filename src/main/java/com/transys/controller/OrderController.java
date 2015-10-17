@@ -228,15 +228,6 @@ public class OrderController extends CRUDController<Order> {
 		//TODO fix me
 		criteria.getSearchMap().remove("_csrf");
 		
-		String balanceAmountDueReqStr = (String) criteria.getSearchMap().get("balanceAmountDue");
-		if (StringUtils.isNotEmpty(balanceAmountDueReqStr)) {
-			if (BooleanUtils.toBoolean(balanceAmountDueReqStr)) {
-				criteria.getSearchMap().put("balanceAmountDue", "!=0.00");
-			} else {
-				criteria.getSearchMap().put("balanceAmountDue", "0.00");
-			}
-		}
-		
 		if (criteria.getSearchMap().get("customer") != null) {
 			String customerId = (String)criteria.getSearchMap().get("customer");
 			if (StringUtils.isNotEmpty(customerId)) {

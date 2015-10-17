@@ -20,7 +20,6 @@ $("#orderNotesModalForm").submit(function (ev) {
     ev.preventDefault();
 });
 </script>
-
 <form:form action="/order/saveOrderNotesModal.do" name="orderNotesModalForm" id="orderNotesModalForm" commandName="notesModelObject" method="post">
 	<form:hidden path="id" id="id" />
 	<form:hidden path="order.id" id="order.id" />

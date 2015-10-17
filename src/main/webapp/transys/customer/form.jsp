@@ -42,10 +42,10 @@ function formatFax(){
 	}	
 }	
 </script>
-<br/>
 <form:form action="save.do" name="typeForm" commandName="modelObject" method="post" id="typeForm">
 	<form:hidden path="id" id="id" />
 	<table id="form-table" class="table">
+		<tr><td colspan=10></td></tr>
 		<tr>
 			<td class="form-left"><transys:label code="Company Name" /><span class="errorMessage">*</span></td>
 			<td align="${left}">

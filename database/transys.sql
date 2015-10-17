@@ -742,12 +742,12 @@ DROP TABLE IF EXISTS `permit`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `permit` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `permitType` bigint(20) NOT NULL,
+  `permitTypeId` bigint(20) NOT NULL,
   `number` varchar(25) DEFAULT NULL,
   `fee` decimal(6,2) DEFAULT NULL,
   `startDate` datetime DEFAULT NULL,
   `endDate` datetime DEFAULT NULL,
-  `locationType` bigint(20) DEFAULT NULL,
+  `locationTypeId` bigint(20) DEFAULT NULL,
   `status` bigint(20) NOT NULL DEFAULT '1',
   `created_at` datetime DEFAULT NULL,
   `created_by` bigint(20) DEFAULT NULL,
@@ -758,20 +758,20 @@ CREATE TABLE `permit` (
   `deliveryAddressId` bigint(20) NOT NULL,
   `parkingMeter` varchar(3) DEFAULT NULL,
   `parkingMeterFee` decimal(6,2) DEFAULT NULL,
-  `permitClass` bigint(20) DEFAULT NULL,
+  `permitClassId` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `permitStatusRef_idx` (`status`),
   KEY `permitCustomerRef_idx` (`customerId`),
   KEY `permitDeliveryAddressRef_idx` (`deliveryAddressId`),
-  KEY `permitLocationTypeRef_idx` (`locationType`),
-  KEY `permitTypeRef_idx` (`permitType`),
-  KEY `permitClassRef_Idx` (`permitClass`),
-  CONSTRAINT `permitClassRef` FOREIGN KEY (`permitClass`) REFERENCES `permitClass` (`id`),
+  KEY `permitLocationTypeRef_idx` (`locationTypeId`),
+  KEY `permitTypeRef_idx` (`permitTypeId`),
+  KEY `permitClassRef_Idx` (`permitClassId`),
+  CONSTRAINT `permitClassRef` FOREIGN KEY (`permitClassId`) REFERENCES `permitClass` (`id`),
   CONSTRAINT `permitCustomerRef` FOREIGN KEY (`customerId`) REFERENCES `customer` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `permitDeliveryAddressRef` FOREIGN KEY (`deliveryAddressId`) REFERENCES `deliveryAddress` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `permitLocationTypeRef` FOREIGN KEY (`locationType`) REFERENCES `locationType` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `permitLocationTypeRef` FOREIGN KEY (`locationTypeId`) REFERENCES `locationType` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `permitStatusRef` FOREIGN KEY (`status`) REFERENCES `permitStatus` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `permitTypeRef` FOREIGN KEY (`permitType`) REFERENCES `permitType` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `permitTypeRef` FOREIGN KEY (`permitTypeId`) REFERENCES `permitType` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 

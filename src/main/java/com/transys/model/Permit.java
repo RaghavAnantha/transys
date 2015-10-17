@@ -24,11 +24,11 @@ public class Permit  extends AbstractBaseModel {
 	private Customer customer;
 	
 	@ManyToOne
-	@JoinColumn(name="permitType")
+	@JoinColumn(name="permitTypeId")
 	private PermitType permitType;
 	
 	@ManyToOne
-	@JoinColumn(name="permitClass")
+	@JoinColumn(name="permitClassId")
 	private PermitClass permitClass;
 	
 	@OneToMany(mappedBy="permit", cascade = CascadeType.ALL)
@@ -54,7 +54,7 @@ public class Permit  extends AbstractBaseModel {
 	private DeliveryAddress deliveryAddress;
 	
 	@ManyToOne
-	@JoinColumn(name="locationType")
+	@JoinColumn(name="locationTypeId")
 	private LocationType locationType;
 	
 	@ManyToOne
@@ -70,10 +70,12 @@ public class Permit  extends AbstractBaseModel {
 	@Transient
 	private Long orderId;
 
+	@Transient
 	public Long getOrderId() {
 		return orderId;
 	}
-
+	
+	@Transient
 	public void setOrderId(Long orderId) {
 		this.orderId = orderId;
 	}
