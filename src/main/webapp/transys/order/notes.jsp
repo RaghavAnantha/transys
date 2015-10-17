@@ -2,7 +2,7 @@
 <form:form action="saveOrderNotes.do" name="typeForm" commandName="notesModelObject" method="post">
 	<form:hidden path="id" id="id" />
 	<form:hidden path="order.id" id="order.id" />
-	<table id="form-table" width="100%" cellspacing="1" cellpadding="5">
+	<table id="form-table" class="table">
 		<tr><td colspan=10></td></tr>
 		<tr><td class="form-left">Notes<span class="errorMessage">*</span></td></tr>
 		<tr>

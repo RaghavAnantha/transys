@@ -389,7 +389,7 @@ function populatePermitDetails(index, permit) {
 	
 	var permitAddressSelect = $("#permitAddress" + index);
 	
-	permitValidFrom.html(permit.startDate);
+	permitValidFrom.html(permit.formattedStartDate);
    	permitValidTo.html(permit.endDate);
    	
    	/*var permitFeeVal = "0.00"
@@ -856,19 +856,19 @@ function verifyExchangeOrderAndSubmit() {
 		</tr>
 	    <tr>
 	    	<td class="form-left"><transys:label code="Permit1 Valid From"/><span class="errorMessage">*</span></td>
-	        <td class="td-static" align="${left}" id="permitValidFrom1">${modelObject.permits[0].startDate}</td>
+	        <td class="td-static" align="${left}" id="permitValidFrom1">${modelObject.permits[0].formattedStartDate}</td>
 	        <td class="form-left"><transys:label code="Permit2 Valid From"/><span class="errorMessage">*</span></td>
-	        <td class="td-static" align="${left}" id="permitValidFrom2">${modelObject.permits[1].startDate}</td>
+	        <td class="td-static" align="${left}" id="permitValidFrom2">${modelObject.permits[1].formattedStartDate}</td>
 	        <td class="form-left"><transys:label code="Permit3 Valid From"/><span class="errorMessage">*</span></td>
-	        <td class="td-static" align="${left}" id="permitValidFrom3">${modelObject.permits[2].startDate}</td>
+	        <td class="td-static" align="${left}" id="permitValidFrom3">${modelObject.permits[2].formattedStartDate}</td>
 	    </tr>
 	    <tr>
 	    	<td class="form-left"><transys:label code="Permit1 Valid To"/><span class="errorMessage">*</span></td>
-	        <td class="td-static" align="${left}" id="permitValidTo1">${modelObject.permits[0].endDate}</td>
+	        <td class="td-static" align="${left}" id="permitValidTo1">${modelObject.permits[0].formattedEndDate}</td>
 	        <td class="form-left" ><transys:label code="Permit2 Valid To"/><span class="errorMessage">*</span></td>
-	        <td class="td-static" align="${left}" id="permitValidTo2">${modelObject.permits[1].endDate}</td>
+	        <td class="td-static" align="${left}" id="permitValidTo2">${modelObject.permits[1].formattedEndDate}</td>
 	        <td class="form-left"><transys:label code="Permit3 Valid To"/><span class="errorMessage">*</span></td>
-	        <td class="td-static" align="${left}" id="permitValidTo3">${modelObject.permits[2].endDate}</td>
+	        <td class="td-static" align="${left}" id="permitValidTo3">${modelObject.permits[2].formattedEndDate}</td>
 	    </tr>
 	    <tr>
 	      <td class="form-left"><transys:label code="Permit1 Address"/></td>
@@ -1050,7 +1050,7 @@ function verifyExchangeOrderAndSubmit() {
 			<td class="form-left"><transys:label code="Payment1 Date"/><span class="errorMessage">*</span></td>
 			<td class="td-static" align="${left}">
 				<c:if test="${modelObject.orderPayment[0] != null and modelObject.orderPayment[0].id != null}">
-					${modelObject.orderPayment[0].createdAt}
+					${modelObject.orderPayment[0].formattedCreatedAt}
 				</c:if>
 			</td>
 			<td class="form-left"><transys:label code="Amount1"/><span class="errorMessage">*</span></td>
@@ -1081,7 +1081,7 @@ function verifyExchangeOrderAndSubmit() {
 			<td class="form-left"><transys:label code="Payment2 Date"/><span class="errorMessage">*</span></td>
 			<td class="td-static" align="${left}">
 				<c:if test="${modelObject.orderPayment[1] != null and modelObject.orderPayment[1].id != null}">
-					${modelObject.orderPayment[1].createdAt}
+					${modelObject.orderPayment[1].formattedCreatedAt}
 				</c:if>
 			</td>
 			<td class="form-left"><transys:label code="Amount2"/><span class="errorMessage">*</span></td>
@@ -1112,7 +1112,7 @@ function verifyExchangeOrderAndSubmit() {
 			<td class="form-left"><transys:label code="Payment3 Date"/><span class="errorMessage">*</span></td>
 			<td class="td-static" align="${left}">
 				<c:if test="${modelObject.orderPayment[2] != null and modelObject.orderPayment[2].id != null}">
-					${modelObject.orderPayment[2].createdAt}
+					${modelObject.orderPayment[2].formattedCreatedAt}
 				</c:if>
 			</td>
 			<td class="form-left"><transys:label code="Amount3"/><span class="errorMessage">*</span></td>
@@ -1161,7 +1161,6 @@ function verifyExchangeOrderAndSubmit() {
 				<br><form:errors path="orderNotes[0].notes" cssClass="errorMessage" />
 			</td>
 		</tr>
-		<tr><td colspan="2"></td></tr>
 		<tr>
 			<td>&nbsp;</td>
 			<td align="${left}" colspan="2">
@@ -1170,6 +1169,7 @@ function verifyExchangeOrderAndSubmit() {
 				<input type="button" id="orderCancelBtn" value="<transys:label code="Cancel"/>" class="flat btn btn-primary btn-sm" onClick="location.href='main.do'" />
 			</td>
 		</tr>
+		<tr><td colspan="2"></td></tr>
 	</table>
 </form:form>
 

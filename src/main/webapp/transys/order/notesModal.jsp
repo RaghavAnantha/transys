@@ -23,7 +23,7 @@ $("#orderNotesModalForm").submit(function (ev) {
 <form:form action="/order/saveOrderNotesModal.do" name="orderNotesModalForm" id="orderNotesModalForm" commandName="notesModelObject" method="post">
 	<form:hidden path="id" id="id" />
 	<form:hidden path="order.id" id="order.id" />
-	<table id="form-table" width="100%" cellspacing="1" cellpadding="5">
+	<table id="form-table" class="table">
 		<tr>
 			<td colspan=10>
 				<form:textarea row="5" id="notesTabNotes" path="notes" cssClass="flat" style="width:100%;"/>

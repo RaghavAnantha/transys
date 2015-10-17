@@ -1,6 +1,7 @@
 package com.transys.model;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -126,6 +127,18 @@ public class Permit  extends AbstractBaseModel {
 	
 	public Date getEndDate() {
 		return this.endDate;
+	}
+	
+	@Transient
+	public String getFormattedStartDate() {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyy");
+		return dateFormat.format(this.startDate);
+	}
+	
+	@Transient
+	public String getFormattedEndDate() {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyy");
+		return dateFormat.format(this.endDate);
 	}
 
 	public List<PermitAddress> getPermitAddress() {
