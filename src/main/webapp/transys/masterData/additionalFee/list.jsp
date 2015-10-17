@@ -21,6 +21,8 @@
 						<option value="${aFee.description}" ${selected}>${aFee.description}</option>
 					</c:forEach>
 			</select></td>	
+			<td align="${left}" class="form-left"><transys:label code="Effective Date From"/></td>
+			<td align="${left}" class="wide"><input class="flat" id="datepicker6" name="effectiveStartDate" value="${sessionScope.searchCriteria.searchMap['effectiveStartDate']}" style="width: 175px" /></td>
 			</tr>
 			<tr>
 				<td align="${left}" class="form-left"><transys:label code="Fee" /></td>
@@ -39,6 +41,8 @@
 							<option value="${tempFee.fee}" ${selected}>${tempFee.fee}</option>
 						</c:forEach>
 				</select></td>	
+			 <td align="${left}" class="form-left"><transys:label code="Effective Date To"/></td>
+		     <td align="${left}" class="wide"><input class="flat" id="datepicker7" name="effectiveEndDate" value="${sessionScope.searchCriteria.searchMap['effectiveEndDate']}" style="width: 175px" /></td> 
 			</tr>
 		<tr>
 			<td align="${left}"></td>

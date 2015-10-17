@@ -21,6 +21,8 @@
 						<option value="${aClass.id}" ${selected}>${aClass.permitClass}</option>
 					</c:forEach>
 			</select></td>	
+			<td align="${left}" class="form-left"><transys:label code="Effective Date From"/></td>
+			<td align="${left}" class="wide"><input class="flat" id="datepicker6" name="effectiveStartDate" value="${sessionScope.searchCriteria.searchMap['effectiveStartDate']}" style="width: 175px" /></td>
 			</tr>
 			<tr>
 			<td align="${left}" class="form-left"><transys:label code="Permit Type" /></td>
@@ -38,7 +40,9 @@
 						</c:if>
 						<option value="${aType.id}" ${selected}>${aType.permitType}</option>
 					</c:forEach>
-			</select></td>	
+			</select></td>
+			 <td align="${left}" class="form-left"><transys:label code="Effective Date To"/></td>
+		     <td align="${left}" class="wide"><input class="flat" id="datepicker7" name="effectiveEndDate" value="${sessionScope.searchCriteria.searchMap['effectiveEndDate']}" style="width: 175px" /></td> 
 			</tr>
 			<tr>
 				<td align="${left}" class="form-left"><transys:label code="Permit Fee" /></td>

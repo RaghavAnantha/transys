@@ -609,19 +609,6 @@ public class GenericJpaDAO implements GenericDAO {
 				valBuilder = valBuilder.deleteCharAt(valBuilder.length() - 1);
 				searchString.append("UPPER(p." + criteriaKey + ") IN (" + valBuilder.toString() + ")");
 			}
-		} else if (criterias.get(param.toString()).toString().startsWith("<=")) {
-			if (!orQuery) {
-				searchString.append(" and ");
-			}
-			try {
-				searchString.append("p." + criteriaKey + " <= '"
-						+ new Timestamp(((Date) BaseController.dateFormat
-								.parse(criterias.get(param.toString()).toString().trim().substring(2))).getTime())
-						+ "'");
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 		} else if (criterias.get(param.toString()).toString().startsWith("!=")
 				|| criterias.get(param.toString()).toString().startsWith("<>")) {
 			if (!orQuery) {
@@ -633,7 +620,12 @@ public class GenericJpaDAO implements GenericDAO {
 				|| param.toString().toUpperCase().startsWith("CREATEDAT")
 				|| param.toString().toUpperCase().startsWith("MODIFIEDAT"))) {
 			
-			appendSearchStringWithDateRange(criterias, searchString, param);
+			String dateValue = criterias.get(param.toString()).toString();
+			 if (dateValue.startsWith(">=") || dateValue.startsWith("<=")) {
+				appendSearchStringWithDate(criterias, searchString, param, orQuery, criteriaKey);
+			} else {
+				appendSearchStringWithDateRange(criterias, searchString, param);
+			}
 		} else {
 			if (!orQuery) {
 				searchString.append(" and ");
@@ -665,6 +657,26 @@ public class GenericJpaDAO implements GenericDAO {
 		}
 	}
 
+	private void appendSearchStringWithDate(Map criterias, StringBuffer searchString, Object param, boolean orQuery,
+			String criteriaKey) {
+		if (!orQuery) {
+			searchString.append(" and ");
+		}
+		
+		String operator = criterias.get(param.toString()).toString().trim().substring(0, 2);
+		String operand = criterias.get(param.toString()).toString().trim().substring(2);
+		
+		try {
+			searchString.append("p." + criteriaKey + operator + " '"
+					+ new Timestamp(((Date) BaseController.dateFormat
+							.parse(operand)).getTime())
+					+ "'");
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
 	/**
 	 *
 	 * @param criterias
@@ -685,7 +697,7 @@ public class GenericJpaDAO implements GenericDAO {
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}
-		}
+		} 
 	}
 
 	/*
