@@ -1,12 +1,13 @@
 <%@include file="/common/taglibs.jsp"%>
 <br />
-<h4 style="margin-top: -15px; !important">Customers List Report</h4>
+<h5 style="margin-top: -15px; !important">Customer List Report</h5>
 <form:form action="customerListReport.do" method="get" name="customersListReport" id="customersListReport">
-	<table width="100%" id="form-table">
+	<table id="form-table" class="table">
+		<tr><td colspan=10></td></tr>
 		<tr>
 			<td align="${left}" class="form-left"><transys:label
 					code="Company Name" /></td>
-			<td align="${left}" class="wide"><select
+			<td align="${left}"><select
 				class="flat form-control input-sm" id="companyNameListReport"
 				name="companyName" style="width:175px !important">
 					<option value="">------<transys:label code="Please Select" />------</option>
@@ -22,7 +23,7 @@
 		</tr>
 		<tr>
 			<td align="${left}" class="form-left"><transys:label code="Contact Name" /></td>
-			<td align="${left}" class="wide"><select class="flat form-control input-sm" id="contactNameListReport"
+			<td align="${left}"><select class="flat form-control input-sm" id="contactNameListReport"
 				name="contactName" style="width:175px !important">
 					<option value="">------<transys:label code="Please Select" />------</option>
 					<c:forEach items="${customer}" var="name">
@@ -39,7 +40,7 @@
 			<td align="${left}" class="form-left"><transys:label
 					code="Phone Number" /></td>
 			<td align="${left}"><select class="flat form-control input-sm"
-				id="phone" name="phone" style="width: 175px">
+				id="phone" name="phone" style="width: 175px !important">
 					<option value="">------<transys:label code="Please Select" />------</option>
 					<c:forEach items="${customerIds}" var="phone">
 						<c:set var="selected" value="" />
@@ -53,8 +54,8 @@
 		</tr>
 		<tr>
 			<td align="${left}" class="form-left"><transys:label code="Status" /></td>
-			<td align="${left}" class="wide">
-				<select class="flat form-control input-sm" id="customerStatus" name="customerStatus" style="width: 175px">
+			<td align="${left}">
+				<select class="flat form-control input-sm" id="customerStatus" name="customerStatus" style="width: 175px !important">
 					<option value="">------<transys:label code="Please Select" />------</option>
 					<c:forEach items="${customerStatuses}" var="aCustomerStatus">
 						<c:set var="selected" value=""/>

@@ -1,6 +1,6 @@
 <%@include file="/common/taglibs.jsp"%>
 <br/>
-<h4 style="margin-top: -15px; !important">Order Permits Alert</h4>
+<h5 style="margin-top: -15px; !important">Order Permits Alert</h5>
 <form:form action="/orderPermitAlert/list.do" method="get" name="orderPermitsAlertSearchForm" id="orderPermitsAlertSearchForm">
 	<table width="100%" id="form-table">
 		<tr>
@@ -142,11 +142,11 @@
 		<transys:textcolumn headerText="Contact" dataField="order.customer.contactName" />
 		<transys:textcolumn headerText="Phone#" dataField="order.customer.phone" />
 		<transys:textcolumn headerText="OrderStatus" dataField="order.orderStatus.status" />
-		<transys:textcolumn headerText="Delivery Date" dataField="order.deliveryDate" type="java.sql.Timestamp"/>
+		<transys:textcolumn headerText="Delivery Date" dataField="order.deliveryDate" type="java.sql.Timestamp" dataFormat="MM/dd/yyy"/>
 		<transys:textcolumn headerText="Permit#" dataField="permit.number" />
 		<transys:textcolumn headerText="PermitStatus" dataField="permit.status.status" />
-		<transys:textcolumn headerText="StartDate" dataField="permit.startDate" type="java.sql.Timestamp"/>
-		<transys:textcolumn headerText="EndDate" dataField="permit.endDate" type="java.sql.Timestamp"/>
+		<transys:textcolumn headerText="StartDate" dataField="permit.startDate" type="java.sql.Timestamp" dataFormat="MM/dd/yyy"/>
+		<transys:textcolumn headerText="EndDate" dataField="permit.endDate" type="java.sql.Timestamp" dataFormat="MM/dd/yyy"/>
 		<transys:anchorcolumn headerText="New Permit" linkText="Add New Permit" linkUrl="/permit/permitCreateModal.do" target="#addNewPermitModal" />
 		<transys:anchorcolumn headerText="Add Order Notes" linkText="Add Order Notes" linkUrl="/order/orderNotesCreateModal.do" target="#addOrderNotesModal" />
 	</transys:datatable>

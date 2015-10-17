@@ -1,6 +1,6 @@
 <%@include file="/common/taglibs.jsp"%>
 <br />
-<h4 style="margin-top: -15px; !important">Manage Customers</h4>
+<h5 style="margin-top: -15px; !important">Manage Customers</h5>
 <form:form action="list.do" method="get" name="searchForm">
 	<table width="100%" id="form-table">
 		<tr>
@@ -105,7 +105,7 @@
 		<transys:textcolumn headerText="Company Name" dataField="companyName" />
 		<transys:textcolumn headerText="ContactName" dataField="contactName" />
 		<transys:textcolumn headerText="Phone" dataField="phone" />
-		<transys:textcolumn headerText="Created Date" dataField="createdAt" />
+		<transys:textcolumn headerText="Created Date" dataField="createdAt" dataFormat="MM/dd/yyy"/>
 		<transys:textcolumn headerText="Status" dataField="customerStatus.status" />
 	</transys:datatable>
 	<%session.setAttribute("manageCustomerColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>

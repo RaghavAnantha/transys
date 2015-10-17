@@ -36,7 +36,6 @@ $("#permitForCustomerModalForm").submit(function (ev) {
     ev.preventDefault();
 });
 </script>
-<br/>
 <form:form action="/permit/saveForCustomerModal.do" name="permitForCustomerModalForm" id="permitForCustomerModalForm" commandName="modelObject" method="post" >
 	<table id="form-table" class="table">
 		<tr>

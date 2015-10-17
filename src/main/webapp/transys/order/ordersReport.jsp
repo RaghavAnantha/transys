@@ -1,11 +1,12 @@
 <%@include file="/common/taglibs.jsp"%>
-<h4 !important">Orders Report</h4>
+<br />
+<h5 style="margin-top: -15px; !important">Orders Report</h5>
 <form:form action="orderReport.do" method="get" name="orderReportSearchForm" id="orderReportSearchForm">
-	<table width="100%" id="form-table">
+	<table id="form-table" class="table">
 		<tr>
-			<td align="${left}" class="form-left"><transys:label code="Company Name" /></td>
-			<td align="${left}" class="wide">
-				<select class="flat form-control input-sm" id="compName" name="customer" style="width: 175px">
+			<td class="form-left"><transys:label code="Company Name" /></td>
+			<td>
+				<select class="flat form-control input-sm" id="compName" name="customer" style="width: 175px !important">
 					<option value="">------<transys:label code="Please Select" />------</option>
 					<c:forEach items="${customers}" var="name">
 						<c:set var="selected" value="" />
@@ -19,9 +20,9 @@
 			</td>
 		</tr>
 		<tr>
-			<td align="${left}" class="form-left"><transys:label code="Delivery Date from" /></td>
-			<td align="${left}" class="wide">
-				<select class="flat form-control input-sm" id=deliveryDateFrom name="deliveryDate" style="width: 175px">
+			<td class="form-left"><transys:label code="Delivery Date From" /></td>
+			<td class="wide">
+				<select class="flat form-control input-sm" id=deliveryDateFrom name="deliveryDate" style="width: 175px !important">
 					<option value="">------<transys:label code="Please Select" />------</option>
 					<c:forEach items="${order}" var="anOrder">
 						<c:set var="selected" value="" />
@@ -33,9 +34,9 @@
 					</c:forEach>
 				</select>
 			</td>
-			<td align="${left}" class="form-left"><transys:label code="Delivery Date to" /></td>
-			<td align="${left}" class="wide">
-				<select class="flat form-control input-sm" id=deliveryDateTo name="deliveryDate" style="width: 175px">
+			<td class="form-left"><transys:label code="Delivery Date To" /></td>
+			<td>
+				<select class="flat form-control input-sm" id=deliveryDateTo name="deliveryDate" style="width: 175px !important">
 					<option value="">------<transys:label code="Please Select" />------</option>
 					<c:forEach items="${order}" var="anOrder">
 						<c:set var="selected" value="" />
@@ -49,9 +50,9 @@
 			</td>
 		</tr>
 		<tr>
-			<td align="${left}" class="form-left"><transys:label code="Contact Name" /></td>
-			<td align="${left}" class="wide">
-				<select class="flat form-control input-sm" id="contactName" name="deliveryContactName" style="width: 175px">
+			<td class="form-left"><transys:label code="Contact Name" /></td>
+			<td>
+				<select class="flat form-control input-sm" id="contactName" name="deliveryContactName" style="width: 175px !important">
 					<option value="">------<transys:label code="Please Select" />------</option>
 					<c:forEach items="${order}" var="aOrder">
 						<c:set var="selected" value="" />
@@ -63,9 +64,9 @@
 					</c:forEach>
 				</select>
 			</td>
-			<td align="${left}" class="form-left"><transys:label code="Order Status" /></td>
-			<td align="${left}">
-				<select class="flat form-control input-sm" id="orderStatus" name="orderStatus" style="width: 175px">
+			<td class="form-left"><transys:label code="Order Status" /></td>
+			<td>
+				<select class="flat form-control input-sm" id="orderStatus" name="orderStatus" style="width: 175px !important">
 					<option value="">------<transys:label code="Please Select" />------</option>
 					<c:forEach items="${orderStatuses}" var="oStatus">
 						<c:set var="selected" value="" />
@@ -79,9 +80,9 @@
 			</td>
 		</tr>
 		<tr>
-			<td align="${left}" class="form-left"><transys:label code="Phone Number" /></td>
-			<td align="${left}" class="wide">
-				<select class="flat form-control input-sm" id=deliveryContactPhone1 name="deliveryContactPhone1" style="width: 175px">
+			<td class="form-left"><transys:label code="Phone Number" /></td>
+			<td>
+				<select class="flat form-control input-sm" id=deliveryContactPhone1 name="deliveryContactPhone1" style="width: 175px !important">
 					<option value="">------<transys:label code="Please Select" />------</option>
 					<c:forEach items="${order}" var="anOrder">
 						<c:set var="selected" value="" />
@@ -95,8 +96,8 @@
 			</td>
 		</tr>
 		<tr>
-			<td align="${left}"></td>
-			<td align="${left}">
+			<td></td>
+			<td>
 				<input type="button" class="btn btn-primary btn-sm" onclick="document.forms['orderReportSearchForm'].submit();"
 					value="<transys:label code="Preview"/>" />
 			</td>
@@ -117,8 +118,8 @@
 		<transys:textcolumn headerText="Delivery Address" dataField="deliveryAddress.line1" />
 		<transys:textcolumn headerText="City" dataField="deliveryAddress.city" />
 		<transys:textcolumn headerText="Status" dataField="orderStatus.status" />
-		<transys:textcolumn headerText="Delivery Date" dataField="deliveryDate" />
-		<transys:textcolumn headerText="Pickup Date" dataField="pickupDate" />
+		<transys:textcolumn headerText="Delivery Date" dataField="deliveryDate" dataFormat="MM/dd/yyy"/>
+		<transys:textcolumn headerText="Pickup Date" dataField="pickupDate" dataFormat="MM/dd/yyy"/>
 		<transys:textcolumn headerText="Pymt. method" dataField="orderPayment[0].paymentMethod.method" />	
 		<transys:textcolumn headerText="Dumpster Price" dataField="orderFees.dumpsterPrice" />
 		<transys:textcolumn headerText="City Fee" dataField="orderFees.cityFee" />

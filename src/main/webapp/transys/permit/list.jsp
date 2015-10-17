@@ -1,6 +1,6 @@
 <%@include file="/common/taglibs.jsp"%>
 <br/>
-<h4 style="margin-top: -15px; !important">Manage Permits</h4>
+<h5 style="margin-top: -15px; !important">Manage Permits</h5>
 <form:form action="list.do" method="get" name="permitSearchForm" id="permitSearchForm">
 	<table width="100%" id="form-table">
 		<tr>
@@ -180,8 +180,8 @@
 		<transys:textcolumn headerText="Locn. Type" dataField="locationType.locationType" />
 		<transys:textcolumn headerText="PermitType" dataField="permitType.permitType" />
 		<transys:textcolumn headerText="PermitClass" dataField="permitClass.permitClass" />
-		<transys:textcolumn headerText="StartDate" dataField="startDate" />
-		<transys:textcolumn headerText="EndDate" dataField="endDate" />
+		<transys:textcolumn headerText="StartDate" dataField="startDate" dataFormat="MM/dd/yyy"/>
+		<transys:textcolumn headerText="EndDate" dataField="endDate" dataFormat="MM/dd/yyy"/>
 		<transys:textcolumn headerText="CustomerName" dataField="customer.companyName" />
 		<transys:textcolumn headerText="Permit#" dataField="number" />
 		<transys:textcolumn headerText="PermitFee" dataField="fee" />

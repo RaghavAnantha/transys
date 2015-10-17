@@ -1,6 +1,7 @@
 package com.transys.model;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -19,17 +20,16 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 @Entity
 @Table(name="permit")
 public class Permit  extends AbstractBaseModel {
-
 	@ManyToOne
 	@JoinColumn(name="customerId")
 	private Customer customer;
 	
 	@ManyToOne
-	@JoinColumn(name="permitType")
+	@JoinColumn(name="permitTypeId")
 	private PermitType permitType;
 	
 	@ManyToOne
-	@JoinColumn(name="permitClass")
+	@JoinColumn(name="permitClassId")
 	private PermitClass permitClass;
 	
 	@OneToMany(mappedBy="permit", cascade = CascadeType.ALL)
@@ -51,11 +51,11 @@ public class Permit  extends AbstractBaseModel {
 	private Date endDate;
 	
 	@ManyToOne
-	@JoinColumn(name="deliveryAddress")
+	@JoinColumn(name="deliveryAddressId")
 	private DeliveryAddress deliveryAddress;
 	
 	@ManyToOne
-	@JoinColumn(name="locationType")
+	@JoinColumn(name="locationTypeId")
 	private LocationType locationType;
 	
 	@ManyToOne
@@ -71,10 +71,12 @@ public class Permit  extends AbstractBaseModel {
 	@Transient
 	private Long orderId;
 
+	@Transient
 	public Long getOrderId() {
 		return orderId;
 	}
-
+	
+	@Transient
 	public void setOrderId(Long orderId) {
 		this.orderId = orderId;
 	}
@@ -125,6 +127,18 @@ public class Permit  extends AbstractBaseModel {
 	
 	public Date getEndDate() {
 		return this.endDate;
+	}
+	
+	@Transient
+	public String getFormattedStartDate() {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyy");
+		return dateFormat.format(this.startDate);
+	}
+	
+	@Transient
+	public String getFormattedEndDate() {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyy");
+		return dateFormat.format(this.endDate);
 	}
 
 	public List<PermitAddress> getPermitAddress() {

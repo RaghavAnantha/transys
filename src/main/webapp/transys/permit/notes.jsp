@@ -1,10 +1,10 @@
 <%@include file="/common/taglibs.jsp"%>
-<h5>Add Permit Notes</h5>
-
 <form:form action="savePermitNotes.do" name="typeForm" commandName="notesModelObject" method="post">
 	<form:hidden path="id" id="id" />
 	<form:hidden path="permit.id" id="permit.id" />
-	<table id="form-table" width="100%" cellspacing="1" cellpadding="5">
+	<table id="form-table" width="100%">
+		<tr><td colspan=10></td></tr>
+	    <tr><td class="form-left">Notes<span class="errorMessage">*</span></td></tr>
 		<tr>
 			<td colspan=10>
 				<%-- <td align="${left}" class="form-left"><transys:label code="Notes" /></td> --%>
@@ -27,8 +27,8 @@
 	<transys:datatable urlContext="permit" baseObjects="${notesList}"
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
 		pagingLink="search.do" searcheable="false" dataQualifier="managePermitNotes">
-		<transys:textcolumn headerText="Entered By" dataField="enteredBy" />
-		<transys:textcolumn headerText="Date/Time" dataField="createdAt" />
+		<transys:textcolumn headerText="Entered By" dataField="enteredBy" width="125px" />
+		<transys:textcolumn headerText="Date/Time" dataField="createdAt" dataFormat="MM/dd/yyy"/>
 		<transys:textcolumn headerText="Notes/Comments" dataField="notes" />
 	</transys:datatable>
 	<%session.setAttribute("managePermitNotesColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>

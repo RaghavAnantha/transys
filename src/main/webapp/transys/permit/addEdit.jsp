@@ -1,5 +1,6 @@
 <%@include file="/common/taglibs.jsp"%>
-<h4>Add/Edit Permits</h4>
+<br />
+<h5 style="margin-top: -15px; !important">Add/Edit Permits</h5>
 <ul class="nav nav-tabs" id="permit_edit_tabs">
 	<li><a href="#permitDetails" data-toggle="tab">Permit Details</a></li>
 	<li><a href="#permitAddress" data-toggle="tab">Permit Address</a></li>

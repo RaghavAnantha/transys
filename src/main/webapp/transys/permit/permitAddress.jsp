@@ -1,10 +1,9 @@
 <%@include file="/common/taglibs.jsp"%>
-<h5>Add Permit Address</h5>
-
 <form:form id="permitAddressForm" action="savePermitAddress.do" name="permitAddressForm" commandName="permitAddressModelObject" method="post">
 	<form:hidden path="id" />
 	<form:hidden path="permit.id" id="permit.id" />
 	<table id="form-table" class="table editPermitAddress">
+		<tr><td colspan=10></td></tr>
 		<tr>
 			<td class="form-left"><transys:label code="Permit Address #" /><span class="errorMessage">*</span></td>
 			<td align="${left}">
@@ -87,8 +86,8 @@
 	    }).get();
 	    
 	    $("#permitAddressForm").find('#id').val($.trim(tableData[0]));
-	    $('#line1').val($.trim(tableData[1]));
-	    $('#line2').val($.trim(tableData[2])); 
+	    $("#permitAddressForm").find('#line1').val($.trim(tableData[1]));
+	    $("#permitAddressForm").find('#line2').val($.trim(tableData[2])); 
 	    $('table.editPermitAddress').find('#city').val($.trim(tableData[3]));
 	    $('table.editPermitAddress').find('#zipcode').val($.trim(tableData[5]));
 		$("table.editPermitAddress select option").filter(function() {

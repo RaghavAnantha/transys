@@ -1,10 +1,10 @@
 <%@include file="/common/taglibs.jsp"%>
 
-<br />
 <form:form id="editDeliveryAddressForm" action="saveDeliveryAddress.do" name="typeForm" commandName="deliveryAddressModelObject" method="post" >
 	<form:hidden path="id" />
 	<form:hidden path="customer.id" id="customerId" />
-	<table id="form-table" class="table delivery">
+	<table id="form-table" class="table customerDeliveryAddress">
+		<tr><td colspan=10></td></tr>
 		<tr>
 			<td class="form-left"><transys:label code="Customer ID" /><span class="errorMessage">*</span></td>
 			<td align="${left}">${deliveryAddressModelObject.customer.id}</td>
@@ -81,12 +81,11 @@ function validate() {
 	return true;
 };
 
-$("#deliveryAddressServiceForm").find("tr a").click(function() {		
-	
+$("#deliveryAddressServiceForm").find("tr a").click(function() {
 	var ids = ["id", "line1", "line2", "city", "zipcode", "state"];
 	
 	for (var i= 0; i<ids.length; i++) {		
-		$("table.delivery").find('#'+ids[i]).removeClass("border");	
+		$("table.customerDeliveryAddress").find('#'+ids[i]).removeClass("border");	
 	}
 	
     var tableData = $(this).parent().parent().children("td").map(function() {
@@ -94,22 +93,22 @@ $("#deliveryAddressServiceForm").find("tr a").click(function() {
     }).get();
     
     $("#editDeliveryAddressForm").find('#id').val($.trim(tableData[0]));
-    $('#line1').val($.trim(tableData[1]));
-    $('#line2').val($.trim(tableData[2])); 
-    $('table.delivery').find('#city').val($.trim(tableData[3]));
-    $('table.delivery').find('#zipcode').val($.trim(tableData[5]));
-	$("table.delivery select option").filter(function() {
+    $("#editDeliveryAddressForm").find('#line1').val($.trim(tableData[1]));
+    $("#editDeliveryAddressForm").find('#line2').val($.trim(tableData[2])); 
+    $("#editDeliveryAddressForm").find('#city').val($.trim(tableData[3]));
+    $("#editDeliveryAddressForm").find('#zipcode').val($.trim(tableData[5]));
+	$("table.customerDeliveryAddress select option").filter(function() {
 	    return this.text == $.trim(tableData[4]); 
 	}).attr('selected', true);
 });
 
 function checkVal(id) {
-	$("table.delivery").find('#'+id).removeClass("border");
+	$("table.customerDeliveryAddress").find('#'+id).removeClass("border");
 }
 
 function checkValDrop(id, val) {
 	if (val != "") {
-		$("table.delivery").find('#'+id).removeClass("border");
+		$("table.customerDeliveryAddress").find('#'+id).removeClass("border");
 	}
 }
 
@@ -117,9 +116,9 @@ function validateForm() {
 	var ids = ["line1", "line2", "city", "zipcode", "state"];
 	var bool = false	
 	for (var i = 0; i < ids.length; i++) {		
-		if ($("table.delivery").find('#'+ids[i]).val().length == 0 ) {	
+		if ($("table.customerDeliveryAddress").find('#'+ids[i]).val().length == 0 ) {	
 			
-			$("table.delivery").find('#'+ids[i]).addClass("border");
+			$("table.customerDeliveryAddress").find('#'+ids[i]).addClass("border");
 			bool = true;
 		}	
 	} 

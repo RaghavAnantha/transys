@@ -1,5 +1,6 @@
 package com.transys.model;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -8,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -111,5 +113,11 @@ public abstract class AbstractBaseModel implements BaseModel {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+	
+	@Transient
+	public String getFormattedCreatedAt() {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyy");
+		return dateFormat.format(this.createdAt);
 	}
 }

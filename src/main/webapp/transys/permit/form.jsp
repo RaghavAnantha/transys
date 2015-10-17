@@ -1,6 +1,6 @@
 <%@include file="/common/taglibs.jsp"%>
-<script type="text/javascript">
 
+<script type="text/javascript">
 function populateDeliveryAddress() {
 	
 	var deliveryAddressSelect = $('#deliveryAddressSelect');
@@ -43,10 +43,10 @@ function populateEndDate() {
 }
 
 </script>
-<br/>
 <form:form action="save.do" name="typeForm" commandName="modelObject" method="post" >
 	<form:hidden path="id" id="id" />
-	<table id="form-table" width="100%">
+	<table id="form-table" class="table">
+		<tr><td colspan=10></td></tr>
 		<tr>
 			<td class="form-left"><transys:label code="Permit Number" /><span class="errorMessage">*</span></td>
 			<td align="${left}" class="wide">
@@ -139,7 +139,6 @@ function populateEndDate() {
 			 	<br><form:errors path="parkingMeterFee" cssClass="errorMessage" />
 			</td>
 		</tr>
-	   
 		<tr><td colspan="2"></td></tr>
 		<tr>
 			<td>&nbsp;</td>

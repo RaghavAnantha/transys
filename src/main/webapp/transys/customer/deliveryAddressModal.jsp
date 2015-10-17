@@ -58,26 +58,6 @@
 </form:form>
 
 <script type="text/javascript">
-$("tr a").click(function() {	
-	var ids = ["line1", "line2", "city", "zipcode", "state"];
-	
-	for (var i= 0; i<ids.length; i++) {		
-		$("table.delivery").find('#'+ids[i]).removeClass("border");	
-	}
-	
-    var tableData = $(this).parent().parent().children("td").map(function() {
-        return $(this).text();
-    }).get();
-    
-    $('#line1').val($.trim(tableData[0]));
-    $('#line2').val($.trim(tableData[1])); 
-    $('table.delivery').find('#city').val($.trim(tableData[2]));
-    $('table.delivery').find('#zipcode').val($.trim(tableData[4]));
-	$("table.delivery select option").filter(function() {
-	    return this.text == $.trim(tableData[3]); 
-	}).attr('selected', true);
-});
-
 function checkVal(id) {
 	$("table.delivery").find('#'+id).removeClass("border");
 }
