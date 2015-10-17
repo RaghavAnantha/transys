@@ -7,3 +7,19 @@
 .nav-tabs > li.active > a, .nav-tabs > li.active > a:focus, .nav-tabs > li.active > a:hover {
     border-width: 2px;
 }
+
+input, .input-sm {
+    font-size: 13px;
+}
+
+textarea {
+    font-size: 13px;
+}
+
+.td-static {
+	font-size: 13px;
+}
+
+.section-header {
+    background-color: #337ab7 !important;
+}

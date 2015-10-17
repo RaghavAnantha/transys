@@ -32,7 +32,7 @@
 		<tr><td colspan="2"></td></tr>
 		<tr><td colspan="2"></td></tr>
 		<tr>
-			<td colspan=10 class="danger" style="font-size: 13px;font-weight: bold;color: white;">Scale/Weights Information</td>
+			<td colspan=10 class="section-header" style="line-height: 1;font-size: 13px;font-weight: bold;color: white;">Scale/Weights Information</td>
 		</tr>
 		<tr>
 			<td colspan="10"></td>
