@@ -224,7 +224,7 @@ public class OrderController extends CRUDController<Order> {
 		String balanceAmountDueReqStr = (String) criteria.getSearchMap().get("balanceAmountDue");
 		if (StringUtils.isNotEmpty(balanceAmountDueReqStr)) {
 			if (BooleanUtils.toBoolean(balanceAmountDueReqStr)) {
-				criteria.getSearchMap().put("balanceAmountDue", "0.00");
+				criteria.getSearchMap().put("balanceAmountDue", "!=0.00");
 			} else {
 				criteria.getSearchMap().put("balanceAmountDue", "0.00");
 			}
