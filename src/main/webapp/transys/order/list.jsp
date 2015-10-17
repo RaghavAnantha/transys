@@ -30,7 +30,7 @@ function populateCustomerDeliveryAddress() {
 }
 </script>
 <br />
-<h4 style="margin-top: -15px; !important">Manage Orders</h4>
+<h5 style="margin-top: -15px; !important">Manage Orders</h5>
 <form:form action="list.do" method="get" name="orderSearchForm" id="orderSearchForm">
 	<table width="100%" id="form-table">
 		<tr>

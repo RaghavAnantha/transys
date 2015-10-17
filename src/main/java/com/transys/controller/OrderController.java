@@ -109,20 +109,27 @@ public class OrderController extends CRUDController<Order> {
 	public void setupCreate(ModelMap model, HttpServletRequest request, Order order) {
 		setupCreate(model, request);
 		
-		String dumpsterQuery = "select obj from Dumpster obj where obj.status.status='Available' order by obj.id asc";
+		String dumpsterQuery = "select obj from Dumpster obj where obj.status.status='Available'";
+		Dumpster assignedDumpster = null;
+		if (order != null && order.getDumpster() != null && order.getDumpster().getId() != null) {
+			List<Dumpster> assignedDumpsterList = genericDAO.executeSimpleQuery("select obj from Dumpster obj where obj.id=" + order.getDumpster().getId());
+			assignedDumpster = assignedDumpsterList.get(0);
+			
+			dumpsterQuery += " and obj.dumpsterSize.id=" + assignedDumpster.getDumpsterSize().getId();
+		}
+		dumpsterQuery += " order by obj.id asc";
+				
 		List<Dumpster> dumpsterInfoList = genericDAO.executeSimpleQuery(dumpsterQuery);
 		
-		if (order == null) {
-			model.addAttribute("orderDumpsters", dumpsterInfoList);
-			return;
-		}
-		
-		if (order.getDumpster() != null && order.getDumpster().getId() != null) {
-			List<Dumpster> assignedDumpsterList = genericDAO.executeSimpleQuery("select obj from Dumpster obj where obj.id=" + order.getDumpster().getId());
-			dumpsterInfoList.add(assignedDumpsterList.get(0));
+		if (assignedDumpster != null) {
+			dumpsterInfoList.add(assignedDumpster);
 		}
 		
 		model.addAttribute("orderDumpsters", dumpsterInfoList);
+		
+		if (order == null) {
+			return;
+		}
 			
 		Long materialCategoryId = null;
 		if (order.getMaterialType().getMaterialCategory() == null) {

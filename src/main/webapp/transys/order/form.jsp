@@ -529,12 +529,14 @@ function verifyExchangeOrderAndSubmit() {
     return false;
 }
 </script>
-<br/>
 <form:form action="save.do" name="orderAddEditForm" commandName="modelObject" method="post" id="orderAddEditForm">
 	<form:hidden path="id" id="id" />
 	<input type="hidden" name="isExchange" id="isExchange" value="false" />
 	<input type="hidden" name="existingDroppedOffOrderId" id="existingDroppedOffOrderId" value="" />
 	<table id="form-table" class="table">
+		<tr>
+			<td colspan=10></td>
+		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Order #" /><span class="errorMessage">*</span></td>
 			<td align="${left}">${modelObject.id}</td>

@@ -1,10 +1,10 @@
 <%@include file="/common/taglibs.jsp"%>
-<h5>Add Notes</h5>
 
 <form:form action="saveOrderNotes.do" name="typeForm" commandName="notesModelObject" method="post">
 	<form:hidden path="id" id="id" />
 	<form:hidden path="order.id" id="order.id" />
 	<table id="form-table" width="100%" cellspacing="1" cellpadding="5">
+		<tr><td class="form-left">Add Notes<span class="errorMessage">*</span></td></tr>
 		<tr>
 			<td colspan=10>
 				<form:textarea row="5" id="notesTabNotes" path="notes" cssClass="flat" style="width:100%;"/>
@@ -22,7 +22,7 @@
 	</table>
 </form:form>
 
-<form:form name="delete.do" id="serviceForm" class="tab-color">
+<form:form name="orderNotesForm" id="orderNotesForm" class="tab-color">
 	<transys:datatable urlContext="order" baseObjects="${notesList}"
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
 		pagingLink="search.do" searcheable="false" dataQualifier="manageNotes">

@@ -19,7 +19,6 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 @Entity
 @Table(name="permit")
 public class Permit  extends AbstractBaseModel {
-
 	@ManyToOne
 	@JoinColumn(name="customerId")
 	private Customer customer;
@@ -51,7 +50,7 @@ public class Permit  extends AbstractBaseModel {
 	private Date endDate;
 	
 	@ManyToOne
-	@JoinColumn(name="deliveryAddress")
+	@JoinColumn(name="deliveryAddressId")
 	private DeliveryAddress deliveryAddress;
 	
 	@ManyToOne
