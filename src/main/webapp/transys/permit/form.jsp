@@ -45,7 +45,7 @@ function populateEndDate() {
 </script>
 <form:form action="save.do" name="typeForm" commandName="modelObject" method="post" >
 	<form:hidden path="id" id="id" />
-	<table id="form-table" width="100%">
+	<table id="form-table" class="table">
 		<tr><td colspan=10></td></tr>
 		<tr>
 			<td class="form-left"><transys:label code="Permit Number" /><span class="errorMessage">*</span></td>
@@ -139,7 +139,6 @@ function populateEndDate() {
 			 	<br><form:errors path="parkingMeterFee" cssClass="errorMessage" />
 			</td>
 		</tr>
-	   
 		<tr><td colspan="2"></td></tr>
 		<tr>
 			<td>&nbsp;</td>

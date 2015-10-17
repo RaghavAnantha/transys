@@ -32,10 +32,10 @@ function populateCustomerDeliveryAddress() {
 <br />
 <h5 style="margin-top: -15px; !important">Manage Orders</h5>
 <form:form action="list.do" method="get" name="orderSearchForm" id="orderSearchForm">
-	<table width="100%" id="form-table">
+	<table id="form-table" class="table">
 		<tr>
-			<td align="${left}" class="form-left"><transys:label code="Order #" /></td>
-			<td align="${left}" class="wide">
+			<td class="form-left"><transys:label code="Order #" /></td>
+			<td>
 				<select class="flat form-control input-sm" id="id" name="id" style="width: 175px !important">
 					<option value="">------<transys:label code="Please Select" />------</option>
 					<c:forEach items="${orderIds}" var="anOrderId">
@@ -47,8 +47,8 @@ function populateCustomerDeliveryAddress() {
 					</c:forEach>
 				</select>
 			</td>
-			<td align="${left}" class="form-left"><transys:label code="Order Status" /></td>
-			<td align="${left}">
+			<td class="form-left"><transys:label code="Order Status" /></td>
+			<td>
 				<select class="flat form-control input-sm" id="orderStatus" name="orderStatus" style="width: 175px !important">
 					<option value="">------<transys:label code="Please Select" />------</option>
 					<c:forEach items="${orderStatuses}" var="anOrderStatus">
@@ -63,8 +63,8 @@ function populateCustomerDeliveryAddress() {
 			<td colspan=10></td>
 		</tr>
 		<tr>
-			<td align="${left}" class="form-left"><transys:label code="Customer" /></td>
-			<td align="${left}" class="wide">
+			<td class="form-left"><transys:label code="Customer" /></td>
+			<td>
 				<select class="flat form-control input-sm" id="customer" name="customer" style="width: 175px !important" onChange="return populateCustomerDeliveryAddress();">
 					<option value="">------<transys:label code="Please Select" />------</option>
 					<c:forEach items="${customers}" var="aCustomer">
@@ -76,8 +76,8 @@ function populateCustomerDeliveryAddress() {
 					</c:forEach>
 				</select>
 			</td>
-			<td align="${left}" class="form-left"><transys:label code="Delivery Address" /></td>
-			<td align="${left}">
+			<td class="form-left"><transys:label code="Delivery Address" /></td>
+			<td>
 				<select class="flat form-control input-sm" id="deliveryAddress" name="deliveryAddress" style="width: 175px !important">
 					<option value="">------Please Select------</option>
 					<c:forEach items="${deliveryAddresses}" var="aDeliveryAddress">
@@ -91,8 +91,8 @@ function populateCustomerDeliveryAddress() {
 			</td>
 		</tr>
 		<tr>
-			<td align="${left}" class="form-left"><transys:label code="Phone Number" /></td>
-			<td align="${left}" class="wide">
+			<td class="form-left"><transys:label code="Phone Number" /></td>
+			<td>
 				<select class="flat form-control input-sm" id=deliveryContactPhone1 name="deliveryContactPhone1" style="width: 175px !important">
 					<option value="">------<transys:label code="Please Select" />------</option>
 					<c:forEach items="${order}" var="anOrder">
@@ -106,8 +106,8 @@ function populateCustomerDeliveryAddress() {
 			</td>
 		</tr>
 		<tr>
-			<td align="${left}" class="form-left"><transys:label code="Dumpster Size" /></td>
-			<td align="${left}" class="wide">
+			<td class="form-left"><transys:label code="Dumpster Size" /></td>
+			<td>
 				<select class="flat form-control input-sm" id="dumpsterSize" name="dumpsterSize" style="width: 175px !important">
 					<option value="">------<transys:label code="Please Select" />------</option>
 					<c:forEach items="${dumpsterSizes}" var="aDumpsterSize">
@@ -120,8 +120,8 @@ function populateCustomerDeliveryAddress() {
 					</c:forEach>
 				</select>
 			</td>
-			<td align="${left}" class="form-left"><transys:label code="Dumpster #" /></td>
-			<td align="${left}">
+			<td class="form-left"><transys:label code="Dumpster #" /></td>
+			<td>
 				<select class="flat form-control input-sm" id="dumpster" name="dumpster" style="width: 175px !important">
 					<option value="">------<transys:label code="Please Select" />------</option>
 					<c:forEach items="${dumpsters}" var="aDumpster">
@@ -135,28 +135,28 @@ function populateCustomerDeliveryAddress() {
 			</td>
 		</tr>
 		<tr>
-			<td align="${left}" class="form-left"><transys:label code="Delivery Date From" /></td>
-			<td align="${left}" class="wide">
+			<td class="form-left"><transys:label code="Delivery Date From" /></td>
+			<td>
 				<input class="flat" id="datepicker" name="deliveryDateFrom" value="${sessionScope.searchCriteria.searchMap['deliveryDateFrom']}" style="width: 175px !important" />
 			</td>
-			<td align="${left}" class="form-left"><transys:label code="Delivery Date To" /></td>
-			<td align="${left}" class="wide">
+			<td class="form-left"><transys:label code="Delivery Date To" /></td>
+			<td>
 				<input class="flat" id="datepicker1" name="deliveryDateTo" value="${sessionScope.searchCriteria.searchMap['deliveryDateTo']}" style="width: 175px !important" />
 			</td>
 		</tr>
 		<tr>
-			<td align="${left}" class="form-left"><transys:label code="Pick Up Date From" /></td>
-			<td align="${left}" class="wide">
+			<td class="form-left"><transys:label code="Pick Up Date From" /></td>
+			<td class="wide">
 				<input class="flat" id="datepicker2" name="pickupDateFrom" value="${sessionScope.searchCriteria.searchMap['pickupDateFrom']}" style="width: 175px !important" />
 			</td>
-			<td align="${left}" class="form-left"><transys:label code="Pick Up Date To" /></td>
-			<td align="${left}" class="wide">
+			<td class="form-left"><transys:label code="Pick Up Date To" /></td>
+			<td>
 				<input class="flat" id="datepicker3" name="pickupDateTo" value="${sessionScope.searchCriteria.searchMap['pickupDateTo']}" style="width: 175px !important" />
 			</td>
 		</tr>
 		<tr>
-			<td align="${left}" class="form-left"><transys:label code="Balance Amount Due" /></td>
-			<td align="${left}" class="wide">
+			<td class="form-left"><transys:label code="Balance Amount Due" /></td>
+			<td>
 				<c:set var="balanceAmountDueYesChecked" value="" />
 				<c:if test="${sessionScope.searchCriteria.searchMap['balanceAmountDue'] == '!=0.00'}">
 					<c:set var="balanceAmountDueYesChecked" value="checked" />
@@ -177,8 +177,8 @@ function populateCustomerDeliveryAddress() {
 			</td>
 		</tr>
 		<tr>
-			<td align="${left}"></td>
-			<td align="${left}">
+			<td></td>
+			<td>
 				<input type="button" class="btn btn-primary btn-sm" onclick="document.forms['orderSearchForm'].submit();"
 					value="<transys:label code="Search"/>" />
 			</td>
@@ -201,8 +201,8 @@ function populateCustomerDeliveryAddress() {
 		<transys:textcolumn headerText="City" dataField="deliveryAddress.city" />
 		<transys:textcolumn headerText="Dmpstr Size" dataField="dumpsterSize.size" />
 		<transys:textcolumn headerText="Dmpstr #" dataField="dumpster.dumpsterNum" />
-		<transys:textcolumn headerText="Delivery Date" dataField="deliveryDate" />
-		<transys:textcolumn headerText="Pickup Date" dataField="pickupDate" />
+		<transys:textcolumn headerText="Delivery Date" dataField="deliveryDate" dataFormat="MM/dd/yyy"/>
+		<transys:textcolumn headerText="Pickup Date" dataField="pickupDate" dataFormat="MM/dd/yyy"/>
 		<transys:textcolumn headerText="Dmpstr Price" dataField="orderFees.dumpsterPrice" type="java.math.BigDecimal"/>
 		<transys:textcolumn headerText="Permit Fee" dataField="orderFees.totalPermitFees" type="java.math.BigDecimal"/>
 		<transys:textcolumn headerText="City Fee" dataField="orderFees.cityFee" type="java.math.BigDecimal"/>

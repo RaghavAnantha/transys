@@ -42,7 +42,7 @@ function formatFax(){
 	}	
 }	
 </script>
-<form:form action="save.do" name="typeForm" commandName="modelObject" method="post" id="typeForm">
+<form:form action="save.do" name="customerForm" id="customerForm" commandName="modelObject" method="post">
 	<form:hidden path="id" id="id" />
 	<table id="form-table" class="table">
 		<tr><td colspan=10></td></tr>
@@ -65,7 +65,7 @@ function formatFax(){
 				<br><form:errors path="customerType" cssClass="errorMessage" />
 			</td> 
 			<td class="form-left"><transys:label code="Created Date" /></td>
-			<td align="${left}">${modelObject.createdAt}</td>
+			<td align="${left}">${modelObject.formattedCreatedAt}</td>
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Charge Company" /></td>
@@ -200,7 +200,6 @@ function formatFax(){
 				<br><form:errors path="customerNotes[0].notes" cssClass="errorMessage" />
 			</td>
 		</tr>
-	   
 		<tr><td colspan="2"></td></tr>
 		<tr>
 			<td>&nbsp;</td>
@@ -210,5 +209,6 @@ function formatFax(){
 				<input type="button" id="cancelBtn" value="<transys:label code="Cancel"/>" class="flat btn btn-primary btn-sm" onClick="location.href='main.do'" />
 			</td>
 		</tr>
+		<tr><td colspan="2"></td></tr>
 	</table>
 </form:form>
