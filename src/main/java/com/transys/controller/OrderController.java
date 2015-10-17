@@ -553,6 +553,12 @@ public class OrderController extends CRUDController<Order> {
 		OrderStatus orderStatus = retrieveOrderStatus("Picked Up");
 		entity.setOrderStatus(orderStatus);
 		
+		Long dumpsterSizeId = entity.getDumpsterSize().getId();
+		Long materialCategoryId = entity.getMaterialType().getMaterialCategory().getId();
+		BigDecimal netWeightTonnage = entity.getNetWeightTonnage();
+		BigDecimal overweightFee = retrieveOverweightFee(dumpsterSizeId, materialCategoryId, netWeightTonnage);
+		entity.getOrderFees().setOverweightFee(overweightFee);
+		
 		genericDAO.saveOrUpdate(entity);
 		
 		Long modifiedBy = getUser(request).getId();
@@ -929,9 +935,9 @@ public class OrderController extends CRUDController<Order> {
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/retrieveOverweightFee.do")
 	public @ResponseBody String retrieveOverweightFee(ModelMap model, HttpServletRequest request,
-			 													     @RequestParam(value = "dumpsterSizeId") String dumpsterSizeId,
-			 													     @RequestParam(value = "materialCategoryId") String materialCategoryId,
-			 													     @RequestParam(value = "netWeightTonnage") String netWeightTonnage) {
+			 													     @RequestParam(value = "dumpsterSizeId") Long dumpsterSizeId,
+			 													     @RequestParam(value = "materialCategoryId") Long materialCategoryId,
+			 													     @RequestParam(value = "netWeightTonnage") BigDecimal netWeightTonnage) {
 		BigDecimal cityFee = retrieveOverweightFee(dumpsterSizeId, materialCategoryId, netWeightTonnage);
 		
 		ObjectMapper objectMapper = new ObjectMapper();
@@ -947,7 +953,7 @@ public class OrderController extends CRUDController<Order> {
 		//return json;
 	}
 	
-	private BigDecimal retrieveOverweightFee(String dumpsterSizeId, String materialCategoryId, String netWeightTonnage) {
+	private BigDecimal retrieveOverweightFee(Long dumpsterSizeId, Long materialCategoryId, BigDecimal netWeightTonnage) {
 		String overweightFeeQuery = "select obj from OverweightFee obj where ";
 		overweightFeeQuery += "obj.dumpsterSize.id=" + dumpsterSizeId
 								 +  " and obj.materialCategory.id=" + materialCategoryId
@@ -959,8 +965,7 @@ public class OrderController extends CRUDController<Order> {
 		} else {
 			OverweightFee overweightFee = overweightFeeList.get(0);
 			
-			BigDecimal requestedWeight = new BigDecimal(netWeightTonnage);
-			BigDecimal differentialWeight = requestedWeight.subtract(overweightFee.getTonLimit());
+			BigDecimal differentialWeight = netWeightTonnage.subtract(overweightFee.getTonLimit());
 			return differentialWeight.multiply(overweightFee.getFee());
 		}
 	}

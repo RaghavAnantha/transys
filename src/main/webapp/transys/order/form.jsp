@@ -266,6 +266,7 @@ function populateDusmpsterPrice() {
 	});
 }
 
+/*
 function populateOverweightFee() {
 	var dumpsterSizeSelect = $("#dumpsterSize");
 	var dumpsterSizeId = dumpsterSizeSelect.val();
@@ -291,7 +292,7 @@ function populateOverweightFee() {
        		overweightFeeInput.val(responseData);
 		}
 	});
-}
+}*/
 
 function populateCityFee() {
 	var cityFeeDescriptionSelect = $("#orderFees\\.cityFeeType");
@@ -925,39 +926,6 @@ function verifyExchangeOrderAndSubmit() {
 			<td colspan=10></td>
 		</tr>
 		<tr>
-			<td colspan=10 class="danger" style="font-size: 13px;font-weight: bold;color: white;">Scale/Weights Information</td>
-		</tr>
-		<tr>
-			<td colspan="10"></td>
-		</tr>
-		<tr>
-			<td colspan="10"></td>
-		</tr>
-		<tr>
-			<td class="form-left"><transys:label code="Gross"/><span class="errorMessage">*</span></td>
-			<td align="${left}">
-				<form:input path="grossWeight" cssClass="flat" />
-				<br><form:errors path="grossWeight" cssClass="errorMessage" />
-			</td>
-			<td class="form-left"><transys:label code="Tare"/><span class="errorMessage">*</span></td>
-			<td align="${left}">
-				<form:input path="tare" cssClass="flat" />
-				<br><form:errors path="tare" cssClass="errorMessage" />
-			</td>
-		</tr>
-		<tr>
-			<td class="form-left"><transys:label code="Net Lb"/><span class="errorMessage">*</span></td>
-			<td align="${left}">
-				<form:input path="netWeightLb" cssClass="flat" />
-				<br><form:errors path="netWeightLb" cssClass="errorMessage" />
-			</td>
-			<td class="form-left"><transys:label code="Net Tonnage"/><span class="errorMessage">*</span></td>
-			<td align="${left}">
-				<form:input path="netWeightTonnage" cssClass="flat" onChange="return populateOverweightFee();"/>
-				<br><form:errors path="netWeightTonnage" cssClass="errorMessage" />
-			</td>
-		</tr>
-		<tr>
 			<td colspan=10></td>
 		</tr>
 		<tr>
@@ -1092,7 +1060,11 @@ function verifyExchangeOrderAndSubmit() {
 				<br><form:errors path="orderPayment[0].paymentMethod" cssClass="errorMessage" />
 			</td>
 			<td class="form-left"><transys:label code="Payment1 Date"/><span class="errorMessage">*</span></td>
-			<td align="${left}">${modelObject.orderPayment[0].createdAt}</td>
+			<td align="${left}">
+				<c:if test="${modelObject.orderPayment[0] != null and modelObject.orderPayment[0].id != null}">
+					${modelObject.orderPayment[0].createdAt}
+				</c:if>
+			</td>
 			<td class="form-left"><transys:label code="Amount1"/><span class="errorMessage">*</span></td>
 			<td align="${left}">
 				<form:input path="orderPayment[0].amountPaid" cssClass="flat" />
@@ -1119,7 +1091,11 @@ function verifyExchangeOrderAndSubmit() {
 				<br><form:errors path="orderPayment[1].paymentMethod" cssClass="errorMessage" />
 			</td>
 			<td class="form-left"><transys:label code="Payment2 Date"/><span class="errorMessage">*</span></td>
-			<td align="${left}">${modelObject.orderPayment[1].createdAt}</td>
+			<td align="${left}">
+				<c:if test="${modelObject.orderPayment[1] != null and modelObject.orderPayment[1].id != null}">
+					${modelObject.orderPayment[1].createdAt}
+				</c:if>
+			</td>
 			<td class="form-left"><transys:label code="Amount2"/><span class="errorMessage">*</span></td>
 			<td align="${left}">
 				<form:input path="orderPayment[1].amountPaid" cssClass="flat" />
@@ -1146,7 +1122,11 @@ function verifyExchangeOrderAndSubmit() {
 				<br><form:errors path="orderPayment[2].paymentMethod" cssClass="errorMessage" />
 			</td>
 			<td class="form-left"><transys:label code="Payment3 Date"/><span class="errorMessage">*</span></td>
-			<td align="${left}">${modelObject.orderPayment[2].createdAt}</td>
+			<td align="${left}">
+				<c:if test="${modelObject.orderPayment[2] != null and modelObject.orderPayment[2].id != null}">
+					${modelObject.orderPayment[2].createdAt}
+				</c:if>
+			</td>
 			<td class="form-left"><transys:label code="Amount3"/><span class="errorMessage">*</span></td>
 			<td align="${left}">
 				<form:input path="orderPayment[2].amountPaid" cssClass="flat" />
