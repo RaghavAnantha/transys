@@ -26,7 +26,7 @@
 	<transys:datatable urlContext="order" baseObjects="${notesList}"
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
 		pagingLink="search.do" searcheable="false" dataQualifier="manageNotes">
-		<transys:textcolumn headerText="Entered By" dataField="createdBy" />
+		<transys:textcolumn headerText="Entered By" dataField="enteredBy" />
 		<transys:textcolumn headerText="Date/Time" dataField="createdAt" />
 		<transys:textcolumn headerText="Notes/Comments" dataField="notes" />
 	</transys:datatable>

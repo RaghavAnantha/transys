@@ -46,6 +46,7 @@ import com.transys.model.PermitStatus;
 import com.transys.model.PermitType;
 import com.transys.model.SearchCriteria;
 import com.transys.model.State;
+import com.transys.model.User;
 
 @SuppressWarnings("unchecked")
 @Controller
@@ -709,6 +710,9 @@ public class PermitController extends CRUDController<Permit> {
 		}
 		
 		updateBaseProperties(request, entity);
+		User user=genericDAO.getById(User.class,entity.getCreatedBy());
+		entity.setEnteredBy(user.getName());
+		
 		genericDAO.saveOrUpdate(entity);
 		cleanUp(request);
 

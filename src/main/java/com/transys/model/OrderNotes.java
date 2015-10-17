@@ -17,6 +17,17 @@ public class OrderNotes extends AbstractBaseModel {
 	@Column(name="notes")
 	private String notes;
 	
+	@Column(name="entered_by")
+	private String enteredBy;
+	
+	public String getEnteredBy() {
+		return enteredBy;
+	}
+
+	public void setEnteredBy(String enteredBy) {
+		this.enteredBy = enteredBy;
+	}
+
 	public Order getOrder() {
 		return order;
 	}

@@ -327,6 +327,7 @@ public class OrderController extends CRUDController<Order> {
 			}
 		}
 		
+		udpateEnteredBy(entity);
 		genericDAO.saveOrUpdate(entity);
 		cleanUp(request);
 		
@@ -377,6 +378,7 @@ public class OrderController extends CRUDController<Order> {
 			}
 		}
 		
+		udpateEnteredBy(entity);
 		genericDAO.saveOrUpdate(entity);
 		cleanUp(request);
 		
@@ -410,6 +412,11 @@ public class OrderController extends CRUDController<Order> {
 		return urlContext + "/order";
 	}
 
+	private void udpateEnteredBy(OrderNotes entity) {
+		User user=genericDAO.getById(User.class,entity.getCreatedBy());
+		entity.setEnteredBy(user.getName());
+	}
+	
 	private List<List<Permit>> retrievePermitsOfChosenType(Order order) {
 		List<List<Permit>> allPermitsOfChosenTypesList = new ArrayList<List<Permit>>();
 		
