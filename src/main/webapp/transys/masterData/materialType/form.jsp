@@ -48,7 +48,6 @@
 		<tr>
 			<td>&nbsp;</td>
 			<td align="${left}" colspan="2"><input type="submit" id="create" onclick="return validate()" value="<transys:label code="Save"/>"
-				class="flat btn btn-primary btn-sm" /> <input type="reset" id="resetBtn" value="<transys:label code="Reset"/> "
 				class="flat btn btn-primary btn-sm" /> <input type="button" id="cancelBtn" value="<transys:label code="Cancel"/>"
 				class="flat btn btn-primary btn-sm" onClick="location.href='main.do'" /></td>
 		</tr>
