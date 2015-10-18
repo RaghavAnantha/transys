@@ -23,3 +23,7 @@ textarea {
 .section-header {
     background-color: #337ab7 !important;
 }
+
+.form-left {
+	width: 135px;
+}

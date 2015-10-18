@@ -534,10 +534,9 @@ function verifyExchangeOrderAndSubmit() {
 	<input type="hidden" name="isExchange" id="isExchange" value="false" />
 	<input type="hidden" name="existingDroppedOffOrderId" id="existingDroppedOffOrderId" value="" />
 	<table id="form-table" class="table">
-		<tr><td colspan=10></td></tr>
 		<tr>
 			<td class="form-left"><transys:label code="Order #" /><span class="errorMessage">*</span></td>
-			<td>${modelObject.id}</td>
+			<td class="wide">${modelObject.id}</td>
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Customer" /><span class="errorMessage"></span></td>
@@ -574,7 +573,7 @@ function verifyExchangeOrderAndSubmit() {
 			<td class="td-static" id="billingEmailTd">${modelObject.customer.email}</td>
 		</tr>
 		<tr>
-			<td colspan=10></td>
+			<td></td>
 		</tr>
 		<tr>
 			<td colspan=10 class="section-header" style="line-height: 1;font-size: 13px;font-weight: bold;color: white;">Delivery Information</td>
@@ -699,6 +698,11 @@ function verifyExchangeOrderAndSubmit() {
 		<tr>
 			<td colspan="10"></td>
 		</tr>
+		
+</table>
+
+<table id="form-table" class="table">	
+
 		<tr>
 	    	<td class="form-left"><transys:label code="Permit1 Class"/><span class="errorMessage">*</span></td>
 	        <td>
@@ -910,11 +914,17 @@ function verifyExchangeOrderAndSubmit() {
 	        <td class="form-left">Permit3 Fee<span class="errorMessage">*</span></td>
 	        <td class="td-static"><form:input path="orderFees.permitFee3" style="width:172px !important" cssClass="flat" onChange="return populateTotalPermitFees();"/></td>
 	    </tr>
+	
+</table>
+
+<table id="form-table" class="table">
+
+
 	    <tr>
-			<td colspan=10></td>
+			<td></td>
 		</tr>
 		<tr>
-			<td colspan=10></td>
+			<td></td>
 		</tr>
 		<tr>
 			<td colspan=10 class="section-header" style="line-height: 1;font-size: 13px;font-weight: bold;color: white;">Rates/Fees Information</td>
@@ -927,7 +937,7 @@ function verifyExchangeOrderAndSubmit() {
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Total Permit Fees"/></td>
-			<td>
+			<td class="wide">
 				<form:input path="orderFees.totalPermitFees" cssClass="form-control" readonly="true" style="width:172px;height:24px !important"/>
 			</td>
 		</tr>
@@ -1027,7 +1037,7 @@ function verifyExchangeOrderAndSubmit() {
 			</td>
 		</tr>
 		<tr>
-			<td colspan=10></td>
+			<td></td>
 		</tr>
 		<tr>
 			<td colspan=10 class="section-header" style="line-height: 1;font-size: 13px;font-weight: bold;color: white;">Payment Information</td>
@@ -1038,6 +1048,11 @@ function verifyExchangeOrderAndSubmit() {
 		<tr>
 			<td colspan="10"></td>
 		</tr>
+
+</table>
+		
+<table id="form-table" class="table">
+	
 		<tr>
 			<td class="form-left"><transys:label code="Payment1 Method"/><span class="errorMessage">*</span></td>
 			<td>
@@ -1141,14 +1156,19 @@ function verifyExchangeOrderAndSubmit() {
 			</c:if>
 			<td class="td-static"><span class="${balanceDueAlertClass}">${modelObject.balanceAmountDue}</span></td>
 		</tr>
+		
+</table>
+
+<table id="form-table" class="table">
+
 		<tr>
-			<td colspan=10></td>
+			<td></td>
 		</tr>
 		<tr>
 			<td colspan=10 class="section-header" style="line-height: 1;font-size: 13px;font-weight: bold;color: white;">Notes/Comments</td>
 		</tr>
 		<tr>
-			<td colspan="10"></td>
+			<td></td>
 		</tr>
 		<tr>
 			<td colspan=10>
