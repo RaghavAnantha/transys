@@ -7,7 +7,7 @@
  		<tr>
 			<td align="${left}" class="form-left"><transys:label code="Material Type" /></td>
 			<td align="${left}" class="wide">
-				<select class="flat form-control input-sm" id="materialType" name="materialType" style="width: 175px">
+				<select class="flat form-control input-sm" id="materialType" name="materialType" style="width: 175px !important">
 					<option value="">------
 						<transys:label code="Please Select" />------
 					</option>
@@ -20,6 +20,7 @@
 					</c:forEach>
 				</select>
 			</td>	
+			<td colspan=10></td>
 		</tr>
 		<tr>
 		  <td align="${left}" class="form-left"><transys:label code="Intake Date"/></td>
@@ -27,7 +28,7 @@
 		</tr>
 		<tr>
 			<td align="${left}" class="form-left"><transys:label code="Net Weight In Tonnage" /></td>
-			<td align="${left}" class="wide"><input name="netWeightInTonnage" style="width: 175px"  /></td>
+			<td align="${left}" class="wide"><input name="netWeightInTonnage" style="width: 175px !important"  /></td>
 		</tr>
 		<tr>
 			<td align="${left}"></td>

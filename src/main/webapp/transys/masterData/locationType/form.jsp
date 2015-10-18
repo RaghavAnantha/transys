@@ -1,14 +1,14 @@
 <%@include file="/common/taglibs.jsp"%>
 
 <br />
-<h4 style="margin-top: -15px; !important">Add/Edit Payment Method</h4>
+<h4 style="margin-top: -15px; !important">Add/Edit Location Type</h4>
 <form:form action="save.do" name="typeForm" commandName="modelObject"
 	method="post" id="typeForm">
 	<form:hidden path="id" id="id" />
 	<table id="form-table" class="table">
 		<tr>
 			<td class="form-left"><transys:label code="Location Type" /></td>
-			<td align="${left}"><form:input path="locationType" cssClass="flat" />
+			<td align="${left}"><form:input path="locationType" cssClass="flat" style="width: 175px !important"/>
 				<br>
 			<form:errors path="locationType" cssClass="errorMessage" /></td>
 		</tr>

@@ -20,6 +20,7 @@
 					</c:forEach>
 				</select>
 			</td>	
+			<td colspan=10></td>
 		</tr>
 		<tr>
 			<td align="${left}" class="form-left"><transys:label code="Dumpster Number" /></td>

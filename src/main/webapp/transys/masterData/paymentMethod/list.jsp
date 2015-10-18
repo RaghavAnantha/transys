@@ -8,7 +8,7 @@
 			<td align="${left}" class="form-left"><transys:label code="Payment Method" /></td>
 			<td align="${left}" class="wide"><select
 				class="flat form-control input-sm" id="method" name="method"
-				style="width: 175px">
+				style="width: 175px !important">
 					<option value="">------
 						<transys:label code="Please Select" />------
 					</option>
@@ -21,6 +21,7 @@
 						<option value="${apaymentMethod.method}" ${selected}>${apaymentMethod.method}</option>
 					</c:forEach>
 			</select></td>
+			<td colspan=10></td>
 		</tr>
 
 		<tr>

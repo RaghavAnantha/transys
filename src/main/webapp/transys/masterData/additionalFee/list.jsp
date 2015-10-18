@@ -5,10 +5,10 @@
 <form:form action="list.do" method="get" name="searchForm">
 	<table width="100%" id="form-table">
 		<tr>
-			<td align="${left}" class="form-left"><transys:label code="Description" /></td>
-			<td align="${left}" class="wide"><select
+			<td class="form-left"><transys:label code="Description" /></td>
+			<td class="wide"><select
 				class="flat form-control input-sm" id="city" name="description"
-				style="width: 175px">
+				style="width: 175px !important">
 					<option value="">------
 						<transys:label code="Please Select" />------
 					</option>
@@ -23,6 +23,7 @@
 			</select></td>	
 			<td align="${left}" class="form-left"><transys:label code="Effective Date From"/></td>
 			<td align="${left}" class="wide"><input class="flat" id="datepicker6" name="effectiveStartDate" value="${sessionScope.searchCriteria.searchMap['effectiveStartDate']}" style="width: 175px" /></td>
+			<td colspan=10></td>
 			</tr>
 			<tr>
 				<td align="${left}" class="form-left"><transys:label code="Fee" /></td>

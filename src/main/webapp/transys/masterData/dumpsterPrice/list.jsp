@@ -5,8 +5,8 @@
 <form:form action="list.do" method="get" name="searchForm">
 	<table width="100%" id="form-table">
 		<tr>
-			<td align="${left}" class="form-left"><transys:label code="Dumpster Size" /></td>
-			<td align="${left}" class="wide">
+			<td class="form-left"><transys:label code="Dumpster Size" /></td>
+			<td class="wide">
 				<select class="flat form-control input-sm" id="dumpsterSize" name="dumpsterSize" style="width: 175px !important">
 					<option value="">------<transys:label code="Please Select" />------</option>
 					<c:forEach items="${dumpsterSizes}" var="aDumpsterSize">
@@ -19,12 +19,13 @@
 					</c:forEach>
 				</select>
 			</td>	
- 			<td align="${left}" class="form-left"><transys:label code="Effective Date From"/></td>
-			<td align="${left}" class="wide"><input class="flat" id="datepicker6" name="effectiveStartDate" value="${sessionScope.searchCriteria.searchMap['effectiveStartDate']}" style="width: 175px" /></td>
+ 			<td class="form-left"><transys:label code="Effective Date From"/></td>
+			<td class="wide"><input class="flat" id="datepicker6" name="effectiveStartDate" value="${sessionScope.searchCriteria.searchMap['effectiveStartDate']}" style="width: 175px" /></td>
+			<td colspan=10></td>
 		</tr>
 		<tr>
-			<td align="${left}" class="form-left"><transys:label code="Material Type" /></td>
-			<td align="${left}" class="wide">
+			<td class="form-left"><transys:label code="Material Type" /></td>
+			<td class="wide">
 				<select class="flat form-control input-sm" id="materialType" name="materialType" style="width: 175px !important">
 					<option value="">------Please Select------</option>
 					<c:forEach items="${materialTypes}" var="aType">
@@ -36,12 +37,12 @@
 						<option value="${aType.id}" ${selected}>${aType.materialName}</option>
 					</c:forEach>
 			</select></td>	
-			 <td align="${left}" class="form-left"><transys:label code="Effective Date To"/></td>
-		     <td align="${left}" class="wide"><input class="flat" id="datepicker7" name="effectiveEndDate" value="${sessionScope.searchCriteria.searchMap['effectiveEndDate']}" style="width: 175px" /></td> 
+			 <td class="form-left"><transys:label code="Effective Date To"/></td>
+		     <td class="wide"><input class="flat" id="datepicker7" name="effectiveEndDate" value="${sessionScope.searchCriteria.searchMap['effectiveEndDate']}" style="width: 175px" /></td> 
 		</tr>
 		<tr>
-			<td align="${left}" class="form-left"><transys:label code="Dumpster Price" /></td>
-			<td align="${left}" class="wide"><select
+			<td class="form-left"><transys:label code="Dumpster Price" /></td>
+			<td class="wide"><select
 				class="flat form-control input-sm" id="price" name="price"
 				style="width: 175px !important">
 					<option value="">------
@@ -58,8 +59,8 @@
 			</select></td>	
 		</tr>
 		<tr>
-			<td align="${left}"></td>
-			<td align="${left}"><input type="button"
+			<td></td>
+			<td><input type="button"
 				class="btn btn-primary btn-sm"
 				onclick="document.forms['searchForm'].submit();"
 				value="<transys:label code="Search"/>" /></td>

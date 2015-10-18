@@ -13,16 +13,17 @@
 					<form:option value="">------Please Select--------</form:option>
 					<form:options items="${materialTypes}" itemValue="id" itemLabel="materialName" />
 				</form:select> 
-			 	<br><form:errors path="materialType" cssClass="errorMessage" />
+			 	<form:errors path="materialType" cssClass="errorMessage" />
 			</td>
+			<td colspan=10></td>
 		</tr>
 		<tr>
 			<td align="${left}" class="form-left"><transys:label code="Intake Date" /></td>
-			<td align="${left}" class="wide"><form:input path="intakeDate" class="flat" id="datepicker7" name="intakeDate" style="width: 175px" /></td>
+			<td align="${left}" class="wide"><form:input path="intakeDate" class="flat" id="datepicker7" name="intakeDate" style="width: 175px !important" /></td>
 		</tr>
 		<tr>
 			<td align="${left}" class="form-left"><transys:label code="Tons" /></td>
-			<td align="${left}" class="wide"><form:input path="netWeightTonnage" cssClass="flat" style="width: 175px"  /></td>
+			<td align="${left}" class="wide"><form:input path="netWeightTonnage" cssClass="flat" style="width: 175px !important"  /></td>
 		</tr>
 			<tr>
 			<td colspan=10></td>

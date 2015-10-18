@@ -7,7 +7,7 @@
 		<tr>
 			<td align="${left}" class="form-left"><transys:label code="Material Category" /></td>
 			<td align="${left}" class="wide">
-				<select class="flat form-control input-sm" id="materialType" name="category" style="width: 175px">
+				<select class="flat form-control input-sm" id="materialType" name="category" style="width: 175px !important">
 					<option value="">------Please Select------</option>
 					<c:forEach items="${materialCategories}" var="aCategory">
 						<c:set var="selected" value="" />
@@ -18,6 +18,7 @@
 						<option value="${aCategory.category}" ${selected}>${aCategory.category}</option>
 					</c:forEach>
 			</select></td>	
+			<td colspan=10></td>
 		</tr>
 		<tr>
 			<td align="${left}"></td>

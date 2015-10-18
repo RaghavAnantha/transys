@@ -8,7 +8,7 @@
 	<table id="form-table" class="table">
 		<tr>
 			<td class="form-left"><transys:label code="Payment Method" /></td>
-			<td align="${left}"><form:input path="method" cssClass="flat" />
+			<td ><form:input path="method" cssClass="flat" style="width: 175px !important"/>
 				<br>
 			<form:errors path="method" cssClass="errorMessage" /></td>
 		</tr>

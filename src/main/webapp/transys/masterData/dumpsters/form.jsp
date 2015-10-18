@@ -13,12 +13,12 @@
 					<form:option value="">-------Please Select------</form:option>
 					<form:options items="${dumpsterSizes}" itemValue="id" itemLabel="size" />
 				</form:select> 
-			 	<br><form:errors path="dumpsterSize" cssClass="errorMessage" />
+			 	<form:errors path="dumpsterSize" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Dumpster Number" /><span class="errorMessage">*</span></td>
-			<td align="${left}"><form:input path="dumpsterNum" cssClass="flat" /> <br>
+			<td align="${left}"><form:input path="dumpsterNum" cssClass="flat" style="width:172px !important"/> <br>
 			<form:errors path="dumpsterNum" cssClass="errorMessage" /></td>
 		</tr>
 		<tr>

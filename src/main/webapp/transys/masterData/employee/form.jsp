@@ -45,6 +45,7 @@ function formatPhone(){
 			<td ><form:input path="lastName" cssClass="flat" style="width: 175px !important"/>
 				<br>
 			<form:errors path="lastName" cssClass="errorMessage" /></td>
+			<td colspan=10></td>
 		</tr>
 		
 		<tr>

@@ -10,38 +10,38 @@
 		<tr>
 			<td class="form-left"><transys:label code="Dumpster Size" /></td>
 			<td align="${left}">
-				<form:select cssClass="flat form-control input-sm" style="width:172px !important" path="dumpsterSize" >
+				<form:select cssClass="flat form-control input-sm" style="width:173px !important" path="dumpsterSize" >
 					<form:option value="">------Please Select--------</form:option>
 					<form:options items="${dumpsterSizes}" itemValue="id"  itemLabel="size" />
 				</form:select> 
-				<br><form:errors path="dumpsterSize" cssClass="errorMessage" />
+				<form:errors path="dumpsterSize" cssClass="errorMessage" />
 			</td> 
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Material Type" /></td>
 			<td align="${left}">
-				<form:select cssClass="flat form-control input-sm" style="width:172px !important" path="materialType" >
+				<form:select cssClass="flat form-control input-sm" style="width:173px !important" path="materialType" >
 					<form:option value="">------Please Select--------</form:option>
 					<form:options items="${materialTypes}" itemValue="id" itemLabel="materialName" />
 				</form:select> 
-				<br><form:errors path="materialType" cssClass="errorMessage" />
+				<form:errors path="materialType" cssClass="errorMessage" />
 			</td> 
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Dumpster Price" /></td>
-			<td align="${left}"><form:input path="price" cssClass="flat" />
-			<br>
+			<td align="${left}"><form:input path="price" cssClass="flat" style="width:173px !important"/>
+			<br> 
 			<form:errors path="price" cssClass="errorMessage" /></td>
 		</tr>
 		<tr>
 			<td align="${left}" class="form-left"><transys:label code="Effective Date From" /></td>
 			<td align="${left}">
-			<form:input path="effectiveStartDate" class="flat" id="datepicker7" name="effectiveStartDate" /></td>
+			<form:input path="effectiveStartDate" class="flat" id="datepicker7" name="effectiveStartDate" style="width:173px !important"/></td>
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Effective Date To" /></td>
 			<td align="${left}">
-			<form:input path="effectiveEndDate" class="flat" id="datepicker8" name="effectiveEndDate"  /></td>
+			<form:input path="effectiveEndDate" class="flat" id="datepicker8" name="effectiveEndDate"  style="width:173px !important"/></td>
 		</tr>
 		<tr>
 			<td colspan=10></td>

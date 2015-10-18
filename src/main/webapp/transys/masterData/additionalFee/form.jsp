@@ -9,25 +9,25 @@
 	
 		<tr>
 			<td class="form-left"><transys:label code="Description" /></td>
-			<td align="${left}"><form:input path="description" cssClass="flat" />
+			<td align="${left}"><form:input path="description" cssClass="flat" style="width: 175px !important"/>
 				<br>
 			<form:errors path="description" cssClass="errorMessage" /></td>
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Fee" /></td>
-			<td align="${left}"><form:input path="fee" cssClass="flat" />
+			<td align="${left}"><form:input path="fee" cssClass="flat" style="width: 175px !important"/>
 				<br>
 			<form:errors path="fee" cssClass="errorMessage" /></td>
 		</tr>
 			<tr>
 			<td align="${left}" class="form-left"><transys:label code="Effective Date From" /></td>
 			<td align="${left}">
-			<form:input path="effectiveStartDate" class="flat" id="datepicker7" name="effectiveStartDate" /></td>
+			<form:input path="effectiveStartDate" class="flat" id="datepicker7" name="effectiveStartDate" style="width: 175px !important"/></td>
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Effective Date To" /></td>
 			<td align="${left}">
-			<form:input path="effectiveEndDate" class="flat" id="datepicker8" name="effectiveEndDate"  /></td>
+			<form:input path="effectiveEndDate" class="flat" id="datepicker8" name="effectiveEndDate"  style="width: 175px !important"/></td>
 		</tr>
 		<tr>
 			<td colspan=10></td>

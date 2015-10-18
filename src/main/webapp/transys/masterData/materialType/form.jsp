@@ -7,20 +7,22 @@
 	<form:hidden path="id" id="id" />
 	<table id="form-table" class="table">
 		<tr>
+			<td colspan=10></td>
+		</tr>
+		<tr>
 			<td class="form-left"><transys:label code="Material Category" /></td>
 			<td align="${left}">
 				<form:select cssClass="flat form-control input-sm" style="width:172px !important" path="materialCategory" >
 					<form:option value="">------Please Select--------</form:option>
 					<form:options items="${materialCategories}" itemValue="id" itemLabel="category" />
 				</form:select> 
-				<br><form:errors path="materialCategory" cssClass="errorMessage" />
+				<form:errors path="materialCategory" cssClass="errorMessage" />
 			</td> 
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Material Type" /></td>
 			<td align="${left}">
-				<form:input path="materialName" cssClass="flat" />
-				<br>
+				<form:input path="materialName" cssClass="flat" style="width:172px !important"/>
 				<form:errors path="materialName" cssClass="errorMessage" />
 			</td>
 		</tr>
