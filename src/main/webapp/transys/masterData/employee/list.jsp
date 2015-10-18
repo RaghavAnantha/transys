@@ -22,8 +22,7 @@
 			<td align="${left}" class="form-left"><transys:label
 					code="Employee First Name" /></td>
 			<td align="${left}" ><select
-				class="flat form-control input-sm" id="status" name="firstName"
-				style="width: 175px">
+				class="flat form-control input-sm" id="status" name="firstName" style="width: 175px !important">
 					<option value="">------
 						<transys:label code="Please Select" />------
 					</option>

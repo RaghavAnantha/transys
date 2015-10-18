@@ -127,18 +127,7 @@ public class BaseController {
 			criteria = new SearchCriteria();
 			criteria.setPageSize(25);
 		}
-		if (!StringUtils.isEmpty(request.getParameter("rst"))) {
-			criteria.getSearchMap().clear();
-			if(request.getSession().getAttribute("unitval")!=null){
-				request.getSession().removeAttribute("unitval");
-			}
-			if(request.getSession().getAttribute("inspectionDriverIdlist")!=null){
-				request.getSession().removeAttribute("inspectionDriverIdlist");
-			}
-			if(request.getSession().getAttribute("fuelogverificationData")!=null){
-				request.getSession().removeAttribute("fuelogverificationData");
-			}
-		}
+		
 		criteria.setRequestParams(params);
 		if (params != null && params.size()>0) {
 			Map parameters = new HashMap();
@@ -167,7 +156,9 @@ public class BaseController {
 				criteria.setSearchMap(parameters);
 			}
 		}
+		
 		request.getSession().setAttribute("searchCriteria", criteria);
+		updateEffectiveDateInSearch(request);
 	}
 
 	protected String getCriteriaAsString(SearchCriteria criteria) {
@@ -199,6 +190,40 @@ public class BaseController {
 		}
 		response.setContentType(MimeUtil.getContentType(type));
 		return type;
+	}
+	
+	protected void updateEffectiveDateInSearch(HttpServletRequest request) {
+		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
+		Map<String, Object> searchMap = criteria.getSearchMap();
+		
+		if (searchMap.containsKey("effectiveStartDate")) {
+			searchMap.put("effectiveStartDate", ">=" + searchMap.get("effectiveStartDate"));
+			System.out.println("Setting effective start date");
+		}
+		
+		if (searchMap.containsKey("effectiveEndDate")) {
+			searchMap.put("effectiveEndDate", "<=" + searchMap.get("effectiveEndDate"));
+			System.out.println("Setting effective end date");
+		}
+		
+		criteria.setSearchMap(searchMap);
+	}
+	
+	protected void resetEffectiveDateInSearch(HttpServletRequest request) {
+		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
+		Map<String, Object> searchMap = criteria.getSearchMap();
+		
+		if (searchMap.containsKey("effectiveStartDate")) {
+			searchMap.put("effectiveStartDate", searchMap.get("effectiveStartDate").toString().substring(2));
+			System.out.println("Resetting effective start date");
+		}
+		
+		if (searchMap.containsKey("effectiveEndDate")) {
+			searchMap.put("effectiveEndDate", searchMap.get("effectiveEndDate").toString().substring(2));
+			System.out.println("Resetting effective end date");
+		}
+		
+		criteria.setSearchMap(searchMap);
 	}
 
 	/*public void writeActivityLog(String activityType, String details) {

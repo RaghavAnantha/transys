@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.transys.model.AdditionalFee;
+import com.transys.model.DumpsterPrice;
 import com.transys.model.SearchCriteria;
 
 @SuppressWarnings("unchecked")
@@ -40,7 +41,10 @@ public class AdditionalFeeController extends CRUDController<AdditionalFee> {
 		// TODO:
 		criteria.getSearchMap().remove("_csrf");
 		criteria.setPageSize(25);
+		
 		model.addAttribute("list", genericDAO.search(AdditionalFee.class, criteria, "id", false));
+		cleanUp(request);
+		
 		return urlContext + "/list";
 	}
 
@@ -70,7 +74,7 @@ public class AdditionalFeeController extends CRUDController<AdditionalFee> {
 		criteria.getSearchMap().remove("_csrf");
 		super.save(request, entity, bindingResult, model);
 
-		return urlContext + "/list";
+		return urlContext + "/form";
 
 	}
 

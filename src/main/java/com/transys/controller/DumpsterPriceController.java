@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import com.transys.controller.editor.AbstractModelEditor;
 import com.transys.model.DumpsterPrice;
 import com.transys.model.DumpsterSize;
-import com.transys.model.MaterialCategory;
 import com.transys.model.MaterialType;
 import com.transys.model.SearchCriteria;
 
@@ -52,7 +51,10 @@ public class DumpsterPriceController extends CRUDController<DumpsterPrice> {
 		// TODO:
 		criteria.getSearchMap().remove("_csrf");
 		criteria.setPageSize(25);
+		
 		model.addAttribute("list", genericDAO.search(DumpsterPrice.class, criteria, "id", false));
+		cleanUp(request);
+		
 		return urlContext + "/list";
 	}
 
@@ -84,7 +86,7 @@ public class DumpsterPriceController extends CRUDController<DumpsterPrice> {
 		criteria.getSearchMap().remove("_csrf");
 		super.save(request, entity, bindingResult, model);
 
-		return urlContext + "/list";
+		return urlContext + "/form";
 
 	}
 

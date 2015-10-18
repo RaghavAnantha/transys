@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.transys.controller.editor.AbstractModelEditor;
+import com.transys.model.DumpsterPrice;
 import com.transys.model.PermitClass;
 import com.transys.model.PermitFee;
 import com.transys.model.PermitType;
@@ -49,7 +50,10 @@ public class PermitFeeController extends CRUDController<PermitFee> {
 		// TODO:
 		criteria.getSearchMap().remove("_csrf");
 		criteria.setPageSize(25);
+		
 		model.addAttribute("list", genericDAO.search(PermitFee.class, criteria, "id", false));
+		cleanUp(request);
+		
 		return urlContext + "/list";
 	}
 
@@ -81,7 +85,8 @@ public class PermitFeeController extends CRUDController<PermitFee> {
 		criteria.getSearchMap().remove("_csrf");
 		super.save(request, entity, bindingResult, model);
 
-		return urlContext + "/list";
+		return urlContext + "/form";
 
 	}
+	
 }

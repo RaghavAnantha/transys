@@ -258,7 +258,7 @@ public abstract class CRUDController<T extends BaseModel> extends BaseController
 	}
 
 	public void cleanUp(HttpServletRequest request) {
-
+		resetEffectiveDateInSearch(request);
 	}
 
 	@RequestMapping(method = { RequestMethod.GET, RequestMethod.POST }, value = "/export.do")

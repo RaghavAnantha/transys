@@ -659,18 +659,20 @@ public class GenericJpaDAO implements GenericDAO {
 
 	private void appendSearchStringWithDate(Map criterias, StringBuffer searchString, Object param, boolean orQuery,
 			String criteriaKey) {
-		if (!orQuery) {
-			searchString.append(" and ");
-		}
+		
 		
 		String operator = criterias.get(param.toString()).toString().trim().substring(0, 2);
 		String operand = criterias.get(param.toString()).toString().trim().substring(2);
 		
 		try {
-			searchString.append("p." + criteriaKey + operator + " '"
+			String toAppend = "p." + criteriaKey + operator + " '"
 					+ new Timestamp(((Date) BaseController.dateFormat
 							.parse(operand)).getTime())
-					+ "'");
+					+ "'";
+			if (!orQuery) {
+				searchString.append(" and ");
+			}
+			searchString.append(toAppend);
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

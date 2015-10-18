@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.transys.model.CityFee;
+import com.transys.model.DumpsterPrice;
 import com.transys.model.SearchCriteria;
 
 @Controller
@@ -40,7 +41,10 @@ public class CityFeeController extends CRUDController<CityFee> {
 		// TODO:
 		criteria.getSearchMap().remove("_csrf");
 		criteria.setPageSize(25);
+		
 		model.addAttribute("list", genericDAO.search(CityFee.class, criteria, "id", false));
+		cleanUp(request);
+		
 		return urlContext + "/list";
 	}
 
@@ -70,7 +74,8 @@ public class CityFeeController extends CRUDController<CityFee> {
 		criteria.getSearchMap().remove("_csrf");
 		super.save(request, entity, bindingResult, model);
 
-		return urlContext + "/list";
+		return urlContext + "/form";
 
 	}
+	
 }
