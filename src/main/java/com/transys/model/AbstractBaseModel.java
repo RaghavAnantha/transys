@@ -11,6 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 @MappedSuperclass
@@ -118,6 +120,10 @@ public abstract class AbstractBaseModel implements BaseModel {
 	@Transient
 	public String getFormattedCreatedAt() {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyy");
-		return dateFormat.format(this.createdAt);
+		if (this.createdAt != null) {
+			return dateFormat.format(this.createdAt);
+		} else {
+			return StringUtils.EMPTY;
+		}
 	}
 }

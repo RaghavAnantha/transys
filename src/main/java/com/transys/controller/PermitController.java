@@ -653,7 +653,7 @@ public class PermitController extends CRUDController<Permit> {
 	@RequestMapping(method = RequestMethod.GET, value = "/customerDeliveryAddress")
 	public @ResponseBody String displayCustomerDeliveryAddress(ModelMap model, HttpServletRequest request) {
 		String customerId = request.getParameter("customerId");
-		List<DeliveryAddress> addressList  = genericDAO.executeSimpleQuery("select obj from DeliveryAddress obj where obj.customer.id=" + customerId);
+		List<DeliveryAddress> addressList  = genericDAO.executeSimpleQuery("select obj from DeliveryAddress obj where obj.customer.id=" + customerId  + " and obj.city like 'Chicago'");
 		
 		ObjectMapper objectMapper = new ObjectMapper();
 		String json = StringUtils.EMPTY;
