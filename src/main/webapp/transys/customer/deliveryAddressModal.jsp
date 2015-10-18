@@ -35,7 +35,7 @@
 					<form:option value="">------Please Select--------</form:option>
 					<form:options items="${state}" itemValue="id" itemLabel="name" />
 				</form:select> 
-				<br><form:errors path="state" cssClass="errorMessage" />
+				<form:errors path="state" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>
@@ -50,7 +50,6 @@
 			<td>&nbsp;</td>
 			<td align="${left}" colspan="2">
 				<input type="submit" id="create" onclick="return validateForm()" value="Save" class="flat btn btn-primary btn-sm" /> 
-				<input type="reset" id="resetBtn" value="Reset" class="flat btn btn-primary btn-sm" /> 
 				<input type="button" value="Close" class="flat btn btn-primary btn-sm" data-dismiss="modal" />
 			</td>
 		</tr>

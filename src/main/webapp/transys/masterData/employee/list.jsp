@@ -39,12 +39,9 @@
 		</tr>
 		<tr>
 			<td class="form-left form-left-ext"><transys:label code="Employee Last Name" /></td>
-						<td align="${left}" ><select
-				class="flat form-control input-sm" id="lastName" name="lastName"
-				style="width: 175px !important">
-					<option value="">------
-						<transys:label code="Please Select" />------
-					</option>
+			<td align="${left}" >
+				<select class="flat form-control input-sm" id="lastName" name="lastName" style="width: 175px !important">
+					<option value="">------Please Select------</option>
 					<c:forEach items="${employee}" var="anEmployee">
 						<c:set var="selected" value="" />
 						<c:if
@@ -91,13 +88,13 @@
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
 		pagingLink="search.do" multipleDelete="false" searcheable="false"
 		exportPdf="true" exportXls="true" dataQualifier="employee">
-		<transys:textcolumn headerText="Employee ID" dataField="employeeId" />
-		<transys:textcolumn headerText="Employee First Name" dataField="firstName" />
+		<transys:textcolumn headerText="Employee Id" dataField="employeeId" width="80px"/>
+		<transys:textcolumn headerText="Employee First Name" dataField="firstName"/>
 		<transys:textcolumn headerText="Employee Last Name" dataField="lastName" />
 		<transys:textcolumn headerText="Job Title" dataField="jobTitle.jobTitle" />
 		<transys:textcolumn headerText="Phone" dataField="phone" />
-		<transys:textcolumn headerText="Hire Date" dataField="hireDate" />
-		<transys:textcolumn headerText="Termination Date" dataField="leaveDate" />
+		<transys:textcolumn headerText="Hire Date" dataField="hireDate" dataFormat="MM/dd/yyy"/>
+		<transys:textcolumn headerText="Termination Date" dataField="leaveDate"dataFormat="MM/dd/yyy" />
 		<transys:textcolumn headerText="Status" dataField="status.status" />
 
 
