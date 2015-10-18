@@ -38,9 +38,10 @@ $("#permitForCustomerModalForm").submit(function (ev) {
 </script>
 <form:form action="/permit/saveForCustomerModal.do" name="permitForCustomerModalForm" id="permitForCustomerModalForm" commandName="modelObject" method="post" >
 	<table id="form-table" class="table">
+		<tr><td colspan="10"></td></tr>
 		<tr>
 			<td class="form-left"><transys:label code="Permit Number" /><span class="errorMessage">*</span></td>
-			<td align="${left}">
+			<td class="wide">
 				<form:input path="number" cssClass="flat" style="width: 175px" />
 			 	<br><form:errors path="number" cssClass="errorMessage" />
 			</td>
@@ -99,7 +100,7 @@ $("#permitForCustomerModalForm").submit(function (ev) {
 			</td>
 			<td class="form-left"><transys:label code="End Date" /></td>
 			<td align="${left}">
-				<form:input path="endDate" cssClass="form-control" readonly="true" style="width:172px;height:25px !important" />
+				<form:input path="endDate" cssClass="form-control" readonly="true" style="width:175px;height:25px !important" />
 			</td>
 		</tr>
 		<tr>

@@ -872,7 +872,7 @@ function verifyExchangeOrderAndSubmit() {
 	        <td class="td-static" id="permitValidTo3">${modelObject.permits[2].formattedEndDate}</td>
 	    </tr>
 	    <tr>
-	      <td class="form-left"><transys:label code="Permit1 Address"/></td>
+	      <td class="form-left">Permit1 Address</td>
 	      <td>
         	<select class="flat form-control input-sm" id="permitAddress1" name="permitAddress1" style="width:172px !important">
 				<c:if test="${modelObject.permits != null and modelObject.permits[0] != null and modelObject.permits[0].number != null}">
@@ -882,7 +882,7 @@ function verifyExchangeOrderAndSubmit() {
 				</c:if>
 			</select>
 	      </td>
-	      <td class="form-left"><transys:label code="Permit2 Address"/></td>
+	      <td class="form-left">Permit2 Address</td>
 	      <td>
         	<select class="flat form-control input-sm" id="permitAddress2" name="permitAddress2" style="width:172px !important">
 				<c:if test="${modelObject.permits != null and modelObject.permits[1] != null and modelObject.permits[1].number != null}">
@@ -892,7 +892,7 @@ function verifyExchangeOrderAndSubmit() {
 				</c:if>
 			</select>
 	      </td>
-	      <td class="form-left"><transys:label code="Permit3 Address"/></td>
+	      <td class="form-left">Permit3 Address</td>
 	      <td>
         	<select class="flat form-control input-sm" id="permitAddress3" name="permitAddress3" style="width:172px !important">
 				<c:if test="${modelObject.permits != null and modelObject.permits[2] != null and modelObject.permits[2].number != null}">
