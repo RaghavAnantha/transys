@@ -535,6 +535,7 @@ function verifyExchangeOrderAndSubmit() {
 	<input type="hidden" name="existingDroppedOffOrderId" id="existingDroppedOffOrderId" value="" />
 	<table id="form-table" class="table">
 		<tr><td></td></tr>
+		<tr><td><%@include file="/common/messages.jsp"%></td></tr>
 		<tr>
 			<td class="form-left">Order #<span class="errorMessage">*</span></td>
 			<td class="wide">${modelObject.id}</td>
@@ -582,9 +583,8 @@ function verifyExchangeOrderAndSubmit() {
 		<tr>
 			<td></td>
 		</tr>
-		
 		<tr>
-			<td class="form-left"><transys:label code="Delivery Address" /><span class="errorMessage"></span></td>
+			<td class="form-left">Delivery Address<span class="errorMessage"></span></td>
 			<td>
 				<label style="display: inline-block; font-weight: normal">
 					<form:select id="deliveryAddressSelect" cssClass="flat form-control input-sm" path="deliveryAddress" style="width:172px !important">
