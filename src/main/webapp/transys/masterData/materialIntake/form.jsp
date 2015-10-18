@@ -7,8 +7,8 @@
 	<form:hidden path="id" id="id" />
 	<table id="form-table" class="table">
 		<tr>
-			<td align="${left}" class="form-left"><transys:label code="Material Type" /></td>
-			<td align="${left}">
+			<td class="form-left"><transys:label code="Material Type" /></td>
+			<td>
 				<form:select id="materialTypeSelect" cssClass="flat form-control input-sm" path="materialType" style="width: 175px !important" > 
 					<form:option value="">------Please Select--------</form:option>
 					<form:options items="${materialTypes}" itemValue="id" itemLabel="materialName" />
@@ -18,12 +18,12 @@
 			<td colspan=10></td>
 		</tr>
 		<tr>
-			<td align="${left}" class="form-left"><transys:label code="Intake Date" /></td>
-			<td align="${left}" class="wide"><form:input path="intakeDate" class="flat" id="datepicker7" name="intakeDate" style="width: 175px !important" /></td>
+			<td class="form-left"><transys:label code="Intake Date" /></td>
+			<td class="wide"><form:input path="intakeDate" class="flat" id="datepicker7" name="intakeDate" style="width: 175px !important" /></td>
 		</tr>
 		<tr>
-			<td align="${left}" class="form-left"><transys:label code="Tons" /></td>
-			<td align="${left}" class="wide"><form:input path="netWeightTonnage" cssClass="flat" style="width: 175px !important"  /></td>
+			<td class="form-left"><transys:label code="Tons" /></td>
+			<td class="wide"><form:input path="netWeightTonnage" cssClass="flat" style="width: 175px !important"  /></td>
 		</tr>
 			<tr>
 			<td colspan=10></td>
@@ -49,7 +49,7 @@
 		</tr>
 		<tr>
 			<td>&nbsp;</td>
-			<td align="${left}" colspan="2"><input type="submit" id="create" onclick="return validate()" value="<transys:label code="Save"/>"
+			<td colspan="2"><input type="submit" id="create" onclick="return validate()" value="<transys:label code="Save"/>"
 				class="flat btn btn-primary btn-sm" /> <input type="button" id="cancelBtn" value="<transys:label code="Cancel"/>"
 				class="flat btn btn-primary btn-sm" onClick="location.href='main.do'" /></td>
 		</tr>

@@ -8,7 +8,7 @@
 	<table id="form-table" class="table">
 		<tr>
 			<td class="form-left"><transys:label code="Dumpster Size" /><span class="errorMessage">*</span></td>
-			<td align="${left}">
+			<td>
 				<form:select id="dumpsterSize" cssClass="flat form-control input-sm" style="width:172px !important" path="dumpsterSize"> 
 					<form:option value="">-------Please Select------</form:option>
 					<form:options items="${dumpsterSizes}" itemValue="id" itemLabel="size" />
@@ -18,12 +18,12 @@
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Dumpster Number" /><span class="errorMessage">*</span></td>
-			<td align="${left}"><form:input path="dumpsterNum" cssClass="flat" style="width:172px !important"/> <br>
+			<td><form:input path="dumpsterNum" cssClass="flat" style="width:172px !important"/> <br>
 			<form:errors path="dumpsterNum" cssClass="errorMessage" /></td>
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Status" /></td>
-			<td align="${left}">
+			<td>
 				<form:select cssClass="flat form-control input-sm" style="width:172px !important" path="status" >
 					<form:option value="">------Please Select--------</form:option>
 					<form:options items="${dumpsterStatus}" itemValue="id"  itemLabel="status" />
@@ -54,7 +54,7 @@
 		</tr>
 		<tr>
 			<td>&nbsp;</td>
-			<td align="${left}" colspan="2"><input type="submit" id="create" onclick="return validate()" value="<transys:label code="Save"/>"
+			<td colspan="2"><input type="submit" id="create" onclick="return validate()" value="<transys:label code="Save"/>"
 				class="flat btn btn-primary btn-sm" /> <input type="button" id="cancelBtn" value="<transys:label code="Cancel"/>"
 				class="flat btn btn-primary btn-sm" onClick="location.href='main.do'" /></td>
 		</tr>

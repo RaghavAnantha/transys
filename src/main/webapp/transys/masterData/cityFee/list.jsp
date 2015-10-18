@@ -44,8 +44,8 @@
 		     <td class="wide"><input class="flat" id="datepicker7" name="effectiveEndDate" value="${sessionScope.searchCriteria.searchMap['effectiveEndDate']}" style="width: 175px !important" /></td> 
 		</tr>
 		<tr>
-			<td align="${left}"></td>
-			<td align="${left}"><input type="button"
+			<td></td>
+			<td><input type="button"
 				class="btn btn-primary btn-sm"
 				onclick="document.forms['searchForm'].submit();"
 				value="<transys:label code="Search"/>" /></td>

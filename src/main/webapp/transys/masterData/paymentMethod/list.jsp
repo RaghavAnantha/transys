@@ -5,8 +5,8 @@
 <form:form action="list.do" method="get" name="searchForm">
 	<table width="100%" id="form-table">
 		<tr>
-			<td align="${left}" class="form-left"><transys:label code="Payment Method" /></td>
-			<td align="${left}" class="wide"><select
+			<td class="form-left"><transys:label code="Payment Method" /></td>
+			<td class="wide"><select
 				class="flat form-control input-sm" id="method" name="method"
 				style="width: 175px !important">
 					<option value="">------
@@ -25,8 +25,8 @@
 		</tr>
 
 		<tr>
-			<td align="${left}"></td>
-			<td align="${left}"><input type="button"
+			<td></td>
+			<td><input type="button"
 				class="btn btn-primary btn-sm"
 				onclick="document.forms['searchForm'].submit();"
 				value="<transys:label code="Search"/>" /></td>

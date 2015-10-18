@@ -89,7 +89,7 @@ function formatPhone(){
 		
 		<tr>
 			<td class="form-left"><transys:label code="Phone" /></td>
-			<td align="${left}"><form:input path="phone" cssClass="flat" style="width: 175px !important" onkeypress="return onlyNumbers(event, false)" onblur="return formatPhone();"/>
+			<td><form:input path="phone" cssClass="flat" style="width: 175px !important" onkeypress="return onlyNumbers(event, false)" onblur="return formatPhone();"/>
 				<br>
 			<form:errors path="phone" cssClass="errorMessage" /></td>
 			
@@ -104,8 +104,8 @@ function formatPhone(){
 			<td class="wide"><form:input path="hireDate" class="flat"
 				id="datepicker7" name="hireDate" style="width: 175px" /></td>
 				
-				<td align="${left}" class="form-left"><transys:label code="Termination Date" /></td>
-			<td align="${left}" class="wide"><form:input path="leaveDate" class="flat"
+				<td class="form-left"><transys:label code="Termination Date" /></td>
+			<td class="wide"><form:input path="leaveDate" class="flat"
 				id="datepicker3" name="leaveDate" style="width: 175px" /></td>
 		</tr>
 		
@@ -142,7 +142,7 @@ function formatPhone(){
 		</tr>
 		<tr>
 			<td>&nbsp;</td>
-			<td align="${left}" colspan="2">
+			<td colspan="2">
 			<input type="submit" id="create" onclick="return validate()" value="<transys:label code="Save"/>" class="flat btn btn-primary btn-sm" /> 
 			<input type="button" id="cancelBtn" value="<transys:label code="Cancel"/>" class="flat btn btn-primary btn-sm" onClick="location.href='main.do'" /></td>
 		</tr>

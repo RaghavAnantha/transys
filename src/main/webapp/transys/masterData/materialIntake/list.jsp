@@ -5,8 +5,8 @@
 <form:form action="list.do" method="get" name="searchForm">
 	<table width="100%" id="form-table">
  		<tr>
-			<td align="${left}" class="form-left"><transys:label code="Material Type" /></td>
-			<td align="${left}" class="wide">
+			<td class="form-left"><transys:label code="Material Type" /></td>
+			<td class="wide">
 				<select class="flat form-control input-sm" id="materialType" name="materialType" style="width: 175px !important">
 					<option value="">------
 						<transys:label code="Please Select" />------
@@ -23,16 +23,16 @@
 			<td colspan=10></td>
 		</tr>
 		<tr>
-		  <td align="${left}" class="form-left"><transys:label code="Intake Date"/></td>
-		  <td align="${left}" class="wide"><input class="flat" id="datepicker1" name="intakeDate" value="${sessionScope.searchCriteria.searchMap['intakeDate']}" style="width: 175px" /></td>
+		  <td class="form-left"><transys:label code="Intake Date"/></td>
+		  <td class="wide"><input class="flat" id="datepicker1" name="intakeDate" value="${sessionScope.searchCriteria.searchMap['intakeDate']}" style="width: 175px" /></td>
 		</tr>
 		<tr>
-			<td align="${left}" class="form-left"><transys:label code="Net Weight In Tonnage" /></td>
-			<td align="${left}" class="wide"><input name="netWeightInTonnage" style="width: 175px !important"  /></td>
+			<td class="form-left"><transys:label code="Net Weight In Tonnage" /></td>
+			<td class="wide"><input name="netWeightInTonnage" style="width: 175px !important"  /></td>
 		</tr>
 		<tr>
-			<td align="${left}"></td>
-			<td align="${left}"><input type="button"
+			<td></td>
+			<td><input type="button"
 				class="btn btn-primary btn-sm"
 				onclick="document.forms['searchForm'].submit();"
 				value="<transys:label code="Search"/>" /></td>
@@ -46,7 +46,7 @@
 		pagingLink="search.do" multipleDelete="false" searcheable="false"
 		exportPdf="true" exportXls="true" dataQualifier="cityFee">
 		<transys:textcolumn headerText="Material Name" dataField="materialType.id" />
-		<transys:textcolumn headerText="Intake Date" dataField="intakeDate" />
+		<transys:textcolumn headerText="Intake Date" dataField="intakeDate" dataFormat="MM/dd/yyy"/>
 		<transys:textcolumn headerText="Net Weight Tonnage" dataField="netWeightTonnage" />
 	</transys:datatable>
 	<%session.setAttribute("materialIntakeForRecycleList", pageContext.getAttribute("columnPropertyList"));%>

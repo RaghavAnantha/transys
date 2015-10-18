@@ -5,8 +5,8 @@
 <form:form action="list.do" method="get" name="searchForm">
 	<table id="form-table" class="table">
 		<tr>
-			<td align="${left}" class="form-left"><transys:label code="Employee ID" /></td>
-			<td align="${left}">
+			<td class="form-left"><transys:label code="Employee ID" /></td>
+			<td>
 				<select class="flat form-control input-sm" id="status" name="employeeId" style="width: 175px !important">
 					<option value="">------Please Select------</option>
 					<c:forEach items="${employee}" var="anEmployee">
@@ -39,7 +39,7 @@
 		</tr>
 		<tr>
 			<td class="form-left form-left-ext"><transys:label code="Employee Last Name" /></td>
-			<td align="${left}" >
+			<td >
 				<select class="flat form-control input-sm" id="lastName" name="lastName" style="width: 175px !important">
 					<option value="">------Please Select------</option>
 					<c:forEach items="${employee}" var="anEmployee">
@@ -55,9 +55,9 @@
 		</tr>
 		
 		<tr>
-			<td align="${left}" class="form-left"><transys:label
+			<td class="form-left"><transys:label
 					code="Status" /></td>
-			<td align="${left}"><select
+			<td><select
 				class="flat form-control input-sm" id="status" name="status.status"
 				style="width: 175px !important">
 					<option value="">------
@@ -74,8 +74,8 @@
 			</select></td>
 		</tr>
 		<tr>
-			<td align="${left}"></td>
-			<td align="${left}"><input type="button"
+			<td></td>
+			<td><input type="button"
 				class="btn btn-primary btn-sm"
 				onclick="document.forms['searchForm'].submit();"
 				value="<transys:label code="Search"/>" /></td>

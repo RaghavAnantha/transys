@@ -8,7 +8,7 @@
 	<table id="form-table" class="table">
 		<tr>
 			<td class="form-left"><transys:label code="Location Type" /></td>
-			<td align="${left}"><form:input path="locationType" cssClass="flat" style="width: 175px !important"/>
+			<td><form:input path="locationType" cssClass="flat" style="width: 175px !important"/>
 				<br>
 			<form:errors path="locationType" cssClass="errorMessage" /></td>
 		</tr>
@@ -35,7 +35,7 @@
 		</tr>
 		<tr>
 			<td>&nbsp;</td>
-			<td align="${left}" colspan="2"><input type="submit" id="create" onclick="return validate()" value="<transys:label code="Save"/>"
+			<td colspan="2"><input type="submit" id="create" onclick="return validate()" value="<transys:label code="Save"/>"
 				class="flat btn btn-primary btn-sm" /> <input type="button" id="cancelBtn" value="<transys:label code="Cancel"/>"
 				class="flat btn btn-primary btn-sm" onClick="location.href='main.do'" /></td>
 		</tr>

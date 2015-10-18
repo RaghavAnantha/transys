@@ -9,25 +9,25 @@
 	
 		<tr>
 			<td class="form-left"><transys:label code="City" /></td>
-			<td align="${left}"><form:input path="suburbName" cssClass="flat" style="width:173px !important"/>
+			<td><form:input path="suburbName" cssClass="flat" style="width:173px !important"/>
 				<br>
 			<form:errors path="suburbName" cssClass="errorMessage" /></td>
 			<td colspan=10></td>
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Fee" /></td>
-			<td align="${left}"><form:input path="fee" cssClass="flat" style="width:173px !important"/>
+			<td><form:input path="fee" cssClass="flat" style="width:173px !important"/>
 				<br>
 			<form:errors path="fee" cssClass="errorMessage" /></td>
 		</tr>
 		<tr>
-			<td align="${left}" class="form-left"><transys:label code="Effective Date From" /></td>
-			<td align="${left}">
+			<td class="form-left"><transys:label code="Effective Date From" /></td>
+			<td>
 			<form:input path="effectiveStartDate" class="flat" id="datepicker7" name="effectiveStartDate" style="width:173px !important"/></td>
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Effective Date To" /></td>
-			<td align="${left}">
+			<td>
 			<form:input path="effectiveEndDate" class="flat" id="datepicker8" name="effectiveEndDate"  style="width:173px !important"/></td>
 		</tr>
 		<tr>
@@ -53,7 +53,7 @@
 		</tr>
 		<tr>
 			<td>&nbsp;</td>
-			<td align="${left}" colspan="2"><input type="submit" id="create" onclick="return validate()" value="<transys:label code="Save"/>"
+			<td colspan="2"><input type="submit" id="create" onclick="return validate()" value="<transys:label code="Save"/>"
 				class="flat btn btn-primary btn-sm" /> <input type="button" id="cancelBtn" value="<transys:label code="Cancel"/>"
 				class="flat btn btn-primary btn-sm" onClick="location.href='main.do'" /></td>
 		</tr>
