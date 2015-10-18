@@ -834,9 +834,13 @@ public class OrderController extends CRUDController<Order> {
 	}
 	
 	private BigDecimal retrieveDumpsterPrice(String dumpsterSizeId, String materialTypeId) {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd"); 
+		String todaysDateStr = dateFormat.format(new Date());
+		
 		String dumpsterPriceQuery = "select obj from DumpsterPrice obj where";
 		dumpsterPriceQuery += " obj.dumpsterSize.id=" + dumpsterSizeId
-				    		  	 +  " and obj.materialType.id=" + materialTypeId;
+				    		  	 +  " and obj.materialType.id=" + materialTypeId
+				    		  	 +  " and '" + todaysDateStr + "' between obj.effectiveStartDate and obj.effectiveEndDate";
 		
 		List<DumpsterPrice> dumsterPriceList = genericDAO.executeSimpleQuery(dumpsterPriceQuery);
 		return dumsterPriceList.get(0).getPrice();
@@ -931,8 +935,12 @@ public class OrderController extends CRUDController<Order> {
 	}
 	
 	private BigDecimal retrieveCityFee(String cityFeeId) {
-		String cityFeeQuery = "select obj from CityFee obj where ";
-		cityFeeQuery += "obj.id=" + cityFeeId;
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd"); 
+		String todaysDateStr = dateFormat.format(new Date());
+		
+		String cityFeeQuery = "select obj from CityFee obj where";
+		cityFeeQuery += " obj.id=" + cityFeeId
+						 +  " and '" + todaysDateStr + "' between obj.effectiveStartDate and obj.effectiveEndDate";
 		
 		List<CityFee> cityFeeList = genericDAO.executeSimpleQuery(cityFeeQuery);
 		return cityFeeList.get(0).getFee();
@@ -959,10 +967,14 @@ public class OrderController extends CRUDController<Order> {
 	}
 	
 	private BigDecimal retrieveOverweightFee(Long dumpsterSizeId, Long materialCategoryId, BigDecimal netWeightTonnage) {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd"); 
+		String todaysDateStr = dateFormat.format(new Date());
+		
 		String overweightFeeQuery = "select obj from OverweightFee obj where ";
 		overweightFeeQuery += "obj.dumpsterSize.id=" + dumpsterSizeId
 								 +  " and obj.materialCategory.id=" + materialCategoryId
-								 +  " and obj.tonLimit<" + netWeightTonnage;
+								 +  " and obj.tonLimit<" + netWeightTonnage
+								 +  " and '" + todaysDateStr + "' between obj.effectiveStartDate and obj.effectiveEndDate";
 		
 		List<OverweightFee> overweightFeeList = genericDAO.executeSimpleQuery(overweightFeeQuery);
 		if (overweightFeeList.isEmpty()) {

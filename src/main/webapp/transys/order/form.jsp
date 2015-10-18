@@ -64,7 +64,7 @@ function populateDeliveryAddress(addressList) {
 	var deliveryAddressSelect = $('#deliveryAddressSelect');
 	deliveryAddressSelect.empty();
 	
-	var firstOption = $('<option value="">'+ "-------Please Select------" +'</option>');
+	var firstOption = $('<option value="">'+ "-----Please Select-----" +'</option>');
 	deliveryAddressSelect.append(firstOption);
 	
 	$.each(addressList, function () {
@@ -96,11 +96,11 @@ function populatePermitClass() {
 	permitClassSelect2.empty();
 	permitClassSelect3.empty();
 	
-	var firstOption1 = $('<option value="">'+ "-------Please Select------" +'</option>');
+	var firstOption1 = $('<option value="">'+ "-----Please Select-----" +'</option>');
 	permitClassSelect1.append(firstOption1);
-	var firstOption2 = $('<option value="">'+ "-------Please Select------" +'</option>');
+	var firstOption2 = $('<option value="">'+ "-----Please Select-----" +'</option>');
 	permitClassSelect2.append(firstOption2);
-	var firstOption3 = $('<option value="">'+ "-------Please Select------" +'</option>');
+	var firstOption3 = $('<option value="">'+ "-----Please Select-----" +'</option>');
 	permitClassSelect3.append(firstOption3);
 	
 	$.ajax({
@@ -192,7 +192,7 @@ function populateMaterialCategories() {
 	var materialCategorySelect = $("#materialCategory");
 	materialCategorySelect.empty();
 	
-	var firstOption = $('<option value="">'+ "-------Please Select------" +'</option>');
+	var firstOption = $('<option value="">'+ "-----Please Select-----" +'</option>');
 	materialCategorySelect.append(firstOption);
 	
 	$.ajax({
@@ -224,7 +224,7 @@ function populateMaterialTypes() {
 	var materialTypeSelect = $("#materialType");
 	materialTypeSelect.empty();
 	
-	var firstOption = $('<option value="">'+ "-------Please Select------" +'</option>');
+	var firstOption = $('<option value="">'+ "-----Please Select-----" +'</option>');
 	materialTypeSelect.append(firstOption);
 	
 	$.ajax({
@@ -336,7 +336,7 @@ function populatePermitNumbers(index) {
 	var permitNumbersSelect = $("#permits\\[" + (index-1) + "\\]");
 	permitNumbersSelect.empty();
 	
-	var firstOption = $('<option value="">'+ "-------Please Select------" +'</option>');
+	var firstOption = $('<option value="">'+ "-----Please Select-----" +'</option>');
 	permitNumbersSelect.append(firstOption);
 	
 	$.ajax({
@@ -544,7 +544,7 @@ function verifyExchangeOrderAndSubmit() {
 			<td>
 				<label style="display: inline-block; font-weight: normal">
 					<form:select id="customerSelect" cssClass="flat form-control input-sm" style="width:172px !important" path="customer" onChange="return populateCustomerInfo();"> 
-						<form:option value="">-------Please Select------</form:option>
+						<form:option value="">-----Please Select-----</form:option>
 						<form:options items="${customers}" itemValue="id" itemLabel="companyName" />
 					</form:select>
 				</label>
@@ -588,7 +588,7 @@ function verifyExchangeOrderAndSubmit() {
 			<td>
 				<label style="display: inline-block; font-weight: normal">
 					<form:select id="deliveryAddressSelect" cssClass="flat form-control input-sm" path="deliveryAddress" style="width:172px !important">
-						<form:option value="">-------Please Select------</form:option>
+						<form:option value="">-----Please Select-----</form:option>
 						<form:options items="${deliveryAddresses}" itemValue="id" itemLabel="fullLine"/>
 					</form:select> 
 				</label>
@@ -634,13 +634,13 @@ function verifyExchangeOrderAndSubmit() {
 			<td class="form-left"><transys:label code="Delivery Time"/></td>
 			<td>
 				<label style="display: inline-block; font-weight: normal">
-					<form:select id="deliveryHourFrom" cssClass="flat form-control input-sm" style="width:95px !important" path="deliveryHourFrom"> 
+					<form:select id="deliveryHourFrom" cssClass="flat form-control input-sm" style="width:99px !important" path="deliveryHourFrom"> 
 						<form:options items="${deliveryHours}" />
 					</form:select>
 				</label>
 				&nbsp;to&nbsp;
 				<label style="display: inline-block; font-weight: normal">
-					<form:select id="deliveryHourTo" cssClass="flat form-control input-sm" style="width:95px !important" path="deliveryHourTo"> 
+					<form:select id="deliveryHourTo" cssClass="flat form-control input-sm" style="width:99px !important" path="deliveryHourTo"> 
 						<form:options items="${deliveryHours}" />
 					</form:select>
 				</label>
@@ -651,7 +651,7 @@ function verifyExchangeOrderAndSubmit() {
 			<td class="form-left"><transys:label code="Dumpster Location" /><span class="errorMessage">*</span></td>
 			<td>
 				<form:select id="dumpsterLocationSelect" cssClass="flat form-control input-sm" style="width:172px !important" path="dumpsterLocation"> 
-					<form:option value="">-------Please Select------</form:option>
+					<form:option value="">-----Please Select-----</form:option>
 					<form:options items="${dusmpsterLocationTypes}" itemValue="id" itemLabel="locationType" />
 				</form:select> 
 			 	<form:errors path="dumpsterLocation" cssClass="errorMessage" />
@@ -659,7 +659,7 @@ function verifyExchangeOrderAndSubmit() {
 			<td class="form-left"><transys:label code="Dumpster Size"/><span class="errorMessage">*</span></td>
 			<td>
 				<form:select id="dumpsterSize" cssClass="flat form-control input-sm" style="width:172px !important" path="dumpsterSize" onchange="return handleDumpsterSizeChange(); "> 
-					<form:option value="">-------Please Select------</form:option>
+					<form:option value="">-----Please Select-----</form:option>
 					<form:options items="${dumpsterSizes}" itemValue="id" itemLabel="size" />
 				</form:select> 
 			 	<form:errors path="dumpsterSize" cssClass="errorMessage" />
@@ -668,8 +668,8 @@ function verifyExchangeOrderAndSubmit() {
 		<tr>
 			<td class="form-left">Material Category<span class="errorMessage">*</span></td>
 			<td>
-				<select class="flat form-control input-sm" id="materialCategory" name="materialCategory" id="materialCategory" style="width: 172px !important" onChange="return populateMaterialTypes();">
-					<option value="">------Please Select------</option>
+				<select class="flat form-control form-control-ext input-sm" id="materialCategory" name="materialCategory" id="materialCategory" style="width: 172px !important" onChange="return populateMaterialTypes();">
+					<option value="">-----Please Select-----</option>
 					<c:forEach items="${materialCategories}" var="aMaterialCategory">
 						<c:set var="selected" value="" />
 						<c:if test="${modelObject.materialType.materialCategory.id == aMaterialCategory.id}">
@@ -682,7 +682,7 @@ function verifyExchangeOrderAndSubmit() {
 			<td class="form-left"><transys:label code="Material Type"/></td>
 			<td>
 				<form:select id="materialType" cssClass="flat form-control input-sm" style="width:172px !important" path="materialType"  onChange="return populateDusmpsterPrice();"> 
-					<form:option value="">-------Please Select------</form:option>
+					<form:option value="">-----Please Select-----</form:option>
 					<form:options items="${materialTypes}" itemValue="id" itemLabel="materialName" />
 				</form:select> 
 				<form:errors path="materialType" cssClass="errorMessage" />
@@ -701,7 +701,7 @@ function verifyExchangeOrderAndSubmit() {
 	    	<td class="form-left"><transys:label code="Permit1 Class"/><span class="errorMessage">*</span></td>
 	        <td>
 				<select class="flat form-control input-sm" id="permitClasses1" name="permitClasses1" style="width:172px !important">
-					<option value="">------Please Select------</option>
+					<option value="">-----Please Select-----</option>
 					<c:forEach items="${permitClasses}" var="aPermitClass">
 						<c:set var="selected" value="" />
 						<c:if test="${modelObject.permits != null and modelObject.permits[0] != null and modelObject.permits[0].permitClass != null}">
@@ -716,7 +716,7 @@ function verifyExchangeOrderAndSubmit() {
 		 	<td class="form-left"><transys:label code="Permit2 Class"/></td>
 	        <td>
 				<select class="flat form-control input-sm" id="permitClasses2" name="permitClasses2" style="width:172px !important">
-					<option value="">------Please Select------</option>
+					<option value="">-----Please Select-----</option>
 					<c:forEach items="${permitClasses}" var="aPermitClass">
 						<c:set var="selected" value="" />
 						<c:if test="${modelObject.permits != null and modelObject.permits[1] != null and modelObject.permits[1].permitClass != null}">
@@ -731,7 +731,7 @@ function verifyExchangeOrderAndSubmit() {
 		 	<td class="form-left"><transys:label code="Permit3 Class"/></td>
 	        <td>
 				<select class="flat form-control input-sm" id="permitClasses3" name="permitClasses3" style="width:172px !important">
-					<option value="">------Please Select------</option>
+					<option value="">-----Please Select-----</option>
 					<c:forEach items="${permitClasses}" var="aPermitClass">
 						<c:set var="selected" value="" />
 						<c:if test="${modelObject.permits != null and modelObject.permits[2] != null and modelObject.permits[2].permitClass != null}">
@@ -748,7 +748,7 @@ function verifyExchangeOrderAndSubmit() {
 	    	<td class="form-left"><transys:label code="Permit1 Type"/><span class="errorMessage">*</span></td>
 	        <td>
 				<select class="flat form-control input-sm" id="permitTypes1" name="permitTypes1" style="width:172px !important" onChange="return populatePermitNumbers(1);">
-					<option value="">------Please Select------</option>
+					<option value="">-----Please Select-----</option>
 					<c:forEach items="${permitTypes}" var="aPermitType">
 						<c:set var="selected" value="" />
 						<c:if test="${modelObject.permits != null and modelObject.permits[0] != null and modelObject.permits[0].permitType != null}">
@@ -763,7 +763,7 @@ function verifyExchangeOrderAndSubmit() {
 	        <td class="form-left"><transys:label code="Permit2 Type"/><span class="errorMessage">*</span></td>
 	        <td>
 	        	<select class="flat form-control input-sm" id="permitTypes2" name="permitTypes2" style="width:172px !important" onChange="return populatePermitNumbers(2);">
-					<option value="">------Please Select------</option>
+					<option value="">-----Please Select-----</option>
 					<c:forEach items="${permitTypes}" var="aPermitType">
 						<c:set var="selected" value="" />
 						<c:if test="${modelObject.permits != null and modelObject.permits[1] != null and modelObject.permits[1].permitType != null}">
@@ -778,7 +778,7 @@ function verifyExchangeOrderAndSubmit() {
 	        <td class="form-left"><transys:label code="Permit3 Type"/><span class="errorMessage">*</span></td>
 	        <td>
 	        	<select class="flat form-control input-sm" id="permitTypes3" name="permitTypes3" style="width:172px !important" onChange="return populatePermitNumbers(3);">
-					<option value="">------Please Select------</option>
+					<option value="">-----Please Select-----</option>
 					<c:forEach items="${permitTypes}" var="aPermitType">
 						<c:set var="selected" value="" />
 						<c:if test="${modelObject.permits != null and modelObject.permits[2] != null and modelObject.permits[2].permitType != null}">
@@ -796,7 +796,7 @@ function verifyExchangeOrderAndSubmit() {
 	        <td>
 	        	<label style="display: inline-block; font-weight: normal">
 		        	<select class="flat form-control input-sm" id="permits[0]" name="permits[0]" style="width:172px !important" onChange="return retrievePermitDetails(1);">
-						<option value="">------<transys:label code="Please Select" />------</option>
+						<option value="">-----Please Select-----</option>
 						<c:if test="${modelObject.permits != null and modelObject.permits[0] != null and modelObject.permits[0].number != null}">
 							<c:set var="chosenPermit" value="${modelObject.permits[0]}" />
 							<c:set var="allPermitsOfChosenType" value="${allPermitsOfChosenTypesList[0]}" />
@@ -820,7 +820,7 @@ function verifyExchangeOrderAndSubmit() {
 	        <td class="form-left"><transys:label code="Permit2 Number"/><span class="errorMessage">*</span></td>
 	        <td>
 	        	<select class="flat form-control input-sm" id="permits[1]" name="permits[1]" style="width:172px !important" onChange="return retrievePermitDetails(2);">
-					<option value="">------<transys:label code="Please Select" />------</option>
+					<option value="">-----Please Select-----</option>
 					<c:if test="${modelObject.permits != null and modelObject.permits[1] != null and modelObject.permits[1].number != null}">
 						<c:set var="chosenPermit" value="${modelObject.permits[1]}" />
 						<c:set var="allPermitsOfChosenType" value="${allPermitsOfChosenTypesList[1]}" />
@@ -837,7 +837,7 @@ function verifyExchangeOrderAndSubmit() {
 	        <td class="form-left"><transys:label code="Permit3 Number"/><span class="errorMessage">*</span></td>
 	        <td>
 	        	<select class="flat form-control input-sm" id="permits[2]" name="permits[2]" style="width:172px !important" onChange="return retrievePermitDetails(3);">
-					<option value="">------<transys:label code="Please Select" />------</option>
+					<option value="">-----Please Select-----</option>
 					<c:if test="${modelObject.permits != null and modelObject.permits[2] != null and modelObject.permits[2].number != null}">
 						<c:set var="chosenPermit" value="${modelObject.permits[2]}" />
 						<c:set var="allPermitsOfChosenType" value="${allPermitsOfChosenTypesList[2]}" />
@@ -946,7 +946,7 @@ function verifyExchangeOrderAndSubmit() {
 			<td class="form-left">Description<span class="errorMessage">*</span></td>
 			<td>
 				<form:select id="orderFees.cityFeeType" cssClass="flat form-control input-sm" style="width:172px !important" path="orderFees.cityFeeType" onChange="return populateCityFee();"> 
-					<form:option value="">-------Please Select------</form:option>
+					<form:option value="">-----Please Select-----</form:option>
 					<form:options items="${cityFeeDetails}" itemValue="id" itemLabel="suburbName" />
 				</form:select>
 				<form:errors path="orderFees.cityFeeType" cssClass="errorMessage" />
@@ -961,7 +961,7 @@ function verifyExchangeOrderAndSubmit() {
 			<td class="form-left"><transys:label code="Description"/><span class="errorMessage">*</span></td>
 				<td>
 				<form:select id="additionalFee1Type" cssClass="flat form-control input-sm" style="width:172px !important" path="orderFees.additionalFee1Type"> 
-					<form:option value="">-------Please Select------</form:option>
+					<form:option value="">-----Please Select-----</form:option>
 					<form:options items="${additionalFeeTypes}" itemValue="id" itemLabel="description" />
 				</form:select>
 				<form:errors path="orderFees.additionalFee1Type" cssClass="errorMessage" />
@@ -976,7 +976,7 @@ function verifyExchangeOrderAndSubmit() {
 			<td class="form-left"><transys:label code="Description"/><span class="errorMessage">*</span></td>
 			<td>
 				<form:select id="additionalFee2Type" cssClass="flat form-control input-sm" style="width:172px !important" path="orderFees.additionalFee2Type"> 
-					<form:option value="">-------Please Select------</form:option>
+					<form:option value="">-----Please Select-----</form:option>
 					<form:options items="${additionalFeeTypes}" itemValue="id" itemLabel="description" />
 				</form:select>
 				<form:errors path="orderFees.additionalFee2Type" cssClass="errorMessage" />
@@ -991,7 +991,7 @@ function verifyExchangeOrderAndSubmit() {
 			<td class="form-left"><transys:label code="Description"/><span class="errorMessage">*</span></td>
 				<td>
 				<form:select id="additionalFee3Type" cssClass="flat form-control input-sm" style="width:172px !important" path="orderFees.additionalFee3Type"> 
-					<form:option value="">-------Please Select------</form:option>
+					<form:option value="">-----Please Select-----</form:option>
 					<form:options items="${additionalFeeTypes}" itemValue="id" itemLabel="description" />
 				</form:select>
 				<form:errors path="orderFees.additionalFee3Type" cssClass="errorMessage" />
@@ -1039,7 +1039,7 @@ function verifyExchangeOrderAndSubmit() {
 		<tr>
 			<td class="wide">
 				<form:select cssClass="flat form-control input-sm" style="width:172px !important" path="orderPayment[0].paymentMethod"> 
-					<form:option value="">-------Please Select------</form:option>
+					<form:option value="">-----Please Select-----</form:option>
 					<form:options items="${paymentMethods}" itemValue="id" itemLabel="method" />
 				</form:select>
 				<form:errors path="orderPayment[0].paymentMethod" cssClass="errorMessage" />
@@ -1065,7 +1065,7 @@ function verifyExchangeOrderAndSubmit() {
 		<tr>
 			<td class="wide">
 				<form:select cssClass="flat form-control input-sm" style="width:172px !important" path="orderPayment[1].paymentMethod"> 
-					<form:option value="">-------Please Select------</form:option>
+					<form:option value="">-----Please Select-----</form:option>
 					<form:options items="${paymentMethods}" itemValue="id" itemLabel="method" />
 				</form:select>
 				<form:errors path="orderPayment[1].paymentMethod" cssClass="errorMessage" />
@@ -1091,7 +1091,7 @@ function verifyExchangeOrderAndSubmit() {
 		<tr>
 			<td>
 				<form:select cssClass="flat form-control input-sm" style="width:172px !important" path="orderPayment[2].paymentMethod"> 
-					<form:option value="">-------Please Select------</form:option>
+					<form:option value="">-----Please Select-----</form:option>
 					<form:options items="${paymentMethods}" itemValue="id" itemLabel="method" />
 				</form:select>
 				<form:errors path="orderPayment[2].paymentMethod" cssClass="errorMessage" />
