@@ -6,7 +6,7 @@
 		<tr>
 			<td class="form-left">Pickup Date<span class="errorMessage">*</span></td>
 			<td>
-				<form:input path="pickupDate" cssClass="flat" id="datepicker6" name="pickupDate"/>
+				<form:input path="pickupDate" cssClass="flat" id="datepicker6" name="pickupDate" style="width:172px !important"/>
 				 <br><form:errors path="pickupDate" cssClass="errorMessage" />
 			</td>
 		</tr>
@@ -25,7 +25,7 @@
 		<tr>
 			<td class="form-left"><transys:label code="Check #"/><span class="errorMessage">*</span></td>
 			<td>
-				<form:input path="orderPayment[0].checkNum" cssClass="flat" />
+				<form:input path="orderPayment[0].checkNum" cssClass="flat" style="width:172px !important"/>
 				<br><form:errors path="orderPayment[0].checkNum" cssClass="errorMessage" />
 			</td>
 		</tr>
@@ -42,25 +42,25 @@
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Gross"/><span class="errorMessage">*</span></td>
-			<td>
-				<form:input path="grossWeight" cssClass="flat" />
+			<td class="wide">
+				<form:input path="grossWeight" cssClass="flat" style="width:172px !important"/>
 				<br><form:errors path="grossWeight" cssClass="errorMessage" />
 			</td>
-			<td class="form-left"><transys:label code="Tare"/><span class="errorMessage">*</span></td>
+			<td class="form-left">Tare<span class="errorMessage">*</span></td>
 			<td>
-				<form:input path="tare" cssClass="flat" />
+				<form:input path="tare" cssClass="flat" style="width:172px !important"/>
 				<br><form:errors path="tare" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Net Lb"/><span class="errorMessage">*</span></td>
 			<td>
-				<form:input path="netWeightLb" cssClass="flat" />
+				<form:input path="netWeightLb" cssClass="flat" style="width:172px !important"/>
 				<br><form:errors path="netWeightLb" cssClass="errorMessage" />
 			</td>
 			<td class="form-left"><transys:label code="Net Tonnage"/><span class="errorMessage">*</span></td>
 			<td>
-				<form:input path="netWeightTonnage" cssClass="flat"/>
+				<form:input path="netWeightTonnage" cssClass="flat" style="width:172px !important"/>
 				<br><form:errors path="netWeightTonnage" cssClass="errorMessage" />
 			</td>
 		</tr>

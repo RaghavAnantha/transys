@@ -21,8 +21,8 @@ $("#customerModalForm").submit(function (ev) {
 	<table id="form-table" class="table">
 		<tr>
 			<td class="form-left"><transys:label code="Company Name" /><span class="errorMessage">*</span></td>
-			<td align="${left}">
-				<form:input path="companyName" cssClass="flat"  />
+			<td class="wide">
+				<form:input path="companyName" cssClass="flat flat-ext"  />
 			 	<br><form:errors path="companyName" cssClass="errorMessage" />
 			</td>
 			<td class="form-left"><transys:label code="Customer ID" /></td>
@@ -70,24 +70,24 @@ $("#customerModalForm").submit(function (ev) {
 		<tr>
 			<td class="form-left"><transys:label code="Address Line1"/><span class="errorMessage">*</span></td>
 			<td align="${left}">
-				<form:input path="billingAddressLine1" cssClass="flat"/>
+				<form:input path="billingAddressLine1" cssClass="flat flat-ext"/>
 				 <br><form:errors path="billingAddressLine1" cssClass="errorMessage" />
 			</td>
 			<td class="form-left"><transys:label code="Address Line2"/></td>
 			<td align="${left}">
-				<form:input path="billingAddressLine2" cssClass="flat" />
+				<form:input path="billingAddressLine2" cssClass="flat flat-ext" />
 				 <br><form:errors path="billingAddressLine2" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="City" /><span class="errorMessage">*</span></td>
 			<td align="${left}">
-				<form:input cssClass="flat" path="city" />
+				<form:input cssClass="flat flat-ext" path="city" />
 				<br><form:errors path="city" cssClass="errorMessage" />
 			</td>
 			<td class="form-left"><transys:label code="Zipcode" /><span class="errorMessage"></span></td>
 			<td align="${left}">
-				<form:input path="zipcode" cssClass="flat"  maxlength="5" onkeypress="return onlyNumbers(event, false)"/>
+				<form:input path="zipcode" cssClass="flat flat-ext"  maxlength="5" onkeypress="return onlyNumbers(event, false)"/>
 			 	<br><form:errors path="zipcode" cssClass="errorMessage" />
 			</td>
 		</tr>
@@ -113,11 +113,11 @@ $("#customerModalForm").submit(function (ev) {
 		<tr>
 		<td class="form-left"><transys:label code="Contact Name" /><span class="errorMessage"></span></td>
 		<td align="${left}">
-			<form:input path="contactName" cssClass="flat" />	 	
+			<form:input path="contactName" cssClass="flat flat-ext" />	 	
 		</td>
 		<td class="form-left"><transys:label code="Alt Phone1" /></td>
 			<td align="${left}">
-				<form:input path="altPhone1" cssClass="flat"  maxlength="12" 
+				<form:input path="altPhone1" cssClass="flat flat-ext"  maxlength="12" 
 					id="altPhone1" onkeypress="return onlyNumbers(event, false)" onblur="return validateAndFormatPhone('altPhone1');"/>
 			 	<br><form:errors path="altPhone1" cssClass="errorMessage" />
 			</td>
@@ -125,13 +125,13 @@ $("#customerModalForm").submit(function (ev) {
 		<tr>
 			<td class="form-left"><transys:label code="Phone" /></td>
 			<td align="${left}">
-				<form:input path="phone" cssClass="flat"  maxlength="12" 
+				<form:input path="phone" cssClass="flat flat-ext"  maxlength="12" 
 					id="phone" onkeypress="return onlyNumbers(event, false)" onblur="return validateAndFormatPhone('phone');"/>
 			 	<br><form:errors path="phone" cssClass="errorMessage" />
 			</td>
 			<td class="form-left"><transys:label code="Alt Phone2" /></td>
 			<td align="${left}">
-				<form:input path="altPhone2" cssClass="flat"  maxlength="12" 
+				<form:input path="altPhone2" cssClass="flat flat-ext"  maxlength="12" 
 					id="altPhone2" onkeypress="return onlyNumbers(event, false)" onblur="return validateAndFormatPhone('altPhone2');"/>
 			 	<br><form:errors path="altPhone2" cssClass="errorMessage" />
 			</td>
@@ -139,12 +139,12 @@ $("#customerModalForm").submit(function (ev) {
 		<tr>
 			<td class="form-left"><transys:label code="Email" /></td>
 			<td align="${left}">
-				<form:input path="email" cssClass="flat" id="email" />
+				<form:input path="email" cssClass="flat flat-ext" id="email" />
 				 <br><form:errors path="email" cssClass="errorMessage" />
 			</td>
 			<td class="form-left"><transys:label code="Fax" /></td>
 			<td align="${left}">
-				<form:input path="fax" cssClass="flat" maxlength="12" 
+				<form:input path="fax" cssClass="flat flat-ext" maxlength="12" 
 					id="fax" onkeypress="return onlyNumbers(event, false)" onblur="return validateAndFormatPhone('fax');"/>
 				 <br><form:errors path="fax" cssClass="errorMessage" />
 			</td>
@@ -164,21 +164,21 @@ $("#customerModalForm").submit(function (ev) {
 		<tr>
 			<td class="form-left"><transys:label code="Delivery Address #" /><span class="errorMessage">*</span></td>
 			<td align="${left}">
-				<form:input path="deliveryAddress[0].line1" cssClass="flat"/>
+				<form:input path="deliveryAddress[0].line1" cssClass="flat flat-ext"/>
 			 	<br><form:errors path="deliveryAddress[0].line1" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Delivery Street" /><span class="errorMessage">*</span></td>
 			<td align="${left}">
-				<form:input path="deliveryAddress[0].line2" cssClass="flat"/>
+				<form:input path="deliveryAddress[0].line2" cssClass="flat flat-ext"/>
 			 	<br><form:errors path="deliveryAddress[0].line2" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="City" /><span class="errorMessage">*</span></td>
 			<td align="${left}">
-				<form:input path="deliveryAddress[0].city" cssClass="flat"/>
+				<form:input path="deliveryAddress[0].city" cssClass="flat flat-ext"/>
 			 	<br><form:errors path="deliveryAddress[0].city" cssClass="errorMessage" />
 			</td>
 		</tr>
@@ -209,11 +209,8 @@ $("#customerModalForm").submit(function (ev) {
 			<td colspan=10></td>
 		</tr>
 		<tr>
-			<td colspan=10></td>
-		</tr>
-		<tr>
 			<td colspan=10>
-				<form:textarea row="5" path="customerNotes[0].notes" cssClass="flat" id="customerNotes" style="width:100%; height:150%;"/>
+				<form:textarea row="5" path="customerNotes[0].notes" cssClass="flat" id="customerNotes" style="width:100%; height:100%;"/>
 				<br><form:errors path="customerNotes[0].notes" cssClass="errorMessage" />
 			</td>
 		</tr>
