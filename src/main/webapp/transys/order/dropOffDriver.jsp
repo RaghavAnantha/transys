@@ -7,7 +7,7 @@
 			<td class="form-left"><transys:label code="Drop-off Driver" /><span class="errorMessage">*</span></td>
 			<td>
 				<form:select id="dropOffDriver" cssClass="flat form-control input-sm" style="width:172px !important" path="dropOffDriver"> 
-					<form:option value="">-------Please Select------</form:option>
+					<form:option value="">-----Please Select-----</form:option>
 					<form:options items="${drivers}" itemValue="id" itemLabel="name" />
 				</form:select> 
 				<form:errors path="dropOffDriver" cssClass="errorMessage" />
@@ -17,7 +17,7 @@
 			<td class="form-left"><transys:label code="Dumpster #" /><span class="errorMessage"></span></td>
 			<td>
 				<form:select id="dumpsterNum" cssClass="flat form-control input-sm" path="dumpster" style="width:172px !important">
-					<form:option value="">-------Please Select------</form:option>
+					<form:option value="">-----Please Select-----</form:option>
 					<form:options items="${orderDumpsters}" itemValue="id" itemLabel="dumpsterNum" />
 				</form:select> 
 				<form:errors path="dumpster" cssClass="errorMessage" />
