@@ -10,21 +10,21 @@
 		<tr>
 			<td class="form-left"><transys:label code="Delivery Address #" /><span class="errorMessage">*</span></td>
 			<td align="${left}">
-				<form:input path="line1" cssClass="flat" onkeyup="checkVal(this.id)"/>
+				<form:input path="line1" cssClass="flat flat-ext" onkeyup="checkVal(this.id)"/>
 			 	<br><form:errors path="line1" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Delivery Street" /><span class="errorMessage">*</span></td>
 			<td align="${left}">
-				<form:input path="line2" cssClass="flat" onkeyup="checkVal(this.id)"/>
+				<form:input path="line2" cssClass="flat flat-ext" onkeyup="checkVal(this.id)"/>
 			 	<br><form:errors path="line2" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="City" /><span class="errorMessage">*</span></td>
 			<td align="${left}">
-				<form:input path="city" cssClass="flat" onkeyup="checkVal(this.id)"/>
+				<form:input path="city" cssClass="flat flat-ext" onkeyup="checkVal(this.id)"/>
 			 	<br><form:errors path="city" cssClass="errorMessage" />
 			</td>
 		</tr>
@@ -41,7 +41,7 @@
 		<tr>
 			<td class="form-left"><transys:label code="Zipcode" /><span class="errorMessage">*</span></td>
 			<td align="${left}">
-				<form:input path="zipcode" cssClass="flat"  onkeyup="checkValDrop(this.id, this.value)"/>
+				<form:input path="zipcode" cssClass="flat flat-ext"  onkeyup="checkValDrop(this.id, this.value)"/>
 			 	<br><form:errors path="zipcode" cssClass="errorMessage" />
 			</td>
 		</tr>

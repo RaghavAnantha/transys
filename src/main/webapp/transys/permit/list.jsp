@@ -175,16 +175,16 @@
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
 		pagingLink="search.do" multipleDelete="false" searcheable="false" 
 		exportPdf="true" exportXls="true" dataQualifier="managePermits">
-		<transys:textcolumn headerText="Delivery Address #" dataField="deliveryAddress.line1" />
-		<transys:textcolumn headerText="DeliveryStreet" dataField="deliveryAddress.line2" /> 
+		<transys:textcolumn headerText="Delivery Address #" dataField="deliveryAddress.line1" width="90px"/>
+		<transys:textcolumn headerText="Delivery Street" dataField="deliveryAddress.line2" /> 
 		<transys:textcolumn headerText="Locn. Type" dataField="locationType.locationType" />
-		<transys:textcolumn headerText="PermitType" dataField="permitType.permitType" />
-		<transys:textcolumn headerText="PermitClass" dataField="permitClass.permitClass" />
-		<transys:textcolumn headerText="StartDate" dataField="startDate" dataFormat="MM/dd/yyy"/>
-		<transys:textcolumn headerText="EndDate" dataField="endDate" dataFormat="MM/dd/yyy"/>
-		<transys:textcolumn headerText="CustomerName" dataField="customer.companyName" />
+		<transys:textcolumn headerText="Permit Type" dataField="permitType.permitType" />
+		<transys:textcolumn headerText="Permit Class" dataField="permitClass.permitClass" />
+		<transys:textcolumn headerText="Start Date" dataField="startDate" dataFormat="MM/dd/yyy"/>
+		<transys:textcolumn headerText="End Date" dataField="endDate" dataFormat="MM/dd/yyy"/>
+		<transys:textcolumn headerText="Customer Name" dataField="customer.companyName" />
 		<transys:textcolumn headerText="Permit#" dataField="number" />
-		<transys:textcolumn headerText="PermitFee" dataField="fee" />
+		<transys:textcolumn headerText="Permit Fee" dataField="fee" />
 		<transys:textcolumn headerText="Order#" dataField="orderId" />
 		<transys:textcolumn headerText="Status" dataField="status.status" />
 	</transys:datatable>

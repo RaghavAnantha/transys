@@ -82,9 +82,9 @@
 	<transys:datatable urlContext="customer" baseObjects="${customerReportVOList}"
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
 		pagingLink="search.do" dataQualifier="customerListReport">
-		<transys:textcolumn headerText="Customer ID" dataField="id" />
+		<transys:textcolumn headerText="Id" dataField="id" width="30px"/>
 		<transys:textcolumn headerText="Company Name" dataField="companyName" />
-		<transys:textcolumn headerText="ContactName" dataField="contactName" />
+		<transys:textcolumn headerText="Contact Name" dataField="contactName" />
 		<transys:textcolumn headerText="Phone Number" dataField="phoneNumber" />
 		<transys:textcolumn headerText="Status" dataField="status" />
 		<transys:textcolumn headerText="Total Orders" dataField="totalOrders" />
