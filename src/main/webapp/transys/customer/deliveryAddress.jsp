@@ -38,7 +38,7 @@
 					<form:option value="">------Please Select--------</form:option>
 					<form:options items="${state}" itemValue="id" itemLabel="name" />
 				</form:select> 
-				<br><form:errors path="state" cssClass="errorMessage" />
+				<form:errors path="state" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>
@@ -53,7 +53,6 @@
 			<td>&nbsp;</td>
 			<td align="${left}" colspan="2">
 				<input type="submit" id="create" onclick="return validateForm()" value="<transys:label code="Save"/>" class="flat btn btn-primary btn-sm" /> 
-				<input type="reset" id="resetBtn" value="<transys:label code="Reset"/> "class="flat btn btn-primary btn-sm" /> 
 				<input type="button" id="cancelBtn" value="<transys:label code="Cancel"/>" class="flat btn btn-primary btn-sm" onClick="location.href='main.do'" />
 			</td>
 		</tr>

@@ -52,20 +52,20 @@ function formatFax(){
 				<form:input path="companyName" cssClass="flat flat-ext" />
 			 	<br><form:errors path="companyName" cssClass="errorMessage" />
 			</td>
-			<td class="form-left"><transys:label code="Customer ID" /></td>
-			<td align="${left}">${modelObject.id}</td>
+			<td class="form-left"><transys:label code="Customer Id" /></td>
+			<td class="td-static">${modelObject.id}</td>
 		</tr>
 		<tr>
-			<td class="form-left"><transys:label code="Customer Type" /></td>
+			<td class="form-left">Customer Type</td>
 			<td align="${left}">
 				<form:select cssClass="flat form-control input-sm" style="width:172px !important" path="customerType" >
 					<form:option value="">------Please Select--------</form:option>
 					<form:options items="${customerTypes}" itemValue="id" itemLabel="customerType"/>
 				</form:select> 
-				<br><form:errors path="customerType" cssClass="errorMessage" />
+				<form:errors path="customerType" cssClass="errorMessage" />
 			</td> 
-			<td class="form-left"><transys:label code="Created Date" /></td>
-			<td align="${left}">${modelObject.formattedCreatedAt}</td>
+			<td class="form-left">Created Date</td>
+			<td class="td-static">${modelObject.formattedCreatedAt}</td>
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Charge Company" /></td>
@@ -74,7 +74,7 @@ function formatFax(){
 					<form:option value="">------Please Select--------</form:option>
 					<form:options items="${chargeCompanyOptions}" />
 				</form:select> 
-				<br><form:errors path="chargeCompany" cssClass="errorMessage" />
+				<form:errors path="chargeCompany" cssClass="errorMessage" />
 			</td>
 			<td class="form-left"><transys:label code="Total Orders" /></td>
 			<td align="${left}"></td>
@@ -86,16 +86,16 @@ function formatFax(){
 					<form:option value="">------Please Select--------</form:option>
 					<form:options items="${customerStatuses}" itemValue="id" itemLabel="status" />
 				</form:select> 
-				<br><form:errors path="customerStatus" cssClass="errorMessage" />
+				<form:errors path="customerStatus" cssClass="errorMessage" />
 			</td> 
 			<td class="form-left"><transys:label code="Last Delivery" /></td>
 			<td align="${left}"></td>
 		</tr>
 		<tr>
-			<td colspan=10 class="section-header" style="line-height: 1;font-size: 13px;font-weight: bold;color: white;">Billing Address</td>
+			<td colspan=10></td>
 		</tr>
 		<tr>
-			<td colspan=10></td>
+			<td colspan=10 class="section-header" style="line-height: 1;font-size: 13px;font-weight: bold;color: white;">Billing Address</td>
 		</tr>
 		<tr>
 			<td colspan=10></td>
@@ -131,8 +131,11 @@ function formatFax(){
 					<form:option value="">------Please Select--------</form:option>
 					<form:options items="${state}" itemValue="id" itemLabel="name" />
 				</form:select> 
-				<br><form:errors path="state" cssClass="errorMessage" />
+				<form:errors path="state" cssClass="errorMessage" />
 			</td>
+		</tr>
+		<tr>
+			<td colspan=10></td>
 		</tr>	
 		<tr>
 			<td colspan=10 class="section-header" style="line-height: 1;font-size: 13px;font-weight: bold;color: white;">Billing Contact</td>
@@ -140,9 +143,6 @@ function formatFax(){
 		<tr>
 			<td colspan=10></td>
 		</tr>
-		<tr>
-			<td colspan=10></td>
-		</tr>	
 		<tr>
 		<td class="form-left"><transys:label code="Contact Name" /><span class="errorMessage"></span></td>
 		<td align="${left}">
@@ -192,9 +192,6 @@ function formatFax(){
 			<td colspan=10></td>
 		</tr>
 		<tr>
-			<td colspan=10></td>
-		</tr>
-		<tr>
 			<td colspan=10>
 				<form:textarea row="5" path="customerNotes[0].notes" cssClass="flat" id="customerNotes" style="width:100%; height:150%;"/>
 				<br><form:errors path="customerNotes[0].notes" cssClass="errorMessage" />
@@ -205,7 +202,6 @@ function formatFax(){
 			<td>&nbsp;</td>
 			<td align="${left}" colspan="2">
 				<input type="submit" id="create" onclick="return validate()" value="<transys:label code="Save"/>" class="flat btn btn-primary btn-sm" /> 
-				<input type="reset" id="resetBtn" value="<transys:label code="Reset"/> "class="flat btn btn-primary btn-sm" /> 
 				<input type="button" id="cancelBtn" value="<transys:label code="Cancel"/>" class="flat btn btn-primary btn-sm" onClick="location.href='main.do'" />
 			</td>
 		</tr>

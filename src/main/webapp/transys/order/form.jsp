@@ -534,6 +534,7 @@ function verifyExchangeOrderAndSubmit() {
 	<input type="hidden" name="isExchange" id="isExchange" value="false" />
 	<input type="hidden" name="existingDroppedOffOrderId" id="existingDroppedOffOrderId" value="" />
 	<table id="form-table" class="table">
+		<tr><td></td></tr>
 		<tr>
 			<td class="form-left">Order #<span class="errorMessage">*</span></td>
 			<td class="wide">${modelObject.id}</td>
@@ -553,7 +554,7 @@ function verifyExchangeOrderAndSubmit() {
 						<img src="/images/addnew.png" border="0" style="float:bottom" class="toolbarButton">
 					</a>
 				</label> 
-				<br><form:errors path="customer" cssClass="errorMessage" />
+				<form:errors path="customer" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>
@@ -581,9 +582,7 @@ function verifyExchangeOrderAndSubmit() {
 		<tr>
 			<td></td>
 		</tr>
-		<tr>
-			<td></td>
-		</tr>
+		
 		<tr>
 			<td class="form-left"><transys:label code="Delivery Address" /><span class="errorMessage"></span></td>
 			<td>
@@ -599,7 +598,7 @@ function verifyExchangeOrderAndSubmit() {
 						<img src="/images/addnew.png" border="0" style="float:bottom" class="toolbarButton">
 					</a>
 				</label>
-				<br><form:errors path="deliveryAddress" cssClass="errorMessage" />
+				<form:errors path="deliveryAddress" cssClass="errorMessage" />
 			</td>
 			<td class="form-left"><span style="color:blue">Pickup Order #</span></td>
 			<td>
@@ -655,7 +654,7 @@ function verifyExchangeOrderAndSubmit() {
 					<form:option value="">-------Please Select------</form:option>
 					<form:options items="${dusmpsterLocationTypes}" itemValue="id" itemLabel="locationType" />
 				</form:select> 
-			 	<br><form:errors path="dumpsterLocation" cssClass="errorMessage" />
+			 	<form:errors path="dumpsterLocation" cssClass="errorMessage" />
 			</td>
 			<td class="form-left"><transys:label code="Dumpster Size"/><span class="errorMessage">*</span></td>
 			<td>
@@ -663,13 +662,13 @@ function verifyExchangeOrderAndSubmit() {
 					<form:option value="">-------Please Select------</form:option>
 					<form:options items="${dumpsterSizes}" itemValue="id" itemLabel="size" />
 				</form:select> 
-			 	<br><form:errors path="dumpsterSize" cssClass="errorMessage" />
+			 	<form:errors path="dumpsterSize" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>
 			<td class="form-left">Material Category<span class="errorMessage">*</span></td>
 			<td>
-				<select class="flat form-control input-sm" id="materialCategory" name="materialCategory" id="materialCategory" style="width: 175px" onChange="return populateMaterialTypes();">
+				<select class="flat form-control input-sm" id="materialCategory" name="materialCategory" id="materialCategory" style="width: 172px !important" onChange="return populateMaterialTypes();">
 					<option value="">------Please Select------</option>
 					<c:forEach items="${materialCategories}" var="aMaterialCategory">
 						<c:set var="selected" value="" />
@@ -686,14 +685,12 @@ function verifyExchangeOrderAndSubmit() {
 					<form:option value="">-------Please Select------</form:option>
 					<form:options items="${materialTypes}" itemValue="id" itemLabel="materialName" />
 				</form:select> 
-				<br><form:errors path="materialType" cssClass="errorMessage" />
+				<form:errors path="materialType" cssClass="errorMessage" />
 			</td>
 		</tr>
+		<tr><td></td></tr>
 		<tr>
 			<td colspan=10 class="section-header" style="line-height: 1;font-size: 13px;font-weight: bold;color: white;">Permit Information</td>
-		</tr>
-		<tr>
-			<td></td>
 		</tr>
 		<tr>
 			<td></td>
@@ -913,17 +910,11 @@ function verifyExchangeOrderAndSubmit() {
 	    </tr>
 	</table>
 	<table id="form-table" class="table">
-	    <tr>
-			<td></td>
-		</tr>
 		<tr>
 			<td></td>
 		</tr>
 		<tr>
 			<td colspan=10 class="section-header" style="line-height: 1;font-size: 13px;font-weight: bold;color: white;">Rates/Fees Information</td>
-		</tr>
-		<tr>
-			<td></td>
 		</tr>
 		<tr>
 			<td></td>
@@ -938,34 +929,34 @@ function verifyExchangeOrderAndSubmit() {
 			<td class="form-left"><transys:label code="Dumpster Price"/><span class="errorMessage">*</span></td>
 			<td>
 				<form:input path="orderFees.dumpsterPrice" cssClass="form-control" readonly="true" style="width:172px;height:24px !important" />
-				<br><form:errors path="orderFees.dumpsterPrice" cssClass="errorMessage" />
+				<form:errors path="orderFees.dumpsterPrice" cssClass="errorMessage" />
 			</td>
 			<td class="form-left"><transys:label code="Overweight Fee"/><span class="errorMessage">*</span></td>
 			<td>
 				<form:input path="orderFees.overweightFee" cssClass="form-control" readonly="true" style="width:172px;height:24px !important" />
-				<br><form:errors path="orderFees.overweightFee" cssClass="errorMessage" />
+				<form:errors path="orderFees.overweightFee" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="City Fee"/><span class="errorMessage">*</span></td>
 			<td>
 				<form:input path="orderFees.cityFee" cssClass="form-control" readonly="true" style="width:172px;height:24px !important" />
-				<br><form:errors path="orderFees.cityFee" cssClass="errorMessage" />
+				<form:errors path="orderFees.cityFee" cssClass="errorMessage" />
 			</td>
-			<td class="form-left"><transys:label code="Description"/><span class="errorMessage">*</span></td>
+			<td class="form-left">Description<span class="errorMessage">*</span></td>
 			<td>
 				<form:select id="orderFees.cityFeeType" cssClass="flat form-control input-sm" style="width:172px !important" path="orderFees.cityFeeType" onChange="return populateCityFee();"> 
 					<form:option value="">-------Please Select------</form:option>
 					<form:options items="${cityFeeDetails}" itemValue="id" itemLabel="suburbName" />
 				</form:select>
-				<br><form:errors path="orderFees.cityFeeType" cssClass="errorMessage" />
+				<form:errors path="orderFees.cityFeeType" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Additional Fee1"/><span class="errorMessage">*</span></td>
 			<td>
 				<form:input path="orderFees.additionalFee1" style="width:172px !important" cssClass="flat" onchange="return populateTotalAdditionalFees();"/>
-				<br><form:errors path="orderFees.additionalFee1" cssClass="errorMessage" />
+				<form:errors path="orderFees.additionalFee1" cssClass="errorMessage" />
 			</td>
 			<td class="form-left"><transys:label code="Description"/><span class="errorMessage">*</span></td>
 				<td>
@@ -973,14 +964,14 @@ function verifyExchangeOrderAndSubmit() {
 					<form:option value="">-------Please Select------</form:option>
 					<form:options items="${additionalFeeTypes}" itemValue="id" itemLabel="description" />
 				</form:select>
-				<br><form:errors path="orderFees.additionalFee1Type" cssClass="errorMessage" />
+				<form:errors path="orderFees.additionalFee1Type" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Additional Fee2"/><span class="errorMessage">*</span></td>
 			<td>
 				<form:input path="orderFees.additionalFee2" style="width:172px !important" cssClass="flat" />
-				<br><form:errors path="orderFees.additionalFee2" cssClass="errorMessage" />
+				<form:errors path="orderFees.additionalFee2" cssClass="errorMessage" />
 			</td>
 			<td class="form-left"><transys:label code="Description"/><span class="errorMessage">*</span></td>
 			<td>
@@ -988,14 +979,14 @@ function verifyExchangeOrderAndSubmit() {
 					<form:option value="">-------Please Select------</form:option>
 					<form:options items="${additionalFeeTypes}" itemValue="id" itemLabel="description" />
 				</form:select>
-				<br><form:errors path="orderFees.additionalFee2Type" cssClass="errorMessage" />
+				<form:errors path="orderFees.additionalFee2Type" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Additional Fee3"/><span class="errorMessage">*</span></td>
 			<td>
 				<form:input path="orderFees.additionalFee3" style="width:172px !important" cssClass="flat" />
-				<br><form:errors path="orderFees.additionalFee3" cssClass="errorMessage" />
+				<form:errors path="orderFees.additionalFee3" cssClass="errorMessage" />
 			</td>
 			<td class="form-left"><transys:label code="Description"/><span class="errorMessage">*</span></td>
 				<td>
@@ -1003,7 +994,7 @@ function verifyExchangeOrderAndSubmit() {
 					<form:option value="">-------Please Select------</form:option>
 					<form:options items="${additionalFeeTypes}" itemValue="id" itemLabel="description" />
 				</form:select>
-				<br><form:errors path="orderFees.additionalFee3Type" cssClass="errorMessage" />
+				<form:errors path="orderFees.additionalFee3Type" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>
@@ -1035,12 +1026,7 @@ function verifyExchangeOrderAndSubmit() {
 		<tr>
 			<td colspan=10 class="section-header" style="line-height: 1;font-size: 13px;font-weight: bold;color: white;">Payment Information</td>
 		</tr>
-		<tr>
-			<td></td>
-		</tr>
-		<tr>
-			<td></td>
-		</tr>
+		<tr><td></td></tr>
 	</table>
 	<table id="form-table" class="table">
 		<tr>
@@ -1056,7 +1042,7 @@ function verifyExchangeOrderAndSubmit() {
 					<form:option value="">-------Please Select------</form:option>
 					<form:options items="${paymentMethods}" itemValue="id" itemLabel="method" />
 				</form:select>
-				<br><form:errors path="orderPayment[0].paymentMethod" cssClass="errorMessage" />
+				<form:errors path="orderPayment[0].paymentMethod" cssClass="errorMessage" />
 			</td>
 			<td class="td-static wide">
 				<c:if test="${modelObject.orderPayment[0] != null and modelObject.orderPayment[0].id != null}">
@@ -1082,7 +1068,7 @@ function verifyExchangeOrderAndSubmit() {
 					<form:option value="">-------Please Select------</form:option>
 					<form:options items="${paymentMethods}" itemValue="id" itemLabel="method" />
 				</form:select>
-				<br><form:errors path="orderPayment[1].paymentMethod" cssClass="errorMessage" />
+				<form:errors path="orderPayment[1].paymentMethod" cssClass="errorMessage" />
 			</td>
 			<td class="td-static">
 				<c:if test="${modelObject.orderPayment[1] != null and modelObject.orderPayment[1].id != null}">
@@ -1108,7 +1094,7 @@ function verifyExchangeOrderAndSubmit() {
 					<form:option value="">-------Please Select------</form:option>
 					<form:options items="${paymentMethods}" itemValue="id" itemLabel="method" />
 				</form:select>
-				<br><form:errors path="orderPayment[2].paymentMethod" cssClass="errorMessage" />
+				<form:errors path="orderPayment[2].paymentMethod" cssClass="errorMessage" />
 			</td>
 			<td class="td-static">
 				<c:if test="${modelObject.orderPayment[2] != null and modelObject.orderPayment[2].id != null}">

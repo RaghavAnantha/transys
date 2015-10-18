@@ -25,8 +25,8 @@ $("#customerModalForm").submit(function (ev) {
 				<form:input path="companyName" cssClass="flat flat-ext"  />
 			 	<br><form:errors path="companyName" cssClass="errorMessage" />
 			</td>
-			<td class="form-left"><transys:label code="Customer ID" /></td>
-			<td align="${left}">${modelObject.id}</td>
+			<td class="form-left"><transys:label code="Customer Id" /></td>
+			<td class="td-static">${modelObject.id}</td>
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Customer Type" /></td>
@@ -35,8 +35,10 @@ $("#customerModalForm").submit(function (ev) {
 					<form:option value="">------Please Select--------</form:option>
 					<form:options items="${customerTypes}" itemValue="id" itemLabel="customerType"/>
 				</form:select> 
-				<br><form:errors path="customerType" cssClass="errorMessage" />
-			</td> 
+				<form:errors path="customerType" cssClass="errorMessage" />
+			</td>
+			<td class="form-left">Created Date</td>
+			<td class="td-static">${modelObject.formattedCreatedAt}</td>
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Charge Company" /></td>
@@ -45,7 +47,7 @@ $("#customerModalForm").submit(function (ev) {
 					<form:option value="">------Please Select--------</form:option>
 					<form:options items="${chargeCompanyOptions}" />
 				</form:select> 
-				<br><form:errors path="chargeCompany" cssClass="errorMessage" />
+				<form:errors path="chargeCompany" cssClass="errorMessage" />
 			</td> 
 		</tr>
 		<tr>
@@ -55,14 +57,14 @@ $("#customerModalForm").submit(function (ev) {
 					<form:option value="">------Please Select--------</form:option>
 					<form:options items="${customerStatuses}" itemValue="id" itemLabel="status"/>
 				</form:select> 
-				<br><form:errors path="customerStatus" cssClass="errorMessage" />
+				<form:errors path="customerStatus" cssClass="errorMessage" />
 			</td> 
 		</tr>
 		<tr>
-			<td colspan=10 class="section-header" style="line-height: 1;font-size: 13px;font-weight: bold;color: white;">Billing Address</td>
+			<td colspan=10></td>
 		</tr>
 		<tr>
-			<td colspan=10></td>
+			<td colspan=10 class="section-header" style="line-height: 1;font-size: 13px;font-weight: bold;color: white;">Billing Address</td>
 		</tr>
 		<tr>
 			<td colspan=10></td>
@@ -86,7 +88,7 @@ $("#customerModalForm").submit(function (ev) {
 				<br><form:errors path="city" cssClass="errorMessage" />
 			</td>
 			<td class="form-left"><transys:label code="Zipcode" /><span class="errorMessage"></span></td>
-			<td align="${left}">
+			<td>
 				<form:input path="zipcode" cssClass="flat flat-ext"  maxlength="5" onkeypress="return onlyNumbers(event, false)"/>
 			 	<br><form:errors path="zipcode" cssClass="errorMessage" />
 			</td>
@@ -98,18 +100,18 @@ $("#customerModalForm").submit(function (ev) {
 					<form:option value="">------Please Select--------</form:option>
 					<form:options items="${state}" itemValue="id" itemLabel="name" />
 				</form:select> 
-				<br><form:errors path="state" cssClass="errorMessage" />
+				<form:errors path="state" cssClass="errorMessage" />
 			</td>
-		</tr>	
+		</tr>
+		<tr>
+			<td colspan=10></td>
+		</tr>
 		<tr>
 			<td colspan=10 class="section-header" style="line-height: 1;font-size: 13px;font-weight: bold;color: white;">Billing Contact</td>
 		</tr>
 		<tr>
 			<td colspan=10></td>
 		</tr>
-		<tr>
-			<td colspan=10></td>
-		</tr>	
 		<tr>
 		<td class="form-left"><transys:label code="Contact Name" /><span class="errorMessage"></span></td>
 		<td align="${left}">
@@ -140,7 +142,7 @@ $("#customerModalForm").submit(function (ev) {
 			<td class="form-left"><transys:label code="Email" /></td>
 			<td align="${left}">
 				<form:input path="email" cssClass="flat flat-ext" id="email" />
-				 <br><form:errors path="email" cssClass="errorMessage" />
+				<br><form:errors path="email" cssClass="errorMessage" />
 			</td>
 			<td class="form-left"><transys:label code="Fax" /></td>
 			<td align="${left}">
@@ -154,9 +156,6 @@ $("#customerModalForm").submit(function (ev) {
 		</tr>
 		<tr>
 			<td colspan=10 class="section-header" style="line-height: 1;font-size: 13px;font-weight: bold;color: white;">Delivery Address</td>
-		</tr>
-		<tr>
-			<td colspan=10></td>
 		</tr>
 		<tr>
 			<td colspan=10></td>
@@ -189,13 +188,13 @@ $("#customerModalForm").submit(function (ev) {
 					<form:option value="">------Please Select--------</form:option>
 					<form:options items="${state}" itemValue="id" itemLabel="name" />
 				</form:select> 
-				<br><form:errors path="deliveryAddress[0].state" cssClass="errorMessage" />
+				<form:errors path="deliveryAddress[0].state" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Zipcode" /><span class="errorMessage">*</span></td>
 			<td align="${left}">
-				<form:input path="deliveryAddress[0].zipcode" cssClass="flat"/>
+				<form:input path="deliveryAddress[0].zipcode" cssClass="flat flat-ext"/>
 			 	<br><form:errors path="deliveryAddress[0].zipcode" cssClass="errorMessage" />
 			</td>
 		</tr>
@@ -219,7 +218,6 @@ $("#customerModalForm").submit(function (ev) {
 			<td>&nbsp;</td>
 			<td align="${left}" colspan="2">
 				<input type="submit" id="create" onclick="return validate()" value="<transys:label code="Save"/>" class="flat btn btn-primary btn-sm" /> 
-				<input type="reset" id="resetBtn" value="<transys:label code="Reset"/> "class="flat btn btn-primary btn-sm" /> 
 				<input type="button" value="Close" class="flat btn btn-primary btn-sm" data-dismiss="modal" />
 			</td>
 		</tr>
