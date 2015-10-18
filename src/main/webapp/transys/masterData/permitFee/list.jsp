@@ -29,7 +29,7 @@
 			<td class="form-left"><transys:label code="Permit Type" /></td>
 			<td class="wide"><select
 				class="flat form-control input-sm" id="permitType" name="permitType"
-				style="width: 175px">
+				style="width: 175px !important">
 					<option value="">------
 						<transys:label code="Please Select" />------
 					</option>
@@ -49,7 +49,7 @@
 				<td class="form-left"><transys:label code="Permit Fee" /></td>
 				<td class="wide"><select
 					class="flat form-control input-sm" id="fee" name="fee"
-					style="width: 175px">
+					style="width: 175px !important">
 						<option value="">------
 							<transys:label code="Please Select" />------
 						</option>
