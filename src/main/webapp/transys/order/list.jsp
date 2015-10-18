@@ -155,7 +155,7 @@ function populateCustomerDeliveryAddress() {
 			</td>
 		</tr>
 		<tr>
-			<td class="form-left"><transys:label code="Balance Amount Due" /></td>
+			<td class="form-left form-left-ext"><transys:label code="Balance Amount Due" /></td>
 			<td>
 				<c:set var="balanceAmountDueYesChecked" value="" />
 				<c:if test="${sessionScope.searchCriteria.searchMap['balanceAmountDue'] == '!=0.00'}">

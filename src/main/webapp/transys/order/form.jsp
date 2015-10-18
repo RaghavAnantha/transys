@@ -952,7 +952,7 @@ function verifyExchangeOrderAndSubmit() {
 				<form:input path="orderFees.cityFee" cssClass="form-control" readonly="true" style="width:172px;height:24px !important" />
 				<br><form:errors path="orderFees.cityFee" cssClass="errorMessage" />
 			</td>
-			<td class="form-left"><transys:label code="City Fee Description"/><span class="errorMessage">*</span></td>
+			<td class="form-left"><transys:label code="Description"/><span class="errorMessage">*</span></td>
 			<td>
 				<form:select id="orderFees.cityFeeType" cssClass="flat form-control input-sm" style="width:172px !important" path="orderFees.cityFeeType" onChange="return populateCityFee();"> 
 					<form:option value="">-------Please Select------</form:option>
@@ -967,7 +967,7 @@ function verifyExchangeOrderAndSubmit() {
 				<form:input path="orderFees.additionalFee1" style="width:172px !important" cssClass="flat" onchange="return populateTotalAdditionalFees();"/>
 				<br><form:errors path="orderFees.additionalFee1" cssClass="errorMessage" />
 			</td>
-			<td class="form-left"><transys:label code="Additional Fee1 Description"/><span class="errorMessage">*</span></td>
+			<td class="form-left"><transys:label code="Description"/><span class="errorMessage">*</span></td>
 				<td>
 				<form:select id="additionalFee1Type" cssClass="flat form-control input-sm" style="width:172px !important" path="orderFees.additionalFee1Type"> 
 					<form:option value="">-------Please Select------</form:option>
@@ -982,7 +982,7 @@ function verifyExchangeOrderAndSubmit() {
 				<form:input path="orderFees.additionalFee2" style="width:172px !important" cssClass="flat" />
 				<br><form:errors path="orderFees.additionalFee2" cssClass="errorMessage" />
 			</td>
-			<td class="form-left"><transys:label code="Additional Fee2 Description"/><span class="errorMessage">*</span></td>
+			<td class="form-left"><transys:label code="Description"/><span class="errorMessage">*</span></td>
 			<td>
 				<form:select id="additionalFee2Type" cssClass="flat form-control input-sm" style="width:172px !important" path="orderFees.additionalFee2Type"> 
 					<form:option value="">-------Please Select------</form:option>
@@ -997,7 +997,7 @@ function verifyExchangeOrderAndSubmit() {
 				<form:input path="orderFees.additionalFee3" style="width:172px !important" cssClass="flat" />
 				<br><form:errors path="orderFees.additionalFee3" cssClass="errorMessage" />
 			</td>
-			<td class="form-left"><transys:label code="Additional Fee3 Description"/><span class="errorMessage">*</span></td>
+			<td class="form-left"><transys:label code="Description"/><span class="errorMessage">*</span></td>
 				<td>
 				<form:select id="additionalFee3Type" cssClass="flat form-control input-sm" style="width:172px !important" path="orderFees.additionalFee3Type"> 
 					<form:option value="">-------Please Select------</form:option>
@@ -1007,7 +1007,7 @@ function verifyExchangeOrderAndSubmit() {
 			</td>
 		</tr>
 		<tr>
-			<td class="form-left"><transys:label code="Total Additional Fees"/></td>
+			<td class="form-left form-left-ext"><transys:label code="Total Additional Fees"/></td>
 			<td>
 				<form:input path="orderFees.totalAdditionalFees" cssClass="form-control" readonly="true" style="width:172px;height:24px !important"/>
 			</td>
