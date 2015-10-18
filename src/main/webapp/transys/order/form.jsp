@@ -608,29 +608,29 @@ function verifyExchangeOrderAndSubmit() {
 			</td>
 		</tr>
 		<tr>
-			<td class="form-left"><transys:label code="Contact Name" /><span class="errorMessage">*</span></td>
+			<td class="form-left">Contact Name<span class="errorMessage">*</span></td>
 			<td>
-				<form:input path="deliveryContactName" cssClass="flat"  />
+				<form:input path="deliveryContactName" cssClass="flat" style="width:172px !important" />
 			 	<br><form:errors path="deliveryContactName" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Phone1"/><span class="errorMessage">*</span></td>
 			<td>
-				<form:input path="deliveryContactPhone1" cssClass="flat" maxlength="12" 
+				<form:input path="deliveryContactPhone1" cssClass="flat" style="width:172px !important" maxlength="12" 
 					id="deliveryContactPhone1" onkeypress="return onlyNumbers(event, false)" onblur="return validateAndFormatPhone('deliveryContactPhone1');"/>
 				<br><form:errors path="deliveryContactPhone1" cssClass="errorMessage" />
 			</td>
 			<td class="form-left"><transys:label code="Phone2"/></td>
 			<td>
-				<form:input path="deliveryContactPhone2" id="deliveryContactPhone2" cssClass="flat" />
+				<form:input path="deliveryContactPhone2" id="deliveryContactPhone2" cssClass="flat" style="width:172px !important"/>
 				<br><form:errors path="deliveryContactPhone2" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Delivery Date"/><span class="errorMessage">*</span></td>
 			<td>
-				<form:input path="deliveryDate" cssClass="flat" id="datepicker7" name="deliveryDate"/>
+				<form:input path="deliveryDate" cssClass="flat" style="width:172px !important" id="datepicker7" name="deliveryDate"/>
 				 <br><form:errors path="deliveryDate" cssClass="errorMessage" />
 			</td>
 			<td class="form-left"><transys:label code="Delivery Time"/></td>
@@ -904,11 +904,11 @@ function verifyExchangeOrderAndSubmit() {
 		</tr>
 	    <tr>
 	    	<td class="form-left">Permit1 Fee<span class="errorMessage">*</span></td>
-	        <td class="td-static"><form:input path="orderFees.permitFee1" cssClass="flat" onChange="return populateTotalPermitFees();"/></td>
+	        <td class="td-static"><form:input path="orderFees.permitFee1" style="width:172px !important" cssClass="flat" onChange="return populateTotalPermitFees();"/></td>
 	        <td class="form-left">Permit2 Fee<span class="errorMessage">*</span></td>
-	        <td class="td-static"><form:input path="orderFees.permitFee2" cssClass="flat" onChange="return populateTotalPermitFees();"/></td>
+	        <td class="td-static"><form:input path="orderFees.permitFee2" style="width:172px !important" cssClass="flat" onChange="return populateTotalPermitFees();"/></td>
 	        <td class="form-left">Permit3 Fee<span class="errorMessage">*</span></td>
-	        <td class="td-static"><form:input path="orderFees.permitFee3" cssClass="flat" onChange="return populateTotalPermitFees();"/></td>
+	        <td class="td-static"><form:input path="orderFees.permitFee3" style="width:172px !important" cssClass="flat" onChange="return populateTotalPermitFees();"/></td>
 	    </tr>
 	    <tr>
 			<td colspan=10></td>
@@ -926,39 +926,44 @@ function verifyExchangeOrderAndSubmit() {
 			<td colspan="10"></td>
 		</tr>
 		<tr>
-			<td class="form-left"><transys:label code="Dumpster Price"/><span class="errorMessage">*</span></td>
+			<td class="form-left"><transys:label code="Total Permit Fees"/></td>
 			<td>
-				<form:input path="orderFees.dumpsterPrice" cssClass="form-control" readonly="true" style="width:172px;height:25px !important" />
-				<br><form:errors path="orderFees.dumpsterPrice" cssClass="errorMessage" />
+				<form:input path="orderFees.totalPermitFees" cssClass="form-control" readonly="true" style="width:172px;height:24px !important"/>
 			</td>
 		</tr>
 		<tr>
-			<td class="form-left"><transys:label code="Total Permit Fees"/></td>
+			<td class="form-left"><transys:label code="Dumpster Price"/><span class="errorMessage">*</span></td>
 			<td>
-				<form:input path="orderFees.totalPermitFees" cssClass="form-control" readonly="true" style="width:172px;height:25px !important"/>
+				<form:input path="orderFees.dumpsterPrice" cssClass="form-control" readonly="true" style="width:172px;height:24px !important" />
+				<br><form:errors path="orderFees.dumpsterPrice" cssClass="errorMessage" />
 			</td>
 			<td class="form-left"><transys:label code="Overweight Fee"/><span class="errorMessage">*</span></td>
 			<td>
-				<form:input path="orderFees.overweightFee" cssClass="form-control" readonly="true" style="width:172px;height:25px !important" />
+				<form:input path="orderFees.overweightFee" cssClass="form-control" readonly="true" style="width:172px;height:24px !important" />
 				<br><form:errors path="orderFees.overweightFee" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>
+			<td class="form-left"><transys:label code="City Fee"/><span class="errorMessage">*</span></td>
+			<td>
+				<form:input path="orderFees.cityFee" cssClass="form-control" readonly="true" style="width:172px;height:24px !important" />
+				<br><form:errors path="orderFees.cityFee" cssClass="errorMessage" />
+			</td>
 			<td class="form-left"><transys:label code="City Fee Description"/><span class="errorMessage">*</span></td>
-				<td>
+			<td>
 				<form:select id="orderFees.cityFeeType" cssClass="flat form-control input-sm" style="width:172px !important" path="orderFees.cityFeeType" onChange="return populateCityFee();"> 
 					<form:option value="">-------Please Select------</form:option>
 					<form:options items="${cityFeeDetails}" itemValue="id" itemLabel="suburbName" />
 				</form:select>
 				<br><form:errors path="orderFees.cityFeeType" cssClass="errorMessage" />
 			</td>
-			<td class="form-left"><transys:label code="City Fee"/><span class="errorMessage">*</span></td>
-			<td>
-				<form:input path="orderFees.cityFee" cssClass="form-control" readonly="true" style="width:172px;height:25px !important" />
-				<br><form:errors path="orderFees.cityFee" cssClass="errorMessage" />
-			</td>
 		</tr>
 		<tr>
+			<td class="form-left"><transys:label code="Additional Fee1"/><span class="errorMessage">*</span></td>
+			<td>
+				<form:input path="orderFees.additionalFee1" style="width:172px !important" cssClass="flat" onchange="return populateTotalAdditionalFees();"/>
+				<br><form:errors path="orderFees.additionalFee1" cssClass="errorMessage" />
+			</td>
 			<td class="form-left"><transys:label code="Additional Fee1 Description"/><span class="errorMessage">*</span></td>
 				<td>
 				<form:select id="additionalFee1Type" cssClass="flat form-control input-sm" style="width:172px !important" path="orderFees.additionalFee1Type"> 
@@ -967,28 +972,28 @@ function verifyExchangeOrderAndSubmit() {
 				</form:select>
 				<br><form:errors path="orderFees.additionalFee1Type" cssClass="errorMessage" />
 			</td>
-			<td class="form-left"><transys:label code="Additional Fee1"/><span class="errorMessage">*</span></td>
-			<td>
-				<form:input path="orderFees.additionalFee1" cssClass="flat" onchange="return populateTotalAdditionalFees();"/>
-				<br><form:errors path="orderFees.additionalFee1" cssClass="errorMessage" />
-			</td>
 		</tr>
 		<tr>
+			<td class="form-left"><transys:label code="Additional Fee2"/><span class="errorMessage">*</span></td>
+			<td>
+				<form:input path="orderFees.additionalFee2" style="width:172px !important" cssClass="flat" />
+				<br><form:errors path="orderFees.additionalFee2" cssClass="errorMessage" />
+			</td>
 			<td class="form-left"><transys:label code="Additional Fee2 Description"/><span class="errorMessage">*</span></td>
-				<td>
+			<td>
 				<form:select id="additionalFee2Type" cssClass="flat form-control input-sm" style="width:172px !important" path="orderFees.additionalFee2Type"> 
 					<form:option value="">-------Please Select------</form:option>
 					<form:options items="${additionalFeeTypes}" itemValue="id" itemLabel="description" />
 				</form:select>
 				<br><form:errors path="orderFees.additionalFee2Type" cssClass="errorMessage" />
 			</td>
-			<td class="form-left"><transys:label code="Additional Fee2"/><span class="errorMessage">*</span></td>
-			<td>
-				<form:input path="orderFees.additionalFee2" cssClass="flat" />
-				<br><form:errors path="orderFees.additionalFee2" cssClass="errorMessage" />
-			</td>
 		</tr>
 		<tr>
+			<td class="form-left"><transys:label code="Additional Fee3"/><span class="errorMessage">*</span></td>
+			<td>
+				<form:input path="orderFees.additionalFee3" style="width:172px !important" cssClass="flat" />
+				<br><form:errors path="orderFees.additionalFee3" cssClass="errorMessage" />
+			</td>
 			<td class="form-left"><transys:label code="Additional Fee3 Description"/><span class="errorMessage">*</span></td>
 				<td>
 				<form:select id="additionalFee3Type" cssClass="flat form-control input-sm" style="width:172px !important" path="orderFees.additionalFee3Type"> 
@@ -997,33 +1002,28 @@ function verifyExchangeOrderAndSubmit() {
 				</form:select>
 				<br><form:errors path="orderFees.additionalFee3Type" cssClass="errorMessage" />
 			</td>
-			<td class="form-left"><transys:label code="Additional Fee3"/><span class="errorMessage">*</span></td>
-			<td>
-				<form:input path="orderFees.additionalFee3" cssClass="flat" />
-				<br><form:errors path="orderFees.additionalFee3" cssClass="errorMessage" />
-			</td>
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Total Additional Fees"/></td>
 			<td>
-				<form:input path="orderFees.totalAdditionalFees" cssClass="form-control" readonly="true" style="width:172px;height:25px !important"/>
+				<form:input path="orderFees.totalAdditionalFees" cssClass="form-control" readonly="true" style="width:172px;height:24px !important"/>
 			</td>
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Discount %"/><span class="errorMessage">*</span></td>
 			<td>
-				<form:input path="orderFees.discountPercentage" cssClass="flat" onchange="return populateTotalFees();"/>
+				<form:input path="orderFees.discountPercentage" style="width:172px !important" cssClass="flat" onchange="return populateTotalFees();"/>
 				<br><form:errors path="orderFees.discountPercentage" cssClass="errorMessage" />
 			</td>
 			<td class="form-left"><transys:label code="Discount Amount"/></td>
 			<td>
-				<form:input path="orderFees.discountAmount" cssClass="form-control" readonly="true" style="width:172px;height:25px !important"/>
+				<form:input path="orderFees.discountAmount" cssClass="form-control" readonly="true" style="width:172px;height:24px !important"/>
 			</td>
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Total Fees"/><span class="errorMessage">*</span></td>
 			<td>
-				<form:input path="orderFees.totalFees" cssClass="form-control" readonly="true" style="width:172px;height:25px !important"/>
+				<form:input path="orderFees.totalFees" cssClass="form-control" readonly="true" style="width:172px;height:24px !important"/>
 			</td>
 		</tr>
 		<tr>
