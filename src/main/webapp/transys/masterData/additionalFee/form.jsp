@@ -1,12 +1,11 @@
 <%@include file="/common/taglibs.jsp"%>
 
 <br />
-<h4 style="margin-top: -15px; !important">Add/Edit Additional Fee</h4>
+<h5 style="margin-top: -15px; !important">Add/Edit Additional Fee</h5>
 <form:form action="save.do" name="typeForm" commandName="modelObject"
 	method="post" id="typeForm">
 	<form:hidden path="id" id="id" />
 	<table id="form-table" class="table">
-	
 		<tr>
 			<td class="form-left"><transys:label code="Description" /></td>
 			<td><form:input path="description" cssClass="flat" style="width: 175px !important"/>
@@ -33,7 +32,7 @@
 			<td colspan=10></td>
 		</tr>
 		<tr>
-			<td colspan=10 class="danger" style="font-size: 13px;font-weight: bold;color: white;">Notes/Comments</td>
+			<td colspan=10 class="section-header" style="line-height: 1;font-size: 13px;font-weight: bold;color: white;">Notes/Comments</td>
 		</tr>
 		<tr>
 			<td colspan=10></td>

@@ -1,6 +1,6 @@
 <%@include file="/common/taglibs.jsp"%>
 <br />
-<h4 style="margin-top: -15px; !important">Manage Material Types</h4>
+<h5 style="margin-top: -15px; !important">Manage Material Types</h5>
 
 <form:form action="list.do" method="get" name="searchForm">
 	<table width="100%" id="form-table">
@@ -24,7 +24,7 @@
 			<td class="form-left"><transys:label code="Material Type" /></td>
 			<td class="wide"><select
 				class="flat form-control input-sm" id="materialName" name="materialName"
-				style="width: 175px">
+				style="width: 175px !important">
 					<option value="">------
 						<transys:label code="Please Select" />------
 					</option>
@@ -55,7 +55,7 @@
 		pagingLink="search.do" multipleDelete="false" searcheable="false"
 		exportPdf="true" exportXls="true" dataQualifier="materialType" >
 		
-		<transys:textcolumn headerText="Material ID" dataField="id" />
+		<transys:textcolumn headerText="Material ID" dataField="id" width="125px"/>
 		<transys:textcolumn headerText="Material Category" dataField="materialCategory.category" />
 		<transys:textcolumn headerText="Material Name" dataField="materialName" />
 	</transys:datatable>

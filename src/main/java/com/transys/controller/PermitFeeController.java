@@ -32,6 +32,8 @@ public class PermitFeeController extends CRUDController<PermitFee> {
 	public void initBinder(WebDataBinder binder) {
 		binder.registerCustomEditor(PermitClass.class, new AbstractModelEditor(PermitClass.class));
 		binder.registerCustomEditor(PermitType.class, new AbstractModelEditor(PermitType.class));
+		
+		super.initBinder(binder);
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/main.do")

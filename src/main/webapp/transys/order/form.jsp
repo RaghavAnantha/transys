@@ -1143,8 +1143,11 @@ function verifyExchangeOrderAndSubmit() {
 					<c:set var="orderNotesDisabled" value="true" />
 				</c:if>
 				<form:textarea readonly="${orderNotesDisabled}" row="5" path="orderNotes[0].notes" cssClass="form-control" style="width:100%; height:100%;"/>
-				<br><form:errors path="orderNotes[0].notes" cssClass="errorMessage" />
+				<form:errors path="orderNotes[0].notes" cssClass="errorMessage" />
 			</td>
+		</tr>
+		<tr>
+			<td></td>
 		</tr>
 		<tr>
 			<td>&nbsp;</td>

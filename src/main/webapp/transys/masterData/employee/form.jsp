@@ -25,7 +25,7 @@ function formatPhone(){
 </script>
 <br />
 
-<h4 style="margin-top: -15px; !important">Add/Edit Employee</h4>
+<h5 style="margin-top: -15px; !important">Add/Edit Employee</h5>
 <form:form action="save.do" name="typeForm" commandName="modelObject"
 	method="post" id="typeForm">
 	<form:hidden path="id" id="id" />

@@ -1,6 +1,6 @@
 <%@include file="/common/taglibs.jsp"%>
 <br />
-<h4 style="margin-top: -15px; !important">Manage Location Types</h4>
+<h5 style="margin-top: -15px; !important">Manage Location Types</h5>
 
 <form:form action="list.do" method="get" name="searchForm">
 	<table width="100%" id="form-table">
@@ -39,7 +39,7 @@
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
 		pagingLink="search.do" multipleDelete="false" searcheable="false"
 		exportPdf="true" exportXls="true" dataQualifier="locationType">
-		<transys:textcolumn headerText="Location Type ID" dataField="id" />
+		<transys:textcolumn headerText="Location Type ID" dataField="id" width="125px"/>
 		<transys:textcolumn headerText="Location Type" dataField="locationType" />
 	</transys:datatable>
 	<%session.setAttribute("locationTypeColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>

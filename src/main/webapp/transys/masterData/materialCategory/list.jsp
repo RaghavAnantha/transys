@@ -1,6 +1,6 @@
 <%@include file="/common/taglibs.jsp"%>
 <br />
-<h4 style="margin-top: -15px; !important">Manage Material Categories</h4>
+<h5 style="margin-top: -15px; !important">Manage Material Categories</h5>
 
 <form:form action="list.do" method="get" name="searchForm">
 	<table width="100%" id="form-table">
@@ -36,7 +36,7 @@
 		pagingLink="search.do" multipleDelete="false" searcheable="false"
 		exportPdf="true" exportXls="true" dataQualifier="materialCategory" >
 		
-		<transys:textcolumn headerText="Material Category ID" dataField="id" />
+		<transys:textcolumn headerText="Material Category ID" dataField="id" width="150px"/>
 		<transys:textcolumn headerText="Material Category" dataField="category" />
 	</transys:datatable>
 	<%session.setAttribute("materialCategoryColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
