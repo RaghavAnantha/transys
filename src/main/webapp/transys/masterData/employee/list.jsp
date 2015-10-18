@@ -7,7 +7,7 @@
 		<tr>
 			<td align="${left}" class="form-left"><transys:label code="Employee ID" /></td>
 			<td align="${left}" >
-				<select class="flat form-control input-sm" id="status" name="employeeId" style="width: 175px">
+				<select class="flat form-control input-sm" id="status" name="employeeId" style="width: 175px !important">
 					<option value="">------Please Select------</option>
 					<c:forEach items="${employee}" var="anEmployee">
 						<c:set var="selected" value="" />
@@ -41,7 +41,7 @@
 			<td align="${left}" class="form-left"><transys:label code="Employee last Name" /></td>
 						<td align="${left}" ><select
 				class="flat form-control input-sm" id="lastName" name="lastName"
-				style="width: 175px">
+				style="width: 175px !important">
 					<option value="">------
 						<transys:label code="Please Select" />------
 					</option>
@@ -62,7 +62,7 @@
 					code="Status" /></td>
 			<td align="${left}"><select
 				class="flat form-control input-sm" id="status" name="status.status"
-				style="width: 175px">
+				style="width: 175px !important">
 					<option value="">------
 						<transys:label code="Please Select" />------
 					</option>

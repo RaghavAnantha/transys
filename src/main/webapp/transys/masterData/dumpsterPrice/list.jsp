@@ -7,7 +7,7 @@
 		<tr>
 			<td align="${left}" class="form-left"><transys:label code="Dumpster Size" /></td>
 			<td align="${left}" class="wide">
-				<select class="flat form-control input-sm" id="dumpsterSize" name="dumpsterSize" style="width: 175px">
+				<select class="flat form-control input-sm" id="dumpsterSize" name="dumpsterSize" style="width: 175px !important">
 					<option value="">------<transys:label code="Please Select" />------</option>
 					<c:forEach items="${dumpsterSizes}" var="aDumpsterSize">
 						<c:set var="selected" value="" />
@@ -25,7 +25,7 @@
 		<tr>
 			<td align="${left}" class="form-left"><transys:label code="Material Type" /></td>
 			<td align="${left}" class="wide">
-				<select class="flat form-control input-sm" id="materialType" name="materialType" style="width: 175px">
+				<select class="flat form-control input-sm" id="materialType" name="materialType" style="width: 175px !important">
 					<option value="">------Please Select------</option>
 					<c:forEach items="${materialTypes}" var="aType">
 						<c:set var="selected" value="" />
@@ -43,7 +43,7 @@
 			<td align="${left}" class="form-left"><transys:label code="Dumpster Price" /></td>
 			<td align="${left}" class="wide"><select
 				class="flat form-control input-sm" id="price" name="price"
-				style="width: 175px">
+				style="width: 175px !important">
 					<option value="">------
 						<transys:label code="Please Select" />------
 					</option>
