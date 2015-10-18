@@ -33,74 +33,74 @@ function formatPhone(){
 		<tr>
 			<td class="form-left"><transys:label code="Employee ID" /><span
 				class="errorMessage">*</span></td>
-			<td align="${left}"><form:input path="employeeId" cssClass="flat" /> <br>
+			<td><form:input path="employeeId" cssClass="flat" style="width: 175px !important"/> <br>
 			<form:errors path="employeeId" cssClass="errorMessage" /></td>
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="First Name" /></td>
-			<td align="${left}"><form:input path="firstName" cssClass="flat" />
+			<td ><form:input path="firstName" cssClass="flat" style="width: 175px !important"/>
 				<br>
 			<form:errors path="firstName" cssClass="errorMessage" /></td>
 			<td class="form-left"><transys:label code="Last Name" /></td>
-			<td align="${left}"><form:input path="lastName" cssClass="flat" />
+			<td ><form:input path="lastName" cssClass="flat" style="width: 175px !important"/>
 				<br>
 			<form:errors path="lastName" cssClass="errorMessage" /></td>
 		</tr>
 		
 		<tr>
 		<td class="form-left"><transys:label code="Job Title" /><span class="errorMessage">*</span></td>
-			<td align="${left}">
+			<td>
 				<form:select id="jobTitle" cssClass="flat form-control input-sm" path="jobTitle" style="width: 175px !important" onChange="return populateDeliveryAddress();"> 
 					<form:option value="">------Please Select--------</form:option>
 					<form:options items="${jobTitleValues}" itemValue="id" itemLabel="jobTitle" />
 				</form:select> 
-			 	<br><form:errors path="jobTitle" cssClass="errorMessage" />
+			 	<form:errors path="jobTitle" cssClass="errorMessage" />
 			</td>
 		</tr>
 		
 		<tr>
 			<td class="form-left"><transys:label code="Address" /></td>
-			<td align="${left}"><form:input path="address" cssClass="flat" />
+			<td><form:input path="address" cssClass="flat" style="width: 175px !important"/>
 				<br>
 			<form:errors path="address" cssClass="errorMessage" /></td>
 			
 			<td class="form-left"><transys:label code="City" /></td>
-			<td align="${left}"><form:input path="city" cssClass="flat" />
+			<td><form:input path="city" cssClass="flat" style="width: 175px !important"/>
 				<br>
 			<form:errors path="city" cssClass="errorMessage" /></td>
 		</tr>
 		
 		<tr>
 			<td class="form-left"><transys:label code="State" /></td>
-			<td align="${left}">
+			<td>
 				<form:select cssClass="flat form-control input-sm" path="state.id" style="width:172px !important">
 					<form:option value="">------Please Select--------</form:option>
 					<form:options items="${state}" itemValue="id" itemLabel="name" />
 				</form:select> 
-				<br><form:errors path="state.id" cssClass="errorMessage" />
+				<form:errors path="state.id" cssClass="errorMessage" />
 			</td>
 			
 			<td class="form-left"><transys:label code="Zipcode" /></td>
-			<td align="${left}"><form:input path="zipcode" cssClass="flat" />
+			<td><form:input path="zipcode" cssClass="flat" style="width: 175px !important"/>
 				<br>
 			<form:errors path="zipcode" cssClass="errorMessage" /></td>
 		</tr>
 		
 		<tr>
 			<td class="form-left"><transys:label code="Phone" /></td>
-			<td align="${left}"><form:input path="phone" cssClass="flat" onkeypress="return onlyNumbers(event, false)" onblur="return formatPhone();"/>
+			<td align="${left}"><form:input path="phone" cssClass="flat" style="width: 175px !important" onkeypress="return onlyNumbers(event, false)" onblur="return formatPhone();"/>
 				<br>
 			<form:errors path="phone" cssClass="errorMessage" /></td>
 			
 			<td class="form-left"><transys:label code="EMail" /></td>
-			<td align="${left}"><form:input path="email" cssClass="flat" />
+			<td><form:input path="email" cssClass="flat" style="width: 175px !important"/>
 				<br>
 			<form:errors path="email" cssClass="errorMessage" /></td>
 		</tr>
 		
 		<tr>
-			<td align="${left}" class="form-left"><transys:label code="Hire Date" /></td>
-			<td align="${left}" class="wide"><form:input path="hireDate" class="flat"
+			<td class="form-left"><transys:label code="Hire Date" /></td>
+			<td class="wide"><form:input path="hireDate" class="flat"
 				id="datepicker7" name="hireDate" style="width: 175px" /></td>
 				
 				<td align="${left}" class="form-left"><transys:label code="Termination Date" /></td>
@@ -110,7 +110,7 @@ function formatPhone(){
 		
 		<tr>
 			<td class="form-left"><transys:label code="Status" /></td>
-			<td align="${left}">
+			<td>
 				<form:select cssClass="flat form-control input-sm" path="status" style="width:172px !important">
 					<form:option value="">------Please Select--------</form:option>
 					<form:options items="${employeeStatus}" itemValue="id" itemLabel="status" />
