@@ -56,7 +56,7 @@ function populateEndDate() {
 			
 			<td class="form-left"><transys:label code="Order Number" /></td>
 			<td align="${left}">
-				<input value="${associatedOrderID.order.id}" cssClass="flat" style="width: 175px !important" readOnly="true"/>
+				<input value="${associatedOrderID.order.id}" class="form-control" style="width:172px;height:24px !important" readonly/>
 			</td>
 		</tr>
 		<tr>
@@ -113,14 +113,13 @@ function populateEndDate() {
 		</tr>
 		
 		<tr>
-			<td align="${left}" class="form-left"><transys:label
-					code="Start Date" /></td>
+			<td class="form-left">Start Date</td>
 			<td align="${left}" class="wide"><form:input path="startDate" class="flat"
 				id="datepicker7" name="startDate" style="width: 175px !important"  onChange="return populateEndDate();"/></td>
 				
-			<td class="form-left"><transys:label code="End Date" /></td>
+			<td class="form-left">End Date</td>
 			<td align="${left}">
-				<form:input id="endDateInput" path="endDate" cssClass="flat" style="width: 175px !important" readonly="true" />
+				<form:input id="endDateInput" path="endDate" cssClass="flat flat-ext form-control" style="width:172px;height:24px !important" readonly="true" />
 			 	<br><form:errors path="endDate" cssClass="errorMessage" />
 			</td>
 		</tr>
