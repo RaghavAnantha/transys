@@ -4,15 +4,15 @@
 <form:form action="/orderPermitAlert/list.do" method="get" name="orderPermitsAlertSearchForm" id="orderPermitsAlertSearchForm">
 	<table width="100%" id="form-table">
 		<tr>
-		  <td align="${left}" class="form-left"><transys:label code="End Date From"/></td>
-		  <td align="${left}" class="wide"><input class="flat" id="datepicker6" name="permit.endDateFrom" value="${sessionScope.searchCriteria.searchMap['permit.endDateFrom']}" style="width: 175px" /></td>
+		  <td class="form-left"><transys:label code="End Date From"/></td>
+		  <td class="wide"><input class="flat" id="datepicker6" name="permit.endDateFrom" value="${sessionScope.searchCriteria.searchMap['permit.endDateFrom']}" style="width: 175px" /></td>
 				
-		  <td align="${left}" class="form-left"><transys:label code="End Date To"/></td>
-	      <td align="${left}" class="wide"><input class="flat" id="datepicker7" name="permit.endDateTo" value="${sessionScope.searchCriteria.searchMap['permit.endDateTo']}" style="width: 175px" /></td>
+		  <td class="form-left"><transys:label code="End Date To"/></td>
+	      <td class="wide"><input class="flat" id="datepicker7" name="permit.endDateTo" value="${sessionScope.searchCriteria.searchMap['permit.endDateTo']}" style="width: 175px" /></td>
 	 	</tr>
 		<tr>
-		  <td align="${left}" class="form-left"><transys:label code="Delivery Address #"/></td>
-				<td align="${left}"><select class="flat form-control input-sm" id="deliveryAddress" name="order.deliveryAddress.line1" style="width: 175px !important">
+		  <td class="form-left"><transys:label code="Delivery Address #"/></td>
+				<td><select class="flat form-control input-sm" id="deliveryAddress" name="order.deliveryAddress.line1" style="width: 175px !important">
 					<option value="">------<transys:label code="Please Select"/>------</option>
 					<c:forEach items="${allDeliveryAddresses}" var="deliveryAddressVar">
 						 <c:set var="selected" value=""/>
@@ -24,8 +24,8 @@
 				</select>
 				</td>
 			
-			<td align="${left}" class="form-left"><transys:label code="Delivery Street"/></td>
-			<td align="${left}"><select class="flat form-control input-sm" id="deliveryStreet" name="order.deliveryAddress.line2" style="width: 175px !important">
+			<td class="form-left"><transys:label code="Delivery Street"/></td>
+			<td><select class="flat form-control input-sm" id="deliveryStreet" name="order.deliveryAddress.line2" style="width: 175px !important">
 				<option value="">------<transys:label code="Please Select"/>------</option>
 				<c:forEach items="${allDeliveryAddresses}" var="deliveryAddress">
 						<c:set var="selected" value=""/>
@@ -40,8 +40,8 @@
 	 </tr>
 	 
  	 <tr>
-		  <td align="${left}" class="form-left"><transys:label code="Contact Name"/></td>
-				<td align="${left}"><select class="flat form-control input-sm" id="contactName" name="order.customer.contactName" style="width: 175px !important">
+		  <td class="form-left"><transys:label code="Contact Name"/></td>
+				<td><select class="flat form-control input-sm" id="contactName" name="order.customer.contactName" style="width: 175px !important">
 					<option value="">------<transys:label code="Please Select"/>------</option>
 					<c:forEach items="${customer}" var="customer">
 							<c:set var="selected" value=""/>
@@ -53,8 +53,8 @@
 				</select>
 				</td>
 			
-			<td align="${left}" class="form-left"><transys:label code="Phone Number"/></td>
-			<td align="${left}"><select class="flat form-control input-sm" id="phone" name="order.customer.phone" style="width: 175px !important">
+			<td class="form-left"><transys:label code="Phone Number"/></td>
+			<td><select class="flat form-control input-sm" id="phone" name="order.customer.phone" style="width: 175px !important">
 				<option value="">------<transys:label code="Please Select"/>------</option>
 				<c:forEach items="${customer}" var="customer">
 						<c:set var="selected" value=""/>
@@ -68,8 +68,8 @@
 	 </tr>
 	 <tr>
 	 <tr>
-		  <td align="${left}" class="form-left"><transys:label code="Permit Number"/></td>
-				<td align="${left}"><select class="flat form-control input-sm" id="permitNumber" name="permit.number" style="width: 175px !important">
+		  <td class="form-left"><transys:label code="Permit Number"/></td>
+				<td><select class="flat form-control input-sm" id="permitNumber" name="permit.number" style="width: 175px !important">
 					<option value="">------<transys:label code="Please Select"/>------</option>
 					<c:forEach items="${permit}" var="permit">
 							<c:set var="selected" value=""/>
@@ -81,8 +81,8 @@
 				</select>
 				</td>
 			
-			<td align="${left}" class="form-left"><transys:label code="Permit Status"/></td>
-			<td align="${left}"><select class="flat form-control input-sm" id="permitStatus" name="permit.status.status" style="width: 175px !important">
+			<td class="form-left"><transys:label code="Permit Status"/></td>
+			<td><select class="flat form-control input-sm" id="permitStatus" name="permit.status.status" style="width: 175px !important">
 				<option value="">------<transys:label code="Please Select"/>------</option>
 				<c:forEach items="${permitStatus}" var="permitStatus">
 					<c:set var="selected" value=""/>
@@ -95,8 +95,8 @@
 			</td>
 	 </tr>
 	 <tr>
-		<td align="${left}" class="form-left"><transys:label code="Order Number"/></td>
-			<td align="${left}"><select id="orderNumber" name="order.id" class="flat form-control input-sm" style="width: 175px !important">
+		<td class="form-left"><transys:label code="Order Number"/></td>
+			<td><select id="orderNumber" name="order.id" class="flat form-control input-sm" style="width: 175px !important">
 				<option value="">------<transys:label code="Please Select"/>------</option>
 				<c:forEach items="${order}" var="order">
 					<c:set var="selected" value=""/>
@@ -107,8 +107,8 @@
 				</c:forEach>
 			</select>
 		</td>
-		<td align="${left}" class="form-left"><transys:label code="Order Status"/></td>
-		<td align="${left}"><select id="orderStatus" name="order.orderStatus" class="flat form-control input-sm" style="width: 175px !important">
+		<td class="form-left"><transys:label code="Order Status"/></td>
+		<td><select id="orderStatus" name="order.orderStatus" class="flat form-control input-sm" style="width: 175px !important">
 				<option value="">------<transys:label code="Please Select"/>------</option>
 				<c:forEach items="${orderStatuses}" var="anOrderStatus">
 					<c:set var="selected" value=""/>
@@ -121,8 +121,8 @@
 		</td>
 	 </tr>
 		<tr>
-			<td align="${left}"></td>
-			<td align="${left}">
+			<td></td>
+			<td>
 				<input type="submit" id="submitOrderPermitsAlertSearch" onclick="return validateForm()" value="<transys:label code="Search"/>" class="btn btn-primary btn-sm" /> 
 			</td>
 		</tr>

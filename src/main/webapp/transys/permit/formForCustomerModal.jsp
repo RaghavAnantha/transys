@@ -48,28 +48,28 @@ $("#permitForCustomerModalForm").submit(function (ev) {
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Customer Name" /><span class="errorMessage">*</span></td>
-			<td align="${left}">
+			<td>
 				<form:select id="permitCustomerSelect" cssClass="flat form-control input-sm" path="customer" style="width: 175px !important"> 
 					<form:options items="${customer}" itemValue="id" itemLabel="companyName" />
 				</form:select> 
 			 	<form:errors path="customer" cssClass="errorMessage" />
 			</td>
 			<td class="form-left"><transys:label code="Permit Fee" /><span class="errorMessage">*</span></td>
-			<td align="${left}">
+			<td>
 				<form:input path="fee" cssClass="flat" style="width: 175px"  />
 			 	<br><form:errors path="fee" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Delivery Address" /><span class="errorMessage">*</span></td>
-			<td align="${left}">
+			<td>
 				<form:select id="permitDeliveryAddressSelect" cssClass="flat form-control input-sm" path="deliveryAddress" style="width: 175px !important" >
 					<form:options items="${deliveryAddress}" itemValue="id" itemLabel="fullLine" />
 				</form:select> 
 			 	<form:errors path="deliveryAddress" cssClass="errorMessage" />
 			</td> 
 			<td class="form-left"><transys:label code="Location Type" /><span class="errorMessage">*</span></td>
-			<td align="${left}">
+			<td>
 				<form:select id="permitLocationTypeSelect" cssClass="flat form-control input-sm" path="locationType" style="width: 175px !important" >
 					<form:options items="${locationType}" itemValue="id" itemLabel="locationType" />
 				</form:select> 
@@ -78,14 +78,14 @@ $("#permitForCustomerModalForm").submit(function (ev) {
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Permit Class" /><span class="errorMessage">*</span></td>
-			<td align="${left}">
+			<td>
 				<form:select id="permitClassSelect" cssClass="flat form-control input-sm" path="permitClass" style="width: 175px !important" >
 					<form:options items="${permitClass}" itemValue="id" itemLabel="permitClass" />
 				</form:select> 
 			 	<form:errors path="permitClass" cssClass="errorMessage" />
 			</td>
 			<td class="form-left"><transys:label code="Permit Type" /></td>
-			<td align="${left}">
+			<td>
 				<form:select id="permitTypeSelect" cssClass="flat form-control input-sm" path="permitType" style="width: 175px !important" >
 					<form:options items="${permitType}" itemValue="id" itemLabel="permitType" />
 				</form:select> 
@@ -94,18 +94,18 @@ $("#permitForCustomerModalForm").submit(function (ev) {
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Start Date" /></td>
-			<td align="${left}">
+			<td>
 				<form:input path="startDate" id="datepicker8" class="flat" style="width: 175px" onChange="return populatePermitEndDate();" />
 				<br><form:errors path="startDate" cssClass="errorMessage" />
 			</td>
 			<td class="form-left"><transys:label code="End Date" /></td>
-			<td align="${left}">
+			<td>
 				<form:input path="endDate" cssClass="form-control" readonly="true" style="width:175px;height:25px !important" />
 			</td>
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Parking Meter" /><span class="errorMessage">*</span></td>
-			<td align="${left}">
+			<td>
 				<form:select cssClass="flat form-control input-sm" path="parkingMeter" style="width: 175px !important" >
 					<form:option value="Yes"></form:option>
 					<form:option value="No"></form:option>
@@ -113,7 +113,7 @@ $("#permitForCustomerModalForm").submit(function (ev) {
 			 	<form:errors path="parkingMeter" cssClass="errorMessage" />
 			</td>
 			<td class="form-left"><transys:label code="Parking Meter Fee" /><span class="errorMessage">*</span></td>
-			<td align="${left}">
+			<td>
 				<form:input path="parkingMeterFee" cssClass="flat" style="width: 175px"  />
 			 	<br><form:errors path="parkingMeterFee" cssClass="errorMessage" />
 			</td>
@@ -121,7 +121,7 @@ $("#permitForCustomerModalForm").submit(function (ev) {
 		<tr><td colspan="2"></td></tr>
 		<tr>
 			<td>&nbsp;</td>
-			<td align="${left}" colspan="2">
+			<td colspan="2">
 				<input type="submit" id="createPermitForCustomer" onclick="return true;" value="<transys:label code="Save"/>" class="flat btn btn-primary btn-sm" /> 
 				<input type="button" id="closePermitForCustomer" value="Close" class="flat btn btn-primary btn-sm" data-dismiss="modal" />
 			</td>
