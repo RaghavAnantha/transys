@@ -3,10 +3,10 @@
 <h4 style="margin-top: -15px; !important">Manage Employees</h4>
 
 <form:form action="list.do" method="get" name="searchForm">
-	<table width="100%" id="form-table">
+	<table id="form-table" class="table">
 		<tr>
 			<td align="${left}" class="form-left"><transys:label code="Employee ID" /></td>
-			<td align="${left}" >
+			<td align="${left}">
 				<select class="flat form-control input-sm" id="status" name="employeeId" style="width: 175px !important">
 					<option value="">------Please Select------</option>
 					<c:forEach items="${employee}" var="anEmployee">
@@ -19,9 +19,9 @@
 			</select></td>	
 		</tr>
 		<tr>
-			<td align="${left}" class="form-left"><transys:label
+			<td class="form-left form-left-ext"><transys:label
 					code="Employee First Name" /></td>
-			<td align="${left}" ><select
+			<td><select
 				class="flat form-control input-sm" id="status" name="firstName" style="width: 175px !important">
 					<option value="">------
 						<transys:label code="Please Select" />------
@@ -38,7 +38,7 @@
 
 		</tr>
 		<tr>
-			<td align="${left}" class="form-left"><transys:label code="Employee last Name" /></td>
+			<td class="form-left form-left-ext"><transys:label code="Employee Last Name" /></td>
 						<td align="${left}" ><select
 				class="flat form-control input-sm" id="lastName" name="lastName"
 				style="width: 175px !important">
