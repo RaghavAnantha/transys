@@ -33,13 +33,13 @@
 						<option value="">------
 							<transys:label code="Please Select" />------
 						</option>
-						<c:forEach items="${additionalFees}" var="tempFee">
+						<c:forEach items="${uniqueAdditionalFees}" var="tempFee">
 							<c:set var="selected" value="" />
 							<c:if
-								test="${sessionScope.searchCriteria.searchMap['fee'] == tempFee.fee}">
+								test="${sessionScope.searchCriteria.searchMap['fee'] == tempFee}">
 								<c:set var="selected" value="selected" />
 							</c:if>
-							<option value="${tempFee.fee}" ${selected}>${tempFee.fee}</option>
+							<option value="${tempFee}" ${selected}>${tempFee}</option>
 						</c:forEach>
 				</select></td>	
 			 <td class="form-left"><transys:label code="Effective Date To"/></td>

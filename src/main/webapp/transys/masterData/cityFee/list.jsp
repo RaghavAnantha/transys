@@ -31,12 +31,12 @@
 					<option value="">------
 						<transys:label code="Please Select" />------
 					</option>
-					<c:forEach items="${cityFees}" var="aCityFee">
+					<c:forEach items="${uniqueCityFees}" var="aCityFee">
 						<c:set var="selected" value="" />
-						<c:if test="${sessionScope.cityFeeSearchCriteria.searchMap['fee'] == aCityFee.fee}">
+						<c:if test="${sessionScope.cityFeeSearchCriteria.searchMap['fee'] == aCityFee}">
 							<c:set var="selected" value="selected" />
 						</c:if>
-						<option value="${aCityFee.fee}" ${selected}>${aCityFee.fee}</option>
+						<option value="${aCityFee}" ${selected}>${aCityFee}</option>
 					</c:forEach>
 				</select>
 			</td>	

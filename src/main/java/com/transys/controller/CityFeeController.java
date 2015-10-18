@@ -64,6 +64,7 @@ public class CityFeeController extends CRUDController<CityFee> {
 	public void setupCreate(ModelMap model, HttpServletRequest request) {
 		Map criterias = new HashMap();
 		model.addAttribute("cityFees", genericDAO.findByCriteria(CityFee.class, criterias, "id", false));
+		model.addAttribute("uniqueCityFees", genericDAO.executeSimpleQuery("select DISTINCT(obj.fee) from CityFee obj order by obj.fee desc"));
 	}
 
 	@RequestMapping(method = RequestMethod.POST, value = "/save.do")

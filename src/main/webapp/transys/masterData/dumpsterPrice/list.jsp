@@ -51,10 +51,10 @@
 					<c:forEach items="${dumpsterPrices}" var="aPrice">
 						<c:set var="selected" value="" />
 						<c:if
-							test="${sessionScope.searchCriteria.searchMap['price'] == aPrice.price}">
+							test="${sessionScope.searchCriteria.searchMap['price'] == aPrice}">
 							<c:set var="selected" value="selected" />
 						</c:if>
-						<option value="${aPrice.price}" ${selected}>${aPrice.price}</option>
+						<option value="${aPrice}" ${selected}>${aPrice}</option>
 					</c:forEach>
 			</select></td>	
 		</tr>

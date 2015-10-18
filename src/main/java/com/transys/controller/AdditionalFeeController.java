@@ -64,6 +64,7 @@ public class AdditionalFeeController extends CRUDController<AdditionalFee> {
 	public void setupCreate(ModelMap model, HttpServletRequest request) {
 		Map criterias = new HashMap();
 		model.addAttribute("additionalFees", genericDAO.findByCriteria(AdditionalFee.class, criterias, "id", false));
+		model.addAttribute("uniqueAdditionalFees", genericDAO.executeSimpleQuery("select DISTINCT(obj.fee) from AdditionalFee obj order by obj.fee desc"));
 	}
 
 	@RequestMapping(method = RequestMethod.POST, value = "/save.do")

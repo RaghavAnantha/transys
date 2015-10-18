@@ -1,6 +1,7 @@
 package com.transys.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.transys.controller.editor.AbstractModelEditor;
+import com.transys.model.BaseModel;
 import com.transys.model.DumpsterPrice;
 import com.transys.model.DumpsterSize;
 import com.transys.model.MaterialType;
@@ -75,7 +77,7 @@ public class DumpsterPriceController extends CRUDController<DumpsterPrice> {
 		Map criterias = new HashMap();
 		model.addAttribute("dumpsterSizes", genericDAO.findUniqueByCriteria(DumpsterSize.class, criterias, "size", false));
 		model.addAttribute("materialTypes", genericDAO.findByCriteria(MaterialType.class, criterias, "id", false));
-		model.addAttribute("dumpsterPrices", genericDAO.findUniqueByCriteria(DumpsterPrice.class, criterias, "id", false));
+		model.addAttribute("dumpsterPrices", genericDAO.executeSimpleQuery("select DISTINCT(obj.price) from DumpsterPrice obj order by obj.price desc"));
 	}
 
 	@RequestMapping(method = RequestMethod.POST, value = "/save.do")

@@ -56,10 +56,10 @@
 						<c:forEach items="${permitFees}" var="aPermitPrice">
 							<c:set var="selected" value="" />
 							<c:if
-								test="${sessionScope.searchCriteria.searchMap['fee'] == aPermitPrice.fee}">
+								test="${sessionScope.searchCriteria.searchMap['fee'] == aPermitPrice}">
 								<c:set var="selected" value="selected" />
 							</c:if>
-							<option value="${aPermitPrice.fee}" ${selected}>${aPermitPrice.fee}</option>
+							<option value="${aPermitPrice}" ${selected}>${aPermitPrice}</option>
 						</c:forEach>
 				</select></td>	
 			</tr>
