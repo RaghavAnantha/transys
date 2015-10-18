@@ -10,7 +10,7 @@
 					<form:option value="">-------Please Select------</form:option>
 					<form:options items="${drivers}" itemValue="id" itemLabel="name" />
 				</form:select> 
-				 <br><form:errors path="dropOffDriver" cssClass="errorMessage" />
+				<form:errors path="dropOffDriver" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>
@@ -20,14 +20,14 @@
 					<form:option value="">-------Please Select------</form:option>
 					<form:options items="${orderDumpsters}" itemValue="id" itemLabel="dumpsterNum" />
 				</form:select> 
-				<br><form:errors path="dumpster" cssClass="errorMessage" />
+				<form:errors path="dumpster" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Check #"/><span class="errorMessage">*</span></td>
 			<td>
 				<form:input path="orderPayment[0].checkNum" cssClass="flat" style="width:172px !important"/>
-				<br><form:errors path="orderPayment[0].checkNum" cssClass="errorMessage" />
+				<form:errors path="orderPayment[0].checkNum" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr><td colspan="2"></td></tr>

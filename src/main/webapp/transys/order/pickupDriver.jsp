@@ -7,11 +7,9 @@
 			<td class="form-left">Pickup Date<span class="errorMessage">*</span></td>
 			<td>
 				<form:input path="pickupDate" cssClass="flat" id="datepicker6" name="pickupDate" style="width:172px !important"/>
-				 <br><form:errors path="pickupDate" cssClass="errorMessage" />
+				 <form:errors path="pickupDate" cssClass="errorMessage" />
 			</td>
 		</tr>
-		<tr><td colspan="2"></td></tr>
-		<tr><td colspan="2"></td></tr>
 		<tr>
 			<td class="form-left"><transys:label code="Pickup Driver" /><span class="errorMessage"></span></td>
 			<td>
@@ -19,7 +17,7 @@
 					<form:option value="">-------Please Select------</form:option>
 					<form:options items="${drivers}" itemValue="id" itemLabel="name" />
 				</form:select> 
-				 <br><form:errors path="pickupDriver" cssClass="errorMessage" />
+				<form:errors path="pickupDriver" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>
@@ -30,12 +28,8 @@
 			</td>
 		</tr>
 		<tr><td colspan="2"></td></tr>
-		<tr><td colspan="2"></td></tr>
 		<tr>
 			<td colspan=10 class="section-header" style="line-height: 1;font-size: 13px;font-weight: bold;color: white;">Scale/Weights Information</td>
-		</tr>
-		<tr>
-			<td colspan="10"></td>
 		</tr>
 		<tr>
 			<td colspan="10"></td>
