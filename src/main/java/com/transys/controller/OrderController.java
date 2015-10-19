@@ -1341,7 +1341,7 @@ public class OrderController extends CRUDController<Order> {
 	public String saveSuccess(ModelMap model, HttpServletRequest request, Order entity) {
 		setupCreate(model, request, entity);
 		
-		model.addAttribute("msg", "Saved successfully");
+		model.addAttribute("msg", "Order saved successfully");
 		
 		model.addAttribute("modelObject", entity);
 		model.addAttribute("activeTab", "manageOrders");

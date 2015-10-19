@@ -1,27 +1,26 @@
 /* This is the style for the informational messages presented to the user */
 
 div.error, span.error, li.error {
-    background: red;
-    border: 1px solid #000;
-    color: #ffffff;
+    color: red;
     font-family: Arial, Helvetica, sans-serif;
-    font-size: 12px;
+    font-size: 13px;
     font-weight: bold;
     padding: 5px;
     text-align: left;
     vertical-align: bottom;
+    background-color: #EAEAF3;
 }
 
 /* use a different color for the message */
 div.message {
-    background: #7DF00A;
-    border: 1px solid #000;
-    color: #000000;
+    color: green;
     font-family: Arial, Helvetica, sans-serif;
-    font-weight: normal;
+    font-size: 13px;
+    font-weight: bold;
     padding: 3px;
     text-align: left;
     vertical-align: bottom;
+    background-color: #EAEAF3;
 }
 
 /* For Spring MVC */

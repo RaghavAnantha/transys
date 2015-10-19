@@ -40,4 +40,12 @@ textarea {
 	width: 172px;
 }
 
+.hr-ext {
+	margin-bottom: 10px;
+	margin-top: 10px;
+	height:2px;
+	border: 0; 
+	background: #333; 
+}
+
 

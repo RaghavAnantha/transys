@@ -18,7 +18,7 @@
 	</tr>
 	<tr>
 		<td valign="top">
-			<jsp:include page="/common/messages.jsp" /><decorator:body />
+			<decorator:body />
 		</td>
 	</tr>
 	<tr>

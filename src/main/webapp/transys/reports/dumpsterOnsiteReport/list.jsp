@@ -2,11 +2,12 @@
 <br />
 <h4 style="margin-top: -15px; !important">Dumpsters On-site Report</h4>
 <form:form action="list.do" method="get" name="dumpstersOnsiteReportsearchForm">
-	<table width="100%" id="form-table">
+	<table id="form-table" class="table">
+	 	<tr><td colspan=10></td><td colspan=10></td></tr>
 		<tr>
 			<td align="${left}" class="form-left"><transys:label
 					code="Dumpster Size" /></td>
-			<td align="${left}" class="wide">
+			<td class="wide">
 				<select class="flat form-control input-sm" id="dumpsterSize" name="dumpsterSize" style="width: 175px">
 					<option value="">------<transys:label code="Please Select" />------</option>
 					<c:forEach items="${dumpsterSizes}" var="aDumpsterSize">
@@ -22,7 +23,7 @@
 			
 			<td align="${left}" class="form-left"><transys:label
 					code="Status" /></td>
-			<td align="${left}" class="wide"><select
+			<td class="wide"><select
 				class="flat form-control input-sm" id="status" name="status"
 				style="width: 168px !important">
 					<option value="">------

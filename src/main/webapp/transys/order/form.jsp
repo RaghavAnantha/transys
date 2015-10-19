@@ -533,9 +533,9 @@ function verifyExchangeOrderAndSubmit() {
 	<form:hidden path="id" id="id" />
 	<input type="hidden" name="isExchange" id="isExchange" value="false" />
 	<input type="hidden" name="existingDroppedOffOrderId" id="existingDroppedOffOrderId" value="" />
+	<%@include file="/common/messages.jsp"%>
 	<table id="form-table" class="table">
 		<tr><td></td></tr>
-		<tr><td><%@include file="/common/messages.jsp"%></td></tr>
 		<tr>
 			<td class="form-left">Order #<span class="errorMessage">*</span></td>
 			<td class="wide">${modelObject.id}</td>

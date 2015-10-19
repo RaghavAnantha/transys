@@ -2,7 +2,8 @@
 <br />
 <h4 style="margin-top: -15px; !important">Dumpsters Rented Report</h4>
 <form:form action="list.do" method="get" name="dumpsterRentedReportsearchForm">
-	<table width="100%" id="form-table">
+	<table id="form-table" class="table">
+	 	<tr><td colspan=10></td><td colspan=10></td></tr>
 		<tr>
 			<td align="${left}" class="form-left"><transys:label
 					code="Dumpster Size" /></td>
