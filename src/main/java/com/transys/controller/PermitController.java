@@ -41,6 +41,7 @@ import com.transys.model.OrderStatus;
 import com.transys.model.Permit;
 import com.transys.model.PermitAddress;
 import com.transys.model.PermitClass;
+import com.transys.model.PermitFee;
 import com.transys.model.PermitNotes;
 import com.transys.model.PermitStatus;
 import com.transys.model.PermitType;
@@ -668,6 +669,26 @@ public class PermitController extends CRUDController<Permit> {
 		//return json;
 	}
 	
+	@RequestMapping(method = RequestMethod.GET, value = "/isPermitRequired")
+	public @ResponseBody String isPermitRequired(ModelMap model, HttpServletRequest request) {
+		String city = request.getParameter("city");
+		Boolean permitRequired = false;
+		
+		if (city.equalsIgnoreCase("Chicago")) {
+			permitRequired = true;
+		}
+		
+		ObjectMapper objectMapper = new ObjectMapper();
+		String json = StringUtils.EMPTY;
+		try {
+			json = objectMapper.writeValueAsString(permitRequired);
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return json;
+	}
+	
 	@RequestMapping(method = RequestMethod.GET, value = "/calculatePermitEndDate")
 	public @ResponseBody String calculatePermitEndDate(ModelMap model, HttpServletRequest request,
 			@RequestParam(value = "permitTypeId") Long permitTypeId,
@@ -675,6 +696,18 @@ public class PermitController extends CRUDController<Permit> {
 		Date endDate = calculatePermitEndDate(permitTypeId, startDate);
 		SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
 		return formatter.format(endDate);
+	}
+	
+	@RequestMapping(method = RequestMethod.GET, value = "/getPermitFee")
+	public @ResponseBody String calculatePermitFee(ModelMap model, HttpServletRequest request,
+			@RequestParam(value = "permitTypeId") Long permitTypeId,
+			@RequestParam(value = "permitClassId") Long permitClassId,
+			@RequestParam(value = "startDate") Date startDate) {
+		
+		SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+		String startDateStr = formatter.format(startDate);
+		PermitFee permitFee = (PermitFee)genericDAO.executeSimpleQuery("select obj from PermitFee obj where obj.permitType=" + permitTypeId + "and obj.permitClass=" + permitClassId + " and " + startDateStr + " BETWEEN obj.effectiveStartDate and obj.effectiveEndDate").get(0);
+		return permitFee.getFee().toPlainString();
 	}
 
 	private Date calculatePermitEndDate(Long permitTypeId, Date startDate) {

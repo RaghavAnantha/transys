@@ -42,6 +42,25 @@ function populateEndDate() {
 	}
 }
 
+function populatePermitFee() {
+	$('#permitFeeInput').empty();
+	var permitClassValue = $('#permitClassSelect').val();
+	var permitTypeValue = $('#permitTypeSelect').val();
+	var startDateValue = $('#datepicker7').val();
+	
+	alert(permitClassValue + "," + permitTypeValue + "," + startDateValue)
+	
+	if (permitClassValue != '' && permitTypeValue != '') {
+		$.ajax({
+	  		url: "getPermitFee.do?permitClassId=" + permitClassValue + "&permitTypeId=" + permitClassValue + "&startDate=" + startDateValue,
+	       	type: "GET",
+	       	success: function(responseData, textStatus, jqXHR) {
+	    	   	$('#permitFeeInput').val(responseData);
+			}
+		});
+	}
+}
+
 </script>
 <form:form action="save.do" name="typeForm" commandName="modelObject" method="post" >
 	<form:hidden path="id" id="id" />
@@ -70,7 +89,7 @@ function populateEndDate() {
 			</td>
 			<td class="form-left"><transys:label code="Permit Fee" /><span class="errorMessage">*</span></td>
 			<td>
-				<form:input path="fee" cssClass="flat" style="width: 175px"  />
+				<form:input id="permitFeeInput" path="fee" cssClass="flat" style="width: 175px"  />
 			 	<br><form:errors path="fee" cssClass="errorMessage" />
 			</td>
 		</tr>
@@ -95,7 +114,7 @@ function populateEndDate() {
 		<tr>
 			<td class="form-left"><transys:label code="Permit Class" /><span class="errorMessage">*</span></td>
 			<td>
-				<form:select cssClass="flat form-control input-sm" path="permitClass" style="width: 175px !important" >
+				<form:select id="permitClassSelect" cssClass="flat form-control input-sm" path="permitClass" style="width: 175px !important" onChange="return populatePermitFee();" >
 					<form:option value="">------Please Select--------</form:option>
 					<form:options items="${permitClass}" itemValue="id" itemLabel="permitClass" />
 				</form:select> 
@@ -104,7 +123,7 @@ function populateEndDate() {
 			
 			<td class="form-left"><transys:label code="Permit Type" /></td>
 			<td>
-				<form:select id="permitTypeSelect" cssClass="flat form-control input-sm" path="permitType" style="width: 175px !important"  onChange="return populateEndDate();" >
+				<form:select id="permitTypeSelect" cssClass="flat form-control input-sm" path="permitType" style="width: 175px !important"  onChange="return populateEndDate();populatePermitFee();" >
 					<form:option value="">------Please Select--------</form:option>
 					<form:options items="${permitType}" itemValue="id" itemLabel="permitType" />
 				</form:select> 
