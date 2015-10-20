@@ -1,6 +1,6 @@
 <%@include file="/common/taglibs.jsp"%>
 <br />
-<h4 style="margin-top: -15px; !important">Manage City Fees</h4>
+<h5 style="margin-top: -15px; !important">Manage City Fees</h5>
 
 <form:form action="list.do" method="get" name="searchForm">
 	<table width="100%" id="form-table">
@@ -8,8 +8,7 @@
 			<td class="form-left"><transys:label code="City" /></td>
 			<td class="wide">
 				<select class="flat form-control input-sm" id="suburbName" name="suburbName" style="width: 175px !important">
-					<option value="">------
-						<transys:label code="Please Select" />------</option>
+					<option value="">------Please Select------</option>
 					<c:forEach items="${cityFees}" var="aCity">
 						<c:set var="selected" value="" />
 						<c:if test="${sessionScope.searchCriteria.searchMap['suburbName'] == aCity.suburbName}">

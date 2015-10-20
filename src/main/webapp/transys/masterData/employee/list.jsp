@@ -1,6 +1,6 @@
 <%@include file="/common/taglibs.jsp"%>
 <br />
-<h4 style="margin-top: -15px; !important">Manage Employees</h4>
+<h5 style="margin-top: -15px; !important">Manage Employees</h5>
 
 <form:form action="list.do" method="get" name="searchForm">
 	<table id="form-table" class="table">

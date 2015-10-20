@@ -1,7 +1,7 @@
 <%@include file="/common/taglibs.jsp"%>
 
 <br />
-<h4 style="margin-top: -15px; !important">Add/Edit Customer Dumpster Price</h4>
+<h5 style="margin-top: -15px; !important">Add/Edit Customer Dumpster Price</h5>
 <form:form action="save.do" name="typeForm" commandName="modelObject"
 	method="post" id="typeForm">
 	<form:hidden path="id" id="id" />

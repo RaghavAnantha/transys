@@ -21,9 +21,10 @@ $(document).ready(function() {
 </script>
 
 <br/>
-<h4 style="margin-top: -15px; !important">Material Intake Daily Report Form</h4>
+<h4 style="margin-top: -15px; !important">Material Intake Daily Report</h4>
 <form:form action="list.do" method="get" name="searchForm" id="materialIntakeDailyReportForm" >
-	<table width="100%" id="form-table">
+	<table id="form-table" class="table">
+	 	<tr><td colspan="10"></td><td colspan="10"></td></tr>
 	 <tr>
 		  <td align="${left}" class="form-left"><transys:label code="Date"/></td>
 		  <td align="${left}" class="wide"><input class="flat" id="datepicker1" name="intakeDate" style="width: 175px" /></td>

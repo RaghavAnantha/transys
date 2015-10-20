@@ -2,29 +2,27 @@
 <br/>
 <h4 style="margin-top: -15px; !important">Orders Revenue Report</h4>
 <form:form action="list.do" method="get" name="searchForm" id="ordersRevenueReportSearchForm">
-	<table width="100%" id="form-table">
-	 <tr>
-		  <td align="${left}" class="form-left"><transys:label code="Order Date From"/></td>
-		  <td align="${left}" class="wide"><input class="flat" id="datepicker1" name="createdAtFrom" style="width: 175px" /></td>
-				
-		  <td align="${left}" class="form-left"><transys:label code="Order Date To"/></td>
-	      <td align="${left}" class="wide"><input class="flat" id="datepicker2" name="createdAtTo" style="width: 175px" /></td>
-			
-	 </tr>
-	
+	<table id="form-table" class="table">
+	 	<tr><td colspan=10></td><td colspan=10></td></tr>
 		<tr>
-			<td align="${left}"></td>
-			<td align="${left}"><input type="button" class="btn btn-primary btn-sm" onclick="document.forms['ordersRevenueReportSearchForm'].submit();"
+			<td class="form-left"><transys:label code="Order Date From"/></td>
+			<td class="wide"><input class="flat" id="datepicker1" name="createdAtFrom" style="width: 175px" /></td>
+					
+			<td class="form-left"><transys:label code="Order Date To"/></td>
+		    <td class="wide"><input class="flat" id="datepicker2" name="createdAtTo" style="width: 175px" /></td>
+		</tr>
+		<tr>
+			<td></td>
+			<td><input type="button" class="btn btn-primary btn-sm" onclick="document.forms['ordersRevenueReportSearchForm'].submit();"
 				value="<transys:label code="Preview"/>" /></td>
 		</tr>
 	</table>
 </form:form>
-
-<hr>
-<table width="100%" id="form-table">
+<hr class="hr-ext">
+<table class="table" id="form-table">
 	 <tr>
 		<td class="form-left"><transys:label code="Order Date Range:" /><span class="errorMessage"></span></td>
-		  <td align="${left}" id="orderDateRange" >${orderDateFrom} To ${orderDateTo}</td>
+		  <td class="wide" id="orderDateRange" >${orderDateFrom} To ${orderDateTo}</td>
 	 </tr>
 	<tr>
 		<td class="form-left" style="width:190px"><transys:label code="Dumpster Price Total:" /><span
@@ -45,7 +43,7 @@
 		<td align="${left}" id="totalOverweightFees">${totalOverweightFees}</td>
 	</tr>
 	<tr>
-		<td class="form-left"><transys:label code="TOTAL Fees:" /><span
+		<td class="form-left"><transys:label code="Total Fees:" /><span
 			class="errorMessage"></span></td>
 		<td align="${left}" id="aggregatedTotalFees">${aggregatedTotalFees}</td>
 	</tr>

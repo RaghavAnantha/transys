@@ -66,7 +66,7 @@
 		pagingLink="search.do" multipleDelete="false" searcheable="false" 
 		dataQualifier="manageDeliveryAddress">
 		<transys:textcolumn headerText="Id" dataField="id" />
-		<transys:textcolumn headerText="Delivery Address #" dataField="line1" />
+		<transys:textcolumn headerText="Delivery Address #" dataField="line1" width="150px"/>
 		<transys:textcolumn headerText="Delivery Street" dataField="line2" />
 		<transys:textcolumn headerText="City" dataField="city" />
 		<transys:textcolumn headerText="State" dataField="state.name" />

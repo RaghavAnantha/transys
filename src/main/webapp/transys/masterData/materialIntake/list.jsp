@@ -1,6 +1,6 @@
 <%@include file="/common/taglibs.jsp"%>
 <br />
-<h4 style="margin-top: -15px; !important">Material Intake for Recycle</h4>
+<h5 style="margin-top: -15px; !important">Material Intake for Recycle</h5>
 
 <form:form action="list.do" method="get" name="searchForm">
 	<table width="100%" id="form-table">
@@ -45,7 +45,7 @@
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
 		pagingLink="search.do" multipleDelete="false" searcheable="false"
 		exportPdf="true" exportXls="true" dataQualifier="cityFee">
-		<transys:textcolumn headerText="Material Name" dataField="materialType.id" />
+		<transys:textcolumn headerText="Material Type" dataField="materialType.materialName" />
 		<transys:textcolumn headerText="Intake Date" dataField="intakeDate" dataFormat="MM/dd/yyy"/>
 		<transys:textcolumn headerText="Net Weight Tonnage" dataField="netWeightTonnage" />
 	</transys:datatable>

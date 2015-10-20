@@ -1,6 +1,6 @@
 <%@include file="/common/taglibs.jsp"%>
 <br />
-<h4 style="margin-top: -15px; !important">Manage Permit Fees</h4>
+<h5 style="margin-top: -15px; !important">Manage Permit Fees</h5>
 
 <form:form action="list.do" method="get" name="searchForm">
 	<table width="100%" id="form-table">

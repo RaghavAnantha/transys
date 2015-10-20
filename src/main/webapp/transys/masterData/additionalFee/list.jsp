@@ -1,6 +1,6 @@
 <%@include file="/common/taglibs.jsp"%>
 <br />
-<h4 style="margin-top: -15px; !important">Manage Additional Fees</h4>
+<h5 style="margin-top: -15px; !important">Manage Additional Fees</h5>
 
 <form:form action="list.do" method="get" name="searchForm">
 	<table width="100%" id="form-table">
@@ -29,7 +29,7 @@
 				<td class="form-left"><transys:label code="Fee" /></td>
 				<td class="wide"><select
 					class="flat form-control input-sm" id="fee" name="fee"
-					style="width: 175px">
+					style="width: 175px  !important">
 						<option value="">------
 							<transys:label code="Please Select" />------
 						</option>

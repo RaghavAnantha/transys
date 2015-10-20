@@ -1,7 +1,7 @@
 <%@include file="/common/taglibs.jsp"%>
 
 <br />
-<h4 style="margin-top: -15px; !important">Add/Edit Permit Fee</h4>
+<h5 style="margin-top: -15px; !important">Add/Edit Permit Fee</h5>
 <form:form action="save.do" name="typeForm" commandName="modelObject"
 	method="post" id="typeForm">
 	<form:hidden path="id" id="id" />
@@ -33,7 +33,7 @@
 			<form:errors path="fee" cssClass="errorMessage" /></td>
 		</tr>
 		<tr>
-			<td class="form-left"><transys:label code="Effective Date From" /></td>
+			<td class="form-left">Effective Date From</td>
 			<td>
 			<form:input path="effectiveStartDate" class="flat" id="datepicker7" name="effectiveStartDate" style="width:172px !important"/></td>
 		</tr>
@@ -46,7 +46,7 @@
 			<td colspan=10></td>
 		</tr>
 		<tr>
-			<td colspan=10 class="danger" style="font-size: 13px;font-weight: bold;color: white;">Notes/Comments</td>
+			<td colspan=10 class="section-header" style="line-height: 1;font-size: 13px;font-weight: bold;color: white;">Notes/Comments</td>
 		</tr>
 		<tr>
 			<td colspan=10></td>

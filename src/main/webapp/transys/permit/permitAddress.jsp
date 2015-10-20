@@ -32,7 +32,7 @@
 					<form:option value="">------Please Select--------</form:option>
 					<form:options items="${state}" itemValue="id" itemLabel="name" />
 				</form:select> 
-				<br><form:errors path="state" cssClass="errorMessage" />
+				<form:errors path="state" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>

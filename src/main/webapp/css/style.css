@@ -637,6 +637,10 @@ a.nivo-prevNav {
 	overflow: hidden
 }
 
+.datagrid td {
+	padding: 2px !important;
+}
+
 .datagrid .even td {
 	background-color: #EAEAF3;
 }

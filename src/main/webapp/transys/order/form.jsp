@@ -533,6 +533,7 @@ function verifyExchangeOrderAndSubmit() {
 	<form:hidden path="id" id="id" />
 	<input type="hidden" name="isExchange" id="isExchange" value="false" />
 	<input type="hidden" name="existingDroppedOffOrderId" id="existingDroppedOffOrderId" value="" />
+	<%@include file="/common/messages.jsp"%>
 	<table id="form-table" class="table">
 		<tr><td></td></tr>
 		<tr>
@@ -582,9 +583,8 @@ function verifyExchangeOrderAndSubmit() {
 		<tr>
 			<td></td>
 		</tr>
-		
 		<tr>
-			<td class="form-left"><transys:label code="Delivery Address" /><span class="errorMessage"></span></td>
+			<td class="form-left">Delivery Address<span class="errorMessage"></span></td>
 			<td>
 				<label style="display: inline-block; font-weight: normal">
 					<form:select id="deliveryAddressSelect" cssClass="flat form-control input-sm" path="deliveryAddress" style="width:172px !important">
@@ -1143,8 +1143,11 @@ function verifyExchangeOrderAndSubmit() {
 					<c:set var="orderNotesDisabled" value="true" />
 				</c:if>
 				<form:textarea readonly="${orderNotesDisabled}" row="5" path="orderNotes[0].notes" cssClass="form-control" style="width:100%; height:100%;"/>
-				<br><form:errors path="orderNotes[0].notes" cssClass="errorMessage" />
+				<form:errors path="orderNotes[0].notes" cssClass="errorMessage" />
 			</td>
+		</tr>
+		<tr>
+			<td></td>
 		</tr>
 		<tr>
 			<td>&nbsp;</td>

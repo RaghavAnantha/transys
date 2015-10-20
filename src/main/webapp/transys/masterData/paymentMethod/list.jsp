@@ -1,6 +1,6 @@
 <%@include file="/common/taglibs.jsp"%>
 <br />
-<h4 style="margin-top: -15px; !important">Manage Payment Methods</h4>
+<h5 style="margin-top: -15px; !important">Manage Payment Methods</h5>
 
 <form:form action="list.do" method="get" name="searchForm">
 	<table width="100%" id="form-table">
@@ -39,7 +39,7 @@
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
 		pagingLink="search.do" multipleDelete="false" searcheable="false"
 		exportPdf="true" exportXls="true" dataQualifier="paymentMethod">
-		<transys:textcolumn headerText="Payment Method ID" dataField="id" />
+		<transys:textcolumn headerText="Payment Method ID" dataField="id" width="150px"/>
 		<transys:textcolumn headerText="Payment Method" dataField="method" />
 	</transys:datatable>
 	<%session.setAttribute("paymentMethodColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>

@@ -2,12 +2,13 @@
 <br />
 <h4 style="margin-top: -15px; !important">Dumpsters Rented Report</h4>
 <form:form action="list.do" method="get" name="dumpsterRentedReportsearchForm">
-	<table width="100%" id="form-table">
+	<table id="form-table" class="table">
+	 	<tr><td colspan=10></td><td colspan=10></td></tr>
 		<tr>
 			<td align="${left}" class="form-left"><transys:label
 					code="Dumpster Size" /></td>
 			<td align="${left}" class="wide">
-				<select class="flat form-control input-sm" id="dumpsterSize" name="dumpsterSize" style="width: 175px">
+				<select class="flat form-control input-sm" id="dumpsterSize" name="dumpsterSize" style="width: 175px !important">
 					<option value="">------<transys:label code="Please Select" />------</option>
 					<c:forEach items="${dumpsterSizes}" var="aDumpsterSize">
 						<c:set var="selected" value="" />
@@ -24,7 +25,7 @@
 					code="Status" /></td>
 			<td align="${left}" class="wide"><select
 				class="flat form-control input-sm" id="status" name="status"
-				style="width: 168px !important">
+				style="width: 175px !important">
 					<option value="">------
 						<transys:label code="Please Select" />------
 					</option>
@@ -57,7 +58,7 @@
 		<transys:textcolumn headerText="Dumpster Size" dataField="dumpsterSize.size" />
 		<transys:textcolumn headerText="Dumpster#" dataField="dumpsterNum" />
 		<transys:textcolumn headerText="Delivery Address" dataField="deliveryAddress" />
-		<transys:textcolumn headerText="Delivery Date" dataField="deliveryDate" />
+		<transys:textcolumn headerText="Delivery Date" dataField="deliveryDate" dataFormat="MM/dd/yyy"/>
 		<transys:textcolumn headerText="Status" dataField="status.status" />
 
 

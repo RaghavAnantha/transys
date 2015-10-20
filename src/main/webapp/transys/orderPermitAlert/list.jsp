@@ -135,13 +135,13 @@
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
 		pagingLink="search.do" multipleDelete="false" searcheable="false" 
 		exportPdf="true" exportXls="true" dataQualifier="orderPermitAlert">
-		<transys:textcolumn headerText="Delivery Address #" dataField="order.deliveryAddress.line1" />
+		<transys:textcolumn headerText="Del. Address #" dataField="order.deliveryAddress.line1" width="100px"/>
 		<transys:textcolumn headerText="Delivery Address Street" dataField="order.deliveryAddress.line2" />
 		<transys:textcolumn headerText="Customer Name" dataField="order.customer.companyName" />
 		<transys:textcolumn headerText="Order#" dataField="order.id" type="java.lang.Long" />
 		<transys:textcolumn headerText="Contact" dataField="order.customer.contactName" />
 		<transys:textcolumn headerText="Phone#" dataField="order.customer.phone" />
-		<transys:textcolumn headerText="OrderS tatus" dataField="order.orderStatus.status" />
+		<transys:textcolumn headerText="Order tatus" dataField="order.orderStatus.status" />
 		<transys:textcolumn headerText="Delivery Date" dataField="order.deliveryDate" type="java.sql.Timestamp" dataFormat="MM/dd/yyy"/>
 		<transys:textcolumn headerText="Permit#" dataField="permit.number" />
 		<transys:textcolumn headerText="Permit Status" dataField="permit.status.status" />
