@@ -5,11 +5,10 @@
 	<table id="form-table" class="table">
 	 	<tr><td colspan=10></td><td colspan=10></td></tr>
 		<tr>
-			<td align="${left}" class="form-left"><transys:label
-					code="Dumpster Size" /></td>
-			<td align="${left}" class="wide">
+			<td class="form-left">Dumpster Size</td>
+			<td class="wide">
 				<select class="flat form-control input-sm" id="dumpsterSize" name="dumpsterSize" style="width: 175px !important">
-					<option value="">------<transys:label code="Please Select" />------</option>
+					<option value="">------Please Select------</option>
 					<c:forEach items="${dumpsterSizes}" var="aDumpsterSize">
 						<c:set var="selected" value="" />
 						<c:if
@@ -21,14 +20,10 @@
 				</select>
 			</td>
 			
-			<td align="${left}" class="form-left"><transys:label
-					code="Status" /></td>
-			<td align="${left}" class="wide"><select
-				class="flat form-control input-sm" id="status" name="status"
-				style="width: 175px !important">
-					<option value="">------
-						<transys:label code="Please Select" />------
-					</option>
+			<td class="form-left">Status</td>
+			<td class="wide">
+				<select class="flat form-control input-sm" id="status" name="status" style="width: 175px !important">
+					<option value="">------Please Select------</option>
 					<c:forEach items="${dumpsterStatus}" var="status">
 						<c:set var="selected" value="" />
 						<c:if
@@ -40,8 +35,8 @@
 			</select></td>
 		</tr>
 		<tr>
-			<td align="${left}"></td>
-			<td align="${left}"><input type="button"
+			<td></td>
+			<td><input type="button"
 				class="btn btn-primary btn-sm"
 				onclick="document.forms['dumpsterRentedReportsearchForm'].submit();"
 				value="<transys:label code="Preview"/>" /></td>
@@ -55,7 +50,7 @@
 	<transys:datatable urlContext="reports/dumpsterRentedReports"  baseObjects="${dumpsterInfoList}"
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
 		pagingLink="search.do" dataQualifier="dumpsterOnsiteReport">
-		<transys:textcolumn headerText="Dumpster Size" dataField="dumpsterSize.size" />
+		<transys:textcolumn headerText="Dumpster Size" dataField="dumpsterSize.size" width="100px"/>
 		<transys:textcolumn headerText="Dumpster#" dataField="dumpsterNum" />
 		<transys:textcolumn headerText="Delivery Address" dataField="deliveryAddress" />
 		<transys:textcolumn headerText="Delivery Date" dataField="deliveryDate" dataFormat="MM/dd/yyy"/>

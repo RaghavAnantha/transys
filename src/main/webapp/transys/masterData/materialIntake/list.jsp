@@ -8,9 +8,7 @@
 			<td class="form-left"><transys:label code="Material Type" /></td>
 			<td class="wide">
 				<select class="flat form-control input-sm" id="materialType" name="materialType" style="width: 175px !important">
-					<option value="">------
-						<transys:label code="Please Select" />------
-					</option>
+					<option value="">----Please Select----</option>
 					<c:forEach items="${materialTypes}" var="aMaterial">
 						<c:set var="selected" value="" />
 						<c:if test="${sessionScope.searchCriteria.searchMap['materialType.id'] == aMaterial.id}">

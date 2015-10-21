@@ -32,15 +32,19 @@ import com.transys.core.util.MimeUtil;
 import com.transys.model.AbstractBaseModel;
 import com.transys.model.DeliveryAddress;
 import com.transys.model.Customer;
+import com.transys.model.CustomerNotes;
 import com.transys.model.CustomerStatus;
 import com.transys.model.CustomerType;
 import com.transys.model.Order;
 import com.transys.model.OrderFees;
+import com.transys.model.OrderNotes;
 import com.transys.model.OrderPayment;
+import com.transys.model.Permit;
 //import com.transys.model.FuelVendor;
 //import com.transys.model.Location;
 import com.transys.model.SearchCriteria;
 import com.transys.model.State;
+import com.transys.model.User;
 import com.transys.model.vo.CustomerReportVO;
 import com.transys.model.BaseModel;
 
@@ -87,6 +91,8 @@ public class CustomerController extends CRUDController<Customer> {
 		model.addAttribute("mode", "ADD");
 		model.addAttribute("activeSubTab", "billing");
 		//return urlContext + "/form";
+		
+		model.addAttribute("notesModelObject", new CustomerNotes());
 		
 		model.addAttribute("deliveryAddressModelObject", new DeliveryAddress());
 				
@@ -143,17 +149,31 @@ public class CustomerController extends CRUDController<Customer> {
 	//@Override
 	public String saveSuccess(ModelMap model, HttpServletRequest request, Customer entity) {
 		setupCreate(model, request);
+		
+		model.addAttribute("msg", "Customer saved successfully");
+		
 		model.addAttribute("modelObject", entity);
 		model.addAttribute("activeTab", "manageCustomer");
 		model.addAttribute("activeSubTab", "billing");
 		model.addAttribute("mode", "ADD");
 		
+		Long customerId = entity.getId();
+		
+		Customer emptyCustomer = new Customer();
+		emptyCustomer.setId(customerId);
+		CustomerNotes notes = new CustomerNotes();
+		notes.setCustomer(emptyCustomer);
+		model.addAttribute("notesModelObject", notes);
+	
+		List<BaseModel> notesList = genericDAO.executeSimpleQuery("select obj from CustomerNotes obj where obj.customer.id=" +  customerId + " order by obj.id asc");
+		model.addAttribute("notesList", notesList);
+		
 		Customer customer = new Customer();
-		customer.setId(entity.getId());
+		customer.setId(customerId);
 		DeliveryAddress address = new DeliveryAddress();
 		address.setCustomer(customer);
 		model.addAttribute("deliveryAddressModelObject", address);
-		List<BaseModel> addressList = genericDAO.executeSimpleQuery("select obj from DeliveryAddress obj where obj.customer.id=" +  entity.getId() + " order by obj.id asc");
+		List<BaseModel> addressList = genericDAO.executeSimpleQuery("select obj from DeliveryAddress obj where obj.customer.id=" +  customerId + " order by obj.id asc");
 		model.addAttribute("deliveryAddressList", addressList);
 		//return urlContext + "/form";
 		return urlContext + "/customer";
@@ -298,15 +318,24 @@ public class CustomerController extends CRUDController<Customer> {
 		model.addAttribute("activeSubTab", "billing");
 		
 		Customer customerToBeEdited = (Customer)model.get("modelObject");
+		Long customerId = customerToBeEdited.getId();
 		
 		Customer emptyCustomer = new Customer();
-		emptyCustomer.setId(customerToBeEdited.getId());
+		emptyCustomer.setId(customerId);
+		CustomerNotes notes = new CustomerNotes();
+		notes.setCustomer(emptyCustomer);
+		model.addAttribute("notesModelObject", notes);
+	
+		List<BaseModel> notesList = genericDAO.executeSimpleQuery("select obj from CustomerNotes obj where obj.customer.id=" +  customerId + " order by obj.id asc");
+		model.addAttribute("notesList", notesList);
+		
+		emptyCustomer = new Customer();
+		emptyCustomer.setId(customerId);
 		DeliveryAddress address = new DeliveryAddress();
 		address.setCustomer(emptyCustomer);
 		model.addAttribute("deliveryAddressModelObject", address);
-	
 		
-		List<BaseModel> addressList = genericDAO.executeSimpleQuery("select obj from DeliveryAddress obj where obj.customer.id=" +  customerToBeEdited.getId() + " order by obj.id asc");
+		List<BaseModel> addressList = genericDAO.executeSimpleQuery("select obj from DeliveryAddress obj where obj.customer.id=" +  customerId + " order by obj.id asc");
 		model.addAttribute("deliveryAddressList", addressList);
 		
 		//return urlContext + "/form";
@@ -398,9 +427,8 @@ public class CustomerController extends CRUDController<Customer> {
 		
 		beforeSave(request, entity, model);
 		
-		entity.getCustomerNotes().get(0).setCustomer(entity);
-		entity.getCustomerNotes().get(0).setCreatedBy(entity.getCreatedBy());
-		entity.getCustomerNotes().get(0).setModifiedBy(entity.getModifiedBy());
+		// TODO: Why both created by and modified by and why set if not changed?
+		setupCustomerNotes(entity);
 		
 		genericDAO.saveOrUpdate(entity);
 		cleanUp(request);
@@ -427,6 +455,115 @@ public class CustomerController extends CRUDController<Customer> {
 		return saveSuccess(model, request, entity);
 	}
 	
+	@RequestMapping(method = RequestMethod.POST, value = "/saveCustomerNotes.do")
+	public String saveCustomerNotes(HttpServletRequest request,
+			@ModelAttribute("notesModelObject") CustomerNotes entity,
+			BindingResult bindingResult, ModelMap model) {
+		try {
+			getValidator().validate(entity, bindingResult);
+		} catch (ValidationException e) {
+			e.printStackTrace();
+			log.warn("Error in validation :" + e);
+		}
+		// return to form if we had errors
+		if (bindingResult.hasErrors()) {
+			setupCreate(model, request);
+			return urlContext + "/form";
+		}
+		
+		//beforeSave(request, entity, model);
+		if (entity instanceof AbstractBaseModel) {
+			AbstractBaseModel baseModel = (AbstractBaseModel) entity;
+			if (baseModel.getId() == null) {
+				baseModel.setCreatedAt(Calendar.getInstance().getTime());
+				if (baseModel.getCreatedBy()==null) {
+					baseModel.setCreatedBy(getUser(request).getId());
+				}
+			} else {
+				baseModel.setModifiedAt(Calendar.getInstance().getTime());
+				if (baseModel.getModifiedBy()==null) {
+					baseModel.setModifiedBy(getUser(request).getId());
+				}
+			}
+		}
+		
+		updateEnteredBy(entity);
+		genericDAO.saveOrUpdate(entity);
+		cleanUp(request);
+		
+		Long customerId = entity.getCustomer().getId();
+		
+		List<Customer> customerList = genericDAO.executeSimpleQuery("select obj from Customer obj where obj.id=" + customerId);
+		Customer savedCustomer = customerList.get(0);
+		model.addAttribute("modelObject", savedCustomer);
+
+		setupCreate(model, request);
+		
+		//model.addAttribute("modelObject", entity);
+		model.addAttribute("activeTab", "manageCustomer");
+		model.addAttribute("mode", "ADD");
+		model.addAttribute("activeSubTab", "customerNotesTab");
+		
+		Customer emptyCustomer = new Customer();
+		emptyCustomer.setId(customerId);
+		CustomerNotes notes = new CustomerNotes();
+		notes.setCustomer(emptyCustomer);
+		model.addAttribute("notesModelObject", notes);
+	
+		List<BaseModel> notesList = genericDAO.executeSimpleQuery("select obj from CustomerNotes obj where obj.customer.id=" +  customerId + " order by obj.id asc");
+		model.addAttribute("notesList", notesList);
+		
+		Customer customer = new Customer();
+		customer.setId(customerId);
+		DeliveryAddress address = new DeliveryAddress();
+		address.setCustomer(customer);
+		model.addAttribute("deliveryAddressModelObject", address);
+		List<BaseModel> addressList = genericDAO.executeSimpleQuery("select obj from DeliveryAddress obj where obj.customer.id=" +  customerId + " order by obj.id asc");
+		model.addAttribute("deliveryAddressList", addressList);
+		
+		return urlContext + "/customer";
+	}
+	
+	private void updateEnteredBy(CustomerNotes entity) {
+		User user = genericDAO.getById(User.class, entity.getCreatedBy());
+		entity.setEnteredBy(user.getName());
+	}
+	
+	private void setupCustomerNotes(Customer customer) {
+		/*if (customer.getId() != null) {
+			// First notes should not be editable
+			return;
+		}*/
+		
+		List<CustomerNotes> customerNotesList = customer.getCustomerNotes();
+		if (customerNotesList == null || customerNotesList.isEmpty()) {
+			return;
+		}
+		
+		CustomerNotes aCustomerNotes = customerNotesList.get(0);
+		if (StringUtils.isEmpty(aCustomerNotes.getNotes())) {
+			customerNotesList.clear();
+			return;
+		}
+		
+		aCustomerNotes.setCustomer(customer);
+		
+		Long createdBy = null;
+		if (customer.getId() == null) {
+			createdBy = customer.getCreatedBy();
+		} else {
+			createdBy = customer.getModifiedBy();
+		}
+		
+		aCustomerNotes.setCreatedBy(createdBy);
+		aCustomerNotes.setCreatedAt(Calendar.getInstance().getTime());
+		
+		updateEnteredBy(aCustomerNotes);
+	
+		//aCustomerNotes.setModifiedBy(customer.getModifiedBy());
+		//aCustomerNotes.setModifiedAt(customer.getModifiedAt());
+	}
+	
 	@RequestMapping(method = RequestMethod.POST, value = "/saveDeliveryAddress.do")
 	public String saveDeliveryAddress(HttpServletRequest request,
 			@ModelAttribute("deliveryAddressModelObject") DeliveryAddress entity,
@@ -442,7 +579,9 @@ public class CustomerController extends CRUDController<Customer> {
 			setupCreate(model, request);
 			return urlContext + "/form";
 		}
+		
 		//beforeSave(request, entity, model);
+		
 		if (entity instanceof AbstractBaseModel) {
 			AbstractBaseModel baseModel = (AbstractBaseModel) entity;
 			if (baseModel.getId() == null) {
@@ -484,13 +623,23 @@ public class CustomerController extends CRUDController<Customer> {
 		setupCreate(model, request);
 		//model.addAttribute("modelObject", entity);
 		
+		Long customerId = entity.getCustomer().getId();
+		
+		Customer emptyCustomer = new Customer();
+		emptyCustomer.setId(customerId);
+		CustomerNotes notes = new CustomerNotes();
+		notes.setCustomer(emptyCustomer);
+		model.addAttribute("notesModelObject", notes);
+	
+		List<BaseModel> notesList = genericDAO.executeSimpleQuery("select obj from CustomerNotes obj where obj.customer.id=" +  customerId + " order by obj.id asc");
+		model.addAttribute("notesList", notesList);
+		
 		Customer customer = new Customer();
-		customer.setId(entity.getCustomer().getId());
+		customer.setId(customerId);
 		DeliveryAddress address = new DeliveryAddress();
 		address.setCustomer(customer);
 		model.addAttribute("deliveryAddressModelObject", address);
 		
-		Long customerId = entity.getCustomer().getId();
 		List<BaseModel> customerList = genericDAO.executeSimpleQuery("select obj from Customer obj where obj.id=" + customerId);
 		model.addAttribute("modelObject", customerList.get(0));
 		

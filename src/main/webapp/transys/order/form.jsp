@@ -578,7 +578,7 @@ function verifyExchangeOrderAndSubmit() {
 			<td></td>
 		</tr>
 		<tr>
-			<td colspan=10 class="section-header" style="line-height: 1;font-size: 13px;font-weight: bold;color: white;">Delivery Information</td>
+			<td colspan=10 class="section-header" style="line-height: 0.7;font-size: 13px;font-weight: bold;color: white;">Delivery Information</td>
 		</tr>
 		<tr>
 			<td></td>
@@ -690,7 +690,7 @@ function verifyExchangeOrderAndSubmit() {
 		</tr>
 		<tr><td></td></tr>
 		<tr>
-			<td colspan=10 class="section-header" style="line-height: 1;font-size: 13px;font-weight: bold;color: white;">Permit Information</td>
+			<td colspan=10 class="section-header" style="line-height: 0.7;font-size: 13px;font-weight: bold;color: white;">Permit Information</td>
 		</tr>
 		<tr>
 			<td></td>
@@ -914,7 +914,7 @@ function verifyExchangeOrderAndSubmit() {
 			<td></td>
 		</tr>
 		<tr>
-			<td colspan=10 class="section-header" style="line-height: 1;font-size: 13px;font-weight: bold;color: white;">Rates/Fees Information</td>
+			<td colspan=10 class="section-header" style="line-height: 0.7;font-size: 13px;font-weight: bold;color: white;">Rates/Fees Information</td>
 		</tr>
 		<tr>
 			<td></td>
@@ -1024,7 +1024,7 @@ function verifyExchangeOrderAndSubmit() {
 			<td></td>
 		</tr>
 		<tr>
-			<td colspan=10 class="section-header" style="line-height: 1;font-size: 13px;font-weight: bold;color: white;">Payment Information</td>
+			<td colspan=10 class="section-header" style="line-height: 0.7;font-size: 13px;font-weight: bold;color: white;">Payment Information</td>
 		</tr>
 		<tr><td></td></tr>
 	</table>
@@ -1130,7 +1130,7 @@ function verifyExchangeOrderAndSubmit() {
 			<td></td>
 		</tr>
 		<tr>
-			<td colspan=10 class="section-header" style="line-height: 1;font-size: 13px;font-weight: bold;color: white;">Notes/Comments</td>
+			<td colspan=10 class="section-header" style="line-height: 0.7;font-size: 13px;font-weight: bold;color: white;">Notes/Comments</td>
 		</tr>
 		<tr>
 			<td></td>
@@ -1139,7 +1139,7 @@ function verifyExchangeOrderAndSubmit() {
 			<td colspan="10">
 				<c:set var="orderNotesDisabled" value="" />
 				<c:if test="${modelObject.orderNotes != null and modelObject.orderNotes.size() > 0 
-				and modelObject.orderNotes[0].notes != null and modelObject.orderNotes[0].notes.length() > 0}">
+							and modelObject.orderNotes[0].notes != null and modelObject.orderNotes[0].notes.length() > 0}">
 					<c:set var="orderNotesDisabled" value="true" />
 				</c:if>
 				<form:textarea readonly="${orderNotesDisabled}" row="5" path="orderNotes[0].notes" cssClass="form-control" style="width:100%; height:100%;"/>
@@ -1156,6 +1156,7 @@ function verifyExchangeOrderAndSubmit() {
 				<input type="button" id="orderCancelBtn" value="<transys:label code="Cancel"/>" class="flat btn btn-primary btn-sm" onClick="location.href='main.do'" />
 			</td>
 		</tr>
+		<tr><td></td></tr>
 		<tr><td></td></tr>
 	</table>
 </form:form>

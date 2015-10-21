@@ -8,7 +8,7 @@
 			<td class="form-left">Dumpster Size</td>
 			<td class="wide">
 				<select class="flat form-control input-sm" id="dumpsterSize" name="dumpsterSize" style="width: 175px !important">
-					<option value="">Please Select------</option>
+					<option value="">------Please Select------</option>
 					<c:forEach items="${dumpsterSizes}" var="aDumpsterSize">
 						<c:set var="selected" value="" />
 						<c:if test="${sessionScope.searchCriteria.searchMap['dumpsterSize'] == aDumpsterSize.id}">
@@ -48,7 +48,7 @@
 	<transys:datatable urlContext="reports/dumpsterOnsiteReports"  baseObjects="${dumpsterInfoList}"
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
 		pagingLink="search.do" dataQualifier="dumpsterOnsiteReport">
-		<transys:textcolumn headerText="Dumpster Size" dataField="dumpsterSize.size" />
+		<transys:textcolumn headerText="Dumpster Size" dataField="dumpsterSize.size" width="100px"/>
 		<transys:textcolumn headerText="Dumpster#" dataField="dumpsterNum" />
 		<transys:textcolumn headerText="Status" dataField="status.status" />
 

@@ -420,7 +420,7 @@ CREATE TABLE `transysOrder` (
 
 LOCK TABLES `transysOrder` WRITE;
 /*!40000 ALTER TABLE `transysOrder` DISABLE KEYS */;
-INSERT INTO `transysOrder` (`id`,`customerId`,`deliveryContactName`,`deliveryContactPhone1`,`deliveryContactPhone2`,`deliveryDate`,`deliveryAddressId`,`locationTypeId`,`dumpsterSizeId`,`materialTypeId`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`,`grossWeight`,`netWeightLb`,`netWeightTonnage`,`tare`,`dumpsterId`,`pickupDate`,`orderStatusId`,`pickUpDriverId`,`dropOffDriverId`,`deliveryHourFrom`,`deliveryHourTo`,`deliveryMinutesFrom`,`deliveryMinutesTo`,`pickupOrderId`,`totalAmountPaid`,`balanceAmountDue`) VALUES (1,5,'Raghav','123-456-7890','123-456-7890','2015-10-09 00:00:00',3,1,1,1,'2015-10-09 00:00:00',1,'2015-10-15 14:51:57',1,1,10.00,10.00,10.00,10.00,2,NULL,1,NULL,2,'12:00 AM','1:00 AM','00','15',NULL,190.00,45.20);
+INSERT INTO `transysOrder` (`id`,`customerId`,`deliveryContactName`,`deliveryContactPhone1`,`deliveryContactPhone2`,`deliveryDate`,`deliveryAddressId`,`locationTypeId`,`dumpsterSizeId`,`materialTypeId`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`,`grossWeight`,`netWeightLb`,`netWeightTonnage`,`tare`,`dumpsterId`,`pickupDate`,`orderStatusId`,`pickUpDriverId`,`dropOffDriverId`,`deliveryHourFrom`,`deliveryHourTo`,`deliveryMinutesFrom`,`deliveryMinutesTo`,`pickupOrderId`,`totalAmountPaid`,`balanceAmountDue`) VALUES (1,5,'Raghav','123-456-7890','123-456-7890','2015-10-09 00:00:00',3,1,1,1,'2015-10-09 00:00:00',1,'2015-10-15 14:51:57',1,1,10.00,10.00,10.00,10.00,2,NULL,1,NULL,2,'12:00 PM','1:00 PM','00','15',NULL,190.00,45.20);
 /*!40000 ALTER TABLE `transysOrder` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -494,7 +494,8 @@ DROP TABLE IF EXISTS `customerNotes`;
 CREATE TABLE `customerNotes` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `customerId` bigint(20) NOT NULL,
-  `notes` varchar(255) DEFAULT NULL,
+  `notes` varchar(500) DEFAULT NULL,
+  `entered_by` varchar(255) DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   `created_by` bigint(20) DEFAULT NULL,
   `modified_at` datetime DEFAULT NULL,
@@ -525,7 +526,7 @@ DROP TABLE IF EXISTS `orderNotes`;
 CREATE TABLE `orderNotes` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `orderId` bigint(20) NOT NULL,
-  `notes` varchar(255) DEFAULT NULL,
+  `notes` varchar(500) DEFAULT NULL,
   `entered_by` varchar(255) DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   `created_by` bigint(20) DEFAULT NULL,
@@ -1032,7 +1033,7 @@ DROP TABLE IF EXISTS `permitNotes`;
 CREATE TABLE `permitNotes` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `permitId` bigint(20) NOT NULL,
-  `notes` varchar(250) DEFAULT NULL,
+  `notes` varchar(500) DEFAULT NULL,
   `entered_by` varchar(255) DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   `created_by` bigint(20) DEFAULT NULL,
@@ -1388,7 +1389,6 @@ CREATE TABLE `permitFee` (
   `modified_by` bigint(20) DEFAULT NULL,
   `delete_flag` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `uniquePermitClassType` (`permitClassId`,`permitTypeId`),
   KEY `permitFeePermitClassRef_idx` (`permitClassId`),
   KEY `permitFeePermitTypeRef_idx` (`permitTypeId`),
   CONSTRAINT `permitFeePermitClassRef` FOREIGN KEY (`permitClassId`) REFERENCES `permitClass` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,

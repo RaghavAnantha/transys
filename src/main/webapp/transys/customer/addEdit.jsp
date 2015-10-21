@@ -5,6 +5,7 @@
 <ul class="nav nav-tabs" id="customer_edit_tabs">
 	<li><a href="#billing" data-toggle="tab">Billing Info</a></li>
 	<li><a href="#delivery" data-toggle="tab">Delivery Address</a></li>
+	<li><a href="#customerNotesTab" data-toggle="tab">Notes</a></li>
 </ul>
 <div class="tab-content" style="background-color: white;">
 	<div id="billing" class="tab-pane">
@@ -12,5 +13,8 @@
 	</div>
 	<div id="delivery" class="tab-pane">
 		<%@include file="deliveryAddress.jsp"%>
+	</div>
+	<div id="customerNotesTab" class="tab-pane">
+		<%@include file="notes.jsp"%>
 	</div>
 </div>
