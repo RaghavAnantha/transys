@@ -1,7 +1,7 @@
 <%@include file="/common/taglibs.jsp"%>
 <form:form action="savePermitNotes.do" name="typeForm" commandName="notesModelObject" method="post">
 	<form:hidden path="id" id="id" />
-	<form:hidden path="permit.id" id="permit.id" />
+	<form:hidden path="permit" id="permit.id" />
 	<table id="form-table" width="100%">
 		<tr><td colspan=10></td></tr>
 	    <tr><td class="form-left">Notes<span class="errorMessage">*</span></td></tr>

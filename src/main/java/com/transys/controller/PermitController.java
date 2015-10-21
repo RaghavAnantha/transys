@@ -695,14 +695,19 @@ public class PermitController extends CRUDController<Permit> {
 		model.addAttribute("activeSubTab", "permitDetails"); // Permit Address?
 		model.addAttribute("mode", "ADD");
 		
+		Permit emptyPermit = new Permit();
+		emptyPermit.setId(entity.getId());
+		
 		PermitNotes notes = new PermitNotes();
-		notes.setPermit(entity);
+		//notes.setPermit(entity);
+		notes.setPermit(emptyPermit);
 		model.addAttribute("notesModelObject", notes);
 		List<BaseModel> notesList = genericDAO.executeSimpleQuery("select obj from PermitNotes obj where obj.permit.id=" +  entity.getId() + " order by obj.id asc");
 		model.addAttribute("notesList", notesList);
 		
 		PermitAddress permitAddress = new PermitAddress();
-		permitAddress.setPermit(entity); 
+		//permitAddress.setPermit(entity);
+		permitAddress.setPermit(emptyPermit);
 		model.addAttribute("permitAddressModelObject", permitAddress);
 		List<BaseModel> permitAddressList = genericDAO.executeSimpleQuery("select obj from PermitAddress obj where obj.permit.id=" +  entity.getId() + " order by obj.id asc");
 		model.addAttribute("permitAddressList", permitAddressList);

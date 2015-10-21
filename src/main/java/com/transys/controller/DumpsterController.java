@@ -81,8 +81,10 @@ public class DumpsterController extends CRUDController<Dumpster> {
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		criteria.getSearchMap().remove("_csrf");
 		super.save(request, entity, bindingResult, model);
+		
+		model.addAttribute("msg", "Dumpster saved successfully");
 
-		return urlContext + "/list";
+		return urlContext + "/form";
 
 	}
 

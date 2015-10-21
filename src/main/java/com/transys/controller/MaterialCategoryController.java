@@ -76,7 +76,9 @@ public class MaterialCategoryController extends CRUDController<MaterialCategory>
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		criteria.getSearchMap().remove("_csrf");
 		super.save(request, entity, bindingResult, model);
+		
+		model.addAttribute("msg", "Material Category saved successfully");
 
-		return urlContext + "/list";
+		return urlContext + "/form";
 	}
 }

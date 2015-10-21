@@ -87,6 +87,7 @@ public class PermitFeeController extends CRUDController<PermitFee> {
 		criteria.getSearchMap().remove("_csrf");
 		super.save(request, entity, bindingResult, model);
 
+		model.addAttribute("msg", "Permit Fee saved successfully");
 		return urlContext + "/form";
 
 	}

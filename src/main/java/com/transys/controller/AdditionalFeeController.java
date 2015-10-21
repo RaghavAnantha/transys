@@ -75,6 +75,7 @@ public class AdditionalFeeController extends CRUDController<AdditionalFee> {
 		criteria.getSearchMap().remove("_csrf");
 		super.save(request, entity, bindingResult, model);
 
+		model.addAttribute("msg", "Additional Fee saved successfully");
 		return urlContext + "/form";
 
 	}

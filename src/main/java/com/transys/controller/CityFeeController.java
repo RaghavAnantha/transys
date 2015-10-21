@@ -74,6 +74,8 @@ public class CityFeeController extends CRUDController<CityFee> {
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		criteria.getSearchMap().remove("_csrf");
 		super.save(request, entity, bindingResult, model);
+		
+		model.addAttribute("msg", "City Fee saved successfully");
 
 		return urlContext + "/form";
 

@@ -1,9 +1,11 @@
 <%@include file="/common/taglibs.jsp"%>
 
+<br />
 <h5 style="margin-top: -15px; !important">Add/Edit Additional Fee</h5>
 <form:form action="save.do" name="typeForm" commandName="modelObject"
 	method="post" id="typeForm">
 	<form:hidden path="id" id="id" />
+	<%@include file="/common/messages.jsp"%>
 	<table id="form-table" class="table">
 		<tr>
 			<td class="form-left"><transys:label code="Description" /></td>

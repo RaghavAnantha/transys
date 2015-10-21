@@ -29,6 +29,7 @@ function formatPhone(){
 <form:form action="save.do" name="typeForm" commandName="modelObject"
 	method="post" id="typeForm">
 	<form:hidden path="id" id="id" />
+	<%@include file="/common/messages.jsp"%>
 	<table id="form-table" class="table">
 		<tr>
 			<td class="form-left"><transys:label code="Employee ID" /><span
