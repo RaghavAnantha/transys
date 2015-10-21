@@ -383,7 +383,9 @@ public class OrderController extends CRUDController<Order> {
 		}
 		
 		updateEnteredBy(entity);
+		
 		genericDAO.saveOrUpdate(entity);
+		
 		cleanUp(request);
 		
 		Long orderId = entity.getOrder().getId();
@@ -1367,6 +1369,7 @@ public class OrderController extends CRUDController<Order> {
 		OrderNotes notes = new OrderNotes();
 		notes.setOrder(emptyOrder);
 		model.addAttribute("notesModelObject", notes);
+		
 		List<BaseModel> notesList = genericDAO.executeSimpleQuery("select obj from OrderNotes obj where obj.order.id=" +  entity.getId() + " order by obj.id asc");
 		model.addAttribute("notesList", notesList);
 		

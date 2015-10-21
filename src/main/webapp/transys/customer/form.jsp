@@ -195,13 +195,11 @@ function formatFax() {
 		<tr>
 			<td colspan=10>
 				<c:set var="customerNotesDisabled" value="" />
-				<c:set var="customerNotesDisabledClass" value="" />
 				<c:if test="${modelObject.customerNotes != null and modelObject.customerNotes.size() > 0 
-				and modelObject.customerNotes[0].notes != null and modelObject.customerNotes[0].notes.length() > 0}">
+							and modelObject.customerNotes[0].notes != null and modelObject.customerNotes[0].notes.length() > 0}">
 					<c:set var="customerNotesDisabled" value="true" />
-					<c:set var="customerNotesDisabledClass" value="form-control" />
 				</c:if>
-				<form:textarea row="5" disabled="${customerNotesDisabled}" path="customerNotes[0].notes" cssClass="flat ${customerNotesDisabledClass}" id="customerNotes" style="width:100%; height:100%;"/>
+				<form:textarea row="5" readonly="${customerNotesDisabled}" path="customerNotes[0].notes" cssClass="form-control" id="customerNotes" style="width:100%; height:100%;"/>
 				<form:errors path="customerNotes[0].notes" cssClass="errorMessage" />
 			</td>
 		</tr>

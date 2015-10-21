@@ -130,7 +130,6 @@ function populatePermitFee() {
 			 	<form:errors path="permitType" cssClass="errorMessage" />
 			</td>
 		</tr>
-		
 		<tr>
 			<td class="form-left">Start Date</td>
 			<td class="wide">
@@ -157,7 +156,29 @@ function populatePermitFee() {
 			 	<form:errors path="parkingMeterFee" cssClass="errorMessage" />
 			</td>
 		</tr>
-		<tr><td colspan="2"></td></tr>
+		<tr>
+			<td></td>
+		</tr>
+		<tr>
+			<td colspan=10 class="section-header" style="line-height: 0.7;font-size: 13px;font-weight: bold;color: white;">Notes/Comments</td>
+		</tr>
+		<tr>
+			<td></td>
+		</tr>
+		<tr>
+			<td colspan="10">
+				<c:set var="permitNotesDisabled" value="" />
+				<c:if test="${modelObject.permitNotes != null and modelObject.permitNotes.size() > 0 
+							and modelObject.permitNotes[0].notes != null and modelObject.permitNotes[0].notes.length() > 0}">
+					<c:set var="permitNotesDisabled" value="true" />
+				</c:if>
+				<form:textarea readonly="${permitNotesDisabled}" row="5" path="permitNotes[0].notes" cssClass="form-control" style="width:100%; height:100%;"/>
+				<form:errors path="permitNotes[0].notes" cssClass="errorMessage" />
+			</td>
+		</tr>
+		<tr>
+			<td></td>
+		</tr>
 		<tr>
 			<td>&nbsp;</td>
 			<td colspan="2">

@@ -36,6 +36,7 @@ import com.transys.model.DeliveryAddress;
 import com.transys.model.LocationType;
 import com.transys.model.Order;
 import com.transys.model.OrderFees;
+import com.transys.model.OrderNotes;
 import com.transys.model.OrderPermits;
 import com.transys.model.OrderStatus;
 import com.transys.model.Permit;
@@ -413,6 +414,10 @@ public class PermitController extends CRUDController<Permit> {
 			}
 			
 			beforeSave(request, entity, model);
+			
+			// TODO: Why both created by and modified by and why set if not changed?
+			setupPermitNotes(entity);
+			
 			genericDAO.saveOrUpdate(entity);
 			
 			// The delivery address entered will automatically be stored as one of the Permit Addresses. Users can add more.
@@ -423,6 +428,45 @@ public class PermitController extends CRUDController<Permit> {
 			return saveSuccess(model, request, entity);
 	}
 
+	private void setupPermitNotes(Permit permit) {
+		/*if (permit.getId() != null) {
+			// First notes should not be editable
+			return;
+		}*/
+		
+		List<PermitNotes> permitNotesList = permit.getPermitNotes();
+		if (permitNotesList == null || permitNotesList.isEmpty()) {
+			return;
+		}
+		
+		PermitNotes aPermitNotes = permitNotesList.get(0);
+		if (StringUtils.isEmpty(aPermitNotes.getNotes())) {
+			permitNotesList.clear();
+			return;
+		}
+		
+		aPermitNotes.setPermit(permit);
+		
+		Long createdBy = null;
+		if (permit.getId() == null) {
+			createdBy = permit.getCreatedBy();
+		} else {
+			createdBy = permit.getModifiedBy();
+		}
+		
+		aPermitNotes.setCreatedBy(createdBy);
+		aPermitNotes.setCreatedAt(Calendar.getInstance().getTime());
+		
+		updateEnteredBy(aPermitNotes);
+		
+		//aPermitNotes.setModifiedBy(order.getModifiedBy());
+		//aPermitNotes.setModifiedAt(order.getModifiedAt());
+	}
+	
+	private void updateEnteredBy(PermitNotes entity) {
+		User user = genericDAO.getById(User.class,entity.getCreatedBy());
+		entity.setEnteredBy(user.getName());
+	}
 	
 	@RequestMapping(method = RequestMethod.POST, value = "/savePermitFromAlert.do")
 	public @ResponseBody String savePermitFromAlert(HttpServletRequest request,
@@ -743,27 +787,28 @@ public class PermitController extends CRUDController<Permit> {
 		}
 		
 		updateBaseProperties(request, entity);
-		User user=genericDAO.getById(User.class,entity.getCreatedBy());
-		entity.setEnteredBy(user.getName());
+		
+		updateEnteredBy(entity);
 		
 		genericDAO.saveOrUpdate(entity);
 		cleanUp(request);
 
 		setupCreate(model, request);
-
+		
+		Long permitId = entity.getPermit().getId();
+		
 		Permit permit = new Permit();
-		permit.setId(entity.getPermit().getId());
+		permit.setId(permitId);
 		PermitNotes notes = new PermitNotes();
 		notes.setPermit(permit);
 		model.addAttribute("notesModelObject", notes);
 		
-		Long permitId = entity.getPermit().getId();
+		List<BaseModel> notesList = genericDAO.executeSimpleQuery("select obj from PermitNotes obj where obj.permit.id=" +  permitId + " order by obj.id asc");
+		model.addAttribute("notesList", notesList);
+		
 		List<BaseModel> permitList = genericDAO.executeSimpleQuery("select obj from Permit obj where obj.id=" + permitId);
 		model.addAttribute("modelObject", permitList.get(0));
 		
-		List<BaseModel> notesList = genericDAO.executeSimpleQuery("select obj from PermitNotes obj where obj.permit.id=" +  permitId + " order by obj.id asc");
-		model.addAttribute("notesList", notesList);
-
 		List<BaseModel> addressList = genericDAO.executeSimpleQuery("select obj from PermitAddress obj where obj.permit.id=" +  permitId + " order by obj.id asc");
 		model.addAttribute("permitAddressList", addressList);
 		

@@ -68,6 +68,9 @@ public class Permit  extends AbstractBaseModel {
 	@Column(name="parkingMeterFee")
 	private BigDecimal parkingMeterFee;
 	
+	@OneToMany(mappedBy="permit", cascade = CascadeType.ALL)
+	private List<PermitNotes> permitNotes;
+	
 	@Transient
 	private Long orderId;
 
@@ -195,5 +198,13 @@ public class Permit  extends AbstractBaseModel {
 
 	public void setParkingMeterFee(BigDecimal parkingMeterFee) {
 		this.parkingMeterFee = parkingMeterFee;
+	}
+
+	public List<PermitNotes> getPermitNotes() {
+		return permitNotes;
+	}
+
+	public void setPermitNotes(List<PermitNotes> permitNotes) {
+		this.permitNotes = permitNotes;
 	}
 }

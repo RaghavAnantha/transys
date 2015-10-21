@@ -10,7 +10,6 @@ import javax.persistence.Transient;
 @Entity
 @Table(name="permitNotes")
 public class PermitNotes extends AbstractBaseModel {
-
 	@ManyToOne
 	@JoinColumn(name="permitId")
 	private Permit permit;
