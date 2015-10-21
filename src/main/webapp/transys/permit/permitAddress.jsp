@@ -59,7 +59,7 @@
 		editable="true" editableInScreen="true" baseObjects="${permitAddressList}"
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
 		pagingLink="search.do" searcheable="false" dataQualifier="manageNotes">
-		<transys:textcolumn headerText="Id" dataField="id" />
+		<transys:textcolumn headerText="Id" dataField="id" width="50px"/>
 		<transys:textcolumn headerText="Address #" dataField="line1" />
 		<transys:textcolumn headerText="Address Street" dataField="line2" />
 		<transys:textcolumn headerText="City" dataField="city" />
