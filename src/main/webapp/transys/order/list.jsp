@@ -196,21 +196,21 @@ function populateCustomerDeliveryAddress() {
 		<transys:textcolumn headerText="Customer" dataField="customer.companyName" />
 		<transys:textcolumn headerText="Contact" dataField="deliveryContactName" />
 		<transys:textcolumn headerText="Phone" dataField="deliveryContactPhone1" />
-		<transys:textcolumn headerText="Delivery #" dataField="deliveryAddress.line1" />
-		<transys:textcolumn headerText="Delivery Street" dataField="deliveryAddress.line2" />
+		<transys:textcolumn headerText="Del #" dataField="deliveryAddress.line1" />
+		<transys:textcolumn headerText="Del Street" dataField="deliveryAddress.line2" />
 		<transys:textcolumn headerText="City" dataField="deliveryAddress.city" />
 		<transys:textcolumn headerText="Dmpstr Size" dataField="dumpsterSize.size" />
 		<transys:textcolumn headerText="Dmpstr #" dataField="dumpster.dumpsterNum" />
-		<transys:textcolumn headerText="Delivery Date" dataField="deliveryDate" dataFormat="MM/dd/yyy"/>
-		<transys:textcolumn headerText="Pickup Date" dataField="pickupDate" dataFormat="MM/dd/yyy"/>
+		<transys:textcolumn headerText="Del Dt" dataField="deliveryDate" dataFormat="MM/dd/yyy"/>
+		<transys:textcolumn headerText="Pickup Dt" dataField="pickupDate" dataFormat="MM/dd/yyy"/>
 		<transys:textcolumn headerText="Dmpstr Price" dataField="orderFees.dumpsterPrice" type="java.math.BigDecimal"/>
 		<transys:textcolumn headerText="Permit Fee" dataField="orderFees.totalPermitFees" type="java.math.BigDecimal"/>
 		<transys:textcolumn headerText="City Fee" dataField="orderFees.cityFee" type="java.math.BigDecimal"/>
 		<transys:textcolumn headerText="OverWt Fee" dataField="orderFees.overweightFee" type="java.math.BigDecimal"/>
 		<transys:textcolumn headerText="Addnl Fee" dataField="orderFees.totalAdditionalFees" type="java.math.BigDecimal"/>
 		<transys:textcolumn headerText="Total Amt" dataField="orderFees.totalFees" type="java.math.BigDecimal" />
-		<transys:textcolumn headerText="Amt. Paid" dataField="totalAmountPaid" type="java.math.BigDecimal" />
-		<transys:textcolumn headerText="Bal. Due" dataField="balanceAmountDue" type="java.math.BigDecimal" />
+		<transys:textcolumn headerText="Amt Paid" dataField="totalAmountPaid" type="java.math.BigDecimal" />
+		<transys:textcolumn headerText="Bal Due" dataField="balanceAmountDue" type="java.math.BigDecimal" />
 		<transys:textcolumn headerText="Status" dataField="orderStatus.status" />
 	</transys:datatable>
 	<%session.setAttribute("manageOrdersColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
