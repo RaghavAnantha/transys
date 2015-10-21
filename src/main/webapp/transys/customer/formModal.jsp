@@ -64,7 +64,7 @@ $("#customerModalForm").submit(function (ev) {
 			<td colspan=10></td>
 		</tr>
 		<tr>
-			<td colspan=10 class="section-header" style="line-height: 1;font-size: 13px;font-weight: bold;color: white;">Billing Address</td>
+			<td colspan=10 class="section-header" style="line-height: 0.7;font-size: 13px;font-weight: bold;color: white;">Billing Address</td>
 		</tr>
 		<tr>
 			<td colspan=10></td>
@@ -107,7 +107,7 @@ $("#customerModalForm").submit(function (ev) {
 			<td colspan=10></td>
 		</tr>
 		<tr>
-			<td colspan=10 class="section-header" style="line-height: 1;font-size: 13px;font-weight: bold;color: white;">Billing Contact</td>
+			<td colspan=10 class="section-header" style="line-height: 0.7;font-size: 13px;font-weight: bold;color: white;">Billing Contact</td>
 		</tr>
 		<tr>
 			<td colspan=10></td>
@@ -155,7 +155,7 @@ $("#customerModalForm").submit(function (ev) {
 			<td colspan=10></td>
 		</tr>
 		<tr>
-			<td colspan=10 class="section-header" style="line-height: 1;font-size: 13px;font-weight: bold;color: white;">Delivery Address</td>
+			<td colspan=10 class="section-header" style="line-height: 0.7;font-size: 13px;font-weight: bold;color: white;">Delivery Address</td>
 		</tr>
 		<tr>
 			<td colspan=10></td>
@@ -202,7 +202,7 @@ $("#customerModalForm").submit(function (ev) {
 			<td colspan=10></td>
 		</tr>
 		<tr>
-			<td colspan=10 class="section-header" style="line-height: 1;font-size: 13px;font-weight: bold;color: white;">Notes/Comments</td>
+			<td colspan=10 class="section-header" style="line-height: 0.7;font-size: 13px;font-weight: bold;color: white;">Notes/Comments</td>
 		</tr>
 		<tr>
 			<td colspan=10></td>

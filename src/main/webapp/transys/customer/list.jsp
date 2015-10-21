@@ -101,7 +101,7 @@
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
 		pagingLink="search.do" multipleDelete="false" searcheable="false"
 		exportPdf="true" exportXls="true" dataQualifier="manageCustomer">
-		<transys:textcolumn headerText="Id" dataField="id" width="60px"/>
+		<transys:textcolumn headerText="Id" dataField="id" width="70px"/>
 		<transys:textcolumn headerText="Company Name" dataField="companyName" />
 		<transys:textcolumn headerText="Contact Name" dataField="contactName" />
 		<transys:textcolumn headerText="Phone" dataField="phone" />

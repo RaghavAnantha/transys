@@ -21,7 +21,7 @@ function formatPhone(){
 	}	
 }
 
-function formatFax(){
+function formatFax() {
 	var fax = document.getElementById("fax").value;
 	if(fax != ""){
 		if(fax.length < 10){
@@ -40,10 +40,11 @@ function formatFax(){
 			}
 		}
 	}	
-}	
+}
 </script>
 <form:form action="save.do" name="customerForm" id="customerForm" commandName="modelObject" method="post">
 	<form:hidden path="id" id="id" />
+	<%@include file="/common/messages.jsp"%>
 	<table id="form-table" class="table">
 		<tr><td colspan="10"></td></tr>
 		<tr>
@@ -95,7 +96,7 @@ function formatFax(){
 			<td colspan=10></td>
 		</tr>
 		<tr>
-			<td colspan=10 class="section-header" style="line-height: 1;font-size: 13px;font-weight: bold;color: white;">Billing Address</td>
+			<td colspan=10 class="section-header" style="line-height: 0.7;font-size: 13px;font-weight: bold;color: white;">Billing Address</td>
 		</tr>
 		<tr>
 			<td colspan=10></td>
@@ -138,7 +139,7 @@ function formatFax(){
 			<td colspan=10></td>
 		</tr>	
 		<tr>
-			<td colspan=10 class="section-header" style="line-height: 1;font-size: 13px;font-weight: bold;color: white;">Billing Contact</td>
+			<td colspan=10 class="section-header" style="line-height: 0.7;font-size: 13px;font-weight: bold;color: white;">Billing Contact</td>
 		</tr>
 		<tr>
 			<td colspan=10></td>
@@ -186,15 +187,22 @@ function formatFax(){
 			<td colspan=10></td>
 		</tr>
 		<tr>
-			<td colspan=10 class="section-header" style="line-height: 1;font-size: 13px;font-weight: bold;color: white;">Notes/Comments</td>
+			<td colspan=10 class="section-header" style="line-height: 0.7;font-size: 13px;font-weight: bold;color: white;">Notes/Comments</td>
 		</tr>
 		<tr>
 			<td colspan=10></td>
 		</tr>
 		<tr>
 			<td colspan=10>
-				<form:textarea row="5" path="customerNotes[0].notes" cssClass="flat" id="customerNotes" style="width:100%; height:100%;"/>
-				<br><form:errors path="customerNotes[0].notes" cssClass="errorMessage" />
+				<c:set var="customerNotesDisabled" value="" />
+				<c:set var="customerNotesDisabledClass" value="" />
+				<c:if test="${modelObject.customerNotes != null and modelObject.customerNotes.size() > 0 
+				and modelObject.customerNotes[0].notes != null and modelObject.customerNotes[0].notes.length() > 0}">
+					<c:set var="customerNotesDisabled" value="true" />
+					<c:set var="customerNotesDisabledClass" value="form-control" />
+				</c:if>
+				<form:textarea row="5" disabled="${customerNotesDisabled}" path="customerNotes[0].notes" cssClass="flat ${customerNotesDisabledClass}" id="customerNotes" style="width:100%; height:100%;"/>
+				<form:errors path="customerNotes[0].notes" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr><td colspan="2"></td></tr>
@@ -205,6 +213,7 @@ function formatFax(){
 				<input type="button" id="cancelBtn" value="<transys:label code="Cancel"/>" class="flat btn btn-primary btn-sm" onClick="location.href='main.do'" />
 			</td>
 		</tr>
+		<tr><td colspan="2"></td></tr>
 		<tr><td colspan="2"></td></tr>
 	</table>
 </form:form>

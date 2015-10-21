@@ -206,17 +206,22 @@ public class OrderController extends CRUDController<Order> {
 	private void populateDeliveryTimeSettings(ModelMap model) {
 		List<String> deliveryHours = new ArrayList<String>();
 		deliveryHours.add("--");
-      deliveryHours.add("12:00 AM");
-      deliveryHours.add("1:00 AM");
+		
+		for (int i = 1; i <= 12; i++) {
+			deliveryHours.add(i + ":00 AM");
+		}
+		for (int i = 1; i <= 12; i++) {
+			deliveryHours.add(i + ":00 PM");
+		}
       
       model.addAttribute("deliveryHours", deliveryHours);
       
-      List<String> deliveryMinutes = new ArrayList<String>();
+      /*List<String> deliveryMinutes = new ArrayList<String>();
       deliveryMinutes.add("--");
       deliveryMinutes.add("00");
       deliveryMinutes.add("15");
       
-      model.addAttribute("deliveryMinutes", deliveryMinutes);
+      model.addAttribute("deliveryMinutes", deliveryMinutes);*/
 	}
 	
 	@Override
@@ -325,7 +330,7 @@ public class OrderController extends CRUDController<Order> {
 			}
 		}
 		
-		udpateEnteredBy(entity);
+		updateEnteredBy(entity);
 		genericDAO.saveOrUpdate(entity);
 		cleanUp(request);
 		
@@ -360,6 +365,7 @@ public class OrderController extends CRUDController<Order> {
 			setupCreate(model, request, null);
 			return urlContext + "/form";
 		}
+		
 		//beforeSave(request, entity, model);
 		if (entity instanceof AbstractBaseModel) {
 			AbstractBaseModel baseModel = (AbstractBaseModel) entity;
@@ -376,7 +382,7 @@ public class OrderController extends CRUDController<Order> {
 			}
 		}
 		
-		udpateEnteredBy(entity);
+		updateEnteredBy(entity);
 		genericDAO.saveOrUpdate(entity);
 		cleanUp(request);
 		
@@ -410,8 +416,8 @@ public class OrderController extends CRUDController<Order> {
 		return urlContext + "/order";
 	}
 
-	private void udpateEnteredBy(OrderNotes entity) {
-		User user=genericDAO.getById(User.class,entity.getCreatedBy());
+	private void updateEnteredBy(OrderNotes entity) {
+		User user = genericDAO.getById(User.class,entity.getCreatedBy());
 		entity.setEnteredBy(user.getName());
 	}
 	
@@ -1280,15 +1286,12 @@ public class OrderController extends CRUDController<Order> {
 	}
 	
 	private void setupOrderNotes(Order order) {
-		List<OrderNotes> orderNotesList = order.getOrderNotes();
-		if (order.getId() != null) {
+		/*if (order.getId() != null) {
 			// First notes should not be editable
-			/*if (orderNotesList != null) {
-				orderNotesList.clear();
-			}*/
 			return;
-		}
+		}*/
 		
+		List<OrderNotes> orderNotesList = order.getOrderNotes();
 		if (orderNotesList == null || orderNotesList.isEmpty()) {
 			return;
 		}
@@ -1300,8 +1303,19 @@ public class OrderController extends CRUDController<Order> {
 		}
 		
 		anOrderNotes.setOrder(order);
-		anOrderNotes.setCreatedBy(order.getCreatedBy());
-		anOrderNotes.setCreatedAt(order.getCreatedAt());
+		
+		Long createdBy = null;
+		if (order.getId() == null) {
+			createdBy = order.getCreatedBy();
+		} else {
+			createdBy = order.getModifiedBy();
+		}
+		
+		anOrderNotes.setCreatedBy(createdBy);
+		anOrderNotes.setCreatedAt(Calendar.getInstance().getTime());
+		
+		updateEnteredBy(anOrderNotes);
+		
 		//anOrderNotes.setModifiedBy(order.getModifiedBy());
 		//anOrderNotes.setModifiedAt(order.getModifiedAt());
 	}
