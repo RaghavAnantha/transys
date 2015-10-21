@@ -695,7 +695,7 @@ public class PermitController extends CRUDController<Permit> {
 			@RequestParam(value = "startDate") Date startDate) {
 		Date endDate = calculatePermitEndDate(permitTypeId, startDate);
 		SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
-		return formatter.format(endDate);
+		return formatter.format(endDate).trim();
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/getPermitFee")
@@ -704,9 +704,9 @@ public class PermitController extends CRUDController<Permit> {
 			@RequestParam(value = "permitClassId") Long permitClassId,
 			@RequestParam(value = "startDate") Date startDate) {
 		
-		SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 		String startDateStr = formatter.format(startDate);
-		PermitFee permitFee = (PermitFee)genericDAO.executeSimpleQuery("select obj from PermitFee obj where obj.permitType=" + permitTypeId + "and obj.permitClass=" + permitClassId + " and " + startDateStr + " BETWEEN obj.effectiveStartDate and obj.effectiveEndDate").get(0);
+		PermitFee permitFee = (PermitFee)genericDAO.executeSimpleQuery("select obj from PermitFee obj where obj.permitType=" + permitTypeId + "and obj.permitClass=" + permitClassId + " and '" + startDateStr + "' BETWEEN obj.effectiveStartDate and obj.effectiveEndDate").get(0);
 		return permitFee.getFee().toPlainString();
 	}
 

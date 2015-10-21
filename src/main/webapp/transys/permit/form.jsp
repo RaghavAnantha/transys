@@ -48,11 +48,9 @@ function populatePermitFee() {
 	var permitTypeValue = $('#permitTypeSelect').val();
 	var startDateValue = $('#datepicker7').val();
 	
-	alert(permitClassValue + "," + permitTypeValue + "," + startDateValue)
-	
-	if (permitClassValue != '' && permitTypeValue != '') {
+	if (permitClassValue != '' && permitTypeValue != '' && startDateValue != '') {
 		$.ajax({
-	  		url: "getPermitFee.do?permitClassId=" + permitClassValue + "&permitTypeId=" + permitClassValue + "&startDate=" + startDateValue,
+	  		url: "getPermitFee.do?permitClassId=" + permitClassValue + "&permitTypeId=" + permitTypeValue + "&startDate=" + startDateValue,
 	       	type: "GET",
 	       	success: function(responseData, textStatus, jqXHR) {
 	    	   	$('#permitFeeInput').val(responseData);
@@ -123,7 +121,7 @@ function populatePermitFee() {
 			
 			<td class="form-left"><transys:label code="Permit Type" /></td>
 			<td>
-				<form:select id="permitTypeSelect" cssClass="flat form-control input-sm" path="permitType" style="width: 175px !important"  onChange="return populateEndDate();populatePermitFee();" >
+				<form:select id="permitTypeSelect" cssClass="flat form-control input-sm" path="permitType" style="width: 175px !important"  onChange="populateEndDate();populatePermitFee();" >
 					<form:option value="">------Please Select--------</form:option>
 					<form:options items="${permitType}" itemValue="id" itemLabel="permitType" />
 				</form:select> 
@@ -135,7 +133,7 @@ function populatePermitFee() {
 			<td class="form-left">Start Date</td>
 			<td class="wide">
 				<form:input path="startDate" class="flat"
-				id="datepicker7" name="startDate" style="width: 175px !important"  onChange="return populateEndDate();"/></td>
+				id="datepicker7" name="startDate" style="width: 175px !important"  onChange="populateEndDate();populatePermitFee();"/></td>
 				<form:errors path="startDate" cssClass="errorMessage" />
 			<td class="form-left">End Date</td>
 			<td>
