@@ -681,8 +681,10 @@ public class PermitController extends CRUDController<Permit> {
 	public String saveSuccess(ModelMap model, HttpServletRequest request, Permit entity) {
 		setupCreate(model, request);
 		
+		model.addAttribute("msg", "Permit saved successfully");
+		
 		model.addAttribute("activeTab", "managePermits");
-		model.addAttribute("activeSubTab", "permitNotes"); // Permit Address?
+		model.addAttribute("activeSubTab", "permitDetails"); // Permit Address?
 		model.addAttribute("mode", "ADD");
 		
 		PermitNotes notes = new PermitNotes();
