@@ -151,8 +151,24 @@ $("#permitModalFromAlertForm").submit(function (ev) {
 			 	</form:select>
 			</td>
 		</tr>
-	   
-		<tr><td colspan="2"></td></tr>
+		<tr>
+			<td></td>
+		</tr>
+		<tr>
+			<td colspan=10 class="section-header" style="line-height: 0.7;font-size: 13px;font-weight: bold;color: white;">Notes/Comments</td>
+		</tr>
+		<tr>
+			<td></td>
+		</tr>
+		<tr>
+			<td colspan="10">
+				<form:textarea row="5" path="permitNotes[0].notes" cssClass="form-control" style="width:100%; height:100%;"/>
+				<form:errors path="permitNotes[0].notes" cssClass="errorMessage" />
+			</td>
+		</tr>
+		<tr>
+			<td></td>
+		</tr>
 		<tr>
 			<td>&nbsp;</td>
 			<td colspan="2">

@@ -210,7 +210,7 @@ $("#customerModalForm").submit(function (ev) {
 		<tr>
 			<td colspan=10>
 				<form:textarea row="5" path="customerNotes[0].notes" cssClass="flat" id="customerNotes" style="width:100%; height:100%;"/>
-				<br><form:errors path="customerNotes[0].notes" cssClass="errorMessage" />
+				<form:errors path="customerNotes[0].notes" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr><td colspan="2"></td></tr>

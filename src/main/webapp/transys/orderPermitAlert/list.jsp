@@ -147,7 +147,7 @@
 		<transys:textcolumn headerText="Permit Status" dataField="permit.status.status" />
 		<transys:textcolumn headerText="Start Date" dataField="permit.startDate" type="java.sql.Timestamp" dataFormat="MM/dd/yyy"/>
 		<transys:textcolumn headerText="End Date" dataField="permit.endDate" type="java.sql.Timestamp" dataFormat="MM/dd/yyy"/>
-		<transys:anchorcolumn headerText="New Permit" linkText="Add New Permit" linkUrl="/permit/permitCreateModal.do" target="#addNewPermitModal" />
+		<transys:anchorcolumn headerText="New Permit" linkText="Add New Permit" linkUrl="/permit/createModal.do" target="#addNewPermitModal" />
 		<transys:anchorcolumn headerText="Add Order Notes" linkText="Add Order Notes" linkUrl="/order/orderNotesCreateModal.do" target="#addOrderNotesModal" />
 	</transys:datatable>
 	<%session.setAttribute("orderPermitAlertColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>

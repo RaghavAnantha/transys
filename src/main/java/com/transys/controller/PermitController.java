@@ -254,8 +254,8 @@ public class PermitController extends CRUDController<Permit> {
 		return urlContext + "/formForCustomerModal";
 	}
 	
-	@RequestMapping(method = RequestMethod.GET, value = "/permitCreateModal.do")
-	public String permitCreateModal(ModelMap model, HttpServletRequest request, 
+	@RequestMapping(method = RequestMethod.GET, value = "/createModal.do")
+	public String createModal(ModelMap model, HttpServletRequest request, 
 			@RequestParam(value = "id") Long orderPermitId)  {
 	
 		setupUpdate(model, request);
@@ -271,6 +271,7 @@ public class PermitController extends CRUDController<Permit> {
 		
 		Permit permitToBeEdited = orderPermitToBeEdited.getPermit();
 		permitToBeEdited.setNumber(StringUtils.EMPTY); // empty the permit number
+		permitToBeEdited.getPermitNotes().clear();
 		
 		model.put("modelObject", permitToBeEdited);
 		
@@ -469,7 +470,7 @@ public class PermitController extends CRUDController<Permit> {
 	}
 	
 	private void updateEnteredBy(PermitNotes entity) {
-		User user = genericDAO.getById(User.class,entity.getCreatedBy());
+		User user = genericDAO.getById(User.class, entity.getCreatedBy());
 		entity.setEnteredBy(user.getName());
 	}
 	
@@ -515,7 +516,11 @@ public class PermitController extends CRUDController<Permit> {
 			} else {
 				entity.setParkingMeter("No");
 			}
+			
 			beforeSave(request, entity, model);
+			
+			setupPermitNotes(entity);
+			
 			genericDAO.saveOrUpdate(entity);
 			
 			// The delivery address entered will automatically be stored as one of the Permit Addresses. Users can add more.
@@ -607,6 +612,9 @@ public class PermitController extends CRUDController<Permit> {
 		entity.setStatus(permitStatus);
 		
 		beforeSave(request, entity, model);
+		
+		setupPermitNotes(entity);
+		
 		genericDAO.saveOrUpdate(entity);
 		
 		// The delivery address entered will automatically be stored as one of the Permit Addresses. Users can add more.
