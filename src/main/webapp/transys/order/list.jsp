@@ -197,7 +197,7 @@ function populateCustomerDeliveryAddress() {
 		<transys:textcolumn headerText="Contact" dataField="deliveryContactName" />
 		<transys:textcolumn headerText="Phone" dataField="deliveryContactPhone1" />
 		<transys:textcolumn headerText="Del #" dataField="deliveryAddress.line1" />
-		<transys:textcolumn headerText="Del Street" dataField="deliveryAddress.line2" />
+		<transys:textcolumn headerText="Del St" dataField="deliveryAddress.line2" />
 		<transys:textcolumn headerText="City" dataField="deliveryAddress.city" />
 		<transys:textcolumn headerText="Dmpstr Size" dataField="dumpsterSize.size" />
 		<transys:textcolumn headerText="Dmpstr #" dataField="dumpster.dumpsterNum" />

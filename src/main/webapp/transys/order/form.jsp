@@ -1216,7 +1216,7 @@ $("#addPermitLink").click(function (ev) {
        	success: function(responseData, textStatus, jqXHR) {
     	   	var validationErrorMsg = jQuery.parseJSON(responseData);
     	   	if (validationErrorMsg != "") {
-    	   		showAlertDialog("Order Permit data validation", validationErrorMsg);
+    	   		showAlertDialog("Order Permit Data Validation", validationErrorMsg);
     	   		return false;
     	   	}
     	   	
