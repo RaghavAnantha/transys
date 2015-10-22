@@ -1206,15 +1206,29 @@ $("#addPermitLink").click(function (ev) {
 		return false;
 	}
 	
-	var url = $(this).attr("href");
-	url += "?customerId=" + customerId 
-		+  "&deliveryAddressId=" + deliveryAddressId
-		+  "&locationTypeId=" + locationTypeId
-		+  "&permitClassId=" + permitClassId
-		+  "&permitTypeId=" + permitTypeId
-		+  "&deliveryDate=" + deliveryDate;
+	var orderId = $('#id').val();
 	
-	showPopupDialog("Add Permit", url);
+	$.ajax({
+  		url: "/permit/validatePermitCanBeAdded.do?orderId=" + orderId + "&deliveryAddressId=" + deliveryAddressId,
+       	type: "GET",
+       	success: function(responseData, textStatus, jqXHR) {
+    	   	var validationErrorMsg = jQuery.parseJSON(responseData);
+    	   	if (validationErrorMsg != "") {
+    	   		showAlertDialog("Order Permit data validation", validationErrorMsg);
+    	   		return false;
+    	   	}
+    	   	
+    	   	var url = $(this).attr("href");
+    		url += "?customerId=" + customerId 
+    			+  "&deliveryAddressId=" + deliveryAddressId
+    			+  "&locationTypeId=" + locationTypeId
+    			+  "&permitClassId=" + permitClassId
+    			+  "&permitTypeId=" + permitTypeId
+    			+  "&deliveryDate=" + deliveryDate;
+    		
+    		showPopupDialog("Add Permit", url);
+		}
+	});
 	
 	ev.preventDefault();
 });
