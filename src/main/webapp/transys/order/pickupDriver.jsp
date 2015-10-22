@@ -1,6 +1,9 @@
 <%@include file="/common/taglibs.jsp"%>
 <form:form action="savePickupDriver.do" name="savePickupDriverForm" commandName="modelObject" method="post" id="savePickupDriverForm">
 	<form:hidden path="id" id="id" />
+	<jsp:include page="/common/messages.jsp">
+		<jsp:param name="msgCtx" value="managePickupDriver" />
+	</jsp:include>
 	<table id="form-table" class="table">
 		<tr><td colspan="2"></td></tr>
 		<tr>

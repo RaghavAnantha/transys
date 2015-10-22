@@ -664,6 +664,7 @@ public final class Datatable extends BodyTagSupport {
 						editColumn.setImageBorder(0);
 						editColumn.setWidth("30");
 						editColumn.setPageContext(this.pageContext);
+						editColumn.cssClass = "centerImage";
 						this.columns.add(editColumn);
 					//}
 				}
@@ -675,6 +676,7 @@ public final class Datatable extends BodyTagSupport {
 						deleteColumn.setPageContext(this.pageContext);
 						deleteColumn.setImageBorder(0);
 						deleteColumn.setWidth("30");
+						deleteColumn.cssClass = "centerImage";
 						this.columns.add(deleteColumn);
 					//}
 				}
@@ -874,7 +876,7 @@ public final class Datatable extends BodyTagSupport {
 				String url = "/"+urlContext+"/delete.do";
 				//if (authenticationService.hasUserPermission(user, url)){
 					//objOut.println("<th  width=\"30\">"+CacheUtil.getText("messageResourceCache","label_Delete_"+locale)+"</th>");
-					objOut.println("<th  width=\"30\">"+"DELETE"+"</th>");
+					objOut.println("<th  width=\"30\">"+"DEL"+"</th>");
 					additionalColumn++;
 				//}
 			}

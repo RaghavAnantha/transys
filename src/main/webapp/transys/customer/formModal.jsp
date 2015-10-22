@@ -8,8 +8,14 @@ $("#customerModalForm").submit(function (ev) {
         url: $this.attr('action'),
         data: $this.serialize(),
         success: function(responseData, textStatus, jqXHR) {
-        	var customer = jQuery.parseJSON(responseData);
-        	appendCustomer(customer);
+        	if (responseData.indexOf("ErrorMsg") >= 0 ) {
+        		displayPopupDialogErrorMessage(responseData);
+        	} else {
+        		var customer = jQuery.parseJSON(responseData);
+        		
+        		displayPopupDialogSuccessMessage("Customer saved successfully");
+        		appendCustomer(customer);
+        	}
         }
     });
     

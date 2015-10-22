@@ -533,12 +533,14 @@ function verifyExchangeOrderAndSubmit() {
 	<form:hidden path="id" id="id" />
 	<input type="hidden" name="isExchange" id="isExchange" value="false" />
 	<input type="hidden" name="existingDroppedOffOrderId" id="existingDroppedOffOrderId" value="" />
-	<%@include file="/common/messages.jsp"%>
+	<jsp:include page="/common/messages.jsp">
+		<jsp:param name="msgCtx" value="manageOrder" />
+	</jsp:include>
 	<table id="form-table" class="table">
 		<tr><td></td></tr>
 		<tr>
 			<td class="form-left">Order #<span class="errorMessage">*</span></td>
-			<td class="wide">${modelObject.id}</td>
+			<td class="wide td-static">${modelObject.id}</td>
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Customer" /><span class="errorMessage"></span></td>
@@ -1206,15 +1208,29 @@ $("#addPermitLink").click(function (ev) {
 		return false;
 	}
 	
-	var url = $(this).attr("href");
-	url += "?customerId=" + customerId 
-		+  "&deliveryAddressId=" + deliveryAddressId
-		+  "&locationTypeId=" + locationTypeId
-		+  "&permitClassId=" + permitClassId
-		+  "&permitTypeId=" + permitTypeId
-		+  "&deliveryDate=" + deliveryDate;
+	var orderId = $('#id').val();
 	
-	showPopupDialog("Add Permit", url);
+	$.ajax({
+  		url: "/permit/validatePermitCanBeAdded.do?orderId=" + orderId + "&deliveryAddressId=" + deliveryAddressId,
+       	type: "GET",
+       	success: function(responseData, textStatus, jqXHR) {
+    	   	var validationErrorMsg = jQuery.parseJSON(responseData);
+    	   	if (validationErrorMsg != "") {
+    	   		showAlertDialog("Order Permit Data Validation", validationErrorMsg);
+    	   		return false;
+    	   	}
+    	   	
+    	   	var url = $(this).attr("href");
+    		url += "?customerId=" + customerId 
+    			+  "&deliveryAddressId=" + deliveryAddressId
+    			+  "&locationTypeId=" + locationTypeId
+    			+  "&permitClassId=" + permitClassId
+    			+  "&permitTypeId=" + permitTypeId
+    			+  "&deliveryDate=" + deliveryDate;
+    		
+    		showPopupDialog("Add Permit", url);
+		}
+	});
 	
 	ev.preventDefault();
 });

@@ -44,7 +44,9 @@ function formatFax() {
 </script>
 <form:form action="save.do" name="customerForm" id="customerForm" commandName="modelObject" method="post">
 	<form:hidden path="id" id="id" />
-	<%@include file="/common/messages.jsp"%>
+	<jsp:include page="/common/messages.jsp">
+		<jsp:param name="msgCtx" value="manageCustomer" />
+	</jsp:include>
 	<table id="form-table" class="table">
 		<tr><td colspan="10"></td></tr>
 		<tr>

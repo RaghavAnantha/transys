@@ -305,7 +305,7 @@ public class PermitController extends CRUDController<Permit> {
 		List<BaseModel> orderPermitsForThisOrder = (List<BaseModel>)genericDAO.executeSimpleQuery("select obj from OrderPermits obj where obj.order.id=" +  orderPermitToBeEdited.getOrder().getId());
 		if (orderPermitsForThisOrder != null && orderPermitsForThisOrder.size() >= MAX_NUMBER_OF_ASSOCIATED_PERMITS) {
 			//do not create modal, show alert
-			model.addAttribute("error", "There are already " + MAX_NUMBER_OF_ASSOCIATED_PERMITS + " for this order.");
+			model.addAttribute("error", "There are already " + MAX_NUMBER_OF_ASSOCIATED_PERMITS + " permits for this order.");
 			return false;
 		}
 		
@@ -733,23 +733,34 @@ public class PermitController extends CRUDController<Permit> {
 		//return json;
 	}
 	
-	@RequestMapping(method = RequestMethod.GET, value = "/isPermitRequired")
-	public @ResponseBody String isPermitRequired(ModelMap model, HttpServletRequest request) {
-		String city = request.getParameter("city");
-		Boolean permitRequired = false;
+	@RequestMapping(method = RequestMethod.GET, value = "/validatePermitCanBeAdded")
+	public @ResponseBody String validatePermitCanBeAdded(ModelMap model, HttpServletRequest request,
+			@RequestParam(value = "orderId") Long orderId,
+			@RequestParam(value = "deliveryAddressId") Long deliveryAddressId) {
+		String validationErrorMsg = StringUtils.EMPTY;
 		
-		if (city.equalsIgnoreCase("Chicago")) {
-			permitRequired = true;
+		List<OrderPermits> orderPermitList = genericDAO.executeSimpleQuery("select obj from OrderPermits obj where obj.order.id=" + orderId);
+		if (orderPermitList != null && orderPermitList.size() == 3) {
+			validationErrorMsg = "There are already " + MAX_NUMBER_OF_ASSOCIATED_PERMITS + " permits for this order.";
+		}
+		
+		List<DeliveryAddress> deliveryAddressList = genericDAO.executeSimpleQuery("select obj from DeliveryAddress obj where obj.id=" + deliveryAddressId);
+		DeliveryAddress deliveryAddress = deliveryAddressList.get(0);
+		String city = deliveryAddress.getCity();
+		
+		if (!StringUtils.equalsIgnoreCase("Chicago", city)) {
+			validationErrorMsg += "\nPermits only required for Chicago delivery address.";
 		}
 		
 		ObjectMapper objectMapper = new ObjectMapper();
 		String json = StringUtils.EMPTY;
 		try {
-			json = objectMapper.writeValueAsString(permitRequired);
+			json = objectMapper.writeValueAsString(validationErrorMsg);
 		} catch (JsonProcessingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
 		return json;
 	}
 	

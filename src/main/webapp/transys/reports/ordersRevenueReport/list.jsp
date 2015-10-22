@@ -33,7 +33,6 @@
 			class="errorMessage"></span></td>
 		<td align="${left}" id="totalPermitFees">${totalPermitFees}</td>
 	</tr>
-
 	<tr>
 		<td class="form-left"><transys:label code="City Fees Total:" /><span
 			class="errorMessage"></span></td>
@@ -43,8 +42,7 @@
 		<td align="${left}" id="totalOverweightFees">${totalOverweightFees}</td>
 	</tr>
 	<tr>
-		<td class="form-left"><transys:label code="Total Fees:" /><span
-			class="errorMessage"></span></td>
+		<td class="form-left"><transys:label code="Total Fees:" /></td>
 		<td align="${left}" id="aggregatedTotalFees">${aggregatedTotalFees}</td>
 	</tr>
 </table>

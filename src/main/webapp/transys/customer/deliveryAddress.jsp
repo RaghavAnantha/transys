@@ -3,12 +3,14 @@
 <form:form id="editDeliveryAddressForm" action="saveDeliveryAddress.do" name="typeForm" commandName="deliveryAddressModelObject" method="post" >
 	<form:hidden path="id" />
 	<form:hidden path="customer.id" id="customerId" />
+	<jsp:include page="/common/messages.jsp">
+		<jsp:param name="msgCtx" value="manageCustomerDeliveryAddress" />
+	</jsp:include>
 	<table id="form-table" class="table customerDeliveryAddress">
 		<tr><td colspan=10></td></tr>
 		<tr>
 			<td class="form-left"><transys:label code="Customer ID" /><span class="errorMessage">*</span></td>
-			<td align="${left}">${deliveryAddressModelObject.customer.id}</td>
-			</td>
+			<td class="td-static">${deliveryAddressModelObject.customer.id}</td>
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Delivery Address #" /><span class="errorMessage">*</span></td>

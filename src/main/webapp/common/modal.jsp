@@ -17,8 +17,25 @@ function showPopupDialog(title, url) {
 	$("#popupDialog").modal('show');
 	$("#popupDialogTitle").html(title);
 	
+	$("#popupDialogErrorMessage").html("");
+	$("#popupDialogSuccessMessage").html("");
+	
 	$("#popupDialogBody").html("");
 	$("#popupDialogBody").load(url);
+}
+
+function displayPopupDialogErrorMessage(message) {
+	var errorMsgHtml = "<img src=\"${ctx}/images/iconWarning.gif\" alt=\"Warning\" class=\"icon\" />" 
+					 + "&nbsp;" 
+					 + message;
+	$("#popupDialogErrorMessage").html(errorMsgHtml);
+}
+
+function displayPopupDialogSuccessMessage(message) {
+	var successMsgHtml = "<img src=\"${ctx}/images/iconInformation.gif\" alt=\"Information\" class=\"icon\" />" 
+					   + "&nbsp;" 
+					   + message;
+	$("#popupDialogSuccessMessage").html(successMsgHtml);
 }
 </script>
 
@@ -57,7 +74,10 @@ function showPopupDialog(title, url) {
 		 	<div class="modal-header" id="popupDialogHeader">
         		<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
        			<h4 class="modal-title" id="popupDialogTitle">Title</h4>
-       			<div id="popupDialogValidations" style="color:red"></div>
+       			<div id="popupDialogMessage">
+       				<div id="popupDialogErrorMessage" style="color:red; font-size:14px; vertical-align:center;"></div>
+       				<div id="popupDialogSuccessMessage" style="color:green; font-size:14px; vertical-align:center;"></div>
+       			</div>
       		 </div>	
 			
 			<div class="modal-body" id="popupDialogBody"></div>
@@ -79,5 +99,7 @@ $("#confirmDialog").on("hidden.bs.modal", function(e) {
 $("#popupDialog").on("hidden.bs.modal", function(e) {
 	$("#popupDialogTitle").html("");
 	$("#popupDialogBody").html("");
+	$("#popupDialogErrorMessage").html("");
+	$("#popupDialogSuccessMessage").html("");
 });	
 </script>

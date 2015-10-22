@@ -485,6 +485,9 @@ public class OrderController extends CRUDController<Order> {
 		model.addAttribute("mode", "ADD");
 		model.addAttribute("activeSubTab", "dropOffDriver");
 		
+		model.addAttribute("msgCtx", "manageDropOffDriver");
+		model.addAttribute("msg", "Drop off driver saved successfully");
+		
 		Long orderId = entity.getId();
 		List<BaseModel> orderList = genericDAO.executeSimpleQuery("select obj from Order obj where obj.id=" + orderId);
 		model.addAttribute("modelObject", orderList.get(0));
@@ -586,6 +589,9 @@ public class OrderController extends CRUDController<Order> {
 		model.addAttribute("activeTab", "manageOrders");
 		model.addAttribute("mode", "ADD");
 		model.addAttribute("activeSubTab", "pickupDriver");
+		
+		model.addAttribute("msgCtx", "managePickupDriver");
+		model.addAttribute("msg", "Pickup driver saved successfully");
 		
 		Long orderId = entity.getId();
 		List<BaseModel> orderList = genericDAO.executeSimpleQuery("select obj from Order obj where obj.id=" + orderId);
@@ -1357,6 +1363,7 @@ public class OrderController extends CRUDController<Order> {
 	public String saveSuccess(ModelMap model, HttpServletRequest request, Order entity) {
 		setupCreate(model, request, entity);
 		
+		model.addAttribute("msgCtx", "manageOrder");
 		model.addAttribute("msg", "Order saved successfully");
 		
 		model.addAttribute("modelObject", entity);
