@@ -11,12 +11,16 @@
 </c:if>
 
 <%-- Success Messages --%>
-<c:if test="${not empty msg}">
-    <div class="message">
-        <c:forEach var="message" items="${msg}">
-            <img src="${ctx}/images/iconInformation.gif" alt="Information" class="icon" />
-            <c:out value="${message}" escapeXml="false"/><br />
-        </c:forEach>
-    </div>
-    <c:remove var="msg"/>
+<c:if test="${param.msgCtx == msgCtx}">
+	<c:if test="${not empty msgCtx}">
+	    <div class="message">
+	        <c:forEach var="message" items="${msg}">
+	            <img src="${ctx}/images/iconInformation.gif" alt="Information" class="icon" />
+	            <c:out value="${message}" escapeXml="false"/><br />
+	        </c:forEach>
+	    </div>
+	    <c:remove var="msg"/>
+	</c:if>
 </c:if>
+
+

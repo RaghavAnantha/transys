@@ -485,6 +485,9 @@ public class OrderController extends CRUDController<Order> {
 		model.addAttribute("mode", "ADD");
 		model.addAttribute("activeSubTab", "dropOffDriver");
 		
+		model.addAttribute("msgCtx", "dropOffDriver");
+		model.addAttribute("msg", "Drop off driver saved successfully");
+		
 		Long orderId = entity.getId();
 		List<BaseModel> orderList = genericDAO.executeSimpleQuery("select obj from Order obj where obj.id=" + orderId);
 		model.addAttribute("modelObject", orderList.get(0));
