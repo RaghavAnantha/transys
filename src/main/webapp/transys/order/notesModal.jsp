@@ -24,10 +24,11 @@ $("#orderNotesModalForm").submit(function (ev) {
 	<form:hidden path="id" id="id" />
 	<form:hidden path="order.id" id="order.id" />
 	<table id="form-table" class="table">
+		<tr><td class="form-left">Notes<span class="errorMessage">*</span></td></tr>
 		<tr>
 			<td colspan=10>
-				<form:textarea row="5" id="notesTabNotesModal" path="notes" cssClass="flat" style="width:100%;"/>
-				<br><form:errors path="notes" cssClass="errorMessage" />
+				<form:textarea row="10" id="notesTabNotesModal" path="notes" cssClass="flat" style="width:100%;height:100%;"/>
+				<form:errors path="notes" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr><td colspan="2"></td></tr>
