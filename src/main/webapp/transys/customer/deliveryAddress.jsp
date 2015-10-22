@@ -9,7 +9,7 @@
 	<table id="form-table" class="table customerDeliveryAddress">
 		<tr><td colspan=10></td></tr>
 		<tr>
-			<td class="form-left"><transys:label code="Customer ID" /><span class="errorMessage">*</span></td>
+			<td class="form-left"><transys:label code="Customer ID" /></td>
 			<td class="td-static">${deliveryAddressModelObject.customer.id}</td>
 		</tr>
 		<tr>

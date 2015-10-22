@@ -6,7 +6,7 @@ function populateDeliveryAddress() {
 	var deliveryAddressSelect = $('#deliveryAddressSelect');
 	deliveryAddressSelect.empty();
 	
-	var firstOption = $('<option value="">'+ "------Please Select--------" +'</option>');
+	var firstOption = $('<option value="">'+ "----Please Select----" +'</option>');
 	deliveryAddressSelect.append(firstOption);
 	
 	var customerId = $('#customerSelect').val();
@@ -66,14 +66,14 @@ $("#permitModalFromAlertForm").submit(function (ev) {
 	<table id="form-table" class="table">
 		<tr><td colspan="10"></td></tr>
 		<tr>
-			<td class="form-left">Permit Number<span class="errorMessage">*</span></td>
+			<td class="form-left">Permit Number</td>
 			<td class="wide">
 				<form:input path="number" cssClass="flat flat-ext" style="width: 175px" />
 			 	<br><form:errors path="number" cssClass="errorMessage" />
 			</td>
 			<td class="form-left"><transys:label code="Order Number" /></td>
 			<td>
-				<input value="${associatedOrderID.order.id}" class="form-control" style="width:175px;height:24px !important" readonly/>
+				<input value="${associatedOrderID.order.id}" class="form-control" style="width:175px;height:22px !important" readonly/>
 			</td>
 		</tr>
 		<tr>
@@ -115,10 +115,10 @@ $("#permitModalFromAlertForm").submit(function (ev) {
 			 	<form:errors path="permitClass.permitClass" cssClass="errorMessage" />
 			</td>
 			
-			<td class="form-left"><transys:label code="Permit Type" /></td>
+			<td class="form-left"><transys:label code="Permit Type" /><span class="errorMessage">*</span></td>
 			<td>
 				<form:select id="permitTypeSelect" cssClass="flat form-control input-sm" path="permitType" style="width: 175px !important" onChange="return populateEndDate();">
-					<form:option value="">------Please Select--------</form:option>
+					<form:option value="">----Please Select----</form:option>
 					<form:options items="${permitType}" itemValue="id" itemLabel="permitType" />
 				</form:select>
 			 	<form:errors path="permitType.permitType" cssClass="errorMessage" />
@@ -132,7 +132,7 @@ $("#permitModalFromAlertForm").submit(function (ev) {
 				<form:errors path="startDate" cssClass="errorMessage" />
 			<td class="form-left"><transys:label code="End Date" /></td>
 			<td>
-				<form:input id="endDateInputPopUp" path="endDate" cssClass="flat flat-ext form-control" style="width:175px;height:24px !important" readonly="true" />
+				<form:input id="endDateInputPopUp" path="endDate" cssClass="flat flat-ext form-control" style="width:175px;height:22px !important" readonly="true" />
 			 </td>
 		</tr>
 		<tr>
@@ -141,7 +141,7 @@ $("#permitModalFromAlertForm").submit(function (ev) {
 				<form:input path="parkingMeter" cssClass="flat flat-ext" style="width: 175px"  />
 			 	<br><form:errors path="parkingMeter" cssClass="errorMessage" />
 			</td>
-			<td class="form-left"><transys:label code="Parking Meter Fee" /><span class="errorMessage">*</span></td>
+			<td class="form-left"><transys:label code="Parking Meter Fee" /></td>
 			<td>
 				<form:input path="parkingMeterFee" cssClass="flat flat-ext" style="width: 175px"  />
 			 	<br><form:errors path="parkingMeterFee" cssClass="errorMessage" />
