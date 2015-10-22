@@ -4,7 +4,7 @@
 	<form:hidden path="customer.id" id="customerId" />
 	<table id="form-table" class="table delivery">
 		<tr>
-			<td class="form-left"><transys:label code="Customer ID" /><span class="errorMessage">*</span></td>
+			<td class="form-left"><transys:label code="Customer ID" /></td>
 			<td class="td-static">${deliveryAddressModelObject.customer.id}</td>
 		</tr>
 		<tr>
