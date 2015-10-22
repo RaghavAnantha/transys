@@ -38,7 +38,10 @@ textarea {
 }
 
 .form-control-ext {
-	width: 172px;
+	width: 172px !important;
+	height:22px;
+	padding: 0px 0px;
+	font-size: 13px;
 }
 
 .hr-ext {
