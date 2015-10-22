@@ -17,7 +17,7 @@
 			</td>
 		</tr>
 		<tr>
-			<td class="form-left"><transys:label code="Dumpster #" /><span class="errorMessage"></span></td>
+			<td class="form-left"><transys:label code="Dumpster #" /><span class="errorMessage">*</span></td>
 			<td>
 				<form:select id="dumpsterNum" cssClass="flat form-control input-sm" path="dumpster" style="width:172px !important">
 					<form:option value="">-----Please Select-----</form:option>
@@ -27,7 +27,7 @@
 			</td>
 		</tr>
 		<tr>
-			<td class="form-left"><transys:label code="Check #"/><span class="errorMessage">*</span></td>
+			<td class="form-left"><transys:label code="Check #"/></td>
 			<td>
 				<form:input path="orderPayment[0].checkNum" cssClass="flat" style="width:172px !important"/>
 				<form:errors path="orderPayment[0].checkNum" cssClass="errorMessage" />

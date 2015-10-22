@@ -14,7 +14,7 @@
 			</td>
 		</tr>
 		<tr>
-			<td class="form-left"><transys:label code="Pickup Driver" /><span class="errorMessage"></span></td>
+			<td class="form-left"><transys:label code="Pickup Driver" /><span class="errorMessage">*</span></td>
 			<td>
 				<form:select id="pickupDriver" cssClass="flat form-control input-sm" style="width:172px !important" path="pickupDriver"> 
 					<form:option value="">-----Please Select-----</form:option>
@@ -24,7 +24,7 @@
 			</td>
 		</tr>
 		<tr>
-			<td class="form-left"><transys:label code="Check #"/><span class="errorMessage">*</span></td>
+			<td class="form-left"><transys:label code="Check #"/></td>
 			<td>
 				<form:input path="orderPayment[0].checkNum" cssClass="flat" style="width:172px !important"/>
 				<br><form:errors path="orderPayment[0].checkNum" cssClass="errorMessage" />
