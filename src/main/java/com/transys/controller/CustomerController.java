@@ -150,6 +150,7 @@ public class CustomerController extends CRUDController<Customer> {
 	public String saveSuccess(ModelMap model, HttpServletRequest request, Customer entity) {
 		setupCreate(model, request);
 		
+		model.addAttribute("msgCtx", "manageCustomer");
 		model.addAttribute("msg", "Customer saved successfully");
 		
 		model.addAttribute("modelObject", entity);
@@ -649,6 +650,9 @@ public class CustomerController extends CRUDController<Customer> {
 		model.addAttribute("activeTab", "manageCustomer");
 		model.addAttribute("activeSubTab", "delivery");
 		model.addAttribute("mode", "ADD");
+		
+		model.addAttribute("msgCtx", "manageCustomerDeliveryAddress");
+		model.addAttribute("msg", "Delivery address saved successfully");
 		
 		//return urlContext + "/form";
 		return urlContext + "/customer";

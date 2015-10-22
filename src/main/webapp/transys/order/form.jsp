@@ -540,7 +540,7 @@ function verifyExchangeOrderAndSubmit() {
 		<tr><td></td></tr>
 		<tr>
 			<td class="form-left">Order #<span class="errorMessage">*</span></td>
-			<td class="wide">${modelObject.id}</td>
+			<td class="wide td-static">${modelObject.id}</td>
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Customer" /><span class="errorMessage"></span></td>
