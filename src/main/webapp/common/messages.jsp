@@ -1,13 +1,15 @@
 <%@ include file="/common/taglibs.jsp"%>
 <%-- Error Messages --%>
-<c:if test="${not empty error}">
-    <div class="error">
-        <c:forEach var="error" items="${error}">
-			<img src="${ctx}/images/iconWarning.gif" alt="Warning" class="icon" />
-			<blink><c:out value="${error}" escapeXml="false"/></blink><br />
-        </c:forEach>
-    </div>
-    <c:remove var="error"/>
+<c:if test="${param.errorCtx == errorCtx}">
+	<c:if test="${not empty error}">
+	    <div class="error">
+	        <c:forEach var="error" items="${error}">
+				<img src="${ctx}/images/iconWarning.gif" alt="Warning" class="icon" />
+				<c:out value="${error}" escapeXml="false"/><br />
+	        </c:forEach>
+	    </div>
+	    <c:remove var="error"/>
+	</c:if>
 </c:if>
 
 <%-- Success Messages --%>

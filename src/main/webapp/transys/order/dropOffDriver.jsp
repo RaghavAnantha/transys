@@ -2,7 +2,7 @@
 <form:form action="saveDropOffDriver.do" name="saveDropOffDriverForm" commandName="modelObject" method="post" id="saveDropOffDriverForm">
 	<form:hidden path="id" id="id" />
 	<jsp:include page="/common/messages.jsp">
-		<jsp:param name="msgCtx" value="dropOffDriver" />
+		<jsp:param name="msgCtx" value="manageDropOffDriver" />
 	</jsp:include>
 	<table id="form-table" class="table">
 		<tr><td colspan="10"></td></tr>

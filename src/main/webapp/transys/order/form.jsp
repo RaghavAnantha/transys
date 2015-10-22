@@ -533,7 +533,9 @@ function verifyExchangeOrderAndSubmit() {
 	<form:hidden path="id" id="id" />
 	<input type="hidden" name="isExchange" id="isExchange" value="false" />
 	<input type="hidden" name="existingDroppedOffOrderId" id="existingDroppedOffOrderId" value="" />
-	<%@include file="/common/messages.jsp"%>
+	<jsp:include page="/common/messages.jsp">
+		<jsp:param name="msgCtx" value="manageOrder" />
+	</jsp:include>
 	<table id="form-table" class="table">
 		<tr><td></td></tr>
 		<tr>
