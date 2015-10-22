@@ -49,7 +49,12 @@ $("#permitModalFromAlertForm").submit(function (ev) {
         url: $this.attr('action'),
         data: $this.serialize(),
         success: function(responseData, textStatus, jqXHR) {
-        	var permit = jQuery.parseJSON(responseData);
+        	if (responseData.indexOf("ErrorMsg") >= 0 ) {
+        		displayPermitModalErrorMessage(responseData);
+        	} else {
+        		var permit = jQuery.parseJSON(responseData);
+        		displayPermitModalSuccessMessage("Permit saved successfully");
+        	}
         }
     });
     

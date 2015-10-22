@@ -26,16 +26,16 @@ function showPopupDialog(title, url) {
 
 function displayPopupDialogErrorMessage(message) {
 	var errorMsgHtml = "<img src=\"${ctx}/images/iconWarning.gif\" alt=\"Warning\" class=\"icon\" />" 
-					   + "&nbsp;" 
-					   + message;
+					 + "&nbsp;" 
+					 + message;
 	$("#popupDialogErrorMessage").html(errorMsgHtml);
 }
 
 function displayPopupDialogSuccessMessage(message) {
-	var errorMsgHtml = "<img src=\"${ctx}/images/iconInformation.gif\" alt=\"Information\" class=\"icon\" />" 
+	var successMsgHtml = "<img src=\"${ctx}/images/iconInformation.gif\" alt=\"Information\" class=\"icon\" />" 
 					   + "&nbsp;" 
 					   + message;
-	$("#popupDialogSuccessMessage").html(errorMsgHtml);
+	$("#popupDialogSuccessMessage").html(successMsgHtml);
 }
 </script>
 

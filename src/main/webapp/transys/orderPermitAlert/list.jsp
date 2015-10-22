@@ -159,7 +159,11 @@
 		 	<div class="modal-header">
         		<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
        			<h4 class="modal-title">Add New Permit</h4>
-       			<!-- <div id="permitValidations" style="color:red"></div> -->
+       			<div id="permitModalMessages">
+       				<div id="permitModalErrorMessage" style="color:red; font-size:14px; vertical-align:center;"></div>
+       				<div id="permitModalSuccessMessage" style="color:green; font-size:14px; vertical-align:center;"></div>
+       			</div>
+       			
       		 </div>	
 			<div class="modal-body" id="addNewPermitModalBody"></div>
 		</div>
@@ -200,13 +204,43 @@ $("#orderPermitsAlertSearchForm").submit(function (ev) {
 });
 
 $("#addNewPermitModal").on("show.bs.modal", function(e) {
+	$("#addNewPermitModalBody").html("");
+	$("#permitModalErrorMessage").html("");
+	$("#permitModalSuccessMessage").html("");
+	
     var link = $(e.relatedTarget).attr("href");
     $(this).find("#addNewPermitModalBody").load(link);
 });
 
 $("#addOrderNotesModal").on("show.bs.modal", function(e) {
+	$("#addOrderNotesModalBody").html("");
+	
     var link = $(e.relatedTarget).attr("href");
     $(this).find("#addOrderNotesModalBody").load(link);
 });
+
+$("#addNewPermitModal").on("hidden.bs.modal", function(e) {
+	$("#addNewPermitModalBody").html("");
+	$("#permitModalErrorMessage").html("");
+	$("#permitModalSuccessMessage").html("");
+});
+
+$("#addOrderNotesModal").on("hidden.bs.modal", function(e) {
+	$("#addOrderNotesModalBody").html("");
+});
+
+function displayPermitModalErrorMessage(message) {
+	var errorMsgHtml = "<img src=\"${ctx}/images/iconWarning.gif\" alt=\"Warning\" class=\"icon\" />" 
+					 + "&nbsp;" 
+					 + message;
+	$("#permitModalErrorMessage").html(errorMsgHtml);
+}
+
+function displayPermitModalSuccessMessage(message) {
+	var successMsgHtml = "<img src=\"${ctx}/images/iconInformation.gif\" alt=\"Information\" class=\"icon\" />" 
+					   + "&nbsp;" 
+					   + message;
+	$("#permitModalSuccessMessage").html(successMsgHtml);
+}
 </script>
 
