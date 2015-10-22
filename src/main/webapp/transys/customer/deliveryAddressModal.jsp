@@ -5,7 +5,7 @@
 	<table id="form-table" class="table delivery">
 		<tr>
 			<td class="form-left"><transys:label code="Customer ID" /><span class="errorMessage">*</span></td>
-			<td align="${left}">${deliveryAddressModelObject.customer.id}</td>
+			<td class="td-static">${deliveryAddressModelObject.customer.id}</td>
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Delivery Address #" /><span class="errorMessage">*</span></td>
@@ -32,7 +32,7 @@
 			<td class="form-left"><transys:label code="State" /><span class="errorMessage">*</span></td>
 			<td align="${left}">
 				<form:select cssClass="flat form-control input-sm" style="width: 174px !important" path="state" onchange="checkVal(this.id)">
-					<form:option value="">------Please Select--------</form:option>
+					<form:option value="">----Please Select----</form:option>
 					<form:options items="${state}" itemValue="id" itemLabel="name" />
 				</form:select> 
 				<form:errors path="state" cssClass="errorMessage" />
@@ -92,8 +92,14 @@ $("#deliveryAddressModalForm").submit(function (ev) {
         url: $this.attr('action'),
         data: $this.serialize(),
         success: function(responseData, textStatus, jqXHR) {
-        	var address = jQuery.parseJSON(responseData);
-        	appendDeliveryAddress(address);
+        	if (responseData.indexOf("ErrorMsg") >= 0 ) {
+        		displayPopupDialogErrorMessage(responseData);
+        	} else {
+        		var address = jQuery.parseJSON(responseData);
+        		
+        		displayPopupDialogSuccessMessage("Delivery address saved successfully");
+        		appendDeliveryAddress(address);
+        	}
         }
     });
     

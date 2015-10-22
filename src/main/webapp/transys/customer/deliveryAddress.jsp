@@ -10,8 +10,7 @@
 		<tr><td colspan=10></td></tr>
 		<tr>
 			<td class="form-left"><transys:label code="Customer ID" /><span class="errorMessage">*</span></td>
-			<td align="${left}">${deliveryAddressModelObject.customer.id}</td>
-			</td>
+			<td class="td-static">${deliveryAddressModelObject.customer.id}</td>
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Delivery Address #" /><span class="errorMessage">*</span></td>

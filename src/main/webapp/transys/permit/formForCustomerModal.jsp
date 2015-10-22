@@ -28,8 +28,14 @@ $("#permitForCustomerModalForm").submit(function (ev) {
         url: $this.attr('action'),
         data: $this.serialize(),
         success: function(responseData, textStatus, jqXHR) {
-        	var permit = jQuery.parseJSON(responseData);
-        	appendPermit(permit);
+        	if (responseData.indexOf("ErrorMsg") >= 0 ) {
+        		displayPopupDialogErrorMessage(responseData);
+        	} else {
+        		var permit = jQuery.parseJSON(responseData);
+        		
+        		displayPopupDialogSuccessMessage("Permit saved successfully");
+        		appendPermit(permit);
+        	}
         }
     });
     
