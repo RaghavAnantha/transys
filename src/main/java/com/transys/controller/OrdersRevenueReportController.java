@@ -139,37 +139,41 @@ public class OrdersRevenueReportController extends CRUDController<Order> {
 		for (Order anOrder : orderList) {
 			DeliveryAddress deliveryAddress = anOrder.getDeliveryAddress();
 			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("id", StringUtils.EMPTY + anOrder.getId().toString());
-			map.put("customer", StringUtils.EMPTY + anOrder.getCustomer().getCompanyName());
-			map.put("deliveryAddress", StringUtils.EMPTY + deliveryAddress.getFullLine());
-			map.put("city", StringUtils.EMPTY + deliveryAddress.getCity());
+			map.put("id", StringUtils.defaultIfEmpty(anOrder.getId().toString(),StringUtils.EMPTY));
+			map.put("customer", StringUtils.defaultIfEmpty(anOrder.getCustomer().getCompanyName(),StringUtils.EMPTY));
+			map.put("deliveryAddress", StringUtils.defaultIfEmpty(deliveryAddress.getFullLine(),StringUtils.EMPTY));
+			map.put("city", StringUtils.defaultIfEmpty(deliveryAddress.getCity(),StringUtils.EMPTY));
 			
 			List<OrderPayment> orderPaymentList = anOrder.getOrderPayment();
 			if (orderPaymentList != null && !orderPaymentList.isEmpty()) {
 				OrderPayment anOrderPayment = orderPaymentList.get(0);
 				map.put("paymentMethod", StringUtils.defaultIfEmpty(anOrderPayment.getPaymentMethod().getMethod(), StringUtils.EMPTY));
-				map.put("checkNum", StringUtils.EMPTY + anOrderPayment.getCheckNum());
-				map.put("ccReferenceNum", StringUtils.EMPTY + anOrderPayment.getCcReferenceNum());
+				map.put("checkNum", StringUtils.defaultIfEmpty(anOrderPayment.getCheckNum(),StringUtils.EMPTY));
+				map.put("ccReferenceNum", StringUtils.defaultIfEmpty(anOrderPayment.getCcReferenceNum(),StringUtils.EMPTY));
 			}
 			
 			OrderFees anOrderFees = anOrder.getOrderFees();
 			if (anOrderFees != null) {
 				map.put("dumpsterPrice", StringUtils.EMPTY + anOrderFees.getDumpsterPrice());
-				map.put("cityFee", StringUtils.EMPTY + anOrderFees.getCityFee());
-				map.put("permitFees", StringUtils.EMPTY + anOrderFees.getPermitFee1());
-				map.put("overweightFee", StringUtils.EMPTY + anOrderFees.getOverweightFee());
-				map.put("additionalFee", StringUtils.EMPTY + anOrderFees.getAdditionalFee1());
-				map.put("totalFees", StringUtils.EMPTY + anOrderFees.getTotalFees());
+				map.put("cityFee", StringUtils.EMPTY  + anOrderFees.getCityFee());
+				map.put("permitFees1", StringUtils.EMPTY + anOrderFees.getPermitFee1());
+				map.put("permitFees2", StringUtils.EMPTY + anOrderFees.getPermitFee2());
+				map.put("permitFees3", StringUtils.EMPTY + anOrderFees.getPermitFee3());
+				map.put("overweightFee", StringUtils.EMPTY + anOrderFees.getOverweightFee() );
+				map.put("additionalFee1", anOrderFees.getAdditionalFee1() == null? StringUtils.EMPTY : anOrderFees.getAdditionalFee1());
+				map.put("additionalFee2", anOrderFees.getAdditionalFee2() == null? StringUtils.EMPTY : anOrderFees.getAdditionalFee2());
+				map.put("additionalFee3",  anOrderFees.getAdditionalFee3() == null? StringUtils.EMPTY : anOrderFees.getAdditionalFee3());
+				map.put("totalFees",  StringUtils.EMPTY + anOrderFees.getTotalFees());
 			}
 			
-			map.put("orderDateFrom", "" + criteria.getSearchMap().get("createdAtFrom"));
-			map.put("orderDateTo", "" + criteria.getSearchMap().get("createdAtTo"));
+			map.put("orderDateFrom",(criteria.getSearchMap().get("createdAtFrom") == null ? StringUtils.EMPTY : criteria.getSearchMap().get("createdAtFrom")));
+			map.put("orderDateTo", (criteria.getSearchMap().get("createdAtTo") == null ? StringUtils.EMPTY : criteria.getSearchMap().get("createdAtTo")));
 			
-			map.put("totalDumpsterPrice", "$" + aggregationValues[0]);
-			map.put("totalPermitFees", "$" + aggregationValues[1]);
-			map.put("totalCityFees", "$" + aggregationValues[2]);
-			map.put("totalOverweightFees", "$" + aggregationValues[3]);
-			map.put("aggregateTotalFees", "$" + aggregationValues[4]);
+			map.put("totalDumpsterPrice", "$ " + aggregationValues[0]);
+			map.put("totalPermitFees", "$ " + aggregationValues[1]);
+			map.put("totalCityFees", "$ " + aggregationValues[2]);
+			map.put("totalOverweightFees", "$ " + aggregationValues[3]);
+			map.put("aggregateTotalFees", "$ " + aggregationValues[4]);
 			
 			//System.out.println(new Gson().toJson(map));
 			ObjectMapper objectMapper = new ObjectMapper();
