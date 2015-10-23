@@ -84,7 +84,11 @@ function formatFax() {
 				<form:errors path="chargeCompany" cssClass="errorMessage" />
 			</td>
 			<td class="form-left">Total Orders</td>
-			<td class="td-static"></td>
+			<td class="td-static">
+				<c:if test="${totalOrders != null}">
+					${totalOrders}
+				</c:if>
+			</td>
 		</tr>
 		<tr>
 			<td class="form-left">Status<span class="errorMessage">*</span></td>
@@ -96,7 +100,11 @@ function formatFax() {
 				<form:errors path="customerStatus" cssClass="errorMessage" />
 			</td> 
 			<td class="form-left"><transys:label code="Last Delivery" /></td>
-			<td class="td-static"></td>
+			<td class="td-static">
+				<c:if test="${formattedDeliveryDate != null}">
+					${formattedDeliveryDate}
+				</c:if>
+			</td>
 		</tr>
 		<tr>
 			<td colspan=10></td>

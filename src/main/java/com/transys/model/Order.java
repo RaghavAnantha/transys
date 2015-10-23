@@ -1,6 +1,7 @@
 package com.transys.model;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -16,6 +17,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
+
+import org.apache.commons.lang3.StringUtils;
 
 @Entity
 @Table(name="transysOrder")
@@ -293,6 +296,16 @@ public class Order extends AbstractBaseModel {
 
 	public Date getDeliveryDate() {
 		return deliveryDate;
+	}
+	
+	@Transient
+	public String getFormattedDeliveryDate() {
+		if (deliveryDate == null) {
+			return StringUtils.EMPTY;
+		}
+		
+		SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+		return dateFormat.format(deliveryDate);
 	}
 
 	public void setDeliveryDate(Date deliveryDate) {

@@ -176,6 +176,9 @@ public class CustomerController extends CRUDController<Customer> {
 		model.addAttribute("deliveryAddressModelObject", address);
 		List<BaseModel> addressList = genericDAO.executeSimpleQuery("select obj from DeliveryAddress obj where obj.customer.id=" +  customerId + " order by obj.id asc");
 		model.addAttribute("deliveryAddressList", addressList);
+		
+		populateAggregartionValues(model, customerId);
+		
 		//return urlContext + "/form";
 		return urlContext + "/customer";
 	}
@@ -339,8 +342,28 @@ public class CustomerController extends CRUDController<Customer> {
 		List<BaseModel> addressList = genericDAO.executeSimpleQuery("select obj from DeliveryAddress obj where obj.customer.id=" +  customerId + " order by obj.id asc");
 		model.addAttribute("deliveryAddressList", addressList);
 		
+		populateAggregartionValues(model, customerId);
+		
 		//return urlContext + "/form";
 		return urlContext + "/customer";
+	}
+	
+	private void populateAggregartionValues(ModelMap model, Long customerId) {
+		String orderQuery = "select obj from Order obj where"
+								+ " obj.customer.id=" +  customerId + " order by obj.id desc";
+		List<Order> orderList = genericDAO.executeSimpleQuery(orderQuery);
+		Integer totalOrders = orderList.size();
+		
+		String lastDeliveryDate = StringUtils.EMPTY;
+		for (Order anOrder : orderList) {
+			if (anOrder.getDeliveryDate() != null) {
+				lastDeliveryDate = anOrder.getFormattedDeliveryDate();
+				break;
+			}
+		}
+		
+		model.addAttribute("totalOrders", totalOrders);
+		model.addAttribute("lastDeliveryDate", lastDeliveryDate);
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/main.do")
@@ -519,8 +542,11 @@ public class CustomerController extends CRUDController<Customer> {
 		DeliveryAddress address = new DeliveryAddress();
 		address.setCustomer(customer);
 		model.addAttribute("deliveryAddressModelObject", address);
+		
 		List<BaseModel> addressList = genericDAO.executeSimpleQuery("select obj from DeliveryAddress obj where obj.customer.id=" +  customerId + " order by obj.id asc");
 		model.addAttribute("deliveryAddressList", addressList);
+		
+		populateAggregartionValues(model, customerId);
 		
 		return urlContext + "/customer";
 	}
@@ -646,6 +672,8 @@ public class CustomerController extends CRUDController<Customer> {
 		
 		List<BaseModel> addressList = genericDAO.executeSimpleQuery("select obj from DeliveryAddress obj where obj.customer.id=" +  customerId + " order by obj.id asc");
 		model.addAttribute("deliveryAddressList", addressList);
+		
+		populateAggregartionValues(model, customerId);
 		
 		model.addAttribute("activeTab", "manageCustomer");
 		model.addAttribute("activeSubTab", "delivery");
