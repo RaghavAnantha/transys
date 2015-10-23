@@ -83,7 +83,8 @@
 </form:form>
 
 <hr class="hr-ext">
-<table class="table" id="form-table"> 	
+<table class="table" id="form-table"> 
+	<tr><td colspan=10></td><td colspan=10></td></tr>	
 	<tr>
 		<td class="form-left">Order Date Range:</td>
 		<td class="wide td-static" id="orderDateRange">${orderDateFrom} To ${orderDateTo}</td>
