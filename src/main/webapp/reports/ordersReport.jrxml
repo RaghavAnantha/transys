@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
-<!-- 2015-10-23T19:43:02 -->
+<!-- 2015-10-23T21:42:24 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="orderReports" pageWidth="1210" pageHeight="555" orientation="Landscape" columnWidth="401" leftMargin="3" rightMargin="3" topMargin="0" bottomMargin="0" uuid="1c66690f-01f1-4b96-ab51-00f1d62e1ce2">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
-	<parameter name="SUBREPORT_DIR" class="Java.io.File" isForPrompting="false">
-		<defaultValueExpression><![CDATA["/Users/mbharatlal/"]]></defaultValueExpression>
-	</parameter>
 	<field name="id" class="java.lang.Long"/>
 	<field name="customer" class="java.lang.String"/>
 	<field name="deliveryContactName" class="java.lang.String"/>
@@ -26,6 +23,8 @@
 	<field name="totalFees" class="java.lang.String"/>
 	<field name="orderDateFrom" class="java.lang.String"/>
 	<field name="orderDateTo" class="java.lang.String"/>
+	<field name="totalPaid" class="java.lang.String"/>
+	<field name="balanceDue" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -39,35 +38,35 @@
 				<text><![CDATA[Orders Report]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Transparent" x="41" y="60" width="143" height="39" uuid="67ed55ae-247c-4d0f-86b3-b71bf5cfa5ce"/>
+				<reportElement mode="Transparent" x="12" y="60" width="143" height="39" uuid="67ed55ae-247c-4d0f-86b3-b71bf5cfa5ce"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font isBold="true" isItalic="false"/>
 				</textElement>
 				<text><![CDATA[Order Data Range From]]></text>
 			</staticText>
 			<textField>
-				<reportElement mode="Transparent" x="184" y="60" width="131" height="39" uuid="c45089e0-8d08-46d3-9aa9-2d631dd2fbad"/>
+				<reportElement mode="Transparent" x="155" y="60" width="131" height="39" uuid="c45089e0-8d08-46d3-9aa9-2d631dd2fbad"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font isBold="true" isItalic="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{orderDateFrom}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement mode="Transparent" x="315" y="60" width="21" height="39" uuid="1de03d6b-7b8b-4eed-99be-938ef9c315d3"/>
+				<reportElement mode="Transparent" x="286" y="60" width="21" height="39" uuid="1de03d6b-7b8b-4eed-99be-938ef9c315d3"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font isBold="true" isItalic="false"/>
 				</textElement>
 				<text><![CDATA[To]]></text>
 			</staticText>
 			<textField pattern="dd/MM/yyyy">
-				<reportElement x="1003" y="21" width="164" height="20" uuid="b8204582-f19e-4cdf-bcb4-75fba1091240"/>
+				<reportElement x="1097" y="21" width="108" height="20" uuid="b8204582-f19e-4cdf-bcb4-75fba1091240"/>
 				<textElement>
 					<font isItalic="true" isUnderline="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="336" y="60" width="100" height="39" uuid="21ce6dd4-e045-426a-b5ad-45251462bbec">
+				<reportElement x="307" y="60" width="100" height="39" uuid="21ce6dd4-e045-426a-b5ad-45251462bbec">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
@@ -81,190 +80,232 @@
 		<band splitType="Stretch"/>
 	</pageHeader>
 	<columnHeader>
-		<band height="21" splitType="Stretch">
+		<band height="26" splitType="Stretch">
 			<staticText>
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="41" y="1" width="51" height="20" backcolor="#CCCCFF" uuid="5b4f71e8-58d1-4fa7-8ca0-0a4f7c9145ce"/>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="8" y="1" width="51" height="20" backcolor="#CCCCFF" uuid="5b4f71e8-58d1-4fa7-8ca0-0a4f7c9145ce"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font isBold="true"/>
 				</textElement>
 				<text><![CDATA[Order #]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="226" y="1" width="89" height="20" backcolor="#CCCCFF" uuid="462418b9-ddc8-4a65-9dda-b6da3ae15a5a"/>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="192" y="1" width="89" height="20" backcolor="#CCCCFF" uuid="462418b9-ddc8-4a65-9dda-b6da3ae15a5a"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font isBold="true" isStrikeThrough="false"/>
 				</textElement>
 				<text><![CDATA[Phone]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="315" y="1" width="100" height="20" backcolor="#CCCCFF" uuid="522443ed-1ef0-4239-8a29-325d79fa9ed3"/>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="281" y="1" width="100" height="20" backcolor="#CCCCFF" uuid="522443ed-1ef0-4239-8a29-325d79fa9ed3"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font isBold="true" isStrikeThrough="false"/>
 				</textElement>
-				<text><![CDATA[Delivery Address]]></text>
+				<text><![CDATA[Del Adds]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="415" y="1" width="72" height="20" backcolor="#CCCCFF" uuid="9ef44617-dbef-4049-bba3-9830b207d37f"/>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="381" y="1" width="72" height="20" backcolor="#CCCCFF" uuid="9ef44617-dbef-4049-bba3-9830b207d37f"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font isBold="true" isStrikeThrough="false"/>
 				</textElement>
 				<text><![CDATA[City]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="549" y="1" width="100" height="20" backcolor="#CCCCFF" uuid="b0ebf467-fc6b-4fc2-a91a-cb7e9880a9b7"/>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="514" y="1" width="81" height="20" backcolor="#CCCCFF" uuid="b0ebf467-fc6b-4fc2-a91a-cb7e9880a9b7"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font isBold="true" isStrikeThrough="false"/>
 				</textElement>
-				<text><![CDATA[Delivery Date]]></text>
+				<text><![CDATA[Del Date]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="649" y="1" width="102" height="20" backcolor="#CCCCFF" uuid="6d9b14a3-0cfe-449c-8d3c-8f98c501aa80"/>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="595" y="1" width="81" height="20" backcolor="#CCCCFF" uuid="6d9b14a3-0cfe-449c-8d3c-8f98c501aa80"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font isBold="true" isStrikeThrough="false"/>
 				</textElement>
 				<text><![CDATA[Pickup Date]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="750" y="1" width="87" height="20" backcolor="#CCCCFF" uuid="080229b7-2d66-446b-880a-664bb35cadac"/>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="676" y="1" width="87" height="20" backcolor="#CCCCFF" uuid="080229b7-2d66-446b-880a-664bb35cadac"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font isBold="true" isStrikeThrough="false"/>
 				</textElement>
-				<text><![CDATA[Dumpster Price]]></text>
+				<text><![CDATA[Dmpstr Price]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="898" y="1" width="61" height="20" backcolor="#CCCCFF" uuid="88fe29f0-44d9-45b2-847d-85fadef216ad"/>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="824" y="1" width="61" height="20" backcolor="#CCCCFF" uuid="88fe29f0-44d9-45b2-847d-85fadef216ad"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font isBold="true" isStrikeThrough="false"/>
 				</textElement>
 				<text><![CDATA[City Fee]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="959" y="1" width="65" height="20" backcolor="#CCCCFF" uuid="14cfa8a0-ce36-4b68-bb64-840ce898515a"/>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="885" y="1" width="65" height="20" backcolor="#CCCCFF" uuid="14cfa8a0-ce36-4b68-bb64-840ce898515a"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font isBold="true" isStrikeThrough="false"/>
 				</textElement>
 				<text><![CDATA[Permit Fees]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="1024" y="1" width="74" height="20" backcolor="#CCCCFF" uuid="ddc10899-6952-4338-8264-bb9192ff6a4e"/>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="950" y="1" width="74" height="20" backcolor="#CCCCFF" uuid="ddc10899-6952-4338-8264-bb9192ff6a4e"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font isBold="true" isStrikeThrough="false"/>
 				</textElement>
 				<text><![CDATA[Ovr. wt Fee]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="157" y="1" width="69" height="20" backcolor="#CCCCFF" uuid="d340982d-c4a4-46f8-9eb4-fba52cbef1c2"/>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="123" y="1" width="69" height="20" backcolor="#CCCCFF" uuid="d340982d-c4a4-46f8-9eb4-fba52cbef1c2"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font isBold="true" isStrikeThrough="false"/>
 				</textElement>
 				<text><![CDATA[Contact Name]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="92" y="1" width="65" height="20" backcolor="#CCCCFF" uuid="6e6246f8-29f0-4c58-8e77-e5a4d45d8de1"/>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="58" y="1" width="65" height="20" backcolor="#CCCCFF" uuid="6e6246f8-29f0-4c58-8e77-e5a4d45d8de1"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font isBold="true" isStrikeThrough="false"/>
 				</textElement>
 				<text><![CDATA[Customer]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="837" y="1" width="61" height="20" backcolor="#CCCCFF" uuid="212f4d74-0f8f-4de9-9543-378343ea7c4a"/>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="763" y="1" width="61" height="20" backcolor="#CCCCFF" uuid="212f4d74-0f8f-4de9-9543-378343ea7c4a"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font isBold="true" isStrikeThrough="false"/>
 				</textElement>
 				<text><![CDATA[Addnl Fees]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="1098" y="1" width="68" height="20" backcolor="#CCCCFF" uuid="9c42da70-ca7e-4c7e-ba0b-f129ae848a34"/>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="1024" y="1" width="58" height="20" backcolor="#CCCCFF" uuid="9c42da70-ca7e-4c7e-ba0b-f129ae848a34">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font isBold="true" isStrikeThrough="false"/>
 				</textElement>
 				<text><![CDATA[Total Fees]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="487" y="1" width="62" height="20" backcolor="#CCCCFF" uuid="bff756c9-df0c-4cc6-9e8d-033ad86c655a"/>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="453" y="1" width="62" height="20" backcolor="#CCCCFF" uuid="bff756c9-df0c-4cc6-9e8d-033ad86c655a"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font isBold="true" isStrikeThrough="false"/>
 				</textElement>
 				<text><![CDATA[Status]]></text>
 			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="1082" y="1" width="58" height="20" backcolor="#CCCCFF" uuid="0394d99e-8047-47ed-9f7f-bb2af9cee07b">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Paid]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="1140" y="1" width="58" height="20" backcolor="#CCCCFF" uuid="a2c9ae8e-3691-4b61-a661-771b8d048cbe">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Balance]]></text>
+			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="21" splitType="Stretch">
+		<band height="160" splitType="Stretch">
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="899" y="1" width="61" height="20" backcolor="#FFFFFF" uuid="8d16551e-1508-4583-9d29-633aa3a18b52"/>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="826" y="-4" width="61" height="20" backcolor="#FFFFFF" uuid="8d16551e-1508-4583-9d29-633aa3a18b52"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{cityFee}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="838" y="1" width="61" height="20" backcolor="#FFFFFF" uuid="7925ff30-fd27-4b73-9452-efd2b21d13ee"/>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="765" y="-4" width="61" height="20" backcolor="#FFFFFF" uuid="7925ff30-fd27-4b73-9452-efd2b21d13ee"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{additionalFees}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="1099" y="1" width="68" height="20" backcolor="#FFFFFF" uuid="03d8ccbf-f556-49ef-9842-c0cb6d6ab308"/>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="1026" y="-4" width="58" height="20" backcolor="#FFFFFF" uuid="03d8ccbf-f556-49ef-9842-c0cb6d6ab308">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{totalFees}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="1025" y="1" width="74" height="20" backcolor="#FFFFFF" uuid="d87f01e1-f26d-498d-a6fc-db5a8dbffc40"/>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="952" y="-4" width="74" height="20" backcolor="#FFFFFF" uuid="d87f01e1-f26d-498d-a6fc-db5a8dbffc40"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{overweightFee}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="960" y="1" width="65" height="20" backcolor="#FFFFFF" uuid="a41a9b90-ab03-4428-8648-750788ce8012"/>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="887" y="-4" width="65" height="20" backcolor="#FFFFFF" uuid="a41a9b90-ab03-4428-8648-750788ce8012"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{permitFees}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="649" y="1" width="102" height="20" backcolor="#FFFFFF" uuid="60f82e54-dd51-4a7f-8408-5338715d2949"/>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="598" y="-4" width="81" height="20" backcolor="#FFFFFF" uuid="60f82e54-dd51-4a7f-8408-5338715d2949">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{pickupDate}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="549" y="1" width="100" height="20" backcolor="#FFFFFF" uuid="9b32193b-61c3-4d87-93e0-6a36ffd98be3"/>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="515" y="-4" width="81" height="20" backcolor="#FFFFFF" uuid="9b32193b-61c3-4d87-93e0-6a36ffd98be3">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{deliveryDate}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="487" y="1" width="62" height="20" backcolor="#FFFFFF" uuid="aa7b1b36-7b53-4afa-84ad-df58ada47633"/>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="453" y="-4" width="62" height="20" backcolor="#FFFFFF" uuid="aa7b1b36-7b53-4afa-84ad-df58ada47633"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{status}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="415" y="1" width="72" height="20" backcolor="#FFFFFF" uuid="6871bf9a-8c27-4cf6-a91d-e07d5c4bd715"/>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="381" y="-4" width="72" height="20" backcolor="#FFFFFF" uuid="6871bf9a-8c27-4cf6-a91d-e07d5c4bd715"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{city}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="315" y="1" width="100" height="20" backcolor="#FFFFFF" uuid="3a388def-97c9-4baf-84c8-f7e52cfac4c4"/>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="281" y="-4" width="100" height="20" backcolor="#FFFFFF" uuid="3a388def-97c9-4baf-84c8-f7e52cfac4c4"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{deliveryAddressFullLine}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="226" y="1" width="89" height="20" backcolor="#FFFFFF" uuid="d4a81a28-adcf-44bc-814b-78b88b8fd0f2"/>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="192" y="-4" width="89" height="20" backcolor="#FFFFFF" uuid="d4a81a28-adcf-44bc-814b-78b88b8fd0f2"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{phone}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="157" y="1" width="69" height="20" backcolor="#FFFFFF" uuid="7f7005e8-5646-47ad-9ed8-9528d6d33a17"/>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="123" y="-4" width="69" height="20" backcolor="#FFFFFF" uuid="7f7005e8-5646-47ad-9ed8-9528d6d33a17"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{deliveryContactName}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="92" y="1" width="65" height="20" backcolor="#FFFFFF" uuid="d8a1f25c-4c53-4f01-996f-1a21118baccf"/>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="58" y="-4" width="65" height="20" backcolor="#FFFFFF" uuid="d8a1f25c-4c53-4f01-996f-1a21118baccf"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{customer}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="41" y="1" width="51" height="20" backcolor="#FFFFFF" uuid="5d0bbeff-585d-4a9d-aabe-2f579d654228"/>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="7" y="-4" width="51" height="20" backcolor="#FFFFFF" uuid="5d0bbeff-585d-4a9d-aabe-2f579d654228"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{id}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="750" y="1" width="87" height="20" backcolor="#FFFFFF" uuid="4816752d-0e67-41b5-82bd-7288eb8f0011"/>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="677" y="-4" width="87" height="20" backcolor="#FFFFFF" uuid="4816752d-0e67-41b5-82bd-7288eb8f0011"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{dumpsterPrice}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1083" y="-4" width="58" height="20" uuid="9bd61911-75d3-4b6d-af06-2cadaa2b5d7d">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{totalPaid}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1141" y="-4" width="58" height="20" uuid="1b59f188-d8c0-41c0-8375-a45eeccd7d9f">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{balanceDue}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

@@ -19,13 +19,13 @@
 			</td>
 		</tr>
 		<tr>
-			<td class="form-left">Delivery Date From</td>
+			<td class="form-left">Order Date From</td>
 			<td>
-				<input class="flat" id="datepicker11" name="deliveryDateFrom" value="${sessionScope.searchCriteria.searchMap['deliveryDateFrom']}" style="width: 175px !important" />
+				<input class="flat" id="datepicker11" name="createdAtFrom" value="${sessionScope.searchCriteria.searchMap['createdAtFrom']}" style="width: 175px !important" />
 			</td>
-			<td class="form-left">Delivery Date To</td>
+			<td class="form-left">Order Date To</td>
 			<td>
-				<input class="flat" id="datepicker12" name="deliveryDateTo" value="${sessionScope.searchCriteria.searchMap['deliveryDateTo']}" style="width: 175px !important" />
+				<input class="flat" id="datepicker12" name="createdAtTo" value="${sessionScope.searchCriteria.searchMap['createdAtTo']}" style="width: 175px !important" />
 			</td>
 		</tr>
 		<tr>
@@ -103,7 +103,9 @@
 		<transys:textcolumn headerText="Permit Fee" dataField="orderFees.totalPermitFees" />
 		<transys:textcolumn headerText="OvrWt. Fee" dataField="orderFees.overweightFee" />
 		<transys:textcolumn headerText="Addnl. Fees" dataField="orderFees.totalAdditionalFees" />
-		<transys:textcolumn headerText="Total Fees" dataField="orderFees.totalFees" />	
+		<transys:textcolumn headerText="Total Fees" dataField="orderFees.totalFees" />
+		<transys:textcolumn headerText="Amt Paid" dataField="totalAmountPaid"/>
+		<transys:textcolumn headerText="Bal Due" dataField="balanceAmountDue" />	
 	</transys:datatable>
 	<%session.setAttribute("orderReportColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
 </form:form>
