@@ -359,6 +359,16 @@ public class Order extends AbstractBaseModel {
 	public void setPickupDate(Date pickupDate) {
 		this.pickupDate = pickupDate;
 	}
+	
+	@Transient
+	public String getFormattedPickupDate() {
+		if (pickupDate == null) {
+			return StringUtils.EMPTY;
+		}
+		
+		SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+		return dateFormat.format(pickupDate);
+	}
 
 	/*public OrderPermits getPermits() {
 		return permits;

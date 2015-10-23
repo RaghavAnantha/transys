@@ -6,7 +6,7 @@ function populateCustomerDeliveryAddress() {
 	
 	deliveryAddressSelect.empty();
 	
-	var firstOption = $('<option value="">'+ "------Please Select------" +'</option>');
+	var firstOption = $('<option value="">'+ "----Please Select----" +'</option>');
 	deliveryAddressSelect.append(firstOption);
 	
 	var customerId = customerSelect.val();
@@ -34,23 +34,23 @@ function populateCustomerDeliveryAddress() {
 <form:form action="list.do" method="get" name="orderSearchForm" id="orderSearchForm">
 	<table id="form-table" class="table">
 		<tr>
-			<td class="form-left"><transys:label code="Order #" /></td>
+			<td class="form-left">Order #</td>
 			<td>
 				<select class="flat form-control input-sm" id="id" name="id" style="width: 175px !important">
-					<option value="">------<transys:label code="Please Select" />------</option>
+					<option value="">------Please Select------</option>
 					<c:forEach items="${orderIds}" var="anOrderId">
 						<c:set var="selected" value="" />
-						<c:if test="${sessionScope.searchCriteria.searchMap['id'] == anOrderId.id}">
+						<c:if test="${sessionScope.searchCriteria.searchMap['id'] == anOrderId}">
 							<c:set var="selected" value="selected" />
 						</c:if>
-						<option value="${anOrderId.id}" ${selected}>${anOrderId.id}</option>
+						<option value="${anOrderId}" ${selected}>${anOrderId}</option>
 					</c:forEach>
 				</select>
 			</td>
-			<td class="form-left"><transys:label code="Order Status" /></td>
+			<td class="form-left">Order Status</td>
 			<td>
 				<select class="flat form-control input-sm" id="orderStatus" name="orderStatus" style="width: 175px !important">
-					<option value="">------<transys:label code="Please Select" />------</option>
+					<option value="">------Please Select------</option>
 					<c:forEach items="${orderStatuses}" var="anOrderStatus">
 						<c:set var="selected" value=""/>
 						<c:if test="${sessionScope.searchCriteria.searchMap['orderStatus'] == anOrderStatus.id}">
@@ -91,16 +91,16 @@ function populateCustomerDeliveryAddress() {
 			</td>
 		</tr>
 		<tr>
-			<td class="form-left"><transys:label code="Phone Number" /></td>
+			<td class="form-left">Phone Number</td>
 			<td>
 				<select class="flat form-control input-sm" id=deliveryContactPhone1 name="deliveryContactPhone1" style="width: 175px !important">
-					<option value="">------<transys:label code="Please Select" />------</option>
-					<c:forEach items="${order}" var="anOrder">
+					<option value="">------Please Select------</option>
+					<c:forEach items="${deliveryContactPhones}" var="aDeliveryContactPhone">
 						<c:set var="selected" value="" />
-						<c:if test="${sessionScope.searchCriteria.searchMap['deliveryContactPhone1'] == anOrder.deliveryContactPhone1}">
+						<c:if test="${sessionScope.searchCriteria.searchMap['deliveryContactPhone1'] == aDeliveryContactPhone}">
 							<c:set var="selected" value="selected" />
 						</c:if>
-						<option value="${anOrder.deliveryContactPhone1}" ${selected}>${anOrder.deliveryContactPhone1}</option>
+						<option value="${aDeliveryContactPhone}" ${selected}>${aDeliveryContactPhone}</option>
 					</c:forEach>
 				</select>
 			</td>
@@ -135,11 +135,11 @@ function populateCustomerDeliveryAddress() {
 			</td>
 		</tr>
 		<tr>
-			<td class="form-left"><transys:label code="Delivery Date From" /></td>
+			<td class="form-left">Delivery Date From</td>
 			<td>
 				<input class="flat" id="datepicker" name="deliveryDateFrom" value="${sessionScope.searchCriteria.searchMap['deliveryDateFrom']}" style="width: 175px !important" />
 			</td>
-			<td class="form-left"><transys:label code="Delivery Date To" /></td>
+			<td class="form-left">Delivery Date To</td>
 			<td>
 				<input class="flat" id="datepicker1" name="deliveryDateTo" value="${sessionScope.searchCriteria.searchMap['deliveryDateTo']}" style="width: 175px !important" />
 			</td>

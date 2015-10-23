@@ -119,7 +119,18 @@ $(function() {
 		changeYear: true,
 		showButtonPanel: true
 	});
-	
+	$( "#datepicker11" ).datepicker({
+		dateFormat: 'mm/dd/yy',
+		changeMonth: true,
+		changeYear: true,
+		showButtonPanel: true
+	});
+	$( "#datepicker12" ).datepicker({
+		dateFormat: 'mm/dd/yy',
+		changeMonth: true,
+		changeYear: true,
+		showButtonPanel: true
+	});
 });
 
 function confirmDelete(url) {
