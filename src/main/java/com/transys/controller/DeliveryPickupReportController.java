@@ -49,7 +49,6 @@ public class DeliveryPickupReportController extends CRUDController<Order> {
 	
 	@Override
 	public void setupCreate(ModelMap model, HttpServletRequest request) {
-		
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		//TODO fix me
 		criteria.getSearchMap().remove("_csrf");

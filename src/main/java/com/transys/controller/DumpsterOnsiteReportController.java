@@ -30,12 +30,9 @@ import com.transys.model.SearchCriteria;
 @Controller
 @RequestMapping("/reports/dumpsterOnsiteReport")
 public class DumpsterOnsiteReportController extends CRUDController<Dumpster> {
-	
-	
 	public DumpsterOnsiteReportController(){	
 		setUrlContext("reports/dumpsterOnsiteReport");
 	}
-	
 	
 	@Override
 	public void setupCreate(ModelMap model, HttpServletRequest request) {
@@ -52,7 +49,7 @@ public class DumpsterOnsiteReportController extends CRUDController<Dumpster> {
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		//TODO fix me
 		criteria.getSearchMap().remove("_csrf");
-		model.addAttribute("dumpsterInfoList",genericDAO.search(getEntityClass(), criteria,"id",null,null));
+		model.addAttribute("dumpsterInfoList", genericDAO.search(getEntityClass(), criteria,"id",null,null));
 		return urlContext + "/list";
 	}
 	
@@ -62,7 +59,7 @@ public class DumpsterOnsiteReportController extends CRUDController<Dumpster> {
 		setupList(model, request);
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		//criteria.getSearchMap().put("id!",0l);
-		model.addAttribute("dumpsterInfoList", genericDAO.search(getEntityClass(), criteria, "id", null, null));
+		//model.addAttribute("dumpsterInfoList", genericDAO.search(getEntityClass(), criteria, "id", null, null));
 		return urlContext + "/list";
 	}
 	
@@ -76,9 +73,7 @@ public class DumpsterOnsiteReportController extends CRUDController<Dumpster> {
 	public void export(ModelMap model, HttpServletRequest request,
 			HttpServletResponse response, @RequestParam("type") String type,
 			Object objectDAO, Class clazz) {
-		
 		try {
-
 			List<Map<String,Object>> reportData = prepareReportData(model, request);
 			type = setRequestHeaders(response, type, "dumpsterOnsiteReport");
 			
@@ -103,7 +98,6 @@ public class DumpsterOnsiteReportController extends CRUDController<Dumpster> {
 	}
 	
 	private List<Map<String, Object>> prepareReportData(ModelMap model, HttpServletRequest request) {
-		
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		criteria.getSearchMap().remove("_csrf");
 	
@@ -111,7 +105,6 @@ public class DumpsterOnsiteReportController extends CRUDController<Dumpster> {
 		List<Map<String, Object>> reportData = new ArrayList<Map<String, Object>>();
 
 		for (Dumpster aDumpster : dumpsterInfoList) {
-			
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("dumpsterSize", aDumpster.getDumpsterSize().getSize());
 			map.put("dumpsterNum", aDumpster.getDumpsterNum());

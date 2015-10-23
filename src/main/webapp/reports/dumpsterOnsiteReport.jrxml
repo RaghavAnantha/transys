@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
-<!-- 2015-10-23T00:59:38 -->
+<!-- 2015-10-23T23:53:11 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="DumpsterOnsiteReport" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="faf505e5-0136-4842-b2f3-9d43bbd13323">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
@@ -19,7 +19,7 @@
 			<staticText>
 				<reportElement x="75" y="19" width="421" height="36" uuid="3c9d029c-2751-4c47-8bbe-8c76c2ae11e5"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Arial" size="18" isBold="true"/>
+					<font fontName="Arial" size="13" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Dumpster On-site Report]]></text>
 			</staticText>
@@ -32,7 +32,9 @@
 		<band height="22" splitType="Stretch">
 			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.HorizontalRowLayout"/>
 			<staticText>
-				<reportElement x="0" y="0" width="185" height="22" uuid="4836077e-f9ef-4ae0-a30e-1ba3e879e55a"/>
+				<reportElement x="0" y="0" width="185" height="20" uuid="4836077e-f9ef-4ae0-a30e-1ba3e879e55a">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
 				<box>
 					<topPen lineWidth="0.5"/>
 					<leftPen lineWidth="0.5"/>
@@ -40,12 +42,14 @@
 					<rightPen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Arial" size="12" isBold="true" isItalic="true"/>
+					<font fontName="Arial" size="10" isBold="true" isItalic="true"/>
 				</textElement>
 				<text><![CDATA[Dumpster Size]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="185" y="0" width="185" height="22" uuid="a323a96e-a6a9-40e7-8ee2-1a608796d362"/>
+				<reportElement x="185" y="0" width="185" height="20" uuid="a323a96e-a6a9-40e7-8ee2-1a608796d362">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
 				<box>
 					<topPen lineWidth="0.5" lineStyle="Solid"/>
 					<leftPen lineWidth="0.5" lineStyle="Solid"/>
@@ -53,12 +57,14 @@
 					<rightPen lineWidth="0.5" lineStyle="Solid"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Arial" size="12" isBold="true" isItalic="true"/>
+					<font fontName="Arial" size="10" isBold="true" isItalic="true"/>
 				</textElement>
 				<text><![CDATA[Dumpster #]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="370" y="0" width="185" height="22" uuid="44129572-a835-4a8a-b46b-00358f9ab29b"/>
+				<reportElement x="370" y="0" width="185" height="20" uuid="44129572-a835-4a8a-b46b-00358f9ab29b">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
 				<box>
 					<topPen lineWidth="0.5"/>
 					<leftPen lineWidth="0.5"/>
@@ -66,17 +72,19 @@
 					<rightPen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Arial" size="12" isBold="true" isItalic="true"/>
+					<font fontName="Arial" size="10" isBold="true" isItalic="true"/>
 				</textElement>
 				<text><![CDATA[Status]]></text>
 			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="27" splitType="Stretch">
+		<band height="20" splitType="Stretch">
 			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.HorizontalRowLayout"/>
 			<textField>
-				<reportElement x="0" y="0" width="185" height="27" uuid="49d5bea4-befc-4ee7-be2b-70645bd6c96f"/>
+				<reportElement x="0" y="-2" width="185" height="20" uuid="49d5bea4-befc-4ee7-be2b-70645bd6c96f">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
 				<box>
 					<topPen lineWidth="0.5"/>
 					<leftPen lineWidth="0.5"/>
@@ -89,7 +97,9 @@
 				<textFieldExpression><![CDATA[$F{dumpsterSize}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="185" y="0" width="185" height="27" uuid="31cb4025-e542-404e-9bc6-a841a0bae981"/>
+				<reportElement x="185" y="-2" width="185" height="20" uuid="31cb4025-e542-404e-9bc6-a841a0bae981">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
 				<box>
 					<topPen lineWidth="0.5"/>
 					<leftPen lineWidth="0.5"/>
@@ -102,7 +112,9 @@
 				<textFieldExpression><![CDATA[$F{dumpsterNum}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="370" y="0" width="185" height="27" uuid="ed508bd3-7a8b-483a-a194-8af0252746de"/>
+				<reportElement x="370" y="-2" width="185" height="20" uuid="ed508bd3-7a8b-483a-a194-8af0252746de">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
 				<box>
 					<topPen lineWidth="0.5"/>
 					<leftPen lineWidth="0.5"/>
@@ -117,7 +129,7 @@
 		</band>
 	</detail>
 	<columnFooter>
-		<band height="1" splitType="Stretch"/>
+		<band splitType="Stretch"/>
 	</columnFooter>
 	<pageFooter>
 		<band height="22" splitType="Stretch">

@@ -82,6 +82,14 @@
 	</table>
 </form:form>
 
+<hr class="hr-ext">
+<table class="table" id="form-table"> 	
+	<tr>
+		<td class="form-left">Order Date Range:</td>
+		<td class="wide td-static" id="orderDateRange">${orderDateFrom} To ${orderDateTo}</td>
+	</tr>
+</table>
+
 <a href="/order/generateOrderReport.do?type=xls"><img src="/images/excel.png" border="0" style="float:right" class="toolbarButton"></a>
 <a href="/order/generateOrderReport.do?type=pdf"><img src="/images/pdf.png" border="0" style="float:right" class="toolbarButton"></a>
 <form:form name="orderReportForm" id="orderReportForm" class="tab-color">

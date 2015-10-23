@@ -53,10 +53,8 @@
 		<transys:textcolumn headerText="Dumpster Size" dataField="dumpsterSize.size" width="100px"/>
 		<transys:textcolumn headerText="Dumpster#" dataField="dumpsterNum" />
 		<transys:textcolumn headerText="Delivery Address" dataField="deliveryAddress" />
-		<transys:textcolumn headerText="Delivery Date" dataField="deliveryDate" dataFormat="MM/dd/yyy"/>
+		<transys:textcolumn headerText="Delivery Date" dataField="deliveryDate" />
 		<transys:textcolumn headerText="Status" dataField="status.status" />
-
-
 	</transys:datatable>
 	<%session.setAttribute("dumpsterOnsiteReportColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
 </form:form>
