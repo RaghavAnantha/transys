@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
-<!-- 2015-10-23T21:42:24 -->
+<!-- 2015-10-23T21:56:01 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="orderReports" pageWidth="1210" pageHeight="555" orientation="Landscape" columnWidth="401" leftMargin="3" rightMargin="3" topMargin="0" bottomMargin="0" uuid="1c66690f-01f1-4b96-ab51-00f1d62e1ce2">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
@@ -173,9 +173,7 @@
 				<text><![CDATA[Addnl Fees]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="1024" y="1" width="58" height="20" backcolor="#CCCCFF" uuid="9c42da70-ca7e-4c7e-ba0b-f129ae848a34">
-					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-				</reportElement>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="1024" y="1" width="58" height="20" backcolor="#CCCCFF" uuid="9c42da70-ca7e-4c7e-ba0b-f129ae848a34"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font isBold="true" isStrikeThrough="false"/>
 				</textElement>
@@ -189,18 +187,14 @@
 				<text><![CDATA[Status]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="1082" y="1" width="58" height="20" backcolor="#CCCCFF" uuid="0394d99e-8047-47ed-9f7f-bb2af9cee07b">
-					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-				</reportElement>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="1082" y="1" width="58" height="20" backcolor="#CCCCFF" uuid="0394d99e-8047-47ed-9f7f-bb2af9cee07b"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font isBold="true" isStrikeThrough="false"/>
 				</textElement>
 				<text><![CDATA[Paid]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="1140" y="1" width="58" height="20" backcolor="#CCCCFF" uuid="a2c9ae8e-3691-4b61-a661-771b8d048cbe">
-					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-				</reportElement>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="1140" y="1" width="58" height="20" backcolor="#CCCCFF" uuid="a2c9ae8e-3691-4b61-a661-771b8d048cbe"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font isBold="true" isStrikeThrough="false"/>
 				</textElement>
@@ -221,9 +215,7 @@
 				<textFieldExpression><![CDATA[$F{additionalFees}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="1026" y="-4" width="58" height="20" backcolor="#FFFFFF" uuid="03d8ccbf-f556-49ef-9842-c0cb6d6ab308">
-					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-				</reportElement>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="1026" y="-4" width="58" height="20" backcolor="#FFFFFF" uuid="03d8ccbf-f556-49ef-9842-c0cb6d6ab308"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{totalFees}]]></textFieldExpression>
 			</textField>
@@ -238,16 +230,12 @@
 				<textFieldExpression><![CDATA[$F{permitFees}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="598" y="-4" width="81" height="20" backcolor="#FFFFFF" uuid="60f82e54-dd51-4a7f-8408-5338715d2949">
-					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-				</reportElement>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="598" y="-4" width="81" height="20" backcolor="#FFFFFF" uuid="60f82e54-dd51-4a7f-8408-5338715d2949"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{pickupDate}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="515" y="-4" width="81" height="20" backcolor="#FFFFFF" uuid="9b32193b-61c3-4d87-93e0-6a36ffd98be3">
-					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-				</reportElement>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="515" y="-4" width="81" height="20" backcolor="#FFFFFF" uuid="9b32193b-61c3-4d87-93e0-6a36ffd98be3"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{deliveryDate}]]></textFieldExpression>
 			</textField>
@@ -292,18 +280,12 @@
 				<textFieldExpression><![CDATA[$F{dumpsterPrice}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="1083" y="-4" width="58" height="20" uuid="9bd61911-75d3-4b6d-af06-2cadaa2b5d7d">
-					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-				</reportElement>
+				<reportElement x="1083" y="-4" width="58" height="20" uuid="9bd61911-75d3-4b6d-af06-2cadaa2b5d7d"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{totalPaid}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="1141" y="-4" width="58" height="20" uuid="1b59f188-d8c0-41c0-8375-a45eeccd7d9f">
-					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-				</reportElement>
+				<reportElement x="1141" y="-4" width="58" height="20" uuid="1b59f188-d8c0-41c0-8375-a45eeccd7d9f"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{balanceDue}]]></textFieldExpression>
 			</textField>

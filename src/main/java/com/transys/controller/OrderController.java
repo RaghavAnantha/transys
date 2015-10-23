@@ -674,7 +674,7 @@ public class OrderController extends CRUDController<Order> {
 			
 			Map<String, Object> reportParams = new HashMap<String,Object>();
 			List<Map<String, Object>> reportList = new ArrayList<Map<String, Object>>();
-			populateOrderReportData(orderList, reportList, reportParams);
+			populateOrderReportData(criteria, orderList, reportList, reportParams);
 			
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
 			out = dynamicReportService.generateStaticReport("ordersReport", reportList, reportParams, type, request);
@@ -702,7 +702,8 @@ public class OrderController extends CRUDController<Order> {
 		}
 	}
 	
-	private void populateOrderReportData(List<Order> orderList, List<Map<String, Object>> reportList, Map<String, Object> reportParams) {
+	private void populateOrderReportData(SearchCriteria criteria, 
+			List<Order> orderList, List<Map<String, Object>> reportList, Map<String, Object> reportParams) {
 		if (orderList == null || orderList.isEmpty()) {
 			return;
 		}
@@ -742,8 +743,11 @@ public class OrderController extends CRUDController<Order> {
 			reportList.add(aReportRow);
 		}
 		
-		String orderDateFrom = orderList.get(0).getFormattedCreatedAt();
-		String orderDateTo = orderList.get(orderList.size() - 1).getFormattedCreatedAt();
+		String orderDateFrom = criteria.getSearchMap().get("createdAtFrom").toString();
+		String orderDateTo = criteria.getSearchMap().get("createdAtTo").toString();
+		orderDateFrom = StringUtils.defaultIfEmpty(orderDateFrom, orderList.get(0).getFormattedCreatedAt());
+		orderDateTo = StringUtils.defaultIfEmpty(orderDateTo, orderList.get(orderList.size() - 1).getFormattedCreatedAt());
+		
 		reportList.get(0).put("orderDateFrom", orderDateFrom);
 		reportList.get(0).put("orderDateTo", orderDateTo);
 	}
