@@ -1,8 +1,8 @@
 <%@include file="/common/taglibs.jsp"%>
 <br />
 <h5 style="margin-top: -15px; !important">Manage Customers</h5>
-<form:form action="list.do" method="get" name="searchForm">
-	<table width="100%" id="form-table">
+<form:form action="list.do" method="get" name="customerSearchForm">
+	<table id="form-table" class="table">
 		<tr>
 			<td align="${left}" class="form-left">Company Name</td>
 			<td align="${left}" class="wide">
@@ -17,57 +17,55 @@
 					</c:forEach>
 			</select></td>
 
-			<td align="${left}" class="form-left"><transys:label
-					code="Customer ID" /></td>
-			<td align="${left}"><select class="flat form-control input-sm"
-				id="customerId" name="id" style="width:175px !important">
+			<td align="${left}" class="form-left">Customer ID</td>
+			<td align="${left}">
+				<select class="flat form-control input-sm" id="customerId" name="id" style="width:175px !important">
 					<option value="">------Please Select------</option>
 					<c:forEach items="${customerIds}" var="customerId">
 						<c:set var="selected" value="" />
-						<c:if test="${sessionScope.searchCriteria.searchMap['id'] == customerId.id}">
+						<c:if test="${sessionScope.searchCriteria.searchMap['id'] == customerId}">
 							<c:set var="selected" value="selected" />
 						</c:if>
-						<option value="${customerId.id}" ${selected}>${customerId.id}</option>
+						<option value="${customerId}" ${selected}>${customerId}</option>
 					</c:forEach>
-			</select></td>
+				</select>
+			</td>
 		</tr>
 		<tr>
-			<td align="${left}" class="form-left"><transys:label code="Contact Name" /></td>
-			<td align="${left}" class="wide"><select class="flat form-control input-sm" id="contactName"
-				name="contactName" style="width:175px !important">
+			<td class="form-left">Contact Name</td>
+			<td class="wide">
+				<select class="flat form-control input-sm" id="contactName" name="contactName" style="width:175px !important">
 					<option value="">------Please Select------</option>
-					<c:forEach items="${customer}" var="name">
+					<c:forEach items="${contactNames}" var="aContactName">
 						<c:set var="selected" value="" />
-						<c:if test="${sessionScope.searchCriteria.searchMap['contactName'] == name.contactName}">
+						<c:if test="${sessionScope.searchCriteria.searchMap['contactName'] == aContactName}">
 							<c:set var="selected" value="selected" />
 						</c:if>
-						<option value="${name.contactName}" ${selected}>${name.contactName}</option>
+						<option value="${aContactName}" ${selected}>${aContactName}</option>
 					</c:forEach>
-			</select></td>
-
-			<td align="${left}" class="form-left"><transys:label
-					code="Phone Number" /></td>
-			<td align="${left}"><select class="flat form-control input-sm"
-				id="phone" name="phone" style="width: 175px !important">
-					<option value="">------<transys:label code="Please Select" />------</option>
-					<c:forEach items="${customerIds}" var="phone">
+				</select>
+			</td>
+			<td class="form-left">Phone Number</td>
+			<td>
+				<select class="flat form-control input-sm" id="phone" name="phone" style="width: 175px !important">
+					<option value="">------Please Select------</option>
+					<c:forEach items="${phones}" var="aPhone">
 						<c:set var="selected" value="" />
-						<c:if test="${sessionScope.searchCriteria.searchMap['phone'] == phone.phone}">
+						<c:if test="${sessionScope.searchCriteria.searchMap['phone'] == aPhone}">
 							<c:set var="selected" value="selected" />
 						</c:if>
-						<option value="${phone.phone}" ${selected}>${phone.phone}</option>
+						<option value="${aPhone}" ${selected}>${aPhone}</option>
 					</c:forEach>
-			</select></td>
+				</select>
+			</td>
 		</tr>
 		<tr>
-			<td align="${left}" class="form-left">
-				<transys:label code="Create Date From" /></td>
-			<td align="${left}" class="wide">
+			<td class="form-left">Create Date From</td>
+			<td class="wide">
 				<input class="flat" id="datepicker" name="createdAtFrom" value="${sessionScope.searchCriteria.searchMap['createdAtFrom']}" style="width: 175px" />
 			</td>
-			<td align="${left}" class="form-left">
-				<transys:label code="Create Date To" /></td>
-			<td align="${left}">
+			<td class="form-left">Create Date To</td>
+			<td>
 				<input class="flat" id="datepicker1" name="createdAtTo" value="${sessionScope.searchCriteria.searchMap['createdAtTo']}" style="width: 175px" />
 			</td>
 		</tr>
@@ -88,20 +86,20 @@
 		</tr>
 		<tr>
 			<td align="${left}"></td>
-			<td align="${left}"><input type="button" class="btn btn-primary btn-sm"
-				onclick="document.forms['searchForm'].submit();"
-				value="<transys:label code="Search"/>" />
+			<td align="${left}">
+				<input type="button" class="btn btn-primary btn-sm" onclick="document.forms['customerSearchForm'].submit();"
+				value="Search" />
 			</td>
 		</tr>
 	</table>
 </form:form>
-<form:form name="delete.do" id="serviceForm" class="tab-color">
+<form:form name="customerServiceForm" id="customerServiceForm" class="tab-color">
 	<transys:datatable urlContext="customer" deletable="true"
 		editable="true" insertable="true" baseObjects="${list}"
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
 		pagingLink="search.do" multipleDelete="false" searcheable="false"
 		exportPdf="true" exportXls="true" dataQualifier="manageCustomer">
-		<transys:textcolumn headerText="Id" dataField="id" width="75px"/>
+		<transys:textcolumn headerText="Id" dataField="id" width="85px"/>
 		<transys:textcolumn headerText="Company Name" dataField="companyName" />
 		<transys:textcolumn headerText="Contact Name" dataField="contactName" />
 		<transys:textcolumn headerText="Phone" dataField="phone" />

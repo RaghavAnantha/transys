@@ -5,8 +5,11 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -69,11 +72,27 @@ public class CustomerController extends CRUDController<Customer> {
 	 */
 	@Override
 	public void setupCreate(ModelMap model, HttpServletRequest request) {
-		Map criterias = new HashMap();
-		model.addAttribute("customer",genericDAO.executeSimpleQuery("select obj from Customer obj where obj.id!=0 order by obj.companyName asc"));
-		model.addAttribute("customerIds",genericDAO.executeSimpleQuery("select obj from Customer obj where obj.id is not null order by obj.id asc"));
-		model.addAttribute("state", genericDAO.findByCriteria(State.class, criterias, "name", false));
+		model.addAttribute("customerIds", genericDAO.executeSimpleQuery("select obj.id from Customer obj order by obj.id asc"));
 		
+		List<Customer> customerList = genericDAO.executeSimpleQuery("select obj from Customer obj order by obj.companyName asc");
+		model.addAttribute("customer", customerList);
+		
+		SortedSet<String> phoneSet = new TreeSet<String>();
+		SortedSet<String> contactNameSet = new TreeSet<String>();
+		for (Customer aCustomer : customerList) {
+			phoneSet.add(aCustomer.getPhone());
+			contactNameSet.add(aCustomer.getContactName());
+		}
+		
+		String[] phoneArr = phoneSet.toArray(new String[0]);
+		String[] contactNameArr = contactNameSet.toArray(new String[0]);
+		
+		model.addAttribute("phones", phoneArr);
+		model.addAttribute("contactNames", contactNameArr);
+		
+		Map criterias = new HashMap();
+		
+		model.addAttribute("state", genericDAO.findByCriteria(State.class, criterias, "name", false));
 		model.addAttribute("customerTypes", genericDAO.findByCriteria(CustomerType.class, criterias, "customerType", false));
 		
 		List<String> chargeCompanyOptions = new ArrayList<String>();
