@@ -1,5 +1,6 @@
 package com.transys.model;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -19,7 +20,7 @@ public class PublicMaterialIntake extends AbstractBaseModel {
 	private MaterialType materialType;
 	
 	@Column(name="netWeightTonnage")
-	private String netWeightTonnage;
+	private BigDecimal netWeightTonnage;
 	
 	@Column(name="intakeDate")
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM/dd/yyyy")
@@ -36,11 +37,11 @@ public class PublicMaterialIntake extends AbstractBaseModel {
 		this.materialType = materialType;
 	}
 
-	public String getNetWeightTonnage() {
+	public BigDecimal getNetWeightTonnage() {
 		return netWeightTonnage;
 	}
 
-	public void setNetWeightTonnage(String netWeightTonnage) {
+	public void setNetWeightTonnage(BigDecimal netWeightTonnage) {
 		this.netWeightTonnage = netWeightTonnage;
 	}
 

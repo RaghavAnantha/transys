@@ -5,6 +5,8 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 @MappedSuperclass
 public abstract class AbstractFeeMasterData extends AbstractBaseModel {
 	
@@ -12,9 +14,11 @@ public abstract class AbstractFeeMasterData extends AbstractBaseModel {
 	private String comments;
 	
 	@Column(name="effectiveStartDate")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM/dd/yyyy")
 	private Date effectiveStartDate;
 	
 	@Column(name="effectiveEndDate")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM/dd/yyyy")
 	private Date effectiveEndDate;
 
 	public String getComments() {
