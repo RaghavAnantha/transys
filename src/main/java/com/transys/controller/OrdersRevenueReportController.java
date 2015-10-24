@@ -1,6 +1,7 @@
 package com.transys.controller;
 
 import java.io.ByteArrayOutputStream;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -136,6 +137,17 @@ public class OrdersRevenueReportController extends CRUDController<Order> {
 		String[] aggregationValues = getOrdersRevenueData(orderList);
 		
 		List<Map<String, Object>> reportData = new ArrayList<Map<String, Object>>();
+		/*Map<String, Object> map = new HashMap<String, Object>();
+		map.put("orderDateFrom",(criteria.getSearchMap().get("createdAtFrom") == null ? StringUtils.EMPTY : criteria.getSearchMap().get("createdAtFrom")));
+		map.put("orderDateTo", (criteria.getSearchMap().get("createdAtTo") == null ? StringUtils.EMPTY : criteria.getSearchMap().get("createdAtTo")));
+		
+		map.put("totalDumpsterPrice", "$ " + aggregationValues[0]);
+		map.put("totalPermitFees", "$ " + aggregationValues[1]);
+		map.put("totalCityFees", "$ " + aggregationValues[2]);
+		map.put("totalOverweightFees", "$ " + aggregationValues[3]);
+		map.put("aggregateTotalFees", "$ " + aggregationValues[4]);
+		reportData.add(map);*/
+		
 		for (Order anOrder : orderList) {
 			DeliveryAddress deliveryAddress = anOrder.getDeliveryAddress();
 			Map<String, Object> map = new HashMap<String, Object>();
@@ -154,23 +166,23 @@ public class OrdersRevenueReportController extends CRUDController<Order> {
 			
 			OrderFees anOrderFees = anOrder.getOrderFees();
 			if (anOrderFees != null) {
-				map.put("dumpsterPrice", StringUtils.EMPTY + anOrderFees.getDumpsterPrice());
-				map.put("cityFee", StringUtils.EMPTY  + anOrderFees.getCityFee());
-				map.put("permitFees1", StringUtils.EMPTY + anOrderFees.getPermitFee1());
-				map.put("permitFees2", StringUtils.EMPTY + anOrderFees.getPermitFee2());
-				map.put("permitFees3", StringUtils.EMPTY + anOrderFees.getPermitFee3());
-				map.put("overweightFee", StringUtils.EMPTY + anOrderFees.getOverweightFee() );
-				map.put("additionalFee1", anOrderFees.getAdditionalFee1() == null? StringUtils.EMPTY : anOrderFees.getAdditionalFee1());
-				map.put("additionalFee2", anOrderFees.getAdditionalFee2() == null? StringUtils.EMPTY : anOrderFees.getAdditionalFee2());
-				map.put("additionalFee3",  anOrderFees.getAdditionalFee3() == null? StringUtils.EMPTY : anOrderFees.getAdditionalFee3());
-				map.put("totalFees",  StringUtils.EMPTY + anOrderFees.getTotalFees());
+				map.put("dumpsterPrice", getStringValueOf(anOrderFees.getDumpsterPrice()));//StringUtils.EMPTY + anOrderFees.getDumpsterPrice());
+				map.put("cityFee", getStringValueOf(anOrderFees.getCityFee())); //StringUtils.EMPTY  + anOrderFees.getCityFee());
+				map.put("totalPermitFees", getStringValueOf(anOrderFees.getTotalPermitFees())); //StringUtils.EMPTY + anOrderFees.getTotalPermitFees());
+//				map.put("permitFees2", StringUtils.EMPTY + anOrderFees.getPermitFee2());
+//				map.put("permitFees3", StringUtils.EMPTY + anOrderFees.getPermitFee3());
+				map.put("overweightFee", getStringValueOf(anOrderFees.getOverweightFee()));//StringUtils.EMPTY + anOrderFees.getOverweightFee() );
+				map.put("totalAdditionalFee", getStringValueOf(anOrderFees.getTotalAdditionalFees()));//anOrderFees.getTotalAdditionalFees() == null? StringUtils.EMPTY : anOrderFees.getAdditionalFee1());
+//				map.put("additionalFee2", anOrderFees.getAdditionalFee2() == null? StringUtils.EMPTY : anOrderFees.getAdditionalFee2());
+//				map.put("additionalFee3",  anOrderFees.getAdditionalFee3() == null? StringUtils.EMPTY : anOrderFees.getAdditionalFee3());
+				map.put("totalFees",  getStringValueOf(anOrderFees.getTotalFees())); //StringUtils.EMPTY + anOrderFees.getTotalFees());
 			}
 			
 			map.put("orderDateFrom",(criteria.getSearchMap().get("createdAtFrom") == null ? StringUtils.EMPTY : criteria.getSearchMap().get("createdAtFrom")));
 			map.put("orderDateTo", (criteria.getSearchMap().get("createdAtTo") == null ? StringUtils.EMPTY : criteria.getSearchMap().get("createdAtTo")));
 			
 			map.put("totalDumpsterPrice", "$ " + aggregationValues[0]);
-			map.put("totalPermitFees", "$ " + aggregationValues[1]);
+			map.put("aggTotalPermitFees", "$ " + aggregationValues[1]);
 			map.put("totalCityFees", "$ " + aggregationValues[2]);
 			map.put("totalOverweightFees", "$ " + aggregationValues[3]);
 			map.put("aggregateTotalFees", "$ " + aggregationValues[4]);
@@ -190,5 +202,13 @@ public class OrdersRevenueReportController extends CRUDController<Order> {
 		}
 		
 		return reportData;
+	}
+	
+	private String getStringValueOf(BigDecimal fee) {
+		if (fee == null) {
+			return "$ 0.0";
+		} else {
+			return "$" + fee;
+		}
 	}
 }

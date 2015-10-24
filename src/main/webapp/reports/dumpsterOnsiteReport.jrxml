@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
-<!-- 2015-10-23T00:59:38 -->
+<!-- 2015-10-24T06:18:09 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="DumpsterOnsiteReport" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="faf505e5-0136-4842-b2f3-9d43bbd13323">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
@@ -19,7 +19,7 @@
 			<staticText>
 				<reportElement x="75" y="19" width="421" height="36" uuid="3c9d029c-2751-4c47-8bbe-8c76c2ae11e5"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Arial" size="18" isBold="true"/>
+					<font fontName="Arial" size="14" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Dumpster On-site Report]]></text>
 			</staticText>
@@ -40,7 +40,7 @@
 					<rightPen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Arial" size="12" isBold="true" isItalic="true"/>
+					<font fontName="Arial" size="10" isBold="true" isItalic="true"/>
 				</textElement>
 				<text><![CDATA[Dumpster Size]]></text>
 			</staticText>
@@ -53,7 +53,7 @@
 					<rightPen lineWidth="0.5" lineStyle="Solid"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Arial" size="12" isBold="true" isItalic="true"/>
+					<font fontName="Arial" size="10" isBold="true" isItalic="true"/>
 				</textElement>
 				<text><![CDATA[Dumpster #]]></text>
 			</staticText>
@@ -66,17 +66,18 @@
 					<rightPen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Arial" size="12" isBold="true" isItalic="true"/>
+					<font fontName="Arial" size="10" isBold="true" isItalic="true"/>
 				</textElement>
 				<text><![CDATA[Status]]></text>
 			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="27" splitType="Stretch">
+		<band height="22" splitType="Stretch">
 			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.HorizontalRowLayout"/>
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 			<textField>
-				<reportElement x="0" y="0" width="185" height="27" uuid="49d5bea4-befc-4ee7-be2b-70645bd6c96f"/>
+				<reportElement x="0" y="0" width="185" height="22" uuid="49d5bea4-befc-4ee7-be2b-70645bd6c96f"/>
 				<box>
 					<topPen lineWidth="0.5"/>
 					<leftPen lineWidth="0.5"/>
@@ -84,12 +85,12 @@
 					<rightPen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Arial" isBold="false"/>
+					<font fontName="Arial" size="10" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{dumpsterSize}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="185" y="0" width="185" height="27" uuid="31cb4025-e542-404e-9bc6-a841a0bae981"/>
+				<reportElement x="185" y="0" width="185" height="22" uuid="31cb4025-e542-404e-9bc6-a841a0bae981"/>
 				<box>
 					<topPen lineWidth="0.5"/>
 					<leftPen lineWidth="0.5"/>
@@ -97,12 +98,12 @@
 					<rightPen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Arial"/>
+					<font fontName="Arial" size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{dumpsterNum}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="370" y="0" width="185" height="27" uuid="ed508bd3-7a8b-483a-a194-8af0252746de"/>
+				<reportElement x="370" y="0" width="185" height="22" uuid="ed508bd3-7a8b-483a-a194-8af0252746de"/>
 				<box>
 					<topPen lineWidth="0.5"/>
 					<leftPen lineWidth="0.5"/>
@@ -110,7 +111,7 @@
 					<rightPen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Arial"/>
+					<font fontName="Arial" size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{status}]]></textFieldExpression>
 			</textField>
@@ -122,14 +123,18 @@
 	<pageFooter>
 		<band height="22" splitType="Stretch">
 			<textField>
-				<reportElement x="223" y="2" width="80" height="20" uuid="293bc6b1-5f7a-486a-b0fd-897ab2fa971a"/>
+				<reportElement x="223" y="2" width="50" height="20" uuid="293bc6b1-5f7a-486a-b0fd-897ab2fa971a">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Arial"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
 			</textField>
 			<textField evaluationTime="Report">
-				<reportElement x="303" y="2" width="40" height="20" uuid="26bae962-68ac-44af-a393-5f195c663b11"/>
+				<reportElement x="273" y="2" width="20" height="20" uuid="26bae962-68ac-44af-a393-5f195c663b11">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Arial"/>
 				</textElement>

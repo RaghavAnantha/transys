@@ -156,12 +156,19 @@ public class DeliveryPickupReportController extends CRUDController<Order> {
 			map.put("dumpsterSize", StringUtils.EMPTY + anOrder.getDumpsterSize().getSize());
 			map.put("dumpsterNum", (anOrder.getDumpster() == null ? StringUtils.EMPTY : anOrder.getDumpster().getDumpsterNum()));
 			map.put("deliveryDate", StringUtils.EMPTY + anOrder.getDeliveryDate());
-			map.put("pickupDate", StringUtils.EMPTY + anOrder.getPickupDate());
+			map.put("pickupDate", anOrder.getPickupDate() == null ? StringUtils.EMPTY : anOrder.getPickupDate());
 			
-			map.put("deliveryDateFrom", StringUtils.EMPTY + criteria.getSearchMap().get("deliveryDateFrom"));
-			map.put("deliveryDateTo", StringUtils.EMPTY + criteria.getSearchMap().get("deliveryDateTo"));
-			map.put("pickupDateFrom", StringUtils.EMPTY + criteria.getSearchMap().get("pickupDateFrom"));
-			map.put("pickupDateTo", StringUtils.EMPTY + criteria.getSearchMap().get("pickupDateTo"));
+			Object deliveryDateFrom = criteria.getSearchMap().get("deliveryDateFrom");
+			map.put("deliveryDateFrom", deliveryDateFrom == null ? StringUtils.EMPTY : deliveryDateFrom );
+			
+			Object deliveryDateTo = criteria.getSearchMap().get("deliveryDateTo");
+			map.put("deliveryDateTo", deliveryDateTo == null ? StringUtils.EMPTY : deliveryDateTo );
+			
+			Object pickupDateFrom = criteria.getSearchMap().get("pickupDateFrom");
+			map.put("pickupDateFrom", pickupDateFrom == null ? StringUtils.EMPTY : pickupDateFrom );
+			
+			Object pickupDateTo = criteria.getSearchMap().get("pickupDateTo");
+			map.put("pickupDateTo", pickupDateTo == null ? StringUtils.EMPTY : pickupDateTo );
 			
 			map.put("dumpsterSizeAggregation", dumpsterSizeAggregation);
 			
