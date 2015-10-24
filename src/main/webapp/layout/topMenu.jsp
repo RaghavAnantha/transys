@@ -42,6 +42,7 @@
 							<li><a href="/masterData/cityFee/main.do">City Fee</a></li>
 							<li><a href="/masterData/permitFee/main.do">Permit Fee</a></li>
 							<li><a href="/masterData/additionalFee/main.do">Additional Fee</a></li>
+							<li><a href="/masterData/recycleLocation/main.do">Recycle Location</a></li>
 						</ul>
 					</li>
 				</ul>

@@ -1,5 +1,6 @@
 package com.transys.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +24,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.transys.controller.editor.AbstractModelEditor;
 import com.transys.model.PublicMaterialIntake;
+import com.transys.model.RecycleLocation;
 import com.transys.model.BaseModel;
 import com.transys.model.MaterialCategory;
 import com.transys.model.MaterialType;
@@ -32,11 +34,11 @@ import com.transys.model.Permit;
 import com.transys.model.SearchCriteria;
 
 @Controller
-@RequestMapping("/publicMaterialIntake")
-public class PublicMaterialIntakeController extends CRUDController<PublicMaterialIntake> {
+@RequestMapping("/masterData/recycleLocation")
+public class RecycleLocationController extends CRUDController<RecycleLocation> {
 
-	public PublicMaterialIntakeController(){	
-		setUrlContext("publicMaterialIntake");
+	public RecycleLocationController(){	
+		setUrlContext("masterData/recycleLocation");
 	}
 	
 	@Override
@@ -53,7 +55,7 @@ public class PublicMaterialIntakeController extends CRUDController<PublicMateria
 		setupList(model, request);
 		
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
-		model.addAttribute("list", genericDAO.search(PublicMaterialIntake.class, criteria, "id", null, null));
+		model.addAttribute("list", genericDAO.search(RecycleLocation.class, criteria, "id", null, null));
 		
 		return urlContext + "/list";
 	}
@@ -67,7 +69,7 @@ public class PublicMaterialIntakeController extends CRUDController<PublicMateria
 		criteria.getSearchMap().remove("_csrf");
 		criteria.setPageSize(25);
 		
-		model.addAttribute("list", genericDAO.search(PublicMaterialIntake.class, criteria, "id", false));
+		model.addAttribute("list", genericDAO.search(RecycleLocation.class, criteria, "id", false));
 		
 		return urlContext + "/list";
 	}
@@ -90,6 +92,12 @@ public class PublicMaterialIntakeController extends CRUDController<PublicMateria
 		
 		model.addAttribute("materialCategories", genericDAO.findByCriteria(MaterialCategory.class, criterias, "id", false));
 		
+		List<String> statusList = new ArrayList<String>();
+		statusList.add("Active");
+		statusList.add("Inactive");
+		
+		model.addAttribute("statuses", statusList);
+		
 		//model.addAttribute("materialTypes", genericDAO.findByCriteria(MaterialType.class, criterias, "id", false));
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		if (criteria.getSearchMap().get("materialType.materialCategory") != null) {
@@ -101,7 +109,7 @@ public class PublicMaterialIntakeController extends CRUDController<PublicMateria
 	}
 
 	@RequestMapping(method = RequestMethod.POST, value = "/save.do")
-	public String save(HttpServletRequest request, @ModelAttribute("modelObject") PublicMaterialIntake entity,
+	public String save(HttpServletRequest request, @ModelAttribute("modelObject") RecycleLocation entity,
 			BindingResult bindingResult, ModelMap model) {
 		try {
 			getValidator().validate(entity, bindingResult);
@@ -136,8 +144,8 @@ public class PublicMaterialIntakeController extends CRUDController<PublicMateria
 		List<MaterialType> materialTypesForSelMatCat = genericDAO.executeSimpleQuery(query);
 		model.addAttribute("materialTypes", materialTypesForSelMatCat);
 		
-		model.addAttribute("msgCtx", "managePublicMaterialIntake");
-		model.addAttribute("msg", "Public material intake saved successfully");
+		model.addAttribute("msgCtx", "manageRecycleLocation");
+		model.addAttribute("msg", "Recycle location saved successfully");
 
 		return urlContext + "/form";
 	}
@@ -146,9 +154,9 @@ public class PublicMaterialIntakeController extends CRUDController<PublicMateria
 	public String edit2(ModelMap model, HttpServletRequest request) {
 		setupUpdate(model, request);
 		
-		PublicMaterialIntake publicMaterialIntakeToBeEdited = (PublicMaterialIntake)model.get("modelObject");
+		RecycleLocation recycleLocationToBeEdited = (RecycleLocation)model.get("modelObject");
 		
-		String query = "select obj from MaterialType obj where obj.materialCategory.id=" + publicMaterialIntakeToBeEdited.getMaterialType().getMaterialCategory().getId();
+		String query = "select obj from MaterialType obj where obj.materialCategory.id=" + recycleLocationToBeEdited.getMaterialType().getMaterialCategory().getId();
 		List<MaterialType> materialTypesForSelMatCat = genericDAO.executeSimpleQuery(query);
 		model.addAttribute("materialTypes", materialTypesForSelMatCat);
 		

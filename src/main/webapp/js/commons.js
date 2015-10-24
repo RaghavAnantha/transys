@@ -131,6 +131,18 @@ $(function() {
 		changeYear: true,
 		showButtonPanel: true
 	});
+	$( "#datepicker13" ).datepicker({
+		dateFormat: 'mm/dd/yy',
+		changeMonth: true,
+		changeYear: true,
+		showButtonPanel: true
+	});
+	$( "#datepicker14" ).datepicker({
+		dateFormat: 'mm/dd/yy',
+		changeMonth: true,
+		changeYear: true,
+		showButtonPanel: true
+	});
 });
 
 function confirmDelete(url) {

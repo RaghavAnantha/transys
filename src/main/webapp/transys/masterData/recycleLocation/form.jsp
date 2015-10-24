@@ -1,7 +1,7 @@
 <%@include file="/common/taglibs.jsp"%>
 
 <br />
-<h5 style="margin-top: -15px; !important">Add/Edit Public Material Intake</h5>
+<h5 style="margin-top: -15px; !important">Add/Edit Recycle Location</h5>
 
 <script type="text/javascript">
 function populateMaterialTypes() {
@@ -33,10 +33,10 @@ function populateMaterialTypes() {
 	});
 }
 </script>
-<form:form action="save.do" name="publicMaterialIntakeForm" commandName="modelObject" method="post" id="publicMaterialIntakeForm">
+<form:form action="save.do" name="recycleLocationForm" commandName="modelObject" method="post" id="recycleLocationForm">
 	<form:hidden path="id" id="id" />
 	<jsp:include page="/common/messages.jsp">
-		<jsp:param name="msgCtx" value="managePublicMaterialIntake" />
+		<jsp:param name="msgCtx" value="manageRecycleLocation" />
 	</jsp:include>
 	<table id="form-table" class="table">
 		<tr>
@@ -66,17 +66,32 @@ function populateMaterialTypes() {
 			<td colspan=10></td>
 		</tr>
 		<tr>
-			<td class="form-left">Intake Date<span class="errorMessage">*</span></td>
+			<td class="form-left">Location<span class="errorMessage">*</span></td>
 			<td class="wide">
-				<form:input path="intakeDate" class="flat" id="datepicker7" name="intakeDate" style="width: 175px !important" />
-				<form:errors path="intakeDate" cssClass="errorMessage" />
+				<form:input path="location" cssClass="flat" style="width: 175px !important"  />
+				<form:errors path="location" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>
-			<td class="form-left">Net Tonnage<span class="errorMessage">*</span></td>
+			<td class="form-left">Status<span class="errorMessage">*</span></td>
 			<td class="wide">
-				<form:input path="netWeightTonnage" cssClass="flat" style="width: 175px !important"  />
-				<form:errors path="netWeightTonnage" cssClass="errorMessage" />
+				<form:select cssClass="flat form-control input-sm" style="width:172px !important" path="status" >
+					<form:option value="">----Please Select----</form:option>
+					<form:options items="${statuses}"/>
+				</form:select> 
+				<form:errors path="status" cssClass="errorMessage" />
+			</td>
+		</tr>
+		<tr>
+			<td class="form-left form-left-ext">Effective Date From<span class="errorMessage">*</span></td>
+			<td>
+				<form:input path="effectiveStartDate" class="flat" id="datepicker13" name="effectiveStartDate" style="width:172px !important"/>
+			</td>
+		</tr>
+		<tr>
+			<td class="form-left">Effective Date To<span class="errorMessage">*</span></td>
+			<td>
+				<form:input path="effectiveEndDate" class="flat" id="datepicker14" name="effectiveEndDate" style="width:172px !important"/>
 			</td>
 		</tr>
 		<tr>
@@ -90,7 +105,7 @@ function populateMaterialTypes() {
 		</tr>
 		<tr>
 			<td colspan=10>
-				<form:textarea row="5" path="comments" cssClass="flat" id="publicMaterialIntakeComments" style="width:100%; height:100%;"/>
+				<form:textarea row="5" path="comments" cssClass="flat" id="recycleLocationComments" style="width:100%; height:100%;"/>
 				<br><form:errors path="comments" cssClass="errorMessage" />
 			</td>
 		</tr>
@@ -100,8 +115,8 @@ function populateMaterialTypes() {
 		<tr>
 			<td>&nbsp;</td>
 			<td colspan="2">
-				<input type="submit" id="publicMaterialIntakeCreate" onclick="return validate()" value="Save" class="flat btn btn-primary btn-sm btn-sm-ext" /> 
-				<input type="button" id="publicMaterialIntakeCancel" value="Back" class="flat btn btn-primary btn-sm btn-sm-ext" onClick="location.href='main.do'" />
+				<input type="submit" id="recycleLocationCreate" onclick="return validate()" value="Save" class="flat btn btn-primary btn-sm btn-sm-ext" /> 
+				<input type="button" id="recycleLocationCancel" value="Back" class="flat btn btn-primary btn-sm btn-sm-ext" onClick="location.href='main.do'" />
 			</td>
 		</tr>
 	</table>
