@@ -15,6 +15,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
@@ -168,16 +169,28 @@ public class OrderController extends CRUDController<Order> {
 	 */
 	@Override
 	public void setupCreate(ModelMap model, HttpServletRequest request) {
+		model.addAttribute("orderIds", genericDAO.executeSimpleQuery("select obj.id from Order obj order by obj.id asc"));
+		
+		List<Order> orderList = genericDAO.executeSimpleQuery("select obj from Order obj order by obj.id asc");
+		model.addAttribute("order", orderList);
+		
+		SortedSet<String> contactNameSet = new TreeSet<String>();
+		SortedSet<String> phoneSet = new TreeSet<String>();
+		for (Order anOrder : orderList) {
+			phoneSet.add(anOrder.getDeliveryContactPhone1());
+			contactNameSet.add(anOrder.getDeliveryContactName());
+		}
+		
+		String[] phoneArr = phoneSet.toArray(new String[0]);
+		String[] contactNameArr = contactNameSet.toArray(new String[0]);
+		
+		model.addAttribute("deliveryContactPhones", phoneArr);
+		model.addAttribute("deliveryContactNames", contactNameArr);
+		
 		Map criterias = new HashMap();
-		model.addAttribute("order", genericDAO.executeSimpleQuery("select obj from Order obj where obj.id!=0 order by obj.id asc"));
-		model.addAttribute("orderIds", genericDAO.executeSimpleQuery("select obj from Order obj where obj.id is not null order by obj.id asc"));
 		
 		model.addAttribute("orderStatuses", genericDAO.findByCriteria(OrderStatus.class, criterias, "status", false));
 		model.addAttribute("customers", genericDAO.findByCriteria(Customer.class, criterias, "companyName", false));
-      //model.addAttribute("deliveryAddresses", genericDAO.findByCriteria(DeliveryAddress.class, criterias, "line1", false));
-      
-      //model.addAttribute("permits", genericDAO.executeSimpleQuery("select obj from Permit obj where obj.id!=0 order by obj.id asc"));
-      //model.addAttribute("permits", genericDAO.findByCriteria(Permit.class, criterias, "id", false));
       
 		model.addAttribute("dumpsters", genericDAO.executeSimpleQuery("select obj from Dumpster obj where obj.id!=0 order by obj.id asc"));
       model.addAttribute("dumpsterSizes", genericDAO.executeSimpleQuery("select obj from DumpsterSize obj where obj.id!=0 order by obj.id asc"));
@@ -189,9 +202,6 @@ public class OrderController extends CRUDController<Order> {
       
       model.addAttribute("additionalFeeTypes", genericDAO.executeSimpleQuery("select obj from AdditionalFee obj where obj.id!=0 order by obj.id asc"));
      
-      //model.addAttribute("materialCategories", genericDAO.executeSimpleQuery("select obj from MaterialCategory obj where obj.id!=0 order by obj.id asc"));
-      //model.addAttribute("materialTypes", genericDAO.executeSimpleQuery("select obj from MaterialType obj where obj.id!=0 order by obj.id asc"));
-      
       model.addAttribute("paymentMethods", genericDAO.executeSimpleQuery("select obj from PaymentMethodType obj where obj.id!=0 order by obj.id asc"));
       
       model.addAttribute("cityFeeDetails", genericDAO.executeSimpleQuery("select obj from CityFee obj where obj.id!=0 order by obj.id asc"));
@@ -656,52 +666,18 @@ public class OrderController extends CRUDController<Order> {
 			if (!type.equals("html") && !(type.equals("print"))) {
 				response.setHeader("Content-Disposition", "attachment;filename= ordersReport." + type);
 			}
+			
 			response.setContentType(MimeUtil.getContentType(type));
-			ByteArrayOutputStream out = new ByteArrayOutputStream();
-			Map<String, Object> params = new HashMap<String,Object>();
 			
 			SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
-			List<Order> list = genericDAO.search(getEntityClass(), criteria,"id",null,null);
-			List<Map<String, ?>> newList = new ArrayList<Map<String, ?>>();
-			for (Order order : list) {
-				Map<String, Object> map = new HashMap<String, Object>();
-				map.put("id", order.getId());
-				map.put("company_name", order.getCustomer().getCompanyName());
-				map.put("createdAt", order.getCreatedAt().toString());
-				map.put("deliveryContactName", order.getDeliveryContactName());
-				map.put("phone", order.getCustomer().getPhone());
-				map.put("line1", order.getDeliveryAddress().getLine1());
-				map.put("city", order.getDeliveryAddress().getCity());
-				map.put("line2", order.getDeliveryAddress().getLine2());
-				map.put("status", order.getOrderStatus().getStatus());
-				
-				if (order.getDeliveryDate() != null) {
-					map.put("deliveryDate", order.getDeliveryDate().toString());
-				}
-				
-				if (order.getPickupDate() != null) {
-					map.put("pickupDate", order.getPickupDate().toString());
-				}
-				
-				List<OrderPayment> orderPaymentList = order.getOrderPayment();
-				if (orderPaymentList != null && !orderPaymentList.isEmpty()) {
-					OrderPayment anOrderPayment = orderPaymentList.get(0);
-					map.put("paymentMethod", StringUtils.defaultIfEmpty(anOrderPayment.getPaymentMethod().getMethod(), StringUtils.EMPTY));
-				}
-				
-				OrderFees orderFees = order.getOrderFees();
-				if (orderFees != null) {
-					map.put("dumpsterPrice", StringUtils.defaultIfEmpty(orderFees.getDumpsterPrice().toString(), "0.00"));
-					map.put("cityFee", StringUtils.defaultIfEmpty(orderFees.getCityFee().toString(), "0.00"));
-					map.put("permitFees", StringUtils.defaultIfEmpty(orderFees.getTotalPermitFees().toString(), "0.00"));
-					map.put("overweightFee", StringUtils.defaultIfEmpty(orderFees.getOverweightFee().toString(), "0.00"));
-					map.put("totalFees", StringUtils.defaultIfEmpty(orderFees.getTotalFees().toString(), "0.00"));
-				}
-				
-				newList.add(map);
-			}
+			List<Order> orderList = genericDAO.search(getEntityClass(), criteria,"id",false,null);
 			
-			out = dynamicReportService.generateStaticReport("ordersReport", newList, params, type, request);
+			Map<String, Object> reportParams = new HashMap<String,Object>();
+			List<Map<String, Object>> reportList = new ArrayList<Map<String, Object>>();
+			populateOrderReportData(criteria, orderList, reportList, reportParams);
+			
+			ByteArrayOutputStream out = new ByteArrayOutputStream();
+			out = dynamicReportService.generateStaticReport("ordersReport", reportList, reportParams, type, request);
 			
 			/*if (!type.equals("print") && !type.equals("pdf")) {
 				out = dynamicReportService.generateStaticReport("ordersReport", newList, params, type, request);
@@ -724,6 +700,56 @@ public class OrderController extends CRUDController<Order> {
 			request.getSession().setAttribute("errors", e.getMessage());
 			
 		}
+	}
+	
+	private void populateOrderReportData(SearchCriteria criteria, 
+			List<Order> orderList, List<Map<String, Object>> reportList, Map<String, Object> reportParams) {
+		if (orderList == null || orderList.isEmpty()) {
+			return;
+		}
+		
+		for (Order order : orderList) {
+			Map<String, Object> aReportRow = new HashMap<String, Object>();
+			
+			aReportRow.put("id", order.getId());
+			aReportRow.put("customer", order.getCustomer().getCompanyName());
+			aReportRow.put("deliveryContactName", order.getDeliveryContactName());
+			aReportRow.put("phone", order.getCustomer().getPhone());
+			aReportRow.put("deliveryAddressFullLine", order.getDeliveryAddress().getFullLine());
+			aReportRow.put("city", order.getDeliveryAddress().getCity());
+			aReportRow.put("status", order.getOrderStatus().getStatus());
+			
+			aReportRow.put("deliveryDate", order.getFormattedDeliveryDate());
+			aReportRow.put("pickupDate", order.getFormattedDeliveryDate());
+			
+			/*List<OrderPayment> orderPaymentList = order.getOrderPayment();
+			if (orderPaymentList != null && !orderPaymentList.isEmpty()) {
+				OrderPayment anOrderPayment = orderPaymentList.get(0);
+				aReportRow.put("paymentMethod", StringUtils.defaultIfEmpty(anOrderPayment.getPaymentMethod().getMethod(), StringUtils.EMPTY));
+			}*/
+			
+			OrderFees orderFees = order.getOrderFees();
+			if (orderFees != null) {
+				aReportRow.put("dumpsterPrice", StringUtils.defaultIfEmpty(orderFees.getDumpsterPrice().toString(), "0.00"));
+				aReportRow.put("cityFee", StringUtils.defaultIfEmpty(orderFees.getCityFee().toString(), "0.00"));
+				aReportRow.put("permitFees", StringUtils.defaultIfEmpty(orderFees.getTotalPermitFees().toString(), "0.00"));
+				aReportRow.put("overweightFee", StringUtils.defaultIfEmpty(orderFees.getOverweightFee().toString(), "0.00"));
+				aReportRow.put("additionalFees", StringUtils.defaultIfEmpty(orderFees.getTotalAdditionalFees().toString(), "0.00"));
+				aReportRow.put("totalFees", StringUtils.defaultIfEmpty(orderFees.getTotalFees().toString(), "0.00"));
+				aReportRow.put("totalPaid", StringUtils.defaultIfEmpty(order.getTotalAmountPaid().toString(), "0.00"));
+				aReportRow.put("balanceDue", StringUtils.defaultIfEmpty(order.getBalanceAmountDue().toString(), "0.00"));
+			}
+			
+			reportList.add(aReportRow);
+		}
+		
+		String orderDateFrom = criteria.getSearchMap().get("createdAtFrom").toString();
+		String orderDateTo = criteria.getSearchMap().get("createdAtTo").toString();
+		orderDateFrom = StringUtils.defaultIfEmpty(orderDateFrom, orderList.get(0).getFormattedCreatedAt());
+		orderDateTo = StringUtils.defaultIfEmpty(orderDateTo, orderList.get(orderList.size() - 1).getFormattedCreatedAt());
+		
+		reportList.get(0).put("orderDateFrom", orderDateFrom);
+		reportList.get(0).put("orderDateTo", orderDateTo);
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/retrievePermit.do")

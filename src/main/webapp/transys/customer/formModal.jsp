@@ -13,6 +13,9 @@ $("#customerModalForm").submit(function (ev) {
         	} else {
         		var customer = jQuery.parseJSON(responseData);
         		
+        		$("#tdCustomerId").html(customer.id);
+        		$("#tdCustomerCreationDt").html(customer.formattedCreatedAt);
+        		
         		displayPopupDialogSuccessMessage("Customer saved successfully");
         		appendCustomer(customer);
         	}
@@ -32,7 +35,7 @@ $("#customerModalForm").submit(function (ev) {
 			 	<br><form:errors path="companyName" cssClass="errorMessage" />
 			</td>
 			<td class="form-left">Customer Id</td>
-			<td class="td-static">${modelObject.id}</td>
+			<td class="td-static" id="tdCustomerId">${modelObject.id}</td>
 		</tr>
 		<tr>
 			<td class="form-left">Customer Type<span class="errorMessage">*</span></td>
@@ -44,7 +47,7 @@ $("#customerModalForm").submit(function (ev) {
 				<form:errors path="customerType" cssClass="errorMessage" />
 			</td>
 			<td class="form-left">Created Date</td>
-			<td class="td-static">
+			<td class="td-static" id="tdCustomerCreationDt">
 				<c:if test="${modelObject.id != null}">
 					${modelObject.formattedCreatedAt}
 				</c:if>

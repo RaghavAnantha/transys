@@ -22,28 +22,28 @@
 <table class="table" id="form-table">
 	 <tr>
 		<td class="form-left"><transys:label code="Order Date Range:" /><span class="errorMessage"></span></td>
-		  <td class="wide" id="orderDateRange" >${orderDateFrom} To ${orderDateTo}</td>
+		  <td class="wide td-static" id="orderDateRange" >${orderDateFrom} To ${orderDateTo}</td>
 	 </tr>
 	<tr>
 		<td class="form-left" style="width:190px"><transys:label code="Dumpster Price Total:" /><span
 			class="errorMessage"></span></td>
-		<td align="${left}" id="totalDumpsterPrice">${totalDumpsterPrice}</td>
+		<td class="td-static" id="totalDumpsterPrice">${totalDumpsterPrice}</td>
 		
 		<td class="form-left"><transys:label code="Permit Fees Total:" /><span
 			class="errorMessage"></span></td>
-		<td align="${left}" id="totalPermitFees">${totalPermitFees}</td>
+		<td class="td-static" id="totalPermitFees">${totalPermitFees}</td>
 	</tr>
 	<tr>
 		<td class="form-left"><transys:label code="City Fees Total:" /><span
 			class="errorMessage"></span></td>
-		<td align="${left}" id="totalCityFees">${totalCityFees}</td>
+		<td class="td-static" id="totalCityFees">${totalCityFees}</td>
 		<td class="form-left" style="width:190px"><transys:label code="Over Weight Fees Total:" /><span
 			class="errorMessage"></span></td>
-		<td align="${left}" id="totalOverweightFees">${totalOverweightFees}</td>
+		<td class="td-static" id="totalOverweightFees">${totalOverweightFees}</td>
 	</tr>
 	<tr>
 		<td class="form-left"><transys:label code="Total Fees:" /></td>
-		<td align="${left}" id="aggregatedTotalFees">${aggregatedTotalFees}</td>
+		<td class="td-static" id="aggregatedTotalFees">${aggregatedTotalFees}</td>
 	</tr>
 </table>
 

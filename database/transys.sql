@@ -178,7 +178,7 @@ CREATE TABLE `customer` (
 
 LOCK TABLES `customer` WRITE;
 /*!40000 ALTER TABLE `customer` DISABLE KEYS */;
-INSERT INTO `customer` VALUES (5,'2015-09-10 21:22:45',1,NULL,NULL,1,'2324 N Camelback Rd',1,NULL,'Chicago','Aberdeen Construction','1234567890','Raghav','1234567890','28262',1,'abc@aberdeen.com',NULL,NULL,NULL,1),(6,'2015-09-11 21:05:43',1,NULL,NULL,1,'1321 W Main St',1,NULL,'Chicago','Gibbons Construction','1234567890','Bharat','1234567890','22323',1,'abc@aberdeen.com',NULL,NULL,NULL,1);
+INSERT INTO `customer` VALUES (5,'2015-09-10 21:22:45',1,NULL,NULL,1,'2324 N Camelback Rd',1,NULL,'Chicago','Aberdeen Construction','1234567890','Raghav','1234567890','28262',1,'abc@aberdeen.com',NULL,NULL,NULL,1),(6,'2015-09-11 21:05:43',1,NULL,NULL,1,'1321 W Main St',1,NULL,'Chicago','Gibbons Construction','1234567890','Hema','1234567890','22323',1,'abc@aberdeen.com',NULL,NULL,NULL,1);
 /*!40000 ALTER TABLE `customer` ENABLE KEYS */;
 UNLOCK TABLES;
 

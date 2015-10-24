@@ -27,9 +27,7 @@ import com.transys.model.SearchCriteria;
 @Controller
 @RequestMapping("/reports/dumpsterRentedReport")
 public class DumpsterRentedReportController extends CRUDController<Dumpster> {
-	
-	
-	public DumpsterRentedReportController(){	
+	public DumpsterRentedReportController() {	
 		setUrlContext("reports/dumpsterRentedReport");
 	}
 	
@@ -50,9 +48,10 @@ public class DumpsterRentedReportController extends CRUDController<Dumpster> {
 		//TODO fix me
 		criteria.getSearchMap().remove("_csrf");
 		List<Dumpster> dumpsterInfoList = genericDAO.search(getEntityClass(), criteria,"id",null,null);
-		model.addAttribute("dumpsterInfoList", dumpsterInfoList);
 		
 		setDeliveryDetailsForDumpster(dumpsterInfoList);
+		model.addAttribute("dumpsterInfoList", dumpsterInfoList);
+		
 		return urlContext + "/list";
 	}
 
@@ -60,7 +59,6 @@ public class DumpsterRentedReportController extends CRUDController<Dumpster> {
 	private void setDeliveryDetailsForDumpster(List<Dumpster> dumpsterInfoList) {
 		for (Dumpster aDumpster : dumpsterInfoList) {
 			// get the latest delivery address & delivery date for the corresponding dumpster# from transysOrder table
-			
 			Map<String, Object> criterias = new HashMap<String, Object>();
 			criterias.put("dumpster.id", aDumpster.getId());
 			List<Order> ordersForDumpster = genericDAO.findByCriteria(Order.class, criterias, "id", true);
@@ -75,7 +73,7 @@ public class DumpsterRentedReportController extends CRUDController<Dumpster> {
 
 			// set 2 transient fields for deliveryAddress and deliveryDate in DumpsterInfo
 			aDumpster.setDeliveryAddress(orderForDumpster.getDeliveryAddress().getFullLine());
-			aDumpster.setDeliveryDate(orderForDumpster.getDeliveryDate() + "");
+			aDumpster.setDeliveryDate(orderForDumpster.getFormattedDeliveryDate());
 		}
 	}
 	
@@ -85,7 +83,7 @@ public class DumpsterRentedReportController extends CRUDController<Dumpster> {
 		setupList(model, request);
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		//criteria.getSearchMap().put("id!",0l);
-		model.addAttribute("dumpsterInfoList", genericDAO.search(getEntityClass(), criteria, "id", null, null));
+		//model.addAttribute("dumpsterInfoList", genericDAO.search(getEntityClass(), criteria, "id", null, null));
 		return urlContext + "/list";
 	}
 	
@@ -99,9 +97,7 @@ public class DumpsterRentedReportController extends CRUDController<Dumpster> {
 	public void export(ModelMap model, HttpServletRequest request,
 			HttpServletResponse response, @RequestParam("type") String type,
 			Object objectDAO, Class clazz) {
-		
 		try {
-
 			List<Map<String,Object>> reportData = prepareReportData(model, request);
 			type = setRequestHeaders(response, type, "dumpsterRentedReport");
 			
@@ -126,7 +122,6 @@ public class DumpsterRentedReportController extends CRUDController<Dumpster> {
 	}
 	
 	private List<Map<String, Object>> prepareReportData(ModelMap model, HttpServletRequest request) {
-		
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		criteria.getSearchMap().remove("_csrf");
 	
@@ -135,13 +130,12 @@ public class DumpsterRentedReportController extends CRUDController<Dumpster> {
 		
 		List<Map<String, Object>> reportData = new ArrayList<Map<String, Object>>();
 		for (Dumpster aDumpster : dumpsterInfoList) {
-			
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("dumpsterSize", aDumpster.getDumpsterSize().getSize());
 			map.put("dumpsterNum", aDumpster.getDumpsterNum());
-			map.put("status",aDumpster.getStatus().getStatus());
-			map.put("deliveryAddress",aDumpster.getDeliveryAddress());
-			map.put("deliveryDate",aDumpster.getDeliveryDate());
+			map.put("status", aDumpster.getStatus().getStatus());
+			map.put("deliveryAddress", StringUtils.defaultIfEmpty(aDumpster.getDeliveryAddress(), StringUtils.EMPTY));
+			map.put("deliveryDate", StringUtils.defaultIfEmpty(aDumpster.getDeliveryDate(), StringUtils.EMPTY));
 			
 			ObjectMapper objectMapper = new ObjectMapper();
 			String jSonResponse = StringUtils.EMPTY;

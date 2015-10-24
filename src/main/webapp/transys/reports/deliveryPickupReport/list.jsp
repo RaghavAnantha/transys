@@ -50,13 +50,13 @@
 <table class="table" id="form-table"> 	
 	<tr>
 		<td class="form-left form-left-ext"><transys:label code="Delivery Date Range:" /></td>
-		<td class="wide" id="deliveryDateRange">${deliveryDateFrom} To ${deliveryDateTo}</td>
+		<td class="wide td-static" id="deliveryDateRange">${deliveryDateFrom} To ${deliveryDateTo}</td>
 
-		<td class="form-left"><transys:label code="Pickup Date Range:" /></td>
-		<td id="pickupDateRange">${pickupDateFrom} To ${pickupDateTo}</td>
+		<td class="form-left  td-static">Pickup Date Range:</td>
+		<td id="pickupDateRange" class="td-static">${pickupDateFrom} To ${pickupDateTo}</td>
 	</tr>
 	<tr>
-		<td>${dumpsterSizeAggregation}</td>
+		<td class="td-static">${dumpsterSizeAggregation}</td>
 	</tr> 
 </table>
 
