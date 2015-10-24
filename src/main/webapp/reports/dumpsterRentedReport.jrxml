@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
-<!-- 2015-10-23T23:15:06 -->
+<!-- 2015-10-24T06:33:40 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="DumpsterOnsiteReport" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="faf505e5-0136-4842-b2f3-9d43bbd13323">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
@@ -21,7 +21,7 @@
 			<staticText>
 				<reportElement x="75" y="19" width="421" height="36" uuid="3c9d029c-2751-4c47-8bbe-8c76c2ae11e5"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="13" isBold="true"/>
+					<font fontName="Arial" size="13" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Dumpsters Rented Report]]></text>
 			</staticText>
@@ -36,52 +36,52 @@
 			<staticText>
 				<reportElement x="0" y="0" width="111" height="20" uuid="4836077e-f9ef-4ae0-a30e-1ba3e879e55a"/>
 				<box>
-					<topPen lineWidth="1.0"/>
-					<leftPen lineWidth="1.0"/>
-					<bottomPen lineWidth="1.0"/>
-					<rightPen lineWidth="1.0"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="10" isBold="true" isItalic="true"/>
+					<font fontName="Arial" size="10" isBold="true" isItalic="false"/>
 				</textElement>
 				<text><![CDATA[Dumpster Size]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="111" y="0" width="111" height="20" uuid="a323a96e-a6a9-40e7-8ee2-1a608796d362"/>
 				<box>
-					<topPen lineWidth="1.0"/>
-					<leftPen lineWidth="1.0"/>
-					<bottomPen lineWidth="1.0"/>
-					<rightPen lineWidth="1.0"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="10" isBold="true" isItalic="true"/>
+					<font fontName="Arial" size="10" isBold="true" isItalic="false"/>
 				</textElement>
 				<text><![CDATA[Dumpster #]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="222" y="0" width="111" height="20" uuid="4847442b-eb8d-41ff-a0fe-ceaefc72c05c"/>
 				<box>
-					<topPen lineWidth="1.0"/>
-					<leftPen lineWidth="1.0"/>
-					<bottomPen lineWidth="1.0"/>
-					<rightPen lineWidth="1.0"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="10" isBold="true" isItalic="true"/>
+					<font fontName="Arial" size="10" isBold="true" isItalic="false"/>
 				</textElement>
 				<text><![CDATA[Delivery Address]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="333" y="0" width="111" height="20" uuid="9174937d-66b8-4bb4-a979-744e7f60704b"/>
 				<box>
-					<topPen lineWidth="1.0"/>
-					<leftPen lineWidth="1.0"/>
-					<bottomPen lineWidth="1.0"/>
-					<rightPen lineWidth="1.0"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="10" isBold="true" isItalic="true"/>
+					<font fontName="Arial" size="10" isBold="true" isItalic="false"/>
 				</textElement>
 				<text><![CDATA[Delivery Date]]></text>
 			</staticText>
@@ -90,13 +90,13 @@
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
 				<box>
-					<topPen lineWidth="1.0"/>
-					<leftPen lineWidth="1.0"/>
-					<bottomPen lineWidth="1.0"/>
-					<rightPen lineWidth="1.0"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="10" isBold="true" isItalic="true"/>
+					<font fontName="Arial" size="10" isBold="true" isItalic="false"/>
 				</textElement>
 				<text><![CDATA[Status]]></text>
 			</staticText>
@@ -110,65 +110,65 @@
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
 				<box>
-					<topPen lineWidth="1.0"/>
-					<leftPen lineWidth="1.0"/>
-					<bottomPen lineWidth="1.0"/>
-					<rightPen lineWidth="1.0"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="10" isBold="false"/>
+					<font fontName="Arial" size="10" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{dumpsterSize}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="111" y="-10" width="111" height="18" uuid="31cb4025-e542-404e-9bc6-a841a0bae981"/>
 				<box>
-					<topPen lineWidth="1.0"/>
-					<leftPen lineWidth="1.0"/>
-					<bottomPen lineWidth="1.0"/>
-					<rightPen lineWidth="1.0"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="10"/>
+					<font fontName="Arial" size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{dumpsterNum}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="222" y="-10" width="111" height="18" uuid="d655d659-4a4b-4475-9910-3a7daf0f8539"/>
 				<box>
-					<topPen lineWidth="1.0"/>
-					<leftPen lineWidth="1.0"/>
-					<bottomPen lineWidth="1.0"/>
-					<rightPen lineWidth="1.0"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="10"/>
+					<font fontName="Arial" size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{deliveryAddress}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="333" y="-10" width="111" height="18" uuid="cf3b4034-e183-4ca9-99bd-e6eba7dd44bb"/>
 				<box>
-					<topPen lineWidth="1.0"/>
-					<leftPen lineWidth="1.0"/>
-					<bottomPen lineWidth="1.0"/>
-					<rightPen lineWidth="1.0"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="10"/>
+					<font fontName="Arial" size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{deliveryDate}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="444" y="-10" width="111" height="18" uuid="ed508bd3-7a8b-483a-a194-8af0252746de"/>
 				<box>
-					<topPen lineWidth="1.0"/>
-					<leftPen lineWidth="1.0"/>
-					<bottomPen lineWidth="1.0"/>
-					<rightPen lineWidth="1.0"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="10"/>
+					<font fontName="Arial" size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{status}]]></textFieldExpression>
 			</textField>
@@ -180,13 +180,21 @@
 	<pageFooter>
 		<band height="40" splitType="Stretch">
 			<textField>
-				<reportElement x="223" y="2" width="80" height="20" uuid="293bc6b1-5f7a-486a-b0fd-897ab2fa971a"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<reportElement x="223" y="2" width="70" height="20" uuid="293bc6b1-5f7a-486a-b0fd-897ab2fa971a">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
 				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
 			</textField>
 			<textField evaluationTime="Report">
-				<reportElement x="303" y="2" width="40" height="20" uuid="26bae962-68ac-44af-a393-5f195c663b11"/>
-				<textElement verticalAlignment="Middle"/>
+				<reportElement x="293" y="2" width="20" height="20" uuid="26bae962-68ac-44af-a393-5f195c663b11">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
 				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 		</band>
