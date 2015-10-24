@@ -33,16 +33,18 @@
 					</c:forEach>
 				</select>
 			</td>
-	</tr>
-	<tr>
-		<td align="${left}"></td>
-		<td align="${left}"><input type="button" class="btn btn-primary btn-sm" onclick="document.forms['deliveryPickUpReportSearchForm'].submit();"
-			value="<transys:label code="Preview"/>" /></td>
-	</tr>
+		</tr>
+		<tr>
+			<td align="${left}"></td>
+			<td align="${left}"><input type="button" class="btn btn-primary btn-sm" onclick="document.forms['deliveryPickUpReportSearchForm'].submit();"
+				value="<transys:label code="Preview"/>" /></td>
+		</tr>
+		<tr><td></td></tr>
 	</table>
 </form:form>
 <hr class="hr-ext">
 <table class="table" id="form-table"> 
+	<tr><td></td></tr>
 	<tr>
 		<td class="form-left">Total Dumpsters/Boxes Delivered (or Picked up) for:</td>
 	</tr>
@@ -50,10 +52,10 @@
 <table class="table" id="form-table"> 	
 	<tr>
 		<td class="form-left form-left-ext"><transys:label code="Delivery Date Range:" /></td>
-		<td class="wide td-static" id="deliveryDateRange">${deliveryDateFrom} To ${deliveryDateTo}</td>
+		<td class="wide td-static" id="deliveryDateRange">${deliveryDateFrom}&nbsp;&nbsp;To&nbsp;&nbsp;${deliveryDateTo}</td>
 
 		<td class="form-left  td-static">Pickup Date Range:</td>
-		<td id="pickupDateRange" class="td-static">${pickupDateFrom} To ${pickupDateTo}</td>
+		<td id="pickupDateRange" class="td-static">${pickupDateFrom}&nbsp;&nbsp;To&nbsp;&nbsp;${pickupDateTo}</td>
 	</tr>
 	<tr>
 		<td class="td-static">${dumpsterSizeAggregation}</td>
@@ -68,7 +70,7 @@
 		pagingLink="search.do" dataQualifier="deliveryPickupReport">
 		<transys:textcolumn headerText="Order #" dataField="id" />
 		<transys:textcolumn headerText="Customer" dataField="customer.companyName" />
-		<transys:textcolumn headerText="Delivery Address" dataField="deliveryAddress.line1" />
+		<transys:textcolumn headerText="Delivery Address" dataField="deliveryAddress.fullLine" />
 		<transys:textcolumn headerText="City" dataField="deliveryAddress.city" />
 		<transys:textcolumn headerText="Dumpster Size" dataField="dumpsterSize.size" />
 		<transys:textcolumn headerText="Dumpster #" dataField="dumpster.dumpsterNum" />

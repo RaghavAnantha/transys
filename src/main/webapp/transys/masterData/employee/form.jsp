@@ -29,7 +29,9 @@ function formatPhone(){
 <form:form action="save.do" name="typeForm" commandName="modelObject"
 	method="post" id="typeForm">
 	<form:hidden path="id" id="id" />
-	<%@include file="/common/messages.jsp"%>
+	<jsp:include page="/common/messages.jsp">
+		<jsp:param name="msgCtx" value="manageEmployees" />
+	</jsp:include>
 	<table id="form-table" class="table">
 		<tr>
 			<td class="form-left"><transys:label code="Employee ID" /><span
@@ -38,11 +40,11 @@ function formatPhone(){
 			<form:errors path="employeeId" cssClass="errorMessage" /></td>
 		</tr>
 		<tr>
-			<td class="form-left"><transys:label code="First Name" /></td>
+			<td class="form-left"><transys:label code="First Name" /><span class="errorMessage">*</span></td>
 			<td ><form:input path="firstName" cssClass="flat" style="width: 175px !important"/>
 				<br>
 			<form:errors path="firstName" cssClass="errorMessage" /></td>
-			<td class="form-left"><transys:label code="Last Name" /></td>
+			<td class="form-left"><transys:label code="Last Name" /><span class="errorMessage">*</span></td>
 			<td ><form:input path="lastName" cssClass="flat" style="width: 175px !important"/>
 				<br>
 			<form:errors path="lastName" cssClass="errorMessage" /></td>
@@ -53,7 +55,7 @@ function formatPhone(){
 		<td class="form-left"><transys:label code="Job Title" /><span class="errorMessage">*</span></td>
 			<td>
 				<form:select id="jobTitle" cssClass="flat form-control input-sm" path="jobTitle" style="width: 175px !important" onChange="return populateDeliveryAddress();"> 
-					<form:option value="">------Please Select--------</form:option>
+					<form:option value="">-----Please Select-----</form:option>
 					<form:options items="${jobTitleValues}" itemValue="id" itemLabel="jobTitle" />
 				</form:select> 
 			 	<form:errors path="jobTitle" cssClass="errorMessage" />
@@ -61,47 +63,47 @@ function formatPhone(){
 		</tr>
 		
 		<tr>
-			<td class="form-left"><transys:label code="Address" /></td>
+			<td class="form-left"><transys:label code="Address" /><span class="errorMessage">*</span></td>
 			<td><form:input path="address" cssClass="flat" style="width: 175px !important"/>
 				<br>
 			<form:errors path="address" cssClass="errorMessage" /></td>
 			
-			<td class="form-left"><transys:label code="City" /></td>
+			<td class="form-left"><transys:label code="City" /><span class="errorMessage">*</span></td>
 			<td><form:input path="city" cssClass="flat" style="width: 175px !important"/>
 				<br>
 			<form:errors path="city" cssClass="errorMessage" /></td>
 		</tr>
 		
 		<tr>
-			<td class="form-left"><transys:label code="State" /></td>
+			<td class="form-left"><transys:label code="State" /><span class="errorMessage">*</span></td>
 			<td>
 				<form:select cssClass="flat form-control input-sm" path="state.id" style="width:172px !important">
-					<form:option value="">------Please Select--------</form:option>
+					<form:option value="">-----Please Select-----</form:option>
 					<form:options items="${state}" itemValue="id" itemLabel="name" />
 				</form:select> 
 				<form:errors path="state.id" cssClass="errorMessage" />
 			</td>
 			
-			<td class="form-left"><transys:label code="Zipcode" /></td>
+			<td class="form-left"><transys:label code="Zipcode" /><span class="errorMessage">*</span></td>
 			<td><form:input path="zipcode" cssClass="flat" style="width: 175px !important"/>
 				<br>
 			<form:errors path="zipcode" cssClass="errorMessage" /></td>
 		</tr>
 		
 		<tr>
-			<td class="form-left"><transys:label code="Phone" /></td>
+			<td class="form-left"><transys:label code="Phone" /><span class="errorMessage">*</span></td>
 			<td><form:input path="phone" cssClass="flat" style="width: 175px !important" onkeypress="return onlyNumbers(event, false)" onblur="return formatPhone();"/>
 				<br>
 			<form:errors path="phone" cssClass="errorMessage" /></td>
 			
-			<td class="form-left"><transys:label code="EMail" /></td>
+			<td class="form-left"><transys:label code="E-mail" /><span class="errorMessage">*</span></td>
 			<td><form:input path="email" cssClass="flat" style="width: 175px !important"/>
 				<br>
 			<form:errors path="email" cssClass="errorMessage" /></td>
 		</tr>
 		
 		<tr>
-			<td class="form-left"><transys:label code="Hire Date" /></td>
+			<td class="form-left"><transys:label code="Hire Date" /><span class="errorMessage">*</span></td>
 			<td class="wide"><form:input path="hireDate" class="flat"
 				id="datepicker7" name="hireDate" style="width: 175px" /></td>
 				
@@ -111,10 +113,10 @@ function formatPhone(){
 		</tr>
 		
 		<tr>
-			<td class="form-left"><transys:label code="Status" /></td>
+			<td class="form-left"><transys:label code="Status" /><span class="errorMessage">*</span></td>
 			<td>
-				<form:select cssClass="flat form-control input-sm" path="status" style="width:172px !important">
-					<form:option value="">------Please Select--------</form:option>
+				<form:select cssClass="flat form-control input-sm" path="status" style="width:175px !important">
+					<form:option value="">-----Please Select-----</form:option>
 					<form:options items="${employeeStatus}" itemValue="id" itemLabel="status" />
 				</form:select> 
 				<br><form:errors path="status" cssClass="errorMessage" />
@@ -124,7 +126,7 @@ function formatPhone(){
 			<td colspan=10></td>
 		</tr>
 		<tr>
-			<td colspan=10 class="danger" style="font-size: 13px;font-weight: bold;color: white;">Notes/Comments</td>
+			<td colspan=10 class="section-header" style="line-height: 0.7;font-size: 13px;font-weight: bold;color: white;">Notes/Comments</td>
 		</tr>
 		<tr>
 			<td colspan=10></td>
@@ -138,9 +140,6 @@ function formatPhone(){
 		<tr>
 			<td colspan=10></td>
 		</tr>		
-		<tr>
-			<td colspan="2"></td>
-		</tr>
 		<tr>
 			<td>&nbsp;</td>
 			<td colspan="2">

@@ -77,6 +77,7 @@ public class LocationTypeController extends CRUDController<LocationType> {
 		criteria.getSearchMap().remove("_csrf");
 		super.save(request, entity, bindingResult, model);
 		
+		model.addAttribute("msgCtx", "manageLocationTypes");
 		model.addAttribute("msg", "Location Type saved successfully");
 
 		return urlContext + "/form";

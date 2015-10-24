@@ -77,6 +77,7 @@ public class PaymentMethodController extends CRUDController<PaymentMethodType> {
 		criteria.getSearchMap().remove("_csrf");
 		super.save(request, entity, bindingResult, model);
 
+		model.addAttribute("msgCtx", "managePaymentMethods");
 		model.addAttribute("msg", "Payment Method saved successfully");
 		return urlContext + "/form";
 

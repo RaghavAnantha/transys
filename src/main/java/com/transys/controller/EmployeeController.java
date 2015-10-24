@@ -92,6 +92,7 @@ public class EmployeeController extends CRUDController<Employee> {
 		criteria.getSearchMap().remove("_csrf");
 		super.save(request, entity,  bindingResult, model);
 		
+		model.addAttribute("msgCtx", "manageEmployees");
 		model.addAttribute("msg", "Employee saved successfully");
 		
 		return urlContext + "/form";

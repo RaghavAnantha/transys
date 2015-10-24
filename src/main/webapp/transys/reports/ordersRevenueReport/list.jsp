@@ -16,14 +16,16 @@
 			<td><input type="button" class="btn btn-primary btn-sm" onclick="document.forms['ordersRevenueReportSearchForm'].submit();"
 				value="<transys:label code="Preview"/>" /></td>
 		</tr>
+		<tr><td></td></tr>
 	</table>
 </form:form>
 <hr class="hr-ext">
 <table class="table" id="form-table">
-	 <tr>
+	<tr><td></td></tr>
+	<tr>
 		<td class="form-left"><transys:label code="Order Date Range:" /><span class="errorMessage"></span></td>
-		  <td class="wide td-static" id="orderDateRange" >${orderDateFrom} To ${orderDateTo}</td>
-	 </tr>
+		<td class="wide td-static" id="orderDateRange" >${orderDateFrom}&nbsp;&nbsp;To&nbsp;&nbsp;${orderDateTo}</td>
+	</tr>
 	<tr>
 		<td class="form-left" style="width:190px"><transys:label code="Dumpster Price Total:" /><span
 			class="errorMessage"></span></td>

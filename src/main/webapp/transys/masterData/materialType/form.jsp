@@ -5,13 +5,15 @@
 <form:form action="save.do" name="typeForm" commandName="modelObject"
 	method="post" id="typeForm">
 	<form:hidden path="id" id="id" />
-	<%@include file="/common/messages.jsp"%>
+	<jsp:include page="/common/messages.jsp">
+		<jsp:param name="msgCtx" value="manageMaterialTypes" />
+	</jsp:include>
 	<table id="form-table" class="table">
 		<tr>
 			<td colspan=10></td>
 		</tr>
 		<tr>
-			<td class="form-left"><transys:label code="Material Category" /></td>
+			<td class="form-left"><transys:label code="Material Category" /><span class="errorMessage">*</span></td>
 			<td>
 				<form:select cssClass="flat form-control input-sm" style="width:172px !important" path="materialCategory" >
 					<form:option value="">------Please Select--------</form:option>
@@ -21,7 +23,7 @@
 			</td> 
 		</tr>
 		<tr>
-			<td class="form-left"><transys:label code="Material Type" /></td>
+			<td class="form-left"><transys:label code="Material Type" /><span class="errorMessage">*</span></td>
 			<td>
 				<form:input path="materialName" cssClass="flat" style="width:172px !important"/>
 				<form:errors path="materialName" cssClass="errorMessage" />
@@ -31,7 +33,7 @@
 			<td colspan=10></td>
 		</tr>
 		<tr>
-			<td colspan=10 class="section-header" style="line-height: 1;font-size: 13px;font-weight: bold;color: white;">Notes/Comments</td>
+			<td colspan=10 class="section-header" style="line-height: 0.7;font-size: 13px;font-weight: bold;color: white;">Notes/Comments</td>
 		</tr>
 		<tr>
 			<td colspan=10></td>
@@ -44,9 +46,6 @@
 		</tr>
 		<tr>
 			<td colspan=10></td>
-		</tr>
-		<tr>
-			<td colspan="2"></td>
 		</tr>
 		<tr>
 			<td>&nbsp;</td>

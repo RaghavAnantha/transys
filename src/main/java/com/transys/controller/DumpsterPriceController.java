@@ -88,6 +88,7 @@ public class DumpsterPriceController extends CRUDController<DumpsterPrice> {
 		criteria.getSearchMap().remove("_csrf");
 		super.save(request, entity, bindingResult, model);
 		
+		model.addAttribute("msgCtx", "manageDumpsterPrice");
 		model.addAttribute("msg", "Dumpster Price saved successfully");
 
 		return urlContext + "/form";

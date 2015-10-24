@@ -5,13 +5,15 @@
 <form:form action="save.do" name="typeForm" commandName="modelObject"
 	method="post" id="typeForm">
 	<form:hidden path="id" id="id" />
-	<%@include file="/common/messages.jsp"%>
+	<jsp:include page="/common/messages.jsp">
+		<jsp:param name="msgCtx" value="manageDumpsters" />
+	</jsp:include>
 	<table id="form-table" class="table">
 		<tr>
 			<td class="form-left"><transys:label code="Dumpster Size" /><span class="errorMessage">*</span></td>
 			<td>
 				<form:select id="dumpsterSize" cssClass="flat form-control input-sm" style="width:172px !important" path="dumpsterSize"> 
-					<form:option value="">-------Please Select------</form:option>
+					<form:option value="">----Please Select----</form:option>
 					<form:options items="${dumpsterSizes}" itemValue="id" itemLabel="size" />
 				</form:select> 
 			 	<form:errors path="dumpsterSize" cssClass="errorMessage" />
@@ -23,10 +25,10 @@
 			<form:errors path="dumpsterNum" cssClass="errorMessage" /></td>
 		</tr>
 		<tr>
-			<td class="form-left"><transys:label code="Status" /></td>
+			<td class="form-left"><transys:label code="Status" /><span class="errorMessage">*</span></td>
 			<td>
 				<form:select cssClass="flat form-control input-sm" style="width:172px !important" path="status" >
-					<form:option value="">------Please Select--------</form:option>
+					<form:option value="">----Please Select----</form:option>
 					<form:options items="${dumpsterStatus}" itemValue="id"  itemLabel="status" />
 				</form:select> 
 				<form:errors path="status" cssClass="errorMessage" />
@@ -36,7 +38,7 @@
 			<td colspan=10></td>
 		</tr>
 		<tr>
-			<td colspan=10 class="section-header" style="line-height: 1;font-size: 13px;font-weight: bold;color: white;">Notes/Comments</td>
+			<td colspan=10 class="section-header" style="line-height: 0.7;font-size: 13px;font-weight: bold;color: white;">Notes/Comments</td>
 		</tr>
 		<tr>
 			<td colspan=10></td>
@@ -49,9 +51,6 @@
 		</tr>
 		<tr>
 			<td colspan=10></td>
-		</tr>
-		<tr>
-			<td colspan="2"></td>
 		</tr>
 		<tr>
 			<td>&nbsp;</td>

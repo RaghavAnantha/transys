@@ -8,7 +8,7 @@
 			<td class="form-left"><transys:label code="City" /></td>
 			<td class="wide">
 				<select class="flat form-control input-sm" id="suburbName" name="suburbName" style="width: 175px !important">
-					<option value="">------Please Select------</option>
+					<option value="">----Please Select----</option>
 					<c:forEach items="${cityFees}" var="aCity">
 						<c:set var="selected" value="" />
 						<c:if test="${sessionScope.searchCriteria.searchMap['suburbName'] == aCity.suburbName}">
@@ -26,8 +26,7 @@
 			<td class="form-left"><transys:label code="Fee" /></td>
 			<td class="wide">
 				<select class="flat form-control input-sm" id="fee" name="fee" style="width: 175px !important">
-					<option value="">------
-						<transys:label code="Please Select" />------
+					<option value="">----Please Select----
 					</option>
 					<c:forEach items="${uniqueCityFees}" var="aCityFee">
 						<c:set var="selected" value="" />

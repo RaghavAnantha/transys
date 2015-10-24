@@ -107,9 +107,7 @@ public class DeliveryPickupReportController extends CRUDController<Order> {
 	@RequestMapping(method = RequestMethod.GET, value = "/generateDeliveryPickupReport.do")
 	public void export(ModelMap model, HttpServletRequest request, HttpServletResponse response,
 			@RequestParam("type") String type, Object objectDAO, Class clazz) {
-
 		try {
-
 			List<Map<String,Object>> reportData = prepareReportData(model, request);
 
 			type = setRequestHeaders(response, type, "deliveryPickupReport");
@@ -125,17 +123,14 @@ public class DeliveryPickupReportController extends CRUDController<Order> {
 
 			out.writeTo(response.getOutputStream());
 			out.close();
-
 		} catch (Exception e) {
 			e.printStackTrace();
 			log.warn("Unable to create file :" + e);
 			request.getSession().setAttribute("errors", e.getMessage());
-
 		}
 	}
 
 	private List<Map<String, Object>> prepareReportData(ModelMap model, HttpServletRequest request) {
-		
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		criteria.getSearchMap().remove("_csrf");
 		
@@ -144,7 +139,6 @@ public class DeliveryPickupReportController extends CRUDController<Order> {
 		
 		List<Map<String, Object>> reportData = new ArrayList<Map<String, Object>>();
 		for (Order anOrder : orderList) {
-			
 			DeliveryAddress deliveryAddress = anOrder.getDeliveryAddress();
 			
 			Map<String, Object> map = new HashMap<String, Object>();
@@ -154,8 +148,8 @@ public class DeliveryPickupReportController extends CRUDController<Order> {
 			map.put("city", StringUtils.EMPTY + deliveryAddress.getCity());
 			map.put("dumpsterSize", StringUtils.EMPTY + anOrder.getDumpsterSize().getSize());
 			map.put("dumpsterNum", (anOrder.getDumpster() == null ? StringUtils.EMPTY : anOrder.getDumpster().getDumpsterNum()));
-			map.put("deliveryDate", StringUtils.EMPTY + anOrder.getDeliveryDate());
-			map.put("pickupDate", anOrder.getPickupDate() == null ? StringUtils.EMPTY : anOrder.getPickupDate());
+			map.put("deliveryDate", anOrder.getFormattedDeliveryDate());
+			map.put("pickupDate", anOrder.getFormattedPickupDate());
 			
 			Object deliveryDateFrom = criteria.getSearchMap().get("deliveryDateFrom");
 			map.put("deliveryDateFrom", deliveryDateFrom == null ? StringUtils.EMPTY : deliveryDateFrom );

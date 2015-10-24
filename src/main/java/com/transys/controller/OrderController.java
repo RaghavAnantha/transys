@@ -263,13 +263,29 @@ public class OrderController extends CRUDController<Order> {
 	@RequestMapping(method = RequestMethod.GET, value = "/orderReport.do")
 	public String orderReport(ModelMap model, HttpServletRequest request) {
 		setupList(model, request);
+		
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		//criteria.getSearchMap().put("id!",0l);
 		//TODO fix me
 		criteria.getSearchMap().remove("_csrf");
-		model.addAttribute("orderReportList",genericDAO.search(getEntityClass(), criteria,"id",null,null));
+		
+		List<Order> orderList =  genericDAO.search(getEntityClass(), criteria,"id", null, null);
+		
+		model.addAttribute("orderReportList", orderList);
 		model.addAttribute("activeTab", "orderReports");
 		model.addAttribute("mode", "MANAGE");
+		
+		String orderDateFrom = criteria.getSearchMap().get("createdAtFrom").toString();
+		String orderDateTo = criteria.getSearchMap().get("createdAtTo").toString();
+		
+		if (orderList != null && !orderList.isEmpty()) {
+			orderDateFrom = StringUtils.defaultIfEmpty(orderDateFrom, orderList.get(0).getFormattedCreatedAt());
+			orderDateTo = StringUtils.defaultIfEmpty(orderDateTo, orderList.get(orderList.size() - 1).getFormattedCreatedAt());
+		}
+		
+		model.addAttribute("orderDateFrom", orderDateFrom);
+		model.addAttribute("orderDateTo", orderDateTo);
+		
 		return urlContext + "/order";
 	}
 	

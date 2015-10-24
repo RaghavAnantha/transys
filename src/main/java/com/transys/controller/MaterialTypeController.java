@@ -80,6 +80,7 @@ public class MaterialTypeController extends CRUDController<MaterialType> {
 		criteria.getSearchMap().remove("_csrf");
 		super.save(request, entity, bindingResult, model);
 
+		model.addAttribute("msgCtx", "manageMaterialTypes");
 		model.addAttribute("msg", "Material Type saved successfully");
 		return urlContext + "/form";
 

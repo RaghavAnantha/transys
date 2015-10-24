@@ -924,7 +924,7 @@ function verifyExchangeOrderAndSubmit() {
 		<tr>
 			<td class="form-left">Total Permit Fees</td>
 			<td class="wide">
-				<form:input path="orderFees.totalPermitFees" readonly="true" cssClass="form-control" style="width:172px;height:22px !important"/>
+				<form:input path="orderFees.totalPermitFees" readonly="true" cssClass="form-control form-control-ext" style="width:172px;height:22px !important"/>
 			</td>
 		</tr>
 		<tr>
@@ -1002,7 +1002,7 @@ function verifyExchangeOrderAndSubmit() {
 		<tr>
 			<td class="form-left"><transys:label code="Total Additional Fees"/></td>
 			<td>
-				<form:input path="orderFees.totalAdditionalFees" readonly="true" cssClass="form-control" style="width:172px;height:22px !important"/>
+				<form:input path="orderFees.totalAdditionalFees" readonly="true" cssClass="form-control form-control-ext" style="width:172px;height:22px !important"/>
 			</td>
 		</tr>
 		<tr>
@@ -1013,13 +1013,13 @@ function verifyExchangeOrderAndSubmit() {
 			</td>
 			<td class="form-left"><transys:label code="Discount Amount"/></td>
 			<td>
-				<form:input path="orderFees.discountAmount" cssClass="form-control" readonly="true" style="width:172px;height:22px !important"/>
+				<form:input path="orderFees.discountAmount" cssClass="form-control form-control-ext" readonly="true" style="width:172px;height:22px !important"/>
 			</td>
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Total Fees"/><span class="errorMessage">*</span></td>
 			<td>
-				<form:input path="orderFees.totalFees" cssClass="form-control" readonly="true" style="width:172px;height:22px !important"/>
+				<form:input path="orderFees.totalFees" cssClass="form-control form-control-ext" readonly="true" style="width:172px;height:22px !important"/>
 			</td>
 		</tr>
 		<tr>
@@ -1051,7 +1051,7 @@ function verifyExchangeOrderAndSubmit() {
 				<c:if test="${modelObject.orderPayment[0] != null and modelObject.orderPayment[0].id != null}">
 					<c:set var="orderPayment1CreatedAt" value="${modelObject.orderPayment[0].formattedCreatedAt}" />
 				</c:if>
-				<input type="text" value="${orderPayment1CreatedAt}" class="form-control" readonly style="width:172px;height:22px !important">
+				<input type="text" value="${orderPayment1CreatedAt}" class="form-control form-control-ext" readonly style="width:172px;height:22px !important">
 			</td>
 			<td class="wide">
 				<form:input path="orderPayment[0].amountPaid" cssClass="flat" />
@@ -1079,7 +1079,7 @@ function verifyExchangeOrderAndSubmit() {
 				<c:if test="${modelObject.orderPayment[1] != null and modelObject.orderPayment[1].id != null}">
 					<c:set var="orderPayment2CreatedAt" value="${modelObject.orderPayment[1].formattedCreatedAt}" />
 				</c:if>
-				<input type="text" value="${orderPayment2CreatedAt}" class="form-control" readonly style="width:172px;height:22px !important">
+				<input type="text" value="${orderPayment2CreatedAt}" class="form-control form-control-ext" readonly style="width:172px;height:22px !important">
 			</td>
 			<td>
 				<form:input path="orderPayment[1].amountPaid" cssClass="flat" />
@@ -1107,7 +1107,7 @@ function verifyExchangeOrderAndSubmit() {
 				<c:if test="${modelObject.orderPayment[2] != null and modelObject.orderPayment[2].id != null}">
 					<c:set var="orderPayment3CreatedAt" value="${modelObject.orderPayment[2].formattedCreatedAt}" />
 				</c:if>
-				<input type="text" value="${orderPayment3CreatedAt}" class="form-control" readonly style="width:172px;height:22px !important">
+				<input type="text" value="${orderPayment3CreatedAt}" class="form-control form-control-ext" readonly style="width:172px;height:22px !important">
 			</td>
 			<td class="wide">
 				<form:input path="orderPayment[2].amountPaid" cssClass="flat" />

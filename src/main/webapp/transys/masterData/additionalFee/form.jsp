@@ -5,27 +5,29 @@
 <form:form action="save.do" name="typeForm" commandName="modelObject"
 	method="post" id="typeForm">
 	<form:hidden path="id" id="id" />
-	<%@include file="/common/messages.jsp"%>
+	<jsp:include page="/common/messages.jsp">
+		<jsp:param name="msgCtx" value="manageAdditionalFees" />
+	</jsp:include>
 	<table id="form-table" class="table">
 		<tr>
-			<td class="form-left"><transys:label code="Description" /></td>
+			<td class="form-left"><transys:label code="Description" /><span class="errorMessage">*</span></td>
 			<td><form:input path="description" cssClass="flat" style="width: 175px !important"/>
 				<br>
 			<form:errors path="description" cssClass="errorMessage" /></td>
 		</tr>
 		<tr>
-			<td class="form-left"><transys:label code="Fee" /></td>
+			<td class="form-left"><transys:label code="Fee" /><span class="errorMessage">*</span></td>
 			<td><form:input path="fee" cssClass="flat" style="width: 175px !important"/>
 				<br>
 			<form:errors path="fee" cssClass="errorMessage" /></td>
 		</tr>
 			<tr>
-			<td class="form-left"><transys:label code="Effective Date From" /></td>
+			<td class="form-left form-left-ext"><transys:label code="Effective Date From" /><span class="errorMessage">*</span></td>
 			<td>
 			<form:input path="effectiveStartDate" class="flat" id="datepicker7" name="effectiveStartDate" style="width: 175px !important"/></td>
 		</tr>
 		<tr>
-			<td class="form-left"><transys:label code="Effective Date To" /></td>
+			<td class="form-left"><transys:label code="Effective Date To" /><span class="errorMessage">*</span></td>
 			<td>
 			<form:input path="effectiveEndDate" class="flat" id="datepicker8" name="effectiveEndDate"  style="width: 175px !important"/></td>
 		</tr>
@@ -33,7 +35,7 @@
 			<td colspan=10></td>
 		</tr>
 		<tr>
-			<td colspan=10 class="section-header" style="line-height: 1;font-size: 13px;font-weight: bold;color: white;">Notes/Comments</td>
+			<td colspan=10 class="section-header" style="line-height: 0.7;font-size: 13px;font-weight: bold;color: white;">Notes/Comments</td>
 		</tr>
 		<tr>
 			<td colspan=10></td>
@@ -46,9 +48,6 @@
 		</tr>
 		<tr>
 			<td colspan=10></td>
-		</tr>
-		<tr>
-			<td colspan="2"></td>
 		</tr>
 		<tr>
 			<td>&nbsp;</td>

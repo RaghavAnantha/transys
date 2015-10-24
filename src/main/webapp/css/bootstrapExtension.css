@@ -45,8 +45,8 @@ textarea {
 }
 
 .hr-ext {
-	margin-bottom: 10px;
-	margin-top: 10px;
+	margin-bottom: 0px;
+	margin-top: 0px;
 	height:2px;
 	border: 0; 
 	background: #333; 
@@ -54,6 +54,10 @@ textarea {
 
 .centerImage {
 	text-align:center;
+}
+
+.btn-sm-ext {
+	padding: 3px 10px;
 }
 
 

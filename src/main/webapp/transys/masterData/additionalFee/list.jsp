@@ -9,8 +9,7 @@
 			<td class="wide"><select
 				class="flat form-control input-sm" id="city" name="description"
 				style="width: 175px !important">
-					<option value="">------
-						<transys:label code="Please Select" />------
+					<option value="">----Please Select-----
 					</option>
 					<c:forEach items="${additionalFees}" var="aFee">
 						<c:set var="selected" value="" />
@@ -30,8 +29,7 @@
 				<td class="wide"><select
 					class="flat form-control input-sm" id="fee" name="fee"
 					style="width: 175px  !important">
-						<option value="">------
-							<transys:label code="Please Select" />------
+						<option value="">----Please Select-----
 						</option>
 						<c:forEach items="${uniqueAdditionalFees}" var="tempFee">
 							<c:set var="selected" value="" />

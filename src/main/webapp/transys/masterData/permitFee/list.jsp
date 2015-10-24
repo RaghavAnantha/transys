@@ -9,8 +9,7 @@
 			<td class="wide"><select
 				class="flat form-control input-sm" id="permitClass" name="permitClass"
 				style="width: 175px !important">
-					<option value="">------
-						<transys:label code="Please Select" />------
+					<option value="">----Please Select----
 					</option>
 					<c:forEach items="${permitClass}" var="aClass">
 						<c:set var="selected" value="" />
@@ -30,8 +29,7 @@
 			<td class="wide"><select
 				class="flat form-control input-sm" id="permitType" name="permitType"
 				style="width: 175px !important">
-					<option value="">------
-						<transys:label code="Please Select" />------
+					<option value="">----Please Select----
 					</option>
 					<c:forEach items="${permitType}" var="aType">
 						<c:set var="selected" value="" />
@@ -50,8 +48,7 @@
 				<td class="wide"><select
 					class="flat form-control input-sm" id="fee" name="fee"
 					style="width: 175px !important">
-						<option value="">------
-							<transys:label code="Please Select" />------
+						<option value="">----Please Select----
 						</option>
 						<c:forEach items="${permitFees}" var="aPermitPrice">
 							<c:set var="selected" value="" />

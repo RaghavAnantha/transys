@@ -5,7 +5,7 @@
 <form:form action="list.do" method="get" name="searchForm">
 	<table id="form-table" class="table">
 		<tr>
-			<td class="form-left"><transys:label code="Employee ID" /></td>
+			<td class="form-left"><transys:label code="Employee Id" /></td>
 			<td>
 				<select class="flat form-control input-sm" id="status" name="employeeId" style="width: 175px !important">
 					<option value="">------Please Select------</option>

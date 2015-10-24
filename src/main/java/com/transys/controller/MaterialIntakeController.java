@@ -78,6 +78,7 @@ public class MaterialIntakeController extends CRUDController<MaterialIntake> {
 		criteria.getSearchMap().remove("_csrf");
 		super.save(request, entity, bindingResult, model);
 		
+		model.addAttribute("msgCtx", "manageMaterialIntake");
 		model.addAttribute("msg", "Material Intake saved successfully");
 
 		return urlContext + "/form";

@@ -106,7 +106,7 @@ $("#permitForCustomerModalForm").submit(function (ev) {
 			</td>
 			<td class="form-left"><transys:label code="End Date" /><span class="errorMessage">*</span></td>
 			<td>
-				<form:input path="endDate" cssClass="form-control" readonly="true" style="width:175px;height:22px !important" />
+				<form:input path="endDate" cssClass="form-control form-control-ext" readonly="true" style="width:175px !important;height:22px" />
 			</td>
 		</tr>
 		<tr>

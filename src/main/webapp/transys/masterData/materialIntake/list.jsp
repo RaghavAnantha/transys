@@ -25,7 +25,7 @@
 		  <td class="wide"><input class="flat" id="datepicker1" name="intakeDate" value="${sessionScope.searchCriteria.searchMap['intakeDate']}" style="width: 175px" /></td>
 		</tr>
 		<tr>
-			<td class="form-left"><transys:label code="Net Weight In Tonnage" /></td>
+			<td class="form-left"><transys:label code="Net Tonnage" /></td>
 			<td class="wide"><input name="netWeightInTonnage" style="width: 175px !important"  /></td>
 		</tr>
 		<tr>
@@ -45,7 +45,7 @@
 		exportPdf="true" exportXls="true" dataQualifier="cityFee">
 		<transys:textcolumn headerText="Material Type" dataField="materialType.materialName" />
 		<transys:textcolumn headerText="Intake Date" dataField="intakeDate" dataFormat="MM/dd/yyy"/>
-		<transys:textcolumn headerText="Net Weight Tonnage" dataField="netWeightTonnage" />
+		<transys:textcolumn headerText="Net Tonnage" dataField="netWeightTonnage" />
 	</transys:datatable>
 	<%session.setAttribute("materialIntakeForRecycleList", pageContext.getAttribute("columnPropertyList"));%>
 </form:form>

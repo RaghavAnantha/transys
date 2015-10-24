@@ -74,7 +74,7 @@ function populatePermitFee() {
 			
 			<td class="form-left"><transys:label code="Order Number" /></td>
 			<td>
-				<input value="${associatedOrderID.order.id}" class="form-control" style="width:172px;height:22px !important" readonly/>
+				<input value="${associatedOrderID.order.id}" class="form-control form-control-ext" style="width:175px !important;height:22px" readonly/>
 			</td>
 		</tr>
 		<tr>
@@ -114,7 +114,7 @@ function populatePermitFee() {
 			<td class="form-left"><transys:label code="Permit Class" /><span class="errorMessage">*</span></td>
 			<td>
 				<form:select id="permitClassSelect" cssClass="flat form-control input-sm" path="permitClass" style="width: 175px !important" onChange="return populatePermitFee();" >
-					<form:option value="">------Please Select--------</form:option>
+					<form:option value="">----Please Select----</form:option>
 					<form:options items="${permitClass}" itemValue="id" itemLabel="permitClass" />
 				</form:select> 
 			 	<form:errors path="permitClass" cssClass="errorMessage" />
@@ -138,7 +138,7 @@ function populatePermitFee() {
 				<form:errors path="startDate" cssClass="errorMessage" />
 			<td class="form-left">End Date</td>
 			<td>
-				<form:input id="endDateInput" path="endDate" cssClass="flat flat-ext form-control" style="width:172px;height:22px !important" readonly="true" />
+				<form:input id="endDateInput" path="endDate" cssClass="flat flat-ext form-control form-control-ext" style="width:175px !important;height:22px !important" readonly="true" />
 			</td>
 		</tr>
 		<tr>
