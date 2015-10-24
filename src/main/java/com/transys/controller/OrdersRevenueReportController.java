@@ -129,7 +129,6 @@ public class OrdersRevenueReportController extends CRUDController<Order> {
 	}
 
 	private List<Map<String, Object>> prepareReportData(HttpServletRequest request) {
-		
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		criteria.getSearchMap().remove("_csrf");
 

@@ -33,9 +33,11 @@ public abstract class AbstractBaseModel implements BaseModel {
 	protected Integer deleteFlag=1;
 	
 	@Column(name="created_at")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM/dd/yyyy")
 	protected Date createdAt = Calendar.getInstance().getTime();
 	
 	@Column(name="modified_at")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM/dd/yyyy")
 	protected Date modifiedAt;
 
 	@Override

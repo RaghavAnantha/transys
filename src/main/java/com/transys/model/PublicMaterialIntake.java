@@ -11,8 +11,8 @@ import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
-@Table(name="materialIntake")
-public class MaterialIntake extends AbstractBaseModel {
+@Table(name="publicMaterialIntake")
+public class PublicMaterialIntake extends AbstractBaseModel {
 	
 	@ManyToOne
 	@JoinColumn(name="materialTypeId")

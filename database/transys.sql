@@ -1447,38 +1447,74 @@ UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 --
--- Table structure for table `materialIntake`
+-- Table structure for table `publicMaterialIntake`
 --
 
-DROP TABLE IF EXISTS `materialIntake`;
+DROP TABLE IF EXISTS `publicMaterialIntake`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `materialIntake` (
+CREATE TABLE `publicMaterialIntake` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `materialTypeId` bigint(20) NOT NULL,
   `intakeDate` datetime NOT NULL,
   `comments` varchar(500) DEFAULT NULL,
-  `created_at` datetime DEFAULT NULL,
-  `created_by` bigint(20) DEFAULT NULL,
+  `created_at` datetime NOT NULL,
+  `created_by` bigint(20) NOT NULL,
   `modified_at` datetime DEFAULT NULL,
   `modified_by` bigint(20) DEFAULT NULL,
   `delete_flag` int(11) NOT NULL DEFAULT '1',
-  `netWeightTonnage` decimal(6,2) DEFAULT NULL,
+  `netWeightTonnage` decimal(6,2) NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `materialIntakeMaterialTypeRef_idx` (`materialTypeId`),
-  CONSTRAINT `materialIntakeMaterialTypeRef` FOREIGN KEY (`materialTypeId`) REFERENCES `materialType` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  KEY `publicMaterialIntakeMaterialTypeRef_idx` (`materialTypeId`),
+  CONSTRAINT `publicMaterialIntakeMaterialTypeRef` FOREIGN KEY (`materialTypeId`) REFERENCES `materialType` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `materialIntake`
+-- Dumping data for table `publicMaterialIntake`
 --
 
-LOCK TABLES `materialIntake` WRITE;
-/*!40000 ALTER TABLE `materialIntake` DISABLE KEYS */;
-INSERT INTO `materialIntake` VALUES (4,1,'2015-10-10 00:00:00',NULL,'2015-10-11 11:04:37',1,NULL,NULL,1,30.00),
+LOCK TABLES `publicMaterialIntake` WRITE;
+/*!40000 ALTER TABLE `publicMaterialIntake` DISABLE KEYS */;
+INSERT INTO `publicMaterialIntake` VALUES (4,1,'2015-10-10 00:00:00',NULL,'2015-10-11 11:04:37',1,NULL,NULL,1,30.00),
 (5,2,'2015-10-10 00:00:00',NULL,'2015-10-11 11:06:54',1,NULL,NULL,1,12.00);
-/*!40000 ALTER TABLE `materialIntake` ENABLE KEYS */;
+/*!40000 ALTER TABLE `publicMaterialIntake` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+--
+-- Table structure for table `recycleLocation`
+--
+
+DROP TABLE IF EXISTS `recycleLocation`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `recycleLocation` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `materialTypeId` bigint(20) NOT NULL,
+  `location` varchar(100) NOT NULL,
+  `status` varchar(20) NOT NULL,
+  `comments` varchar(500) DEFAULT NULL,
+  `effectiveStartDate` datetime NOT NULL,
+  `effectiveEndDate` datetime NOT NULL,
+  `created_at` datetime NOT NULL,
+  `created_by` bigint(20) NOT NULL,
+  `modified_at` datetime DEFAULT NULL,
+  `modified_by` bigint(20) DEFAULT NULL,
+  `delete_flag` int(11) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`),
+  KEY `recycleLocationMaterialTypeRef_idx` (`materialTypeId`),
+  CONSTRAINT `recycleLocationMaterialTypeRef` FOREIGN KEY (`materialTypeId`) REFERENCES `materialType` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `recycleLocation`
+--
+
+LOCK TABLES `recycleLocation` WRITE;
+/*!40000 ALTER TABLE `recycleLocation` DISABLE KEYS */;
+/*!40000 ALTER TABLE `recycleLocation` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 

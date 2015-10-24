@@ -15,6 +15,9 @@
     <decorator name="permit" page="singleColumnLayout.jsp">
         <pattern>/transys/permit/**</pattern>
     </decorator>
+    <decorator name="publicMaterialIntake" page="singleColumnLayout.jsp">
+        <pattern>/transys/publicMaterialIntake/**</pattern>
+    </decorator>
     <decorator name="masterData" page="singleColumnLayout.jsp">
         <pattern>/transys/masterData/**</pattern>
     </decorator>   

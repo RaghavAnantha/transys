@@ -16,6 +16,7 @@
 					<li id="orderPage"><a href="/order/main.do">Orders</a></li>
 					<li id="permitPage"><a href="/permit/main.do">Permits</a></li>
 					<li id="customerPage"><a href="/customer/main.do">Customers</a></li>
+					<li id="materialIntake"><a href="/publicMaterialIntake/main.do">Public Material Intake</a></li>
 					<li id="reportPage">
 						<a href="#" data-toggle="dropdown" class="dropdown-toggle">Reports<b class="caret"></b></a>
 						<ul class="dropdown-menu">
@@ -41,7 +42,6 @@
 							<li><a href="/masterData/cityFee/main.do">City Fee</a></li>
 							<li><a href="/masterData/permitFee/main.do">Permit Fee</a></li>
 							<li><a href="/masterData/additionalFee/main.do">Additional Fee</a></li>
-							<li><a href="/masterData/materialIntake/main.do">Material Intake For Recycle</a></li>
 						</ul>
 					</li>
 				</ul>
