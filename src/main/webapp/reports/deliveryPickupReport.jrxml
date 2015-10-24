@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
-<!-- 2015-10-24T06:07:06 -->
+<!-- 2015-10-24T09:54:42 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="DeliveryPickupReport" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="d3a0f573-b9d0-4bca-9a6f-1da0ab12e250">
 	<queryString>
 		<![CDATA[]]>
@@ -224,11 +224,11 @@
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="30" splitType="Stretch">
+		<band height="27" splitType="Stretch">
 			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.HorizontalRowLayout"/>
 			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 			<textField>
-				<reportElement x="0" y="0" width="72" height="30" uuid="ff10fb41-b060-4fb4-89ee-40ce127ba193">
+				<reportElement x="0" y="0" width="72" height="27" uuid="ff10fb41-b060-4fb4-89ee-40ce127ba193">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
 				<box>
@@ -243,7 +243,7 @@
 				<textFieldExpression><![CDATA[$F{id}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="72" y="0" width="69" height="30" uuid="5ea7f648-d1e7-4c3c-b393-72a9e4915cc6"/>
+				<reportElement x="72" y="0" width="69" height="27" uuid="5ea7f648-d1e7-4c3c-b393-72a9e4915cc6"/>
 				<box>
 					<topPen lineWidth="0.5" lineStyle="Solid"/>
 					<leftPen lineWidth="0.5" lineStyle="Solid"/>
@@ -256,7 +256,7 @@
 				<textFieldExpression><![CDATA[$F{customer}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="141" y="0" width="69" height="30" uuid="1ce5f69c-069f-4724-b05e-c170d6a4523b"/>
+				<reportElement x="141" y="0" width="69" height="27" uuid="1ce5f69c-069f-4724-b05e-c170d6a4523b"/>
 				<box>
 					<topPen lineWidth="0.5" lineStyle="Solid"/>
 					<leftPen lineWidth="0.5" lineStyle="Solid"/>
@@ -269,7 +269,7 @@
 				<textFieldExpression><![CDATA[$F{deliveryAddress}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="210" y="0" width="69" height="30" uuid="dd42d151-3c0a-4b02-9b67-359501688025"/>
+				<reportElement x="210" y="0" width="69" height="27" uuid="dd42d151-3c0a-4b02-9b67-359501688025"/>
 				<box>
 					<topPen lineWidth="0.5" lineStyle="Solid"/>
 					<leftPen lineWidth="0.5" lineStyle="Solid"/>
@@ -282,7 +282,7 @@
 				<textFieldExpression><![CDATA[$F{city}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="279" y="0" width="69" height="30" uuid="5d71fbc1-044a-4049-b3ac-4e615b895e15"/>
+				<reportElement x="279" y="0" width="69" height="27" uuid="5d71fbc1-044a-4049-b3ac-4e615b895e15"/>
 				<box>
 					<topPen lineWidth="0.5" lineStyle="Solid"/>
 					<leftPen lineWidth="0.5" lineStyle="Solid"/>
@@ -295,7 +295,7 @@
 				<textFieldExpression><![CDATA[$F{dumpsterSize}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="348" y="0" width="69" height="30" uuid="b067fd13-c46b-4f61-8a47-4de7b536ffca"/>
+				<reportElement x="348" y="0" width="69" height="27" uuid="b067fd13-c46b-4f61-8a47-4de7b536ffca"/>
 				<box>
 					<topPen lineWidth="0.5" lineStyle="Solid"/>
 					<leftPen lineWidth="0.5" lineStyle="Solid"/>
@@ -308,7 +308,7 @@
 				<textFieldExpression><![CDATA[$F{dumpsterNum}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="417" y="0" width="69" height="30" uuid="7f225b01-fb90-4699-8ef1-e75cff3eee84"/>
+				<reportElement x="417" y="0" width="69" height="27" uuid="7f225b01-fb90-4699-8ef1-e75cff3eee84"/>
 				<box>
 					<topPen lineWidth="0.5" lineStyle="Solid"/>
 					<leftPen lineWidth="0.5" lineStyle="Solid"/>
@@ -321,7 +321,7 @@
 				<textFieldExpression><![CDATA[$F{deliveryDate}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="486" y="0" width="69" height="30" uuid="dbbc510b-7ff0-4fb7-84b8-4b0f03298547"/>
+				<reportElement x="486" y="0" width="69" height="27" uuid="dbbc510b-7ff0-4fb7-84b8-4b0f03298547"/>
 				<box>
 					<topPen lineWidth="0.5" lineStyle="Solid"/>
 					<leftPen lineWidth="0.5" lineStyle="Solid"/>
