@@ -162,7 +162,7 @@
 	 </tr>
 		<tr>
 			<td></td>
-			<td><input type="button" class="btn btn-primary btn-sm"
+			<td><input type="button" class="btn btn-primary btn-sm btn-sm-ext"
 				onclick="document.forms['permitSearchForm'].submit();"
 				value="<transys:label code="Search"/>" /></td>
 		</tr>

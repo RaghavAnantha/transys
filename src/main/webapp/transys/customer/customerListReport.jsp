@@ -67,7 +67,7 @@
 		<tr>
 			<td></td>
 			<td>
-				<input type="button" class="btn btn-primary btn-sm" onclick="document.forms['customersListReport'].submit();"
+				<input type="button" class="btn btn-primary btn-sm btn-sm-ext" onclick="document.forms['customersListReport'].submit();"
 				value="Preview"/></td>
 		</tr>
 	</table>

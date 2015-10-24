@@ -36,7 +36,7 @@
 		</tr>
 		<tr>
 			<td align="${left}"></td>
-			<td align="${left}"><input type="button" class="btn btn-primary btn-sm" onclick="document.forms['deliveryPickUpReportSearchForm'].submit();"
+			<td align="${left}"><input type="button" class="btn btn-primary btn-sm btn-sm-ext" onclick="document.forms['deliveryPickUpReportSearchForm'].submit();"
 				value="<transys:label code="Preview"/>" /></td>
 		</tr>
 		<tr><td></td></tr>

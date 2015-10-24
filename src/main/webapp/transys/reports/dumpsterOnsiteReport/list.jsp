@@ -35,7 +35,7 @@
 		<tr>
 			<td align="${left}"></td>
 			<td align="${left}"><input type="button"
-				class="btn btn-primary btn-sm"
+				class="btn btn-primary btn-sm btn-sm-ext"
 				onclick="document.forms['dumpstersOnsiteReportsearchForm'].submit();"
 				value="<transys:label code="Preview"/>" /></td>
 		</tr>

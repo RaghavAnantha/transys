@@ -143,8 +143,8 @@ $("#permitForCustomerModalForm").submit(function (ev) {
 		<tr>
 			<td>&nbsp;</td>
 			<td colspan="2">
-				<input type="submit" id="createPermitForCustomer" onclick="return true;" value="<transys:label code="Save"/>" class="flat btn btn-primary btn-sm" /> 
-				<input type="button" id="closePermitForCustomer" value="Close" class="flat btn btn-primary btn-sm" data-dismiss="modal" />
+				<input type="submit" id="createPermitForCustomer" onclick="return true;" value="<transys:label code="Save"/>" class="flat btn btn-primary btn-sm btn-sm-ext" /> 
+				<input type="button" id="closePermitForCustomer" value="Close" class="flat btn btn-primary btn-sm btn-sm-ext" data-dismiss="modal" />
 			</td>
 		</tr>
 	</table>

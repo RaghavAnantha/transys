@@ -75,7 +75,7 @@
 		<tr>
 			<td></td>
 			<td>
-				<input type="button" class="btn btn-primary btn-sm" onclick="document.forms['orderReportSearchForm'].submit();"
+				<input type="button" class="btn btn-primary btn-sm btn-sm-ext" onclick="document.forms['orderReportSearchForm'].submit();"
 					value="<transys:label code="Preview"/>" />
 			</td>
 			<td></td>

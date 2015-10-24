@@ -230,8 +230,8 @@ $("#customerModalForm").submit(function (ev) {
 		<tr>
 			<td>&nbsp;</td>
 			<td align="${left}" colspan="2">
-				<input type="submit" id="create" onclick="return validate()" value="<transys:label code="Save"/>" class="flat btn btn-primary btn-sm" /> 
-				<input type="button" value="Close" class="flat btn btn-primary btn-sm" data-dismiss="modal" />
+				<input type="submit" id="create" onclick="return validate()" value="<transys:label code="Save"/>" class="flat btn btn-primary btn-sm btn-sm-ext" /> 
+				<input type="button" value="Close" class="flat btn btn-primary btn-sm btn-sm-ext" data-dismiss="modal" />
 			</td>
 		</tr>
 	</table>

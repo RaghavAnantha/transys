@@ -13,7 +13,7 @@
 		</tr>
 		<tr>
 			<td></td>
-			<td><input type="button" class="btn btn-primary btn-sm" onclick="document.forms['ordersRevenueReportSearchForm'].submit();"
+			<td><input type="button" class="btn btn-primary btn-sm btn-sm-ext" onclick="document.forms['ordersRevenueReportSearchForm'].submit();"
 				value="<transys:label code="Preview"/>" /></td>
 		</tr>
 		<tr><td></td></tr>

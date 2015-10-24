@@ -35,8 +35,8 @@ $("#orderNotesModalForm").submit(function (ev) {
 		<tr>
 			<td>&nbsp;</td>
 			<td colspan="2">
-				<input type="submit" id="submitOrderNotes" onclick="return validateForm()" value="<transys:label code="Save"/>" class="flat btn btn-primary btn-sm" /> 
-				<input type="button" id="closeOrderNotes" value="Close" class="flat btn btn-primary btn-sm" data-dismiss="modal" />
+				<input type="submit" id="submitOrderNotes" onclick="return validateForm()" value="<transys:label code="Save"/>" class="flat btn btn-primary btn-sm btn-sm-ext" /> 
+				<input type="button" id="closeOrderNotes" value="Close" class="flat btn btn-primary btn-sm btn-sm-ext" data-dismiss="modal" />
 			</td>
 		</tr>
 	</table>
