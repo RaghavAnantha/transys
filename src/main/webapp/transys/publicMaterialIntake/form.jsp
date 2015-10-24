@@ -42,7 +42,7 @@ function populateMaterialTypes() {
 		<tr>
 			<td class="form-left">Material Category<span class="errorMessage">*</span></td>
 			<td>
-				<select class="flat form-control form-control-ext input-sm" id="materialCategory" name="materialCategory" style="width: 175px !important" onChange="return populateMaterialTypes();">
+				<select class="flat form-control input-sm" id="materialCategory" name="materialCategory" style="width: 175px !important" onChange="return populateMaterialTypes();">
 					<option value="">----Please Select----</option>
 					<c:forEach items="${materialCategories}" var="aMaterialCategory">
 						<c:set var="selected" value="" />
