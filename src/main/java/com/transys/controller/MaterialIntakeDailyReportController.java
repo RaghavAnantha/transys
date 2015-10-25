@@ -66,6 +66,9 @@ public class MaterialIntakeDailyReportController extends CRUDController<Order> {
 	
 	private List<MaterialIntakeReportVO> retrieveReportData(SearchCriteria criteria) {
 		String intakeDate = extractIntakeSearchDate(criteria);
+		if (StringUtils.isEmpty(intakeDate)) {
+			return (new ArrayList<MaterialIntakeReportVO>());
+		}
 		
 		String rollOffAggregationQuery = "select materialType.materialName, sum(netWeightTonnage) from Order obj where obj.pickupDate='" 
 								+ intakeDate + "' group by obj.materialType.id";
@@ -89,7 +92,7 @@ public class MaterialIntakeDailyReportController extends CRUDController<Order> {
 	
 	private void populateRollOffData(String intakeDate, List<?> rollOffAggregationQueryResults, 
 			List<MaterialIntakeReportVO> rollOffMaterialIntakeReportVOList) {
-		if (rollOffAggregationQueryResults == null) {
+		if (rollOffAggregationQueryResults == null || rollOffAggregationQueryResults.isEmpty()) {
 			return;
 		}
 		
@@ -127,7 +130,7 @@ public class MaterialIntakeDailyReportController extends CRUDController<Order> {
 	
 	private void populatePublicIntakeData(String intakeDate, List<?> publicIntakeAggregationQueryResults, 
 			List<MaterialIntakeReportVO> publicMaterialIntakeReportVOList) {
-		if (publicIntakeAggregationQueryResults == null) {
+		if (publicIntakeAggregationQueryResults == null || publicIntakeAggregationQueryResults.isEmpty()) {
 			return;
 		}
 		
@@ -196,7 +199,7 @@ public class MaterialIntakeDailyReportController extends CRUDController<Order> {
 		String intakeDateStr = StringUtils.EMPTY;
 		
 		Object intakeDateObj = criteria.getSearchMap().get("intakeDate");
-		if (intakeDateObj == null) {
+		if (intakeDateObj == null || StringUtils.isEmpty(intakeDateObj.toString())) {
 			return intakeDateStr;
 		}
 		
