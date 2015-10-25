@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
-<!-- 2015-10-25T20:56:51 -->
+<!-- 2015-10-25T21:04:27 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="DumpsterOnsiteReport" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="faf505e5-0136-4842-b2f3-9d43bbd13323">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
@@ -107,7 +107,7 @@
 		<band height="18" splitType="Stretch">
 			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.HorizontalRowLayout"/>
 			<textField>
-				<reportElement x="0" y="-10" width="111" height="18" uuid="49d5bea4-befc-4ee7-be2b-70645bd6c96f">
+				<reportElement x="0" y="-10" width="111" height="20" uuid="49d5bea4-befc-4ee7-be2b-70645bd6c96f">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
 				<box>
@@ -122,7 +122,7 @@
 				<textFieldExpression><![CDATA[$F{reportDate}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="111" y="-10" width="111" height="18" uuid="31cb4025-e542-404e-9bc6-a841a0bae981"/>
+				<reportElement x="111" y="-10" width="111" height="20" uuid="31cb4025-e542-404e-9bc6-a841a0bae981"/>
 				<box>
 					<topPen lineWidth="0.5"/>
 					<leftPen lineWidth="0.5"/>
@@ -135,7 +135,7 @@
 				<textFieldExpression><![CDATA[$F{materialName}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="222" y="-10" width="111" height="18" uuid="d655d659-4a4b-4475-9910-3a7daf0f8539"/>
+				<reportElement x="222" y="-10" width="111" height="20" uuid="d655d659-4a4b-4475-9910-3a7daf0f8539"/>
 				<box>
 					<topPen lineWidth="0.5"/>
 					<leftPen lineWidth="0.5"/>
@@ -148,7 +148,7 @@
 				<textFieldExpression><![CDATA[$F{rollOffTons}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="333" y="-10" width="111" height="18" uuid="cf3b4034-e183-4ca9-99bd-e6eba7dd44bb"/>
+				<reportElement x="333" y="-10" width="111" height="20" uuid="cf3b4034-e183-4ca9-99bd-e6eba7dd44bb"/>
 				<box>
 					<topPen lineWidth="0.5"/>
 					<leftPen lineWidth="0.5"/>
@@ -161,7 +161,7 @@
 				<textFieldExpression><![CDATA[$F{publicIntakeTons}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="444" y="-10" width="111" height="18" uuid="ed508bd3-7a8b-483a-a194-8af0252746de"/>
+				<reportElement x="444" y="-10" width="111" height="20" uuid="ed508bd3-7a8b-483a-a194-8af0252746de"/>
 				<box>
 					<topPen lineWidth="0.5"/>
 					<leftPen lineWidth="0.5"/>
