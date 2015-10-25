@@ -18,7 +18,7 @@ function populateDeliveryAddress() {
     	   	$.each(addressList, function () {
     	   	    $("<option />", {
     	   	        val: this.id,
-    	   	        text: this.line1 + ", " + this.line2
+    	   	        text: this.fullLine
     	   	    }).appendTo(deliveryAddressSelect);
     	   	});
     
