@@ -1,5 +1,6 @@
 package com.transys.controller;
 
+import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.ParseException;
@@ -11,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
@@ -18,9 +20,11 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.transys.model.Dumpster;
 import com.transys.model.Order;
 import com.transys.model.RecycleLocation;
 import com.transys.model.SearchCriteria;
@@ -54,6 +58,13 @@ public class MaterialIntakeDailyReportController extends CRUDController<Order> {
 		//TODO fix me
 		criteria.getSearchMap().remove("_csrf");
 		
+		List<MaterialIntakeReportVO> reportData =  retrieveReportData(criteria);
+		model.addAttribute("list", reportData);
+		
+		return urlContext + "/list";
+	}
+	
+	private List<MaterialIntakeReportVO> retrieveReportData(SearchCriteria criteria) {
 		String intakeDate = extractIntakeSearchDate(criteria);
 		
 		String rollOffAggregationQuery = "select materialType.materialName, sum(netWeightTonnage) from Order obj where obj.pickupDate='" 
@@ -70,11 +81,10 @@ public class MaterialIntakeDailyReportController extends CRUDController<Order> {
 		List<MaterialIntakeReportVO> publicMaterialIntakeReportVOList = new ArrayList<MaterialIntakeReportVO>();
 		populatePublicIntakeData(intakeDate, publicIntakeAggregationQueryResults, publicMaterialIntakeReportVOList);
 		
-		List<MaterialIntakeReportVO> unionMaterialIntakeReportVOList = unionMaterialIntakeData(
-				rollOffMaterialIntakeReportVOList, publicMaterialIntakeReportVOList);
-		model.addAttribute("list", unionMaterialIntakeReportVOList);
+		List<MaterialIntakeReportVO> unionMaterialIntakeReportVOList = unionMaterialIntakeData(rollOffMaterialIntakeReportVOList, 
+				publicMaterialIntakeReportVOList);
 		
-		return urlContext + "/list";
+		return unionMaterialIntakeReportVOList;
 	}
 	
 	private void populateRollOffData(String intakeDate, List<?> rollOffAggregationQueryResults, 
@@ -208,5 +218,53 @@ public class MaterialIntakeDailyReportController extends CRUDController<Order> {
 		}
 		
 		return outputDateStr;
+	}
+	
+	@RequestMapping(method = RequestMethod.GET, value = "/generateMaterialIntakeDailyReport.do")
+	public void export(ModelMap model, HttpServletRequest request,
+			HttpServletResponse response, @RequestParam("type") String type,
+			Object objectDAO, Class clazz) {
+		try {
+			List<Map<String,Object>> exportReportData = generateExportReportData(model, request);
+			
+			type = setRequestHeaders(response, type, "materialIntakeDailyReport");
+			Map<String, Object> params = new HashMap<String, Object>();
+
+			ByteArrayOutputStream out = dynamicReportService.generateStaticReport("materialIntakeDailyReport", exportReportData, params, type, request);
+		
+			out.writeTo(response.getOutputStream());
+			out.close();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.warn("Unable to create file :" + e);
+			request.getSession().setAttribute("errors", e.getMessage());
+		}
+	}
+	
+	private List<Map<String, Object>> generateExportReportData(ModelMap model, HttpServletRequest request) {
+		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
+		criteria.getSearchMap().remove("_csrf");
+		
+		List<Map<String, Object>> exportReportData = new ArrayList<Map<String, Object>>();
+
+		List<MaterialIntakeReportVO> materialIntakeReportVOList =  retrieveReportData(criteria);
+		if (materialIntakeReportVOList == null || materialIntakeReportVOList.isEmpty()) {
+			return exportReportData;
+		}
+		
+		for (MaterialIntakeReportVO aMaterialIntakeReportVO : materialIntakeReportVOList) {
+			Map<String, Object> aReportRow = new HashMap<String, Object>();
+			
+			aReportRow.put("reportDate", aMaterialIntakeReportVO.getReportDate());
+			aReportRow.put("materialName", aMaterialIntakeReportVO.getMaterialName());
+			aReportRow.put("rollOffTons",aMaterialIntakeReportVO.getRollOffTons());
+			aReportRow.put("publicIntakeTons",aMaterialIntakeReportVO.getPublicIntakeTons());
+			aReportRow.put("totalTons",aMaterialIntakeReportVO.getTotalTons());
+			
+			exportReportData.add(aReportRow);
+		}
+		
+		return exportReportData;
 	}
 }
