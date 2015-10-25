@@ -7,7 +7,7 @@
 			<td align="${left}" class="form-left">Company Name</td>
 			<td align="${left}" class="wide">
 				<select class="flat form-control input-sm" id="companyName" name="companyName" style="width:175px !important">
-					<option value="">------Please Select------</option>
+					<option value="">----Please Select----</option>
 					<c:forEach items="${customer}" var="customer">
 						<c:set var="selected" value="" />
 						<c:if test="${sessionScope.searchCriteria.searchMap['companyName'] == customer.companyName}">
@@ -20,7 +20,7 @@
 			<td align="${left}" class="form-left">Customer ID</td>
 			<td align="${left}">
 				<select class="flat form-control input-sm" id="customerId" name="id" style="width:175px !important">
-					<option value="">------Please Select------</option>
+					<option value="">----Please Select----</option>
 					<c:forEach items="${customerIds}" var="customerId">
 						<c:set var="selected" value="" />
 						<c:if test="${sessionScope.searchCriteria.searchMap['id'] == customerId}">
@@ -35,7 +35,7 @@
 			<td class="form-left">Contact Name</td>
 			<td class="wide">
 				<select class="flat form-control input-sm" id="contactName" name="contactName" style="width:175px !important">
-					<option value="">------Please Select------</option>
+					<option value="">----Please Select----</option>
 					<c:forEach items="${contactNames}" var="aContactName">
 						<c:set var="selected" value="" />
 						<c:if test="${sessionScope.searchCriteria.searchMap['contactName'] == aContactName}">
@@ -48,7 +48,7 @@
 			<td class="form-left">Phone Number</td>
 			<td>
 				<select class="flat form-control input-sm" id="phone" name="phone" style="width: 175px !important">
-					<option value="">------Please Select------</option>
+					<option value="">----Please Select----</option>
 					<c:forEach items="${phones}" var="aPhone">
 						<c:set var="selected" value="" />
 						<c:if test="${sessionScope.searchCriteria.searchMap['phone'] == aPhone}">
@@ -73,7 +73,7 @@
 			<td align="${left}" class="form-left"><transys:label code="Status" /></td>
 			<td align="${left}" class="wide">
 				<select class="flat form-control input-sm" id="customerStatus" name="customerStatus" style="width: 175px !important">
-					<option value="">------<transys:label code="Please Select" />------</option>
+					<option value="">----Please Select----</option>
 					<c:forEach items="${customerStatuses}" var="aCustomerStatus">
 						<c:set var="selected" value=""/>
 						<c:if test="${sessionScope.searchCriteria.searchMap['customerStatus'] == aCustomerStatus.id}">

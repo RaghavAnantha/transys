@@ -37,7 +37,7 @@ function populateCustomerDeliveryAddress() {
 			<td class="form-left">Order #</td>
 			<td>
 				<select class="flat form-control input-sm" id="id" name="id" style="width: 175px !important">
-					<option value="">------Please Select------</option>
+					<option value="">----Please Select----</option>
 					<c:forEach items="${orderIds}" var="anOrderId">
 						<c:set var="selected" value="" />
 						<c:if test="${sessionScope.searchCriteria.searchMap['id'] == anOrderId}">
@@ -50,7 +50,7 @@ function populateCustomerDeliveryAddress() {
 			<td class="form-left">Order Status</td>
 			<td>
 				<select class="flat form-control input-sm" id="orderStatus" name="orderStatus" style="width: 175px !important">
-					<option value="">------Please Select------</option>
+					<option value="">----Please Select----</option>
 					<c:forEach items="${orderStatuses}" var="anOrderStatus">
 						<c:set var="selected" value=""/>
 						<c:if test="${sessionScope.searchCriteria.searchMap['orderStatus'] == anOrderStatus.id}">
@@ -66,7 +66,7 @@ function populateCustomerDeliveryAddress() {
 			<td class="form-left"><transys:label code="Customer" /></td>
 			<td>
 				<select class="flat form-control input-sm" id="customer" name="customer" style="width: 175px !important" onChange="return populateCustomerDeliveryAddress();">
-					<option value="">------<transys:label code="Please Select" />------</option>
+					<option value="">----Please Select----</option>
 					<c:forEach items="${customers}" var="aCustomer">
 						<c:set var="selected" value="" />
 						<c:if test="${sessionScope.searchCriteria.searchMap['customer'] == aCustomer.id}">
@@ -79,7 +79,7 @@ function populateCustomerDeliveryAddress() {
 			<td class="form-left"><transys:label code="Delivery Address" /></td>
 			<td>
 				<select class="flat form-control input-sm" id="deliveryAddress" name="deliveryAddress" style="width: 175px !important">
-					<option value="">------Please Select------</option>
+					<option value="">----Please Select----</option>
 					<c:forEach items="${deliveryAddresses}" var="aDeliveryAddress">
 						<c:set var="selected" value=""/>
 						<c:if test="${sessionScope.searchCriteria.searchMap['deliveryAddress'] == aDeliveryAddress.id}">
@@ -94,7 +94,7 @@ function populateCustomerDeliveryAddress() {
 			<td class="form-left">Phone Number</td>
 			<td>
 				<select class="flat form-control input-sm" id=deliveryContactPhone1 name="deliveryContactPhone1" style="width: 175px !important">
-					<option value="">------Please Select------</option>
+					<option value="">----Please Select----</option>
 					<c:forEach items="${deliveryContactPhones}" var="aDeliveryContactPhone">
 						<c:set var="selected" value="" />
 						<c:if test="${sessionScope.searchCriteria.searchMap['deliveryContactPhone1'] == aDeliveryContactPhone}">
@@ -109,7 +109,7 @@ function populateCustomerDeliveryAddress() {
 			<td class="form-left"><transys:label code="Dumpster Size" /></td>
 			<td>
 				<select class="flat form-control input-sm" id="dumpsterSize" name="dumpsterSize" style="width: 175px !important">
-					<option value="">------<transys:label code="Please Select" />------</option>
+					<option value="">----Please Select----</option>
 					<c:forEach items="${dumpsterSizes}" var="aDumpsterSize">
 						<c:set var="selected" value="" />
 						<c:if
@@ -123,7 +123,7 @@ function populateCustomerDeliveryAddress() {
 			<td class="form-left"><transys:label code="Dumpster #" /></td>
 			<td>
 				<select class="flat form-control input-sm" id="dumpster" name="dumpster" style="width: 175px !important">
-					<option value="">------<transys:label code="Please Select" />------</option>
+					<option value="">----Please Select----</option>
 					<c:forEach items="${dumpsters}" var="aDumpster">
 						<c:set var="selected" value="" />
 						<c:if test="${sessionScope.searchCriteria.searchMap['dumpster'] == aDumpster.id}">

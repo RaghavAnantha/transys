@@ -9,8 +9,7 @@
 			<td class="wide"><select
 				class="flat form-control input-sm" id="method" name="method"
 				style="width: 175px !important">
-					<option value="">------
-						<transys:label code="Please Select" />------
+					<option value="">----Please Select----
 					</option>
 					<c:forEach items="${paymentMethods}" var="apaymentMethod">
 						<c:set var="selected" value="" />
@@ -39,7 +38,7 @@
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
 		pagingLink="search.do" multipleDelete="false" searcheable="false"
 		exportPdf="true" exportXls="true" dataQualifier="paymentMethod">
-		<transys:textcolumn headerText="Payment Method ID" dataField="id" width="150px"/>
+		<transys:textcolumn headerText="Payment Method Id" dataField="id" width="150px"/>
 		<transys:textcolumn headerText="Payment Method" dataField="method" />
 	</transys:datatable>
 	<%session.setAttribute("paymentMethodColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>

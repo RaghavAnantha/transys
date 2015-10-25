@@ -14,7 +14,7 @@
 			<td class="form-left"><transys:label code="Dumpster Size" /><span class="errorMessage">*</span></td>
 			<td>
 				<form:select cssClass="flat form-control input-sm" style="width:173px !important" path="dumpsterSize" >
-					<form:option value="">------Please Select--------</form:option>
+					<form:option value="">----Please Select----</form:option>
 					<form:options items="${dumpsterSizes}" itemValue="id"  itemLabel="size" />
 				</form:select> 
 				<form:errors path="dumpsterSize" cssClass="errorMessage" />
@@ -24,7 +24,7 @@
 			<td class="form-left"><transys:label code="Material Type" /><span class="errorMessage">*</span></td>
 			<td>
 				<form:select cssClass="flat form-control input-sm" style="width:173px !important" path="materialType" >
-					<form:option value="">------Please Select--------</form:option>
+					<form:option value="">----Please Select----</form:option>
 					<form:options items="${materialTypes}" itemValue="id" itemLabel="materialName" />
 				</form:select> 
 				<form:errors path="materialType" cssClass="errorMessage" />
@@ -37,7 +37,7 @@
 			<form:errors path="price" cssClass="errorMessage" /></td>
 		</tr>
 		<tr>
-			<td class="form-left"><transys:label code="Effective Date From" /><span class="errorMessage">*</span></td>
+			<td class="form-left form-left-ext"><transys:label code="Effective Date From" /><span class="errorMessage">*</span></td>
 			<td>
 			<form:input path="effectiveStartDate" class="flat" id="datepicker7" name="effectiveStartDate" style="width:173px !important"/></td>
 		</tr>

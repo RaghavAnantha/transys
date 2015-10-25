@@ -66,7 +66,7 @@ function populatePermitFee() {
 	<table id="form-table" class="table">
 		<tr><td colspan=10></td></tr>
 		<tr>
-			<td class="form-left"><transys:label code="Permit Number" /><span class="errorMessage">*</span></td>
+			<td class="form-left"><transys:label code="Permit Number" /></td>
 			<td class="wide">
 				<form:input path="number" cssClass="flat" style="width: 175px !important"  />
 			 	<br><form:errors path="number" cssClass="errorMessage" />

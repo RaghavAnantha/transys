@@ -37,7 +37,7 @@
 			<td class="form-left"><transys:label code="State" /><span class="errorMessage">*</span></td>
 			<td align="${left}">
 				<form:select cssClass="flat form-control input-sm" style="width: 174px !important" path="state" onchange="checkVal(this.id)">
-					<form:option value="">------Please Select--------</form:option>
+					<form:option value="">----Please Select----</form:option>
 					<form:options items="${state}" itemValue="id" itemLabel="name" />
 				</form:select> 
 				<form:errors path="state" cssClass="errorMessage" />

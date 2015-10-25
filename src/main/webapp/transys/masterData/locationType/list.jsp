@@ -9,8 +9,7 @@
 			<td class="wide"><select
 				class="flat form-control input-sm" id="locationType" name="locationType"
 				style="width: 175px !important">
-					<option value="">------
-						<transys:label code="Please Select" />------
+					<option value="">----Please Select----
 					</option>
 					<c:forEach items="${locationTypes}" var="aLocationType">
 						<c:set var="selected" value="" />

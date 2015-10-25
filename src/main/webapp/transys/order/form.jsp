@@ -930,19 +930,19 @@ function verifyExchangeOrderAndSubmit() {
 		<tr>
 			<td class="form-left"><transys:label code="Dumpster Price"/><span class="errorMessage">*</span></td>
 			<td>
-				<form:input path="orderFees.dumpsterPrice" cssClass="form-control" style="width:172px;height:22px !important" />
+				<form:input path="orderFees.dumpsterPrice" cssClass="form-control form-control-ext" style="width:172px;height:22px !important" />
 				<form:errors path="orderFees.dumpsterPrice" cssClass="errorMessage" />
 			</td>
 			<td class="form-left"><transys:label code="Overweight Fee"/><span class="errorMessage">*</span></td>
 			<td>
-				<form:input path="orderFees.overweightFee" cssClass="form-control" style="width:172px;height:22px !important" />
+				<form:input path="orderFees.overweightFee" cssClass="form-control form-control-ext" style="width:172px;height:22px !important" />
 				<form:errors path="orderFees.overweightFee" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="City Fee"/><span class="errorMessage">*</span></td>
 			<td>
-				<form:input path="orderFees.cityFee" cssClass="form-control" style="width:172px;height:22px !important" />
+				<form:input path="orderFees.cityFee" cssClass="form-control form-control-ext" style="width:172px;height:22px !important" />
 				<form:errors path="orderFees.cityFee" cssClass="errorMessage" />
 			</td>
 			<td class="form-left">Description<span class="errorMessage">*</span></td>
@@ -1096,7 +1096,7 @@ function verifyExchangeOrderAndSubmit() {
 		</tr>
 		<tr>
 			<td>
-				<form:select cssClass="flat form-control input-sm" style="width:172px !important" path="orderPayment[2].paymentMethod"> 
+				<form:select cssClass="flat form-control input-sm" style="width:172px !important;" path="orderPayment[2].paymentMethod"> 
 					<form:option value="">-----Please Select-----</form:option>
 					<form:options items="${paymentMethods}" itemValue="id" itemLabel="method" />
 				</form:select>
@@ -1216,6 +1216,8 @@ $("#addPermitLink").click(function (ev) {
 	
 	var orderId = $('#id').val();
 	
+	var newPermitUrl = $(this).attr("href");
+	
 	$.ajax({
   		url: "/permit/validatePermitCanBeAdded.do?orderId=" + orderId + "&deliveryAddressId=" + deliveryAddressId,
        	type: "GET",
@@ -1226,15 +1228,14 @@ $("#addPermitLink").click(function (ev) {
     	   		return false;
     	   	}
     	   	
-    	   	var url = $(this).attr("href");
-    		url += "?customerId=" + customerId 
-    			+  "&deliveryAddressId=" + deliveryAddressId
-    			+  "&locationTypeId=" + locationTypeId
-    			+  "&permitClassId=" + permitClassId
-    			+  "&permitTypeId=" + permitTypeId
-    			+  "&deliveryDate=" + deliveryDate;
+    	   	newPermitUrl += "?customerId=" + customerId 
+    					 +  "&deliveryAddressId=" + deliveryAddressId
+    					 +  "&locationTypeId=" + locationTypeId
+    					 +  "&permitClassId=" + permitClassId
+    					 +  "&permitTypeId=" + permitTypeId
+    					 +  "&deliveryDate=" + deliveryDate;
     		
-    		showPopupDialog("Add Permit", url);
+    		showPopupDialog("Add Permit", newPermitUrl);
 		}
 	});
 	

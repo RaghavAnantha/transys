@@ -28,16 +28,16 @@ DROP TABLE IF EXISTS `deliveryAddress`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `deliveryAddress` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `created_at` datetime DEFAULT NULL,
-  `created_by` bigint(20) DEFAULT NULL,
+  `created_at` datetime NOT NULL,
+  `created_by` bigint(20) NOT NULL,
   `modified_at` datetime DEFAULT NULL,
   `modified_by` bigint(20) DEFAULT NULL,
   `customerId` bigint(20) NOT NULL,
-  `line1` varchar(150) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `line1` varchar(150) COLLATE utf8_unicode_ci NOT NULL,
   `line2` varchar(150) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `city` varchar(150) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `state` bigint(20) DEFAULT NULL,
-  `zip` varchar(12) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `city` varchar(150) COLLATE utf8_unicode_ci NOT NULL,
+  `state` bigint(20) NOT NULL,
+  `zip` varchar(12) COLLATE utf8_unicode_ci NOT NULL,
   `delete_flag` int(11) DEFAULT '1',
   PRIMARY KEY (`id`),
   KEY `deliveryAddressCustomerRef_idx` (`customerId`),
@@ -53,8 +53,10 @@ CREATE TABLE `deliveryAddress` (
 
 LOCK TABLES `deliveryAddress` WRITE;
 /*!40000 ALTER TABLE `deliveryAddress` DISABLE KEYS */;
-INSERT INTO `deliveryAddress` VALUES (1,NULL,NULL,NULL,NULL,5,'4818 W','VAN BUREN','Chicago',1,'28262',1),(3,NULL,NULL,NULL,NULL,5,'1121 E','Lemon st','Chicago',1,'28262',1);
-INSERT INTO `deliveryAddress` (`id`, `customerId`, `line1`, `line2`, `city`, `state`, `zip`, `delete_flag`) VALUES ('4', '6', '1890', 'Chesterfield Ct', 'Chicago', '1', '28262', '1');
+INSERT INTO `deliveryAddress` VALUES (1,'2015-09-10 21:22:45',1,NULL,NULL,5,'4818 W','VAN BUREN','Chicago',1,'28262',1),
+(3,'2015-09-10 21:22:45',1,NULL,NULL,5,'1121 E','Lemon st','Chicago',1,'28262',1);
+INSERT INTO `deliveryAddress` (`id`, `created_at`, `created_by`, `customerId`, `line1`, `line2`, `city`, `state`, `zip`, `delete_flag`) 
+VALUES ('4', '2015-09-10 21:22:45',1,'6', '1890', 'Chesterfield Ct', 'Chicago', '1', '28262', '1');
 /*!40000 ALTER TABLE `deliveryAddress` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -67,16 +69,16 @@ DROP TABLE IF EXISTS `permitAddress`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `permitAddress` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `created_at` datetime DEFAULT NULL,
-  `created_by` bigint(20) DEFAULT NULL,
+  `created_at` datetime NOT NULL,
+  `created_by` bigint(20) NOT NULL,
   `modified_at` datetime DEFAULT NULL,
   `modified_by` bigint(20) DEFAULT NULL,
   `permitId` bigint(20) NOT NULL,
-  `line1` varchar(150) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `line1` varchar(150) COLLATE utf8_unicode_ci NOT NULL,
   `line2` varchar(150) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `city` varchar(150) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `state` bigint(20) DEFAULT NULL,
-  `zip` varchar(12) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `city` varchar(150) COLLATE utf8_unicode_ci NOT NULL,
+  `state` bigint(20) NOT NULL,
+  `zip` varchar(12) COLLATE utf8_unicode_ci NOT NULL,
   `delete_flag` int(11) DEFAULT '1',
   PRIMARY KEY (`id`),
   KEY `permitRef_idx` (`permitId`),
@@ -92,7 +94,8 @@ CREATE TABLE `permitAddress` (
 
 LOCK TABLES `permitAddress` WRITE;
 /*!40000 ALTER TABLE `permitAddress` DISABLE KEYS */;
-INSERT INTO `permitAddress` VALUES (1,NULL,NULL,NULL,NULL,1,'4818 W','VAN BUREN','Chicago',1,'28262',1),(2,NULL,NULL,NULL,NULL,1,'1121 E','Lemon st','Chicago',1,'28262',1);
+INSERT INTO `permitAddress` VALUES (1,'2015-09-10 21:22:45',1,NULL,NULL,1,'4818 W','VAN BUREN','Chicago',1,'28262',1),
+(2,'2015-09-10 21:22:45',1,NULL,NULL,1,'1121 E','Lemon st','Chicago',1,'28262',1);
 /*!40000 ALTER TABLE `permitAddress` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -105,13 +108,13 @@ DROP TABLE IF EXISTS `businessObject`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `businessObject` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `action` varchar(200) DEFAULT NULL,
+  `action` varchar(200) NOT NULL,
   `displayTag` varchar(60) DEFAULT NULL,
   `objectLevel` int(11) DEFAULT NULL,
   `objectName` varchar(60) DEFAULT NULL,
   `url` varchar(5000) DEFAULT NULL,
-  `created_at` datetime DEFAULT NULL,
-  `created_by` bigint(20) DEFAULT NULL,
+  `created_at` datetime NOT NULL,
+  `created_by` bigint(20) NOT NULL,
   `modified_at` datetime DEFAULT NULL,
   `modified_by` bigint(20) DEFAULT NULL,
   `defaultFlag` int(11) DEFAULT NULL,
@@ -145,27 +148,28 @@ DROP TABLE IF EXISTS `customer`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `customer` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `created_at` datetime DEFAULT NULL,
-  `created_by` bigint(20) DEFAULT NULL,
+  `created_at` datetime NOT NULL,
+  `created_by` bigint(20) NOT NULL,
   `modified_at` datetime DEFAULT NULL,
   `modified_by` bigint(20) DEFAULT NULL,
-  `customerStatusId` bigint(20) DEFAULT NULL,
-  `billingAddressLine1` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `customerTypeId` bigint(20) DEFAULT NULL,
+  `customerStatusId` bigint(20) NOT NULL,
+  `billingAddressLine1` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `customerTypeId` bigint(20) NOT NULL,
   `billingAddressLine2` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `city` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `companyName` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `fax` varchar(15) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `contactName` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `phone` varchar(25) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `zipcode` varchar(25) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `state` bigint(20) DEFAULT NULL,
-  `email` varchar(25) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `altPhone1` varchar(25) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `altPhone2` varchar(25) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `chargeCompany` varchar(5) DEFAULT NULL,
+  `city` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `companyName` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `fax` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `contactName` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `phone` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
+  `zipcode` varchar(25) COLLATE utf8_unicode_ci NOT NULL,
+  `state` bigint(20) NOT NULL,
+  `email` varchar(25) COLLATE utf8_unicode_ci NOT NULL,
+  `altPhone1` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `altPhone2` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `chargeCompany` varchar(5) NOT NULL,
   `delete_flag` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
+  UNIQUE KEY `UK_companyName` (`companyName`),
   CONSTRAINT `customerStateRef` FOREIGN KEY (`state`) REFERENCES `state` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `customerStatusRef` FOREIGN KEY (`customerStatusId`) REFERENCES `customerStatus` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `customerTypeRef` FOREIGN KEY (`customerTypeId`) REFERENCES `customerType` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
@@ -178,7 +182,8 @@ CREATE TABLE `customer` (
 
 LOCK TABLES `customer` WRITE;
 /*!40000 ALTER TABLE `customer` DISABLE KEYS */;
-INSERT INTO `customer` VALUES (5,'2015-09-10 21:22:45',1,NULL,NULL,1,'2324 N Camelback Rd',1,NULL,'Chicago','Aberdeen Construction','1234567890','Raghav','1234567890','28262',1,'abc@aberdeen.com',NULL,NULL,NULL,1),(6,'2015-09-11 21:05:43',1,NULL,NULL,1,'1321 W Main St',1,NULL,'Chicago','Gibbons Construction','1234567890','Hema','1234567890','22323',1,'abc@aberdeen.com',NULL,NULL,NULL,1);
+INSERT INTO `customer` (`id`,`created_at`,`created_by`,`modified_at`,`modified_by`,`customerStatusId`,`billingAddressLine1`,`customerTypeId`,`billingAddressLine2`,`city`,`companyName`,`fax`,`contactName`,`phone`,`zipcode`,`state`,`email`,`altPhone1`,`altPhone2`,`chargeCompany`,`delete_flag`) VALUES (5,'2015-09-10 21:22:45',1,'2015-10-25 18:37:31',1,1,'2324 N Camelback Rd',1,'','Chicago','Aberdeen Construction','123-456-7890','Raghav','123-456-7890','28262',1,'abc@aberdeen.com','','','Yes',1);
+INSERT INTO `customer` (`id`,`created_at`,`created_by`,`modified_at`,`modified_by`,`customerStatusId`,`billingAddressLine1`,`customerTypeId`,`billingAddressLine2`,`city`,`companyName`,`fax`,`contactName`,`phone`,`zipcode`,`state`,`email`,`altPhone1`,`altPhone2`,`chargeCompany`,`delete_flag`) VALUES (6,'2015-09-11 21:05:43',1,NULL,NULL,1,'1321 W Main St',1,NULL,'Chicago','Gibbons Construction','123-456-7890','Hema','123-456-7890','22323',1,'abc@aberdeen.com',NULL,NULL,'Yes',1);
 /*!40000 ALTER TABLE `customer` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -191,16 +196,17 @@ DROP TABLE IF EXISTS `dumpster`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `dumpster` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `dumpsterSizeId` bigint(20) DEFAULT NULL,
-  `dumpsterNum` varchar(50) DEFAULT NULL,
-  `status` bigint(20) DEFAULT NULL,
+  `dumpsterSizeId` bigint(20) NOT NULL,
+  `dumpsterNum` varchar(50) NOT NULL,
+  `status` bigint(20) NOT NULL,
   `comments` varchar(500) DEFAULT NULL,
-  `created_at` datetime DEFAULT NULL,
-  `created_by` bigint(20) DEFAULT NULL,
+  `created_at` datetime NOT NULL,
+  `created_by` bigint(20) NOT NULL,
   `modified_at` datetime DEFAULT NULL,
   `modified_by` bigint(20) DEFAULT NULL,
   `delete_flag` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
+  UNIQUE KEY `UK_dumpsterNum` (`dumpsterNum`),
   KEY `dumpsterInfoDumpsterStatusRef_Idx` (`status`),
   CONSTRAINT `dumpsterInfoDumpsterStatusRef` FOREIGN KEY (`status`) REFERENCES `dumpsterStatus` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `dumpsterInfoDumpsterSizeRef` FOREIGN KEY (`dumpsterSizeId`) REFERENCES `dumpsterSize` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
@@ -213,8 +219,8 @@ CREATE TABLE `dumpster` (
 
 LOCK TABLES `dumpster` WRITE;
 /*!40000 ALTER TABLE `dumpster` DISABLE KEYS */;
-INSERT INTO `dumpster` VALUES (2,1,'20W-113-21',3,NULL,NULL,NULL,NULL,NULL,1);
-INSERT INTO `dumpster` VALUES (3,2,'30W-456-31',1,NULL,NULL,NULL,NULL,NULL,1);
+INSERT INTO `dumpster` VALUES (2,1,'20W-113-21',3,NULL,'2015-09-10 21:22:45',1,NULL,NULL,1);
+INSERT INTO `dumpster` VALUES (3,2,'30W-456-31',1,NULL,'2015-09-10 21:22:45',1,NULL,NULL,1);
 /*!40000 ALTER TABLE `dumpster` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -229,8 +235,8 @@ CREATE TABLE `dumpsterStatus` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `status` varchar(20) NOT NULL,
   `comments` varchar(500) DEFAULT NULL,
-  `created_at` datetime DEFAULT NULL,
-  `created_by` bigint(20) DEFAULT NULL,
+  `created_at` datetime NOT NULL,
+  `created_by` bigint(20) NOT NULL,
   `modified_at` datetime DEFAULT NULL,
   `modified_by` bigint(20) DEFAULT NULL,
   `delete_flag` int(11) NOT NULL DEFAULT '1',
@@ -244,7 +250,9 @@ CREATE TABLE `dumpsterStatus` (
 
 LOCK TABLES `dumpsterStatus` WRITE;
 /*!40000 ALTER TABLE `dumpsterStatus` DISABLE KEYS */;
-INSERT INTO `dumpsterStatus` VALUES (1,'Available',NULL,NULL,NULL,NULL,NULL,1),(2,'In Repair',NULL,NULL,NULL,NULL,NULL,1),(3,'Dropped Off',NULL,NULL,NULL,NULL,NULL,1);
+INSERT INTO `dumpsterStatus` VALUES (1,'Available',NULL,'2015-09-10 21:22:45',1,NULL,NULL,1),
+(2,'In Repair',NULL,'2015-09-10 21:22:45',1,NULL,NULL,1),
+(3,'Dropped Off',NULL,'2015-09-10 21:22:45',1,NULL,NULL,1);
 /*!40000 ALTER TABLE `dumpsterStatus` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -258,27 +266,27 @@ DROP TABLE IF EXISTS `employee`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `employee` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `firstName` varchar(50) DEFAULT NULL,
-  `lastName` varchar(50) DEFAULT NULL,
-  `jobTitleId` bigint(20) DEFAULT NULL,
+  `firstName` varchar(50) NOT NULL,
+  `lastName` varchar(50) NOT NULL,
+  `jobTitleId` bigint(20) NOT NULL,
   `address` tinytext,
-  `city` varchar(50) DEFAULT NULL,
-  `state` bigint(20) DEFAULT NULL,
-  `zip` varchar(12) DEFAULT NULL,
-  `phone` varchar(20) DEFAULT NULL,
-  `email` varchar(150) DEFAULT NULL,
-  `hireDate` datetime DEFAULT NULL,
+  `city` varchar(50) NOT NULL,
+  `state` bigint(20) NOT NULL,
+  `zip` varchar(12) NOT NULL,
+  `phone` varchar(20) NOT NULL,
+  `email` varchar(150) NOT NULL,
+  `hireDate` datetime NOT NULL,
   `leaveDate` datetime DEFAULT NULL,
   `comments` longtext,
   `username` varchar(50) DEFAULT NULL,
   `password` varchar(12) DEFAULT NULL,
-  `created_at` datetime DEFAULT NULL,
-  `created_by` bigint(20) DEFAULT NULL,
+  `created_at` datetime NOT NULL,
+  `created_by` bigint(20) NOT NULL,
   `modified_at` datetime DEFAULT NULL,
   `modified_by` bigint(20) DEFAULT NULL,
   `delete_flag` int(11) NOT NULL DEFAULT '1',
-  `status` bigint(20) DEFAULT NULL,
-  `employeeId` varchar(45) DEFAULT NULL,
+  `status` bigint(20) NOT NULL,
+  `employeeId` varchar(45) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `UK_employeeId` (`employeeId`),
   KEY `employeeJobTitleRef_idx` (`jobTitleId`),
@@ -296,7 +304,10 @@ CREATE TABLE `employee` (
 
 LOCK TABLES `employee` WRITE;
 /*!40000 ALTER TABLE `employee` DISABLE KEYS */;
-INSERT INTO `employee` VALUES (1,'Raghav','Anantha',1,'123','Chicago',1,'28262','','','2015-09-02 00:00:00','2015-09-30 00:00:00',NULL,NULL,NULL,NULL,NULL,'2015-09-24 14:39:45',1,1,1,'007'),(2,'Kasia','Figura',5,'5521 Milwaukee','Chicago',1,'60630','773-987-2221','kasiaFigura@gmail.com','2015-09-01 00:00:00','2015-09-29 00:00:00',NULL,NULL,NULL,'2015-09-24 12:21:31',1,NULL,NULL,1,NULL,'123'),(4,'Scott','Eaker',2,'','',1,'','','kasiaFigura@gmail.com','2015-09-01 00:00:00','2015-09-14 00:00:00',NULL,NULL,NULL,'2015-09-24 12:28:04',1,NULL,NULL,1,NULL,'234'),(5,'Aldo','Valazquez',7,'','',1,'','','','2015-09-01 00:00:00','2015-09-29 00:00:00',NULL,NULL,NULL,'2015-09-24 12:40:41',1,NULL,NULL,1,1,'345');
+INSERT INTO `employee` (`id`,`firstName`,`lastName`,`jobTitleId`,`address`,`city`,`state`,`zip`,`phone`,`email`,`hireDate`,`leaveDate`,`comments`,`username`,`password`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`,`status`,`employeeId`) VALUES (1,'Raghav','Anantha',1,'123','Chicago',1,'28262','773-987-2221','kasiaFigura@gmail.com','2015-09-02 00:00:00','2015-09-30 00:00:00',NULL,NULL,NULL,'2015-09-24 12:21:31',1,'2015-09-24 14:39:45',1,1,1,'007');
+INSERT INTO `employee` (`id`,`firstName`,`lastName`,`jobTitleId`,`address`,`city`,`state`,`zip`,`phone`,`email`,`hireDate`,`leaveDate`,`comments`,`username`,`password`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`,`status`,`employeeId`) VALUES (2,'Kasia','Figura',5,'5521 Milwaukee','Chicago',1,'60630','773-987-2221','kasiaFigura@gmail.com','2015-09-01 00:00:00','2015-09-29 00:00:00',NULL,NULL,NULL,'2015-09-24 12:21:31',1,NULL,NULL,1,1,'123');
+INSERT INTO `employee` (`id`,`firstName`,`lastName`,`jobTitleId`,`address`,`city`,`state`,`zip`,`phone`,`email`,`hireDate`,`leaveDate`,`comments`,`username`,`password`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`,`status`,`employeeId`) VALUES (4,'Scott','Eaker',2,'5521 Milwaukee','Chicago',1,'60630','773-987-2221','kasiaFigura@gmail.com','2015-09-01 00:00:00','2015-09-14 00:00:00',NULL,NULL,NULL,'2015-09-24 12:28:04',1,NULL,NULL,1,1,'234');
+INSERT INTO `employee` (`id`,`firstName`,`lastName`,`jobTitleId`,`address`,`city`,`state`,`zip`,`phone`,`email`,`hireDate`,`leaveDate`,`comments`,`username`,`password`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`,`status`,`employeeId`) VALUES (5,'Aldo','Valazquez',7,'5521 Milwaukee','Chicago',1,'60630','773-987-2221','kasiaFigura@gmail.com','2015-09-01 00:00:00','2015-09-29 00:00:00',NULL,NULL,NULL,'2015-09-24 12:40:41',1,NULL,NULL,1,1,'345');
 /*!40000 ALTER TABLE `employee` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -311,8 +322,8 @@ CREATE TABLE `employeeStatus` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `status` varchar(20) NOT NULL,
   `comments` varchar(500) DEFAULT NULL,
-  `created_at` datetime DEFAULT NULL,
-  `created_by` bigint(20) DEFAULT NULL,
+  `created_at` datetime NOT NULL,
+  `created_by` bigint(20) NOT NULL,
   `modified_at` datetime DEFAULT NULL,
   `modified_by` bigint(20) DEFAULT NULL,
   `delete_flag` int(11) NOT NULL DEFAULT '1',
@@ -326,7 +337,8 @@ CREATE TABLE `employeeStatus` (
 
 LOCK TABLES `employeeStatus` WRITE;
 /*!40000 ALTER TABLE `employeeStatus` DISABLE KEYS */;
-INSERT INTO `employeeStatus` VALUES (1,'Active',NULL,NULL,NULL,NULL,NULL,1),(2,'Inactive',NULL,NULL,NULL,NULL,NULL,1);
+INSERT INTO `employeeStatus` VALUES (1,'Active',NULL,'2015-09-10 21:22:45',1,NULL,NULL,1),
+(2,'Inactive',NULL,'2015-09-10 21:22:45',1,NULL,NULL,1);
 /*!40000 ALTER TABLE `employeeStatus` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -339,11 +351,11 @@ DROP TABLE IF EXISTS `jobTitle`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `jobTitle` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `created_at` datetime DEFAULT NULL,
-  `created_by` bigint(20) DEFAULT NULL,
+  `created_at` datetime NOT NULL,
+  `created_by` bigint(20) NOT NULL,
   `modified_at` datetime DEFAULT NULL,
   `modified_by` bigint(20) DEFAULT NULL,
-  `jobTitle` varchar(150) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `jobTitle` varchar(150) COLLATE utf8_unicode_ci NOT NULL,
   `comments` varchar(500) DEFAULT NULL,
   `delete_flag` int(11) DEFAULT '1',
   PRIMARY KEY (`id`)
@@ -356,7 +368,15 @@ CREATE TABLE `jobTitle` (
 
 LOCK TABLES `jobTitle` WRITE;
 /*!40000 ALTER TABLE `jobTitle` DISABLE KEYS */;
-INSERT INTO `jobTitle` VALUES (1,NULL,NULL,NULL,NULL,'President',NULL,1),(2,NULL,NULL,NULL,NULL,'Roll-Off Driver',NULL,1),(3,NULL,NULL,NULL,NULL,'Semi Driver',NULL,1),(4,NULL,NULL,NULL,NULL,'Driver',NULL,1),(5,NULL,NULL,NULL,NULL,'Receptionist',NULL,1),(6,NULL,NULL,NULL,NULL,'Office',NULL,1),(7,NULL,NULL,NULL,NULL,'Roll-Off Truck Driver',NULL,1),(8,NULL,NULL,NULL,NULL,'Representative',NULL,1);
+INSERT INTO `jobTitle` VALUES 
+(1,'2015-09-10 21:22:45',1,NULL,NULL,'President',NULL,1),
+(2,'2015-09-10 21:22:45',1,NULL,NULL,'Roll-Off Driver',NULL,1),
+(3,'2015-09-10 21:22:45',1,NULL,NULL,'Semi Driver',NULL,1),
+(4,'2015-09-10 21:22:45',1,NULL,NULL,'Driver',NULL,1),
+(5,'2015-09-10 21:22:45',1,NULL,NULL,'Receptionist',NULL,1),
+(6,'2015-09-10 21:22:45',1,NULL,NULL,'Office',NULL,1),
+(7,'2015-09-10 21:22:45',1,NULL,NULL,'Roll-Off Truck Driver',NULL,1),
+(8,'2015-09-10 21:22:45',1,NULL,NULL,'Representative',NULL,1);
 /*!40000 ALTER TABLE `jobTitle` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -371,16 +391,16 @@ DROP TABLE IF EXISTS `transysOrder`;
 CREATE TABLE `transysOrder` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `customerId` bigint(20) NOT NULL,
-  `deliveryContactName` varchar(150) DEFAULT NULL,
-  `deliveryContactPhone1` varchar(25) DEFAULT NULL,
-  `deliveryContactPhone2` varchar(25) DEFAULT NULL,
-  `deliveryDate` datetime DEFAULT NULL,
-  `deliveryAddressId` bigint(20) DEFAULT NULL,
+  `deliveryContactName` varchar(150) NOT NULL,
+  `deliveryContactPhone1` varchar(20) NOT NULL,
+  `deliveryContactPhone2` varchar(20) DEFAULT NULL,
+  `deliveryDate` datetime NOT NULL,
+  `deliveryAddressId` bigint(20) NOT NULL,
   `locationTypeId` bigint(20) NOT NULL,
-  `dumpsterSizeId` bigint(20) DEFAULT NULL,
-  `materialTypeId` bigint(20) DEFAULT NULL,
-  `created_at` datetime DEFAULT NULL,
-  `created_by` bigint(20) DEFAULT NULL,
+  `dumpsterSizeId` bigint(20) NOT NULL,
+  `materialTypeId` bigint(20) NOT NULL,
+  `created_at` datetime NOT NULL,
+  `created_by` bigint(20) NOT NULL,
   `modified_at` datetime DEFAULT NULL,
   `modified_by` bigint(20) DEFAULT NULL,
   `delete_flag` int(11) NOT NULL DEFAULT '1',
@@ -393,8 +413,8 @@ CREATE TABLE `transysOrder` (
   `orderStatusId` bigint(20) NOT NULL,
   `pickUpDriverId` bigint(20) DEFAULT NULL,
   `dropOffDriverId` bigint(20) DEFAULT NULL,
-  `deliveryHourFrom` varchar(10) DEFAULT NULL,
-  `deliveryHourTo` varchar(10) DEFAULT NULL,
+  `deliveryHourFrom` varchar(10) NOT NULL,
+  `deliveryHourTo` varchar(10) NOT NULL,
   `deliveryMinutesFrom` varchar(5) DEFAULT NULL,
   `deliveryMinutesTo` varchar(5) DEFAULT NULL,
   `pickupOrderId` bigint(20) DEFAULT NULL,
@@ -433,10 +453,10 @@ DROP TABLE IF EXISTS `locationType`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `locationType` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `locationType` varchar(20) NOT NULL,
+  `locationType` varchar(30) NOT NULL,
   `comments` varchar(500) DEFAULT NULL,
-  `created_at` datetime DEFAULT NULL,
-  `created_by` bigint(20) DEFAULT NULL,
+  `created_at` datetime NOT NULL,
+  `created_by` bigint(20) NOT NULL,
   `modified_at` datetime DEFAULT NULL,
   `modified_by` bigint(20) DEFAULT NULL,
   `delete_flag` int(11) NOT NULL DEFAULT '1',
@@ -450,7 +470,7 @@ CREATE TABLE `locationType` (
 
 LOCK TABLES `locationType` WRITE;
 /*!40000 ALTER TABLE `locationType` DISABLE KEYS */;
-INSERT INTO `locationType` VALUES (1,'Alley',NULL,NULL,NULL,NULL,NULL,1),(2,'Street (Curb)',NULL,NULL,NULL,NULL,NULL,1),(3,'Driveway',NULL,NULL,NULL,NULL,NULL,1);
+INSERT INTO `locationType` VALUES (1,'Alley',NULL,'2015-09-10 21:22:45',1,NULL,NULL,1),(2,'Street (Curb)',NULL,'2015-09-10 21:22:45',1,NULL,NULL,1),(3,'Driveway',NULL,'2015-09-10 21:22:45',1,NULL,NULL,1);
 /*!40000 ALTER TABLE `locationType` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -465,12 +485,13 @@ CREATE TABLE `customerType` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `customerType` varchar(50) NOT NULL,
   `comments` varchar(500) DEFAULT NULL,
-  `created_at` datetime DEFAULT NULL,
-  `created_by` bigint(20) DEFAULT NULL,
+  `created_at` datetime NOT NULL,
+  `created_by` bigint(20) NOT NULL,
   `modified_at` datetime DEFAULT NULL,
   `modified_by` bigint(20) DEFAULT NULL,
   `delete_flag` int(11) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `UK_customerType` (`customerType`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -480,7 +501,7 @@ CREATE TABLE `customerType` (
 
 LOCK TABLES `customerType` WRITE;
 /*!40000 ALTER TABLE `customerType` DISABLE KEYS */;
-INSERT INTO `customerType` VALUES (1,'Commercial',NULL,NULL,NULL,NULL,NULL,1);
+INSERT INTO `customerType` VALUES (1,'Commercial',NULL,'2015-09-10 21:22:45',1,NULL,NULL,1);
 /*!40000 ALTER TABLE `customerType` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -494,10 +515,10 @@ DROP TABLE IF EXISTS `customerNotes`;
 CREATE TABLE `customerNotes` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `customerId` bigint(20) NOT NULL,
-  `notes` varchar(500) DEFAULT NULL,
-  `entered_by` varchar(255) DEFAULT NULL,
-  `created_at` datetime DEFAULT NULL,
-  `created_by` bigint(20) DEFAULT NULL,
+  `notes` varchar(500) NOT NULL,
+  `entered_by` varchar(255) NOT NULL,
+  `created_at` datetime NOT NULL,
+  `created_by` bigint(20) NOT NULL,
   `modified_at` datetime DEFAULT NULL,
   `modified_by` bigint(20) DEFAULT NULL,
   `delete_flag` int(11) NOT NULL DEFAULT '1',
@@ -526,10 +547,10 @@ DROP TABLE IF EXISTS `orderNotes`;
 CREATE TABLE `orderNotes` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `orderId` bigint(20) NOT NULL,
-  `notes` varchar(500) DEFAULT NULL,
-  `entered_by` varchar(255) DEFAULT NULL,
-  `created_at` datetime DEFAULT NULL,
-  `created_by` bigint(20) DEFAULT NULL,
+  `notes` varchar(500) NOT NULL,
+  `entered_by` varchar(255) NOT NULL,
+  `created_at` datetime NOT NULL,
+  `created_by` bigint(20) NOT NULL,
   `modified_at` datetime DEFAULT NULL,
   `modified_by` bigint(20) DEFAULT NULL,
   `delete_flag` int(11) NOT NULL DEFAULT '1',
@@ -576,8 +597,8 @@ CREATE TABLE `orderFees` (
   `discountPercentage` decimal(6,2) DEFAULT 0.00,
   `discountAmount` decimal(6,2) DEFAULT 0.00,
   `totalFees` decimal(6,2) DEFAULT 0.00,
-  `created_at` datetime DEFAULT NULL,
-  `created_by` bigint(20) DEFAULT NULL,
+  `created_at` datetime NOT NULL,
+  `created_by` bigint(20) NOT NULL,
   `modified_at` datetime DEFAULT NULL,
   `modified_by` bigint(20) DEFAULT NULL,
   `delete_flag` int(11) NOT NULL DEFAULT '1',
@@ -615,8 +636,8 @@ CREATE TABLE `orderPayment` (
   `ccReferenceNum` varchar(50) DEFAULT NULL,
   `checkNum` varchar(50) DEFAULT NULL,
   `amountPaid` decimal(6,2) DEFAULT 0.00,
-  `created_at` datetime DEFAULT NULL,
-  `created_by` bigint(20) DEFAULT NULL,
+  `created_at` datetime NOT NULL,
+  `created_by` bigint(20) NOT NULL,
   `modified_at` datetime DEFAULT NULL,
   `modified_by` bigint(20) DEFAULT NULL,
   `delete_flag` int(11) NOT NULL DEFAULT '1',
@@ -649,8 +670,8 @@ CREATE TABLE `orderPermits` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `orderId` bigint(20) NOT NULL,
   `permitId` bigint(20) NOT NULL,
-  `created_at` datetime DEFAULT NULL,
-  `created_by` bigint(20) DEFAULT NULL,
+  `created_at` datetime NOT NULL,
+  `created_by` bigint(20) NOT NULL,
   `modified_at` datetime DEFAULT NULL,
   `modified_by` bigint(20) DEFAULT NULL,
   `delete_flag` int(11) NOT NULL DEFAULT '1',
@@ -669,7 +690,7 @@ CREATE TABLE `orderPermits` (
 
 LOCK TABLES `orderPermits` WRITE;
 /*!40000 ALTER TABLE `orderPermits` DISABLE KEYS */;
-INSERT INTO `orderPermits` VALUES (3,1,1,NULL,NULL,NULL,NULL,1);
+INSERT INTO `orderPermits` VALUES (3,1,1,'2012-03-16 14:25:34',1,NULL,NULL,1);
 /*!40000 ALTER TABLE `orderPermits` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -684,8 +705,8 @@ CREATE TABLE `orderStatus` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `status` varchar(20) NOT NULL,
   `comments` varchar(500) DEFAULT NULL,
-  `created_at` datetime DEFAULT NULL,
-  `created_by` bigint(20) DEFAULT NULL,
+  `created_at` datetime NOT NULL,
+  `created_by` bigint(20) NOT NULL,
   `modified_at` datetime DEFAULT NULL,
   `modified_by` bigint(20) DEFAULT NULL,
   `delete_flag` int(11) NOT NULL DEFAULT '1',
@@ -699,8 +720,11 @@ CREATE TABLE `orderStatus` (
 
 LOCK TABLES `orderStatus` WRITE;
 /*!40000 ALTER TABLE `orderStatus` DISABLE KEYS */;
-INSERT INTO `transys`.`orderstatus` (`id`, `status`, `comments`) VALUES ('1', 'Open', NULL);
-INSERT INTO `orderStatus` VALUES (2,'Dropped Off',NULL,NULL,NULL,NULL,NULL,1),(3,'Picked Up',NULL,NULL,NULL,NULL,NULL,1),(4,'Closed',NULL,NULL,NULL,NULL,NULL,1);
+INSERT INTO `orderStatus` VALUES 
+(1,'Open',NULL,'2015-09-10 21:22:45',1,NULL,NULL,1),
+(2,'Dropped Off',NULL,'2015-09-10 21:22:45',1,NULL,NULL,1),
+(3,'Picked Up',NULL,'2015-09-10 21:22:45',1,NULL,NULL,1),
+(4,'Closed',NULL,'2015-09-10 21:22:45',1,NULL,NULL,1);
 /*!40000 ALTER TABLE `orderStatus` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -715,8 +739,8 @@ CREATE TABLE `customerStatus` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `status` varchar(20) NOT NULL,
   `comments` varchar(500) DEFAULT NULL,
-  `created_at` datetime DEFAULT NULL,
-  `created_by` bigint(20) DEFAULT NULL,
+  `created_at` datetime NOT NULL,
+  `created_by` bigint(20) NOT NULL,
   `modified_at` datetime DEFAULT NULL,
   `modified_by` bigint(20) DEFAULT NULL,
   `delete_flag` int(11) NOT NULL DEFAULT '1',
@@ -730,8 +754,9 @@ CREATE TABLE `customerStatus` (
 
 LOCK TABLES `customerStatus` WRITE;
 /*!40000 ALTER TABLE `customerStatus` DISABLE KEYS */;
-INSERT INTO `transys`.`customerStatus` (`id`, `status`, `comments`) VALUES ('1', 'Active',NULL);
-INSERT INTO `customerStatus` VALUES (2,'Inactive',NULL,NULL,NULL,NULL,NULL,1);
+INSERT INTO `customerStatus` VALUES
+(1,'Active',NULL,'2015-09-10 21:22:45',1,NULL,NULL,1),
+(2,'Inactive',NULL,'2015-09-10 21:22:45',1,NULL,NULL,1);
 /*!40000 ALTER TABLE `customerStatus` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -746,22 +771,23 @@ CREATE TABLE `permit` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `permitTypeId` bigint(20) NOT NULL,
   `number` varchar(25) DEFAULT NULL,
-  `fee` decimal(6,2) DEFAULT NULL,
-  `startDate` datetime DEFAULT NULL,
-  `endDate` datetime DEFAULT NULL,
-  `locationTypeId` bigint(20) DEFAULT NULL,
+  `fee` decimal(6,2) NOT NULL,
+  `startDate` datetime NOT NULL,
+  `endDate` datetime NOT NULL,
+  `locationTypeId` bigint(20) NOT NULL,
   `status` bigint(20) NOT NULL DEFAULT '1',
-  `created_at` datetime DEFAULT NULL,
-  `created_by` bigint(20) DEFAULT NULL,
+  `created_at` datetime NOT NULL,
+  `created_by` bigint(20) NOT NULL,
   `modified_at` datetime DEFAULT NULL,
   `modified_by` bigint(20) DEFAULT NULL,
   `delete_flag` int(11) NOT NULL DEFAULT '1',
-  `customerId` bigint(20) DEFAULT NULL,
+  `customerId` bigint(20) NOT NULL,
   `deliveryAddressId` bigint(20) NOT NULL,
-  `parkingMeter` varchar(3) DEFAULT NULL,
-  `parkingMeterFee` decimal(6,2) DEFAULT NULL,
-  `permitClassId` bigint(20) DEFAULT NULL,
+  `parkingMeter` varchar(3) NOT NULL,
+  `parkingMeterFee` decimal(6,2) DEFAULT 0.00,
+  `permitClassId` bigint(20) NOT NULL,
   PRIMARY KEY (`id`),
+  UNIQUE KEY `UK_permiNumber` (`number`),
   KEY `permitStatusRef_idx` (`status`),
   KEY `permitCustomerRef_idx` (`customerId`),
   KEY `permitDeliveryAddressRef_idx` (`deliveryAddressId`),
@@ -783,7 +809,8 @@ CREATE TABLE `permit` (
 
 LOCK TABLES `permit` WRITE;
 /*!40000 ALTER TABLE `permit` DISABLE KEYS */;
- INSERT INTO `permit` VALUES (1,1,'1301-11W',50,'2015-09-22 00:00:00','2015-09-25 00:00:00',1,3,'2015-09-22 00:00:00',NULL,'2015-09-22 21:51:56', NULL, 1,5,1,'Yes',1.0,1),(2,1,'5667890',90,'2015-09-22 00:00:00','2015-09-25 00:00:00',1,2,'2015-09-23 12:27:14',1,NULL,NULL,1,6,4,'Yes',90,1),
+ INSERT INTO `permit` VALUES
+ (1,1,'1301-11W',50,'2015-09-22 00:00:00','2015-09-25 00:00:00',1,3,'2015-09-22 00:00:00',NULL,'2015-09-22 21:51:56', NULL, 1,5,1,'Yes',1.0,1),(2,1,'5667890',90,'2015-09-22 00:00:00','2015-09-25 00:00:00',1,2,'2015-09-23 12:27:14',1,NULL,NULL,1,6,4,'Yes',90,1),
  (3,2,'1987-34E',90,'2015-09-22 00:00:00','2015-09-25 00:00:00',1,2,'2015-09-23 12:27:14',1,NULL,NULL,1,6,4,'Yes',90,1);
 /*!40000 ALTER TABLE `permit` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -797,14 +824,15 @@ DROP TABLE IF EXISTS `permitClass`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `permitClass` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `created_at` datetime DEFAULT NULL,
-  `created_by` bigint(20) DEFAULT NULL,
+  `created_at` datetime NOT NULL,
+  `created_by` bigint(20) NOT NULL,
   `modified_at` datetime DEFAULT NULL,
   `modified_by` bigint(20) DEFAULT NULL,
   `delete_flag` int(11) NOT NULL DEFAULT '1',
-  `permitClass` varchar(255) DEFAULT NULL,
+  `permitClass` varchar(25) NOT NULL,
   `comments` varchar(500) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `UK_permitClass` (`permitClass`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -814,7 +842,8 @@ CREATE TABLE `permitClass` (
 
 LOCK TABLES `permitClass` WRITE;
 /*!40000 ALTER TABLE `permitClass` DISABLE KEYS */;
-INSERT INTO `permitClass` VALUES (1,NULL,NULL,NULL,NULL,1,'CLASS A',NULL),(2,'2015-09-22 13:47:10',NULL,NULL,NULL,1,'CLASS B',NULL),(3,'2015-09-22 13:43:51',NULL,NULL,NULL,1,'CLASS C',NULL);
+INSERT INTO `permitClass` VALUES (1,'2015-09-10 21:22:45',1,NULL,NULL,1,'CLASS A',NULL),
+(2,'2015-09-22 13:47:10',1,NULL,NULL,1,'CLASS B',NULL),(3,'2015-09-22 13:43:51',1,NULL,NULL,1,'CLASS C',NULL);
 /*!40000 ALTER TABLE `permitClass` ENABLE KEYS */;
 UNLOCK TABLES;
 --
@@ -828,8 +857,8 @@ CREATE TABLE `permitStatus` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `status` varchar(15) NOT NULL,
   `comments` varchar(500) DEFAULT NULL,
-  `created_at` datetime DEFAULT NULL,
-  `created_by` bigint(20) DEFAULT NULL,
+  `created_at` datetime NOT NULL,
+  `created_by` bigint(20) NOT NULL,
   `modified_at` datetime DEFAULT NULL,
   `modified_by` bigint(20) DEFAULT NULL,
   `delete_flag` int(11) NOT NULL DEFAULT '1',
@@ -843,11 +872,13 @@ CREATE TABLE `permitStatus` (
 
 LOCK TABLES `permitStatus` WRITE;
 /*!40000 ALTER TABLE `permitStatus` DISABLE KEYS */;
-INSERT INTO `permitStatus` VALUES (1,'Pending',NULL,NULL,NULL,NULL,NULL,1),(2,'Available',NULL,NULL,NULL,NULL,NULL,1),(3,'Assigned',NULL,NULL,NULL,NULL,NULL,1),(4,'Expired',NULL,NULL,NULL,NULL,NULL,1);
+INSERT INTO `permitStatus` VALUES 
+(1,'Pending',NULL,'2015-09-10 21:22:45',1,NULL,NULL,1),
+(2,'Available',NULL,'2015-09-10 21:22:45',1,NULL,NULL,1),
+(3,'Assigned',NULL,'2015-09-10 21:22:45',1,NULL,NULL,1),
+(4,'Expired',NULL,'2015-09-10 21:22:45',1,NULL,NULL,1);
 /*!40000 ALTER TABLE `permitStatus` ENABLE KEYS */;
 UNLOCK TABLES;
-
-
 
 --
 -- Table structure for table `permitType`
@@ -858,14 +889,15 @@ DROP TABLE IF EXISTS `permitType`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `permitType` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `permitType` varchar(10) NOT NULL,
+  `permitType` varchar(20) NOT NULL,
   `comments` varchar(500) DEFAULT NULL,
-  `created_at` datetime DEFAULT NULL,
-  `created_by` bigint(20) DEFAULT NULL,
+  `created_at` datetime NOT NULL,
+  `created_by` bigint(20) NOT NULL,
   `modified_at` datetime DEFAULT NULL,
   `modified_by` bigint(20) DEFAULT NULL,
   `delete_flag` int(11) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `UK_permitType` (`permitType`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -875,7 +907,9 @@ CREATE TABLE `permitType` (
 
 LOCK TABLES `permitType` WRITE;
 /*!40000 ALTER TABLE `permitType` DISABLE KEYS */;
-INSERT INTO `permitType` VALUES (1,'3 days',NULL,NULL,NULL,NULL,NULL,1),(2,'30 days',NULL,NULL,NULL,NULL,NULL,1);
+INSERT INTO `permitType` VALUES 
+(1,'3 days',NULL,'2015-09-10 21:22:45',1,NULL,NULL,1),
+(2,'30 days',NULL,'2015-09-10 21:22:45',1,NULL,NULL,1);
 /*!40000 ALTER TABLE `permitType` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -888,14 +922,14 @@ DROP TABLE IF EXISTS `role`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `role` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `created_at` datetime DEFAULT NULL,
-  `created_by` bigint(20) DEFAULT NULL,
+  `created_at` datetime NOT NULL,
+  `created_by` bigint(20) NOT NULL,
   `modified_at` datetime DEFAULT NULL,
   `modified_by` bigint(20) DEFAULT NULL,
   `default_flag` int(11) DEFAULT NULL,
-  `name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `theme` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `delete_flag` int(11) DEFAULT NULL,
+  `delete_flag` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -906,8 +940,12 @@ CREATE TABLE `role` (
 
 LOCK TABLES `role` WRITE;
 /*!40000 ALTER TABLE `role` DISABLE KEYS */;
-INSERT INTO `role` VALUES (1,NULL,NULL,NULL,NULL,1,'ADMIN',NULL,NULL),(2,NULL,NULL,NULL,NULL,1,'OPERATOR',NULL,NULL),(3,NULL,NULL,NULL,NULL,1,'REPORTUSER',NULL,NULL),(4,'2012-03-16 01:43:40',1,NULL,NULL,1,'DATA ENTRY_BILLING',NULL,NULL),(5,'2012-03-16 14:25:34',1,NULL,NULL,1,'TEST',NULL,NULL);
-INSERT INTO `transys`.`role` (`id`, `default_flag`, `name`) VALUES ('6', '1', 'DRIVER');
+INSERT INTO `role` VALUES (1,'2015-09-10 21:22:45',1,NULL,NULL,1,'ADMIN',NULL,NULL),
+(2,'2015-09-10 21:22:45',1,NULL,NULL,1,'OPERATOR',NULL,NULL),
+(3,'2015-09-10 21:22:45',1,NULL,NULL,1,'REPORTUSER',NULL,NULL),
+(4,'2012-03-16 01:43:40',1,NULL,NULL,1,'DATA ENTRY_BILLING',NULL,NULL),
+(5,'2012-03-16 14:25:34',1,NULL,NULL,1,'TEST',NULL,NULL),
+(6,'2012-03-16 14:25:34',1,NULL,NULL,1,'DRIVER',NULL,NULL);
 /*!40000 ALTER TABLE `role` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -920,15 +958,15 @@ DROP TABLE IF EXISTS `rolePrivilege`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `rolePrivilege` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `created_at` datetime DEFAULT NULL,
-  `created_by` bigint(20) DEFAULT NULL,
+  `created_at` datetime NOT NULL,
+  `created_by` bigint(20) NOT NULL,
   `modified_at` datetime DEFAULT NULL,
   `modified_by` bigint(20) DEFAULT NULL,
   `default_flag` int(11) DEFAULT NULL,
-  `permissionType` int(11) DEFAULT NULL,
-  `businessObjectId` bigint(20) DEFAULT NULL,
-  `roleId` bigint(20) DEFAULT NULL,
-  `delete_flag` int(11) DEFAULT NULL,
+  `permissionType` int(11) NOT NULL,
+  `businessObjectId` bigint(20) NOT NULL,
+  `roleId` bigint(20) NOT NULL,
+  `delete_flag` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   KEY `rolePrivelegeRoleRef_Idx` (`roleId`),
   KEY `rolePrivelegeBusinessObjectRef_Idx` (`businessObjectId`),
@@ -955,14 +993,16 @@ DROP TABLE IF EXISTS `state`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `state` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `created_at` datetime DEFAULT NULL,
-  `created_by` bigint(20) DEFAULT NULL,
+  `created_at` datetime NOT NULL,
+  `created_by` bigint(20) NOT NULL,
   `delete_flag` int(11) DEFAULT '1',
   `modified_at` datetime DEFAULT NULL,
   `modified_by` bigint(20) DEFAULT NULL,
-  `code` varchar(5) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  `code` varchar(5) COLLATE utf8_unicode_ci NOT NULL,
+  `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `UK_stateCode` (`code`),
+  UNIQUE KEY `UK_stateName` (`name`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -972,7 +1012,11 @@ CREATE TABLE `state` (
 
 LOCK TABLES `state` WRITE;
 /*!40000 ALTER TABLE `state` DISABLE KEYS */;
-INSERT INTO `state` VALUES (1,NULL,NULL,1,NULL,NULL,'IL','Illinois'),(2,NULL,NULL,1,NULL,NULL,'WI','Wisconsin'),(3,NULL,NULL,1,NULL,NULL,'IN','Indiana'),(4,NULL,NULL,1,NULL,NULL,'MI','Michigan'),(5,NULL,NULL,1,NULL,NULL,'OH','Ohio');
+INSERT INTO `state` VALUES (1,'2012-03-16 14:25:34',1,1,NULL,NULL,'IL','Illinois'),
+(2,'2012-03-16 14:25:34',1,1,NULL,NULL,'WI','Wisconsin'),
+(3,'2012-03-16 14:25:34',1,1,NULL,NULL,'IN','Indiana'),
+(4,'2012-03-16 14:25:34',1,1,NULL,NULL,'MI','Michigan'),
+(5,'2012-03-16 14:25:34',1,1,NULL,NULL,'OH','Ohio');
 /*!40000 ALTER TABLE `state` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -985,22 +1029,22 @@ DROP TABLE IF EXISTS `userInfo`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `userInfo` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `created_at` datetime DEFAULT NULL,
-  `created_by` bigint(20) DEFAULT NULL,
+  `created_at` datetime NOT NULL,
+  `created_by` bigint(20) NOT NULL,
   `modified_at` datetime DEFAULT NULL,
   `modified_by` bigint(20) DEFAULT NULL,
-  `accountStatus` int(11) DEFAULT NULL,
+  `accountStatus` int(11) NOT NULL,
   `agreeTerms` tinyint(4) DEFAULT NULL,
-  `email` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `firstName` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `email` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `firstName` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `lastLoginDate` datetime DEFAULT NULL,
-  `lastName` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `lastName` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `loginAttempts` int(11) DEFAULT NULL,
   `mobileNo` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `password` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `phoneNumber` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `userType` int(11) DEFAULT NULL,
+  `phoneNumber` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `userType` int(11) NOT NULL,
   `username` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `roleId` bigint(20) DEFAULT NULL,
   `billBatchDate` datetime DEFAULT NULL,
@@ -1016,9 +1060,14 @@ CREATE TABLE `userInfo` (
 
 LOCK TABLES `userInfo` WRITE;
 /*!40000 ALTER TABLE `userInfo` DISABLE KEYS */;
-INSERT INTO `userInfo` VALUES (1,NULL,NULL,NULL,NULL,1,NULL,NULL,'admin','2015-09-10 21:32:56','admin',NULL,NULL,'admin','admin',NULL,NULL,'admin',1,NULL,1);
-INSERT INTO `transys`.`userInfo` (`id`, `accountStatus`, `firstName`, `lastLoginDate`, `lastName`, `name`, `password`, `username`, `roleId`, `delete_flag`) VALUES ('2', '1', 'Robert', '2015-09-19 12:41:30', 'De La Rosa', 'Robert De La Rosa', 'robert', 'robert', '6', '1');
-INSERT INTO `transys`.`userInfo` (`id`, `accountStatus`, `firstName`, `lastLoginDate`, `lastName`, `name`, `password`, `username`, `roleId`, `delete_flag`) VALUES ('3', '1', 'Thomas', '2015-09-19 12:41:30', 'De Silva', 'Thomas de Silva', 'thomas', 'thomas', '6', '1');
+INSERT INTO `userInfo` VALUES 
+(1,'2012-03-16 14:25:34',1,NULL,NULL,1,NULL,'admin@abc.com','admin','2015-09-10 21:32:56','admin',NULL,NULL,'admin','admin','123-456-7890',1,'admin',1,NULL,1);
+INSERT INTO `transys`.`userInfo` 
+(`id`, `created_at`, `created_by`,`accountStatus`,`firstName`, `lastLoginDate`, `lastName`, `name`, `password`, `username`, `roleId`, `delete_flag`, `email`, `phoneNumber`,`userType`) 
+VALUES ('2', '2012-03-16 14:25:34',1, '1', 'Robert', '2015-09-19 12:41:30', 'De La Rosa', 'Robert De La Rosa', 'robert', 'robert', '6', '1', 'dela@abc.com','123-456-7890', 1);
+INSERT INTO `transys`.`userInfo` 
+(`id`, `created_at`, `created_by`,`accountStatus`,`firstName`, `lastLoginDate`, `lastName`, `name`, `password`, `username`, `roleId`, `delete_flag`, `email`, `phoneNumber`, `userType`) 
+VALUES ('3', '2012-03-16 14:25:34',1, '1', 'Thomas', '2015-09-19 12:41:30', 'De Silva', 'Thomas de Silva', 'thomas', 'thomas', '6', '1', 'desilva@abc.com','123-456-7890', 1);
 /*!40000 ALTER TABLE `userInfo` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -1033,10 +1082,10 @@ DROP TABLE IF EXISTS `permitNotes`;
 CREATE TABLE `permitNotes` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `permitId` bigint(20) NOT NULL,
-  `notes` varchar(500) DEFAULT NULL,
-  `entered_by` varchar(255) DEFAULT NULL,
-  `created_at` datetime DEFAULT NULL,
-  `created_by` bigint(20) DEFAULT NULL,
+  `notes` varchar(500) NOT NULL,
+  `entered_by` varchar(255) NOT NULL,
+  `created_at` datetime NOT NULL,
+  `created_by` bigint(20) NOT NULL,
   `modified_at` datetime DEFAULT NULL,
   `modified_by` bigint(20) DEFAULT NULL,
   `delete_flag` int(11) NOT NULL DEFAULT '1',
@@ -1066,14 +1115,15 @@ DROP TABLE IF EXISTS `materialType`;
 CREATE TABLE `materialType` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `materialCategoryId` bigint(20) NOT NULL,
-  `materialName` varchar(50) DEFAULT NULL,
+  `materialName` varchar(50) NOT NULL,
   `comments` varchar(500) DEFAULT NULL,
-  `created_at` datetime DEFAULT NULL,
-  `created_by` bigint(20) DEFAULT NULL,
+  `created_at` datetime NOT NULL,
+  `created_by` bigint(20) NOT NULL,
   `modified_at` datetime DEFAULT NULL,
   `modified_by` bigint(20) DEFAULT NULL,
   `delete_flag` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
+  UNIQUE KEY `UK_materialName` (`materialName`),
   CONSTRAINT `materialTypeMaterialCategoryRef` FOREIGN KEY (`materialCategoryId`) REFERENCES `materialCategory` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -1084,12 +1134,12 @@ CREATE TABLE `materialType` (
 
 LOCK TABLES `materialType` WRITE;
 /*!40000 ALTER TABLE `materialType` DISABLE KEYS */;
-INSERT INTO `materialType` (`id`,`materialCategoryId`,`materialName`,`comments`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (1,1,'Concrete',NULL,NULL,NULL,NULL,NULL,1);
-INSERT INTO `materialType` (`id`,`materialCategoryId`,`materialName`,`comments`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (2,1,'Dirt',NULL,NULL,NULL,NULL,NULL,1);
-INSERT INTO `materialType` (`id`,`materialCategoryId`,`materialName`,`comments`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (3,1,'Bricks',NULL,NULL,NULL,NULL,NULL,1);
-INSERT INTO `materialType` (`id`,`materialCategoryId`,`materialName`,`comments`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (4,2,'Cardboard',NULL,NULL,NULL,NULL,NULL,1);
-INSERT INTO `materialType` (`id`,`materialCategoryId`,`materialName`,`comments`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (5,2,'Carpet',NULL,NULL,NULL,NULL,NULL,1);
-INSERT INTO `materialType` (`id`,`materialCategoryId`,`materialName`,`comments`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (6,3,'Flat Roofing',NULL,NULL,NULL,NULL,NULL,1);
+INSERT INTO `materialType` (`id`,`materialCategoryId`,`materialName`,`comments`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (1,1,'Concrete',NULL,'2012-03-16 14:25:34',1,NULL,NULL,1);
+INSERT INTO `materialType` (`id`,`materialCategoryId`,`materialName`,`comments`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (2,1,'Dirt',NULL,'2012-03-16 14:25:34',1,NULL,NULL,1);
+INSERT INTO `materialType` (`id`,`materialCategoryId`,`materialName`,`comments`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (3,1,'Bricks',NULL,'2012-03-16 14:25:34',1,NULL,NULL,1);
+INSERT INTO `materialType` (`id`,`materialCategoryId`,`materialName`,`comments`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (4,2,'Cardboard',NULL,'2012-03-16 14:25:34',1,NULL,NULL,1);
+INSERT INTO `materialType` (`id`,`materialCategoryId`,`materialName`,`comments`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (5,2,'Carpet',NULL,'2012-03-16 14:25:34',1,NULL,NULL,1);
+INSERT INTO `materialType` (`id`,`materialCategoryId`,`materialName`,`comments`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (6,3,'Flat Roofing',NULL,'2012-03-16 14:25:34',1,NULL,NULL,1);
 /*!40000 ALTER TABLE `materialType` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -1104,14 +1154,15 @@ DROP TABLE IF EXISTS `materialCategory`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `materialCategory` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `category` varchar(100) DEFAULT NULL,
+  `category` varchar(100) NOT NULL,
   `comments` varchar(500) DEFAULT NULL,
-  `created_at` datetime DEFAULT NULL,
-  `created_by` bigint(20) DEFAULT NULL,
+  `created_at` datetime NOT NULL,
+  `created_by` bigint(20) NOT NULL,
   `modified_at` datetime DEFAULT NULL,
   `modified_by` bigint(20) DEFAULT NULL,
   `delete_flag` int(11) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `UK_materialCategory` (`category`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -1121,9 +1172,9 @@ CREATE TABLE `materialCategory` (
 
 LOCK TABLES `materialCategory` WRITE;
 /*!40000 ALTER TABLE `materialCategory` DISABLE KEYS */;
-INSERT INTO `materialCategory` (`id`,`category`,`comments`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (1,'Clean Construction Demolition Debris (CCDD)',NULL,NULL,NULL,NULL,NULL,1);
-INSERT INTO `materialCategory` (`id`,`category`,`comments`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (2,'Contruction/Demolition Debris (C&D)',NULL,NULL,NULL,NULL,NULL,1);
-INSERT INTO `materialCategory` (`id`,`category`,`comments`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (3,'Roofing',NULL,NULL,NULL,NULL,NULL,1);
+INSERT INTO `materialCategory` (`id`,`category`,`comments`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (1,'Clean Construction Demolition Debris (CCDD)',NULL,'2012-03-16 14:25:34',1,NULL,NULL,1);
+INSERT INTO `materialCategory` (`id`,`category`,`comments`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (2,'Contruction/Demolition Debris (C&D)',NULL,'2012-03-16 14:25:34',1,NULL,NULL,1);
+INSERT INTO `materialCategory` (`id`,`category`,`comments`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (3,'Roofing',NULL,'2012-03-16 14:25:34',1,NULL,NULL,1);
 /*!40000 ALTER TABLE `materialCategory` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -1137,15 +1188,16 @@ DROP TABLE IF EXISTS `dumpsterSize`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `dumpsterSize` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `size` varchar(25) DEFAULT NULL,
+  `size` varchar(25) NOT NULL,
   `permitClassId` bigint(20) NOT NULL,
   `comments` varchar(20) DEFAULT NULL,
-  `created_at` datetime DEFAULT NULL,
-  `created_by` bigint(20) DEFAULT NULL,
+  `created_at` datetime NOT NULL,
+  `created_by` bigint(20) NOT NULL,
   `modified_at` datetime DEFAULT NULL,
   `modified_by` bigint(20) DEFAULT NULL,
   `delete_flag` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
+  UNIQUE KEY `UK_dumpsterSize` (`size`),
   CONSTRAINT `dumpsterSizePermitClassRef` FOREIGN KEY (`permitClassId`) REFERENCES `permitClass` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -1156,13 +1208,13 @@ CREATE TABLE `dumpsterSize` (
 
 LOCK TABLES `dumpsterSize` WRITE;
 /*!40000 ALTER TABLE `dumpsterSize` DISABLE KEYS */;
-INSERT INTO `dumpsterSize` (`id`,`size`,`permitClassId`,`comments`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (1,'6 yd',1,NULL,NULL,NULL,NULL,NULL,1);
-INSERT INTO `dumpsterSize` (`id`,`size`,`permitClassId`,`comments`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (2,'10 yd',1,NULL,NULL,NULL,NULL,NULL,1);
-INSERT INTO `dumpsterSize` (`id`,`size`,`permitClassId`,`comments`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (3,'15 yd',1,NULL,NULL,NULL,NULL,NULL,1);
-INSERT INTO `dumpsterSize` (`id`,`size`,`permitClassId`,`comments`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (4,'20 yd',1,NULL,NULL,NULL,NULL,NULL,1);
-INSERT INTO `dumpsterSize` (`id`,`size`,`permitClassId`,`comments`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (5,'25 yd',1,NULL,NULL,NULL,NULL,NULL,1);
-INSERT INTO `dumpsterSize` (`id`,`size`,`permitClassId`,`comments`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (6,'30 yd',1,NULL,NULL,NULL,NULL,NULL,1);
-INSERT INTO `dumpsterSize` (`id`,`size`,`permitClassId`,`comments`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (7,'40 yd',2,NULL,NULL,NULL,NULL,NULL,1);
+INSERT INTO `dumpsterSize` (`id`,`size`,`permitClassId`,`comments`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (1,'6 yd',1,NULL,'2012-03-16 14:25:34',1,NULL,NULL,1);
+INSERT INTO `dumpsterSize` (`id`,`size`,`permitClassId`,`comments`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (2,'10 yd',1,NULL,'2012-03-16 14:25:34',1,NULL,NULL,1);
+INSERT INTO `dumpsterSize` (`id`,`size`,`permitClassId`,`comments`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (3,'15 yd',1,NULL,'2012-03-16 14:25:34',1,NULL,NULL,1);
+INSERT INTO `dumpsterSize` (`id`,`size`,`permitClassId`,`comments`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (4,'20 yd',1,NULL,'2012-03-16 14:25:34',1,NULL,NULL,1);
+INSERT INTO `dumpsterSize` (`id`,`size`,`permitClassId`,`comments`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (5,'25 yd',1,NULL,'2012-03-16 14:25:34',1,NULL,NULL,1);
+INSERT INTO `dumpsterSize` (`id`,`size`,`permitClassId`,`comments`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (6,'30 yd',1,NULL,'2012-03-16 14:25:34',1,NULL,NULL,1);
+INSERT INTO `dumpsterSize` (`id`,`size`,`permitClassId`,`comments`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (7,'40 yd',2,NULL,'2012-03-16 14:25:34',1,NULL,NULL,1);
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -1177,12 +1229,13 @@ CREATE TABLE `paymentMethodType` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `method` varchar(20) NOT NULL,
   `comments` varchar(500) DEFAULT NULL,
-  `created_at` datetime DEFAULT NULL,
-  `created_by` bigint(20) DEFAULT NULL,
+  `created_at` datetime NOT NULL,
+  `created_by` bigint(20) NOT NULL,
   `modified_at` datetime DEFAULT NULL,
   `modified_by` bigint(20) DEFAULT NULL,
   `delete_flag` int(11) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `UK_paymentMethod` (`method`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -1192,7 +1245,11 @@ CREATE TABLE `paymentMethodType` (
 
 LOCK TABLES `paymentMethodType` WRITE;
 /*!40000 ALTER TABLE `paymentMethodType` DISABLE KEYS */;
-INSERT INTO `paymentMethodType` VALUES (1,'Company Check',NULL,NULL,NULL,'2015-09-24 22:51:23',1,1),(2,'Cash',NULL,NULL,NULL,NULL,NULL,1),(3,'Credit Card',NULL,NULL,NULL,NULL,NULL,1),(4,'Charge',NULL,NULL,NULL,NULL,NULL,1),(5,'Money Order',NULL,NULL,NULL,NULL,NULL,1);
+INSERT INTO `paymentMethodType` VALUES (1,'Company Check',NULL,'2012-03-16 14:25:34',1,'2015-09-24 22:51:23',1,1),
+(2,'Cash',NULL,'2012-03-16 14:25:34',1,NULL,NULL,1),
+(3,'Credit Card',NULL,'2012-03-16 14:25:34',1,NULL,NULL,1),
+(4,'Charge',NULL,'2012-03-16 14:25:34',1,NULL,NULL,1),
+(5,'Money Order',NULL,'2012-03-16 14:25:34',1,NULL,NULL,1);
 /*!40000 ALTER TABLE `paymentMethodType` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -1210,10 +1267,10 @@ CREATE TABLE `dumpsterPrice` (
   `materialTypeId` bigint(20) NOT NULL,
   `price` decimal(6,2) NOT NULL,
   `comments` varchar(500) DEFAULT NULL,
-  `effectiveStartDate` datetime DEFAULT NULL,
-  `effectiveEndDate` datetime DEFAULT NULL,
-  `created_at` datetime DEFAULT NULL,
-  `created_by` bigint(20) DEFAULT NULL,
+  `effectiveStartDate` datetime NOT NULL,
+  `effectiveEndDate` datetime NOT NULL,
+  `created_at` datetime NOT NULL,
+  `created_by` bigint(20) NOT NULL,
   `modified_at` datetime DEFAULT NULL,
   `modified_by` bigint(20) DEFAULT NULL,
   `delete_flag` int(11) NOT NULL DEFAULT '1',
@@ -1230,27 +1287,27 @@ CREATE TABLE `dumpsterPrice` (
 
 LOCK TABLES `dumpsterPrice` WRITE;
 /*!40000 ALTER TABLE `dumpsterPrice` DISABLE KEYS */;
-INSERT INTO `dumpsterPrice` (`id`,`dumpsterSizeId`,`materialTypeId`,`price`,`comments`,`effectiveStartDate`,`effectiveEndDate`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (1,1,1,240.00,NULL,'2015-09-25 12:31:34','2020-09-25 12:31:34',NULL,NULL,NULL,NULL,1);
-INSERT INTO `dumpsterPrice` (`id`,`dumpsterSizeId`,`materialTypeId`,`price`,`comments`,`effectiveStartDate`,`effectiveEndDate`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (2,1,2,240.00,NULL,'2015-09-25 12:31:34','2020-09-25 12:31:34',NULL,NULL,NULL,NULL,1);
-INSERT INTO `dumpsterPrice` (`id`,`dumpsterSizeId`,`materialTypeId`,`price`,`comments`,`effectiveStartDate`,`effectiveEndDate`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (3,1,3,240.00,NULL,'2015-09-25 12:31:34','2020-09-25 12:31:34',NULL,NULL,NULL,NULL,1);
-INSERT INTO `dumpsterPrice` (`id`,`dumpsterSizeId`,`materialTypeId`,`price`,`comments`,`effectiveStartDate`,`effectiveEndDate`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (4,2,1,300.00,NULL,'2015-09-25 12:31:34','2020-09-25 12:31:34',NULL,NULL,NULL,NULL,1);
-INSERT INTO `dumpsterPrice` (`id`,`dumpsterSizeId`,`materialTypeId`,`price`,`comments`,`effectiveStartDate`,`effectiveEndDate`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (5,2,2,300.00,NULL,'2015-09-25 12:31:34','2020-09-25 12:31:34',NULL,NULL,NULL,NULL,1);
-INSERT INTO `dumpsterPrice` (`id`,`dumpsterSizeId`,`materialTypeId`,`price`,`comments`,`effectiveStartDate`,`effectiveEndDate`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (6,2,3,300.00,NULL,'2015-09-25 12:31:34','2020-09-25 12:31:34',NULL,NULL,NULL,NULL,1);
-INSERT INTO `dumpsterPrice` (`id`,`dumpsterSizeId`,`materialTypeId`,`price`,`comments`,`effectiveStartDate`,`effectiveEndDate`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (7,1,4,240.00,NULL,'2015-09-25 12:31:34','2020-09-25 12:31:34',NULL,NULL,NULL,NULL,1);
-INSERT INTO `dumpsterPrice` (`id`,`dumpsterSizeId`,`materialTypeId`,`price`,`comments`,`effectiveStartDate`,`effectiveEndDate`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (8,1,5,240.00,NULL,'2015-09-25 12:31:34','2020-09-25 12:31:34',NULL,NULL,NULL,NULL,1);
-INSERT INTO `dumpsterPrice` (`id`,`dumpsterSizeId`,`materialTypeId`,`price`,`comments`,`effectiveStartDate`,`effectiveEndDate`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (9,2,4,300.00,NULL,'2015-09-25 12:31:34','2020-09-25 12:31:34',NULL,NULL,NULL,NULL,1);
-INSERT INTO `dumpsterPrice` (`id`,`dumpsterSizeId`,`materialTypeId`,`price`,`comments`,`effectiveStartDate`,`effectiveEndDate`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (10,2,5,300.00,NULL,'2015-09-25 12:31:34','2020-09-25 12:31:34',NULL,NULL,NULL,NULL,1);
-INSERT INTO `dumpsterPrice` (`id`,`dumpsterSizeId`,`materialTypeId`,`price`,`comments`,`effectiveStartDate`,`effectiveEndDate`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (11,1,6,320.00,NULL,'2015-09-25 12:31:34','2020-09-25 12:31:34',NULL,NULL,NULL,NULL,1);
-INSERT INTO `dumpsterPrice` (`id`,`dumpsterSizeId`,`materialTypeId`,`price`,`comments`,`effectiveStartDate`,`effectiveEndDate`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (12,2,6,380.00,NULL,'2015-09-25 12:31:34','2020-09-25 12:31:34',NULL,NULL,NULL,NULL,1);
-INSERT INTO `dumpsterPrice` (`id`,`dumpsterSizeId`,`materialTypeId`,`price`,`comments`,`effectiveStartDate`,`effectiveEndDate`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (13,3,4,350.00,NULL,'2015-09-25 12:31:34','2020-09-25 12:31:34',NULL,NULL,NULL,NULL,1);
-INSERT INTO `dumpsterPrice` (`id`,`dumpsterSizeId`,`materialTypeId`,`price`,`comments`,`effectiveStartDate`,`effectiveEndDate`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (14,4,4,390.00,NULL,'2015-09-25 12:31:34','2020-09-25 12:31:34',NULL,NULL,NULL,NULL,1);
-INSERT INTO `dumpsterPrice` (`id`,`dumpsterSizeId`,`materialTypeId`,`price`,`comments`,`effectiveStartDate`,`effectiveEndDate`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (15,5,4,440.00,NULL,'2015-09-25 12:31:34','2020-09-25 12:31:34',NULL,NULL,NULL,NULL,1);
-INSERT INTO `dumpsterPrice` (`id`,`dumpsterSizeId`,`materialTypeId`,`price`,`comments`,`effectiveStartDate`,`effectiveEndDate`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (16,6,4,470.00,NULL,'2015-09-25 12:31:34','2020-09-25 12:31:34',NULL,NULL,NULL,NULL,1);
-INSERT INTO `dumpsterPrice` (`id`,`dumpsterSizeId`,`materialTypeId`,`price`,`comments`,`effectiveStartDate`,`effectiveEndDate`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (17,3,5,350.00,NULL,'2015-09-25 12:31:34','2020-09-25 12:31:34',NULL,NULL,NULL,NULL,1);
-INSERT INTO `dumpsterPrice` (`id`,`dumpsterSizeId`,`materialTypeId`,`price`,`comments`,`effectiveStartDate`,`effectiveEndDate`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (18,4,5,390.00,NULL,'2015-09-25 12:31:34','2020-09-25 12:31:34',NULL,NULL,NULL,NULL,1);
-INSERT INTO `dumpsterPrice` (`id`,`dumpsterSizeId`,`materialTypeId`,`price`,`comments`,`effectiveStartDate`,`effectiveEndDate`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (19,5,5,440.00,NULL,'2015-09-25 12:31:34','2020-09-25 12:31:34',NULL,NULL,NULL,NULL,1);
-INSERT INTO `dumpsterPrice` (`id`,`dumpsterSizeId`,`materialTypeId`,`price`,`comments`,`effectiveStartDate`,`effectiveEndDate`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (20,6,5,470.00,NULL,'2015-09-25 12:31:34','2020-09-25 12:31:34',NULL,NULL,NULL,NULL,1);
-INSERT INTO `dumpsterPrice` (`id`,`dumpsterSizeId`,`materialTypeId`,`price`,`comments`,`effectiveStartDate`,`effectiveEndDate`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (21,3,6,430.00,NULL,'2015-09-25 12:31:34','2020-09-25 12:31:34',NULL,NULL,NULL,NULL,1);
+INSERT INTO `dumpsterPrice` (`id`,`dumpsterSizeId`,`materialTypeId`,`price`,`comments`,`effectiveStartDate`,`effectiveEndDate`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (1,1,1,240.00,NULL,'2015-09-25 12:31:34','2020-09-25 12:31:34','2012-03-16 14:25:34',1,NULL,NULL,1);
+INSERT INTO `dumpsterPrice` (`id`,`dumpsterSizeId`,`materialTypeId`,`price`,`comments`,`effectiveStartDate`,`effectiveEndDate`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (2,1,2,240.00,NULL,'2015-09-25 12:31:34','2020-09-25 12:31:34','2012-03-16 14:25:34',1,NULL,NULL,1);
+INSERT INTO `dumpsterPrice` (`id`,`dumpsterSizeId`,`materialTypeId`,`price`,`comments`,`effectiveStartDate`,`effectiveEndDate`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (3,1,3,240.00,NULL,'2015-09-25 12:31:34','2020-09-25 12:31:34','2012-03-16 14:25:34',1,NULL,NULL,1);
+INSERT INTO `dumpsterPrice` (`id`,`dumpsterSizeId`,`materialTypeId`,`price`,`comments`,`effectiveStartDate`,`effectiveEndDate`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (4,2,1,300.00,NULL,'2015-09-25 12:31:34','2020-09-25 12:31:34','2012-03-16 14:25:34',1,NULL,NULL,1);
+INSERT INTO `dumpsterPrice` (`id`,`dumpsterSizeId`,`materialTypeId`,`price`,`comments`,`effectiveStartDate`,`effectiveEndDate`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (5,2,2,300.00,NULL,'2015-09-25 12:31:34','2020-09-25 12:31:34','2012-03-16 14:25:34',1,NULL,NULL,1);
+INSERT INTO `dumpsterPrice` (`id`,`dumpsterSizeId`,`materialTypeId`,`price`,`comments`,`effectiveStartDate`,`effectiveEndDate`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (6,2,3,300.00,NULL,'2015-09-25 12:31:34','2020-09-25 12:31:34','2012-03-16 14:25:34',1,NULL,NULL,1);
+INSERT INTO `dumpsterPrice` (`id`,`dumpsterSizeId`,`materialTypeId`,`price`,`comments`,`effectiveStartDate`,`effectiveEndDate`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (7,1,4,240.00,NULL,'2015-09-25 12:31:34','2020-09-25 12:31:34','2012-03-16 14:25:34',1,NULL,NULL,1);
+INSERT INTO `dumpsterPrice` (`id`,`dumpsterSizeId`,`materialTypeId`,`price`,`comments`,`effectiveStartDate`,`effectiveEndDate`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (8,1,5,240.00,NULL,'2015-09-25 12:31:34','2020-09-25 12:31:34','2012-03-16 14:25:34',1,NULL,NULL,1);
+INSERT INTO `dumpsterPrice` (`id`,`dumpsterSizeId`,`materialTypeId`,`price`,`comments`,`effectiveStartDate`,`effectiveEndDate`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (9,2,4,300.00,NULL,'2015-09-25 12:31:34','2020-09-25 12:31:34','2012-03-16 14:25:34',1,NULL,NULL,1);
+INSERT INTO `dumpsterPrice` (`id`,`dumpsterSizeId`,`materialTypeId`,`price`,`comments`,`effectiveStartDate`,`effectiveEndDate`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (10,2,5,300.00,NULL,'2015-09-25 12:31:34','2020-09-25 12:31:34','2012-03-16 14:25:34',1,NULL,NULL,1);
+INSERT INTO `dumpsterPrice` (`id`,`dumpsterSizeId`,`materialTypeId`,`price`,`comments`,`effectiveStartDate`,`effectiveEndDate`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (11,1,6,320.00,NULL,'2015-09-25 12:31:34','2020-09-25 12:31:34','2012-03-16 14:25:34',1,NULL,NULL,1);
+INSERT INTO `dumpsterPrice` (`id`,`dumpsterSizeId`,`materialTypeId`,`price`,`comments`,`effectiveStartDate`,`effectiveEndDate`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (12,2,6,380.00,NULL,'2015-09-25 12:31:34','2020-09-25 12:31:34','2012-03-16 14:25:34',1,NULL,NULL,1);
+INSERT INTO `dumpsterPrice` (`id`,`dumpsterSizeId`,`materialTypeId`,`price`,`comments`,`effectiveStartDate`,`effectiveEndDate`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (13,3,4,350.00,NULL,'2015-09-25 12:31:34','2020-09-25 12:31:34','2012-03-16 14:25:34',1,NULL,NULL,1);
+INSERT INTO `dumpsterPrice` (`id`,`dumpsterSizeId`,`materialTypeId`,`price`,`comments`,`effectiveStartDate`,`effectiveEndDate`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (14,4,4,390.00,NULL,'2015-09-25 12:31:34','2020-09-25 12:31:34','2012-03-16 14:25:34',1,NULL,NULL,1);
+INSERT INTO `dumpsterPrice` (`id`,`dumpsterSizeId`,`materialTypeId`,`price`,`comments`,`effectiveStartDate`,`effectiveEndDate`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (15,5,4,440.00,NULL,'2015-09-25 12:31:34','2020-09-25 12:31:34','2012-03-16 14:25:34',1,NULL,NULL,1);
+INSERT INTO `dumpsterPrice` (`id`,`dumpsterSizeId`,`materialTypeId`,`price`,`comments`,`effectiveStartDate`,`effectiveEndDate`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (16,6,4,470.00,NULL,'2015-09-25 12:31:34','2020-09-25 12:31:34','2012-03-16 14:25:34',1,NULL,NULL,1);
+INSERT INTO `dumpsterPrice` (`id`,`dumpsterSizeId`,`materialTypeId`,`price`,`comments`,`effectiveStartDate`,`effectiveEndDate`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (17,3,5,350.00,NULL,'2015-09-25 12:31:34','2020-09-25 12:31:34','2012-03-16 14:25:34',1,NULL,NULL,1);
+INSERT INTO `dumpsterPrice` (`id`,`dumpsterSizeId`,`materialTypeId`,`price`,`comments`,`effectiveStartDate`,`effectiveEndDate`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (18,4,5,390.00,NULL,'2015-09-25 12:31:34','2020-09-25 12:31:34','2012-03-16 14:25:34',1,NULL,NULL,1);
+INSERT INTO `dumpsterPrice` (`id`,`dumpsterSizeId`,`materialTypeId`,`price`,`comments`,`effectiveStartDate`,`effectiveEndDate`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (19,5,5,440.00,NULL,'2015-09-25 12:31:34','2020-09-25 12:31:34','2012-03-16 14:25:34',1,NULL,NULL,1);
+INSERT INTO `dumpsterPrice` (`id`,`dumpsterSizeId`,`materialTypeId`,`price`,`comments`,`effectiveStartDate`,`effectiveEndDate`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (20,6,5,470.00,NULL,'2015-09-25 12:31:34','2020-09-25 12:31:34','2012-03-16 14:25:34',1,NULL,NULL,1);
+INSERT INTO `dumpsterPrice` (`id`,`dumpsterSizeId`,`materialTypeId`,`price`,`comments`,`effectiveStartDate`,`effectiveEndDate`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (21,3,6,430.00,NULL,'2015-09-25 12:31:34','2020-09-25 12:31:34','2012-03-16 14:25:34',1,NULL,NULL,1);
 
 /*!40000 ALTER TABLE `dumpsterPrice` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -1270,10 +1327,10 @@ CREATE TABLE `customerDumpsterPrice` (
   `materialTypeId` bigint(20) NOT NULL,
   `price` decimal(6,2) NOT NULL,
   `comments` varchar(500) DEFAULT NULL,
-  `effectiveStartDate` datetime DEFAULT NULL,
-  `effectiveEndDate` datetime DEFAULT NULL,
-  `created_at` datetime DEFAULT NULL,
-  `created_by` bigint(20) DEFAULT NULL,
+  `effectiveStartDate` datetime NOT NULL,
+  `effectiveEndDate` datetime NOT NULL,
+  `created_at` datetime NOT NULL,
+  `created_by` bigint(20) NOT NULL,
   `modified_at` datetime DEFAULT NULL,
   `modified_by` bigint(20) DEFAULT NULL,
   `delete_flag` int(11) NOT NULL DEFAULT '1',
@@ -1291,7 +1348,8 @@ CREATE TABLE `customerDumpsterPrice` (
 
 LOCK TABLES `customerDumpsterPrice` WRITE;
 /*!40000 ALTER TABLE `customerDumpsterPrice` DISABLE KEYS */;
-INSERT INTO `customerDumpsterPrice` VALUES (5,6,1,1, 300.00,NULL,'2015-09-25 11:48:14', '2025-09-25 11:48:14','2015-09-25 11:48:14',1,'2015-09-25 11:50:40',1,1);
+INSERT INTO `customerDumpsterPrice` VALUES 
+(5,6,1,1, 300.00,NULL,'2015-09-25 11:48:14', '2025-09-25 11:48:14','2015-09-25 11:48:14',1,'2015-09-25 11:50:40',1,1);
 /*!40000 ALTER TABLE `customerDumpsterPrice` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -1308,10 +1366,10 @@ CREATE TABLE `cityFee` (
   `suburbName` varchar(50) NOT NULL,
   `fee` decimal(6,2) NOT NULL,
   `comments` varchar(500) DEFAULT NULL,
-  `effectiveStartDate` datetime DEFAULT NULL,
-  `effectiveEndDate` datetime DEFAULT NULL,
-  `created_at` datetime DEFAULT NULL,
-  `created_by` bigint(20) DEFAULT NULL,
+  `effectiveStartDate` datetime NOT NULL,
+  `effectiveEndDate` datetime NOT NULL,
+  `created_at` datetime NOT NULL,
+  `created_by` bigint(20) NOT NULL,
   `modified_at` datetime DEFAULT NULL,
   `modified_by` bigint(20) DEFAULT NULL,
   `delete_flag` int(11) NOT NULL DEFAULT '1',
@@ -1325,7 +1383,8 @@ CREATE TABLE `cityFee` (
 
 LOCK TABLES `cityFee` WRITE;
 /*!40000 ALTER TABLE `cityFee` DISABLE KEYS */;
-INSERT INTO `cityFee` VALUES (5,'Chicago',35.00,NULL,'2015-09-25 12:31:34', '2020-09-25 12:31:34', '2015-09-25 12:31:34',1,'2015-09-25 12:32:00',1,1);
+INSERT INTO `cityFee` VALUES 
+(5,'Chicago',35.00,NULL,'2015-09-25 12:31:34', '2020-09-25 12:31:34', '2015-09-25 12:31:34',1,'2015-09-25 12:32:00',1,1);
 /*!40000 ALTER TABLE `cityFee` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -1344,10 +1403,10 @@ CREATE TABLE `overweightFee` (
   `tonLimit` decimal(6,2) NOT NULL,
   `fee` decimal(6,2) NOT NULL,
   `comments` varchar(500) DEFAULT NULL,
-  `effectiveStartDate` datetime DEFAULT NULL,
-  `effectiveEndDate` datetime DEFAULT NULL,
-  `created_at` datetime DEFAULT NULL,
-  `created_by` bigint(20) DEFAULT NULL,
+  `effectiveStartDate` datetime NOT NULL,
+  `effectiveEndDate` datetime NOT NULL,
+  `created_at` datetime NOT NULL,
+  `created_by` bigint(20) NOT NULL,
   `modified_at` datetime DEFAULT NULL,
   `modified_by` bigint(20) DEFAULT NULL,
   `delete_flag` int(11) NOT NULL DEFAULT '1',
@@ -1363,7 +1422,8 @@ CREATE TABLE `overweightFee` (
 
 LOCK TABLES `overweightFee` WRITE;
 /*!40000 ALTER TABLE `overweightFee` DISABLE KEYS */;
-INSERT INTO `overweightFee` VALUES (5,1,1,50.00, 45.00, NULL,'2015-09-25 12:31:34', '2020-09-25 12:31:34', '2015-09-25 12:31:34',1,'2015-09-25 12:32:00',1,1);
+INSERT INTO `overweightFee` VALUES 
+(5,1,1,50.00, 45.00, NULL,'2015-09-25 12:31:34', '2020-09-25 12:31:34', '2015-09-25 12:31:34',1,'2015-09-25 12:32:00',1,1);
 /*!40000 ALTER TABLE `overweightFee` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -1381,10 +1441,10 @@ CREATE TABLE `permitFee` (
   `permitTypeId` bigint(20) NOT NULL,
   `fee` decimal(6,2) NOT NULL,
   `comments` varchar(500) DEFAULT NULL,
-  `effectiveStartDate` datetime DEFAULT NULL,
-  `effectiveEndDate` datetime DEFAULT NULL,
-  `created_at` datetime DEFAULT NULL,
-  `created_by` bigint(20) DEFAULT NULL,
+  `effectiveStartDate` datetime NOT NULL,
+  `effectiveEndDate` datetime NOT NULL,
+  `created_at` datetime NOT NULL,
+  `created_by` bigint(20) NOT NULL,
   `modified_at` datetime DEFAULT NULL,
   `modified_by` bigint(20) DEFAULT NULL,
   `delete_flag` int(11) NOT NULL DEFAULT '1',
@@ -1402,14 +1462,14 @@ CREATE TABLE `permitFee` (
 
 LOCK TABLES `permitFee` WRITE;
 /*!40000 ALTER TABLE `permitFee` DISABLE KEYS */;
-INSERT INTO `permitFee` VALUES (5,1,1,65.00,NULL,'2015-09-25 14:46:36','2025-09-25 14:46:36','2015-09-25 14:46:36',1,'2015-09-25 15:45:42',1,1),
+INSERT INTO `permitFee` VALUES 
+(5,1,1,65.00,NULL,'2015-09-25 14:46:36','2025-09-25 14:46:36','2015-09-25 14:46:36',1,'2015-09-25 15:45:42',1,1),
 (6,1,2,115.00,NULL,'2015-09-25 14:46:36','2025-09-25 14:46:36','2015-09-25 15:45:56',1,NULL,NULL,1),
 (7,2,1,130.00,NULL,'2015-09-25 14:46:36','2025-09-25 14:46:36','2015-09-25 15:46:19',1,NULL,NULL,1),
 (8,2,2,230.00,NULL,'2015-09-25 14:46:36','2025-09-25 14:46:36','2015-09-25 15:46:37',1,NULL,NULL,1);
 /*!40000 ALTER TABLE `permitFee` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
-
 
 
 --
@@ -1424,10 +1484,10 @@ CREATE TABLE `additionalFee` (
   `description` varchar(100) NOT NULL,
   `fee` decimal(6,2) NOT NULL,
   `comments` varchar(500) DEFAULT NULL,
-  `effectiveStartDate` datetime DEFAULT NULL,
-  `effectiveEndDate` datetime DEFAULT NULL,
-  `created_at` datetime DEFAULT NULL,
-  `created_by` bigint(20) DEFAULT NULL,
+  `effectiveStartDate` datetime NOT NULL,
+  `effectiveEndDate` datetime NOT NULL,
+  `created_at` datetime NOT NULL,
+  `created_by` bigint(20) NOT NULL,
   `modified_at` datetime DEFAULT NULL,
   `modified_by` bigint(20) DEFAULT NULL,
   `delete_flag` int(11) NOT NULL DEFAULT '1',
@@ -1441,7 +1501,8 @@ CREATE TABLE `additionalFee` (
 
 LOCK TABLES `additionalFee` WRITE;
 /*!40000 ALTER TABLE `additionalFee` DISABLE KEYS */;
-INSERT INTO `additionalFee` VALUES (5,'Move Box',190.00,NULL,'2015-09-25 15:38:13','2025-09-25 15:38:13','2015-09-25 15:38:13',1,NULL,NULL,1);
+INSERT INTO `additionalFee` VALUES 
+(5,'Move Box',190.00,NULL,'2015-09-25 15:38:13','2025-09-25 15:38:13','2015-09-25 15:38:13',1,NULL,NULL,1);
 /*!40000 ALTER TABLE `additionalFee` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -1465,6 +1526,7 @@ CREATE TABLE `publicMaterialIntake` (
   `delete_flag` int(11) NOT NULL DEFAULT '1',
   `netWeightTonnage` decimal(6,2) NOT NULL,
   PRIMARY KEY (`id`),
+  UNIQUE KEY `UK_publicMaterialIntake` (`materialTypeId`, `intakeDate`),
   KEY `publicMaterialIntakeMaterialTypeRef_idx` (`materialTypeId`),
   CONSTRAINT `publicMaterialIntakeMaterialTypeRef` FOREIGN KEY (`materialTypeId`) REFERENCES `materialType` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
@@ -1514,8 +1576,8 @@ CREATE TABLE `recycleLocation` (
 
 LOCK TABLES `recycleLocation` WRITE;
 /*!40000 ALTER TABLE `recycleLocation` DISABLE KEYS */;
-INSERT INTO `recycleLocation` (`id`,`materialTypeId`,`location`,`status`,`comments`,`effectiveStartDate`,`effectiveEndDate`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (6,3,'location1','Active','t','2015-10-13 00:00:00','2015-10-30 00:00:00','2015-10-24 23:23:03',1,'2015-10-24 23:46:53',1,1);
-INSERT INTO `recycleLocation` (`id`,`materialTypeId`,`location`,`status`,`comments`,`effectiveStartDate`,`effectiveEndDate`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (7,1,'location2','Active','u','2015-10-25 00:00:00','2015-10-31 00:00:00','2015-10-25 00:19:08',1,NULL,NULL,1);
+INSERT INTO `recycleLocation` (`id`,`materialTypeId`,`location`,`status`,`comments`,`effectiveStartDate`,`effectiveEndDate`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (6,3,'location1','Active','test','2015-10-13 00:00:00','2015-10-30 00:00:00','2015-10-24 23:23:03',1,'2015-10-24 23:46:53',1,1);
+INSERT INTO `recycleLocation` (`id`,`materialTypeId`,`location`,`status`,`comments`,`effectiveStartDate`,`effectiveEndDate`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (7,1,'location2','Active','test','2015-10-25 00:00:00','2015-10-31 00:00:00','2015-10-25 00:19:08',1,NULL,NULL,1);
 /*!40000 ALTER TABLE `recycleLocation` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;

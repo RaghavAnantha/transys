@@ -8,7 +8,7 @@
 			<td class="form-left">Dumpster Size</td>
 			<td class="wide">
 				<select class="flat form-control input-sm" id="dumpsterSize" name="dumpsterSize" style="width: 175px !important">
-					<option value="">------Please Select------</option>
+					<option value="">----Please Select----</option>
 					<c:forEach items="${dumpsterSizes}" var="aDumpsterSize">
 						<c:set var="selected" value="" />
 						<c:if test="${sessionScope.searchCriteria.searchMap['dumpsterSize'] == aDumpsterSize.id}">
@@ -21,7 +21,7 @@
 			<td class="form-left">Status</td>
 			<td class="wide">
 				<select class="flat form-control input-sm" id="status" name="status" style="width: 175px !important">
-					<option value="">------Please Select------</option>
+					<option value="">----Please Select----</option>
 					<c:forEach items="${dumpsterStatus}" var="status">
 						<c:set var="selected" value="" />
 						<c:if test="${sessionScope.searchCriteria.searchMap['status'] == status.id}">

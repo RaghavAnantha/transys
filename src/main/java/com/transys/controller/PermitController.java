@@ -735,13 +735,15 @@ public class PermitController extends CRUDController<Permit> {
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/validatePermitCanBeAdded")
 	public @ResponseBody String validatePermitCanBeAdded(ModelMap model, HttpServletRequest request,
-			@RequestParam(value = "orderId") Long orderId,
+			@RequestParam(value = "orderId", required = false) Long orderId,
 			@RequestParam(value = "deliveryAddressId") Long deliveryAddressId) {
 		String validationErrorMsg = StringUtils.EMPTY;
 		
-		List<OrderPermits> orderPermitList = genericDAO.executeSimpleQuery("select obj from OrderPermits obj where obj.order.id=" + orderId);
-		if (orderPermitList != null && orderPermitList.size() == 3) {
-			validationErrorMsg = "There are already " + MAX_NUMBER_OF_ASSOCIATED_PERMITS + " permits for this order.";
+		if (orderId != null) {
+			List<OrderPermits> orderPermitList = genericDAO.executeSimpleQuery("select obj from OrderPermits obj where obj.order.id=" + orderId);
+			if (orderPermitList != null && orderPermitList.size() == 3) {
+				validationErrorMsg = "There are already " + MAX_NUMBER_OF_ASSOCIATED_PERMITS + " permits for this order.";
+			}
 		}
 		
 		List<DeliveryAddress> deliveryAddressList = genericDAO.executeSimpleQuery("select obj from DeliveryAddress obj where obj.id=" + deliveryAddressId);
@@ -749,7 +751,10 @@ public class PermitController extends CRUDController<Permit> {
 		String city = deliveryAddress.getCity();
 		
 		if (!StringUtils.equalsIgnoreCase("Chicago", city)) {
-			validationErrorMsg += "\nPermits only required for Chicago delivery address.";
+			if (StringUtils.isNotEmpty(validationErrorMsg)) {
+				validationErrorMsg += "\n";
+			}
+			validationErrorMsg += "Permits only required for Chicago delivery address.";
 		}
 		
 		ObjectMapper objectMapper = new ObjectMapper();

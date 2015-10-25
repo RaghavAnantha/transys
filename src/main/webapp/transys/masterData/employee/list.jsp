@@ -8,7 +8,7 @@
 			<td class="form-left"><transys:label code="Employee Id" /></td>
 			<td>
 				<select class="flat form-control input-sm" id="status" name="employeeId" style="width: 175px !important">
-					<option value="">------Please Select------</option>
+					<option value="">----Please Select----</option>
 					<c:forEach items="${employee}" var="anEmployee">
 						<c:set var="selected" value="" />
 						<c:if test="${sessionScope.searchCriteria.searchMap['employeeId'] == anEmployee.employeeId}">
@@ -23,8 +23,7 @@
 					code="Employee First Name" /></td>
 			<td><select
 				class="flat form-control input-sm" id="status" name="firstName" style="width: 175px !important">
-					<option value="">------
-						<transys:label code="Please Select" />------
+					<option value="">----Please Select----
 					</option>
 					<c:forEach items="${employee}" var="anEmployee">
 						<c:set var="selected" value="" />
@@ -41,7 +40,7 @@
 			<td class="form-left form-left-ext"><transys:label code="Employee Last Name" /></td>
 			<td >
 				<select class="flat form-control input-sm" id="lastName" name="lastName" style="width: 175px !important">
-					<option value="">------Please Select------</option>
+					<option value="">----Please Select----</option>
 					<c:forEach items="${employee}" var="anEmployee">
 						<c:set var="selected" value="" />
 						<c:if
@@ -60,8 +59,7 @@
 			<td><select
 				class="flat form-control input-sm" id="status" name="status.status"
 				style="width: 175px !important">
-					<option value="">------
-						<transys:label code="Please Select" />------
+					<option value="">----Please Select----
 					</option>
 					<c:forEach items="${employeeStatus}" var="employeeStatus">
 						<c:set var="selected" value="" />

@@ -14,7 +14,7 @@
 			<td class="form-left"><transys:label code="Permit Class" /><span class="errorMessage">*</span></td>
 			<td>
 				<form:select cssClass="flat form-control input-sm" style="width:172px !important" path="permitClass.id" >
-					<form:option value="">------Please Select--------</form:option>
+					<form:option value="">----Please Select----</form:option>
 					<form:options items="${permitClass}" itemValue="id"  itemLabel="permitClass" />
 				</form:select> 
 				<form:errors path="permitClass.id" cssClass="errorMessage" />
@@ -24,7 +24,7 @@
 			<td class="form-left"><transys:label code="Permit Type" /><span class="errorMessage">*</span></td>
 			<td>
 				<form:select cssClass="flat form-control input-sm" style="width:172px !important" path="permitType.id" >
-					<form:option value="">------Please Select--------</form:option>
+					<form:option value="">----Please Select----</form:option>
 					<form:options items="${permitType}" itemValue="id"  itemLabel="permitType" />
 				</form:select> 
 				<form:errors path="permitType.id" cssClass="errorMessage" />

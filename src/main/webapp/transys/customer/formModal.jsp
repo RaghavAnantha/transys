@@ -152,7 +152,7 @@ $("#customerModalForm").submit(function (ev) {
 			</td>
 		</tr>
 		<tr>
-			<td class="form-left">Email</td>
+			<td class="form-left">Email<span class="errorMessage">*</span></td>
 			<td align="${left}">
 				<form:input path="email" cssClass="flat flat-ext" id="email" />
 				<br><form:errors path="email" cssClass="errorMessage" />
@@ -198,7 +198,7 @@ $("#customerModalForm").submit(function (ev) {
 			<td class="form-left">State<span class="errorMessage">*</span></td>
 			<td align="${left}">
 				<form:select cssClass="flat form-control input-sm" style="width: 174px !important" path="deliveryAddress[0].state">
-					<form:option value="">------Please Select--------</form:option>
+					<form:option value="">----Please Select----</form:option>
 					<form:options items="${state}" itemValue="id" itemLabel="name" />
 				</form:select> 
 				<form:errors path="deliveryAddress[0].state" cssClass="errorMessage" />
