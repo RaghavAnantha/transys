@@ -91,12 +91,16 @@ public class PublicMaterialIntakeController extends CRUDController<PublicMateria
 		model.addAttribute("materialCategories", genericDAO.findByCriteria(MaterialCategory.class, criterias, "id", false));
 		
 		//model.addAttribute("materialTypes", genericDAO.findByCriteria(MaterialType.class, criterias, "id", false));
+		
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
-		if (criteria.getSearchMap().get("materialType.materialCategory") != null) {
-			String materialCategoryId = criteria.getSearchMap().get("materialType.materialCategory").toString();
-			String query = "select obj from MaterialType obj where obj.materialCategory.id=" + materialCategoryId;
-			List<MaterialType> materialTypeList = genericDAO.executeSimpleQuery(query);
-			model.addAttribute("materialTypes", materialTypeList);
+		Object materialCategoryObj = criteria.getSearchMap().get("materialType.materialCategory");
+		if (materialCategoryObj != null) {
+			String materialCategoryId = materialCategoryObj.toString();
+			if (StringUtils.isNotEmpty(materialCategoryId)) {
+				String query = "select obj from MaterialType obj where obj.materialCategory.id=" + materialCategoryId;
+				List<MaterialType> materialTypeList = genericDAO.executeSimpleQuery(query);
+				model.addAttribute("materialTypes", materialTypeList);
+			}
 		}
 	}
 

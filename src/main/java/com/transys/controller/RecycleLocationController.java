@@ -45,6 +45,7 @@ public class RecycleLocationController extends CRUDController<RecycleLocation> {
 	public void initBinder(WebDataBinder binder) {
 		binder.registerCustomEditor(MaterialCategory.class, new AbstractModelEditor(MaterialCategory.class));
 		binder.registerCustomEditor(MaterialType.class, new AbstractModelEditor(MaterialType.class));
+		
 		super.initBinder(binder);
 	}
 	
@@ -99,12 +100,16 @@ public class RecycleLocationController extends CRUDController<RecycleLocation> {
 		model.addAttribute("statuses", statusList);
 		
 		//model.addAttribute("materialTypes", genericDAO.findByCriteria(MaterialType.class, criterias, "id", false));
+		
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
-		if (criteria.getSearchMap().get("materialType.materialCategory") != null) {
-			String materialCategoryId = criteria.getSearchMap().get("materialType.materialCategory").toString();
-			String query = "select obj from MaterialType obj where obj.materialCategory.id=" + materialCategoryId;
-			List<MaterialType> materialTypeList = genericDAO.executeSimpleQuery(query);
-			model.addAttribute("materialTypes", materialTypeList);
+		Object materialCategoryObj = criteria.getSearchMap().get("materialType.materialCategory");
+		if (materialCategoryObj != null) {
+			String materialCategoryId = materialCategoryObj.toString();
+			if (StringUtils.isNotEmpty(materialCategoryId)) {
+				String query = "select obj from MaterialType obj where obj.materialCategory.id=" + materialCategoryId;
+				List<MaterialType> materialTypeList = genericDAO.executeSimpleQuery(query);
+				model.addAttribute("materialTypes", materialTypeList);
+			}
 		}
 	}
 

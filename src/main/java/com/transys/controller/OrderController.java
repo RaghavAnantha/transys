@@ -360,7 +360,7 @@ public class OrderController extends CRUDController<Order> {
 		genericDAO.saveOrUpdate(entity);
 		cleanUp(request);
 		
-		return "Saved successfully";
+		return "Order notes saved successfully";
 		
 		/*Long orderId = entity.getOrder().getId();
 		
@@ -512,7 +512,7 @@ public class OrderController extends CRUDController<Order> {
 		model.addAttribute("activeSubTab", "dropOffDriver");
 		
 		model.addAttribute("msgCtx", "manageDropOffDriver");
-		model.addAttribute("msg", "Drop off driver saved successfully");
+		model.addAttribute("msg", "Drop off data saved successfully");
 		
 		Long orderId = entity.getId();
 		List<BaseModel> orderList = genericDAO.executeSimpleQuery("select obj from Order obj where obj.id=" + orderId);
@@ -617,7 +617,7 @@ public class OrderController extends CRUDController<Order> {
 		model.addAttribute("activeSubTab", "pickupDriver");
 		
 		model.addAttribute("msgCtx", "managePickupDriver");
-		model.addAttribute("msg", "Pickup driver saved successfully");
+		model.addAttribute("msg", "Pickup data saved successfully");
 		
 		Long orderId = entity.getId();
 		List<BaseModel> orderList = genericDAO.executeSimpleQuery("select obj from Order obj where obj.id=" + orderId);
