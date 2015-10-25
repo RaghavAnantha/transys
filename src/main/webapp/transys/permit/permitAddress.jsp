@@ -2,6 +2,9 @@
 <form:form id="permitAddressForm" action="savePermitAddress.do" name="permitAddressForm" commandName="permitAddressModelObject" method="post">
 	<form:hidden path="id" />
 	<form:hidden path="permit.id" id="permit.id" />
+	<jsp:include page="/common/messages.jsp">
+		<jsp:param name="msgCtx" value="savePermitAddress" />
+	</jsp:include>
 	<table id="form-table" class="table editPermitAddress">
 		<tr><td colspan=10></td></tr>
 		<tr>

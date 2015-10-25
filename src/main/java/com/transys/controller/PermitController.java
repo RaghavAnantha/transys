@@ -689,6 +689,7 @@ public class PermitController extends CRUDController<Permit> {
 	public String saveSuccess(ModelMap model, HttpServletRequest request, Permit entity) {
 		setupCreate(model, request);
 		
+		model.addAttribute("msgCtx", "managePermit");
 		model.addAttribute("msg", "Permit saved successfully");
 		
 		model.addAttribute("activeTab", "managePermits");
@@ -849,10 +850,17 @@ public class PermitController extends CRUDController<Permit> {
 		List<BaseModel> permitList = genericDAO.executeSimpleQuery("select obj from Permit obj where obj.id=" + permitId);
 		model.addAttribute("modelObject", permitList.get(0));
 		
+		model.addAttribute("editDeliveryAddress", ((Permit)permitList.get(0)).getCustomer().getDeliveryAddress());
+		
 		List<BaseModel> addressList = genericDAO.executeSimpleQuery("select obj from PermitAddress obj where obj.permit.id=" +  permitId + " order by obj.id asc");
 		model.addAttribute("permitAddressList", addressList);
 		
-		model.addAttribute("permitAddressModelObject", new PermitAddress());
+		PermitAddress emptyPermitAddress = new PermitAddress();
+		emptyPermitAddress.setPermit(permit);
+		model.addAttribute("permitAddressModelObject", emptyPermitAddress);
+		
+		model.addAttribute("msgCtx", "savePermitNotes");
+		model.addAttribute("msg", "Permit notes saved successfully");
 		
 		model.addAttribute("activeTab", "managePermits");
 		model.addAttribute("activeSubTab", "permitNotes");
@@ -893,10 +901,21 @@ public class PermitController extends CRUDController<Permit> {
 		List<BaseModel> permitList = genericDAO.executeSimpleQuery("select obj from Permit obj where obj.id=" + permitId);
 		model.addAttribute("modelObject", permitList.get(0));
 		
+		model.addAttribute("editDeliveryAddress", ((Permit)permitList.get(0)).getCustomer().getDeliveryAddress());
+		
 		List<BaseModel> addressList = genericDAO.executeSimpleQuery("select obj from PermitAddress obj where obj.permit.id=" +  permitId + " order by obj.id asc");
 		model.addAttribute("permitAddressList", addressList);
 		
-		model.addAttribute("notesModelObject", new PermitNotes());
+		List<BaseModel> notesList = genericDAO.executeSimpleQuery("select obj from PermitNotes obj where obj.permit.id=" +  permitId + " order by obj.id asc");
+		model.addAttribute("notesList", notesList);
+		
+		PermitNotes emptyPermitNotes = new PermitNotes();
+		emptyPermitNotes.setPermit(permit);
+		model.addAttribute("notesModelObject", emptyPermitNotes);
+		
+		model.addAttribute("msgCtx", "savePermitAddress");
+		model.addAttribute("msg", "Permit Address saved successfully");
+	
 		model.addAttribute("activeTab", "managePermits");
 		model.addAttribute("activeSubTab", "permitAddress");
 		model.addAttribute("mode", "ADD");
