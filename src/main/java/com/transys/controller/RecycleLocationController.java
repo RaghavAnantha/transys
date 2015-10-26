@@ -71,7 +71,7 @@ public class RecycleLocationController extends CRUDController<RecycleLocation> {
 		criteria.setPageSize(25);
 		
 		model.addAttribute("list", genericDAO.search(RecycleLocation.class, criteria, "id", false));
-		
+		cleanUp(request);
 		return urlContext + "/list";
 	}
 

@@ -88,13 +88,13 @@ function populateMaterialTypes() {
 		<tr>
 			<td class="form-left">Effective Date From</td>
 		  	<td class="wide">
-		  		<input class="flat" id="datepicker1" name="effectiveStartDate" value="" style="width: 175px" />
+		  		<input class="flat" id="datepicker1" name="effectiveStartDate" value="${sessionScope.searchCriteria.searchMap['effectiveStartDate']}" style="width: 175px" />
 		  	</td>
 		</tr>
 		<tr>
 			<td class="form-left">Effective Date To</td>
 		  	<td class="wide">
-		  		<input class="flat" id="datepicker2" name="effectiveEndDate" value="" style="width: 175px" />
+		  		<input class="flat" id="datepicker2" name="effectiveEndDate" value="${sessionScope.searchCriteria.searchMap['effectiveEndDate']}" style="width: 175px" />
 		  	</td>
 		</tr>
 		<tr>
