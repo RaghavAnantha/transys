@@ -68,6 +68,8 @@
 		<transys:textcolumn headerText="Overweight Fee" dataField="orderFees.overweightFee" />
 		<transys:textcolumn headerText="Additional Fee" dataField="orderFees.totalAdditionalFees" />
 		<transys:textcolumn headerText="Total Fees" dataField="orderFees.totalFees" />
+		<transys:textcolumn headerText="Total Paid" dataField="totalAmountPaid" />
+		<transys:textcolumn headerText="Fee Balance" dataField="balanceAmountDue" />
 	</transys:datatable>
 	<%session.setAttribute("orderRevenueReportColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
 </form:form>

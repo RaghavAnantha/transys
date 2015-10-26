@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
-<!-- 2015-10-24T09:52:54 -->
+<!-- 2015-10-26T09:12:52 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ordersRevenueReport_Landscape" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="c42294c9-e48a-45e8-8a2d-a78f0976d31d">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
 	<queryString>
@@ -33,6 +33,8 @@
 	<field name="to" class="java.lang.String"/>
 	<field name="totalAdditionalFee" class="java.lang.String"/>
 	<field name="aggTotalPermitFees" class="java.lang.String"/>
+	<field name="totalPaid" class="java.lang.String"/>
+	<field name="feeBalance" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -172,11 +174,11 @@
 		</band>
 	</title>
 	<columnHeader>
-		<band height="27" splitType="Stretch">
+		<band height="20" splitType="Stretch">
 			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.HorizontalRowLayout"/>
 			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 			<staticText>
-				<reportElement mode="Transparent" x="0" y="0" width="70" height="27" forecolor="#000000" backcolor="#337AB7" uuid="2347d370-0987-401d-9d48-413bb0dc4f46">
+				<reportElement mode="Transparent" x="0" y="0" width="76" height="20" forecolor="#000000" backcolor="#337AB7" uuid="2347d370-0987-401d-9d48-413bb0dc4f46">
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 				</reportElement>
 				<box>
@@ -191,7 +193,7 @@
 				<text><![CDATA[Order #]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Transparent" x="70" y="0" width="61" height="27" forecolor="#000000" backcolor="#337AB7" uuid="07094ee6-67aa-47db-b4af-37380bd56d99">
+				<reportElement mode="Transparent" x="76" y="0" width="66" height="20" forecolor="#000000" backcolor="#337AB7" uuid="07094ee6-67aa-47db-b4af-37380bd56d99">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
 				<box>
@@ -206,7 +208,7 @@
 				<text><![CDATA[Customer]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Transparent" x="131" y="0" width="61" height="27" forecolor="#000000" backcolor="#337AB7" uuid="4c96572c-79ec-47eb-80a4-064c1e5d9c5d"/>
+				<reportElement mode="Transparent" x="142" y="0" width="66" height="20" forecolor="#000000" backcolor="#337AB7" uuid="4c96572c-79ec-47eb-80a4-064c1e5d9c5d"/>
 				<box>
 					<topPen lineWidth="0.5"/>
 					<leftPen lineWidth="0.5"/>
@@ -219,7 +221,7 @@
 				<text><![CDATA[Delivery Address]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Transparent" x="192" y="0" width="61" height="27" forecolor="#000000" backcolor="#337AB7" uuid="32f3cf76-4a53-4393-8d4d-c18fc9d3c1e5">
+				<reportElement mode="Transparent" x="208" y="0" width="66" height="20" forecolor="#000000" backcolor="#337AB7" uuid="32f3cf76-4a53-4393-8d4d-c18fc9d3c1e5">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
 				<box>
@@ -234,52 +236,7 @@
 				<text><![CDATA[City]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Transparent" x="253" y="0" width="61" height="27" forecolor="#000000" backcolor="#337AB7" uuid="f98c33c8-1627-410a-a22c-97aafa5c0270">
-					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-				</reportElement>
-				<box>
-					<topPen lineWidth="0.5"/>
-					<leftPen lineWidth="0.5"/>
-					<bottomPen lineWidth="0.5"/>
-					<rightPen lineWidth="0.5"/>
-				</box>
-				<textElement textAlignment="Center">
-					<font fontName="Arial" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Payment Method]]></text>
-			</staticText>
-			<staticText>
-				<reportElement mode="Transparent" x="314" y="0" width="61" height="27" forecolor="#000000" backcolor="#337AB7" uuid="fd4dc824-c7f9-4bfe-93ea-7748d5e07e9f">
-					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-				</reportElement>
-				<box>
-					<topPen lineWidth="0.5"/>
-					<leftPen lineWidth="0.5"/>
-					<bottomPen lineWidth="0.5"/>
-					<rightPen lineWidth="0.5"/>
-				</box>
-				<textElement textAlignment="Center">
-					<font fontName="Arial" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Check #]]></text>
-			</staticText>
-			<staticText>
-				<reportElement mode="Transparent" x="375" y="0" width="61" height="27" forecolor="#000000" backcolor="#337AB7" uuid="ebe78517-c40d-4b22-8628-ca97da3da005">
-					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-				</reportElement>
-				<box>
-					<topPen lineWidth="0.5"/>
-					<leftPen lineWidth="0.5"/>
-					<bottomPen lineWidth="0.5"/>
-					<rightPen lineWidth="0.5"/>
-				</box>
-				<textElement textAlignment="Center">
-					<font fontName="Arial" isBold="true"/>
-				</textElement>
-				<text><![CDATA[CC Reference #]]></text>
-			</staticText>
-			<staticText>
-				<reportElement mode="Transparent" x="436" y="0" width="61" height="27" forecolor="#000000" backcolor="#337AB7" uuid="e1764dd6-ccf2-4452-b371-0600dedd94ad">
+				<reportElement mode="Transparent" x="274" y="0" width="66" height="20" forecolor="#000000" backcolor="#337AB7" uuid="e1764dd6-ccf2-4452-b371-0600dedd94ad">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
 				<box>
@@ -294,7 +251,7 @@
 				<text><![CDATA[Dumpster Price]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Transparent" x="497" y="0" width="61" height="27" forecolor="#000000" backcolor="#337AB7" uuid="13749845-bc38-4f1f-8f7c-d57b461cc03b">
+				<reportElement mode="Transparent" x="340" y="0" width="66" height="20" forecolor="#000000" backcolor="#337AB7" uuid="13749845-bc38-4f1f-8f7c-d57b461cc03b">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
 				<box>
@@ -309,7 +266,7 @@
 				<text><![CDATA[City Fee]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Transparent" x="558" y="0" width="61" height="27" forecolor="#000000" backcolor="#337AB7" uuid="7d6216a1-18d3-4750-896f-d793047319ba">
+				<reportElement mode="Transparent" x="406" y="0" width="66" height="20" forecolor="#000000" backcolor="#337AB7" uuid="7d6216a1-18d3-4750-896f-d793047319ba">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
 				<box>
@@ -324,7 +281,7 @@
 				<text><![CDATA[Total Permit Fees]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Transparent" x="619" y="0" width="61" height="27" forecolor="#000000" backcolor="#337AB7" uuid="0b3c3675-52d0-41a3-be97-ef5d48200265">
+				<reportElement mode="Transparent" x="472" y="0" width="66" height="20" forecolor="#000000" backcolor="#337AB7" uuid="0b3c3675-52d0-41a3-be97-ef5d48200265">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
 				<box>
@@ -339,7 +296,7 @@
 				<text><![CDATA[Overweight Fee]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Transparent" x="680" y="0" width="61" height="27" forecolor="#000000" backcolor="#337AB7" uuid="44cfbc31-46fd-438f-a35a-d13c432b0ce8">
+				<reportElement mode="Transparent" x="538" y="0" width="66" height="20" forecolor="#000000" backcolor="#337AB7" uuid="44cfbc31-46fd-438f-a35a-d13c432b0ce8">
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
@@ -356,7 +313,7 @@
 				<text><![CDATA[Tot Addnl Fee]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Transparent" x="741" y="0" width="61" height="27" forecolor="#000000" backcolor="#337AB7" uuid="246581d3-6bc9-446b-837d-5500eac6dcd1">
+				<reportElement mode="Transparent" x="604" y="0" width="66" height="20" forecolor="#000000" backcolor="#337AB7" uuid="246581d3-6bc9-446b-837d-5500eac6dcd1">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
 				<box>
@@ -370,6 +327,36 @@
 				</textElement>
 				<text><![CDATA[Total Fees]]></text>
 			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="670" y="0" width="66" height="20" forecolor="#000000" backcolor="#337AB7" uuid="d138d0fb-7249-454f-91b6-7e54e49b420e">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Paid Amt]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="736" y="0" width="66" height="20" forecolor="#000000" backcolor="#337AB7" uuid="a481e007-e84a-4dee-8fe6-248e3224e83c">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fee Bal]]></text>
+			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
@@ -377,7 +364,7 @@
 			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.HorizontalRowLayout"/>
 			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 			<textField>
-				<reportElement mode="Opaque" x="0" y="0" width="70" height="27" backcolor="#FFFFFF" uuid="156813d1-1879-4f71-a493-41c590f0cbe3">
+				<reportElement mode="Opaque" x="0" y="0" width="76" height="27" backcolor="#FFFFFF" uuid="156813d1-1879-4f71-a493-41c590f0cbe3">
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
@@ -394,7 +381,7 @@
 				<textFieldExpression><![CDATA[$F{id}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement mode="Opaque" x="70" y="0" width="61" height="27" backcolor="#FFFFFF" uuid="52052145-1724-460c-ae0b-8f26835239bf">
+				<reportElement mode="Opaque" x="76" y="0" width="66" height="27" backcolor="#FFFFFF" uuid="52052145-1724-460c-ae0b-8f26835239bf">
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
@@ -410,7 +397,7 @@
 				<textFieldExpression><![CDATA[$F{customer}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement mode="Opaque" x="131" y="0" width="61" height="27" backcolor="#FFFFFF" uuid="4dcc5e70-5633-4d78-8918-ebe92a28b2ac">
+				<reportElement mode="Opaque" x="142" y="0" width="66" height="27" backcolor="#FFFFFF" uuid="4dcc5e70-5633-4d78-8918-ebe92a28b2ac">
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 				</reportElement>
 				<box>
@@ -425,7 +412,7 @@
 				<textFieldExpression><![CDATA[$F{deliveryAddress}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement mode="Opaque" x="192" y="0" width="61" height="27" backcolor="#FFFFFF" uuid="280f42e2-888a-4e5d-85dc-b0ddd9e99e89">
+				<reportElement mode="Opaque" x="208" y="0" width="66" height="27" backcolor="#FFFFFF" uuid="280f42e2-888a-4e5d-85dc-b0ddd9e99e89">
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
@@ -441,55 +428,7 @@
 				<textFieldExpression><![CDATA[$F{city}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement mode="Opaque" x="253" y="0" width="61" height="27" backcolor="#FFFFFF" uuid="f20a1c27-b345-4fdd-8d05-728045b6413f">
-					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-				</reportElement>
-				<box>
-					<topPen lineWidth="0.5" lineStyle="Solid"/>
-					<leftPen lineWidth="0.5" lineStyle="Solid"/>
-					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
-					<rightPen lineWidth="0.5" lineStyle="Solid"/>
-				</box>
-				<textElement textAlignment="Center">
-					<font fontName="Arial"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{paymentMethod}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement mode="Opaque" x="314" y="0" width="61" height="27" backcolor="#FFFFFF" uuid="e1364531-f21a-44d4-95c0-37d1c1499557">
-					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-				</reportElement>
-				<box>
-					<topPen lineWidth="0.5" lineStyle="Solid"/>
-					<leftPen lineWidth="0.5" lineStyle="Solid"/>
-					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
-					<rightPen lineWidth="0.5" lineStyle="Solid"/>
-				</box>
-				<textElement textAlignment="Center">
-					<font fontName="Arial"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{checkNum}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement mode="Opaque" x="375" y="0" width="61" height="27" backcolor="#FFFFFF" uuid="2ea67a41-f834-4958-9b31-12b86eecddc9">
-					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-				</reportElement>
-				<box>
-					<topPen lineWidth="0.5" lineStyle="Solid"/>
-					<leftPen lineWidth="0.5" lineStyle="Solid"/>
-					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
-					<rightPen lineWidth="0.5" lineStyle="Solid"/>
-				</box>
-				<textElement textAlignment="Center">
-					<font fontName="Arial"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{ccReferenceNum}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement mode="Opaque" x="436" y="0" width="61" height="27" backcolor="#FFFFFF" uuid="3a62a57a-9d2e-4103-8dcd-58d07eda9141">
+				<reportElement mode="Opaque" x="274" y="0" width="66" height="27" backcolor="#FFFFFF" uuid="3a62a57a-9d2e-4103-8dcd-58d07eda9141">
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
@@ -506,7 +445,7 @@
 				<textFieldExpression><![CDATA[$F{dumpsterPrice}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement mode="Opaque" x="497" y="0" width="61" height="27" backcolor="#FFFFFF" uuid="d8bfd60e-c9e5-4031-830a-279fa75fcacd">
+				<reportElement mode="Opaque" x="340" y="0" width="66" height="27" backcolor="#FFFFFF" uuid="d8bfd60e-c9e5-4031-830a-279fa75fcacd">
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
@@ -523,7 +462,7 @@
 				<textFieldExpression><![CDATA[$F{cityFee}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement mode="Opaque" x="558" y="0" width="61" height="27" backcolor="#FFFFFF" uuid="f042eee7-5023-4c7a-b5c4-e7266784b460">
+				<reportElement mode="Opaque" x="406" y="0" width="66" height="27" backcolor="#FFFFFF" uuid="f042eee7-5023-4c7a-b5c4-e7266784b460">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
@@ -539,7 +478,7 @@
 				<textFieldExpression><![CDATA[$F{totalPermitFees}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement mode="Opaque" x="619" y="0" width="61" height="27" backcolor="#FFFFFF" uuid="faf1cf72-2483-4fc2-b8ce-8b209886d6f4">
+				<reportElement mode="Opaque" x="472" y="0" width="66" height="27" backcolor="#FFFFFF" uuid="faf1cf72-2483-4fc2-b8ce-8b209886d6f4">
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
@@ -556,7 +495,7 @@
 				<textFieldExpression><![CDATA[$F{overweightFee}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement mode="Opaque" x="680" y="0" width="61" height="27" backcolor="#FFFFFF" uuid="d7f27894-7fbf-41a6-ba0d-4f8c392403aa">
+				<reportElement mode="Opaque" x="538" y="0" width="66" height="27" backcolor="#FFFFFF" uuid="d7f27894-7fbf-41a6-ba0d-4f8c392403aa">
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
@@ -572,7 +511,7 @@
 				<textFieldExpression><![CDATA[$F{totalAdditionalFee}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement mode="Opaque" x="741" y="0" width="61" height="27" backcolor="#FFFFFF" uuid="a293200b-9820-436b-bc0d-124cdc98c96f">
+				<reportElement mode="Opaque" x="604" y="0" width="66" height="27" backcolor="#FFFFFF" uuid="a293200b-9820-436b-bc0d-124cdc98c96f">
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
@@ -586,6 +525,32 @@
 					<font fontName="Arial"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{totalFees}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="670" y="0" width="66" height="27" uuid="3353dcca-0ade-4287-8d13-eabbf3e21c92"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{totalPaid}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="736" y="0" width="66" height="27" uuid="3353dcca-0ade-4287-8d13-eabbf3e21c92"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{feeBalance}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

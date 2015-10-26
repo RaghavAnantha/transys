@@ -175,6 +175,8 @@ public class OrdersRevenueReportController extends CRUDController<Order> {
 //				map.put("additionalFee2", anOrderFees.getAdditionalFee2() == null? StringUtils.EMPTY : anOrderFees.getAdditionalFee2());
 //				map.put("additionalFee3",  anOrderFees.getAdditionalFee3() == null? StringUtils.EMPTY : anOrderFees.getAdditionalFee3());
 				map.put("totalFees",  getStringValueOf(anOrderFees.getTotalFees())); //StringUtils.EMPTY + anOrderFees.getTotalFees());
+				map.put("totalPaid",  getStringValueOf(anOrder.getTotalAmountPaid()));
+				map.put("feeBalance",  getStringValueOf(anOrder.getBalanceAmountDue()));
 			}
 			
 			map.put("orderDateFrom",(criteria.getSearchMap().get("createdAtFrom") == null ? StringUtils.EMPTY : criteria.getSearchMap().get("createdAtFrom")));
