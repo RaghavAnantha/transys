@@ -787,7 +787,6 @@ CREATE TABLE `permit` (
   `parkingMeterFee` decimal(6,2) DEFAULT 0.00,
   `permitClassId` bigint(20) NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `UK_permiNumber` (`number`),
   KEY `permitStatusRef_idx` (`status`),
   KEY `permitCustomerRef_idx` (`customerId`),
   KEY `permitDeliveryAddressRef_idx` (`deliveryAddressId`),
