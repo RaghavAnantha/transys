@@ -265,15 +265,16 @@ public class PermitController extends CRUDController<Permit> {
 		criterias.put("id", orderPermitId);
 		OrderPermits orderPermitToBeEdited = genericDAO.findByCriteria(OrderPermits.class, criterias, "id", false).get(0);
 		
-		if (!validateMaxPermitsAllowable(model, orderPermitToBeEdited)) {
-			return urlContext + "/formModal"; //TODO: Check
-		}
-		
 		Permit permitToBeEdited = orderPermitToBeEdited.getPermit();
 		permitToBeEdited.setNumber(StringUtils.EMPTY); // empty the permit number
 		permitToBeEdited.getPermitNotes().clear();
 		
 		model.put("modelObject", permitToBeEdited);
+		
+		// dont do validation here
+		/*if (!validateMaxPermitsAllowable(orderPermitToBeEdited)) {
+			model.addAttribute("error", "There are already " + MAX_NUMBER_OF_ASSOCIATED_PERMITS + " permits for this order.");
+		}*/
 		
 		List<Customer> customers = new ArrayList<>();
 		customers.add(permitToBeEdited.getCustomer());
@@ -300,12 +301,11 @@ public class PermitController extends CRUDController<Permit> {
 		return urlContext + "/formModal";
 	}
 
-	private boolean validateMaxPermitsAllowable(ModelMap model, OrderPermits orderPermitToBeEdited) {
+	private boolean validateMaxPermitsAllowable(OrderPermits orderPermitToBeEdited) {
 		// validate if this order has < 3 permits, else show alert
 		List<BaseModel> orderPermitsForThisOrder = (List<BaseModel>)genericDAO.executeSimpleQuery("select obj from OrderPermits obj where obj.order.id=" +  orderPermitToBeEdited.getOrder().getId());
 		if (orderPermitsForThisOrder != null && orderPermitsForThisOrder.size() >= MAX_NUMBER_OF_ASSOCIATED_PERMITS) {
 			//do not create modal, show alert
-			model.addAttribute("error", "There are already " + MAX_NUMBER_OF_ASSOCIATED_PERMITS + " permits for this order.");
 			return false;
 		}
 		
@@ -480,8 +480,37 @@ public class PermitController extends CRUDController<Permit> {
 			BindingResult bindingResult, ModelMap model) {
 		
 			String status = "Assigned";
-			OrderPermits associatedOrderPermitEntry = validatePermitEndDate(entity);
+			OrderPermits associatedOrderPermitEntry = null;
 			
+			try {
+				associatedOrderPermitEntry = validatePermitEndDate(entity);
+			} catch (Exception ex) {
+
+				ObjectMapper objectMapper = new ObjectMapper();
+				String json = StringUtils.EMPTY;
+				try {
+					json = objectMapper.writeValueAsString(ex.getMessage());
+				} catch (JsonProcessingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				return json;
+			}
+			
+			if (!validateMaxPermitsAllowable(associatedOrderPermitEntry)) {
+				ObjectMapper objectMapper = new ObjectMapper();
+				String json = StringUtils.EMPTY;
+				try {
+					json = objectMapper.writeValueAsString("ErrorMsg: There are already " + MAX_NUMBER_OF_ASSOCIATED_PERMITS + " permits for this order.");
+				} catch (JsonProcessingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				return json;
+			}
+
 			PermitStatus permitStatus = (PermitStatus)genericDAO.executeSimpleQuery("select obj from PermitStatus obj where obj.status='" + status + "'").get(0);
 			entity.setStatus(permitStatus);
 			
@@ -532,16 +561,7 @@ public class PermitController extends CRUDController<Permit> {
 			
 			cleanUp(request);
 			
-			ObjectMapper objectMapper = new ObjectMapper();
-			String json = StringUtils.EMPTY;
-			try {
-				json = objectMapper.writeValueAsString(entity);
-			} catch (JsonProcessingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-			return json;
+			return "Permit saved successfully";
 	}
 
 	
@@ -570,15 +590,19 @@ public class PermitController extends CRUDController<Permit> {
 		System.out.println("Permit Fees updated for Order with Id = " + associatedOrderPermitEntry.getOrder().getId());
 	}
 
-	private OrderPermits validatePermitEndDate(Permit entity) {
+	private OrderPermits validatePermitEndDate(Permit entity) throws Exception {
 		OrderPermits associatedOrderPermitEntry = null;
-		// check the dates, endDate >= Order's delivery date
 		List<BaseModel> orderPermits = (List<BaseModel>)genericDAO.executeSimpleQuery("select obj from OrderPermits obj where obj.id=" +  entity.getOrderId()+ " order by obj.id desc");
 		if (orderPermits != null && orderPermits.size() > 0) {
 			associatedOrderPermitEntry = (OrderPermits) orderPermits.get(0);
 			if (entity.getEndDate().before(associatedOrderPermitEntry.getOrder().getDeliveryDate())) {
 				// validation error must be thrown
 				System.out.println("Permit End Date does not match the Order's Delivery Date, please check.");
+				if (!validateMaxPermitsAllowable(associatedOrderPermitEntry)) {
+					throw new Exception("ErrorMsg: There are already " + MAX_NUMBER_OF_ASSOCIATED_PERMITS + " permits for this order.");
+				} else {
+					throw new Exception("ErrorMsg: Permit End Date (" + entity.getFormattedEndDate() + ") does not match the Order's Delivery Date (" + associatedOrderPermitEntry.getOrder().getFormattedDeliveryDate() + "), please check.");
+				}
 			}
 		}
 		return associatedOrderPermitEntry;
@@ -666,15 +690,15 @@ public class PermitController extends CRUDController<Permit> {
 			newOrderPermits.setPermit(entity);
 			if (newOrderPermits instanceof AbstractBaseModel) {
 				AbstractBaseModel baseModel = (AbstractBaseModel) entity;
-				if (baseModel.getId() == null) {
-					baseModel.setCreatedAt(Calendar.getInstance().getTime());
-					if (baseModel.getCreatedBy()==null) {
-						baseModel.setCreatedBy(getUser(request).getId());
+				if (newOrderPermits.getId() == null) {
+					newOrderPermits.setCreatedAt(Calendar.getInstance().getTime());
+					if (newOrderPermits.getCreatedBy()==null) {
+						newOrderPermits.setCreatedBy(getUser(request).getId());
 					}
 				} else {
-					baseModel.setModifiedAt(Calendar.getInstance().getTime());
-					if (baseModel.getModifiedBy()==null) {
-						baseModel.setModifiedBy(getUser(request).getId());
+					newOrderPermits.setModifiedAt(Calendar.getInstance().getTime());
+					if (newOrderPermits.getModifiedBy()==null) {
+						newOrderPermits.setModifiedBy(getUser(request).getId());
 					}
 				}
 			}

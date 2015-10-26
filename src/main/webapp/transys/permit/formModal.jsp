@@ -50,10 +50,12 @@ $("#permitModalFromAlertForm").submit(function (ev) {
         data: $this.serialize(),
         success: function(responseData, textStatus, jqXHR) {
         	if (responseData.indexOf("ErrorMsg") >= 0 ) {
-        		displayPermitModalErrorMessage(responseData);
+        		//displayPermitModalErrorMessage(responseData.substring(("ErrorMsg: ").length()));
+        		displayPermitModalErrorMessage(responseData.replace("ErrorMsg: ", ""));
         	} else {
-        		var permit = jQuery.parseJSON(responseData);
-        		displayPermitModalSuccessMessage("Permit saved successfully");
+        		//var permit = jQuery.parseJSON(responseData);
+        		//displayPermitModalSuccessMessage("Permit saved successfully");
+        		$this.find("#closePermitFromAlertClose").click();
         	}
         }
     });
@@ -63,6 +65,9 @@ $("#permitModalFromAlertForm").submit(function (ev) {
 </script>
 <form:form action="/permit/savePermitFromAlert.do" name="permitModalFromAlertForm" id="permitModalFromAlertForm" commandName="modelObject" method="post" >
 	<form:hidden path="orderId" value="${associatedOrderID.id}" />
+	<jsp:include page="/common/messages.jsp">
+		<jsp:param name="msgCtx" value="addPermitFromAlert" />
+	</jsp:include>
 	<table id="form-table" class="table">
 		<tr><td colspan="10"></td></tr>
 		<tr>
