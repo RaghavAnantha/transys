@@ -76,7 +76,7 @@
 			<td></td>
 			<td>
 				<input type="button" class="btn btn-primary btn-sm btn-sm-ext" onclick="document.forms['orderReportSearchForm'].submit();"
-					value="<transys:label code="Preview"/>" />
+					value="Preview" />
 			</td>
 			<td></td>
 		</tr>
@@ -89,7 +89,7 @@
 	<tr><td colspan=10></td><td colspan=10></td></tr>
 	<tr>
 		<td class="form-left">Order Date Range:</td>
-		<td class="wide td-static" id="orderDateRange">${orderDateFrom}&nbsp;&nbsp;To&nbsp;&nbsp;${orderDateTo}</td>
+		<td class="wide td-static" id="orderDateRangeTd">${orderDateFrom}&nbsp;&nbsp;To&nbsp;&nbsp;${orderDateTo}</td>
 	</tr>
 </table>
 

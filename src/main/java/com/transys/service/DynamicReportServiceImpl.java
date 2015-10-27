@@ -680,8 +680,8 @@ public class DynamicReportServiceImpl implements DynamicReportService {
 			JasperReport masterJasperReport = (JasperReport) JRLoader.loadObject(masterReportFile);
 			
 			String subReportPathname = request.getSession().getServletContext().getRealPath("/reports");
-			File subReportFile = new File(request.getSession().getServletContext().getRealPath("/reports/" + subReportName + ".jasper"));
-			JasperReport subJasperReport = (JasperReport) JRLoader.loadObject(subReportFile);
+			/*File subReportFile = new File(request.getSession().getServletContext().getRealPath("/reports/" + subReportName + ".jasper"));
+			JasperReport subJasperReport = (JasperReport) JRLoader.loadObject(subReportFile);*/
 			
 			// ***********
 			JasperPrint jp = null;
@@ -689,7 +689,7 @@ public class DynamicReportServiceImpl implements DynamicReportService {
 			JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(datas, false);
 			//JRMapCollectionDataSource dataSource = new JRMapCollectionDataSource(datas);
 				
-			params.put("subreportParameter", subJasperReport);
+			//params.put("subreportParameter", subJasperReport);
 			params.put("SUBREPORT_DIR", subReportPathname);
 				
 			jp = JasperFillManager.fillReport(masterJasperReport, params,
