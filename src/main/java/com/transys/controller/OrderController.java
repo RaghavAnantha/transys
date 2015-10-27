@@ -730,7 +730,7 @@ public class OrderController extends CRUDController<Order> {
 			aReportRow.put("id", order.getId());
 			aReportRow.put("customer", order.getCustomer().getCompanyName());
 			aReportRow.put("deliveryContactName", order.getDeliveryContactName());
-			aReportRow.put("phone", order.getCustomer().getPhone());
+			aReportRow.put("phone", order.getDeliveryContactPhone1());
 			aReportRow.put("deliveryAddressFullLine", order.getDeliveryAddress().getFullLine());
 			aReportRow.put("city", order.getDeliveryAddress().getCity());
 			aReportRow.put("status", order.getOrderStatus().getStatus());

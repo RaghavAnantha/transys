@@ -163,7 +163,6 @@
        				<div id="permitModalErrorMessage" style="color:red; font-size:14px; vertical-align:center;"></div>
        				<div id="permitModalSuccessMessage" style="color:green; font-size:14px; vertical-align:center;"></div>
        			</div>
-       			
       		 </div>	
 			<div class="modal-body" id="addNewPermitModalBody"></div>
 		</div>

@@ -23,14 +23,14 @@
 		<div id="customerReports" class="tab-pane" style="background-color: white;padding-top: 5px;">
 			<ul class="nav nav-tabs" id="customer_reports_tabs">
 				<li><a href="#customerListReport" data-toggle="tab" class="active">Customer List Report</a></li>
-				<li><a href="#customerOrderReport" data-toggle="tab">Customer Order Report</a></li>
+				<li><a href="#customerOrdersReport" data-toggle="tab">Customer Orders Report</a></li>
 			</ul>
 			<div class="tab-content" style="background-color: white;padding-top: 5px;">
 				<div id="customerListReport" class="tab-pane">
 					<%@include file="customerListReport.jsp"%>
 				</div>
-				<div id="customerOrderReport" class="tab-pane">
-					<p>Placeholder for Customer Order Report</p>
+				<div id="customerOrdersReport" class="tab-pane">
+					<%@include file="customerOrdersReport.jsp"%>
 				</div>
 
 			</div>

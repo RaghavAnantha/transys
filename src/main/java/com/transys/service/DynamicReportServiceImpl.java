@@ -657,6 +657,52 @@ public class DynamicReportServiceImpl implements DynamicReportService {
 			return null;
 		}
 	}
+	
+	@Override
+	public ByteArrayOutputStream generateStaticMasterSubReport(String masterReportName, String subReportName, 
+			List<?> datas, Map params, String type, HttpServletRequest request) {
+		try {// @@@@@@@@@@@@@@@@@ 1a
+			System.out.println("-----------------------");
+			JasperPrint jp = getJasperPrintFromFile(masterReportName, subReportName, datas, params, request);
+			ByteArrayOutputStream out = getStreamByType(type, jp, request);
+			return out;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			return null;
+		}
+		
+	}
+	
+	public JasperPrint getJasperPrintFromFile(String masterReportName, String subReportName, List datas,
+			Map params, HttpServletRequest request) {
+		try {// @@@@@@@@@@@@@@@@@ 2a
+			File masterReportFile = new File(request.getSession().getServletContext().getRealPath("/reports/" + masterReportName + ".jasper"));
+			JasperReport masterJasperReport = (JasperReport) JRLoader.loadObject(masterReportFile);
+			
+			String subReportPathname = request.getSession().getServletContext().getRealPath("/reports");
+			File subReportFile = new File(request.getSession().getServletContext().getRealPath("/reports/" + subReportName + ".jasper"));
+			JasperReport subJasperReport = (JasperReport) JRLoader.loadObject(subReportFile);
+			
+			// ***********
+			JasperPrint jp = null;
+			//JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(datas);
+			JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(datas, false);
+			//JRMapCollectionDataSource dataSource = new JRMapCollectionDataSource(datas);
+				
+			params.put("subreportParameter", subJasperReport);
+			params.put("SUBREPORT_DIR", subReportPathname);
+				
+			jp = JasperFillManager.fillReport(masterJasperReport, params,
+						dataSource);
+			/*JasperFillManager.fillReportToFile(jasperMasterReport,
+	            destFileName, parameters, beanColDataSource);*/
+			
+			return jp;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			return null;
+		}
+	}
 
 	public JasperPrint getJasperPrintFromFile(String reportName, List datas,
 			Map params, HttpServletRequest request) {
@@ -668,7 +714,7 @@ public class DynamicReportServiceImpl implements DynamicReportService {
 			// ***********
 			JasperPrint jp = null;
 			if (datas != null) {
-				//JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(datas);
+				 //JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(datas);
 				JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(datas, false);
 				//JRMapCollectionDataSource dataSource =new JRMapCollectionDataSource(datas);
 				jp = JasperFillManager.fillReport(jasperReport, params,
@@ -682,7 +728,6 @@ public class DynamicReportServiceImpl implements DynamicReportService {
 		}
 	}
 	
-
 	private DynamicReportBuilder getReport(String reportName,
 			Style headerStyle, Style detailStyle,
 			List<IColumnTag> columnPropertyList,

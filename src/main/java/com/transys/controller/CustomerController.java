@@ -49,6 +49,7 @@ import com.transys.model.SearchCriteria;
 import com.transys.model.State;
 import com.transys.model.User;
 import com.transys.model.vo.CustomerReportVO;
+import com.transys.model.vo.OrderReportVO;
 import com.transys.model.BaseModel;
 
 @Controller
@@ -224,50 +225,10 @@ public class CustomerController extends CRUDController<Customer> {
 		//criteria.getSearchMap().put("id!",0l);
 		criteria.getSearchMap().remove("_csrf");
 		
-		List<Customer> customerList =  genericDAO.search(getEntityClass(), criteria, "companyName", null, null);
+		List<CustomerReportVO> customerReportVOList = retrieveCustomerListReportData(criteria);
 		
-		Map<Long, Customer> customerMap = new HashMap<Long, Customer>();
-		
-		StringBuffer Ids = new StringBuffer("(");
-		Integer count = 0;
-		for (Customer customer : customerList) {
-			count++;
-			Ids.append(customer.getId());
-			if (count < customerList.size()) {
-				Ids.append(",");
-			}
-			else {
-				Ids.append(")");
-			}
-			customerMap.put(customer.getId(), customer);
-		}
-        
-      List<OrderFees> orderFeesList = genericDAO.executeSimpleQuery("select obj from OrderFees obj where obj.order.customer.id IN " + Ids.toString());
-      List<CustomerReportVO> customerReportVOList = new ArrayList<CustomerReportVO>() ;
-      for (Long key : customerMap.keySet()) {
-      	CustomerReportVO customerReportVO =  new CustomerReportVO();
-			BigDecimal sum = new BigDecimal("0.0");
-			Integer ordercount = 0;
-			for (OrderFees anOrderFees: orderFeesList ) {
-	          if (anOrderFees.getOrder().getCustomer().getId() == key) {
-	               sum = sum.add(anOrderFees.getTotalFees());
-	               ordercount++;
-	          }
-	      }
-	      customerReportVO.setCompanyName(customerMap.get(key).getCompanyName());
-         customerReportVO.setContactName(customerMap.get(key).getContactName());
-         customerReportVO.setPhoneNumber(customerMap.get(key).getPhone());
-         customerReportVO.setTotalAmount(sum);
-         customerReportVO.setTotalOrders(ordercount);
-         customerReportVO.setId(customerMap.get(key).getId());
-         customerReportVO.setStatus(customerMap.get(key).getCustomerStatus().getStatus());
-
-         customerReportVOList.add(customerReportVO);
-	   }
-
-		
-		//model.addAttribute("customerReportVOList",customerReportVOList);
-		request.getSession().setAttribute("customerReportVOList", customerReportVOList);
+		//model.addAttribute("customerListReportList", customerReportVOList);
+		request.getSession().setAttribute("customerListReportList", customerReportVOList);
 		
 		model.addAttribute("activeTab", "customerReports");
 		model.addAttribute("activeSubTab", "customerListReport");
@@ -277,13 +238,82 @@ public class CustomerController extends CRUDController<Customer> {
 		return urlContext + "/customer";
 	}
 	
+	@RequestMapping(method = RequestMethod.GET, value = "/customerOrdersReport.do")
+	public String customerOrdersReport(ModelMap model, HttpServletRequest request) {
+		setupList(model, request);
+		
+		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
+		//criteria.getSearchMap().put("id!",0l);
+		criteria.getSearchMap().remove("_csrf");
+		
+		List<CustomerReportVO> customerReportVOList = retrieveCustomerListReportData(criteria);
+		
+		model.addAttribute("customerOrdersReportList", customerReportVOList);
+		//request.getSession().setAttribute("customerOrdersReportList", customerReportVOList);
+		
+		model.addAttribute("activeTab", "customerReports");
+		model.addAttribute("activeSubTab", "customerOrdersReport");
+		model.addAttribute("mode", "MANAGE");
+		
+		//return urlContext + "/list";
+		return urlContext + "/customer";
+	}
+	
+	private List<CustomerReportVO> retrieveCustomerListReportData(SearchCriteria criteria) {
+		List<Customer> customerList = genericDAO.search(getEntityClass(), criteria, "companyName", null, null);
+		
+		Map<Long, Customer> customerMap = new HashMap<Long, Customer>();
+		
+		StringBuffer ids = new StringBuffer("(");
+		Integer count = 0;
+		for (Customer customer : customerList) {
+			count++;
+			ids.append(customer.getId());
+			if (count < customerList.size()) {
+				ids.append(",");
+			} else {
+				ids.append(")");
+			}
+			
+			customerMap.put(customer.getId(), customer);
+		}
+        
+      List<OrderFees> orderFeesList = genericDAO.executeSimpleQuery("select obj from OrderFees obj where obj.order.customer.id IN " + ids.toString());
+      
+      List<CustomerReportVO> customerReportVOList = new ArrayList<CustomerReportVO>() ;
+      for (Long key : customerMap.keySet()) {
+      	CustomerReportVO customerReportVO =  new CustomerReportVO();
+			BigDecimal sum = new BigDecimal("0.00");
+			Integer ordercount = 0;
+			for (OrderFees anOrderFees: orderFeesList ) {
+	          if (anOrderFees.getOrder().getCustomer().getId() == key) {
+	               sum = sum.add(anOrderFees.getTotalFees());
+	               ordercount++;
+	          }
+	      }
+			
+			Customer aCustomer = customerMap.get(key);
+			customerReportVO.setId(aCustomer.getId());
+	      customerReportVO.setCompanyName(aCustomer.getCompanyName());
+	      customerReportVO.setStatus(aCustomer.getCustomerStatus().getStatus());
+         customerReportVO.setContactName(aCustomer.getContactName());
+         customerReportVO.setPhoneNumber(aCustomer.getPhone());
+         customerReportVO.setTotalOrderAmount(sum);
+         customerReportVO.setTotalOrders(ordercount);
+         
+
+         customerReportVOList.add(customerReportVO);
+	   }
+      
+      return customerReportVOList;
+	}
+	
 	@RequestMapping(method = RequestMethod.GET, value = "/generateCustomerListReport.do")
 	public void generateCustomerListReport(ModelMap model, HttpServletRequest request,
 			HttpServletResponse response, @RequestParam("type") String type,
 			Object objectDAO, Class clazz) {
-		
 		try {
-			List<CustomerReportVO> customerReportVOList = (List<CustomerReportVO>) request.getSession().getAttribute("customerReportVOList");
+			List<CustomerReportVO> customerReportVOList = (List<CustomerReportVO>) request.getSession().getAttribute("customerListReportList");
 			
 			List<Map<String, ?>> reportData = new ArrayList<Map<String, ?>>();
 			for (CustomerReportVO aCustomerReportVO : customerReportVOList) {
@@ -293,8 +323,8 @@ public class CustomerController extends CRUDController<Customer> {
 				map.put("contactName", aCustomerReportVO.getContactName());
 				map.put("phoneNumber", aCustomerReportVO.getPhoneNumber());
 				map.put("status", aCustomerReportVO.getStatus());
-				map.put("totalOrders", aCustomerReportVO.getTotalOrders().toString());
-				map.put("totalAmount", aCustomerReportVO.getTotalAmount().toString());
+				map.put("totalOrders", aCustomerReportVO.getTotalOrders());
+				map.put("totalOrderAmount", aCustomerReportVO.getTotalOrderAmount());
 				
 				reportData.add(map);
 			}
@@ -322,6 +352,82 @@ public class CustomerController extends CRUDController<Customer> {
 				out = dynamicReportService.generateStaticReport("customerListReport"+"print",
 						reportData, params, type, request);
 			}*/
+		
+			out.writeTo(response.getOutputStream());
+			out.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.warn("Unable to create file :" + e);
+			request.getSession().setAttribute("errors", e.getMessage());
+		}
+	}
+	
+	@RequestMapping(method = RequestMethod.GET, value = "/generateCustomerOrdersReport.do")
+	public void generateCustomerOrdersReport(ModelMap model, HttpServletRequest request,
+			HttpServletResponse response, @RequestParam("type") String type,
+			Object objectDAO, Class clazz) {
+		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
+		//criteria.getSearchMap().put("id!",0l);
+		criteria.getSearchMap().remove("_csrf");
+		
+		List<CustomerReportVO> customerReportVOList = retrieveCustomerListReportData(criteria);
+		
+		for (CustomerReportVO aCustomerReportVO : customerReportVOList) {
+			String query = "select obj from Order obj where obj.customer.id=" + aCustomerReportVO.getId();
+			List<Order> orderList = genericDAO.executeSimpleQuery(query);
+			
+			List<OrderReportVO> anOrderReportVOList = new ArrayList<OrderReportVO>();
+			for (Order anOrder : orderList) {
+				OrderReportVO anOrderReportVO = new OrderReportVO();
+				
+				anOrderReportVO.setId(anOrder.getId());
+				anOrderReportVO.setDeliveryContactName(anOrder.getDeliveryContactName());
+				anOrderReportVO.setDeliveryContactPhone1(anOrder.getDeliveryContactPhone1());
+				anOrderReportVO.setDeliveryAddressFullLine(anOrder.getDeliveryAddress().getFullLine());
+				anOrderReportVO.setDeliveryCity(anOrder.getDeliveryAddress().getCity());
+				
+				anOrderReportVO.setStatus(anOrder.getOrderStatus().getStatus());
+				
+				anOrderReportVO.setDeliveryDate(anOrder.getFormattedDeliveryDate());
+				anOrderReportVO.setPickupDate(anOrder.getFormattedPickupDate());
+				
+				OrderFees anOrderFees = anOrder.getOrderFees();
+				anOrderReportVO.setDumpsterPrice(anOrderFees.getDumpsterPrice());
+				anOrderReportVO.setCityFee(anOrderFees.getCityFee());
+				anOrderReportVO.setPermitFees(anOrderFees.getTotalPermitFees());
+				anOrderReportVO.setOverweightFee(anOrderFees.getOverweightFee());
+				anOrderReportVO.setAdditionalFees(anOrderFees.getTotalAdditionalFees());
+				anOrderReportVO.setTotalFees(anOrderFees.getTotalFees());
+				
+				anOrderReportVO.setTotalAmountPaid(anOrder.getTotalAmountPaid());
+				anOrderReportVO.setBalanceAmountDue(anOrder.getBalanceAmountDue());
+				
+				anOrderReportVOList.add(anOrderReportVO);
+			}
+			aCustomerReportVO.setOrderList(anOrderReportVOList);
+		}
+		
+		try {
+			if (StringUtils.isEmpty(type))
+				type = "xlsx";
+			if (!type.equals("html") && !(type.equals("print"))) {
+				response.setHeader("Content-Disposition",
+					"attachment;filename= customerOrdersReport." + type);
+			}
+			
+			response.setContentType(MimeUtil.getContentType(type));
+			
+			String orderDateFrom = criteria.getSearchMap().getOrDefault("createdAtFrom", StringUtils.EMPTY).toString();
+			String orderDateTo = criteria.getSearchMap().getOrDefault("createdAtTo", StringUtils.EMPTY).toString();
+			
+			Map<String, Object> params = new HashMap<String, Object>();
+			params.put("ORDER_DATE_FROM", orderDateFrom);
+			params.put("ORDER_DATE_TO", orderDateTo);
+			
+			ByteArrayOutputStream out = new ByteArrayOutputStream();
+			
+			out = dynamicReportService.generateStaticMasterSubReport("customerOrdersReportMaster", "customerOrdersReportSub",
+					customerReportVOList, params, type, request);
 		
 			out.writeTo(response.getOutputStream());
 			out.close();

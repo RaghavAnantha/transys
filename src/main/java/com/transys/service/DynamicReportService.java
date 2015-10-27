@@ -115,5 +115,7 @@ public interface DynamicReportService {
      */
     public ByteArrayOutputStream generateStaticReport(String reportName, List<?> datas, Map params, String type, HttpServletRequest request);
     
+    public ByteArrayOutputStream generateStaticMasterSubReport(String masterReportName, String subReportName, List<?> datas, Map params, String type, HttpServletRequest request);
+    
     public JasperPrint getJasperPrintFromFile(String reportName, List datas, Map params, HttpServletRequest request);
 }

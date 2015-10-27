@@ -1,15 +1,24 @@
 package com.transys.model.vo;
 
 import java.math.BigDecimal;
+import java.util.List;
+
+import com.transys.model.Order;
 
 public class CustomerReportVO implements BaseVO {
 	private Long id;
+	
 	private String companyName;
+	
 	private String contactName;
 	private String phoneNumber;
+	
 	private Integer totalOrders;
-	private BigDecimal totalAmount;
+	private BigDecimal totalOrderAmount;
+	
 	private String status;
+	
+	private List<OrderReportVO> orderList;
 
 	public String getStatus() {
 		return status;
@@ -47,10 +56,16 @@ public class CustomerReportVO implements BaseVO {
 	public void setTotalOrders(Integer totalOrders) {
 		this.totalOrders = totalOrders;
 	}
-	public BigDecimal getTotalAmount() {
-		return totalAmount;
+	public BigDecimal getTotalOrderAmount() {
+		return totalOrderAmount;
 	}
-	public void setTotalAmount(BigDecimal totalAmount) {
-		this.totalAmount = totalAmount;
+	public void setTotalOrderAmount(BigDecimal totalOrderAmount) {
+		this.totalOrderAmount = totalOrderAmount;
+	}
+	public List<OrderReportVO> getOrderList() {
+		return orderList;
+	}
+	public void setOrderList(List<OrderReportVO> orderList) {
+		this.orderList = orderList;
 	}
 }
