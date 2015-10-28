@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2015-10-28T00:13:00 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="customerOrdersReportMaster" pageWidth="840" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="18fcb7af-9502-4d2a-97bb-f1aa4d3e0b40">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="ORDER_DATE_FROM" class="java.lang.String"/>
+	<parameter name="ORDER_DATE_TO" class="java.lang.String"/>
+	<field name="companyName" class="java.lang.String"/>
+	<field name="totalOrders" class="java.lang.Integer"/>
+	<field name="orderList" class="java.util.List"/>
+	<field name="totalOrderAmount" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="51" splitType="Stretch">
+			<staticText>
+				<reportElement x="298" y="14" width="204" height="22" uuid="b0a1f603-8777-471d-8dcd-c045eb461702"/>
+				<textElement>
+					<font size="13" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Customer Orders Report]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="2" splitType="Stretch"/>
+	</pageHeader>
+	<detail>
+		<band height="76" splitType="Stretch">
+			<staticText>
+				<reportElement x="6" y="28" width="74" height="20" uuid="cdd36699-10b0-4d1b-b12e-cd3093d9c171"/>
+				<textElement verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total Orders:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="96" y="28" width="82" height="20" uuid="14398782-2678-4c8f-aae5-d2b299f6558c"/>
+				<textElement verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{totalOrders}]]></textFieldExpression>
+			</textField>
+			<subreport>
+				<reportElement positionType="Float" x="3" y="52" width="790" height="20" isRemoveLineWhenBlank="true" backcolor="#99CCFF" uuid="5e17c269-b4d0-4292-b95e-95519d85f7f3">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource
+            ($F{orderList})]]></dataSourceExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/customerOrdersReportSub.jasper"]]></subreportExpression>
+			</subreport>
+			<line>
+				<reportElement x="0" y="28" width="790" height="1" uuid="14db5488-e408-4702-baa3-81a77adda830">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+			</line>
+			<textField>
+				<reportElement x="290" y="28" width="82" height="20" uuid="447c5232-4ff7-489f-be99-190e96631193">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{totalOrderAmount}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="200" y="28" width="80" height="20" uuid="a3768860-3ccc-40d9-a1d0-8738b0616316">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total Amount:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="1" y="50" width="790" height="1" uuid="0c4fc346-d4be-400b-a457-666695c3c53a">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+			</line>
+			<staticText>
+				<reportElement x="7" y="4" width="100" height="20" uuid="d5147e9d-46b0-4ab5-837e-b2815f9c130a"/>
+				<textElement verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Company Name:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="111" y="4" width="82" height="20" uuid="d007c669-39f3-4fb9-a94c-277af1bb1aa7">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{companyName}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="220" y="4" width="90" height="20" uuid="51656ca9-c242-4d56-8efb-4684dab6ecdf"/>
+				<textElement verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Order date range:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="326" y="4" width="54" height="20" uuid="a0226eee-4005-4674-8e7e-7a23dfddff71">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{ORDER_DATE_FROM}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="386" y="4" width="20" height="20" uuid="d55f700f-d286-4e68-a355-6a70770bbbc0"/>
+				<textElement verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[To]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="415" y="4" width="54" height="20" uuid="200bc874-1fb5-4074-9393-53aca32b7b51">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{ORDER_DATE_TO}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="18" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="14" splitType="Stretch"/>
+	</summary>
+</jasperReport>

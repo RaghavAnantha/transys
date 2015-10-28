@@ -38,7 +38,7 @@ function populateMaterialTypes() {
 	<jsp:include page="/common/messages.jsp">
 		<jsp:param name="msgCtx" value="manageRecycleLocation" />
 	</jsp:include>
-	<table id="form-table" class="table">
+	 <table id="form-table" class="table">
 		<tr>
 			<td class="form-left">Material Category<span class="errorMessage">*</span></td>
 			<td>
@@ -116,8 +116,8 @@ function populateMaterialTypes() {
 			<td>&nbsp;</td>
 			<td colspan="2">
 				<input type="submit" id="recycleLocationCreate" onclick="return validate()" value="Save" class="flat btn btn-primary btn-sm btn-sm-ext" /> 
-				<input type="button" id="recycleLocationCancel" value="Back" class="flat btn btn-primary btn-sm btn-sm-ext" onClick="location.href='main.do'" />
+				<input type="button" id="recycleLocationCancel" value="Back" class="flat btn btn-primary btn-sm btn-sm-ext" onClick="window.location.href='main.do'" />
 			</td>
 		</tr>
-	</table>
+	</table> 
 </form:form>
