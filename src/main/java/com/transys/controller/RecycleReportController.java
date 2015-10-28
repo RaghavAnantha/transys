@@ -50,9 +50,9 @@ public class RecycleReportController extends CRUDController<Order> {
 		request.getSession().removeAttribute("searchCriteria");
 		setupList(model, request);
 		
-		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
+	/*	SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		List<?> reportData =  retrieveReportData(criteria);
-		model.addAttribute("list", reportData);
+		model.addAttribute("list", reportData);*/
 		
 		return urlContext + "/list";
 	}
@@ -110,7 +110,7 @@ public class RecycleReportController extends CRUDController<Order> {
 		model.addAttribute("materialCategories", genericDAO.findByCriteria(MaterialCategory.class, criterias, "id", false));
 		
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
-		Object materialCategoryObj = criteria.getSearchMap().get("materialType.materialCategory");
+		Object materialCategoryObj = criteria.getSearchMap().get("materialCategory");
 		if (materialCategoryObj != null) {
 			String materialCategoryId = materialCategoryObj.toString();
 			if (StringUtils.isNotEmpty(materialCategoryId)) {

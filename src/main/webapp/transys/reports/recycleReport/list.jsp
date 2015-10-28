@@ -65,7 +65,7 @@ function populateMaterialTypes() {
 		</select></td>
 	</tr>
 	 <tr>
-		  <td class="form-left">Date From</td>
+		  <td class="form-left">Date From<span class="errorMessage">*</span></td>
 		  <td class="wide">
 		  		<input class="flat" id="datepicker1" name="recycleDateFrom" value="${sessionScope.searchCriteria.searchMap['recycleDateFrom']}" style="width: 175px" />
 		  </td>
