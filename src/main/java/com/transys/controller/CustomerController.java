@@ -42,6 +42,7 @@ import com.transys.model.Order;
 import com.transys.model.OrderFees;
 import com.transys.model.OrderNotes;
 import com.transys.model.OrderPayment;
+import com.transys.model.OrderStatus;
 import com.transys.model.Permit;
 //import com.transys.model.FuelVendor;
 //import com.transys.model.Location;
@@ -102,6 +103,10 @@ public class CustomerController extends CRUDController<Customer> {
 		model.addAttribute("chargeCompanyOptions", chargeCompanyOptions);
 		
 		model.addAttribute("customerStatuses", genericDAO.findByCriteria(CustomerStatus.class, criterias, "status", false));
+		
+		//TODO:  Thisis for order report - think of moving the report to order
+		model.addAttribute("orderStatuses", genericDAO.findByCriteria(OrderStatus.class, criterias, "status", false));
+		
 	}
 	
 	@Override
@@ -407,6 +412,13 @@ public class CustomerController extends CRUDController<Customer> {
 			aCustomerReportVO.setOrderList(anOrderReportVOList);
 		}
 		
+		String orderDateFrom = criteria.getSearchMap().getOrDefault("createdAtFrom", StringUtils.EMPTY).toString();
+		String orderDateTo = criteria.getSearchMap().getOrDefault("createdAtTo", StringUtils.EMPTY).toString();
+		
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("ORDER_DATE_FROM", orderDateFrom);
+		params.put("ORDER_DATE_TO", orderDateTo);
+		
 		try {
 			if (StringUtils.isEmpty(type))
 				type = "xlsx";
@@ -417,15 +429,7 @@ public class CustomerController extends CRUDController<Customer> {
 			
 			response.setContentType(MimeUtil.getContentType(type));
 			
-			String orderDateFrom = criteria.getSearchMap().getOrDefault("createdAtFrom", StringUtils.EMPTY).toString();
-			String orderDateTo = criteria.getSearchMap().getOrDefault("createdAtTo", StringUtils.EMPTY).toString();
-			
-			Map<String, Object> params = new HashMap<String, Object>();
-			params.put("ORDER_DATE_FROM", orderDateFrom);
-			params.put("ORDER_DATE_TO", orderDateTo);
-			
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
-			
 			out = dynamicReportService.generateStaticMasterSubReport("customerOrdersReportMaster", "customerOrdersReportSub",
 					customerReportVOList, params, type, request);
 		
