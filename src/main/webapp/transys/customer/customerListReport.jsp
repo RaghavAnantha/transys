@@ -7,7 +7,7 @@
 		<tr>
 			<td class="form-left">Company Name</td>
 			<td>
-				<select class="flat form-control input-sm" id="companyNameListReport" name="companyName" style="width:175px !important">
+				<select class="flat form-control input-sm" id="customerListReport.companyName" name="companyName" style="width:175px !important">
 					<option value="">----Please Select----</option>
 					<c:forEach items="${customer}" var="customer">
 						<c:set var="selected" value="" />
@@ -22,7 +22,7 @@
 		<tr>
 			<td class="form-left">Contact Name</td>
 			<td>
-				<select class="flat form-control input-sm" id="contactNameListReport" name="contactName" style="width:175px !important">
+				<select class="flat form-control input-sm" id="customerListReport.contactName" name="contactName" style="width:175px !important">
 					<option value="">----Please Select----</option>
 					<c:forEach items="${contactNames}" var="aContactName">
 						<c:set var="selected" value="" />
@@ -37,7 +37,7 @@
 		<tr>
 			<td class="form-left">Phone Number</td>
 			<td>
-				<select class="flat form-control input-sm" id="phoneListReport" name="phone" style="width: 175px !important">
+				<select class="flat form-control input-sm" id="customerListReport.phone" name="phone" style="width: 175px !important">
 					<option value="">----Please Select----</option>
 					<c:forEach items="${phones}" var="aPhone">
 						<c:set var="selected" value="" />
@@ -52,7 +52,7 @@
 		<tr>
 			<td class="form-left">Status</td>
 			<td >
-				<select class="flat form-control input-sm" id="customerStatusListReport" name="customerStatus" style="width: 175px !important">
+				<select class="flat form-control input-sm" id="customerListReport.customerStatus" name="customerStatus" style="width: 175px !important">
 					<option value="">----Please Select----</option>
 					<c:forEach items="${customerStatuses}" var="aCustomerStatus">
 						<c:set var="selected" value=""/>
