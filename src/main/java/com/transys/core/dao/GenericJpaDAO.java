@@ -77,6 +77,12 @@ public class GenericJpaDAO implements GenericDAO {
 		Query q = entityManager.createQuery(query);
 		return q.getResultList();
 	}
+	
+	@Override
+	public <T extends BaseModel> List<T> executeNativeQuery(String query) {
+		Query q = entityManager.createNativeQuery(query);
+		return q.getResultList();
+	}
 
 	@Override
 	public <T extends BaseModel> void executeSimpleUpdateQuery(String query) {
