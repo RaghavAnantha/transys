@@ -8,6 +8,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ValidationException;
@@ -369,7 +371,8 @@ public class PermitController extends CRUDController<Permit> {
 		
 		List<DeliveryAddress> addresses = genericDAO.findUniqueByCriteria(DeliveryAddress.class, criterias, "line1", false);
 	   model.addAttribute("allDeliveryAddresses", addresses);
-		model.addAttribute("customer", genericDAO.findByCriteria(Customer.class, criterias, "contactName", false));
+	   List<Customer> customerList = genericDAO.findByCriteria(Customer.class, criterias, "contactName", false);
+		model.addAttribute("customer", customerList);
 		model.addAttribute("locationType", genericDAO.findByCriteria(LocationType.class, criterias, "id", false));
 		model.addAttribute("order", genericDAO.findByCriteria(Order.class, criterias, "id", false));
 		model.addAttribute("permitClass", genericDAO.findByCriteria(PermitClass.class, criterias, "permitClass", false));
@@ -378,6 +381,17 @@ public class PermitController extends CRUDController<Permit> {
 		model.addAttribute("permit", genericDAO.findByCriteria(Permit.class, criterias, "id", false));
 		model.addAttribute("orderStatuses", genericDAO.findByCriteria(OrderStatus.class, criterias, "status", false));
 		model.addAttribute("state", genericDAO.findAll(State.class));
+		
+		SortedSet<String> phoneSet = new TreeSet<String>();
+		SortedSet<String> contactNameSet = new TreeSet<String>();
+		for (Customer aCustomer : customerList) {
+			phoneSet.add(aCustomer.getPhone());
+			contactNameSet.add(aCustomer.getContactName());
+		}
+		
+		model.addAttribute("phone", phoneSet);	
+		model.addAttribute("contactName", contactNameSet);
+		
 
 	}
 	

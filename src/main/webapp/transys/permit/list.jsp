@@ -36,12 +36,12 @@
 		  <td class="form-left"><transys:label code="Contact Name"/></td>
 				<td><select class="flat form-control input-sm" id="contactName" name="customer.contactName" style="width: 175px !important"">
 					<option value="">------<transys:label code="Please Select"/>------</option>
-					<c:forEach items="${customer}" var="customer">
+					<c:forEach items="${contactName}" var="contactName">
 							<c:set var="selected" value=""/>
-							<c:if test="${sessionScope.searchCriteria.searchMap['customer.contactName'] == customer.contactName}">
+							<c:if test="${sessionScope.searchCriteria.searchMap['customer.contactName'] == contactName}">
 								<c:set var="selected" value="selected"/>
 							</c:if>
-								<option value="${customer.contactName}" ${selected}>${customer.contactName}</option>
+								<option value="${contactName}" ${selected}>${contactName}</option>
 					</c:forEach>
 				</select>
 				</td>
@@ -49,12 +49,12 @@
 			<td class="form-left"><transys:label code="Phone Number"/></td>
 			<td><select class="flat form-control input-sm" id="phoneNum" name="customer.phone" style="width: 175px !important"">
 				<option value="">------<transys:label code="Please Select"/>------</option>
-				<c:forEach items="${customer}" var="customer">
+				<c:forEach items="${phone}" var="phoneVar">
 						<c:set var="selected" value=""/>
-						<c:if test="${sessionScope.searchCriteria.searchMap['customer.phone'] == customer.phone}">
+						<c:if test="${sessionScope.searchCriteria.searchMap['customer.phone'] == phoneVar}">
 							<c:set var="selected" value="selected"/>
 					</c:if>
-						<option value="${customer.phone}" ${selected}>${customer.phone}</option>
+						<option value="${phoneVar}" ${selected}>${phoneVar}</option>
 				</c:forEach>
 			</select>
 			</td>
