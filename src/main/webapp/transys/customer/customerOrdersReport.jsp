@@ -46,16 +46,16 @@
 					</c:forEach>
 				</select>
 			</td>	
-			<td class="form-left">Status</td>
+			<td class="form-left">Order Status</td>
 			<td >
-				<select class="flat form-control input-sm" id="customerStatusCustomerOrdersReport" name="customerStatus" style="width: 175px !important">
+				<select class="flat form-control input-sm" id="orderStatusCustomerOrdersReport" name="orderStatus" style="width: 175px !important">
 					<option value="">----Please Select----</option>
-					<c:forEach items="${customerStatuses}" var="aCustomerStatus">
+					<c:forEach items="${orderStatuses}" var="anOrderStatus">
 						<c:set var="selected" value=""/>
-						<c:if test="${sessionScope.searchCriteria.searchMap['customerStatus'] == aCustomerStatus.id}">
+						<c:if test="${sessionScope.searchCriteria.searchMap['orderStatus'] == anOrderStatus.id}">
 							<c:set var="selected" value="selected" />
 						</c:if>
-						<option value="${aCustomerStatus.id}" ${selected}>${aCustomerStatus.status}</option>
+						<option value="${anOrderStatus.id}" ${selected}>${anOrderStatus.status}</option>
 					</c:forEach>
 				</select>
 			</td>
