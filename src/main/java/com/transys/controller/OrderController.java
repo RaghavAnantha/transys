@@ -759,8 +759,16 @@ public class OrderController extends CRUDController<Order> {
 			reportList.add(aReportRow);
 		}
 		
-		String orderDateFrom = criteria.getSearchMap().get("createdAtFrom").toString();
-		String orderDateTo = criteria.getSearchMap().get("createdAtTo").toString();
+		String orderDateFrom = StringUtils.EMPTY;
+		if (criteria.getSearchMap().get("createdAtFrom") != null) {
+			orderDateFrom = criteria.getSearchMap().get("createdAtFrom").toString();
+		}
+		
+		String orderDateTo = StringUtils.EMPTY;
+		if (criteria.getSearchMap().get("createdAtTo") != null) {
+			orderDateTo = criteria.getSearchMap().get("createdAtTo").toString();
+		}
+		
 		orderDateFrom = StringUtils.defaultIfEmpty(orderDateFrom, orderList.get(0).getFormattedCreatedAt());
 		orderDateTo = StringUtils.defaultIfEmpty(orderDateTo, orderList.get(orderList.size() - 1).getFormattedCreatedAt());
 		

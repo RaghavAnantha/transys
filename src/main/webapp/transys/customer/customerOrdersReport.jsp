@@ -7,11 +7,11 @@
 		<tr>
 			<td class="form-left">Company Name</td>
 			<td class="wide">
-				<select class="flat form-control input-sm" id="companyNameCustomerOrdersReport" name="companyName" style="width:175px !important">
+				<select class="flat form-control input-sm" id="customerOrdersReport.companyName" name="customer.companyName" style="width:175px !important">
 					<option value="">----Please Select----</option>
 					<c:forEach items="${customer}" var="customer">
 						<c:set var="selected" value="" />
-						<c:if test="${sessionScope.searchCriteria.searchMap['companyName'] == customer.companyName}">
+						<c:if test="${sessionScope.searchCriteria.searchMap['customer.companyName'] == customer.companyName}">
 							<c:set var="selected" value="selected" />
 						</c:if>
 						<option value="${customer.companyName}" ${selected}>${customer.companyName}</option>
@@ -20,11 +20,11 @@
 			</td>
 			<td class="form-left">Contact Name</td>
 			<td>
-				<select class="flat form-control input-sm" id="contactNameCustomerOrdersReport" name="contactName" style="width:175px !important">
+				<select class="flat form-control input-sm" id="customerOrdersReport.contactName" name="customer.contactName" style="width:175px !important">
 					<option value="">----Please Select----</option>
 					<c:forEach items="${contactNames}" var="aContactName">
 						<c:set var="selected" value="" />
-						<c:if test="${sessionScope.searchCriteria.searchMap['contactName'] == aContactName}">
+						<c:if test="${sessionScope.searchCriteria.searchMap['customer.contactName'] == aContactName}">
 							<c:set var="selected" value="selected" />
 						</c:if>
 						<option value="${aContactName}" ${selected}>${aContactName}</option>
@@ -35,11 +35,11 @@
 		<tr>
 			<td class="form-left">Phone Number</td>
 			<td>
-				<select class="flat form-control input-sm" id="phoneCustomerOrdersReport" name="phone" style="width: 175px !important">
+				<select class="flat form-control input-sm" id="customerOrdersReport.phone" name="customer.phone" style="width: 175px !important">
 					<option value="">----Please Select----</option>
 					<c:forEach items="${phones}" var="aPhone">
 						<c:set var="selected" value="" />
-						<c:if test="${sessionScope.searchCriteria.searchMap['phone'] == aPhone}">
+						<c:if test="${sessionScope.searchCriteria.searchMap['customer.phone'] == aPhone}">
 							<c:set var="selected" value="selected" />
 						</c:if>
 						<option value="${aPhone}" ${selected}>${aPhone}</option>
@@ -48,7 +48,7 @@
 			</td>	
 			<td class="form-left">Order Status</td>
 			<td >
-				<select class="flat form-control input-sm" id="orderStatusCustomerOrdersReport" name="orderStatus" style="width: 175px !important">
+				<select class="flat form-control input-sm" id="customerOrdersReport.orderStatus" name="orderStatus" style="width: 175px !important">
 					<option value="">----Please Select----</option>
 					<c:forEach items="${orderStatuses}" var="anOrderStatus">
 						<c:set var="selected" value=""/>
@@ -85,31 +85,41 @@
 	<tr><td colspan=10></td><td colspan=10></td></tr>
 	<tr>
 		<td class="form-left">Company Name:</td>
-		<td class="wide td-static" id="companyNameTd">${companyName}
+		<td class="wide td-static" id="companyNameTd">${customerOrdersReportCompanyName}</td>
 		<td class="form-left">&nbsp;&nbsp;Order Date Range:</td>
-		<td class="wide td-static" id="orderDateRangeTd">${orderDateFrom}&nbsp;&nbsp;To&nbsp;&nbsp;${orderDateTo}</td>
+		<td class="wide td-static" id="orderDateRangeTd">${customerOrdersReportOrderDateFrom}&nbsp;&nbsp;To&nbsp;&nbsp;${customerOrdersReportOrderDateTo}</td>
 	</tr>
 	<tr>
 		<td class="form-left">Total Orders:</td>
-		<td class="wide td-static" id="totalOrdersTd">${totalOrders}
+		<td class="wide td-static" id="totalOrdersTd">${customerOrdersReportTotalOrders}</td>
 		<td class="form-left">&nbsp;&nbsp;Total Amount:</td>
-		<td class="wide td-static" id="totalAmountTd">${totalOrderAmount}</td>
+		<td class="wide td-static" id="totalAmountTd">${customerOrdersReportTotalOrderAmount}</td>
 	</tr>
 </table>
 
 <a href="/customer/generateCustomerOrdersReport.do?type=xls"><img src="/images/excel.png" border="0" style="float:right" class="toolbarButton"></a>
 <a href="/customer/generateCustomerOrdersReport.do?type=pdf"><img src="/images/pdf.png" border="0" style="float:right" class="toolbarButton"></a>
 <form:form name="customerOrdersReportDetails" id="customerOrdersReportDetails" class="tab-color">
-	<transys:datatable urlContext="customer" baseObjects="${customerOrdersReportList}"
+	<transys:datatable urlContext="customer" baseObjects="${customerOrdersReportList[0].orderList}"
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
-		pagingLink="search.do" dataQualifier="customerOrdersReport">
-		<transys:textcolumn headerText="Id" dataField="id" width="85px"/>
-		<transys:textcolumn headerText="Company Name" dataField="companyName" />
-		<transys:textcolumn headerText="Contact Name" dataField="contactName" />
-		<transys:textcolumn headerText="Phone Number" dataField="phoneNumber" />
+		pagingLink="search.do" multipleDelete="false" searcheable="false" dataQualifier="customerOrdersReport">
+		<transys:textcolumn headerText="Order #" dataField="id" />
+		<transys:textcolumn headerText="Contact" dataField="deliveryContactName" />
+		<transys:textcolumn headerText="Phone" dataField="deliveryContactPhone1" />
+		<transys:textcolumn headerText="Del Adds" dataField="deliveryAddressFullLine" />
+		<transys:textcolumn headerText="City" dataField="deliveryCity" />
 		<transys:textcolumn headerText="Status" dataField="status" />
-		<transys:textcolumn headerText="Total Orders" dataField="totalOrders" />
-		<transys:textcolumn headerText="Total Amount" dataField="totalOrderAmount" />
+		<transys:textcolumn headerText="Delivery Date" dataField="deliveryDate" dataFormat="MM/dd/yyy"/>
+		<transys:textcolumn headerText="Pickup Date" dataField="pickupDate" dataFormat="MM/dd/yyy"/>
+		<%--<transys:textcolumn headerText="Pymt. method" dataField="orderPayment[0].paymentMethod.method" />--%>	
+		<transys:textcolumn headerText="Dumpster Price" dataField="dumpsterPrice" />
+		<transys:textcolumn headerText="City Fee" dataField="cityFee" />
+		<transys:textcolumn headerText="Permit Fee" dataField="permitFees" />
+		<transys:textcolumn headerText="OvrWt. Fee" dataField="overweightFee" />
+		<transys:textcolumn headerText="Addnl. Fees" dataField="additionalFees" />
+		<transys:textcolumn headerText="Total Fees" dataField="totalFees" />
+		<transys:textcolumn headerText="Amt Paid" dataField="totalAmountPaid"/>
+		<transys:textcolumn headerText="Bal Due" dataField="balanceAmountDue" />	
 	</transys:datatable>
 	<%session.setAttribute("customerOrdersReportColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
 </form:form>
