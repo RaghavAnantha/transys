@@ -31,6 +31,8 @@ public class OrderReportVO implements BaseVO {
 	private BigDecimal totalAmountPaid;
 	private BigDecimal balanceAmountDue;
 	
+	private String createdAt;
+	
 	public Long getId() {
 		return id;
 	}
@@ -132,5 +134,11 @@ public class OrderReportVO implements BaseVO {
 	}
 	public void setBalanceAmountDue(BigDecimal balanceAmountDue) {
 		this.balanceAmountDue = balanceAmountDue;
+	}
+	public String getCreatedAt() {
+		return createdAt;
+	}
+	public void setCreatedAt(String createdAt) {
+		this.createdAt = createdAt;
 	}
 }

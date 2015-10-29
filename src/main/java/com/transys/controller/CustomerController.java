@@ -255,23 +255,12 @@ public class CustomerController extends CRUDController<Customer> {
 		List<CustomerReportVO> customerReportVOList = retrieveCustomerOrdersReportData(criteria);
 		//request.getSession().setAttribute("customerOrdersReportList", customerReportVOList);
 		
-		String orderDateFrom = StringUtils.EMPTY;
-		if (criteria.getSearchMap().get("createdAtFrom") != null) {
-			orderDateFrom = criteria.getSearchMap().get("createdAtFrom").toString();
-		}
-		
-		String orderDateTo = StringUtils.EMPTY;
-		if (criteria.getSearchMap().get("createdAtTo") != null) {
-			orderDateTo = criteria.getSearchMap().get("createdAtTo").toString();
-		}
-		
-		//orderDateFrom = StringUtils.defaultIfEmpty(orderDateFrom, customerReportVOList.get(0).getOrderList().get(0).getFormattedCreatedAt());
-		//orderDateTo = StringUtils.defaultIfEmpty(orderDateTo, customerReportVOList.get(0).getOrderList().get(orderList.size() - 1).getFormattedCreatedAt());
+		String[] orderDates = extractOrderDateRange(criteria, customerReportVOList);
 		
 		model.addAttribute("customerOrdersReportList", customerReportVOList);
 		model.addAttribute("customerOrdersReportCompanyName", customerReportVOList.get(0).getCompanyName());
-		model.addAttribute("customerOrdersReportOrderDateFrom", orderDateFrom);
-		model.addAttribute("customerOrdersReportOrderDateTo", orderDateTo);
+		model.addAttribute("customerOrdersReportOrderDateFrom", orderDates[0]);
+		model.addAttribute("customerOrdersReportOrderDateTo", orderDates[1]);
 		model.addAttribute("customerOrdersReportTotalOrders", customerReportVOList.get(0).getTotalOrders());
 		model.addAttribute("customerOrdersReportTotalOrderAmount", customerReportVOList.get(0).getTotalOrderAmount());
 		
@@ -281,6 +270,24 @@ public class CustomerController extends CRUDController<Customer> {
 		
 		//return urlContext + "/list";
 		return urlContext + "/customer";
+	}
+	
+	private String[] extractOrderDateRange(SearchCriteria criteria, List<CustomerReportVO> customerReportVOList) {
+		String orderDateFrom = criteria.getSearchMap().getOrDefault("createdAtFrom", StringUtils.EMPTY).toString();
+		String orderDateTo = criteria.getSearchMap().getOrDefault("createdAtTo", StringUtils.EMPTY).toString();
+		
+		if (StringUtils.isEmpty(orderDateFrom)) {
+			if (!customerReportVOList.isEmpty() && !customerReportVOList.get(0).getOrderList().isEmpty()) {
+				List<OrderReportVO> orderList = customerReportVOList.get(0).getOrderList();
+				orderDateFrom = orderList.get(0).getCreatedAt();
+				orderDateTo = orderList.get(orderList.size() - 1).getCreatedAt();
+			}
+		}
+		
+		String orderDates[] = new String[2];
+		orderDates[0] = orderDateFrom;
+		orderDates[1] = orderDateTo;
+		return orderDates;
 	}
 	
 	private List<CustomerReportVO> retrieveCustomerListReportData(SearchCriteria criteria) {
@@ -394,6 +401,8 @@ public class CustomerController extends CRUDController<Customer> {
 			OrderReportVO anOrderReportVO = new OrderReportVO();
 			
 			anOrderReportVO.setId(anOrder.getId());
+			anOrderReportVO.setCreatedAt(anOrder.getFormattedCreatedAt());
+			
 			anOrderReportVO.setDeliveryContactName(anOrder.getDeliveryContactName());
 			anOrderReportVO.setDeliveryContactPhone1(anOrder.getDeliveryContactPhone1());
 			anOrderReportVO.setDeliveryAddressFullLine(anOrder.getDeliveryAddress().getFullLine());
@@ -519,12 +528,11 @@ public class CustomerController extends CRUDController<Customer> {
 		
 		List<CustomerReportVO> customerReportVOList = retrieveCustomerOrdersReportData(criteria);
 		
-		String orderDateFrom = criteria.getSearchMap().getOrDefault("createdAtFrom", StringUtils.EMPTY).toString();
-		String orderDateTo = criteria.getSearchMap().getOrDefault("createdAtTo", StringUtils.EMPTY).toString();
+		String[] orderDates = extractOrderDateRange(criteria, customerReportVOList);
 		
 		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("ORDER_DATE_FROM", orderDateFrom);
-		params.put("ORDER_DATE_TO", orderDateTo);
+		params.put("ORDER_DATE_FROM", orderDates[0]);
+		params.put("ORDER_DATE_TO", orderDates[1]);
 		
 		try {
 			if (StringUtils.isEmpty(type))
