@@ -69,7 +69,7 @@ function populateMaterialTypes() {
 		  <td class="wide">
 		  		<input class="flat" id="datepicker1" name="recycleDateFrom" value="${sessionScope.searchCriteria.searchMap['recycleDateFrom']}" style="width: 175px" />
 		  </td>
-		  <td class="form-left">Date To</td>
+		  <td class="form-left">Date To<span class="errorMessage">*</span></td>
 		  <td class="wide">
 		  		<input class="flat" id="datepicker2" name="recycleDateTo" value="${sessionScope.searchCriteria.searchMap['recycleDateTo']}" style="width: 175px" />
 		  </td>
@@ -79,8 +79,18 @@ function populateMaterialTypes() {
 		<td><input type="button" class="btn btn-primary btn-sm btn-sm-ext" onclick="document.forms['recycleReportForm'].submit();"
 			value="<transys:label code="Preview"/>" /></td>
 	</tr>
+	<tr><td></td></tr>
 	</table>
 </form:form>
+
+<hr class="hr-ext">
+<table class="table" id="form-table"> 
+	<tr><td colspan=10></td><td colspan=10></td></tr>
+	<tr>
+		<td class="form-left">Date Range:</td>
+		<td class="wide td-static" id="recycleDateRangeTd">${recycleDateFrom}&nbsp;&nbsp;To&nbsp;&nbsp;${recycleDateTo}</td>
+	</tr>
+</table>
 
 <a href="/reports/recycleReport/generateRecycleReport.do?type=xls"><img src="/images/excel.png" border="0" style="float:right" class="toolbarButton"></a>
 <a href="/reports/recycleReport/generateRecycleReport.do?type=pdf"><img src="/images/pdf.png" border="0" style="float:right" class="toolbarButton"></a>

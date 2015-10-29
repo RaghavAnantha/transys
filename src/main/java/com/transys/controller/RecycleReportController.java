@@ -35,7 +35,6 @@ import com.transys.model.vo.RecycleReportVO;
 @Controller
 @RequestMapping("/reports/recycleReport")
 public class RecycleReportController extends CRUDController<Order> {
-
 	public RecycleReportController() {	
 		setUrlContext("reports/recycleReport");
 	}
@@ -68,6 +67,11 @@ public class RecycleReportController extends CRUDController<Order> {
 		List<?> reportData =  retrieveReportData(criteria);
 		model.addAttribute("list", reportData);
 		
+		String recycleDateFrom = criteria.getSearchMap().getOrDefault("recycleDateFrom", StringUtils.EMPTY).toString();
+		String recycleDateTo = criteria.getSearchMap().getOrDefault("recycleDateTo", StringUtils.EMPTY).toString();
+		model.addAttribute("recycleDateFrom", recycleDateFrom);
+		model.addAttribute("recycleDateTo", recycleDateTo);
+		
 		return urlContext + "/list";
 	}
 	
@@ -80,7 +84,6 @@ public class RecycleReportController extends CRUDController<Order> {
 	@RequestMapping(method = RequestMethod.GET, value = "/retrieveMaterialTypes.do")
 	public @ResponseBody String retrieveMaterialTypes(ModelMap model, HttpServletRequest request,
 															 @RequestParam(value = "materialCategoryId") Long materialCategoryId) {
-		
 		List<MaterialType> materialTypes = retrieveMaterialTypes(materialCategoryId);
 		
 		ObjectMapper objectMapper = new ObjectMapper();
@@ -122,7 +125,6 @@ public class RecycleReportController extends CRUDController<Order> {
 	}
 	
 	private List<RecycleReportVO> retrieveReportData(SearchCriteria criteria) {
-		
 		// Working Query in MySQL - select matCategory,materialName,SUM(tonnageSum),recycleLoc from (select materialca3_.category as matCategory, materialty2_.materialName as materialName, sum(order0_.netWeightTonnage) as tonnageSum,  order0_.pickupDate as pickupDate, recycleloc1_.location as recycleLoc, recycleloc1_.effectiveStartDate, recycleloc1_.effectiveEndDate from `transys`.transysOrder order0_, `transys`.materialType materialty2_, `transys`.materialCategory materialca3_ cross join `transys`.recycleLocation recycleloc1_ where order0_.materialTypeId=materialty2_.id and materialty2_.materialCategoryId=materialca3_.id and recycleloc1_.materialTypeId=order0_.materialTypeId and recycleloc1_.status='Active' AND order0_.pickupDate<='2015-10-27' AND order0_.pickupDate>='2015-10-17' AND order0_.pickupDate BETWEEN recycleloc1_.effectiveStartDate AND recycleloc1_.effectiveEndDate group by order0_.materialTypeId , recycleloc1_.id UNION (select materialca3_.category as matCategory, materialty2_.materialName as materialName, sum(public0_.netWeightTonnage) as tonnageSum,  public0_.intakeDate as intakeDate, recycleloc1_.location as recycleLoc, recycleloc1_.effectiveStartDate, recycleloc1_.effectiveEndDate from `transys`.publicMaterialIntake public0_, `transys`.materialType materialty2_, `transys`.materialCategory materialca3_ cross join `transys`.recycleLocation recycleloc1_ where public0_.materialTypeId=materialty2_.id and materialty2_.materialCategoryId=materialca3_.id and recycleloc1_.materialTypeId=public0_.materialTypeId and recycleloc1_.status='Active' AND public0_.intakeDate<='2015-10-27' AND public0_.intakeDate>='2015-10-17' AND public0_.intakeDate BETWEEN recycleloc1_.effectiveStartDate AND recycleloc1_.effectiveEndDate group by public0_.materialTypeId , recycleloc1_.id)) AS temp group by materialName, recycleLoc;
 		String conditionClause = createSearchCriteria(criteria);
 		String rollOffAggregationQuery = "select materialca3_.category as matCategory, materialty2_.materialName as materialName, sum(order0_.netWeightTonnage) as tonnageSum,  order0_.pickupDate as pickupDate, recycleloc1_.location as recycleLoc, recycleloc1_.effectiveStartDate, recycleloc1_.effectiveEndDate from `transys`.transysOrder order0_, `transys`.materialType materialty2_, `transys`.materialCategory materialca3_ cross join `transys`.recycleLocation recycleloc1_ where order0_.materialTypeId=materialty2_.id and materialty2_.materialCategoryId=materialca3_.id and recycleloc1_.materialTypeId=order0_.materialTypeId and recycleloc1_.status='Active' " + conditionClause + " group by order0_.materialTypeId , recycleloc1_.id";
@@ -145,7 +147,6 @@ public class RecycleReportController extends CRUDController<Order> {
 	}
 	
 	private List<RecycleReportVO> populateAggregationResults(List<?> aggregationQueryResults) {
-		
 		List<RecycleReportVO> recycleReportVOList = new ArrayList<>();
 		ObjectMapper objectMapper = new ObjectMapper();
 		for (Object aggregationObj : aggregationQueryResults) {
@@ -177,7 +178,6 @@ public class RecycleReportController extends CRUDController<Order> {
 	}
 
 	private String createSearchCriteria(SearchCriteria criteria) {
-		
 		StringBuffer conditionClause = new StringBuffer();
 		Map<String, Object> searchMap = criteria.getSearchMap();
 		
@@ -229,10 +229,18 @@ public class RecycleReportController extends CRUDController<Order> {
 			HttpServletResponse response, @RequestParam("type") String type,
 			Object objectDAO, Class clazz) {
 		try {
+			SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
+			
 			List<Map<String,Object>> exportReportData = generateExportReportData(model, request);
 			
 			type = setRequestHeaders(response, type, "recycleReport");
+			
+			String recycleDateFrom = criteria.getSearchMap().getOrDefault("recycleDateFrom", StringUtils.EMPTY).toString();
+			String recycleDateTo = criteria.getSearchMap().getOrDefault("recycleDateTo", StringUtils.EMPTY).toString();
+			
 			Map<String, Object> params = new HashMap<String, Object>();
+			params.put("RECYCLE_DATE_FROM", recycleDateFrom);
+			params.put("RECYCLE_DATE_TO", recycleDateTo);
 
 			ByteArrayOutputStream out = dynamicReportService.generateStaticReport("recycleReport", exportReportData, params, type, request);
 		
