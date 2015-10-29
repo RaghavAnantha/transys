@@ -115,6 +115,12 @@
 								<option value="${permit.number}" ${selected}>${permit.number}</option>
 						</c:if>
 					</c:forEach>
+					<c:set var="selected" value=""/>
+					<c:if test="${sessionScope.searchCriteria.searchMap['number'] == 'Pending Payment'}">
+						<c:set var="selected" value="selected"/>
+					</c:if>
+					<option value="Pending Payment" ${selected}>Pending Payment</option>
+					
 				</select>
 				</td>
 			

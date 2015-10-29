@@ -122,6 +122,8 @@ public class PermitController extends CRUDController<Permit> {
 		//TODO: Fix me 
 		criteria.getSearchMap().remove("_csrf");
 		
+		injectPendingPaymentPermitSearch(criteria);
+		
 		if (!injectOrderSearchCriteria(criteria)) {
 			// search yielded no results
 			model.addAttribute("list", new ArrayList<Permit>());
@@ -148,6 +150,22 @@ public class PermitController extends CRUDController<Permit> {
 		model.addAttribute("mode", "MANAGE");
 		
 		return urlContext + "/permit";
+	}
+
+	private void injectPendingPaymentPermitSearch(SearchCriteria criteria) {
+		
+		if (criteria != null && criteria.getSearchMap() != null) {
+			Map<String, Object> searchMap = criteria.getSearchMap();
+			Object[] param = searchMap.keySet().toArray();
+			for (int i = 0; i < param.length; i++) {
+				String key = param[i].toString();
+				if(key.toUpperCase().contains("NUMBER") && searchMap.get(key).toString().equalsIgnoreCase("Pending Payment") ) {
+					searchMap.put("number", "null");
+				}
+			}
+			criteria.setSearchMap(searchMap);
+		}
+				
 	}
 
 	private boolean injectOrderSearchCriteria(SearchCriteria criteria) {
@@ -404,7 +422,9 @@ public class PermitController extends CRUDController<Permit> {
 			String status = "Pending";
 			if (entity.getNumber() != null && entity.getNumber().length() > 0) {
 				status = "Available";
-			} 
+			} else {
+				entity.setNumber(null);
+			}
 
 			PermitStatus permitStatus = (PermitStatus)genericDAO.executeSimpleQuery("select obj from PermitStatus obj where obj.status='" + status + "'").get(0);
 			entity.setStatus(permitStatus);
