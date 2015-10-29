@@ -105,7 +105,7 @@ function populateMaterialTypes() {
 		</tr>
 		<tr>
 			<td colspan=10>
-				<form:textarea row="5" path="comments" cssClass="flat" id="recycleLocationComments" style="width:100%; height:100%;"/>
+				<form:textarea row="5" path="comments" cssClass="flat notes" id="recycleLocationComments" />
 				<br><form:errors path="comments" cssClass="errorMessage" />
 			</td>
 		</tr>

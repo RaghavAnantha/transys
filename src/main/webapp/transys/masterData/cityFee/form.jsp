@@ -46,7 +46,7 @@
 		</tr>
 		<tr>
 			<td colspan=10>
-				<form:textarea row="5" path="comments" cssClass="flat" id="cityFeeComments" style="width:100%; height:150%;"/>
+				<form:textarea row="5" path="comments" cssClass="flat notes" id="cityFeeComments" />
 				<br><form:errors path="comments" cssClass="errorMessage" />
 			</td>
 		</tr>
