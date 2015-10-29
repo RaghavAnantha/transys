@@ -54,8 +54,8 @@ $("#permitModalFromAlertForm").submit(function (ev) {
         		displayPermitModalErrorMessage(responseData.replace("ErrorMsg: ", ""));
         	} else {
         		//var permit = jQuery.parseJSON(responseData);
-        		//displayPermitModalSuccessMessage("Permit saved successfully");
-        		$this.find("#closePermitFromAlertClose").click();
+        		displayPermitModalSuccessMessage("Permit saved successfully");
+        		//$this.find("#closePermitFromAlertClose").click();
         	}
         }
     });

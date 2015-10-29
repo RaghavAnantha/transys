@@ -518,30 +518,13 @@ public class PermitController extends CRUDController<Permit> {
 			try {
 				associatedOrderPermitEntry = validatePermitEndDate(entity);
 			} catch (Exception ex) {
-
-				ObjectMapper objectMapper = new ObjectMapper();
-				String json = StringUtils.EMPTY;
-				try {
-					json = objectMapper.writeValueAsString(ex.getMessage());
-				} catch (JsonProcessingException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				
-				return json;
+				System.out.println("Exception while validating permit end date = " + ex.getMessage());
+				return ex.getMessage();
 			}
 			
 			if (!validateMaxPermitsAllowable(associatedOrderPermitEntry)) {
-				ObjectMapper objectMapper = new ObjectMapper();
-				String json = StringUtils.EMPTY;
-				try {
-					json = objectMapper.writeValueAsString("ErrorMsg: There are already " + MAX_NUMBER_OF_ASSOCIATED_PERMITS + " permits for this order.");
-				} catch (JsonProcessingException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				
-				return json;
+				System.out.println("There are already " + MAX_NUMBER_OF_ASSOCIATED_PERMITS + " permits for this order.");
+				return "ErrorMsg: There are already " + MAX_NUMBER_OF_ASSOCIATED_PERMITS + " permits for this order.";
 			}
 
 			PermitStatus permitStatus = (PermitStatus)genericDAO.executeSimpleQuery("select obj from PermitStatus obj where obj.status='" + status + "'").get(0);
