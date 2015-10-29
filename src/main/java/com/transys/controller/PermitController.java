@@ -165,7 +165,6 @@ public class PermitController extends CRUDController<Permit> {
 			}
 			criteria.setSearchMap(searchMap);
 		}
-				
 	}
 
 	private boolean injectOrderSearchCriteria(SearchCriteria criteria) {

@@ -8,6 +8,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -71,7 +73,8 @@ public class OrderPermitAlertController extends CRUDController<OrderPermits> {
 		
 		List<DeliveryAddress> addresses = genericDAO.findUniqueByCriteria(DeliveryAddress.class, criterias, "line1", false);
 	   model.addAttribute("allDeliveryAddresses", addresses);
-		model.addAttribute("customer", genericDAO.findByCriteria(Customer.class, criterias, "contactName", false));
+	   List<Customer> customerList = genericDAO.findByCriteria(Customer.class, criterias, "contactName", false);
+		model.addAttribute("customer", customerList);
 		model.addAttribute("locationType", genericDAO.findByCriteria(LocationType.class, criterias, "id", false));
 		model.addAttribute("order", genericDAO.findByCriteria(Order.class, criterias, "id", false));
 		model.addAttribute("permitClass", genericDAO.findByCriteria(PermitClass.class, criterias, "permitClass", false));
@@ -81,6 +84,16 @@ public class OrderPermitAlertController extends CRUDController<OrderPermits> {
 		model.addAttribute("orderStatuses", genericDAO.findByCriteria(OrderStatus.class, criterias, "status", false));
 		model.addAttribute("state", genericDAO.findAll(State.class));
 
+		SortedSet<String> phoneSet = new TreeSet<String>();
+		SortedSet<String> contactNameSet = new TreeSet<String>();
+		for (Customer aCustomer : customerList) {
+			phoneSet.add(aCustomer.getPhone());
+			contactNameSet.add(aCustomer.getContactName());
+		}
+		
+		model.addAttribute("phone", phoneSet);	
+		model.addAttribute("contactName", contactNameSet);
+		
 		List<OrderPermits> orderPermits = getToBeAlertedPermits(new SearchCriteria());
 		model.addAttribute("orderPermitList", orderPermits);
 
@@ -92,6 +105,8 @@ public class OrderPermitAlertController extends CRUDController<OrderPermits> {
 		setupList(model, request);
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		
+		injectPendingPaymentPermitSearch(criteria);
+		
 		// Search for permits corresponding to open orders and status=expired or expiring in the next 7 days
 		List<OrderPermits> orderPermits = getToBeAlertedPermits(criteria);
 		System.out.println("Number of matching permits = " + orderPermits.size());
@@ -99,6 +114,21 @@ public class OrderPermitAlertController extends CRUDController<OrderPermits> {
 		
 		model.addAttribute("activeTab", "orderPermitAlert");
 		return urlContext + "/list";
+	}
+	
+	private void injectPendingPaymentPermitSearch(SearchCriteria criteria) {
+		
+		if (criteria != null && criteria.getSearchMap() != null) {
+			Map<String, Object> searchMap = criteria.getSearchMap();
+			Object[] param = searchMap.keySet().toArray();
+			for (int i = 0; i < param.length; i++) {
+				String key = param[i].toString();
+				if(key.toUpperCase().contains("NUMBER") && searchMap.get(key).toString().equalsIgnoreCase("Pending Payment") ) {
+					searchMap.put("permit.number", "null");
+				}
+			}
+			criteria.setSearchMap(searchMap);
+		}
 	}
 	
 	/**
