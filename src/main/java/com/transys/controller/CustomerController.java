@@ -258,11 +258,14 @@ public class CustomerController extends CRUDController<Customer> {
 		String[] orderDates = extractOrderDateRange(criteria, customerReportVOList);
 		
 		model.addAttribute("customerOrdersReportList", customerReportVOList);
-		model.addAttribute("customerOrdersReportCompanyName", customerReportVOList.get(0).getCompanyName());
 		model.addAttribute("customerOrdersReportOrderDateFrom", orderDates[0]);
 		model.addAttribute("customerOrdersReportOrderDateTo", orderDates[1]);
-		model.addAttribute("customerOrdersReportTotalOrders", customerReportVOList.get(0).getTotalOrders());
-		model.addAttribute("customerOrdersReportTotalOrderAmount", customerReportVOList.get(0).getTotalOrderAmount());
+		
+		if (!customerReportVOList.isEmpty()) {
+			model.addAttribute("customerOrdersReportCompanyName", customerReportVOList.get(0).getCompanyName());
+			model.addAttribute("customerOrdersReportTotalOrders", customerReportVOList.get(0).getTotalOrders());
+			model.addAttribute("customerOrdersReportTotalOrderAmount", customerReportVOList.get(0).getTotalOrderAmount());
+		}
 		
 		model.addAttribute("activeTab", "customerReports");
 		model.addAttribute("activeSubTab", "customerOrdersReport");
@@ -340,11 +343,14 @@ public class CustomerController extends CRUDController<Customer> {
 	}
 	
 	private List<CustomerReportVO> retrieveCustomerOrdersReportData(SearchCriteria criteria) {
+		List<CustomerReportVO> customerReportVOList = new ArrayList<CustomerReportVO>();
+		
 		List<Order> orderList = genericDAO.search(Order.class, criteria, "customer.companyName", null, null);
+		if (orderList.isEmpty()) {
+			return customerReportVOList;
+		}
 		
 		Map<Long, List<Order>> customerOrderMap = new HashMap<Long, List<Order>>();
-		StringBuffer customerIdsBuff = new StringBuffer("(");
-			
 		for (Order anOrder : orderList) {
 			Long customerId = anOrder.getCustomer().getId();
 			List<Order> customerOrderList = customerOrderMap.get(customerId);
@@ -354,49 +360,32 @@ public class CustomerController extends CRUDController<Customer> {
 			}
 			
 			customerOrderList.add(anOrder);
-			
-			customerIdsBuff.append(customerId + ",");
 		}
 		
-		String customerIds = customerIdsBuff.substring(0, customerIdsBuff.length() -1);
-		customerIds += ")";
-		List<OrderFees> orderFeesList = genericDAO.executeSimpleQuery("select obj from OrderFees obj where obj.order.customer.id IN " 
-				+ customerIds);
-		
-		List<CustomerReportVO> customerReportVOList = new ArrayList<CustomerReportVO>();
 		for (Long customerKey : customerOrderMap.keySet()) {
-			BigDecimal sum = new BigDecimal("0.00");
-			Integer orderCount = 0;
-			for (OrderFees anOrderFees: orderFeesList ) {
-	          if (anOrderFees.getOrder().getCustomer().getId() == customerKey) {
-	               sum = sum.add(anOrderFees.getTotalFees());
-	               orderCount++;
-	          }
-	      }
-			
-			Order anOrder = customerOrderMap.get(customerKey).get(0);
-			Customer aCustomer = anOrder.getCustomer();
-			
-			CustomerReportVO customerReportVO =  new CustomerReportVO();
-			customerReportVO.setId(aCustomer.getId());
-	      customerReportVO.setCompanyName(aCustomer.getCompanyName());
-	      customerReportVO.setStatus(aCustomer.getCustomerStatus().getStatus());
-         customerReportVO.setContactName(aCustomer.getContactName());
-         customerReportVO.setPhoneNumber(aCustomer.getPhone());
-         customerReportVO.setTotalOrderAmount(sum);
-         customerReportVO.setTotalOrders(orderCount);
-         
-         List<OrderReportVO> anOrderReportVOList = new ArrayList<OrderReportVO>();
-         map(customerOrderMap.get(customerKey), anOrderReportVOList);
-         customerReportVO.setOrderList(anOrderReportVOList);
+			CustomerReportVO aCcustomerReportVO =  new CustomerReportVO();
+			map(customerOrderMap.get(customerKey), aCcustomerReportVO);
 
-         customerReportVOList.add(customerReportVO);
+         customerReportVOList.add(aCcustomerReportVO);
 		}
       
       return customerReportVOList;
 	}
 	
-	private void map(List<Order> orderList, List<OrderReportVO> anOrderReportVOList) {
+	private void map(Customer aCustomer, CustomerReportVO aCustomerReportVO) {
+		aCustomerReportVO.setId(aCustomer.getId());
+		aCustomerReportVO.setCompanyName(aCustomer.getCompanyName());
+		aCustomerReportVO.setStatus(aCustomer.getCustomerStatus().getStatus());
+		aCustomerReportVO.setContactName(aCustomer.getContactName());
+		aCustomerReportVO.setPhoneNumber(aCustomer.getPhone());
+	}
+	
+	private void map(List<Order> orderList, CustomerReportVO aCustomerReportVO) {
+		Customer aCustomer = orderList.get(0).getCustomer();
+		map(aCustomer, aCustomerReportVO);
+		
+		BigDecimal totalOrderAmount = new BigDecimal("0.00");
+		List<OrderReportVO> anOrderReportVOList = new ArrayList<OrderReportVO>();
 		for (Order anOrder : orderList) {
 			OrderReportVO anOrderReportVO = new OrderReportVO();
 			
@@ -425,7 +414,14 @@ public class CustomerController extends CRUDController<Customer> {
 			anOrderReportVO.setBalanceAmountDue(anOrder.getBalanceAmountDue());
 			
 			anOrderReportVOList.add(anOrderReportVO);
+			
+			totalOrderAmount = totalOrderAmount.add(anOrderFees.getTotalFees());
 		}
+		
+		aCustomerReportVO.setTotalOrderAmount(totalOrderAmount);
+      aCustomerReportVO.setTotalOrders(orderList.size());
+		
+		aCustomerReportVO.setOrderList(anOrderReportVOList);
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/generateCustomerListReport.do")
@@ -489,42 +485,6 @@ public class CustomerController extends CRUDController<Customer> {
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		//criteria.getSearchMap().put("id!",0l);
 		criteria.getSearchMap().remove("_csrf");
-		
-		/* List<CustomerReportVO> customerReportVOList = retrieveCustomerListReportData(criteria);
-		 	for (CustomerReportVO aCustomerReportVO : customerReportVOList) {
-			String query = "select obj from Order obj where obj.customer.id=" + aCustomerReportVO.getId();
-			List<Order> orderList = genericDAO.executeSimpleQuery(query);
-			
-			List<OrderReportVO> anOrderReportVOList = new ArrayList<OrderReportVO>();
-			for (Order anOrder : orderList) {
-				OrderReportVO anOrderReportVO = new OrderReportVO();
-				
-				anOrderReportVO.setId(anOrder.getId());
-				anOrderReportVO.setDeliveryContactName(anOrder.getDeliveryContactName());
-				anOrderReportVO.setDeliveryContactPhone1(anOrder.getDeliveryContactPhone1());
-				anOrderReportVO.setDeliveryAddressFullLine(anOrder.getDeliveryAddress().getFullLine());
-				anOrderReportVO.setDeliveryCity(anOrder.getDeliveryAddress().getCity());
-				
-				anOrderReportVO.setStatus(anOrder.getOrderStatus().getStatus());
-				
-				anOrderReportVO.setDeliveryDate(anOrder.getFormattedDeliveryDate());
-				anOrderReportVO.setPickupDate(anOrder.getFormattedPickupDate());
-				
-				OrderFees anOrderFees = anOrder.getOrderFees();
-				anOrderReportVO.setDumpsterPrice(anOrderFees.getDumpsterPrice());
-				anOrderReportVO.setCityFee(anOrderFees.getCityFee());
-				anOrderReportVO.setPermitFees(anOrderFees.getTotalPermitFees());
-				anOrderReportVO.setOverweightFee(anOrderFees.getOverweightFee());
-				anOrderReportVO.setAdditionalFees(anOrderFees.getTotalAdditionalFees());
-				anOrderReportVO.setTotalFees(anOrderFees.getTotalFees());
-				
-				anOrderReportVO.setTotalAmountPaid(anOrder.getTotalAmountPaid());
-				anOrderReportVO.setBalanceAmountDue(anOrder.getBalanceAmountDue());
-				
-				anOrderReportVOList.add(anOrderReportVO);
-			}
-			aCustomerReportVO.setOrderList(anOrderReportVOList);
-		}*/
 		
 		List<CustomerReportVO> customerReportVOList = retrieveCustomerOrdersReportData(criteria);
 		
