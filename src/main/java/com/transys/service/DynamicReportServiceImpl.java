@@ -41,6 +41,7 @@ import net.sf.jasperreports.export.SimpleExporterInput;
 import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
 import net.sf.jasperreports.export.SimplePdfExporterConfiguration;
 import net.sf.jasperreports.export.SimpleXlsReportConfiguration;
+import net.sf.jasperreports.export.SimpleXlsxReportConfiguration;
 import net.sf.jasperreports.j2ee.servlets.ImageServlet;
 
 import org.hibernate.Query;
@@ -986,7 +987,7 @@ public class DynamicReportServiceImpl implements DynamicReportService {
 	private ByteArrayOutputStream getStreamByType(String type, JasperPrint jp,
 			HttpServletRequest request) throws JRException {
 		if ("xlsx".equalsIgnoreCase(type)) {
-			return exportReportXls(jp);
+			return exportReportXlsx(jp);
 		} else if ("xls".equalsIgnoreCase(type)) {
 			return exportReportXls(jp);
 		} else if ("pdf".equalsIgnoreCase(type)) {
@@ -1006,14 +1007,14 @@ public class DynamicReportServiceImpl implements DynamicReportService {
 
 	private ByteArrayOutputStream exportReportXls(JasperPrint jp)
 			throws JRException {
-		JRXlsExporter exporter = new JRXlsExporter();
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		
+		JRXlsExporter exporter = new JRXlsExporter();
 		exporter.setExporterInput(new SimpleExporterInput(jp));
 		exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(out));
+		
 		SimpleXlsReportConfiguration configuration = new SimpleXlsReportConfiguration();
-		
 		configuration.setDetectCellType(true);
-		
 		configuration.setIgnoreGraphics(true);
 		configuration.setWhitePageBackground(true);
 		configuration.setRemoveEmptySpaceBetweenColumns(true);
@@ -1035,17 +1036,21 @@ public class DynamicReportServiceImpl implements DynamicReportService {
 
 	private ByteArrayOutputStream exportReportXlsx(JasperPrint jp)
 			throws JRException {
-		JRXlsxExporter exporter = new JRXlsxExporter();
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		exporter.setParameter(JRExporterParameter.JASPER_PRINT, jp);
-		exporter.setParameter(JRExporterParameter.OUTPUT_STREAM, out);
-		// exporter.setParameter(JRXlsExporterParameter.IS_DETECT_CELL_TYPE,
-		// Boolean.TRUE);
-		// exporter.setParameter(JRXlsExporterParameter.IS_WHITE_PAGE_BACKGROUND,
-		// Boolean.FALSE);
-		// exporter.setParameter(JRXlsExporterParameter.IS_IGNORE_GRAPHICS,
-		// Boolean.FALSE);
-		// exporter.setParameter(JRXls)
+		
+		JRXlsxExporter exporter = new JRXlsxExporter();
+		exporter.setExporterInput(new SimpleExporterInput(jp));
+		exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(out));
+		
+		SimpleXlsxReportConfiguration configuration = new SimpleXlsxReportConfiguration();
+		configuration.setDetectCellType(true);
+		configuration.setIgnoreGraphics(true);
+		configuration.setWhitePageBackground(true);
+		configuration.setRemoveEmptySpaceBetweenColumns(true);
+		configuration.setRemoveEmptySpaceBetweenRows(true);
+		exporter.setConfiguration(configuration);
+		
+		//exporter.setParameter(JRXls)
 		exporter.exportReport();
 
 		return out;
