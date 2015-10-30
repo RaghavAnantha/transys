@@ -1160,8 +1160,14 @@ function verifyExchangeOrderAndSubmit() {
 		<tr>
 			<td></td>
 			<td colspan="2">
-				<input type="button" id="orderCreate" onclick="processForm();" value="<transys:label code="Save"/>" class="flat btn btn-primary btn-sm btn-sm-ext" /> 
-				<input type="button" id="orderCancelBtn" value="<transys:label code="Back"/>" class="flat btn btn-primary btn-sm btn-sm-ext" onClick="location.href='main.do'" />
+				<input type="button" id="orderCreate" onclick="processForm();" value="Save" class="flat btn btn-primary btn-sm btn-sm-ext" /> 
+				<input type="button" id="orderCancelBtn" value="Back" class="flat btn btn-primary btn-sm btn-sm-ext" onClick="location.href='main.do'" />
+				
+				<c:set var="printDisabled" value="" />
+				<c:if test="${modelObject.id == null}">
+					<c:set var="printDisabled" value="disabled" />
+				</c:if>
+				<input type="button" id="orderPrintBtn" ${printDisabled} value="Print" class="flat btn btn-primary btn-sm btn-sm-ext" onClick="location.href='printOrder.do?orderId=${modelObject.id}'" />
 			</td>
 		</tr>
 		<tr><td></td></tr>

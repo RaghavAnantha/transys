@@ -1,6 +1,7 @@
 package com.transys.controller;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.ParseException;
@@ -77,6 +78,7 @@ import com.transys.model.PermitType;
 import com.transys.model.SearchCriteria;
 import com.transys.model.State;
 import com.transys.model.User;
+import com.transys.model.vo.OrderReportVO;
 import com.transys.service.DynamicReportServiceImpl;
 
 @Controller
@@ -694,18 +696,41 @@ public class OrderController extends CRUDController<Order> {
 			
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
 			out = dynamicReportService.generateStaticReport("ordersReport", reportList, reportParams, type, request);
+		
+			out.writeTo(response.getOutputStream());
+			out.close();
 			
-			/*if (!type.equals("print") && !type.equals("pdf")) {
-				out = dynamicReportService.generateStaticReport("ordersReport", newList, params, type, request);
-			}
-			else if(type.equals("pdf")){
-				out = dynamicReportService.generateStaticReport("ordersReportPdf",
-						newList, params, type, request);
-			}
-			else {
-				out = dynamicReportService.generateStaticReport("ordersReport"+"print",
-						newList, params, type, request);
-			}*/
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.warn("Unable to create file :" + e);
+			request.getSession().setAttribute("errors", e.getMessage());
+			
+		}
+	}
+	
+	@RequestMapping(method = { RequestMethod.GET}, value = "/printOrder.do")
+	public void printOrder(ModelMap model, HttpServletRequest request, HttpServletResponse response, 
+			@RequestParam("orderId") Long orderId) {
+		try {
+			response.setHeader("Content-Disposition", "attachment;filename= orderPrint." + "pdf");
+			response.setContentType(MimeUtil.getContentType("pdf"));
+			
+			String query = "select obj from Order obj where obj.id= " + orderId;
+			List<Order> orderList = genericDAO.executeSimpleQuery(query);
+			
+			OrderReportVO anOrderReportVO = new OrderReportVO();
+			anOrderReportVO.setDeliveryDate("10/20/2015");
+			
+			List<OrderReportVO> orderReportVOList = new ArrayList<OrderReportVO>();
+			orderReportVOList.add(anOrderReportVO);
+			
+			String logoFilePath = request.getSession().getServletContext().getRealPath("/images/" + "rds_logo.png");
+			
+			Map<String, Object> reportParams = new HashMap<String,Object>();
+			reportParams.put("LOGO_FILE_PATH", logoFilePath);
+			
+			ByteArrayOutputStream out = new ByteArrayOutputStream();
+			out = dynamicReportService.generateStaticReport("orderPrint", orderReportVOList, reportParams, "pdf", request);
 		
 			out.writeTo(response.getOutputStream());
 			out.close();
