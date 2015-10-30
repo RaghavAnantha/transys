@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
-<!-- 2015-10-30T15:02:47 -->
+<!-- 2015-10-30T23:45:43 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="orderPrint" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="f412ce57-68ae-45e8-90e9-b1c053e29ef7">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<parameter name="LOGO_FILE" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+	</parameter>
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
@@ -95,9 +98,10 @@
 				<textElement textAlignment="Right" verticalAlignment="Middle"/>
 				<text><![CDATA[Alt Contact Phone]]></text>
 			</staticText>
-			<image>
+			<image hAlign="Center" vAlign="Middle">
 				<reportElement x="6" y="10" width="115" height="70" uuid="f4672e33-f422-43d8-9afc-56a522572b5a"/>
-				<imageExpression><![CDATA["/rags/temp/rds_1.png"]]></imageExpression>
+				<graphicElement fill="Solid"/>
+				<imageExpression><![CDATA[$P{LOGO_FILE}]]></imageExpression>
 			</image>
 		</band>
 	</title>
