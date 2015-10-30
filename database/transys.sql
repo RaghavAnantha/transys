@@ -1382,8 +1382,9 @@ CREATE TABLE `cityFee` (
 
 LOCK TABLES `cityFee` WRITE;
 /*!40000 ALTER TABLE `cityFee` DISABLE KEYS */;
-INSERT INTO `cityFee` VALUES 
-(5,'Chicago',35.00,NULL,'2015-09-25 12:31:34', '2020-09-25 12:31:34', '2015-09-25 12:31:34',1,'2015-09-25 12:32:00',1,1);
+INSERT INTO `cityFee` (`id`,`suburbName`,`fee`,`comments`,`effectiveStartDate`,`effectiveEndDate`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (5,'Chicago',0.00,NULL,'2015-09-25 12:31:34','2020-09-25 12:31:34','2015-09-25 12:31:34',1,'2015-09-25 12:32:00',1,1);
+INSERT INTO `cityFee` (`id`,`suburbName`,`fee`,`comments`,`effectiveStartDate`,`effectiveEndDate`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (6,'Arlington Heights',150.00,NULL,'2015-09-25 12:31:34','2020-09-25 12:31:34','2015-09-25 12:31:34',1,'2015-09-25 12:32:00',1,1);
+INSERT INTO `cityFee` (`id`,`suburbName`,`fee`,`comments`,`effectiveStartDate`,`effectiveEndDate`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (7,'Bedford Park',80.00,NULL,'2015-09-25 12:31:34','2020-09-25 12:31:34','2015-09-25 12:31:34',1,'2015-09-25 12:32:00',1,1);
 /*!40000 ALTER TABLE `cityFee` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -1576,8 +1577,9 @@ CREATE TABLE `recycleLocation` (
 LOCK TABLES `recycleLocation` WRITE;
 /*!40000 ALTER TABLE `recycleLocation` DISABLE KEYS */;
 INSERT INTO `recycleLocation` (`id`,`materialTypeId`,`location`,`status`,`comments`,`effectiveStartDate`,`effectiveEndDate`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (6,3,'location1','Active','test','2015-10-13 00:00:00','2015-10-30 00:00:00','2015-10-24 23:23:03',1,'2015-10-24 23:46:53',1,1);
-INSERT INTO `recycleLocation` (`id`,`materialTypeId`,`location`,`status`,`comments`,`effectiveStartDate`,`effectiveEndDate`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (7,1,'location2','Active','test','2015-10-08 00:00:00','2015-10-31 00:00:00','2015-10-25 00:19:08',1,NULL,NULL,1);
-INSERT INTO `recycleLocation` (`id`,`materialTypeId`,`location`,`status`,`comments`,`effectiveStartDate`,`effectiveEndDate`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (8,2,'location3','Active','test','2015-10-01 00:00:00','2015-10-30 00:00:00','2015-10-30 00:19:08',1,NULL,NULL,1);
+INSERT INTO `recycleLocation` (`id`,`materialTypeId`,`location`,`status`,`comments`,`effectiveStartDate`,`effectiveEndDate`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (7,1,'location2','Active','test','2015-10-08 00:00:00','2015-12-31 00:00:00','2015-10-25 00:19:08',1,NULL,NULL,1);
+INSERT INTO `recycleLocation` (`id`,`materialTypeId`,`location`,`status`,`comments`,`effectiveStartDate`,`effectiveEndDate`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (8,2,'location3','Active','test','2015-10-01 00:00:00','2015-11-30 00:00:00','2015-10-30 00:19:08',1,NULL,NULL,1);
+INSERT INTO `recycleLocation` (`id`,`materialTypeId`,`location`,`status`,`comments`,`effectiveStartDate`,`effectiveEndDate`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (9,1,'Atkinson Landfill','Active','test','2015-10-01 00:00:00','2016-10-30 00:00:00','2015-10-30 00:19:08',1,NULL,NULL,1);
 /*!40000 ALTER TABLE `recycleLocation` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
