@@ -9,7 +9,7 @@ import com.transys.model.Order;
 
 public class OrderReportVO implements BaseVO {
 	private Long id;
-	private String createdAt;
+	private String orderDate;
 	
 	private String companyName;
 	
@@ -149,11 +149,11 @@ public class OrderReportVO implements BaseVO {
 	public void setBalanceAmountDue(BigDecimal balanceAmountDue) {
 		this.balanceAmountDue = balanceAmountDue;
 	}
-	public String getCreatedAt() {
-		return createdAt;
+	public String getOrderDate() {
+		return orderDate;
 	}
-	public void setCreatedAt(String createdAt) {
-		this.createdAt = createdAt;
+	public void setOrderDate(String orderDate) {
+		this.orderDate = orderDate;
 	}
 	public String getBillingAddress() {
 		return billingAddress;
