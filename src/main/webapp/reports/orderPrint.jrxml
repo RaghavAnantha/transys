@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
-<!-- 2015-10-31T19:38:17 -->
+<!-- 2015-10-31T23:09:16 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="orderPrint" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="f412ce57-68ae-45e8-90e9-b1c053e29ef7">
 	<parameter name="LOGO_FILE_PATH" class="java.lang.String">
 		<parameterDescription><![CDATA[]]></parameterDescription>
@@ -639,7 +639,7 @@ On the 4th day box will automatically be moved unless office is notified and an 
 				</graphicElement>
 			</rectangle>
 			<staticText>
-				<reportElement x="368" y="495" width="116" height="19" forecolor="#0D6BFE" uuid="81d4522f-a27a-4897-bf0d-846efc3c1fb4"/>
+				<reportElement x="372" y="495" width="108" height="19" forecolor="#0D6BFE" uuid="81d4522f-a27a-4897-bf0d-846efc3c1fb4"/>
 				<text><![CDATA[Authorized Signature]]></text>
 			</staticText>
 			<textField>
@@ -689,7 +689,8 @@ On the 4th day box will automatically be moved unless office is notified and an 
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[** Not Responsible For Customer Pavement Or Accompanying Sub Surface **]]></text>
+				<text><![CDATA[** Not Responsible For Customer Pavement Or 
+    Accompanying Sub Surface **]]></text>
 			</staticText>
 		</band>
 	</detail>
