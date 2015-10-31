@@ -57,7 +57,8 @@ public class TransferStationIntakeReportGenerator extends ExcelReportGenerator {
 		// the header row: centered text in 48pt font
 		Row headerRow = sheet.createRow(1);
 		Row headerRow1 = sheet.createRow(2);
-		headerRow.setHeightInPoints(12.75f);
+		Row headerRow2 = sheet.createRow(3);
+		//headerRow.setHeightInPoints(12.75f);
 
 		Iterator<String> headersSet = headers.keySet().iterator();
 
@@ -66,10 +67,17 @@ public class TransferStationIntakeReportGenerator extends ExcelReportGenerator {
 		
 		while (headersSet.hasNext()) {
 			System.out.println("Creating columnIndex = " + columnIndex);
-			Cell cell = headerRow.createCell(columnIndex);
+			
 			String headerName = headersSet.next();
-			cell.setCellValue(headerName);
-			cell.setCellStyle(styles.get("header"));
+			if (headerName.equals("Roll-off Container Sizes") || (headerName.equals("Date")) || (headerName.equals("Total Boxes")) ){
+				Cell cell = headerRow1.createCell(columnIndex);
+				cell.setCellValue(headerName);
+				cell.setCellStyle(styles.get("header"));
+			} else {
+				Cell cell = headerRow.createCell(columnIndex);
+				cell.setCellValue(headerName);
+				cell.setCellStyle(styles.get("header"));
+			}
 			
 			if (headerName.equals("Roll-off Container Sizes")) {
 				int toMergeCount = 0;
@@ -78,7 +86,7 @@ public class TransferStationIntakeReportGenerator extends ExcelReportGenerator {
 					toMergeCount = rollOffBoxesPerYardList.size();
 					int rollOffIndex = 0;
 					for (int mergeCol = columnIndex; mergeCol < columnIndex+toMergeCount; mergeCol++) {
-						Cell cell1 = headerRow1.createCell(mergeCol);
+						Cell cell1 = headerRow2.createCell(mergeCol);
 						cell1.setCellStyle(styles.get("header"));
 						String valueForCell = rollOffBoxesPerYardList.get(rollOffIndex++).getYardSize();
 						cell1.setCellValue(valueForCell);
@@ -86,7 +94,7 @@ public class TransferStationIntakeReportGenerator extends ExcelReportGenerator {
 					}
 					
 				}
-				sheet.addMergedRegion(new CellRangeAddress(headerRow.getRowNum(), headerRow.getRowNum(), columnIndex, columnIndex + (toMergeCount-1)));
+				sheet.addMergedRegion(new CellRangeAddress(headerRow1.getRowNum(), headerRow1.getRowNum(), columnIndex, columnIndex + (toMergeCount-1)));
 				columnIndex += toMergeCount;
 			} else if (headerName.equals("Public Intake Totals")) {
 				int toMergeCount = 2;
@@ -96,6 +104,7 @@ public class TransferStationIntakeReportGenerator extends ExcelReportGenerator {
 				String valueForCell = "Tonnage";
 				cell1.setCellValue(valueForCell);
 				columnWidths.add(256 * valueForCell.length());
+				sheet.addMergedRegion(new CellRangeAddress(headerRow1.getRowNum(), headerRow2.getRowNum(), mergeCol, mergeCol));
 				mergeCol++;
 				
 				cell1 = headerRow1.createCell(mergeCol);
@@ -103,6 +112,7 @@ public class TransferStationIntakeReportGenerator extends ExcelReportGenerator {
 				valueForCell = "Cubic Yard Conversion";
 				cell1.setCellValue(valueForCell);
 				columnWidths.add(256 * valueForCell.length());
+				sheet.addMergedRegion(new CellRangeAddress(headerRow1.getRowNum(), headerRow2.getRowNum(), mergeCol, mergeCol));
 				
 				sheet.addMergedRegion(new CellRangeAddress(headerRow.getRowNum(), headerRow.getRowNum(), columnIndex, columnIndex + (toMergeCount-1)));
 				columnIndex += toMergeCount;
@@ -114,6 +124,7 @@ public class TransferStationIntakeReportGenerator extends ExcelReportGenerator {
 				String valueForCell = "Cubic Yards";
 				cell1.setCellValue(valueForCell);
 				columnWidths.add(256 * valueForCell.length());
+				sheet.addMergedRegion(new CellRangeAddress(headerRow1.getRowNum(), headerRow2.getRowNum(), mergeCol, mergeCol));
 				mergeCol++;
 				
 				cell1 = headerRow1.createCell(mergeCol);
@@ -121,6 +132,7 @@ public class TransferStationIntakeReportGenerator extends ExcelReportGenerator {
 				valueForCell = "Actual Tonnage";
 				cell1.setCellValue(valueForCell);
 				columnWidths.add(256 * valueForCell.length());
+				sheet.addMergedRegion(new CellRangeAddress(headerRow1.getRowNum(), headerRow2.getRowNum(), mergeCol, mergeCol));
 				
 				sheet.addMergedRegion(new CellRangeAddress(headerRow.getRowNum(), headerRow.getRowNum(), columnIndex, columnIndex + (toMergeCount-1)));
 				columnIndex += toMergeCount;
@@ -132,6 +144,7 @@ public class TransferStationIntakeReportGenerator extends ExcelReportGenerator {
 				String valueForCell = "Cubic Yards";
 				cell1.setCellValue(valueForCell);
 				columnWidths.add(256 * valueForCell.length());
+				sheet.addMergedRegion(new CellRangeAddress(headerRow1.getRowNum(), headerRow2.getRowNum(), mergeCol, mergeCol));
 				mergeCol++;
 				
 				cell1 = headerRow1.createCell(mergeCol);
@@ -139,12 +152,13 @@ public class TransferStationIntakeReportGenerator extends ExcelReportGenerator {
 				valueForCell = "Tonnage";
 				cell1.setCellValue(valueForCell);
 				columnWidths.add(256 * valueForCell.length());
+				sheet.addMergedRegion(new CellRangeAddress(headerRow1.getRowNum(), headerRow2.getRowNum(), mergeCol, mergeCol));
 				
 				sheet.addMergedRegion(new CellRangeAddress(headerRow.getRowNum(), headerRow.getRowNum(), columnIndex, columnIndex + (toMergeCount-1)));
 				columnIndex += toMergeCount;
 			} else {
-				sheet.addMergedRegion(new CellRangeAddress(headerRow.getRowNum(), headerRow1.getRowNum(), columnIndex, columnIndex));
-				Cell cell1 = headerRow1.createCell(columnIndex);
+				sheet.addMergedRegion(new CellRangeAddress(headerRow1.getRowNum(), headerRow2.getRowNum(), columnIndex, columnIndex));
+				Cell cell1 = headerRow2.createCell(columnIndex);
 				cell1.setCellStyle(styles.get("header"));
 				columnWidths.add(256 * headerName.length());
 				columnIndex++;
@@ -155,11 +169,11 @@ public class TransferStationIntakeReportGenerator extends ExcelReportGenerator {
 
 		Row row;
 		Cell cell;
-		int rownum = 3;
+		int rownum = 4;
 		int rowOffset = 2;
 		for (int i = 0; i < data.size(); i++, rownum++) {
 			row = sheet.createRow(rownum);
-			row.setHeightInPoints(12.75f);
+			//row.setHeightInPoints(12.75f);
 
 			for (MonthlyIntakeReportVO everyDataObject : data) {
 
