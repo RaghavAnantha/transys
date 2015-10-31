@@ -72,6 +72,31 @@ public class DeliveryAddress extends AbstractBaseModel {
 		
 		return fullLineBuff.toString();
 	}
+	
+	@Transient
+	//TODO: Move to utils
+	public String getFullDeliveryAddress() {
+		StringBuffer addressBuff = new StringBuffer();
+		if (StringUtils.isNotEmpty(getLine1())) {
+			addressBuff.append(getLine1());
+		}
+		if (StringUtils.isNotEmpty(getLine2())) {
+			addressBuff.append(" " + getLine2());
+		}
+		if (StringUtils.isNotEmpty(getCity())) {
+			addressBuff.append(", " + getCity());
+		}
+		if (getState() != null) {
+			if (StringUtils.isNotEmpty(getState().getName())) {
+				addressBuff.append(", " + getState().getName());
+			}
+		}
+		if (StringUtils.isNotEmpty(getZipcode())) {
+			addressBuff.append(", " + getZipcode());
+		}
+		
+		return addressBuff.toString();
+	}
 
 	public String getCity() {
 		return city;

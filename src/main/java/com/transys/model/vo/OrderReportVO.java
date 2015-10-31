@@ -9,18 +9,31 @@ import com.transys.model.Order;
 
 public class OrderReportVO implements BaseVO {
 	private Long id;
+	private String createdAt;
 	
 	private String companyName;
 	
+	private String billingAddress;
+	
 	private String deliveryContactName;
 	private String deliveryContactPhone1;
+	private String deliveryContactPhone2;
+	
+	private String deliveryAddress;
 	private String deliveryAddressFullLine;
 	private String deliveryCity;
+	
+	private String dumpsterLocation;
 	
 	private String status;
 	
 	private String deliveryDate;
+	private String deliveryDateTime;
 	private String pickupDate;
+	
+	private String dumpsterSize;
+	
+	private String materialType;
 	
 	private BigDecimal dumpsterPrice;
 	private BigDecimal cityFee;
@@ -31,7 +44,8 @@ public class OrderReportVO implements BaseVO {
 	private BigDecimal totalAmountPaid;
 	private BigDecimal balanceAmountDue;
 	
-	private String createdAt;
+	private String paymentMethod;
+	private String referenceNum;
 	
 	public Long getId() {
 		return id;
@@ -140,5 +154,59 @@ public class OrderReportVO implements BaseVO {
 	}
 	public void setCreatedAt(String createdAt) {
 		this.createdAt = createdAt;
+	}
+	public String getBillingAddress() {
+		return billingAddress;
+	}
+	public void setBillingAddress(String billingAddress) {
+		this.billingAddress = billingAddress;
+	}
+	public String getDeliveryContactPhone2() {
+		return deliveryContactPhone2;
+	}
+	public void setDeliveryContactPhone2(String deliveryContactPhone2) {
+		this.deliveryContactPhone2 = deliveryContactPhone2;
+	}
+	public String getDeliveryAddress() {
+		return deliveryAddress;
+	}
+	public void setDeliveryAddress(String deliveryAddress) {
+		this.deliveryAddress = deliveryAddress;
+	}
+	public String getDumpsterLocation() {
+		return dumpsterLocation;
+	}
+	public void setDumpsterLocation(String dumpsterLocation) {
+		this.dumpsterLocation = dumpsterLocation;
+	}
+	public String getDeliveryDateTime() {
+		return deliveryDateTime;
+	}
+	public void setDeliveryDateTime(String deliveryDateTime) {
+		this.deliveryDateTime = deliveryDateTime;
+	}
+	public String getDumpsterSize() {
+		return dumpsterSize;
+	}
+	public void setDumpsterSize(String dumpsterSize) {
+		this.dumpsterSize = dumpsterSize;
+	}
+	public String getMaterialType() {
+		return materialType;
+	}
+	public void setMaterialType(String materialType) {
+		this.materialType = materialType;
+	}
+	public String getPaymentMethod() {
+		return paymentMethod;
+	}
+	public void setPaymentMethod(String paymentMethod) {
+		this.paymentMethod = paymentMethod;
+	}
+	public String getReferenceNum() {
+		return referenceNum;
+	}
+	public void setReferenceNum(String referenceNum) {
+		this.referenceNum = referenceNum;
 	}
 }
