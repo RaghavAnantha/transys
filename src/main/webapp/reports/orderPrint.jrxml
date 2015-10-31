@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
-<!-- 2015-10-31T13:24:00 -->
+<!-- 2015-10-31T16:02:13 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="orderPrint" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="f412ce57-68ae-45e8-90e9-b1c053e29ef7">
 	<parameter name="LOGO_FILE_PATH" class="java.lang.String">
 		<parameterDescription><![CDATA[]]></parameterDescription>
@@ -201,7 +201,7 @@
 				<text><![CDATA[Delivery Promised]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="130" y="40" width="80" height="20" uuid="61890636-c585-437c-891d-0571e5e37cb5">
+				<reportElement x="130" y="40" width="100" height="20" uuid="61890636-c585-437c-891d-0571e5e37cb5">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
@@ -237,6 +237,38 @@
 	<detail>
 		<band height="500" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<staticText>
+				<reportElement x="266" y="160" width="100" height="40" uuid="4bcc3116-f177-4798-bafb-ab62bc30ecc2">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[ADDITIONAL FEE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="8" y="160" width="113" height="40" uuid="35203b8f-d609-4483-a9a5-d748cb840f66">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[DUMPSTER RENTAL]]></text>
+			</staticText>
 			<rectangle>
 				<reportElement x="270" y="210" width="230" height="70" uuid="e66b075f-8583-4be2-a1f3-042ac66bc3be"/>
 			</rectangle>
@@ -360,30 +392,14 @@
 				<reportElement x="384" y="180" width="100" height="20" uuid="27779c62-f824-4b41-bfad-6939d55c7a7e">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
-				<textFieldExpression><![CDATA[$F{totalFees}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["$"+$F{totalFees}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="270" y="178" width="100" height="20" uuid="f1c1196c-d672-49a3-91c6-6b06daa2d9b8">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
-				<textFieldExpression><![CDATA[$F{additionalFees}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["$"+$F{additionalFees}]]></textFieldExpression>
 			</textField>
-			<staticText>
-				<reportElement x="266" y="160" width="100" height="40" uuid="4bcc3116-f177-4798-bafb-ab62bc30ecc2">
-					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-				</reportElement>
-				<box>
-					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement>
-					<font isBold="true"/>
-				</textElement>
-				<text><![CDATA[ADDITIONAL FEE]]></text>
-			</staticText>
 			<staticText>
 				<reportElement x="146" y="161" width="100" height="40" uuid="574f0688-9640-42ab-a8be-a4734cdf08fe">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
@@ -404,30 +420,14 @@
 				<reportElement x="144" y="178" width="100" height="20" uuid="7a150e66-8746-4582-b7ba-71bcbe856e02">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
-				<textFieldExpression><![CDATA[$F{permitFees}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["$"+$F{permitFees}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="10" y="178" width="100" height="20" uuid="8eb413c8-ae79-4477-a46a-50a5bf360527">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
-				<textFieldExpression><![CDATA[$F{dumpsterPrice}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["$"+$F{dumpsterPrice}]]></textFieldExpression>
 			</textField>
-			<staticText>
-				<reportElement x="8" y="160" width="113" height="40" uuid="35203b8f-d609-4483-a9a5-d748cb840f66">
-					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-				</reportElement>
-				<box>
-					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement>
-					<font isBold="true"/>
-				</textElement>
-				<text><![CDATA[DUMPSTER RENTAL]]></text>
-			</staticText>
 			<rectangle>
 				<reportElement x="0" y="210" width="260" height="275" uuid="eccdc412-3766-4699-973e-64ee2bda7869"/>
 			</rectangle>

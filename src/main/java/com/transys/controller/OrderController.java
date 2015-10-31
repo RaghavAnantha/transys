@@ -220,10 +220,10 @@ public class OrderController extends CRUDController<Order> {
 		deliveryHours.add("--");
 		
 		for (int i = 1; i <= 12; i++) {
-			deliveryHours.add(i + ":00 AM");
+			deliveryHours.add(i + " AM");
 		}
 		for (int i = 1; i <= 12; i++) {
-			deliveryHours.add(i + ":00 PM");
+			deliveryHours.add(i + " PM");
 		}
       
       model.addAttribute("deliveryHours", deliveryHours);
@@ -708,7 +708,7 @@ public class OrderController extends CRUDController<Order> {
 		}
 	}
 	
-	@RequestMapping(method = { RequestMethod.GET}, value = "/printOrder.do")
+	@RequestMapping(method = {RequestMethod.GET}, value = "/printOrder.do")
 	public void printOrder(ModelMap model, HttpServletRequest request, HttpServletResponse response, 
 			@RequestParam("orderId") Long orderId) {
 		try {
@@ -746,15 +746,25 @@ public class OrderController extends CRUDController<Order> {
 	private void map(Order anOrder, OrderReportVO anOrderReportVO) {
 		anOrderReportVO.setId(anOrder.getId());
 		anOrderReportVO.setOrderDate(anOrder.getFormattedCreatedAt());
+		anOrderReportVO.setStatus(anOrder.getOrderStatus().getStatus());
+		
+		anOrderReportVO.setCompanyName(anOrder.getCustomer().getCompanyName());
+		anOrderReportVO.setBillingAddress(anOrder.getCustomer().getBillingAddress());
 		
 		anOrderReportVO.setDeliveryContactName(anOrder.getDeliveryContactName());
 		anOrderReportVO.setDeliveryContactPhone1(anOrder.getDeliveryContactPhone1());
+		anOrderReportVO.setDeliveryContactPhone2(anOrder.getDeliveryContactPhone2());
 		anOrderReportVO.setDeliveryAddressFullLine(anOrder.getDeliveryAddress().getFullLine());
+		anOrderReportVO.setDeliveryAddress(anOrder.getDeliveryAddress().getFullDeliveryAddress());
 		anOrderReportVO.setDeliveryCity(anOrder.getDeliveryAddress().getCity());
 		
-		anOrderReportVO.setStatus(anOrder.getOrderStatus().getStatus());
+		anOrderReportVO.setDumpsterLocation(anOrder.getDumpsterLocation().getLocationType());
+		anOrderReportVO.setDumpsterSize(anOrder.getDumpsterSize().getSize());
+		
+		anOrderReportVO.setMaterialType(anOrder.getMaterialType().getMaterialName());
 		
 		anOrderReportVO.setDeliveryDate(anOrder.getFormattedDeliveryDate());
+		anOrderReportVO.setDeliveryDateTime(anOrder.getDeliveryDateTime());
 		anOrderReportVO.setPickupDate(anOrder.getFormattedPickupDate());
 		
 		OrderFees anOrderFees = anOrder.getOrderFees();
@@ -764,6 +774,12 @@ public class OrderController extends CRUDController<Order> {
 		anOrderReportVO.setOverweightFee(anOrderFees.getOverweightFee());
 		anOrderReportVO.setAdditionalFees(anOrderFees.getTotalAdditionalFees());
 		anOrderReportVO.setTotalFees(anOrderFees.getTotalFees());
+		
+		List<OrderPayment> payments = anOrder.getOrderPayment();
+		if (payments != null && !payments.isEmpty()) {
+			anOrderReportVO.setPaymentMethod(payments.get(0).getPaymentMethod().getMethod());
+			anOrderReportVO.setReferenceNum(payments.get(0).getCcReferenceNum());
+		}
 		
 		anOrderReportVO.setTotalAmountPaid(anOrder.getTotalAmountPaid());
 		anOrderReportVO.setBalanceAmountDue(anOrder.getBalanceAmountDue());
