@@ -63,6 +63,8 @@ public class TransferStationIntakeReportGenerator extends ExcelReportGenerator {
 
 		int columnIndex = 1;
 		LinkedList<Integer> columnWidths = new LinkedList<>();
+		
+		int totalMergedColumns = 0;
 
 		while (headersSet.hasNext()) {
 			System.out.println("Creating columnIndex = " + columnIndex);
@@ -88,6 +90,7 @@ public class TransferStationIntakeReportGenerator extends ExcelReportGenerator {
 				}
 				sheet.addMergedRegion(new CellRangeAddress(headerRow.getRowNum(), headerRow.getRowNum(), columnIndex, columnIndex + (toMergeCount-1)));
 				columnIndex += toMergeCount;
+				totalMergedColumns += toMergeCount;
 			} else {
 				sheet.addMergedRegion(new CellRangeAddress(headerRow.getRowNum(), headerRow1.getRowNum(), columnIndex, columnIndex));
 				Cell cell1 = headerRow1.createCell(columnIndex);
@@ -96,6 +99,28 @@ public class TransferStationIntakeReportGenerator extends ExcelReportGenerator {
 				columnIndex++;
 			}
 		}
+		
+		// add Waste total headers
+		Cell additionalCell = headerRow.createCell(columnIndex);
+		String headerName = "Total Waste Cubic Yards";
+		additionalCell.setCellValue(headerName);
+		additionalCell.setCellStyle(styles.get("header"));
+		sheet.addMergedRegion(new CellRangeAddress(headerRow.getRowNum(), headerRow1.getRowNum(), columnIndex, columnIndex));
+		Cell cell1 = headerRow1.createCell(columnIndex);
+		cell1.setCellStyle(styles.get("header"));
+		columnWidths.add(256 * headerName.length());
+		columnIndex++;
+		
+		additionalCell = headerRow.createCell(columnIndex);
+		headerName = "Total Waste Tonnage";
+		additionalCell.setCellValue(headerName);
+		additionalCell.setCellStyle(styles.get("header"));
+		sheet.addMergedRegion(new CellRangeAddress(headerRow.getRowNum(), headerRow1.getRowNum(), columnIndex, columnIndex));
+		cell1 = headerRow1.createCell(columnIndex);
+		cell1.setCellStyle(styles.get("header"));
+		columnWidths.add(256 * headerName.length());
+		columnIndex++;
+		
 		// sheet.createFreezePane(0, 1);
 
 		Row row;
@@ -169,6 +194,23 @@ public class TransferStationIntakeReportGenerator extends ExcelReportGenerator {
 						e.printStackTrace();
 					}
 				}
+				
+				// add waste total data
+				cell = row.createCell(columnIndex);
+				
+				cell.setCellStyle(styles.get("formula"));
+				String ref = ((char)('A' + cell.getColumnIndex()-1)) + "" + (cell.getRowIndex()+1) + ","  + (char)('A' + cell.getColumnIndex()-4) + (cell.getRowIndex()+1) ;
+            System.out.println("Formula = " + ref);
+				cell.setCellFormula("SUM(" + ref + ")");
+				columnIndex++;
+				
+				cell = row.createCell(columnIndex);
+				
+				cell.setCellStyle(styles.get("formula"));
+				ref = ((char)('A' + cell.getColumnIndex()-3)) + "" + (cell.getRowIndex()+1) + ","  + (char)('A' + cell.getColumnIndex()-4) + (cell.getRowIndex()+1) ;
+            System.out.println("Formula = " + ref);
+				cell.setCellFormula("SUM(" + ref + ")");
+				columnIndex++;
 
 			}
 		}

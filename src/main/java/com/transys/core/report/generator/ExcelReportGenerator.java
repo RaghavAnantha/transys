@@ -222,6 +222,14 @@ public class ExcelReportGenerator {
       style.setWrapText(true);
       styles.put("cell_indented", style);
       
+      style = wb.createCellStyle();
+      style.setAlignment(CellStyle.ALIGN_CENTER);
+      style.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
+      style.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
+      style.setFillPattern(CellStyle.SOLID_FOREGROUND);
+      style.setDataFormat(wb.createDataFormat().getFormat("0.00"));
+      styles.put("formula", style);
+      
       return styles;
    }
    

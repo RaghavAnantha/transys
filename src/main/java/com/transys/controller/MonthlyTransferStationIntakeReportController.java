@@ -7,7 +7,6 @@ import java.text.DateFormatSymbols;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -21,7 +20,6 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -30,6 +28,7 @@ import com.transys.core.report.generator.TransferStationIntakeReportGenerator;
 import com.transys.model.Order;
 import com.transys.model.SearchCriteria;
 import com.transys.model.vo.MonthlyIntakeReportVO;
+import com.transys.model.vo.PublicMaterialIntakeVO;
 import com.transys.model.vo.RollOffBoxesPerYardVO;
 
 @Controller
@@ -106,10 +105,11 @@ public class MonthlyTransferStationIntakeReportController extends CRUDController
 		List<?> rollOffBoxesPerYardResults = genericDAO.executeNativeQuery(rollOffBoxesPerYardQuery);
 
 		String publicIntakeTonnageQuery = "select ifnull(sum(obj.netWeightTonnage),0) AS tonnage, ifnull(((sum(obj.netWeightTonnage)) * 3.3),0) as cubicYards from `transys`.publicMaterialIntake obj where obj.intakeDate='2015-10-09'";
-		List<?> publicIntakeTonnageResults = genericDAO.executeNativeQuery(rollOffBoxesPerYardQuery);
+		List<?> publicIntakeTonnageResults = genericDAO.executeNativeQuery(publicIntakeTonnageQuery);
 		
 		if (rollOffBoxesPerYardResults != null && rollOffBoxesPerYardResults.size() > 0) {
-			List<RollOffBoxesPerYardVO> boxesPerYardVOList = populateAggregationResults(rollOffBoxesPerYardResults);
+			List<RollOffBoxesPerYardVO> boxesPerYardVOList = (List<RollOffBoxesPerYardVO>)(List<?>) populateAggregationResults(rollOffBoxesPerYardResults);
+			List<PublicMaterialIntakeVO>publicIntakeVOList = (List<PublicMaterialIntakeVO>)(List<?>) populateAggregationResults(publicIntakeTonnageResults);
 			
 			monthlyIntakeReportVO.setRollOffBoxesPerYard(boxesPerYardVOList);
 			
@@ -124,6 +124,11 @@ public class MonthlyTransferStationIntakeReportController extends CRUDController
 			monthlyIntakeReportVO.setIntakeDate(Calendar.getInstance().getTime());
 			monthlyIntakeReportVO.setTotalBoxes(totalBoxes);
 			monthlyIntakeReportVO.setRollOffCubicYards(rollOffCubicYards);
+			
+			for (PublicMaterialIntakeVO eachPublicIntakeCount : publicIntakeVOList) {
+				monthlyIntakeReportVO.setPublicIntakeCubicYards(eachPublicIntakeCount.getCubicYards());
+				monthlyIntakeReportVO.setPublicIntakeTonnage(eachPublicIntakeCount.getTonnage());
+			}
 			
 			String rollOffTonnageQuery = "select SUM(netWeightTonnage) from Order obj where obj.deliveryDate='2015-10-09'";
 			List<?> rollOffTonnageResult = genericDAO.executeSimpleQuery(rollOffTonnageQuery);
@@ -163,8 +168,8 @@ public class MonthlyTransferStationIntakeReportController extends CRUDController
 			
 	}
 	
-	private List<RollOffBoxesPerYardVO> populateAggregationResults(List<?> aggregationQueryResults) {
-		List<RollOffBoxesPerYardVO> boxesPerYardVOList = new ArrayList<>();
+	private List<Object> populateAggregationResults(List<?> aggregationQueryResults) {
+		List<Object> resultList = new ArrayList<>();
 		ObjectMapper objectMapper = new ObjectMapper();
 		for (Object aggregationObj : aggregationQueryResults) {
 			String jsonResponse = StringUtils.EMPTY;
@@ -177,22 +182,33 @@ public class MonthlyTransferStationIntakeReportController extends CRUDController
 			
 			jsonResponse = jsonResponse.substring(1, jsonResponse.length() - 1);
 			
-			System.out.println("Json respose = " + jsonResponse);
+			System.out.println("Json response = " + jsonResponse);
 			
 			String [] tokens = jsonResponse.split(",");
-			String yardSize = StringUtils.replace(tokens[0], "\"", StringUtils.EMPTY);
-			Integer numBoxes = Integer.parseInt(tokens[1]);
-			BigDecimal cubicYards = new BigDecimal(tokens[2]);
-			
-			RollOffBoxesPerYardVO boxesPerYardData = new RollOffBoxesPerYardVO();
-			boxesPerYardData.setYardSize(yardSize);
-			boxesPerYardData.setNumBoxes(numBoxes);
-			boxesPerYardData.setCubicYards(cubicYards);
-			
-			boxesPerYardVOList.add(boxesPerYardData);
+			if (tokens.length == 3) {
+				String yardSize = StringUtils.replace(tokens[0], "\"", StringUtils.EMPTY);
+				Integer numBoxes = Integer.parseInt(tokens[1]);
+				BigDecimal cubicYards = new BigDecimal(tokens[2]);
+				
+				RollOffBoxesPerYardVO boxesPerYardData = new RollOffBoxesPerYardVO();
+				boxesPerYardData.setYardSize(yardSize);
+				boxesPerYardData.setNumBoxes(numBoxes);
+				boxesPerYardData.setCubicYards(cubicYards);
+				
+				resultList.add(boxesPerYardData);
+			} else if (tokens.length == 2) {
+				// public intake
+				BigDecimal tonnage = new BigDecimal(tokens[0]);
+				BigDecimal cubicYards = new BigDecimal(tokens[1]);
+				PublicMaterialIntakeVO publicMaterialIntakeVO = new PublicMaterialIntakeVO();
+				publicMaterialIntakeVO.setTonnage(tonnage);
+				publicMaterialIntakeVO.setCubicYards(cubicYards);
+				
+				resultList.add(publicMaterialIntakeVO);
+			}
 		}
 		
-		return boxesPerYardVOList;
+		return resultList;
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/generateExcelReport.do")
@@ -209,6 +225,8 @@ public class MonthlyTransferStationIntakeReportController extends CRUDController
 		headerMap.put("Roll-off Container Sizes", "rollOffBoxesPerYard");
 		headerMap.put("Roll Off Cubic Yards", "rollOffCubicYards");
 		headerMap.put("Roll Off Actual Tonnage", "rollOffTonnage");
+		headerMap.put("Public Intake Tonnage", "publicIntakeTonnage");
+		headerMap.put("Public Intake Cubic Yards", "publicIntakeCubicYards");
 		
 		ByteArrayOutputStream out = excelReportGenerator.exportReport("Monthly Transfer Station Intake Report", headerMap, reportDataList);
 		
