@@ -202,7 +202,7 @@ public class Customer extends AbstractBaseModel {
 	
 	@Transient
 	//TODO: Move to utils
-	public String getBillingAddress() {
+	public String getBillingAddress(String lineSeparator) {
 		StringBuffer addressBuff = new StringBuffer();
 		if (StringUtils.isNotEmpty(getBillingAddressLine1())) {
 			addressBuff.append(getBillingAddressLine1());
@@ -211,15 +211,15 @@ public class Customer extends AbstractBaseModel {
 			addressBuff.append(" " + getBillingAddressLine2());
 		}
 		if (StringUtils.isNotEmpty(getCity())) {
-			addressBuff.append(", " + getCity());
+			addressBuff.append(lineSeparator + getCity());
 		}
 		if (getState() != null) {
 			if (StringUtils.isNotEmpty(getState().getName())) {
-				addressBuff.append(", " + getState().getName());
+				addressBuff.append(" " + getState().getName());
 			}
 		}
 		if (StringUtils.isNotEmpty(getZipcode())) {
-			addressBuff.append(", " + getZipcode());
+			addressBuff.append(" " + getZipcode());
 		}
 		
 		return addressBuff.toString();

@@ -562,7 +562,7 @@ function verifyExchangeOrderAndSubmit() {
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Address" /><span class="errorMessage"></span></td>
-			<td class="td-static" id="billingAddressTd">${modelObject.customer.getBillingAddress()}</td>
+			<td class="td-static" id="billingAddressTd">${modelObject.customer.getBillingAddress("<br>")}</td>
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Contact" /><span class="errorMessage"></span></td>

@@ -749,13 +749,13 @@ public class OrderController extends CRUDController<Order> {
 		anOrderReportVO.setStatus(anOrder.getOrderStatus().getStatus());
 		
 		anOrderReportVO.setCompanyName(anOrder.getCustomer().getCompanyName());
-		anOrderReportVO.setBillingAddress(anOrder.getCustomer().getBillingAddress());
+		anOrderReportVO.setBillingAddress(anOrder.getCustomer().getBillingAddress("\n"));
 		
 		anOrderReportVO.setDeliveryContactName(anOrder.getDeliveryContactName());
 		anOrderReportVO.setDeliveryContactPhone1(anOrder.getDeliveryContactPhone1());
 		anOrderReportVO.setDeliveryContactPhone2(anOrder.getDeliveryContactPhone2());
 		anOrderReportVO.setDeliveryAddressFullLine(anOrder.getDeliveryAddress().getFullLine());
-		anOrderReportVO.setDeliveryAddress(anOrder.getDeliveryAddress().getFullDeliveryAddress());
+		anOrderReportVO.setDeliveryAddress(anOrder.getDeliveryAddress().getFullDeliveryAddress("\n"));
 		anOrderReportVO.setDeliveryCity(anOrder.getDeliveryAddress().getCity());
 		
 		anOrderReportVO.setDumpsterLocation(anOrder.getDumpsterLocation().getLocationType());

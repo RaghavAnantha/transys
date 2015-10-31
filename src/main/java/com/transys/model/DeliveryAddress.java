@@ -75,7 +75,7 @@ public class DeliveryAddress extends AbstractBaseModel {
 	
 	@Transient
 	//TODO: Move to utils
-	public String getFullDeliveryAddress() {
+	public String getFullDeliveryAddress(String lineSeparator) {
 		StringBuffer addressBuff = new StringBuffer();
 		if (StringUtils.isNotEmpty(getLine1())) {
 			addressBuff.append(getLine1());
@@ -84,15 +84,15 @@ public class DeliveryAddress extends AbstractBaseModel {
 			addressBuff.append(" " + getLine2());
 		}
 		if (StringUtils.isNotEmpty(getCity())) {
-			addressBuff.append(", " + getCity());
+			addressBuff.append(lineSeparator + getCity());
 		}
 		if (getState() != null) {
 			if (StringUtils.isNotEmpty(getState().getName())) {
-				addressBuff.append(", " + getState().getName());
+				addressBuff.append(" " + getState().getName());
 			}
 		}
 		if (StringUtils.isNotEmpty(getZipcode())) {
-			addressBuff.append(", " + getZipcode());
+			addressBuff.append(" " + getZipcode());
 		}
 		
 		return addressBuff.toString();
