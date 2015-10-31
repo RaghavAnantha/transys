@@ -879,12 +879,18 @@ public class OrderController extends CRUDController<Order> {
 		List<Permit> permits = genericDAO.executeSimpleQuery(permitsQuery);
 		Permit aPermit = permits.get(0);
 		if ("Available".equals(aPermit.getStatus().getStatus())) {
-			aPermit.setFee(new BigDecimal(0.00));
+			String orderPermitsQuery = "select obj from OrderPermits obj where obj.permit.id=" + permitId;
+			List<OrderPermits> orderPermitsList = genericDAO.executeSimpleQuery(orderPermitsQuery);
+			if (!orderPermitsList.isEmpty()) {
+				aPermit.setFee(new BigDecimal(0.00));
+			}
 		}
+		
 		return permits;
 	}
 	
-	private List<Permit> retrievePermit(String customerId, String deliveryAddressId, String permitClassId, String permitTypeId, String deliveryDateStr) {
+	private List<Permit> retrievePermit(String customerId, String deliveryAddressId, String permitClassId, 
+			String permitTypeId, String deliveryDateStr) {
 		String requiredEndDateStr = StringUtils.EMPTY;
 		if (StringUtils.isNotEmpty(deliveryDateStr)) {
 			SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
