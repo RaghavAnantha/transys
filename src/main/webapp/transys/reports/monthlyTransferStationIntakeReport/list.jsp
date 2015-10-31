@@ -7,6 +7,21 @@
 	<table id="form-table" class="table">
 	 <tr><td colspan="10"></td><td colspan="10"></td></tr>
  		<tr>
+		<td class="form-left">Year</td>
+		<td  class="wide">
+			<select class="flat form-control input-sm" id="year" name="year" style="width: 150px">
+				<option value="">--Please Select--</option>
+				<c:forEach items="${years}" var="aYear">
+					<c:set var="selected" value="" />
+					<c:if test="${sessionScope.searchCriteria.searchMap['year'] == aYear}">
+						<c:set var="selected" value="selected" />
+					</c:if>
+					<option value="${aYear}" ${selected}>${aYear}</option>
+				</c:forEach>
+			</select>
+		</td>
+		</tr>
+		<tr>
 		<td class="form-left">Month</td>
 		<td class="wide">
 			<select class="flat form-control input-sm" id="month" name="month" style="width: 175px !important">
@@ -22,6 +37,7 @@
 				</c:forEach>
 			</select>
 		</td>
+		<tr><td colspan="10"></td><td colspan="10"></td></tr>
 		<tr>
 		<td></td>
 		<td><input type="button" class="btn btn-primary btn-sm btn-sm-ext" onclick="document.forms['monthlyTransferStationIntakeReportForm'].submit();"

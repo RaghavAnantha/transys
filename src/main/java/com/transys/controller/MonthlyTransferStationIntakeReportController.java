@@ -7,6 +7,7 @@ import java.text.DateFormatSymbols;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -92,6 +93,15 @@ public class MonthlyTransferStationIntakeReportController extends CRUDController
 		//Map<String, Integer> months = cal.getDisplayNames(Calendar.MONTH, Calendar.LONG, Locale.ENGLISH);
 		String[] months = new DateFormatSymbols(Locale.ENGLISH).getMonths();
 		model.addAttribute("months", months); 
+		
+		Calendar now = Calendar.getInstance();   // Gets the current date and time
+		int year = now.get(Calendar.YEAR); 
+		
+		List<Integer> years = new LinkedList<>();
+		for (int tmpYear = (year-1); tmpYear < (year + 20); tmpYear++) {
+			years.add(tmpYear);
+		}
+		model.addAttribute("years", years); 
 	}
 	
 	private List<MonthlyIntakeReportVO> retrieveReportData(SearchCriteria criteria) {
@@ -101,6 +111,7 @@ public class MonthlyTransferStationIntakeReportController extends CRUDController
 		MonthlyIntakeReportVO monthlyIntakeReportVO = new MonthlyIntakeReportVO();
 		// select SUM(count), SUM(cubicYards) from (select dumpstersizeId,count(*) as count, (dumpstersizeId * count(*)) AS cubicYards from `transys`.transysOrder where deliverydate='2015-10-09' group by dumpstersizeId) AS A;
 		//String rollOffBoxesPerYardQuery = "select dumpsterSize0_.size, count(*) as count, (dumpsterSize0_.size * count(*)) AS cubicYards from `transys`.transysOrder order0_, `transys`.dumpsterSize dumpsterSize0_ where dumpsterSize0_.id = order0_.dumpsterSizeId AND deliveryDate='2015-10-09' group by dumpstersizeId";
+		// delivery date -- ?? select order0_.deliveryDate, dumpsterSize0_.size as SIZE, ifnull(count(order0_.dumpsterSizeId),0) AS COUNT, (dumpsterSize0_.size * ifnull(count(order0_.dumpsterSizeId),0)) AS cubicYards FROM `transys`.dumpsterSize dumpsterSize0_ LEFT JOIN `transys`.transysOrder order0_ ON (dumpsterSize0_.id = order0_.dumpsterSizeId AND deliveryDate >= '2015-10-01' AND deliveryDate < '2015-11-01') group by dumpsterSize0_.size order by dumpsterSize0_.id
 		String rollOffBoxesPerYardQuery = "select dumpsterSize0_.size as SIZE, ifnull(count(order0_.dumpsterSizeId),0) AS COUNT, (dumpsterSize0_.size * ifnull(count(order0_.dumpsterSizeId),0)) AS cubicYards FROM `transys`.dumpsterSize dumpsterSize0_ LEFT JOIN `transys`.transysOrder order0_ ON (dumpsterSize0_.id = order0_.dumpsterSizeId AND deliveryDate='2015-10-09') group by dumpsterSize0_.size order by dumpsterSize0_.id";
 		List<?> rollOffBoxesPerYardResults = genericDAO.executeNativeQuery(rollOffBoxesPerYardQuery);
 
