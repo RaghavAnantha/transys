@@ -223,10 +223,13 @@ public class MonthlyTransferStationIntakeReportController extends CRUDController
 		headerMap.put("Date", "intakeDate");
 		headerMap.put("Total Boxes", "totalBoxes");
 		headerMap.put("Roll-off Container Sizes", "rollOffBoxesPerYard");
-		headerMap.put("Roll Off Cubic Yards", "rollOffCubicYards");
+		//headerMap.put("Roll Off Cubic Yards", "rollOffCubicYards");
+		headerMap.put("Roll Off Totals", "rollOffTotals");
 		headerMap.put("Roll Off Actual Tonnage", "rollOffTonnage");
-		headerMap.put("Public Intake Tonnage", "publicIntakeTonnage");
-		headerMap.put("Public Intake Cubic Yards", "publicIntakeCubicYards");
+//		headerMap.put("Public Intake Tonnage", "publicIntakeTonnage");
+//		headerMap.put("Public Intake Cubic Yards", "publicIntakeCubicYards");
+		headerMap.put("Public Intake Totals", "publicIntakeTotals");
+		headerMap.put("Waste Totals", "wasteTotals");
 		
 		ByteArrayOutputStream out = excelReportGenerator.exportReport("Monthly Transfer Station Intake Report", headerMap, reportDataList);
 		

@@ -223,6 +223,7 @@ public class ExcelReportGenerator {
       styles.put("cell_indented", style);
       
       style = wb.createCellStyle();
+      style = createBorderedStyle(wb);
       style.setAlignment(CellStyle.ALIGN_CENTER);
       style.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
       style.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());

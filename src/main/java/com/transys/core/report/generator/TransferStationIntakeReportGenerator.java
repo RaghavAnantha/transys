@@ -52,7 +52,7 @@ public class TransferStationIntakeReportGenerator extends ExcelReportGenerator {
 		Cell titleCell = titleRow.createCell(0);
 		titleCell.setCellValue(title);
 		titleCell.setCellStyle(styles.get("title"));
-		sheet.addMergedRegion(CellRangeAddress.valueOf("$A$1:$L$1"));
+		sheet.addMergedRegion(CellRangeAddress.valueOf("$A$1:$Q$1"));
 
 		// the header row: centered text in 48pt font
 		Row headerRow = sheet.createRow(1);
@@ -64,8 +64,6 @@ public class TransferStationIntakeReportGenerator extends ExcelReportGenerator {
 		int columnIndex = 1;
 		LinkedList<Integer> columnWidths = new LinkedList<>();
 		
-		int totalMergedColumns = 0;
-
 		while (headersSet.hasNext()) {
 			System.out.println("Creating columnIndex = " + columnIndex);
 			Cell cell = headerRow.createCell(columnIndex);
@@ -73,7 +71,7 @@ public class TransferStationIntakeReportGenerator extends ExcelReportGenerator {
 			cell.setCellValue(headerName);
 			cell.setCellStyle(styles.get("header"));
 			
-			if (columnIndex == 3) {
+			if (headerName.equals("Roll-off Container Sizes")) {
 				int toMergeCount = 0;
 				if (data != null && data.size() > 0) {
 					List<RollOffBoxesPerYardVO> rollOffBoxesPerYardList = data.get(0).getRollOffBoxesPerYard();
@@ -90,7 +88,60 @@ public class TransferStationIntakeReportGenerator extends ExcelReportGenerator {
 				}
 				sheet.addMergedRegion(new CellRangeAddress(headerRow.getRowNum(), headerRow.getRowNum(), columnIndex, columnIndex + (toMergeCount-1)));
 				columnIndex += toMergeCount;
-				totalMergedColumns += toMergeCount;
+			} else if (headerName.equals("Public Intake Totals")) {
+				int toMergeCount = 2;
+				int mergeCol = columnIndex;
+				Cell cell1 = headerRow1.createCell(mergeCol);
+				cell1.setCellStyle(styles.get("header"));
+				String valueForCell = "Tonnage";
+				cell1.setCellValue(valueForCell);
+				columnWidths.add(256 * valueForCell.length());
+				mergeCol++;
+				
+				cell1 = headerRow1.createCell(mergeCol);
+				cell1.setCellStyle(styles.get("header"));
+				valueForCell = "Cubic Yard Conversion";
+				cell1.setCellValue(valueForCell);
+				columnWidths.add(256 * valueForCell.length());
+				
+				sheet.addMergedRegion(new CellRangeAddress(headerRow.getRowNum(), headerRow.getRowNum(), columnIndex, columnIndex + (toMergeCount-1)));
+				columnIndex += toMergeCount;
+			} else if (headerName.equals("Roll Off Totals")) { 
+				int toMergeCount = 2;
+				int mergeCol = columnIndex;
+				Cell cell1 = headerRow1.createCell(mergeCol);
+				cell1.setCellStyle(styles.get("header"));
+				String valueForCell = "Cubic Yards";
+				cell1.setCellValue(valueForCell);
+				columnWidths.add(256 * valueForCell.length());
+				mergeCol++;
+				
+				cell1 = headerRow1.createCell(mergeCol);
+				cell1.setCellStyle(styles.get("header"));
+				valueForCell = "Actual Tonnage";
+				cell1.setCellValue(valueForCell);
+				columnWidths.add(256 * valueForCell.length());
+				
+				sheet.addMergedRegion(new CellRangeAddress(headerRow.getRowNum(), headerRow.getRowNum(), columnIndex, columnIndex + (toMergeCount-1)));
+				columnIndex += toMergeCount;
+			} else if (headerName.equals("Waste Totals")) {
+				int toMergeCount = 2;
+				int mergeCol = columnIndex;
+				Cell cell1 = headerRow1.createCell(mergeCol);
+				cell1.setCellStyle(styles.get("header"));
+				String valueForCell = "Cubic Yards";
+				cell1.setCellValue(valueForCell);
+				columnWidths.add(256 * valueForCell.length());
+				mergeCol++;
+				
+				cell1 = headerRow1.createCell(mergeCol);
+				cell1.setCellStyle(styles.get("header"));
+				valueForCell = "Tonnage";
+				cell1.setCellValue(valueForCell);
+				columnWidths.add(256 * valueForCell.length());
+				
+				sheet.addMergedRegion(new CellRangeAddress(headerRow.getRowNum(), headerRow.getRowNum(), columnIndex, columnIndex + (toMergeCount-1)));
+				columnIndex += toMergeCount;
 			} else {
 				sheet.addMergedRegion(new CellRangeAddress(headerRow.getRowNum(), headerRow1.getRowNum(), columnIndex, columnIndex));
 				Cell cell1 = headerRow1.createCell(columnIndex);
@@ -99,27 +150,6 @@ public class TransferStationIntakeReportGenerator extends ExcelReportGenerator {
 				columnIndex++;
 			}
 		}
-		
-		// add Waste total headers
-		Cell additionalCell = headerRow.createCell(columnIndex);
-		String headerName = "Total Waste Cubic Yards";
-		additionalCell.setCellValue(headerName);
-		additionalCell.setCellStyle(styles.get("header"));
-		sheet.addMergedRegion(new CellRangeAddress(headerRow.getRowNum(), headerRow1.getRowNum(), columnIndex, columnIndex));
-		Cell cell1 = headerRow1.createCell(columnIndex);
-		cell1.setCellStyle(styles.get("header"));
-		columnWidths.add(256 * headerName.length());
-		columnIndex++;
-		
-		additionalCell = headerRow.createCell(columnIndex);
-		headerName = "Total Waste Tonnage";
-		additionalCell.setCellValue(headerName);
-		additionalCell.setCellStyle(styles.get("header"));
-		sheet.addMergedRegion(new CellRangeAddress(headerRow.getRowNum(), headerRow1.getRowNum(), columnIndex, columnIndex));
-		cell1 = headerRow1.createCell(columnIndex);
-		cell1.setCellStyle(styles.get("header"));
-		columnWidths.add(256 * headerName.length());
-		columnIndex++;
 		
 		// sheet.createFreezePane(0, 1);
 
@@ -149,6 +179,42 @@ public class TransferStationIntakeReportGenerator extends ExcelReportGenerator {
 								cell.setCellValue(boxForEachYard.getNumBoxes());
 								columnIndex++;
 							}
+						} else if (fieldName.equals("rollOffTotals")) {
+							
+							cell = row.createCell(columnIndex);
+							cell.setCellStyle(styles.get("cell_normal_centered"));
+							cell.setCellValue(((BigDecimal) everyDataObject.getRollOffCubicYards()).doubleValue());
+							columnIndex++;
+							
+							cell = row.createCell(columnIndex);
+							cell.setCellStyle(styles.get("cell_normal_centered"));
+							cell.setCellValue(((BigDecimal) everyDataObject.getRollOffTonnage()).doubleValue());
+							columnIndex++;
+							
+						} else if (fieldName.equals("publicIntakeTotals")) {
+							cell = row.createCell(columnIndex);
+							cell.setCellStyle(styles.get("cell_normal_centered"));
+							cell.setCellValue(((BigDecimal) everyDataObject.getPublicIntakeTonnage()).doubleValue());
+							columnIndex++;
+							
+							cell = row.createCell(columnIndex);
+							cell.setCellStyle(styles.get("cell_normal_centered"));
+							cell.setCellValue(((BigDecimal) everyDataObject.getPublicIntakeCubicYards()).doubleValue());
+							columnIndex++;
+						} else if (fieldName.equals("wasteTotals")) {
+							cell = row.createCell(columnIndex);
+							cell.setCellStyle(styles.get("formula"));
+							String ref = ((char)('A' + cell.getColumnIndex()-1)) + "" + (cell.getRowIndex()+1) + ","  + (char)('A' + cell.getColumnIndex()-5) + (cell.getRowIndex()+1) ;
+			            System.out.println("Formula = " + ref);
+							cell.setCellFormula("SUM(" + ref + ")");
+							columnIndex++;
+							
+							cell = row.createCell(columnIndex);
+							cell.setCellStyle(styles.get("formula"));
+							ref = ((char)('A' + cell.getColumnIndex()-3)) + "" + (cell.getRowIndex()+1) + ","  + (char)('A' + cell.getColumnIndex()-4) + (cell.getRowIndex()+1) ;
+			            System.out.println("Formula = " + ref);
+							cell.setCellFormula("SUM(" + ref + ")");
+							columnIndex++;
 						} else {
 						
 							Field field = everyDataObject.getClass().getDeclaredField(fieldName);
@@ -194,24 +260,6 @@ public class TransferStationIntakeReportGenerator extends ExcelReportGenerator {
 						e.printStackTrace();
 					}
 				}
-				
-				// add waste total data
-				cell = row.createCell(columnIndex);
-				
-				cell.setCellStyle(styles.get("formula"));
-				String ref = ((char)('A' + cell.getColumnIndex()-1)) + "" + (cell.getRowIndex()+1) + ","  + (char)('A' + cell.getColumnIndex()-4) + (cell.getRowIndex()+1) ;
-            System.out.println("Formula = " + ref);
-				cell.setCellFormula("SUM(" + ref + ")");
-				columnIndex++;
-				
-				cell = row.createCell(columnIndex);
-				
-				cell.setCellStyle(styles.get("formula"));
-				ref = ((char)('A' + cell.getColumnIndex()-3)) + "" + (cell.getRowIndex()+1) + ","  + (char)('A' + cell.getColumnIndex()-4) + (cell.getRowIndex()+1) ;
-            System.out.println("Formula = " + ref);
-				cell.setCellFormula("SUM(" + ref + ")");
-				columnIndex++;
-
 			}
 		}
 
