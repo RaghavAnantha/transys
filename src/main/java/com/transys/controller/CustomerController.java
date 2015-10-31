@@ -388,40 +388,41 @@ public class CustomerController extends CRUDController<Customer> {
 		List<OrderReportVO> anOrderReportVOList = new ArrayList<OrderReportVO>();
 		for (Order anOrder : orderList) {
 			OrderReportVO anOrderReportVO = new OrderReportVO();
-			
-			anOrderReportVO.setId(anOrder.getId());
-			anOrderReportVO.setOrderDate(anOrder.getFormattedCreatedAt());
-			
-			anOrderReportVO.setDeliveryContactName(anOrder.getDeliveryContactName());
-			anOrderReportVO.setDeliveryContactPhone1(anOrder.getDeliveryContactPhone1());
-			anOrderReportVO.setDeliveryAddressFullLine(anOrder.getDeliveryAddress().getFullLine());
-			anOrderReportVO.setDeliveryCity(anOrder.getDeliveryAddress().getCity());
-			
-			anOrderReportVO.setStatus(anOrder.getOrderStatus().getStatus());
-			
-			anOrderReportVO.setDeliveryDate(anOrder.getFormattedDeliveryDate());
-			anOrderReportVO.setPickupDate(anOrder.getFormattedPickupDate());
-			
-			OrderFees anOrderFees = anOrder.getOrderFees();
-			anOrderReportVO.setDumpsterPrice(anOrderFees.getDumpsterPrice());
-			anOrderReportVO.setCityFee(anOrderFees.getCityFee());
-			anOrderReportVO.setPermitFees(anOrderFees.getTotalPermitFees());
-			anOrderReportVO.setOverweightFee(anOrderFees.getOverweightFee());
-			anOrderReportVO.setAdditionalFees(anOrderFees.getTotalAdditionalFees());
-			anOrderReportVO.setTotalFees(anOrderFees.getTotalFees());
-			
-			anOrderReportVO.setTotalAmountPaid(anOrder.getTotalAmountPaid());
-			anOrderReportVO.setBalanceAmountDue(anOrder.getBalanceAmountDue());
-			
+			map(anOrder, anOrderReportVO);
 			anOrderReportVOList.add(anOrderReportVO);
 			
-			totalOrderAmount = totalOrderAmount.add(anOrderFees.getTotalFees());
+			totalOrderAmount = totalOrderAmount.add(anOrderReportVO.getTotalFees());
 		}
 		
 		aCustomerReportVO.setTotalOrderAmount(totalOrderAmount);
       aCustomerReportVO.setTotalOrders(orderList.size());
 		
 		aCustomerReportVO.setOrderList(anOrderReportVOList);
+	}
+	
+	private void map(Order anOrder, OrderReportVO anOrderReportVO) {
+		anOrderReportVO.setId(anOrder.getId());
+		anOrderReportVO.setOrderDate(anOrder.getFormattedCreatedAt());
+		anOrderReportVO.setStatus(anOrder.getOrderStatus().getStatus());
+		
+		anOrderReportVO.setDeliveryContactName(anOrder.getDeliveryContactName());
+		anOrderReportVO.setDeliveryContactPhone1(anOrder.getDeliveryContactPhone1());
+		anOrderReportVO.setDeliveryAddressFullLine(anOrder.getDeliveryAddress().getFullLine());
+		anOrderReportVO.setDeliveryCity(anOrder.getDeliveryAddress().getCity());
+		
+		anOrderReportVO.setDeliveryDate(anOrder.getFormattedDeliveryDate());
+		anOrderReportVO.setPickupDate(anOrder.getFormattedPickupDate());
+		
+		OrderFees anOrderFees = anOrder.getOrderFees();
+		anOrderReportVO.setDumpsterPrice(anOrderFees.getDumpsterPrice());
+		anOrderReportVO.setCityFee(anOrderFees.getCityFee());
+		anOrderReportVO.setPermitFees(anOrderFees.getTotalPermitFees());
+		anOrderReportVO.setOverweightFee(anOrderFees.getOverweightFee());
+		anOrderReportVO.setAdditionalFees(anOrderFees.getTotalAdditionalFees());
+		anOrderReportVO.setTotalFees(anOrderFees.getTotalFees());
+		
+		anOrderReportVO.setTotalAmountPaid(anOrder.getTotalAmountPaid());
+		anOrderReportVO.setBalanceAmountDue(anOrder.getBalanceAmountDue());
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/generateCustomerListReport.do")

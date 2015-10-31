@@ -1,45 +1,40 @@
 <%@include file="/common/taglibs.jsp"%>
+<%@include file="/common/modal.jsp"%>
+
 <script type="text/javascript">
-function formatPhone(){	
-	var phone = document.getElementById("phone").value;
-	if(phone != ""){
-		if(phone.length < 10){
-			alert("Invalid Phone Number");
-			document.getElementById("phone").value = "";
-			return true;
-		}
-		else{
-			var str = new String(phone);
-			if(!str.match("-")){
-				var p1 = str.substring(0,3);
-				var p2 = str.substring(3,6);
-				var p3 = str.substring(6,10);				
-				var phone = p1 + "-" + p2 + "-" + p3;
-				document.getElementById("phone").value = phone;
-			}
-		}
+function validateAndFormatPhone(phoneId) {	
+	var phone = document.getElementById(phoneId).value;
+	if (phone == "") {
+		return;
+	}
+	
+	if (phone.length < 10  || phone.length > 12 
+			|| (phone.length > 10 && !phone.match("-"))) {
+		var alertMsg = "<p>Invalid Phone/Fax Number.</p>";
+		showAlertDialog("Data validation", alertMsg);
+		
+		document.getElementById(phoneId).value = "";
+		return false;
+	} else {
+		var formattedPhone = formatPhone(phone);
+		document.getElementById(phoneId).value = formattedPhone;
 	}	
 }
 
-function formatFax() {
-	var fax = document.getElementById("fax").value;
-	if(fax != ""){
-		if(fax.length < 10){
-			alert("Invalid Phone Number");
-			document.getElementById("fax").value = "";
-			return true;
-		}
-		else{
-			var str = new String(fax);
-			if(!str.match("-")){
-				var p1 = str.substring(0,3);
-				var p2 = str.substring(3,6);
-				var p3 = str.substring(6,10);				
-				var fax = p1 + "-" + p2 + "-" + p3;
-				document.getElementById("fax").value = fax;
-			}
-		}
-	}	
+function formatPhone(phone) {
+	if (phone.length < 10) {
+		return phone;
+	}
+	
+	var str = new String(phone);
+	if (str.match("-")) {
+		return phone;
+	}
+	
+	var p1 = str.substring(0,3);
+	var p2 = str.substring(3,6);
+	var p3 = str.substring(6,10);				
+	return p1 + "-" + p2 + "-" + p3;
 }
 </script>
 <form:form action="save.do" name="customerForm" id="customerForm" commandName="modelObject" method="post">
@@ -166,7 +161,7 @@ function formatFax() {
 		<td class="form-left">Alt Phone1</td>
 			<td align="${left}">
 				<form:input path="altPhone1" cssClass="flat flat-ext"  maxlength="12" 
-					id="altPhone1" onkeypress="return onlyNumbers(event, false)" onblur="return formatPhone();"/>
+					id="altPhone1" onblur="return validateAndFormatPhone('altPhone1');"/>
 			 	<br><form:errors path="altPhone1" cssClass="errorMessage" />
 			</td>
 		</tr>
@@ -174,13 +169,13 @@ function formatFax() {
 			<td class="form-left">Phone<span class="errorMessage">*</span></td>
 			<td align="${left}">
 				<form:input path="phone" cssClass="flat flat-ext"  maxlength="12" 
-					id="phone" onkeypress="return onlyNumbers(event, false)" onblur="return formatPhone();"/>
+					id="phone" onblur="return validateAndFormatPhone('phone');"/>
 			 	<br><form:errors path="phone" cssClass="errorMessage" />
 			</td>
 			<td class="form-left">Alt Phone2</td>
 			<td align="${left}">
 				<form:input path="altPhone2" cssClass="flat flat-ext"  maxlength="12" 
-					id="altPhone2" onkeypress="return onlyNumbers(event, false)" onblur="return formatPhone();"/>
+					id="altPhone2" onblur="return validateAndFormatPhone('altPhone2');"/>
 			 	<br><form:errors path="altPhone2" cssClass="errorMessage" />
 			</td>
 		</tr>
@@ -193,7 +188,7 @@ function formatFax() {
 			<td class="form-left">Fax</td>
 			<td align="${left}">
 				<form:input path="fax" cssClass="flat flat-ext" maxlength="12" 
-					id="fax" onkeypress="return onlyNumbers(event, false)" onblur="return formatFax();"/>
+					id="fax" onblur="return validateAndFormatPhone('fax');"/>
 				 <br><form:errors path="fax" cssClass="errorMessage" />
 			</td>
 		</tr>

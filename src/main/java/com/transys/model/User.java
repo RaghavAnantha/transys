@@ -54,10 +54,10 @@ public class User extends AbstractBaseModel implements Comparable, Auditable {
 	private String name;
 	
 	@Column(name = "phoneNumber")
-	@Pattern(regexp = "[0-9]*", message = "Phone number should be numeric.")
+	//@Pattern(regexp = "[0-9]*", message = "Phone number should be numeric.")
 	private String phoneNumber;
 	
-	@Pattern(regexp = "[0-9]*", message = "Mobile number should be numeric.")
+	//@Pattern(regexp = "[0-9]*", message = "Mobile number should be numeric.")
 	@Column(name = "mobileNo")
 	private String mobileNo;
 	

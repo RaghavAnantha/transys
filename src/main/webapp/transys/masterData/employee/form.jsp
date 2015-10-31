@@ -1,27 +1,41 @@
 <%@include file="/common/taglibs.jsp"%>
+<%@include file="/common/modal.jsp"%>
 
 <script type="text/javascript">
-function formatPhone(){	
-	var phone = document.getElementById("phone").value;
-	if(phone != ""){
-		if(phone.length < 10){
-			alert("Invalid Phone Number");
-			document.getElementById("phone").value = "";
-			return true;
-		}
-		else{
-			var str = new String(phone);
-			if(!str.match("-")){
-				var p1 = str.substring(0,3);
-				var p2 = str.substring(3,6);
-				var p3 = str.substring(6,10);				
-				var phone = p1 + "-" + p2 + "-" + p3;
-				document.getElementById("phone").value = phone;
-			}
-		}
+function validateAndFormatPhone(phoneId) {	
+	var phone = document.getElementById(phoneId).value;
+	if (phone == "") {
+		return;
+	}
+	
+	if (phone.length < 10  || phone.length > 12 
+			|| (phone.length > 10 && !phone.match("-"))) {
+		var alertMsg = "<p>Invalid Phone Number.</p>";
+		showAlertDialog("Data validation", alertMsg);
+		
+		document.getElementById(phoneId).value = "";
+		return false;
+	} else {
+		var formattedPhone = formatPhone(phone);
+		document.getElementById(phoneId).value = formattedPhone;
 	}	
 }
 
+function formatPhone(phone) {
+	if (phone.length < 10) {
+		return phone;
+	}
+	
+	var str = new String(phone);
+	if (str.match("-")) {
+		return phone;
+	}
+	
+	var p1 = str.substring(0,3);
+	var p2 = str.substring(3,6);
+	var p3 = str.substring(6,10);				
+	return p1 + "-" + p2 + "-" + p3;
+}
 </script>
 <br />
 
@@ -91,8 +105,8 @@ function formatPhone(){
 		</tr>
 		
 		<tr>
-			<td class="form-left"><transys:label code="Phone" /><span class="errorMessage">*</span></td>
-			<td><form:input path="phone" cssClass="flat" style="width: 175px !important" onkeypress="return onlyNumbers(event, false)" onblur="return formatPhone();"/>
+			<td class="form-left">Phone<span class="errorMessage">*</span></td>
+			<td><form:input path="phone" cssClass="flat" style="width: 175px !important" maxlength="12" onblur="return validateAndFormatPhone('phone');"/>
 				<br>
 			<form:errors path="phone" cssClass="errorMessage" /></td>
 			

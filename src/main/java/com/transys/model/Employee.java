@@ -11,7 +11,6 @@ import javax.persistence.Table;
 @Entity
 @Table(name="employee")
 public class Employee extends AbstractBaseModel {
-	
 	@Column(name="firstName")
 	private String firstName;
 	

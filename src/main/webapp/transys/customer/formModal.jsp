@@ -1,5 +1,24 @@
 <%@include file="/common/taglibs.jsp"%>
 <script type="text/javascript">
+function validateAndFormatPhoneModal(phoneId) {	
+	var phone = document.getElementById(phoneId).value;
+	if (phone == "") {
+		return;
+	}
+	
+	if (phone.length < 10  || phone.length > 12
+			|| (phone.length > 10 && !phone.match("-"))) {
+		var alertMsg = "Invalid Phone Number";
+		alert(alertMsg);
+		
+		document.getElementById(phoneId).value = "";
+		return false;
+	} else {
+		var formattedPhone = formatPhone(phone);
+		document.getElementById(phoneId).value = formattedPhone;
+	}	
+}
+
 $("#customerModalForm").submit(function (ev) {
 	var $this = $(this);
 	
@@ -84,31 +103,31 @@ $("#customerModalForm").submit(function (ev) {
 		</tr>
 		<tr>
 			<td class="form-left">Address Line1<span class="errorMessage">*</span></td>
-			<td align="${left}">
+			<td>
 				<form:input path="billingAddressLine1" cssClass="flat flat-ext"/>
 				 <br><form:errors path="billingAddressLine1" cssClass="errorMessage" />
 			</td>
 			<td class="form-left">Address Line2</td>
-			<td align="${left}">
+			<td>
 				<form:input path="billingAddressLine2" cssClass="flat flat-ext" />
 				 <br><form:errors path="billingAddressLine2" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>
 			<td class="form-left">City<span class="errorMessage">*</span></td>
-			<td align="${left}">
+			<td>
 				<form:input cssClass="flat flat-ext" path="city" />
 				<br><form:errors path="city" cssClass="errorMessage" />
 			</td>
 			<td class="form-left">Zipcode<span class="errorMessage">*</span></td>
 			<td>
-				<form:input path="zipcode" cssClass="flat flat-ext"  maxlength="5" onkeypress="return onlyNumbers(event, false)"/>
+				<form:input path="zipcode" cssClass="flat flat-ext"  maxlength="5" />
 			 	<br><form:errors path="zipcode" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>
 			<td class="form-left">State<span class="errorMessage">*</span></td>
-			<td align="${left}">
+			<td>
 				<form:select cssClass="flat form-control input-sm" path="state" style="width:172px !important">
 					<form:option value="">----Please Select----</form:option>
 					<form:options items="${state}" itemValue="id" itemLabel="name" />
@@ -127,40 +146,40 @@ $("#customerModalForm").submit(function (ev) {
 		</tr>
 		<tr>
 		<td class="form-left">Contact Name<span class="errorMessage">*</span></td>
-		<td align="${left}">
+		<td>
 			<form:input path="contactName" cssClass="flat flat-ext" />	 	
 		</td>
 		<td class="form-left">Alt Phone1</td>
-			<td align="${left}">
-				<form:input path="altPhone1" cssClass="flat flat-ext"  maxlength="12" 
-					id="altPhone1" onkeypress="return onlyNumbers(event, false)" onblur="return validateAndFormatPhone('altPhone1');"/>
+			<td>
+				<form:input path="altPhone1" cssClass="flat flat-ext" maxlength="12" 
+					id="altPhone1" onblur="return validateAndFormatPhoneModal('altPhone1');"/>
 			 	<br><form:errors path="altPhone1" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>
 			<td class="form-left">Phone<span class="errorMessage">*</span></td>
-			<td align="${left}">
-				<form:input path="phone" cssClass="flat flat-ext"  maxlength="12" 
-					id="phone" onkeypress="return onlyNumbers(event, false)" onblur="return validateAndFormatPhone('phone');"/>
+			<td>
+				<form:input path="phone" cssClass="flat flat-ext" maxlength="12" 
+					id="phone" onblur="return validateAndFormatPhoneModal('phone');"/>
 			 	<br><form:errors path="phone" cssClass="errorMessage" />
 			</td>
 			<td class="form-left">Alt Phone2</td>
-			<td align="${left}">
-				<form:input path="altPhone2" cssClass="flat flat-ext"  maxlength="12" 
-					id="altPhone2" onkeypress="return onlyNumbers(event, false)" onblur="return validateAndFormatPhone('altPhone2');"/>
+			<td>
+				<form:input path="altPhone2" cssClass="flat flat-ext" maxlength="12" 
+					id="altPhone2" onblur="return validateAndFormatPhoneModal('altPhone2');"/>
 			 	<br><form:errors path="altPhone2" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>
 			<td class="form-left">Email<span class="errorMessage">*</span></td>
-			<td align="${left}">
+			<td>
 				<form:input path="email" cssClass="flat flat-ext" id="email" />
 				<br><form:errors path="email" cssClass="errorMessage" />
 			</td>
 			<td class="form-left">Fax</td>
-			<td align="${left}">
+			<td>
 				<form:input path="fax" cssClass="flat flat-ext" maxlength="12" 
-					id="fax" onkeypress="return onlyNumbers(event, false)" onblur="return validateAndFormatPhone('fax');"/>
+					id="fax" onblur="return validateAndFormatPhoneModal('fax');"/>
 				 <br><form:errors path="fax" cssClass="errorMessage" />
 			</td>
 		</tr>

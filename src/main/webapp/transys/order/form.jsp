@@ -4,16 +4,17 @@
 <script type="text/javascript">
 function validateAndFormatPhone(phoneId) {	
 	var phone = document.getElementById(phoneId).value;
-	if(phone == "") {
+	if (phone == "") {
 		return;
 	}
 	
-	if(phone.length < 10) {
+	if (phone.length < 10  || phone.length > 12
+			|| (phone.length > 10 && !phone.match("-"))) {
 		var alertMsg = "<p>Invalid Phone Number.</p>";
 		showAlertDialog("Data validation", alertMsg);
 		
 		document.getElementById(phoneId).value = "";
-		return true;
+		return false;
 	} else {
 		var formattedPhone = formatPhone(phone);
 		document.getElementById(phoneId).value = formattedPhone;
@@ -21,12 +22,12 @@ function validateAndFormatPhone(phoneId) {
 }
 
 function formatPhone(phone) {
-	if(phone.length < 10) {
+	if (phone.length < 10) {
 		return phone;
 	}
 	
 	var str = new String(phone);
-	if(str.match("-")) {
+	if (str.match("-")) {
 		return phone;
 	}
 	
@@ -561,19 +562,19 @@ function verifyExchangeOrderAndSubmit() {
 			</td>
 		</tr>
 		<tr>
-			<td class="form-left"><transys:label code="Address" /><span class="errorMessage"></span></td>
-			<td class="td-static" id="billingAddressTd">${modelObject.customer.getBillingAddress()}</td>
+			<td class="form-left">Address<span class="errorMessage"></span></td>
+			<td class="td-static" id="billingAddressTd">${modelObject.customer.getBillingAddress("<br>")}</td>
 		</tr>
 		<tr>
-			<td class="form-left"><transys:label code="Contact" /><span class="errorMessage"></span></td>
+			<td class="form-left">Contact<span class="errorMessage"></span></td>
 			<td class="td-static" id="billingContactTd">${modelObject.customer.contactName}</td>
-			<td class="form-left"><transys:label code="Fax"/></td>
+			<td class="form-left">Fax</td>
 			<td class="td-static" id="billingFaxTd">${modelObject.customer.getFormattedFax()}</td>
 		</tr>
 		<tr>
-			<td class="form-left"><transys:label code="Phone" /><span class="errorMessage"></span></td>
+			<td class="form-left">Phone<span class="errorMessage"></span></td>
 			<td class="td-static" id="billingPhoneTd">${modelObject.customer.getFormattedPhone()}</td>
-			<td class="form-left"><transys:label code="Email"/></td>
+			<td class="form-left">Email</td>
 			<td class="td-static" id="billingEmailTd">${modelObject.customer.email}</td>
 		</tr>
 		<tr>
@@ -615,34 +616,35 @@ function verifyExchangeOrderAndSubmit() {
 			</td>
 		</tr>
 		<tr>
-			<td class="form-left"><transys:label code="Phone1"/><span class="errorMessage">*</span></td>
+			<td class="form-left">Phone1<span class="errorMessage">*</span></td>
 			<td>
 				<form:input path="deliveryContactPhone1" cssClass="flat" style="width:172px !important" maxlength="12" 
-					id="deliveryContactPhone1" onkeypress="return onlyNumbers(event, false)" onblur="return validateAndFormatPhone('deliveryContactPhone1');"/>
+					id="deliveryContactPhone1" onblur="return validateAndFormatPhone('deliveryContactPhone1');"/>
 				<form:errors path="deliveryContactPhone1" cssClass="errorMessage" />
 			</td>
-			<td class="form-left"><transys:label code="Phone2"/></td>
+			<td class="form-left">Phone2</td>
 			<td>
-				<form:input path="deliveryContactPhone2" id="deliveryContactPhone2" cssClass="flat" style="width:172px !important"/>
+				<form:input path="deliveryContactPhone2" id="deliveryContactPhone2" cssClass="flat" style="width:172px !important" maxlength="12"
+					onblur="return validateAndFormatPhone('deliveryContactPhone2');"/>
 				<form:errors path="deliveryContactPhone2" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>
-			<td class="form-left"><transys:label code="Delivery Date"/><span class="errorMessage">*</span></td>
+			<td class="form-left">Delivery Date<span class="errorMessage">*</span></td>
 			<td>
 				<form:input path="deliveryDate" cssClass="flat" style="width:172px !important" id="datepicker7" name="deliveryDate"/>
 				 <form:errors path="deliveryDate" cssClass="errorMessage" />
 			</td>
-			<td class="form-left"><transys:label code="Delivery Time"/><span class="errorMessage">*</span></td>
+			<td class="form-left">Delivery Time<span class="errorMessage">*</span></td>
 			<td>
 				<label style="display: inline-block; font-weight: normal">
-					<form:select id="deliveryHourFrom" cssClass="flat form-control input-sm" style="width:99px !important" path="deliveryHourFrom"> 
+					<form:select id="deliveryHourFrom" cssClass="flat form-control input-sm" style="width:79px !important" path="deliveryHourFrom"> 
 						<form:options items="${deliveryHours}" />
 					</form:select>
 				</label>
 				&nbsp;to&nbsp;
 				<label style="display: inline-block; font-weight: normal">
-					<form:select id="deliveryHourTo" cssClass="flat form-control input-sm" style="width:99px !important" path="deliveryHourTo"> 
+					<form:select id="deliveryHourTo" cssClass="flat form-control input-sm" style="width:79px !important" path="deliveryHourTo"> 
 						<form:options items="${deliveryHours}" />
 					</form:select>
 				</label>

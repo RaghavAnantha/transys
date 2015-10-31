@@ -307,6 +307,21 @@ public class Order extends AbstractBaseModel {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
 		return dateFormat.format(deliveryDate);
 	}
+	
+	@Transient
+	public String getDeliveryDateTime() {
+		String deliveryDate = getFormattedDeliveryDate();
+		if (StringUtils.isEmpty(deliveryDate)) {
+			return StringUtils.EMPTY;
+		}
+		
+		if (!StringUtils.isEmpty(deliveryHourFrom)) {
+			deliveryDate += " ";
+			deliveryDate += deliveryHourFrom;
+		}
+		
+		return deliveryDate;
+	}
 
 	public void setDeliveryDate(Date deliveryDate) {
 		this.deliveryDate = deliveryDate;
