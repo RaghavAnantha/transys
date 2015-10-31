@@ -282,8 +282,8 @@ public class CustomerController extends CRUDController<Customer> {
 		if (StringUtils.isEmpty(orderDateFrom)) {
 			if (!customerReportVOList.isEmpty() && !customerReportVOList.get(0).getOrderList().isEmpty()) {
 				List<OrderReportVO> orderList = customerReportVOList.get(0).getOrderList();
-				orderDateFrom = orderList.get(0).getCreatedAt();
-				orderDateTo = orderList.get(orderList.size() - 1).getCreatedAt();
+				orderDateFrom = orderList.get(0).getOrderDate();
+				orderDateTo = orderList.get(orderList.size() - 1).getOrderDate();
 			}
 		}
 		
@@ -390,7 +390,7 @@ public class CustomerController extends CRUDController<Customer> {
 			OrderReportVO anOrderReportVO = new OrderReportVO();
 			
 			anOrderReportVO.setId(anOrder.getId());
-			anOrderReportVO.setCreatedAt(anOrder.getFormattedCreatedAt());
+			anOrderReportVO.setOrderDate(anOrder.getFormattedCreatedAt());
 			
 			anOrderReportVO.setDeliveryContactName(anOrder.getDeliveryContactName());
 			anOrderReportVO.setDeliveryContactPhone1(anOrder.getDeliveryContactPhone1());

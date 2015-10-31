@@ -77,7 +77,7 @@ function populateMaterialTypes() {
 	<tr>
 		<td></td>
 		<td><input type="button" class="btn btn-primary btn-sm btn-sm-ext" onclick="document.forms['recycleReportForm'].submit();"
-			value="<transys:label code="Preview"/>" /></td>
+			value="Preview" /></td>
 	</tr>
 	<tr><td></td></tr>
 	</table>

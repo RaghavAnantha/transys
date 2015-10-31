@@ -719,7 +719,7 @@ public class OrderController extends CRUDController<Order> {
 			List<Order> orderList = genericDAO.executeSimpleQuery(query);
 			
 			OrderReportVO anOrderReportVO = new OrderReportVO();
-			anOrderReportVO.setDeliveryDate("10/20/2015");
+			map(orderList.get(0), anOrderReportVO);
 			
 			List<OrderReportVO> orderReportVOList = new ArrayList<OrderReportVO>();
 			orderReportVOList.add(anOrderReportVO);
@@ -741,6 +741,32 @@ public class OrderController extends CRUDController<Order> {
 			request.getSession().setAttribute("errors", e.getMessage());
 			
 		}
+	}
+	
+	private void map(Order anOrder, OrderReportVO anOrderReportVO) {
+		anOrderReportVO.setId(anOrder.getId());
+		anOrderReportVO.setOrderDate(anOrder.getFormattedCreatedAt());
+		
+		anOrderReportVO.setDeliveryContactName(anOrder.getDeliveryContactName());
+		anOrderReportVO.setDeliveryContactPhone1(anOrder.getDeliveryContactPhone1());
+		anOrderReportVO.setDeliveryAddressFullLine(anOrder.getDeliveryAddress().getFullLine());
+		anOrderReportVO.setDeliveryCity(anOrder.getDeliveryAddress().getCity());
+		
+		anOrderReportVO.setStatus(anOrder.getOrderStatus().getStatus());
+		
+		anOrderReportVO.setDeliveryDate(anOrder.getFormattedDeliveryDate());
+		anOrderReportVO.setPickupDate(anOrder.getFormattedPickupDate());
+		
+		OrderFees anOrderFees = anOrder.getOrderFees();
+		anOrderReportVO.setDumpsterPrice(anOrderFees.getDumpsterPrice());
+		anOrderReportVO.setCityFee(anOrderFees.getCityFee());
+		anOrderReportVO.setPermitFees(anOrderFees.getTotalPermitFees());
+		anOrderReportVO.setOverweightFee(anOrderFees.getOverweightFee());
+		anOrderReportVO.setAdditionalFees(anOrderFees.getTotalAdditionalFees());
+		anOrderReportVO.setTotalFees(anOrderFees.getTotalFees());
+		
+		anOrderReportVO.setTotalAmountPaid(anOrder.getTotalAmountPaid());
+		anOrderReportVO.setBalanceAmountDue(anOrder.getBalanceAmountDue());
 	}
 	
 	private void populateOrderReportData(SearchCriteria criteria, 

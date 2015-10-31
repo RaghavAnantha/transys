@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
-<!-- 2015-10-31T00:53:59 -->
+<!-- 2015-10-31T13:24:00 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="orderPrint" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="f412ce57-68ae-45e8-90e9-b1c053e29ef7">
 	<parameter name="LOGO_FILE_PATH" class="java.lang.String">
 		<parameterDescription><![CDATA[]]></parameterDescription>
@@ -21,10 +21,10 @@
 	<field name="pickupDate" class="java.lang.String"/>
 	<field name="materialType" class="java.lang.String"/>
 	<field name="dumpsterSize" class="java.lang.String"/>
-	<field name="dumpsterPrice" class="java.lang.String"/>
-	<field name="permitFee" class="java.lang.String"/>
-	<field name="additionalFee" class="java.lang.String"/>
-	<field name="totalFees" class="java.lang.String"/>
+	<field name="dumpsterPrice" class="java.math.BigDecimal"/>
+	<field name="permitFees" class="java.math.BigDecimal"/>
+	<field name="additionalFees" class="java.math.BigDecimal"/>
+	<field name="totalFees" class="java.math.BigDecimal"/>
 	<field name="paymentMethod" class="java.lang.String"/>
 	<field name="referenceNum" class="java.lang.String"/>
 	<background>
@@ -366,7 +366,7 @@
 				<reportElement x="270" y="178" width="100" height="20" uuid="f1c1196c-d672-49a3-91c6-6b06daa2d9b8">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
-				<textFieldExpression><![CDATA[$F{additionalFee}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{additionalFees}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="266" y="160" width="100" height="40" uuid="4bcc3116-f177-4798-bafb-ab62bc30ecc2">
@@ -404,7 +404,7 @@
 				<reportElement x="144" y="178" width="100" height="20" uuid="7a150e66-8746-4582-b7ba-71bcbe856e02">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
-				<textFieldExpression><![CDATA[$F{permitFee}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{permitFees}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="10" y="178" width="100" height="20" uuid="8eb413c8-ae79-4477-a46a-50a5bf360527">
