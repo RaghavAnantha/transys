@@ -121,7 +121,4 @@ public class DeliveryAddress extends AbstractBaseModel {
 	public void setZipcode(String zipcode) {
 		this.zipcode = zipcode;
 	}
-	
-	
-	
 }
