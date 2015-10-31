@@ -177,7 +177,7 @@ public class ExcelReportGenerator {
       headerFont.setBoldweight(Font.BOLDWEIGHT_BOLD);
       style = createBorderedStyle(wb);
       style.setAlignment(CellStyle.ALIGN_CENTER);
-      style.setFillForegroundColor(IndexedColors.GREY_40_PERCENT.getIndex());
+      style.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
       style.setFillPattern(CellStyle.SOLID_FOREGROUND);
       style.setFont(headerFont);
       styles.put("header", style);
@@ -226,8 +226,8 @@ public class ExcelReportGenerator {
       style = createBorderedStyle(wb);
       style.setAlignment(CellStyle.ALIGN_CENTER);
       style.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
-      style.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
-      style.setFillPattern(CellStyle.SOLID_FOREGROUND);
+//      style.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
+//      style.setFillPattern(CellStyle.SOLID_FOREGROUND);
       style.setDataFormat(wb.createDataFormat().getFormat("0.00"));
       styles.put("formula", style);
       

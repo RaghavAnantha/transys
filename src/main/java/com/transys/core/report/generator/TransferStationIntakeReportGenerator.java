@@ -94,6 +94,10 @@ public class TransferStationIntakeReportGenerator extends ExcelReportGenerator {
 					}
 					
 				}
+				
+				for (int i = columnIndex+1; i < columnIndex + toMergeCount; i++) {
+					headerRow1.createCell(i).setCellStyle(styles.get("header"));
+				}
 				sheet.addMergedRegion(new CellRangeAddress(headerRow1.getRowNum(), headerRow1.getRowNum(), columnIndex, columnIndex + (toMergeCount-1)));
 				columnIndex += toMergeCount;
 			} else if (headerName.equals("Public Intake Totals")) {
@@ -104,6 +108,8 @@ public class TransferStationIntakeReportGenerator extends ExcelReportGenerator {
 				String valueForCell = "Tonnage";
 				cell1.setCellValue(valueForCell);
 				columnWidths.add(256 * valueForCell.length());
+				
+				headerRow2.createCell(mergeCol).setCellStyle(styles.get("header"));
 				sheet.addMergedRegion(new CellRangeAddress(headerRow1.getRowNum(), headerRow2.getRowNum(), mergeCol, mergeCol));
 				mergeCol++;
 				
@@ -112,8 +118,13 @@ public class TransferStationIntakeReportGenerator extends ExcelReportGenerator {
 				valueForCell = "Cubic Yard Conversion";
 				cell1.setCellValue(valueForCell);
 				columnWidths.add(256 * valueForCell.length());
+				
+				headerRow2.createCell(mergeCol).setCellStyle(styles.get("header"));
 				sheet.addMergedRegion(new CellRangeAddress(headerRow1.getRowNum(), headerRow2.getRowNum(), mergeCol, mergeCol));
 				
+				for (int i = columnIndex+1; i < columnIndex + toMergeCount; i++) {
+					headerRow.createCell(i).setCellStyle(styles.get("header"));
+				}
 				sheet.addMergedRegion(new CellRangeAddress(headerRow.getRowNum(), headerRow.getRowNum(), columnIndex, columnIndex + (toMergeCount-1)));
 				columnIndex += toMergeCount;
 			} else if (headerName.equals("Roll Off Totals")) { 
@@ -124,6 +135,8 @@ public class TransferStationIntakeReportGenerator extends ExcelReportGenerator {
 				String valueForCell = "Cubic Yards";
 				cell1.setCellValue(valueForCell);
 				columnWidths.add(256 * valueForCell.length());
+				
+				headerRow2.createCell(mergeCol).setCellStyle(styles.get("header"));
 				sheet.addMergedRegion(new CellRangeAddress(headerRow1.getRowNum(), headerRow2.getRowNum(), mergeCol, mergeCol));
 				mergeCol++;
 				
@@ -132,8 +145,13 @@ public class TransferStationIntakeReportGenerator extends ExcelReportGenerator {
 				valueForCell = "Actual Tonnage";
 				cell1.setCellValue(valueForCell);
 				columnWidths.add(256 * valueForCell.length());
+				
+				headerRow2.createCell(mergeCol).setCellStyle(styles.get("header"));
 				sheet.addMergedRegion(new CellRangeAddress(headerRow1.getRowNum(), headerRow2.getRowNum(), mergeCol, mergeCol));
 				
+				for (int i = columnIndex+1; i < columnIndex + toMergeCount; i++) {
+					headerRow.createCell(i).setCellStyle(styles.get("header"));
+				}
 				sheet.addMergedRegion(new CellRangeAddress(headerRow.getRowNum(), headerRow.getRowNum(), columnIndex, columnIndex + (toMergeCount-1)));
 				columnIndex += toMergeCount;
 			} else if (headerName.equals("Waste Totals")) {
@@ -144,6 +162,8 @@ public class TransferStationIntakeReportGenerator extends ExcelReportGenerator {
 				String valueForCell = "Cubic Yards";
 				cell1.setCellValue(valueForCell);
 				columnWidths.add(256 * valueForCell.length());
+				
+				headerRow2.createCell(mergeCol).setCellStyle(styles.get("header"));
 				sheet.addMergedRegion(new CellRangeAddress(headerRow1.getRowNum(), headerRow2.getRowNum(), mergeCol, mergeCol));
 				mergeCol++;
 				
@@ -152,8 +172,13 @@ public class TransferStationIntakeReportGenerator extends ExcelReportGenerator {
 				valueForCell = "Tonnage";
 				cell1.setCellValue(valueForCell);
 				columnWidths.add(256 * valueForCell.length());
+				
+				headerRow2.createCell(mergeCol).setCellStyle(styles.get("header"));
 				sheet.addMergedRegion(new CellRangeAddress(headerRow1.getRowNum(), headerRow2.getRowNum(), mergeCol, mergeCol));
 				
+				for (int i = columnIndex+1; i < columnIndex + toMergeCount; i++) {
+					headerRow.createCell(i).setCellStyle(styles.get("header"));
+				}
 				sheet.addMergedRegion(new CellRangeAddress(headerRow.getRowNum(), headerRow.getRowNum(), columnIndex, columnIndex + (toMergeCount-1)));
 				columnIndex += toMergeCount;
 			} else {
