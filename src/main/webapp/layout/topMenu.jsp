@@ -26,6 +26,7 @@
 							<li><a href="/reports/dumpsterRentedReport/main.do">Dumpsters Rented Report</a></li>
 							<li><a href="/reports/recycleReport/main.do">Recycle Report</a></li>
 							<li><a href="/reports/materialIntakeDailyReport/main.do">Material Intake Daily Report</a></li>
+							<li><a href="/reports/monthlyTransferStationIntakeReport/main.do">Monthly Transfer Station Intake Report</a></li>
 						</ul>
 					</li>
 					<li id="masterDataPage">
