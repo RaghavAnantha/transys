@@ -221,7 +221,7 @@ public class MonthlyTransferStationIntakeReportController extends CRUDController
 					e.printStackTrace();
 				}
 				
-				System.out.println("JSON Response = " + jsonResponse);
+				//System.out.println("JSON Response = " + jsonResponse);
 				
 				if (jsonResponse.startsWith("\"")) {
 					jsonResponse = jsonResponse.substring(1, jsonResponse.length() - 1);
