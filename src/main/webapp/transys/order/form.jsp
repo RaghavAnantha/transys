@@ -38,6 +38,11 @@ function formatPhone(phone) {
 }
 
 function populateCustomerInfo() {
+	emptyCustomerBillingAddress();
+	
+	var deliveryAddressSelect = $('#deliveryAddressSelect');
+	emptySelect(deliveryAddressSelect);
+	
 	var customerSelect =  $('#customerSelect');
 	var customerId = customerSelect.val();
 	if (customerId == "") {
@@ -48,8 +53,15 @@ function populateCustomerInfo() {
 	retrieveAndPopulateCustomerBillingAddress();
 }
 
+function emptySelect(selectElem) {
+	selectElem.empty();
+	
+	var firstOption = $('<option value="">'+ "-----Please Select-----" +'</option>');
+	selectElem.append(firstOption);
+}
+
 function retrieveAndPopulateDeliveryAddress() {
-	var customerSelect =  $('#customerSelect');
+	var customerSelect = $('#customerSelect');
 	var customerId = customerSelect.val();
 	$.ajax({
   		url: "customerDeliveryAddress.do?id=" + customerId,
@@ -63,10 +75,7 @@ function retrieveAndPopulateDeliveryAddress() {
 
 function populateDeliveryAddress(addressList) {
 	var deliveryAddressSelect = $('#deliveryAddressSelect');
-	deliveryAddressSelect.empty();
-	
-	var firstOption = $('<option value="">'+ "-----Please Select-----" +'</option>');
-	deliveryAddressSelect.append(firstOption);
+	emptySelect(deliveryAddressSelect);
 	
 	$.each(addressList, function () {
    		$("<option />", {
@@ -82,27 +91,19 @@ function handleDumpsterSizeChange() {
 }
 
 function populatePermitClass() {
-	var dumpsterSizeSelect =  $('#dumpsterSize');
-	var dumpsterSizeId = dumpsterSizeSelect.val();
-	
-	if (dumpsterSizeId == "") {
-		return false;
-	}
-	
 	var permitClassSelect1 = $("#permitClasses" + 1);
 	var permitClassSelect2 = $('#permitClasses' + 2);
 	var permitClassSelect3 = $('#permitClasses' + 3);
 	
-	permitClassSelect1.empty();
-	permitClassSelect2.empty();
-	permitClassSelect3.empty();
+	emptySelect(permitClassSelect1);
+	emptySelect(permitClassSelect2);
+	emptySelect(permitClassSelect3);
 	
-	var firstOption1 = $('<option value="">'+ "-----Please Select-----" +'</option>');
-	permitClassSelect1.append(firstOption1);
-	var firstOption2 = $('<option value="">'+ "-----Please Select-----" +'</option>');
-	permitClassSelect2.append(firstOption2);
-	var firstOption3 = $('<option value="">'+ "-----Please Select-----" +'</option>');
-	permitClassSelect3.append(firstOption3);
+	var dumpsterSizeSelect =  $('#dumpsterSize');
+	var dumpsterSizeId = dumpsterSizeSelect.val();
+	if (dumpsterSizeId == "") {
+		return false;
+	}
 	
 	$.ajax({
   		url: "retrievePermitClass.do?dumpsterSizeId=" + dumpsterSizeId,
@@ -151,11 +152,21 @@ function retrieveAndPopulateCustomerBillingAddress() {
 }
 
 function populateCustomerBillingAddress(customer) {
+	emptyCustomerBillingAddress();
+	
 	$('#billingAddressTd').html(customer.billingAddress);
 	$('#billingContactTd').html(customer.contactName);
 	$('#billingPhoneTd').html(customer.formattedPhone);
 	$('#billingFaxTd').html(customer.formattedFax);
 	$('#billingEmailTd').html(customer.email);
+}
+
+function emptyCustomerBillingAddress() {
+	$('#billingAddressTd').html("");
+	$('#billingContactTd').html("");
+	$('#billingPhoneTd').html("");
+	$('#billingFaxTd').html("");
+	$('#billingEmailTd').html("");
 }
 
 function appendDeliveryAddress(address) {
@@ -184,17 +195,17 @@ function appendPermit(permit) {
 }
 
 function populateMaterialCategories() {
+	var materialCategorySelect = $("#materialCategory");
+	emptySelect(materialCategorySelect);
+	
+	var materialTypeSelect = $("#materialType");
+	emptySelect(materialTypeSelect);
+	
 	var dumpsterSizeSelect = $("#dumpsterSize");
 	var dumpsterSizeId = dumpsterSizeSelect.val();
 	if (dumpsterSizeId == "") {
 		return false;
 	}
-	
-	var materialCategorySelect = $("#materialCategory");
-	materialCategorySelect.empty();
-	
-	var firstOption = $('<option value="">'+ "-----Please Select-----" +'</option>');
-	materialCategorySelect.append(firstOption);
 	
 	$.ajax({
   		url: "retrieveMaterialCategories.do?" + "dumpsterSizeId=" + dumpsterSizeId,
@@ -212,6 +223,9 @@ function populateMaterialCategories() {
 }
 
 function populateMaterialTypes() {
+	var materialTypeSelect = $("#materialType");
+	emptySelect(materialTypeSelect);
+	
 	var dumpsterSizeSelect = $("#dumpsterSize");
 	var dumpsterSizeId = dumpsterSizeSelect.val();
 	
@@ -221,12 +235,6 @@ function populateMaterialTypes() {
 	if (dumpsterSizeId == "" || materialCategoryId == "") {
 		return false;
 	}
-	
-	var materialTypeSelect = $("#materialType");
-	materialTypeSelect.empty();
-	
-	var firstOption = $('<option value="">'+ "-----Please Select-----" +'</option>');
-	materialTypeSelect.append(firstOption);
 	
 	$.ajax({
   		url: "retrieveMaterialTypes.do?" + "dumpsterSizeId=" + dumpsterSizeId + "&materialCategoryId=" + materialCategoryId,
@@ -330,7 +338,8 @@ function populatePermitNumbers(index) {
 	
 	var deliveryDate = $("[name='deliveryDate']").val();
 	
-	if (permitClassId == "" || permitTypeId == "" || deliveryDate == "") {
+	if (customerId == "" || deliveryAddressId == "" || permitClassId == "" 
+			|| permitTypeId == "" || deliveryDate == "") {
 		return false;
 	}
 	
@@ -652,7 +661,7 @@ function verifyExchangeOrderAndSubmit() {
 			</td>
 		</tr>
 		<tr>
-			<td class="form-left"><transys:label code="Dumpster Location" /><span class="errorMessage">*</span></td>
+			<td class="form-left">Dumpster Location<span class="errorMessage">*</span></td>
 			<td>
 				<form:select id="dumpsterLocationSelect" cssClass="flat form-control input-sm" style="width:172px !important" path="dumpsterLocation"> 
 					<form:option value="">-----Please Select-----</form:option>
@@ -660,7 +669,7 @@ function verifyExchangeOrderAndSubmit() {
 				</form:select> 
 			 	<form:errors path="dumpsterLocation" cssClass="errorMessage" />
 			</td>
-			<td class="form-left"><transys:label code="Dumpster Size"/><span class="errorMessage">*</span></td>
+			<td class="form-left">Dumpster Size<span class="errorMessage">*</span></td>
 			<td>
 				<form:select id="dumpsterSize" cssClass="flat form-control input-sm" style="width:172px !important" path="dumpsterSize" onchange="return handleDumpsterSizeChange(); "> 
 					<form:option value="">-----Please Select-----</form:option>
@@ -683,7 +692,7 @@ function verifyExchangeOrderAndSubmit() {
 					</c:forEach>
 				</select>
 			</td>
-			<td class="form-left"><transys:label code="Material Type"/><span class="errorMessage">*</span></td>
+			<td class="form-left">Material Type<span class="errorMessage">*</span></td>
 			<td>
 				<form:select id="materialType" cssClass="flat form-control input-sm" style="width:172px !important" path="materialType"  onChange="return populateDusmpsterPrice();"> 
 					<form:option value="">-----Please Select-----</form:option>
@@ -732,7 +741,7 @@ function verifyExchangeOrderAndSubmit() {
 					</c:forEach>
 				</select>
 		 	</td>
-		 	<td class="form-left"><transys:label code="Permit3 Class"/></td>
+		 	<td class="form-left">Permit3 Class</td>
 	        <td>
 				<select class="flat form-control input-sm" id="permitClasses3" name="permitClasses3" style="width:172px !important">
 					<option value="">-----Please Select-----</option>
@@ -749,7 +758,7 @@ function verifyExchangeOrderAndSubmit() {
 		 	</td>
 	    </tr>
 	    <tr>
-	    	<td class="form-left"><transys:label code="Permit1 Type"/><span class="errorMessage">*</span></td>
+	    	<td class="form-left">Permit1 Type<span class="errorMessage">*</span></td>
 	        <td>
 				<select class="flat form-control input-sm" id="permitTypes1" name="permitTypes1" style="width:172px !important" onChange="return populatePermitNumbers(1);">
 					<option value="">-----Please Select-----</option>
