@@ -252,6 +252,11 @@ function populateMaterialTypes() {
 }
 
 function populateDusmpsterPrice() {
+	var dumpsterPriceInput = $("#orderFees\\.dumpsterPrice");
+	dumpsterPriceInput.val("");
+	
+	populateTotalFees();
+	
 	var dumpsterSizeSelect = $("#dumpsterSize");
 	var dumpsterSizeId = dumpsterSizeSelect.val();
 	
@@ -262,8 +267,6 @@ function populateDusmpsterPrice() {
 		return false;
 	}
 	
-	var dumpsterPriceInput = $("#orderFees\\.dumpsterPrice");
-	
 	$.ajax({
   		url: "retrieveDumpsterPrice.do?" + "dumpsterSizeId=" + dumpsterSizeId 
   								  		 + "&materialTypeId=" + materialTypeId,
@@ -271,6 +274,8 @@ function populateDusmpsterPrice() {
        	type: "GET",
        	success: function(responseData, textStatus, jqXHR) {
        		dumpsterPriceInput.val(responseData);
+       		
+       		populateTotalFees();
 		}
 	});
 }
@@ -304,14 +309,16 @@ function populateOverweightFee() {
 }*/
 
 function populateCityFee() {
+	var cityFeeInput = $("#orderFees\\.cityFee");
+	cityFeeInput.val("");
+	
+	populateTotalFees();
+	
 	var cityFeeDescriptionSelect = $("#orderFees\\.cityFeeType");
 	var cityFeeId = cityFeeDescriptionSelect.val();
-	
 	if (cityFeeDescriptionSelect == "") {
 		return false;
 	}
-	
-	var cityFeeInput = $("#orderFees\\.cityFee");
 	
 	$.ajax({
   		url: "retrieveCityFee.do?" + "cityFeeId=" + cityFeeId ,
@@ -319,11 +326,24 @@ function populateCityFee() {
        	type: "GET",
        	success: function(responseData, textStatus, jqXHR) {
        		cityFeeInput.val(responseData);
+       		
+       		populateTotalFees();
 		}
 	});
 }
 
+function handleDeliveyAddressChange() {
+	var permit1NumbersSelect = $("#permits\\[" + 0 + "\\]");
+	emptySelect(permitNumbersSelect);
+	
+	var permitTypeSelect = $("#permitTypes" + 1);
+	emptySelect(permitTypeSelect);
+}
+
 function populatePermitNumbers(index) {
+	var permitNumbersSelect = $("#permits\\[" + (index-1) + "\\]");
+	emptySelect(permitNumbersSelect);
+	
 	var customerSelect = $('#customerSelect');
 	var customerId = customerSelect.val();
 	
@@ -342,12 +362,6 @@ function populatePermitNumbers(index) {
 			|| permitTypeId == "" || deliveryDate == "") {
 		return false;
 	}
-	
-	var permitNumbersSelect = $("#permits\\[" + (index-1) + "\\]");
-	permitNumbersSelect.empty();
-	
-	var firstOption = $('<option value="">'+ "-----Please Select-----" +'</option>');
-	permitNumbersSelect.append(firstOption);
 	
 	$.ajax({
   		url: "retrievePermit.do?" + "customerId=" + customerId
@@ -377,8 +391,14 @@ function populatePermitNumbers(index) {
 }
 
 function retrievePermitDetails(index) {
+	emptyPermitDetails(index);
+	
 	var permitNumbersSelect = $("#permits\\[" + (index-1) + "\\]");
 	var permitId = permitNumbersSelect.val();
+	
+	if (permitId == "") {
+		return false;
+	}
 	
 	$.ajax({
   		url: "retrievePermit.do?" + "permitId=" + permitId,
@@ -420,6 +440,21 @@ function populatePermitDetails(index, permit) {
    	populateTotalPermitFees();
 }
 
+function emptyPermitDetails(index) {
+	var permitValidFrom = $("#permitValidFrom" + index);
+	var permitValidTo = $("#permitValidTo" + index);
+	var permitFee = $("#orderFees\\.permitFee" + index);
+	
+	var permitAddressSelect = $("#permitAddress" + index);
+	
+	permitValidFrom.html("");
+	permitValidTo.html("");
+	permitFee.val("");
+	emptySelect(permitAddressSelect);
+	
+	populateTotalPermitFees();
+}
+
 function populateTotalPermitFees() {
 	var totalPermitFees = parseFloat(0.00);
 	
@@ -437,6 +472,8 @@ function populateTotalPermitFees() {
 	}
 	
 	$("#orderFees\\.totalPermitFees").val(totalPermitFees);
+	
+	populateTotalFees();
 }
 
 function populateTotalAdditionalFees() {
@@ -458,6 +495,8 @@ function populateTotalAdditionalFees() {
 	}
 	
 	$("#orderFees\\.totalAdditionalFees").val(totalAdditionalFees);
+	
+	populateTotalFees();
 }
 
 function populateTotalFees() {
@@ -599,7 +638,7 @@ function verifyExchangeOrderAndSubmit() {
 			<td class="form-left">Delivery Address<span class="errorMessage">*</span></td>
 			<td>
 				<label style="display: inline-block; font-weight: normal">
-					<form:select id="deliveryAddressSelect" cssClass="flat form-control input-sm" path="deliveryAddress" style="width:172px !important">
+					<form:select id="deliveryAddressSelect" cssClass="flat form-control input-sm" path="deliveryAddress" style="width:172px !important" onChange="return handleDeliveyAddressChange();">
 						<form:option value="">-----Please Select-----</form:option>
 						<form:options items="${deliveryAddresses}" itemValue="id" itemLabel="fullLine"/>
 					</form:select> 
@@ -711,7 +750,7 @@ function verifyExchangeOrderAndSubmit() {
 	</table>
 	<table id="form-table" class="table">
 		<tr>
-	    	<td class="form-left"><transys:label code="Permit1 Class"/><span class="errorMessage">*</span></td>
+	    	<td class="form-left">Permit1 Class<span class="errorMessage">*</span></td>
 	        <td>
 				<select class="flat form-control input-sm" id="permitClasses1" name="permitClasses1" style="width:172px !important">
 					<option value="">-----Please Select-----</option>
@@ -805,7 +844,7 @@ function verifyExchangeOrderAndSubmit() {
 	        </td>
 	    </tr>
 	    <tr>
-	    	<td class="form-left"><transys:label code="Permit1 Number"/><span class="errorMessage">*</span></td>
+	    	<td class="form-left">Permit1 Number<span class="errorMessage">*</span></td>
 	        <td>
 	        	<label style="display: inline-block; font-weight: normal">
 		        	<select class="flat form-control input-sm" id="permits[0]" name="permits[0]" style="width:172px !important" onChange="return retrievePermitDetails(1);">
@@ -941,19 +980,19 @@ function verifyExchangeOrderAndSubmit() {
 		<tr>
 			<td class="form-left"><transys:label code="Dumpster Price"/><span class="errorMessage">*</span></td>
 			<td>
-				<form:input path="orderFees.dumpsterPrice" cssClass="form-control form-control-ext" style="width:172px;height:22px !important" />
+				<form:input path="orderFees.dumpsterPrice" cssClass="form-control form-control-ext" style="width:172px;height:22px !important" onChange="return populateTotalFees();"/>
 				<form:errors path="orderFees.dumpsterPrice" cssClass="errorMessage" />
 			</td>
-			<td class="form-left"><transys:label code="Overweight Fee"/><span class="errorMessage">*</span></td>
+			<td class="form-left">Overweight Fee<span class="errorMessage">*</span></td>
 			<td>
-				<form:input path="orderFees.overweightFee" cssClass="form-control form-control-ext" style="width:172px;height:22px !important" />
+				<form:input path="orderFees.overweightFee" cssClass="form-control form-control-ext" style="width:172px;height:22px !important" onChange="return populateTotalFees();"/>
 				<form:errors path="orderFees.overweightFee" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>
-			<td class="form-left"><transys:label code="City Fee"/><span class="errorMessage">*</span></td>
+			<td class="form-left">City Fee<span class="errorMessage">*</span></td>
 			<td>
-				<form:input path="orderFees.cityFee" cssClass="form-control form-control-ext" style="width:172px;height:22px !important" />
+				<form:input path="orderFees.cityFee" cssClass="form-control form-control-ext" style="width:172px;height:22px !important" onChange="return populateTotalFees();"/>
 				<form:errors path="orderFees.cityFee" cssClass="errorMessage" />
 			</td>
 			<td class="form-left">Description<span class="errorMessage">*</span></td>
@@ -966,14 +1005,14 @@ function verifyExchangeOrderAndSubmit() {
 			</td>
 		</tr>
 		<tr>
-			<td class="form-left"><transys:label code="Additional Fee1"/></td>
+			<td class="form-left">Additional Fee1</td>
 			<td>
 				<form:input path="orderFees.additionalFee1" style="width:172px !important" cssClass="flat" onchange="return populateTotalAdditionalFees();"/>
 				<form:errors path="orderFees.additionalFee1" cssClass="errorMessage" />
 			</td>
-			<td class="form-left"><transys:label code="Description"/></td>
+			<td class="form-left">Description</td>
 				<td>
-				<form:select id="additionalFee1Type" cssClass="flat form-control input-sm" style="width:172px !important" path="orderFees.additionalFee1Type"> 
+				<form:select id="additionalFee1Type" cssClass="flat form-control input-sm" style="width:172px !important" path="orderFees.additionalFee1Type" > 
 					<form:option value="">-----Please Select-----</form:option>
 					<form:options items="${additionalFeeTypes}" itemValue="id" itemLabel="description" />
 				</form:select>
@@ -981,12 +1020,12 @@ function verifyExchangeOrderAndSubmit() {
 			</td>
 		</tr>
 		<tr>
-			<td class="form-left"><transys:label code="Additional Fee2"/></td>
+			<td class="form-left">Additional Fee2</td>
 			<td>
-				<form:input path="orderFees.additionalFee2" style="width:172px !important" cssClass="flat" />
+				<form:input path="orderFees.additionalFee2" style="width:172px !important" cssClass="flat" onchange="return populateTotalAdditionalFees();"/>
 				<form:errors path="orderFees.additionalFee2" cssClass="errorMessage" />
 			</td>
-			<td class="form-left"><transys:label code="Description"/></td>
+			<td class="form-left">Description</td>
 			<td>
 				<form:select id="additionalFee2Type" cssClass="flat form-control input-sm" style="width:172px !important" path="orderFees.additionalFee2Type"> 
 					<form:option value="">-----Please Select-----</form:option>
@@ -996,9 +1035,9 @@ function verifyExchangeOrderAndSubmit() {
 			</td>
 		</tr>
 		<tr>
-			<td class="form-left"><transys:label code="Additional Fee3"/></td>
+			<td class="form-left">Additional Fee3</td>
 			<td>
-				<form:input path="orderFees.additionalFee3" style="width:172px !important" cssClass="flat" />
+				<form:input path="orderFees.additionalFee3" style="width:172px !important" cssClass="flat" onchange="return populateTotalAdditionalFees();"/>
 				<form:errors path="orderFees.additionalFee3" cssClass="errorMessage" />
 			</td>
 			<td class="form-left"><transys:label code="Description"/></td>
