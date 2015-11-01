@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
-<!-- 2015-10-23T22:56:31 -->
+<!-- 2015-11-01T10:55:22 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="orderReports" pageWidth="1210" pageHeight="555" orientation="Landscape" columnWidth="401" leftMargin="3" rightMargin="3" topMargin="0" bottomMargin="0" uuid="1c66690f-01f1-4b96-ab51-00f1d62e1ce2">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
@@ -23,8 +23,8 @@
 	<field name="totalFees" class="java.lang.String"/>
 	<field name="orderDateFrom" class="java.lang.String"/>
 	<field name="orderDateTo" class="java.lang.String"/>
-	<field name="totalPaid" class="java.lang.String"/>
-	<field name="balanceDue" class="java.lang.String"/>
+	<field name="totalPaid" class="java.math.BigDecimal"/>
+	<field name="balanceDue" class="java.math.BigDecimal"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>

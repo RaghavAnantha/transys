@@ -66,4 +66,8 @@ textarea {
 	width: 50%
 }
 
+select.ui-datepicker-month, select.ui-datepicker-year {
+	color: black;
+}
+
 
