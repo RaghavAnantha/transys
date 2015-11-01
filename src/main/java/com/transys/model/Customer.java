@@ -202,6 +202,12 @@ public class Customer extends AbstractBaseModel {
 	
 	@Transient
 	//TODO: Move to utils
+	public String getBillingAddress() {
+		return getBillingAddress("<br>");
+	}
+	
+	@Transient
+	//TODO: Move to utils
 	public String getBillingAddress(String lineSeparator) {
 		StringBuffer addressBuff = new StringBuffer();
 		if (StringUtils.isNotEmpty(getBillingAddressLine1())) {

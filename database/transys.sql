@@ -183,7 +183,7 @@ CREATE TABLE `customer` (
 LOCK TABLES `customer` WRITE;
 /*!40000 ALTER TABLE `customer` DISABLE KEYS */;
 INSERT INTO `customer` (`id`,`created_at`,`created_by`,`modified_at`,`modified_by`,`customerStatusId`,`billingAddressLine1`,`customerTypeId`,`billingAddressLine2`,`city`,`companyName`,`fax`,`contactName`,`phone`,`zipcode`,`state`,`email`,`altPhone1`,`altPhone2`,`chargeCompany`,`delete_flag`) VALUES (5,'2015-09-10 21:22:45',1,'2015-10-25 18:37:31',1,1,'2324 N Camelback Rd',1,'','Chicago','Aberdeen Construction','123-456-7890','Raghav','123-456-7890','28262',1,'abc@aberdeen.com','','','Yes',1);
-INSERT INTO `customer` (`id`,`created_at`,`created_by`,`modified_at`,`modified_by`,`customerStatusId`,`billingAddressLine1`,`customerTypeId`,`billingAddressLine2`,`city`,`companyName`,`fax`,`contactName`,`phone`,`zipcode`,`state`,`email`,`altPhone1`,`altPhone2`,`chargeCompany`,`delete_flag`) VALUES (6,'2015-09-11 21:05:43',1,NULL,NULL,1,'1321 W Main St',1,NULL,'Chicago','Gibbons Construction','123-456-7890','Hema','123-456-7890','22323',1,'abc@aberdeen.com',NULL,NULL,'Yes',1);
+INSERT INTO `customer` (`id`,`created_at`,`created_by`,`modified_at`,`modified_by`,`customerStatusId`,`billingAddressLine1`,`customerTypeId`,`billingAddressLine2`,`city`,`companyName`,`fax`,`contactName`,`phone`,`zipcode`,`state`,`email`,`altPhone1`,`altPhone2`,`chargeCompany`,`delete_flag`) VALUES (6,'2015-09-11 21:05:43',1,NULL,NULL,1,'1321 W Main St',1,NULL,'Chicago','Gibbons Construction','435-768-7890','Hema','465-768-7890','22323',1,'xyz@gibbons.com',NULL,NULL,'Yes',1);
 /*!40000 ALTER TABLE `customer` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -842,7 +842,7 @@ CREATE TABLE `permitClass` (
 LOCK TABLES `permitClass` WRITE;
 /*!40000 ALTER TABLE `permitClass` DISABLE KEYS */;
 INSERT INTO `permitClass` VALUES (1,'2015-09-10 21:22:45',1,NULL,NULL,1,'CLASS A',NULL),
-(2,'2015-09-22 13:47:10',1,NULL,NULL,1,'CLASS B',NULL),(3,'2015-09-22 13:43:51',1,NULL,NULL,1,'CLASS C',NULL);
+(2,'2015-09-22 13:47:10',1,NULL,NULL,1,'CLASS B',NULL);
 /*!40000 ALTER TABLE `permitClass` ENABLE KEYS */;
 UNLOCK TABLES;
 --
