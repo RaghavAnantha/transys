@@ -8,6 +8,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -62,22 +63,8 @@ public class MonthlyTransferStationIntakeReportController extends CRUDController
 		//TODO fix me
 		criteria.getSearchMap().remove("_csrf");
 		
-		Object monthObj = criteria.getSearchMap().get("month");
-		if (monthObj == null || StringUtils.isEmpty(monthObj.toString())) {
-			model.addAttribute("msgCtx", "monthlyTransferStationIntakeReport");
-			model.addAttribute("error", "Please select a month for report generation.");
-			return "/list";
-		}
-		
-		Object yearObj = criteria.getSearchMap().get("year");
-		if (yearObj == null || StringUtils.isEmpty(yearObj.toString())) {
-			model.addAttribute("msgCtx", "monthlyTransferStationIntakeReport");
-			model.addAttribute("error", "Please select a year for report generation.");
-			return "/list";
-		}
-		
-		List<?> reportData =  retrieveReportData(criteria);
-		model.addAttribute("list", reportData);
+//		List<?> reportData =  retrieveReportData(criteria);
+	//	model.addAttribute("list", reportData);
 		
 		return urlContext + "/list";
 	}
@@ -106,7 +93,22 @@ public class MonthlyTransferStationIntakeReportController extends CRUDController
 		model.addAttribute("years", years); 
 	}
 	
-	private List<MonthlyIntakeReportVO> retrieveReportData(SearchCriteria criteria) {
+	private String convertDateFormat(String inputDateStr, String inputDateFormatStr, String outputDateFormatStr) {
+		SimpleDateFormat inputDateFormat = new SimpleDateFormat(inputDateFormatStr);
+		SimpleDateFormat outputDateFormat = new SimpleDateFormat(outputDateFormatStr);
+		
+		String outputDateStr = StringUtils.EMPTY;
+		try {
+			Date inputDate = inputDateFormat.parse(inputDateStr);
+			outputDateStr = outputDateFormat.format(inputDate);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return outputDateStr;
+	}
+	private List<MonthlyIntakeReportVO> retrieveReportData(String month, String year) {
 
 		List<MonthlyIntakeReportVO> monthlyIntakeReportVOList = new ArrayList<>();
 
@@ -116,7 +118,17 @@ public class MonthlyTransferStationIntakeReportController extends CRUDController
 		// String year = criteria.getSearchMap().get("year").toString();
 
 		try {
-			String intakeDate = "2015-10-01";
+			
+			/*Calendar c = Calendar.getInstance();
+			Date date = new SimpleDateFormat("yyyy-MMMM-dd").parse(year + "-" + month + "-" + 01);
+			c.setTime(date);*/
+			
+			String intakeDate = convertDateFormat(year + "-" + month + "-" + "01", "yyyy-MMMM-dd", "yyyy-MM-dd");
+			
+			/*String intakeDate = "2015-10-01";
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			
+			c.setTime(sdf.parse(intakeDate));*/
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			Calendar c = Calendar.getInstance();
 			c.setTime(sdf.parse(intakeDate));
@@ -221,7 +233,7 @@ public class MonthlyTransferStationIntakeReportController extends CRUDController
 					e.printStackTrace();
 				}
 				
-				//System.out.println("JSON Response = " + jsonResponse);
+//				System.out.println("JSON Response = " + jsonResponse);
 				
 				if (jsonResponse.startsWith("\"")) {
 					jsonResponse = jsonResponse.substring(1, jsonResponse.length() - 1);
@@ -287,13 +299,20 @@ public class MonthlyTransferStationIntakeReportController extends CRUDController
 		return resultList;
 	}
 	
-	@RequestMapping(method = RequestMethod.GET, value = "/generateExcelReport.do")
+	@RequestMapping(method = RequestMethod.POST, value = "/generateExcelReport.do")
 	public void export(ModelMap model, HttpServletRequest request,
 			HttpServletResponse response, Object objectDAO, Class clazz) {
 		
+		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
+		//TODO fix me
+		criteria.getSearchMap().remove("_csrf");
+		
+		String month = request.getParameter("month");
+		String year =request.getParameter("year");
+		
 		ExcelReportGenerator excelReportGenerator = new TransferStationIntakeReportGenerator();
 		
-		List<MonthlyIntakeReportVO> reportDataList = retrieveReportData(null);
+		List<MonthlyIntakeReportVO> reportDataList = retrieveReportData(month, year);
 		Map<String, String> headerMap = new LinkedHashMap<>();
 		
 		headerMap.put("Date", "intakeDate");
