@@ -27,7 +27,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class ExcelReportGenerator {
 	
-	public static SimpleDateFormat fmt = new SimpleDateFormat("dd-MMM");
+	public static SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
 	
 	public ExcelReportGenerator() {
 		
@@ -197,7 +197,7 @@ public class ExcelReportGenerator {
       style = createBorderedStyle(wb);
       style.setAlignment(CellStyle.ALIGN_RIGHT);
       style.setFont(font1);
-      style.setDataFormat(df.getFormat("d-mmm"));
+      style.setDataFormat(df.getFormat("dd-mmm"));
       styles.put("cell_b_date", style);
       
       style = createBorderedStyle(wb);

@@ -52,7 +52,7 @@ public class TransferStationIntakeReportGenerator extends ExcelReportGenerator {
 		Cell titleCell = titleRow.createCell(0);
 		titleCell.setCellValue(title);
 		titleCell.setCellStyle(styles.get("title"));
-		sheet.addMergedRegion(CellRangeAddress.valueOf("$A$1:$Q$1"));
+		sheet.addMergedRegion(CellRangeAddress.valueOf("$A$1:$P$1"));
 
 		// the header row: centered text in 48pt font
 		Row headerRow = sheet.createRow(1);
@@ -90,7 +90,7 @@ public class TransferStationIntakeReportGenerator extends ExcelReportGenerator {
 						cell1.setCellStyle(styles.get("header"));
 						String valueForCell = rollOffBoxesPerYardList.get(rollOffIndex++).getYardSize();
 						cell1.setCellValue(valueForCell);
-						columnWidths.add(256 * valueForCell.length());
+						columnWidths.add(valueForCell.length());
 					}
 					
 				}
@@ -107,7 +107,7 @@ public class TransferStationIntakeReportGenerator extends ExcelReportGenerator {
 				cell1.setCellStyle(styles.get("header"));
 				String valueForCell = "Tonnage";
 				cell1.setCellValue(valueForCell);
-				columnWidths.add(256 * valueForCell.length());
+				columnWidths.add(valueForCell.length());
 				
 				headerRow2.createCell(mergeCol).setCellStyle(styles.get("header"));
 				sheet.addMergedRegion(new CellRangeAddress(headerRow1.getRowNum(), headerRow2.getRowNum(), mergeCol, mergeCol));
@@ -117,7 +117,7 @@ public class TransferStationIntakeReportGenerator extends ExcelReportGenerator {
 				cell1.setCellStyle(styles.get("header"));
 				valueForCell = "Cubic Yard Conversion";
 				cell1.setCellValue(valueForCell);
-				columnWidths.add(256 * valueForCell.length());
+				columnWidths.add(valueForCell.length());
 				
 				headerRow2.createCell(mergeCol).setCellStyle(styles.get("header"));
 				sheet.addMergedRegion(new CellRangeAddress(headerRow1.getRowNum(), headerRow2.getRowNum(), mergeCol, mergeCol));
@@ -134,7 +134,7 @@ public class TransferStationIntakeReportGenerator extends ExcelReportGenerator {
 				cell1.setCellStyle(styles.get("header"));
 				String valueForCell = "Cubic Yards";
 				cell1.setCellValue(valueForCell);
-				columnWidths.add(256 * valueForCell.length());
+				columnWidths.add(valueForCell.length());
 				
 				headerRow2.createCell(mergeCol).setCellStyle(styles.get("header"));
 				sheet.addMergedRegion(new CellRangeAddress(headerRow1.getRowNum(), headerRow2.getRowNum(), mergeCol, mergeCol));
@@ -144,7 +144,7 @@ public class TransferStationIntakeReportGenerator extends ExcelReportGenerator {
 				cell1.setCellStyle(styles.get("header"));
 				valueForCell = "Actual Tonnage";
 				cell1.setCellValue(valueForCell);
-				columnWidths.add(256 * valueForCell.length());
+				columnWidths.add(valueForCell.length());
 				
 				headerRow2.createCell(mergeCol).setCellStyle(styles.get("header"));
 				sheet.addMergedRegion(new CellRangeAddress(headerRow1.getRowNum(), headerRow2.getRowNum(), mergeCol, mergeCol));
@@ -161,7 +161,7 @@ public class TransferStationIntakeReportGenerator extends ExcelReportGenerator {
 				cell1.setCellStyle(styles.get("header"));
 				String valueForCell = "Cubic Yards";
 				cell1.setCellValue(valueForCell);
-				columnWidths.add(256 * valueForCell.length());
+				columnWidths.add(valueForCell.length());
 				
 				headerRow2.createCell(mergeCol).setCellStyle(styles.get("header"));
 				sheet.addMergedRegion(new CellRangeAddress(headerRow1.getRowNum(), headerRow2.getRowNum(), mergeCol, mergeCol));
@@ -171,7 +171,7 @@ public class TransferStationIntakeReportGenerator extends ExcelReportGenerator {
 				cell1.setCellStyle(styles.get("header"));
 				valueForCell = "Tonnage";
 				cell1.setCellValue(valueForCell);
-				columnWidths.add(256 * valueForCell.length());
+				columnWidths.add(valueForCell.length());
 				
 				headerRow2.createCell(mergeCol).setCellStyle(styles.get("header"));
 				sheet.addMergedRegion(new CellRangeAddress(headerRow1.getRowNum(), headerRow2.getRowNum(), mergeCol, mergeCol));
@@ -185,7 +185,7 @@ public class TransferStationIntakeReportGenerator extends ExcelReportGenerator {
 				sheet.addMergedRegion(new CellRangeAddress(headerRow1.getRowNum(), headerRow2.getRowNum(), columnIndex, columnIndex));
 				Cell cell1 = headerRow2.createCell(columnIndex);
 				cell1.setCellStyle(styles.get("header"));
-				columnWidths.add(256 * headerName.length());
+				columnWidths.add(headerName.length());
 				columnIndex++;
 			}
 		}
@@ -199,8 +199,9 @@ public class TransferStationIntakeReportGenerator extends ExcelReportGenerator {
 		for (int i = 0; i < data.size(); i++, rownum++) {
 			row = sheet.createRow(rownum);
 			//row.setHeightInPoints(12.75f);
-
-			for (MonthlyIntakeReportVO everyDataObject : data) {
+			
+			MonthlyIntakeReportVO everyDataObject = data.get(i);
+//			for (MonthlyIntakeReportVO everyDataObject : data) {
 
 				columnIndex = 1;
 				Iterator<String> fieldSet = headers.values().iterator();
@@ -243,15 +244,15 @@ public class TransferStationIntakeReportGenerator extends ExcelReportGenerator {
 						} else if (fieldName.equals("wasteTotals")) {
 							cell = row.createCell(columnIndex);
 							cell.setCellStyle(styles.get("formula"));
-							String ref = ((char)('A' + cell.getColumnIndex()-1)) + "" + (cell.getRowIndex()+1) + ","  + (char)('A' + cell.getColumnIndex()-5) + (cell.getRowIndex()+1) ;
-			            System.out.println("Formula = " + ref);
+							String ref = ((char)('A' + cell.getColumnIndex()-1)) + "" + (cell.getRowIndex()+1) + ","  + (char)('A' + cell.getColumnIndex()-4) + (cell.getRowIndex()+1) ;
+//			            System.out.println("Formula = " + ref);
 							cell.setCellFormula("SUM(" + ref + ")");
 							columnIndex++;
 							
 							cell = row.createCell(columnIndex);
 							cell.setCellStyle(styles.get("formula"));
 							ref = ((char)('A' + cell.getColumnIndex()-3)) + "" + (cell.getRowIndex()+1) + ","  + (char)('A' + cell.getColumnIndex()-4) + (cell.getRowIndex()+1) ;
-			            System.out.println("Formula = " + ref);
+//			            System.out.println("Formula = " + ref);
 							cell.setCellFormula("SUM(" + ref + ")");
 							columnIndex++;
 						} else {
@@ -259,7 +260,7 @@ public class TransferStationIntakeReportGenerator extends ExcelReportGenerator {
 							Field field = everyDataObject.getClass().getDeclaredField(fieldName);
 							field.setAccessible(true);
 							
-							System.out.println("Creating index = " + columnIndex + " for value = " + fieldName);
+							//System.out.println("Creating index = " + columnIndex + " for value = " + fieldName);
 							cell = row.createCell(columnIndex);
 							cell.setCellStyle(styles.get("cell_normal_centered"));
 							
@@ -275,7 +276,12 @@ public class TransferStationIntakeReportGenerator extends ExcelReportGenerator {
 							} else if (value instanceof Integer) {
 								cell.setCellValue(Integer.parseInt(value.toString()));
 							} else if (value instanceof Date) {
-								cell.setCellValue(fmt.parse("01-Jan"));
+								cell.setCellStyle(styles.get("cell_b_date"));
+								String valueStr = fmt.format(value);
+								cell.setCellValue(valueStr);
+								if (columnWidths.get(0) < valueStr.length()) { // currently only 1 date
+									columnWidths.set(0, valueStr.length());
+								}
 							} else {
 								String valueStr = "Unknown data type for " + field.getName();
 								cell.setCellValue(valueStr);
@@ -294,12 +300,9 @@ public class TransferStationIntakeReportGenerator extends ExcelReportGenerator {
 					} catch (IllegalAccessException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
-					} catch (ParseException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
 					}
 				}
-			}
+//			}
 		}
 
 		// set column widths, the width is measured in units of 1/256th of a
@@ -307,10 +310,11 @@ public class TransferStationIntakeReportGenerator extends ExcelReportGenerator {
 
 		int index = 1;
 		for (Integer columnWidth : columnWidths) {
-			sheet.setColumnWidth(index, columnWidth);
+			sheet.setColumnWidth(index, 256 * columnWidth);
 			index++;
 		}
 
+		// open excel with 75% zoom
 		// sheet.setZoom(3, 4);
 
 		ByteArrayOutputStream out = new ByteArrayOutputStream();

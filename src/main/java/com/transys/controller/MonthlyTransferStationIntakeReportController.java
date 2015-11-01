@@ -4,6 +4,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.DateFormatSymbols;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.LinkedHashMap;
@@ -105,49 +107,105 @@ public class MonthlyTransferStationIntakeReportController extends CRUDController
 	}
 	
 	private List<MonthlyIntakeReportVO> retrieveReportData(SearchCriteria criteria) {
-		
-		List<MonthlyIntakeReportVO> monthlyIntakeReportVOList = new ArrayList<>();
-		
-		MonthlyIntakeReportVO monthlyIntakeReportVO = new MonthlyIntakeReportVO();
-		// select SUM(count), SUM(cubicYards) from (select dumpstersizeId,count(*) as count, (dumpstersizeId * count(*)) AS cubicYards from `transys`.transysOrder where deliverydate='2015-10-09' group by dumpstersizeId) AS A;
-		//String rollOffBoxesPerYardQuery = "select dumpsterSize0_.size, count(*) as count, (dumpsterSize0_.size * count(*)) AS cubicYards from `transys`.transysOrder order0_, `transys`.dumpsterSize dumpsterSize0_ where dumpsterSize0_.id = order0_.dumpsterSizeId AND deliveryDate='2015-10-09' group by dumpstersizeId";
-		// delivery date -- ?? select order0_.deliveryDate, dumpsterSize0_.size as SIZE, ifnull(count(order0_.dumpsterSizeId),0) AS COUNT, (dumpsterSize0_.size * ifnull(count(order0_.dumpsterSizeId),0)) AS cubicYards FROM `transys`.dumpsterSize dumpsterSize0_ LEFT JOIN `transys`.transysOrder order0_ ON (dumpsterSize0_.id = order0_.dumpsterSizeId AND deliveryDate >= '2015-10-01' AND deliveryDate < '2015-11-01') group by dumpsterSize0_.size order by dumpsterSize0_.id
-		String rollOffBoxesPerYardQuery = "select dumpsterSize0_.size as SIZE, ifnull(count(order0_.dumpsterSizeId),0) AS COUNT, (dumpsterSize0_.size * ifnull(count(order0_.dumpsterSizeId),0)) AS cubicYards FROM `transys`.dumpsterSize dumpsterSize0_ LEFT JOIN `transys`.transysOrder order0_ ON (dumpsterSize0_.id = order0_.dumpsterSizeId AND deliveryDate='2015-10-09') group by dumpsterSize0_.size order by dumpsterSize0_.id";
-		List<?> rollOffBoxesPerYardResults = genericDAO.executeNativeQuery(rollOffBoxesPerYardQuery);
 
-		String publicIntakeTonnageQuery = "select ifnull(sum(obj.netWeightTonnage),0) AS tonnage, ifnull(((sum(obj.netWeightTonnage)) * 3.3),0) as cubicYards from `transys`.publicMaterialIntake obj where obj.intakeDate='2015-10-09'";
-		List<?> publicIntakeTonnageResults = genericDAO.executeNativeQuery(publicIntakeTonnageQuery);
-		
-		if (rollOffBoxesPerYardResults != null && rollOffBoxesPerYardResults.size() > 0) {
-			List<RollOffBoxesPerYardVO> boxesPerYardVOList = (List<RollOffBoxesPerYardVO>)(List<?>) populateAggregationResults(rollOffBoxesPerYardResults);
-			List<PublicMaterialIntakeVO>publicIntakeVOList = (List<PublicMaterialIntakeVO>)(List<?>) populateAggregationResults(publicIntakeTonnageResults);
-			
-			monthlyIntakeReportVO.setRollOffBoxesPerYard(boxesPerYardVOList);
-			
-			Integer totalBoxes = 0;
-			BigDecimal rollOffCubicYards = new BigDecimal(0);
-			
-			for (RollOffBoxesPerYardVO eachYardCount : boxesPerYardVOList) {
-				totalBoxes += eachYardCount.getNumBoxes();
-				rollOffCubicYards = rollOffCubicYards.add(eachYardCount.getCubicYards());
+		List<MonthlyIntakeReportVO> monthlyIntakeReportVOList = new ArrayList<>();
+
+		// System.out.println("Search critera = " + criteria.getSearchMap());
+
+		// String month = criteria.getSearchMap().get("month").toString();
+		// String year = criteria.getSearchMap().get("year").toString();
+
+		try {
+			String intakeDate = "2015-10-01";
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			Calendar c = Calendar.getInstance();
+			c.setTime(sdf.parse(intakeDate));
+			int maxDay = c.getActualMaximum(Calendar.DAY_OF_MONTH);
+			for (int co = 0; co < maxDay; co++) {
+
+				MonthlyIntakeReportVO monthlyIntakeReportVO = new MonthlyIntakeReportVO();
+
+				System.out.println("Executing query for date = " + intakeDate);
+
+				monthlyIntakeReportVO.setIntakeDate(sdf.parse(intakeDate));
+
+				// select SUM(count), SUM(cubicYards) from (select
+				// dumpstersizeId,count(*) as count, (dumpstersizeId * count(*)) AS
+				// cubicYards from `transys`.transysOrder where
+				// deliverydate='2015-10-09' group by dumpstersizeId) AS A;
+				// String rollOffBoxesPerYardQuery = "select dumpsterSize0_.size,
+				// count(*) as count, (dumpsterSize0_.size * count(*)) AS cubicYards
+				// from `transys`.transysOrder order0_, `transys`.dumpsterSize
+				// dumpsterSize0_ where dumpsterSize0_.id = order0_.dumpsterSizeId
+				// AND deliveryDate='2015-10-09' group by dumpstersizeId";
+				// gets the number of dumpsters grouped by dumpsterSize for orders
+				// on a particular delivery date
+				String rollOffBoxesPerYardQuery = "select dumpsterSize0_.size as SIZE, ifnull(count(order0_.dumpsterSizeId),0) AS COUNT, (dumpsterSize0_.size * ifnull(count(order0_.dumpsterSizeId),0)) AS cubicYards FROM `transys`.dumpsterSize dumpsterSize0_ LEFT JOIN `transys`.transysOrder order0_ ON (dumpsterSize0_.id = order0_.dumpsterSizeId AND deliveryDate='"
+						+ intakeDate + "') group by dumpsterSize0_.size order by dumpsterSize0_.id";
+				List<?> rollOffBoxesPerYardResults = genericDAO.executeNativeQuery(rollOffBoxesPerYardQuery);
+
+				String publicIntakeTonnageQuery = "select ifnull(sum(obj.netWeightTonnage),0) AS tonnage, ifnull(((sum(obj.netWeightTonnage)) * 3.3),0) as cubicYards from `transys`.publicMaterialIntake obj where obj.intakeDate = '"
+						+ intakeDate + "'";// ='2015-10-09'";
+				List<?> publicIntakeTonnageResults = genericDAO.executeNativeQuery(publicIntakeTonnageQuery);
+
+				if (rollOffBoxesPerYardResults != null && rollOffBoxesPerYardResults.size() > 0) {
+					List<RollOffBoxesPerYardVO> boxesPerYardVOList = (List<RollOffBoxesPerYardVO>) (List<?>) populateAggregationResults(
+							rollOffBoxesPerYardResults);
+
+					monthlyIntakeReportVO.setRollOffBoxesPerYard(boxesPerYardVOList);
+
+					Integer totalBoxes = 0;
+					BigDecimal rollOffCubicYards = new BigDecimal(0);
+
+					for (RollOffBoxesPerYardVO eachYardCount : boxesPerYardVOList) {
+						totalBoxes += eachYardCount.getNumBoxes();
+						rollOffCubicYards = rollOffCubicYards.add(eachYardCount.getCubicYards());
+					}
+
+					monthlyIntakeReportVO.setTotalBoxes(totalBoxes);
+					monthlyIntakeReportVO.setRollOffCubicYards(rollOffCubicYards);
+
+					String rollOffTonnageQuery = "select SUM(netWeightTonnage) from Order obj where obj.deliveryDate='"
+							+ intakeDate + "'";// '2015-10-09'";
+					List<?> rollOffTonnageResult = genericDAO.executeSimpleQuery(rollOffTonnageQuery);
+
+					String rollOffTonnage = parseSingleElementFromQueryResult(rollOffTonnageResult);
+					if (StringUtils.isEmpty(rollOffTonnage)) {
+						monthlyIntakeReportVO.setRollOffTonnage(new BigDecimal(0));
+					} else {
+						monthlyIntakeReportVO.setRollOffTonnage(new BigDecimal(rollOffTonnage));
+					}
+
+				} else {
+					monthlyIntakeReportVO.setTotalBoxes(0);
+					monthlyIntakeReportVO.setTotalCubicYards(new BigDecimal(0));
+					monthlyIntakeReportVO.setTotalTonnage(new BigDecimal(0));
+				}
+
+				List<PublicMaterialIntakeVO> publicIntakeVOList = (List<PublicMaterialIntakeVO>) (List<?>) populateAggregationResults(
+						publicIntakeTonnageResults);
+
+				if (publicIntakeVOList != null && publicIntakeVOList.size() > 0) {
+					for (PublicMaterialIntakeVO eachPublicIntakeCount : publicIntakeVOList) {
+						monthlyIntakeReportVO.setPublicIntakeCubicYards(eachPublicIntakeCount.getCubicYards());
+						monthlyIntakeReportVO.setPublicIntakeTonnage(eachPublicIntakeCount.getTonnage());
+					}
+				} else {
+					monthlyIntakeReportVO.setPublicIntakeCubicYards(new BigDecimal(0));
+					monthlyIntakeReportVO.setPublicIntakeTonnage(new BigDecimal(0));
+				}
+
+				System.out.println("Setting data for date = " + monthlyIntakeReportVO.getIntakeDate());
+				monthlyIntakeReportVOList.add(monthlyIntakeReportVO);
+
+				c.add(Calendar.DATE, 1);
+				intakeDate = sdf.format(c.getTime());
 			}
-		
-			monthlyIntakeReportVO.setIntakeDate(Calendar.getInstance().getTime());
-			monthlyIntakeReportVO.setTotalBoxes(totalBoxes);
-			monthlyIntakeReportVO.setRollOffCubicYards(rollOffCubicYards);
-			
-			for (PublicMaterialIntakeVO eachPublicIntakeCount : publicIntakeVOList) {
-				monthlyIntakeReportVO.setPublicIntakeCubicYards(eachPublicIntakeCount.getCubicYards());
-				monthlyIntakeReportVO.setPublicIntakeTonnage(eachPublicIntakeCount.getTonnage());
-			}
-			
-			String rollOffTonnageQuery = "select SUM(netWeightTonnage) from Order obj where obj.deliveryDate='2015-10-09'";
-			List<?> rollOffTonnageResult = genericDAO.executeSimpleQuery(rollOffTonnageQuery);
-			monthlyIntakeReportVO.setRollOffTonnage(new BigDecimal(parseSingleElementFromQueryResult(rollOffTonnageResult)));
-			
-			monthlyIntakeReportVOList.add(monthlyIntakeReportVO);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		
+
 		return monthlyIntakeReportVOList;
 	}
 	
@@ -163,13 +221,20 @@ public class MonthlyTransferStationIntakeReportController extends CRUDController
 					e.printStackTrace();
 				}
 				
+				System.out.println("JSON Response = " + jsonResponse);
+				
 				if (jsonResponse.startsWith("\"")) {
 					jsonResponse = jsonResponse.substring(1, jsonResponse.length() - 1);
 				}
 				
 				String [] tokens = jsonResponse.split(",");
 				if (tokens.length > 0) {
-					return StringUtils.replace(tokens[0], "\"", StringUtils.EMPTY);
+					String value = StringUtils.replace(tokens[0], "\"", StringUtils.EMPTY);
+					if (value.equals("null")) {
+						return StringUtils.EMPTY;
+					} else {
+						return value;
+					}
 				} else {
 					return StringUtils.EMPTY;
 				}
