@@ -231,10 +231,10 @@ public class RecycleReportController extends CRUDController<Order> {
 		try {
 			SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 			
-			//List<Map<String,Object>> exportReportData = generateExportReportData(model, request);
+			criteria.getSearchMap().remove("_csrf");
 			
-			 List<RecycleReportVO> exportReportData1 = generateExportReportData1(model, request);
-			type = setRequestHeaders(response, type, "recycleReport");
+			List<RecycleReportVO> exportReportData1 =  retrieveReportData(criteria);
+			 type = setRequestHeaders(response, type, "recycleReport");
 			
 			String recycleDateFrom = criteria.getSearchMap().getOrDefault("recycleDateFrom", StringUtils.EMPTY).toString();
 			String recycleDateTo = criteria.getSearchMap().getOrDefault("recycleDateTo", StringUtils.EMPTY).toString();
@@ -252,7 +252,6 @@ public class RecycleReportController extends CRUDController<Order> {
 			
 			ByteArrayOutputStream out = new RecycleReportGenerator().exportReport("Recycle Report", headers, exportReportData1);
 			
-			
 			out.writeTo(response.getOutputStream());
 			out.close();
 
@@ -261,54 +260,5 @@ public class RecycleReportController extends CRUDController<Order> {
 			log.warn("Unable to create file :" + e);
 			request.getSession().setAttribute("errors", e.getMessage());
 		}
-	}
-	private List<Map<String, Object>> generateExportReportData(ModelMap model, HttpServletRequest request) {
-		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
-		criteria.getSearchMap().remove("_csrf");
-		
-		List<Map<String, Object>> exportReportData = new ArrayList<Map<String, Object>>();
-
-		List<RecycleReportVO> recycleReportVOList =  retrieveReportData(criteria);
-		if (recycleReportVOList == null || recycleReportVOList.isEmpty()) {
-			return exportReportData;
-		}
-		
-		for (RecycleReportVO reportVO : recycleReportVOList) {
-			Map<String, Object> aReportRow = new HashMap<String, Object>();
-			
-			aReportRow.put("materialCategory", reportVO.getMaterialCategory());
-			aReportRow.put("materialName", reportVO.getMaterialName());
-			aReportRow.put("totalNetTonnage",reportVO.getTotalNetTonnage());
-			aReportRow.put("recycleLocation",reportVO.getRecycleLocation());
-			
-			exportReportData.add(aReportRow);
-		}
-		
-		return exportReportData;
-	}
-	
-	private List<RecycleReportVO> generateExportReportData1(ModelMap model, HttpServletRequest request) {
-		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
-		criteria.getSearchMap().remove("_csrf");
-		
-		List<Map<String, Object>> exportReportData = new ArrayList<Map<String, Object>>();
-
-		List<RecycleReportVO> recycleReportVOList =  retrieveReportData(criteria);
-		if (recycleReportVOList == null || recycleReportVOList.isEmpty()) {
-			return recycleReportVOList;
-		}
-		
-//		for (RecycleReportVO reportVO : recycleReportVOList) {
-//			Map<String, Object> aReportRow = new HashMap<String, Object>();
-//			
-//			aReportRow.put("materialCategory", reportVO.getMaterialCategory());
-//			aReportRow.put("materialName", reportVO.getMaterialName());
-//			aReportRow.put("totalNetTonnage",reportVO.getTotalNetTonnage());
-//			aReportRow.put("recycleLocation",reportVO.getRecycleLocation());
-//			
-//			exportReportData.add(aReportRow);
-//		}
-		
-		return recycleReportVOList;
 	}
 }
