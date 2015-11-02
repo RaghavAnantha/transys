@@ -248,6 +248,9 @@ public class PermitController extends CRUDController<Permit> {
 		String deliveryAddressQuery = "select obj from DeliveryAddress obj where obj.id=" + deliveryAddressId;
 		List<DeliveryAddress> deliveryAddressList = genericDAO.executeSimpleQuery(deliveryAddressQuery);
 		model.addAttribute("deliveryAddress", deliveryAddressList);
+
+		// For new permit, first permit address will be the delivery address
+		model.addAttribute("permitAddress", deliveryAddressList);
 		
 		String locationTypesQuery = "select obj from LocationType obj where obj.id=" + locationTypeId;
 		List<LocationType> locationTypeList = genericDAO.executeSimpleQuery(locationTypesQuery);
@@ -313,6 +316,10 @@ public class PermitController extends CRUDController<Permit> {
 		List<PermitClass> permitClass = new ArrayList<>();
 		permitClass.add(permitToBeEdited.getPermitClass());
 		model.addAttribute("permitClass", permitClass);
+
+		List<PermitType> permitType = new ArrayList<>();
+		permitType.add(permitToBeEdited.getPermitType());
+		model.addAttribute("permitType", permitType);
 		
 		criterias = new HashMap<String, Object>();
 		criterias.put("permit", permitToBeEdited);

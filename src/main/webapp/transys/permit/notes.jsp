@@ -11,7 +11,7 @@
 		<tr>
 			<td colspan=10>
 				<%-- <td class="form-left"><transys:label code="Notes" /></td> --%>
-				<form:textarea row="5" id="notesTextArea" path="notes" cssClass="flat" style="width:100%;"/>
+				<form:textarea row="5" id="notesTextArea" path="notes" cssClass="flat notes"/>
 			 	<br><form:errors path="notes" cssClass="errorMessage" />
 			</td>
 		</tr>

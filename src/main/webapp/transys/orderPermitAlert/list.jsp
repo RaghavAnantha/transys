@@ -148,7 +148,7 @@
 		<transys:textcolumn headerText="Order#" dataField="order.id" type="java.lang.Long" />
 		<transys:textcolumn headerText="Contact" dataField="order.customer.contactName" />
 		<transys:textcolumn headerText="Phone#" dataField="order.customer.phone" />
-		<transys:textcolumn headerText="Order tatus" dataField="order.orderStatus.status" />
+		<transys:textcolumn headerText="Order Status" dataField="order.orderStatus.status" />
 		<transys:textcolumn headerText="Delivery Date" dataField="order.deliveryDate" type="java.sql.Timestamp" dataFormat="MM/dd/yyy"/>
 		<transys:textcolumn headerText="Permit#" dataField="permit.number" />
 		<transys:textcolumn headerText="Permit Status" dataField="permit.status.status" />

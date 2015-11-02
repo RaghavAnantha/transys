@@ -89,11 +89,6 @@ $("#permitModalFromAlertForm").submit(function (ev) {
 				</form:select>
 			 	<form:errors path="customer" cssClass="errorMessage" />
 			</td>
-			<td class="form-left"><transys:label code="Permit Fee" /><span class="errorMessage">*</span></td>
-			<td>
-				<form:input path="fee" cssClass="flat flat-ext" style="width: 175px"  />
-			 	<form:errors path="fee" cssClass="errorMessage" />
-			</td>
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Delivery Address" /><span class="errorMessage">*</span></td>
@@ -103,7 +98,17 @@ $("#permitModalFromAlertForm").submit(function (ev) {
 				</form:select>
 			 	<form:errors path="deliveryAddress" cssClass="errorMessage" />
 			</td> 
-			<td class="form-left"><transys:label code="LocationType" /><span class="errorMessage">*</span></td>
+			<td class="form-left"><transys:label code="Permit Address" /><span class="errorMessage">*</span></td>
+			<td>
+				<select class="flat form-control input-sm" style="width: 175px !important">
+					<c:forEach items="${permitAddress}" var="aPermitAddress">
+						<option value="${aPermitAddress.fullLine}" ${selected}>${aPermitAddress.fullLine}</option>
+					</c:forEach>	
+			 	</select>
+			</td>
+		</tr>
+		<tr>
+		<td class="form-left"><transys:label code="LocationType" /><span class="errorMessage">*</span></td>
 			<td>
 				<form:select id="locationTypeSelect" cssClass="flat form-control input-sm" path="locationType" style="width: 175px !important">
 				<form:options items="${locationType}" itemValue="id" itemLabel="locationType" />
@@ -123,7 +128,6 @@ $("#permitModalFromAlertForm").submit(function (ev) {
 			<td class="form-left"><transys:label code="Permit Type" /><span class="errorMessage">*</span></td>
 			<td>
 				<form:select id="permitTypeSelect" cssClass="flat form-control input-sm" path="permitType" style="width: 175px !important" onChange="return populateEndDate();">
-					<form:option value="">----Please Select----</form:option>
 					<form:options items="${permitType}" itemValue="id" itemLabel="permitType" />
 				</form:select>
 			 	<form:errors path="permitType.permitType" cssClass="errorMessage" />
@@ -132,33 +136,33 @@ $("#permitModalFromAlertForm").submit(function (ev) {
 		
 		<tr>
 			<td class="form-left wide">Start Date</td>
-			<td><form:input path="startDate" class="flat flat-ext"
-				id="datepicker8" name="startDate" style="width: 175px"  onChange="return populateEndDate();"/></td>
-				<form:errors path="startDate" cssClass="errorMessage" />
+			<td><form:input path="startDate" cssClass="flat flat-ext form-control form-control-ext" id="startDateInputPopUp" name="startDate" style="width: 175px" readonly="true" /></td> <!-- onChange="return populateEndDate();" -->
 			<td class="form-left"><transys:label code="End Date" /></td>
 			<td>
 				<form:input id="endDateInputPopUp" path="endDate" cssClass="flat flat-ext form-control form-control-ext" style="width:175px !important;height:22px" readonly="true" />
 			 </td>
 		</tr>
 		<tr>
+			<td class="form-left"><transys:label code="Permit Fee" /><span class="errorMessage">*</span></td>
+			<td class="td-static" id="fee">$${modelObject.fee}</td>
+			<%-- <td>
+				<form:input path="fee" cssClass="flat flat-ext" style="width: 175px"  />
+			 	<form:errors path="fee" cssClass="errorMessage" />
+			</td> --%>
+		</tr>
+		<tr>
 		<td class="form-left"><transys:label code="Parking Meter" /><span class="errorMessage">*</span></td>
 			<td>
-				<form:input path="parkingMeter" cssClass="flat flat-ext" style="width: 175px"  />
+				<form:select cssClass="flat form-control input-sm" path="parkingMeter" style="width: 175px !important" >
+					<form:option value="Yes"></form:option>
+					<form:option value="No"></form:option>
+				</form:select> 
 			 	<br><form:errors path="parkingMeter" cssClass="errorMessage" />
 			</td>
 			<td class="form-left"><transys:label code="Parking Meter Fee" /></td>
 			<td>
 				<form:input path="parkingMeterFee" cssClass="flat flat-ext" style="width: 175px"  />
 			 	<br><form:errors path="parkingMeterFee" cssClass="errorMessage" />
-			</td>
-		</tr>
-		<tr>
-		<td class="form-left"><transys:label code="Permit Addresses" /><span class="errorMessage">*</span></td>
-			<td>
-				<form:select cssClass="flat form-control input-sm" path="parkingMeter" style="width: 175px !important" >
-					<form:options items="${permitAddress}" itemValue="id" itemLabel="fullLine" />
-				 	<br><form:errors path="permitAddress" cssClass="errorMessage" />
-			 	</form:select>
 			</td>
 		</tr>
 		<tr>
@@ -172,7 +176,7 @@ $("#permitModalFromAlertForm").submit(function (ev) {
 		</tr>
 		<tr>
 			<td colspan="10">
-				<form:textarea row="5" path="permitNotes[0].notes" cssClass="form-control" style="width:100%; height:100%;"/>
+				<form:textarea row="5" path="permitNotes[0].notes" cssClass="form-control" style="width:63%; height:100%;"/>
 				<form:errors path="permitNotes[0].notes" cssClass="errorMessage" />
 			</td>
 		</tr>

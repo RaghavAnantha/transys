@@ -60,11 +60,6 @@ $("#permitForCustomerModalForm").submit(function (ev) {
 				</form:select> 
 			 	<form:errors path="customer" cssClass="errorMessage" />
 			</td>
-			<td class="form-left"><transys:label code="Permit Fee" /><span class="errorMessage">*</span></td>
-			<td>
-				<form:input path="fee" cssClass="flat" style="width: 175px"  />
-			 	<br><form:errors path="fee" cssClass="errorMessage" />
-			</td>
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Delivery Address" /><span class="errorMessage">*</span></td>
@@ -74,7 +69,17 @@ $("#permitForCustomerModalForm").submit(function (ev) {
 				</form:select> 
 			 	<form:errors path="deliveryAddress" cssClass="errorMessage" />
 			</td> 
-			<td class="form-left"><transys:label code="Location Type" /><span class="errorMessage">*</span></td>
+			<td class="form-left"><transys:label code="Permit Address" /><span class="errorMessage">*</span></td>
+			<td>
+				<select id="permitAddressFromOrderSelect" class="flat form-control input-sm" style="width: 175px !important" >
+					<c:forEach items="${permitAddress}" var="aPermitAddress">
+						<option value="${aPermitAddress.fullLine}" ${selected}>${aPermitAddress.fullLine}</option>
+					</c:forEach>					
+			 	</select>
+			</td>
+		</tr>
+		<tr>
+		<td class="form-left"><transys:label code="Location Type" /><span class="errorMessage">*</span></td>
 			<td>
 				<form:select id="permitLocationTypeSelect" cssClass="flat form-control input-sm" path="locationType" style="width: 175px !important" >
 					<form:options items="${locationType}" itemValue="id" itemLabel="locationType" />
@@ -108,6 +113,10 @@ $("#permitForCustomerModalForm").submit(function (ev) {
 			<td>
 				<form:input path="endDate" cssClass="form-control form-control-ext" readonly="true" style="width:175px !important;height:22px" />
 			</td>
+		</tr>
+		<tr>
+		<td class="form-left"><transys:label code="Permit Fee" /><span class="errorMessage">*</span></td>
+		<td class="td-static" id="fee">$${modelObject.fee}</td>
 		</tr>
 		<tr>
 			<td class="form-left">Parking Meter<span class="errorMessage">*</span></td>
