@@ -152,6 +152,13 @@ public class OrderController extends CRUDController<Order> {
 		List<MaterialType> materialTypeList = retrieveMaterialTypes(dumsterSizeId, materialCategoryId);
 		model.addAttribute("materialTypes", materialTypeList);
 		
+		List<Permit> permits = order.getPermits();
+		if (permits != null && !permits.isEmpty()) {
+			List<PermitClass> permitClassList = new ArrayList<PermitClass>();
+			permitClassList.add(permits.get(0).getPermitClass());
+			model.addAttribute("permitClasses", permitClassList);
+		}
+		
 		/*BigDecimal totalAmountPaid = new BigDecimal(0.00);
 		if (order.getOrderPayment() != null) {
 			for (OrderPayment anOrderPayment : order.getOrderPayment()) {
@@ -199,7 +206,7 @@ public class OrderController extends CRUDController<Order> {
       
       model.addAttribute("dusmpsterLocationTypes", genericDAO.executeSimpleQuery("select obj from LocationType obj where obj.id!=0 order by obj.id asc"));
       
-      model.addAttribute("permitClasses", genericDAO.executeSimpleQuery("select obj from PermitClass obj where obj.id!=0 order by obj.id asc"));
+      //model.addAttribute("permitClasses", genericDAO.executeSimpleQuery("select obj from PermitClass obj where obj.id!=0 order by obj.id asc"));
       model.addAttribute("permitTypes", genericDAO.executeSimpleQuery("select obj from PermitType obj where obj.id!=0 order by obj.id asc"));
       
       model.addAttribute("additionalFeeTypes", genericDAO.executeSimpleQuery("select obj from AdditionalFee obj where obj.id!=0 order by obj.id asc"));
