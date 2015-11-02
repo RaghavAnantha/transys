@@ -555,7 +555,60 @@ function populateTotalFees() {
 }
 
 function validateForm() {
+	var missingData = "";
+	
+	if ($('#customerSelect').val() == "") {
+		missingData += "Customer, "
+	}
+	if ($('#deliveryAddressSelect').val() == "") {
+		missingData += "Delivery Address, "
+	}
+	if ($('#deliveryContactName').val() == "") {
+		missingData += "Contact Name, "
+	}
+	if ($('#deliveryContactPhone1').val() == "") {
+		missingData += "Phone1, "
+	}
+	if ($("[name='deliveryDate']").val() == "") {
+		missingData += "Delivery Date, "
+	}
+	if ($('#deliveryHourFrom').val() == "") {
+		missingData += "Delivery Hour From, "
+	}
+	if ($('#deliveryHourTo').val() == "") {
+		missingData += "Delivery Hour To, "
+	}
+	if ($('#dumpsterLocationSelect').val() == "") {
+		missingData += "Dumpster Location, "
+	}
+	if ($('#dumpsterSize').val() == "") {
+		missingData += "Dumpster Size, "
+	}
+	if ($('#materialCategory').val() == "") {
+		missingData += "Material Category, "
+	}
+	if ($('#materialType').val() == "") {
+		missingData += "Material Type, "
+	}
+	if ($('#permits\\[0\\]').val() == ""  && $('#permits\\[1\\]').val() == "" && $('#permits\\[2\\]').val() == "") {
+		missingData += "Permits"
+	}
+	
+	if (missingData != "") {
+		var alertMsg = "Please enter/select required data for saving order.  Missing data:\n"
+					 + missingData;
+		showConfirmDialog("Data Validation", alertMsg);
+		
+		return false;
+	}
+	
 	return true;
+}
+
+function validatePayment() {
+	if ($('#orderPayment0\\.paymentMethod').val() != "") {
+		
+	}
 }
 
 function processForm() {
