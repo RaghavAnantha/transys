@@ -467,12 +467,13 @@ public class OrderController extends CRUDController<Order> {
 				String aChosenPermitTypeId = aChosenPermit.getPermitType().getId().toString();
 				String aChosenPermitCustomerId = aChosenPermit.getCustomer().getId().toString();
 				String aChosenPermitDeliveryAddressId = aChosenPermit.getDeliveryAddress().getId().toString();
+				String aChosenPermitLocationTypeId = aChosenPermit.getLocationType().getId().toString();
 				
 				SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
 				String deliveryDateStr = formatter.format(order.getDeliveryDate());
 				
 				List<Permit> aPermitOfChosenTypeList = retrievePermit(aChosenPermitCustomerId, 
-						aChosenPermitDeliveryAddressId, aChosenPermitClassId,  aChosenPermitTypeId, deliveryDateStr);
+						aChosenPermitDeliveryAddressId, aChosenPermitClassId,  aChosenPermitTypeId, deliveryDateStr, aChosenPermitLocationTypeId);
 					
 				aPermitOfChosenTypeList.add(aChosenPermit);
 				
@@ -558,6 +559,31 @@ public class OrderController extends CRUDController<Order> {
 		}
 	}
 	
+	private void updateIfPermitsChanged(List<Permit> originallyAssignedPermits, List<Permit> currentlyAssignedPermits, Long modifiedBy) {
+		if (originallyAssignedPermits == null || originallyAssignedPermits.isEmpty()) {
+			return;
+		}
+		
+		List<Permit> changedPermits = new ArrayList<Permit>();
+		for (Permit anOriginallyAssignedPermit : originallyAssignedPermits) {
+			boolean permitChanged = true;
+			for (Permit aCurrentlyAssignedPermit : currentlyAssignedPermits) {
+				if (anOriginallyAssignedPermit.getId() == aCurrentlyAssignedPermit.getId()) {
+					permitChanged = false;
+					break;
+				}
+			}
+			
+			if (permitChanged) { 
+				changedPermits.add(anOriginallyAssignedPermit);
+			}
+		}
+		
+		if (!changedPermits.isEmpty()) {
+			updatePermitStatus(changedPermits, "Available", modifiedBy);
+		}
+	}
+	
 	private void updateDumpsterStatus(Dumpster dumpsterInfoPassed, String status, Long modifiedBy) {
 		String dumpsterStatusQuery = "select obj from DumpsterStatus obj where obj.status='" + status + "'";
 		List<DumpsterStatus> dumpsterStatusList = genericDAO.executeSimpleQuery(dumpsterStatusQuery);
@@ -588,6 +614,7 @@ public class OrderController extends CRUDController<Order> {
 			e.printStackTrace();
 			log.warn("Error in validation :" + e);
 		}
+		
 		// return to form if we had errors
 		if (bindingResult.hasErrors()) {
 			setupCreate(model, request, entity);
@@ -857,13 +884,15 @@ public class OrderController extends CRUDController<Order> {
 														    @RequestParam(value = "permitId", required = false) String permitId,
 															 @RequestParam(value = "permitClassId", required = false) String permitClassId,
 															 @RequestParam(value = "permitTypeId", required = false) String permitTypeId,
-															 @RequestParam(value = "deliveryDate", required = false) String deliveryDate) {
+															 @RequestParam(value = "deliveryDate", required = false) String deliveryDate,
+															 @RequestParam(value = "locationTypeId", required = false) String locationTypeId) {
 		List<Permit> permitList = new ArrayList<Permit>();
 		
 		if (StringUtils.isNotEmpty(permitId)) {
 			permitList = retrievePermit(permitId); 
 		} else {
-			permitList = retrievePermit(customerId, deliveryAddressId, permitClassId, permitTypeId, deliveryDate);
+			permitList = retrievePermit(customerId, deliveryAddressId, permitClassId, permitTypeId, 
+					deliveryDate, locationTypeId);
 		}
 		
 		ObjectMapper objectMapper = new ObjectMapper();
@@ -897,27 +926,25 @@ public class OrderController extends CRUDController<Order> {
 	}
 	
 	private List<Permit> retrievePermit(String customerId, String deliveryAddressId, String permitClassId, 
-			String permitTypeId, String deliveryDateStr) {
+			String permitTypeId, String deliveryDateStr, String locationTypeId) {
+		String permitTypeQuery = "select obj from PermitType obj where obj.id="+ permitTypeId;
+		List<PermitType> requestedPermitTypes = genericDAO.executeSimpleQuery(permitTypeQuery);
+		
+		String requestedPermitDaysTokens[] = requestedPermitTypes.get(0).getPermitType().split("\\s");
+		int requestedPermitDays = new Integer(requestedPermitDaysTokens[0]);
+		
 		String requiredEndDateStr = StringUtils.EMPTY;
-		if (StringUtils.isNotEmpty(deliveryDateStr)) {
-			SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
-			try {
-				String permitTypeQuery = "select obj from PermitType obj where obj.id="+ permitTypeId;
-				List<PermitType> requestedPermitTypes = genericDAO.executeSimpleQuery(permitTypeQuery);
-				
-				String requestedPermitDaysTokens[] = requestedPermitTypes.get(0).getPermitType().split("\\s");
-				int requestedPermitDays = new Integer(requestedPermitDaysTokens[0]);
-				
-				Date deliveryDate = formatter.parse(deliveryDateStr);
-				Date requiredEndDate = DateUtils.addDays(deliveryDate, requestedPermitDays);
-				
-				//2015-10-03 00:00:00.0
-				formatter.applyPattern("yyyy-MM-dd 00:00:00.0");
-				requiredEndDateStr = formatter.format(requiredEndDate);
-			} catch (ParseException pe) {
-				//TODO: handle error
-				pe.printStackTrace();
-			}
+		SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+		try {
+			Date deliveryDate = formatter.parse(deliveryDateStr);
+			Date requiredEndDate = DateUtils.addDays(deliveryDate, requestedPermitDays);
+			
+			//2015-10-03 00:00:00.0
+			formatter.applyPattern("yyyy-MM-dd 00:00:00.0");
+			requiredEndDateStr = formatter.format(requiredEndDate);
+		} catch (ParseException pe) {
+			//TODO: handle error
+			pe.printStackTrace();
 		}
 		
 		String permitsQuery = "select obj from Permit obj where";
@@ -926,35 +953,10 @@ public class OrderController extends CRUDController<Order> {
 				    	 +  " and obj.permitClass.id=" + permitClassId
 				    	 +  " and obj.permitType.id=" + permitTypeId
 				    	 +  " and obj.endDate >= '" + requiredEndDateStr + "'"
-				    	 +  " and obj.status.status=";
+				    	 +  " and obj.locationType.id=" + locationTypeId
+				    	 +  " and obj.status.status IN ('Available', 'Pending')";
 		
-		List<Permit> availablePermits = genericDAO.executeSimpleQuery(permitsQuery + "'Available'");
-		//return availablePermits;
-		
-		List<Permit> pendingPermits = genericDAO.executeSimpleQuery(permitsQuery + "'Pending'");
-		if (pendingPermits.isEmpty()) {
-			return availablePermits;
-		}
-		
-		StringBuffer pendingPermitIdsBuff = new StringBuffer();
-		Map<Long, Permit> pendingPermitsMap = new HashMap<Long, Permit>();
-		for (Permit aPendingPermit : pendingPermits) {
-			pendingPermitIdsBuff.append(aPendingPermit.getId().toString() + " ,");
-			pendingPermitsMap.put(aPendingPermit.getId(), aPendingPermit);
-		}
-		
-		String pendingPermitIds = pendingPermitIdsBuff.substring(0, (pendingPermitIdsBuff.length() - 2));
-		String orderPermitsQuery = "select obj from OrderPermits obj where obj.id in (" 
-											+ pendingPermitIds
-											+ ")";
-		List<OrderPermits> orderPermitsList = genericDAO.executeSimpleQuery(orderPermitsQuery);
-		for (OrderPermits aOrderPermit : orderPermitsList) {
-			pendingPermitsMap.remove(aOrderPermit.getPermit().getId());
-		}
-		
-		Collection<Permit> filteredPendingPermits = pendingPermitsMap.values();
-		
-		availablePermits.addAll(filteredPendingPermits);
+		List<Permit> availablePermits = genericDAO.executeSimpleQuery(permitsQuery);
 		return availablePermits;
 	}
 	
@@ -1289,6 +1291,11 @@ public class OrderController extends CRUDController<Order> {
 		
 		beforeSave(request, entity, model);
 		
+		List<Permit> originallyAssignedPermits = null;
+		if (entity.getId() != null) {
+			originallyAssignedPermits = genericDAO.executeSimpleQuery("select obj.permits from Order obj where obj.id=" + entity.getId());
+		}
+		
 		StringBuffer permitIdsBuff = new StringBuffer();
 		for (Permit aPermit : entity.getPermits()) {
 			if (aPermit != null && aPermit.getId() != null) {
@@ -1296,7 +1303,7 @@ public class OrderController extends CRUDController<Order> {
 			}
 		}
 		
-		// TODO: why is permit updating even when not changed? Changeto list of order permits instead?
+		// TODO: why is permit updating even when not changed? Change to list of order permits instead?
 		// TODO: create/modified date not updated
 		String permitIds = permitIdsBuff.substring(0, (permitIdsBuff.length() - 2));
 		List<Permit> permitList = genericDAO.executeSimpleQuery("select obj from Permit obj where obj.id in (" 
@@ -1317,7 +1324,11 @@ public class OrderController extends CRUDController<Order> {
 
 		genericDAO.saveOrUpdate(entity);
 		
-		updatePermitStatus(permitList, "Assigned", getUser(request).getId());
+		Long modifiedBy = getUser(request).getId();
+		
+		updatePermitStatus(permitList, "Assigned", modifiedBy);
+		
+		updateIfPermitsChanged(originallyAssignedPermits, permitList, modifiedBy);
 		
 		cleanUp(request);
 		

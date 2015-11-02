@@ -957,8 +957,8 @@ public class DynamicReportServiceImpl implements DynamicReportService {
 			Style bigDecimalStyle = new Style();
 			//doubleStyle.setBorder(Border.THIN);
 			bigDecimalStyle.setHorizontalAlign(HorizontalAlign.RIGHT);
-			bigDecimalStyle.setPattern("####.000");
-			bigDecimalStyle.setTextColor(Color.RED);
+			bigDecimalStyle.setPattern("######.00");
+			//bigDecimalStyle.setTextColor(Color.RED);
 			AbstractColumn bigDecimalColumn = getColumn(columnTag.getDataField(), BigDecimal.class,
 					LabelUtil.getText(columnTag.getHeaderText(), locale),
 					Integer.valueOf("100"), headerStyle, bigDecimalStyle);

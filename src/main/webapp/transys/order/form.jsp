@@ -43,6 +43,8 @@ function populateCustomerInfo() {
 	var deliveryAddressSelect = $('#deliveryAddressSelect');
 	emptySelect(deliveryAddressSelect);
 	
+	resetPermit(1);
+	
 	var customerSelect =  $('#customerSelect');
 	var customerId = customerSelect.val();
 	if (customerId == "") {
@@ -332,12 +334,28 @@ function populateCityFee() {
 	});
 }
 
-function handleDeliveyAddressChange() {
-	var permit1NumbersSelect = $("#permits\\[" + 0 + "\\]");
-	emptySelect(permitNumbersSelect);
+function handleDeliveryAddressChange() {
+	resetPermit(1);
+}
+
+function handleDeliveryDateChange() {
+	resetPermit(1);
+}
+
+function handleDumpsterLocationChange() {
+	resetPermit(1);
+}
+
+function handlePermitClassChange(index) {
+	resetPermit(index);
+}
+
+function resetPermit(index) {
+	var permitTypeSelect = $("#permitTypes" + index);
+	permitTypeSelect.select(0);
 	
-	var permitTypeSelect = $("#permitTypes" + 1);
-	emptySelect(permitTypeSelect);
+	var permit1NumbersSelect = $("#permits\\[" + (index-1) + "\\]");
+	emptySelect(permitNumbersSelect);
 }
 
 function populatePermitNumbers(index) {
@@ -356,10 +374,16 @@ function populatePermitNumbers(index) {
 	var permitTypeSelect = $("#permitTypes" + index);
 	var permitTypeId = permitTypeSelect.val();
 	
+	var locationTypeSelect = $('#dumpsterLocationSelect');
+	var locationTypeId = locationTypeSelect.val();
+	
 	var deliveryDate = $("[name='deliveryDate']").val();
 	
 	if (customerId == "" || deliveryAddressId == "" || permitClassId == "" 
-			|| permitTypeId == "" || deliveryDate == "") {
+			|| permitTypeId == "" || deliveryDate == "" || locationTypeId == "") {
+		var alertMsg = "Please select customer, delivery address, delivery date, location, permit class and type for retrieving permits."
+		showAlertDialog("Data Validation", alertMsg);
+		
 		return false;
 	}
 	
@@ -368,7 +392,8 @@ function populatePermitNumbers(index) {
   								  + "&deliveryAddressId=" + deliveryAddressId
   								  + "&permitClassId=" + permitClassId
   								  + "&permitTypeId=" + permitTypeId
-  								  + "&deliveryDate=" + deliveryDate,
+  								  + "&deliveryDate=" + deliveryDate
+  								  + "&locationTypeId=" + locationTypeId,
   								  
        	type: "GET",
        	success: function(responseData, textStatus, jqXHR) {
@@ -638,7 +663,7 @@ function verifyExchangeOrderAndSubmit() {
 			<td class="form-left">Delivery Address<span class="errorMessage">*</span></td>
 			<td>
 				<label style="display: inline-block; font-weight: normal">
-					<form:select id="deliveryAddressSelect" cssClass="flat form-control input-sm" path="deliveryAddress" style="width:172px !important" onChange="return handleDeliveyAddressChange();">
+					<form:select id="deliveryAddressSelect" cssClass="flat form-control input-sm" path="deliveryAddress" style="width:172px !important" onChange="return handleDeliveryAddressChange();">
 						<form:option value="">-----Please Select-----</form:option>
 						<form:options items="${deliveryAddresses}" itemValue="id" itemLabel="fullLine"/>
 					</form:select> 
@@ -680,7 +705,7 @@ function verifyExchangeOrderAndSubmit() {
 		<tr>
 			<td class="form-left">Delivery Date<span class="errorMessage">*</span></td>
 			<td>
-				<form:input path="deliveryDate" cssClass="flat" style="width:172px !important" id="datepicker7" name="deliveryDate"/>
+				<form:input path="deliveryDate" cssClass="flat" style="width:172px !important" id="datepicker7" name="deliveryDate" onChange="return handleDeliveryDateChange();"/>
 				 <form:errors path="deliveryDate" cssClass="errorMessage" />
 			</td>
 			<td class="form-left">Delivery Time<span class="errorMessage">*</span></td>
@@ -702,7 +727,7 @@ function verifyExchangeOrderAndSubmit() {
 		<tr>
 			<td class="form-left">Dumpster Location<span class="errorMessage">*</span></td>
 			<td>
-				<form:select id="dumpsterLocationSelect" cssClass="flat form-control input-sm" style="width:172px !important" path="dumpsterLocation"> 
+				<form:select id="dumpsterLocationSelect" cssClass="flat form-control input-sm" style="width:172px !important" path="dumpsterLocation" onchange="return handleDumpsterLocationChange();"> 
 					<form:option value="">-----Please Select-----</form:option>
 					<form:options items="${dusmpsterLocationTypes}" itemValue="id" itemLabel="locationType" />
 				</form:select> 
@@ -710,7 +735,7 @@ function verifyExchangeOrderAndSubmit() {
 			</td>
 			<td class="form-left">Dumpster Size<span class="errorMessage">*</span></td>
 			<td>
-				<form:select id="dumpsterSize" cssClass="flat form-control input-sm" style="width:172px !important" path="dumpsterSize" onchange="return handleDumpsterSizeChange(); "> 
+				<form:select id="dumpsterSize" cssClass="flat form-control input-sm" style="width:172px !important" path="dumpsterSize" onchange="return handleDumpsterSizeChange();"> 
 					<form:option value="">-----Please Select-----</form:option>
 					<form:options items="${dumpsterSizes}" itemValue="id" itemLabel="size" />
 				</form:select> 
@@ -752,7 +777,7 @@ function verifyExchangeOrderAndSubmit() {
 		<tr>
 	    	<td class="form-left">Permit1 Class<span class="errorMessage">*</span></td>
 	        <td>
-				<select class="flat form-control input-sm" id="permitClasses1" name="permitClasses1" style="width:172px !important">
+				<select class="flat form-control input-sm" id="permitClasses1" name="permitClasses1" style="width:172px !important" onChange="return handlePermitClassChange(1);">
 					<option value="">-----Please Select-----</option>
 					<c:forEach items="${permitClasses}" var="aPermitClass">
 						<c:set var="selected" value="" />
@@ -767,7 +792,7 @@ function verifyExchangeOrderAndSubmit() {
 		 	</td>
 		 	<td class="form-left"><transys:label code="Permit2 Class"/></td>
 	        <td>
-				<select class="flat form-control input-sm" id="permitClasses2" name="permitClasses2" style="width:172px !important">
+				<select class="flat form-control input-sm" id="permitClasses2" name="permitClasses2" style="width:172px !important" onChange="return handlePermitClassChange(2);">
 					<option value="">-----Please Select-----</option>
 					<c:forEach items="${permitClasses}" var="aPermitClass">
 						<c:set var="selected" value="" />
@@ -782,7 +807,7 @@ function verifyExchangeOrderAndSubmit() {
 		 	</td>
 		 	<td class="form-left">Permit3 Class</td>
 	        <td>
-				<select class="flat form-control input-sm" id="permitClasses3" name="permitClasses3" style="width:172px !important">
+				<select class="flat form-control input-sm" id="permitClasses3" name="permitClasses3" style="width:172px !important" onChange="return handlePermitClassChange(3);">
 					<option value="">-----Please Select-----</option>
 					<c:forEach items="${permitClasses}" var="aPermitClass">
 						<c:set var="selected" value="" />
@@ -1243,6 +1268,10 @@ $("#addCustomerLink").click(function (ev) {
 
 $("#addDeliveryAddressLink").click(function (ev) {
 	var customerId = $('#customerSelect').val();
+	if (customerId == "") {
+		var alertMsg = "Please select customer for adding delivery address."
+		showAlertDialog("Data Validation", alertMsg);
+	}
 	
 	var url = $(this).attr("href");
 	url += "?customerId=" + customerId;
@@ -1267,6 +1296,9 @@ $("#addPermitLink").click(function (ev) {
 	
 	if (customerId == "" || deliveryAddressId == "" || locationTypeId == "" 
 			|| permitClassId == "" || permitTypeId == "" || deliveryDate == "") {
+		var alertMsg = "Please select customer, delivery address, delivery date, location, permit class and type for the new permit."
+		showAlertDialog("Data Validation", alertMsg);
+		
 		return false;
 	}
 	

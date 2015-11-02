@@ -7,7 +7,6 @@ import javax.persistence.Table;
 @Entity
 @Table(name="locationType")
 public class LocationType extends AbstractBaseModel {
-
 	@Column(name="locationType")
 	private String locationType;
 
