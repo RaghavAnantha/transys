@@ -149,6 +149,8 @@ public class PermitController extends CRUDController<Permit> {
 		model.addAttribute("activeTab", "managePermits");
 		model.addAttribute("mode", "MANAGE");
 		
+		cleanUp(request);
+		
 		return urlContext + "/permit";
 	}
 
@@ -159,7 +161,8 @@ public class PermitController extends CRUDController<Permit> {
 			Object[] param = searchMap.keySet().toArray();
 			for (int i = 0; i < param.length; i++) {
 				String key = param[i].toString();
-				if(key.toUpperCase().contains("NUMBER") && searchMap.get(key).toString().equalsIgnoreCase("Pending Payment") ) {
+				if(key.toUpperCase().contains("NUMBER") && searchMap.get(key).toString().equalsIgnoreCase("To Be Assigned") ) {
+					System.out.println("Key = " + key + " : " + searchMap.get(key).toString());
 					searchMap.put("number", "null");
 				}
 			}

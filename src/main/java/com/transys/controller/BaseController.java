@@ -225,6 +225,19 @@ public class BaseController {
 		
 		criteria.setSearchMap(searchMap);
 	}
+	
+	protected void resetEmptyPermitNumberInSearch(HttpServletRequest request) {
+		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
+		Map<String, Object> searchMap = criteria.getSearchMap();
+		
+		if (searchMap.containsKey("number") && searchMap.get("number").toString().equalsIgnoreCase("null")) {
+			searchMap.put("number", "To Be Assigned");
+			System.out.println("Resetting Permit Number");
+		}
+		
+		criteria.setSearchMap(searchMap);
+		
+	}
 
 	/*public void writeActivityLog(String activityType, String details) {
 		auditService.writeActivityLog(urlContext, activityType, details);

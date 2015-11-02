@@ -104,11 +104,17 @@
 	 </tr>
 	 <tr>
 		  <td class="form-left"><transys:label code="Permit Number"/></td>
-				<td><select class="flat form-control input-sm" id="permitNumber" name="number" style="width: 175px !important"">
+				<td><select class="flat form-control input-sm" id="permitNumber" name="number" style="width: 175px !important">
+				<c:set var="selected" value=""/>
 					<option value="">------<transys:label code="Please Select"/>------</option>
+					<c:if test="${sessionScope.searchCriteria.searchMap['number'] == 'To Be Assigned'}">
+						<c:set var="selected" value="selected"/>
+					</c:if>
+					<option value="To Be Assigned" ${selected}>To Be Assigned</option>
+					
 					<c:forEach items="${permit}" var="permit">
 						<c:if test="${not empty permit.number}">
-							<c:set var="selected" value=""/>
+						<c:set var="selected" value=""/>
 							<c:if test="${sessionScope.searchCriteria.searchMap['number'] == permit.number}">
 								<c:set var="selected" value="selected"/>
 							</c:if>
@@ -116,11 +122,6 @@
 						</c:if>
 					</c:forEach>
 					<c:set var="selected" value=""/>
-					<c:if test="${sessionScope.searchCriteria.searchMap['number'] == 'Pending Payment'}">
-						<c:set var="selected" value="selected"/>
-					</c:if>
-					<option value="Pending Payment" ${selected}>Pending Payment</option>
-					
 				</select>
 				</td>
 			
