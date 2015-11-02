@@ -25,6 +25,8 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import com.transys.model.vo.MonthlyIntakeReportVO;
+
 public class ExcelReportGenerator {
 	
 	public static SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
@@ -54,15 +56,15 @@ public class ExcelReportGenerator {
       Cell titleCell = titleRow.createCell(0);
       titleCell.setCellValue(title);
       titleCell.setCellStyle(styles.get("title"));
-      sheet.addMergedRegion(CellRangeAddress.valueOf("$A$1:$L$1"));
+      sheet.addMergedRegion(CellRangeAddress.valueOf("$A$1:$E$1"));
       
     //the header row: centered text in 48pt font
       Row headerRow = sheet.createRow(1);
-      headerRow.setHeightInPoints(12.75f);
+//      headerRow.setHeightInPoints(12.75f);
       
       Iterator<String> headersSet = headers.keySet().iterator();
       
-      int i = 0;
+      int i = 1;
       LinkedList<Integer> columnWidths = new LinkedList<>();
       
       while(headersSet.hasNext()){
@@ -70,7 +72,7 @@ public class ExcelReportGenerator {
       	String headerName = headersSet.next();
          cell.setCellValue(headerName);
          cell.setCellStyle(styles.get("header"));
-         columnWidths.add(256*headerName.length());
+         columnWidths.add(headerName.length());
       }
       
 //      sheet.createFreezePane(0, 1);
@@ -81,11 +83,11 @@ public class ExcelReportGenerator {
       for (i = 0; i < data.size(); i++, rownum++) {
           row = sheet.createRow(rownum);
           
-          for (Object everyDataObject : data) {
+          Object everyDataObject = data.get(i);
          	 
          	 // invoke all fields using reflection on everyDataObject
          	 
-         	 int columnIndex = 0;
+         	 int columnIndex = 1;
          	 Iterator<String> fieldSet = headers.values().iterator();
             	 
          	 while(fieldSet.hasNext()) {
@@ -100,16 +102,14 @@ public class ExcelReportGenerator {
 						 
 						 if (value instanceof String) {
 							 cell.setCellValue(value.toString());
-							 if (columnWidths.get(columnIndex) < value.toString().length()) {
-								 columnWidths.set(columnIndex, value.toString().length());
+							 if (columnWidths.get(columnIndex-1) < value.toString().length()) {
+								 columnWidths.set(columnIndex-1, value.toString().length());
 							 }
 						 } else if (value instanceof BigDecimal) {
 							 cell.setCellValue(((BigDecimal)value).doubleValue());
 						 } else if (value instanceof Integer) {
 							 cell.setCellValue(Integer.parseInt(value.toString()));
-						 } else if (value instanceof Date) {
-							 cell.setCellValue(fmt.parse("01-Jan"));
-						 }  else { 
+						 } else { 
 							 String valueStr = "Unknown data type for " + field.getName();
 							 cell.setCellValue(valueStr);
 						 }
@@ -126,20 +126,15 @@ public class ExcelReportGenerator {
 					} catch (IllegalAccessException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
-					} catch (ParseException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-             }
-         	 
+					} 
           }
       }
 
       //set column widths, the width is measured in units of 1/256th of a character width
 
-      int index = 0;
+      int index = 1;
       for (Integer columnWidth : columnWidths) {
-      	sheet.setColumnWidth(index, columnWidth);
+      	sheet.setColumnWidth(index, 256*columnWidth);
       	index++;
       }
 
@@ -184,6 +179,7 @@ public class ExcelReportGenerator {
       
       Font font1 = wb.createFont();
       font1.setBoldweight(Font.BOLDWEIGHT_BOLD);
+      font1.setFontHeightInPoints((short)14);
       style = createBorderedStyle(wb);
       style.setAlignment(CellStyle.ALIGN_LEFT);
       style.setFont(font1);

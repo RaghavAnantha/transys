@@ -239,9 +239,9 @@ public class RecycleReportController extends CRUDController<Order> {
 			String recycleDateFrom = criteria.getSearchMap().getOrDefault("recycleDateFrom", StringUtils.EMPTY).toString();
 			String recycleDateTo = criteria.getSearchMap().getOrDefault("recycleDateTo", StringUtils.EMPTY).toString();
 			
-			Map<String, Object> params = new HashMap<String, Object>();
+			/*Map<String, Object> params = new HashMap<String, Object>();
 			params.put("RECYCLE_DATE_FROM", recycleDateFrom);
-			params.put("RECYCLE_DATE_TO", recycleDateTo);
+			params.put("RECYCLE_DATE_TO", recycleDateTo);*/
 
 			//ByteArrayOutputStream out = dynamicReportService.generateStaticReport("recycleReport", exportReportData, params, type, request);
 			Map<String, String> headers = new LinkedHashMap<>();
@@ -250,7 +250,9 @@ public class RecycleReportController extends CRUDController<Order> {
 			headers.put("Tons", "totalNetTonnage");
 			headers.put("Location", "recycleLocation");
 			
-			ByteArrayOutputStream out = new RecycleReportGenerator().exportReport("Recycle Report", headers, exportReportData1);
+			RecycleReportGenerator reportGenerator = new RecycleReportGenerator();
+			reportGenerator.setAggregationHeader("Date Range:	" + recycleDateFrom	+ "  To  " + recycleDateTo);
+			ByteArrayOutputStream out = reportGenerator.exportReport("Recycle Report", headers, exportReportData1);
 			
 			out.writeTo(response.getOutputStream());
 			out.close();

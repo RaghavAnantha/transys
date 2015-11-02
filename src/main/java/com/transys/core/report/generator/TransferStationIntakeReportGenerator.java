@@ -208,7 +208,6 @@ public class TransferStationIntakeReportGenerator extends ExcelReportGenerator {
 			//row.setHeightInPoints(12.75f);
 			
 			MonthlyIntakeReportVO everyDataObject = data.get(i);
-//			for (MonthlyIntakeReportVO everyDataObject : data) {
 
 				columnIndex = 1;
 				Iterator<String> fieldSet = headers.values().iterator();

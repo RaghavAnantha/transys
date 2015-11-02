@@ -19,8 +19,12 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-public class RecycleReportGenerator extends ExcelReportGenerator {
+import com.transys.model.vo.MonthlyIntakeReportVO;
 
+public class RecycleReportGenerator extends ExcelReportGenerator {
+	
+	String aggregationHeader = null;
+	
 	@Override
 	public ByteArrayOutputStream exportReport(String title, Map<String, String> headers, List<?> data) {
 			
@@ -44,17 +48,32 @@ public class RecycleReportGenerator extends ExcelReportGenerator {
 	      titleCell.setCellStyle(styles.get("title"));
 	      sheet.addMergedRegion(CellRangeAddress.valueOf("$A$1:$E$1"));
 	      
+	      // aggregation data - Date Range
+	      int colIndex = 1;
+	      
+	      Row aggregationRow = sheet.createRow(1);
+	      aggregationRow.setHeightInPoints(22);
+	      Cell aggregationCell = aggregationRow.createCell(colIndex++);
+	      aggregationCell.setCellStyle(styles.get("cell_b"));
+	      aggregationCell.setCellValue(this.aggregationHeader);
+	      
+	      for (int i = 2; i <= 4; i++) {
+	      	aggregationRow.createCell(i).setCellStyle(styles.get("cell_b"));
+			}
+			sheet.addMergedRegion(new CellRangeAddress(aggregationRow.getRowNum(), aggregationRow.getRowNum(), 1, 4));
+
 	    //the header row: centered text in 48pt font
-	      Row headerRow = sheet.createRow(1);
-	      headerRow.setHeightInPoints(12.75f);
+	      Row headerRow = sheet.createRow(2);
+//	      headerRow.setHeightInPoints(12.75f);
 	      
 	      Iterator<String> headersSet = headers.keySet().iterator();
 	      
-	      int i = 1;
+	      
 	      LinkedList<Integer> columnWidths = new LinkedList<>();
 	      
+	      colIndex = 1;
 	      while(headersSet.hasNext()){
-	      	Cell cell = headerRow.createCell(i++);
+	      	Cell cell = headerRow.createCell(colIndex++);
 	      	String headerName = headersSet.next();
 	         cell.setCellValue(headerName);
 	         cell.setCellStyle(styles.get("header"));
@@ -65,11 +84,11 @@ public class RecycleReportGenerator extends ExcelReportGenerator {
 	      
 	      Row row;
 	      Cell cell;
-	      int rownum = 2;
-	      for (i = 0; i < data.size(); i++, rownum++) {
+	      int rownum = 3;
+	      for (int i = 0; i < data.size(); i++, rownum++) {
 	          row = sheet.createRow(rownum);
 	          
-	          for (Object everyDataObject : data) {
+	          Object everyDataObject = data.get(i);
 	         	 
 	         	 // invoke all fields using reflection on everyDataObject
 	         	 
@@ -114,8 +133,6 @@ public class RecycleReportGenerator extends ExcelReportGenerator {
 							e.printStackTrace();
 						} 
 	             }
-	         	 
-	          }
 	      }
 	
 	      //set column widths, the width is measured in units of 1/256th of a character width
@@ -137,5 +154,9 @@ public class RecycleReportGenerator extends ExcelReportGenerator {
 			}
 	      return out;
 		}
-
+	
+	public void setAggregationHeader(String data) {
+		this.aggregationHeader = data;
+	}
+ 
 }
