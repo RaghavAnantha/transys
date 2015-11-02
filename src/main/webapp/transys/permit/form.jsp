@@ -53,7 +53,7 @@ function populatePermitFee() {
 	  		url: "getPermitFee.do?permitClassId=" + permitClassValue + "&permitTypeId=" + permitTypeValue + "&startDate=" + startDateValue,
 	       	type: "GET",
 	       	success: function(responseData, textStatus, jqXHR) {
-	    	   	$('#permitFeeInput').val(responseData);
+	    	   	$('#permitFeeInput').html("$" + responseData);
 			}
 		});
 	}
@@ -87,11 +87,6 @@ function populatePermitFee() {
 					<form:options items="${customer}" itemValue="id" itemLabel="companyName" />
 				</form:select> 
 			 	<form:errors path="customer" cssClass="errorMessage" />
-			</td>
-			<td class="form-left"><transys:label code="Permit Fee" /><span class="errorMessage">*</span></td>
-			<td>
-				<form:input id="permitFeeInput" path="fee" cssClass="flat" style="width: 175px"  />
-			 	<br><form:errors path="fee" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>
@@ -143,6 +138,15 @@ function populatePermitFee() {
 				<form:input id="endDateInput" path="endDate" cssClass="flat flat-ext form-control form-control-ext" style="width:175px !important;height:22px !important" readonly="true" />
 			</td>
 		</tr>
+		<tr>
+			<td class="form-left"><transys:label code="Permit Fee" /><span class="errorMessage">*</span></td>
+			<td class="td-static" id="permitFeeInput"></td>
+			<%-- <td>
+				
+				<form:input id="permitFeeInput" path="fee" cssClass="flat" style="width: 175px"  />
+			 	<br><form:errors path="fee" cssClass="errorMessage" />
+			</td>
+		</tr> --%>
 		<tr>
 		<td class="form-left"><transys:label code="Parking Meter" /><span class="errorMessage">*</span></td>
 			<td>
