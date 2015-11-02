@@ -7,7 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -25,11 +25,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.transys.core.report.generator.RecycleReportGenerator;
 import com.transys.model.MaterialCategory;
 import com.transys.model.MaterialType;
 import com.transys.model.Order;
 import com.transys.model.SearchCriteria;
-import com.transys.model.vo.MaterialIntakeReportVO;
 import com.transys.model.vo.RecycleReportVO;
 
 @Controller
@@ -231,8 +231,9 @@ public class RecycleReportController extends CRUDController<Order> {
 		try {
 			SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 			
-			List<Map<String,Object>> exportReportData = generateExportReportData(model, request);
+			//List<Map<String,Object>> exportReportData = generateExportReportData(model, request);
 			
+			 List<RecycleReportVO> exportReportData1 = generateExportReportData1(model, request);
 			type = setRequestHeaders(response, type, "recycleReport");
 			
 			String recycleDateFrom = criteria.getSearchMap().getOrDefault("recycleDateFrom", StringUtils.EMPTY).toString();
@@ -242,8 +243,16 @@ public class RecycleReportController extends CRUDController<Order> {
 			params.put("RECYCLE_DATE_FROM", recycleDateFrom);
 			params.put("RECYCLE_DATE_TO", recycleDateTo);
 
-			ByteArrayOutputStream out = dynamicReportService.generateStaticReport("recycleReport", exportReportData, params, type, request);
-		
+			//ByteArrayOutputStream out = dynamicReportService.generateStaticReport("recycleReport", exportReportData, params, type, request);
+			Map<String, String> headers = new LinkedHashMap<>();
+			headers.put("Material Category", "materialCategory");
+			headers.put("Material Type", "materialName");
+			headers.put("Tons", "totalNetTonnage");
+			headers.put("Location", "recycleLocation");
+			
+			ByteArrayOutputStream out = new RecycleReportGenerator().exportReport("Recycle Report", headers, exportReportData1);
+			
+			
 			out.writeTo(response.getOutputStream());
 			out.close();
 
@@ -276,5 +285,30 @@ public class RecycleReportController extends CRUDController<Order> {
 		}
 		
 		return exportReportData;
+	}
+	
+	private List<RecycleReportVO> generateExportReportData1(ModelMap model, HttpServletRequest request) {
+		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
+		criteria.getSearchMap().remove("_csrf");
+		
+		List<Map<String, Object>> exportReportData = new ArrayList<Map<String, Object>>();
+
+		List<RecycleReportVO> recycleReportVOList =  retrieveReportData(criteria);
+		if (recycleReportVOList == null || recycleReportVOList.isEmpty()) {
+			return recycleReportVOList;
+		}
+		
+//		for (RecycleReportVO reportVO : recycleReportVOList) {
+//			Map<String, Object> aReportRow = new HashMap<String, Object>();
+//			
+//			aReportRow.put("materialCategory", reportVO.getMaterialCategory());
+//			aReportRow.put("materialName", reportVO.getMaterialName());
+//			aReportRow.put("totalNetTonnage",reportVO.getTotalNetTonnage());
+//			aReportRow.put("recycleLocation",reportVO.getRecycleLocation());
+//			
+//			exportReportData.add(aReportRow);
+//		}
+		
+		return recycleReportVOList;
 	}
 }
