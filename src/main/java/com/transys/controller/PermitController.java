@@ -430,11 +430,20 @@ public class PermitController extends CRUDController<Permit> {
 		
 			String status = "Pending";
 			if (entity.getNumber() != null && entity.getNumber().length() > 0) {
-				status = "Available";
+				// check for duplicate
+				if (isPermitNumberUnique(entity.getNumber())) {
+					status = "Available";
+				} else {
+					return showPermitCreatePageWithError(request, entity, model, "Permit Number " + entity.getNumber() + " already exists.");
+				}
 			} else {
 				entity.setNumber(null);
 			}
 
+			if (entity.getFee() == null) {
+				return showPermitCreatePageWithError(request, entity, model, "Permit Fee for the required class/type for the given date range = " + entity.getFormattedStartDate() + " to " + entity.getFormattedEndDate() + " is not available.");
+			} 
+			
 			PermitStatus permitStatus = (PermitStatus)genericDAO.executeSimpleQuery("select obj from PermitStatus obj where obj.status='" + status + "'").get(0);
 			entity.setStatus(permitStatus);
 			
@@ -475,6 +484,47 @@ public class PermitController extends CRUDController<Permit> {
 			cleanUp(request);
 			
 			return saveSuccess(model, request, entity);
+	}
+
+	private String showPermitCreatePageWithError(HttpServletRequest request, Permit entity, ModelMap model, String errorMessage) {
+		setupCreate(model, request);
+		
+		model.addAttribute("msgCtx", "managePermit");
+		model.addAttribute("error", errorMessage);
+		
+		model.addAttribute("activeTab", "managePermits");
+		model.addAttribute("activeSubTab", "permitDetails"); // Permit Address?
+		model.addAttribute("mode", "ADD");
+		
+		List<BaseModel> deliveryAddressList = genericDAO.executeSimpleQuery("select obj from DeliveryAddress obj where obj.id=" + entity.getDeliveryAddress().getId());
+		System.out.println("select obj from DeliveryAddress obj where obj.id=" + entity.getDeliveryAddress().getId());
+		model.addAttribute("editDeliveryAddress", deliveryAddressList);
+		
+		PermitNotes notes = new PermitNotes();
+		notes.setPermit(entity);
+		model.addAttribute("notesModelObject", notes);
+		List<BaseModel> notesList = new ArrayList<>(); 
+		model.addAttribute("notesList", notesList);
+		
+		PermitAddress permitAddress = new PermitAddress();
+		permitAddress.setPermit(entity);
+		model.addAttribute("permitAddressModelObject", permitAddress);
+		List<BaseModel> permitAddressList =  new ArrayList<>();
+		model.addAttribute("permitAddressList", permitAddressList);
+		
+		return urlContext + "/permit";
+	}
+
+	private boolean isPermitNumberUnique(String number) {
+		
+		Map<String, String> filterCriteria = new HashMap<>();
+		filterCriteria.put("number", number);
+ 		List<Permit> listOfPermits = genericDAO.findByCriteria(Permit.class, filterCriteria, "id", false);
+ 		if (listOfPermits.isEmpty()) {
+ 			return true;
+ 		} else {
+ 			return false;
+ 		}
 	}
 
 	private void setupPermitNotes(Permit permit) {
@@ -535,6 +585,14 @@ public class PermitController extends CRUDController<Permit> {
 			if (!validateMaxPermitsAllowable(associatedOrderPermitEntry)) {
 				System.out.println("There are already " + MAX_NUMBER_OF_ASSOCIATED_PERMITS + " permits for this order.");
 				return "ErrorMsg: There are already " + MAX_NUMBER_OF_ASSOCIATED_PERMITS + " permits for this order.";
+			}
+			
+			// unique permit number check
+			if(entity.getNumber() != null && entity.getNumber().length() > 0) {
+				if (!isPermitNumberUnique(entity.getNumber())) {
+					System.out.println("Permit Number " + entity.getNumber() + " already exists.");
+					return "ErrorMsg: Permit Number " + entity.getNumber() + " already exists.";
+				}
 			}
 
 			PermitStatus permitStatus = (PermitStatus)genericDAO.executeSimpleQuery("select obj from PermitStatus obj where obj.status='" + status + "'").get(0);
@@ -657,6 +715,14 @@ public class PermitController extends CRUDController<Permit> {
 			return urlContext + "/form";
 		}
 		
+		// unique permit number check
+		if(entity.getNumber() != null && entity.getNumber().length() > 0) {
+			if (!isPermitNumberUnique(entity.getNumber())) {
+				System.out.println("Permit Number " + entity.getNumber() + " already exists.");
+				return "ErrorMsg: Permit Number " + entity.getNumber() + " already exists.";
+			}
+		}
+				
 		String status = "Pending";
 		PermitStatus permitStatus = (PermitStatus)genericDAO.executeSimpleQuery("select obj from PermitStatus obj where obj.status='" + status + "'").get(0);
 		entity.setStatus(permitStatus);

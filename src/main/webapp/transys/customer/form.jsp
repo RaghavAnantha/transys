@@ -208,7 +208,7 @@ function formatPhone(phone) {
 							and modelObject.customerNotes[0].notes != null and modelObject.customerNotes[0].notes.length() > 0}">
 					<c:set var="customerNotesDisabled" value="true" />
 				</c:if>
-				<form:textarea row="5" readonly="${customerNotesDisabled}" path="customerNotes[0].notes" cssClass="form-control" id="customerNotes" style="width:100%; height:100%;"/>
+				<form:textarea row="5" readonly="${customerNotesDisabled}" path="customerNotes[0].notes" cssClass="form-control notes" id="customerNotes" style="width:55%;"/>
 				<form:errors path="customerNotes[0].notes" cssClass="errorMessage" />
 			</td>
 		</tr>

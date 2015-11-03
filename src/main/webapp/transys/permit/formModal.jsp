@@ -163,6 +163,7 @@ $("#permitModalFromAlertForm").submit(function (ev) {
 			<td>
 				<form:input path="parkingMeterFee" cssClass="flat flat-ext" style="width: 175px"  />
 			 	<br><form:errors path="parkingMeterFee" cssClass="errorMessage" />
+			 	<form:hidden path="fee" id="fee" />
 			</td>
 		</tr>
 		<tr>
@@ -176,7 +177,7 @@ $("#permitModalFromAlertForm").submit(function (ev) {
 		</tr>
 		<tr>
 			<td colspan="10">
-				<form:textarea row="5" path="permitNotes[0].notes" cssClass="form-control" style="width:63%; height:100%;"/>
+				<form:textarea row="5" path="permitNotes[0].notes" cssClass="form-control notes" />
 				<form:errors path="permitNotes[0].notes" cssClass="errorMessage" />
 			</td>
 		</tr>

@@ -29,7 +29,7 @@ $("#permitForCustomerModalForm").submit(function (ev) {
         data: $this.serialize(),
         success: function(responseData, textStatus, jqXHR) {
         	if (responseData.indexOf("ErrorMsg") >= 0 ) {
-        		displayPopupDialogErrorMessage(responseData);
+            	displayPopupDialogErrorMessage(responseData.replace("ErrorMsg: ", ""));
         	} else {
         		var permit = jQuery.parseJSON(responseData);
         		
@@ -131,6 +131,7 @@ $("#permitForCustomerModalForm").submit(function (ev) {
 			<td>
 				<form:input path="parkingMeterFee" cssClass="flat" style="width: 175px"  />
 			 	<br><form:errors path="parkingMeterFee" cssClass="errorMessage" />
+			 	<form:hidden path="fee" id="fee" />
 			</td>
 		</tr>
 		<tr>
@@ -144,7 +145,7 @@ $("#permitForCustomerModalForm").submit(function (ev) {
 		</tr>
 		<tr>
 			<td colspan=10>
-				<form:textarea row="5" path="permitNotes[0].notes" cssClass="form-control" style="width:100%; height:100%;"/>
+				<form:textarea row="5" path="permitNotes[0].notes" cssClass="form-control notes" />
 				<form:errors path="permitNotes[0].notes" cssClass="errorMessage" />
 			</td>
 		</tr>

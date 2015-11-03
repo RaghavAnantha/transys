@@ -13,7 +13,7 @@ function validateForm() {
 		<tr><td class="form-left">Notes<span class="errorMessage">*</span></td></tr>
 		<tr>
 			<td colspan=10>
-				<form:textarea row="5" id="notesTabNotes" path="notes" cssClass="flat" style="width:100%;"/>
+				<form:textarea row="5" id="notesTabNotes" path="notes" cssClass="flat notes"/>
 				<form:errors path="notes" cssClass="errorMessage" />
 			</td>
 		</tr>

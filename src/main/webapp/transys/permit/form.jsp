@@ -54,6 +54,7 @@ function populatePermitFee() {
 	       	type: "GET",
 	       	success: function(responseData, textStatus, jqXHR) {
 	    	   	$('#permitFeeInput').html("$" + responseData);
+	    	   	$('#fee').val(responseData);
 			}
 		});
 	}
@@ -140,7 +141,8 @@ function populatePermitFee() {
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Permit Fee" /><span class="errorMessage">*</span></td>
-			<td class="td-static" id="permitFeeInput"></td>
+			<td class="td-static" id="permitFeeInput">${modelObject.fee}</td>
+			<form:hidden path="fee" id="fee" />
 			<%-- <td>
 				
 				<form:input id="permitFeeInput" path="fee" cssClass="flat" style="width: 175px"  />
@@ -178,7 +180,7 @@ function populatePermitFee() {
 							and modelObject.permitNotes[0].notes != null and modelObject.permitNotes[0].notes.length() > 0}">
 					<c:set var="permitNotesDisabled" value="true" />
 				</c:if>
-				<form:textarea readonly="${permitNotesDisabled}" row="5" path="permitNotes[0].notes" cssClass="form-control" style="width:100%; height:100%;"/>
+				<form:textarea readonly="${permitNotesDisabled}" row="5" path="permitNotes[0].notes" cssClass="form-control notes" style="width:55.5%;" />
 				<form:errors path="permitNotes[0].notes" cssClass="errorMessage" />
 			</td>
 		</tr>
