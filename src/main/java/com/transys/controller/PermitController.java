@@ -500,6 +500,10 @@ public class PermitController extends CRUDController<Permit> {
 		System.out.println("select obj from DeliveryAddress obj where obj.id=" + entity.getDeliveryAddress().getId());
 		model.addAttribute("editDeliveryAddress", deliveryAddressList);
 		
+		List<BaseModel> locationTypeList = genericDAO.executeSimpleQuery("select obj from LocationType obj where obj.id=" + entity.getLocationType().getId());
+		System.out.println("select obj from LocationType obj where obj.id=" + entity.getLocationType().getId());
+		model.addAttribute("locationType", locationTypeList);
+		
 		PermitNotes notes = new PermitNotes();
 		notes.setPermit(entity);
 		model.addAttribute("notesModelObject", notes);
