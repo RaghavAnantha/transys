@@ -555,6 +555,26 @@ function populateTotalFees() {
 }
 
 function validateForm() {
+	var missingData = validateMissingData();
+	if (missingData != "") {
+		var alertMsg = "Please enter/select required data for saving order.  Missing data:\n"
+					 + missingData;
+		showConfirmDialog("Data Validation", alertMsg);
+		
+		return false;
+	}
+	
+	var formatValidation = validateDataFormat();
+	if (formatValidtion != "") {
+		var alertMsg = "Invalid data:\n"
+					 + formatValidtion;
+		showConfirmDialog("Data Validation", alertMsg);
+		
+		return false;
+	}
+}
+
+function validateMissingData() {
 	var missingData = "";
 	
 	if ($('#customerSelect').val() == "") {
@@ -594,21 +614,225 @@ function validateForm() {
 		missingData += "Permits"
 	}
 	
-	if (missingData != "") {
-		var alertMsg = "Please enter/select required data for saving order.  Missing data:\n"
-					 + missingData;
-		showConfirmDialog("Data Validation", alertMsg);
+	for (i = 1; i < 4; i++) {
+		missingData += validateMissingPayment(i)
+	}
+	
+	return missingData;
+}
+
+function validateDataFormat() {
+	var validationMsg = "";
+	
+	validationMsg += validateFees(); 
+	validationMsg += validateAllPhones();
+	validationMsg += validateAllDates();
+	validationMsg += validateDeliveryTime();
+	
+	return validationMsg;
+}
+
+function validateMissingPayment(index) {
+	var missingData = "";
+	
+	var paymentMethod = $('#orderPayment' + (index-1) + '\\.paymentMethod').val();
+	if (paymentMethod != "") {
+		if ($('#orderPayment'  + (index-1) + '\\.amountPaid').val() == "") {
+			missingData += "Payment Amount " + index + ", ";
+		}
 		
+		var ccReferenceNum = $('#orderPayment'  + (index-1) +  '\\.ccReferenceNum').val();
+		var checkNum = $('#orderPayment' + (index-1) + '\\.checkNum').val();
+		
+		// Credit card
+		if (paymentMethod == "3" && ccReferenceNum == "") {
+			missingData += "Cc Refernece # " + index + ", ";
+		// Not cash
+		} else if (paymentMethod != "2" && checkNum == "") {
+			missingData += "Check # " + index + ", ";
+		} 
+	}
+	
+	return missingData;
+}
+
+function validateFees() {
+	var validationMsg = "";
+	
+	var dumpsterPrice = $('#orderFees\\.dumpsterPrice').val();
+	if (dumpsterPrice != "") {
+		if (!validateAmount(dumpsterPrice)) {
+			validationMsg += "Invalid Dumpster Price, "
+		}
+	}
+	
+	var cityFeeType = $('#orderFees\\.cityFeeType').val();
+	var cityFee = $('#orderFees\\.cityFee').val();
+	if (cityFeeType != "" && cityFee == "") {
+		validationMsg += "Invalid City Fee, "
+	}
+	if (cityFeeType == "" && cityFee != "") {
+		validationMsg += "Invalid City Fee Type, "
+	}
+	if (cityFee != "") {
+		if (!validateAmount(cityFee)) {
+			validationMsg += "Invalid City Fee, "
+		}
+	}
+	
+	var additionalFee1Type = $('#additionalFee1Type').val();
+	var additionalFee1 = $('#orderFees\\.additionalFee1').val();
+	if (additionalFee1Type != "" && additionalFee1 == "") {
+		validationMsg += "Invalid Additional Fee 1, "
+	}
+	if (additionalFee1Type == "" && additionalFee1 != "") {
+		validationMsg += "Invalid Additional Fee 1 Type, "
+	}
+	if (additionalFee1 != "") {
+		if (!validateAmount(additionalFee1)) {
+			validationMsg += "Invalid Additional Fee1, "
+		}
+	}
+	
+	var additionalFee2Type = $('#additionalFee2Type').val();
+	var additionalFee2 = $('#orderFees\\.additionalFee2').val();
+	if (additionalFee2Type != "" && additionalFee2 == "") {
+		validationMsg += "Invalid Additional Fee 2, "
+	}
+	if (additionalFee2Type == "" && additionalFee2 != "") {
+		validationMsg += "Invalid Additional Fee 2 Type, "
+	}
+	if (additionalFee2 != "") {
+		if (!validateAmount(additionalFee2)) {
+			validationMsg += "Invalid Additional Fee2, "
+		}
+	}
+	
+	var additionalFee3Type = $('#additionalFee3Type').val();
+	var additionalFee3 = $('#orderFees\\.additionalFee3').val();
+	if (additionalFee3Type != "" && additionalFee3 == "") {
+		validationMsg += "Invalid Additional Fee 3, "
+	}
+	if (additionalFee3Type == "" && additionalFee3 != "") {
+		validationMsg += "Invalid Additional Fee 3 Type, "
+	}
+	var additionalFee3 = $('#orderFees\\.additionalFee3').val();
+	if (additionalFee3 != "") {
+		if (!validateAmount(additionalFee3)) {
+			validationMsg += "Invalid Additional Fee3, "
+		}
+	}
+	
+	var overweightFee = $('#orderFees\\.overweightFee').val();
+	if (overweightFee != "") {
+		if (!validateAmount(overweightFee)) {
+			validationMsg += "Invalid Over weight Fee, "
+		}
+	}
+	
+	var discountPercentage = $('#orderFees\\.discountPercentage').val();
+	if (discountPercentage != "") {
+		if (!validateAmount(discountPercentage)) {
+			validationMsg += "Invalid Discount Percentage, "
+		}
+	}
+	
+	var orderPayment0 = $('#orderPayment0\\.amountPaid').val();
+	if (orderPayment0 != "") {
+		if (!validateAmount(orderPayment0)) {
+			validationMsg += "Invalid Order Payment 1, "
+		}
+	}
+	
+	var orderPayment1 = $('#orderPayment1\\.amountPaid').val();
+	if (orderPayment1 != "") {
+		if (!validateAmount(orderPayment1)) {
+			validationMsg += "Invalid Order Payment 2, "
+		}
+	}
+	
+	var orderPayment2 = $('#orderPayment2\\.amountPaid').val();
+	if (orderPayment2 != "") {
+		if (!validateAmount(orderPayment2)) {
+			validationMsg += "Invalid Order Payment 3, "
+		}
+	}
+	
+	return validationMsg;
+}
+
+function validateAllPhones() {
+	var validationMsg = "";
+	
+	var deliveryContactPhone1 = $('#deliveryContactPhone1').val();
+	if (deliveryContactPhone1 != "") {
+		if (!validatePhone(deliveryContactPhone1)) {
+			validationMsg += "Invalid Phone 1, "
+		}
+	}
+	
+	var deliveryContactPhone2 = $('#deliveryContactPhone2').val();
+	if (deliveryContactPhone2 != "") {
+		if (!validatePhone(deliveryContactPhone2)) {
+			validationMsg += "Invalid Phone 2, "
+		}
+	}
+	
+	return validationMsg;
+}
+
+function validateAllDates() {
+	var validationMsg = "";
+	
+	var deliveryDate = $("[name='deliveryDate']").val();
+	if (deliveryDate != "") {
+		if (!validateDate(deliveryDate)) {
+			validationMsg += "Invalid Delivery Date, "
+		}
+	}
+	
+	return validationMsg;
+}
+
+function validateDeliveryTime() {
+	var validationMsg = "";
+	
+	var deliveryHourFrom = $('#deliveryHourFrom').val();
+	var deliveryHourTo = $('#deliveryHourTo').val();
+	
+	var deliveryHourFromTokens = deliveryHourFrom.split("\s");
+	var deliveryHourToTokens = deliveryHourTo.split("\s");
+	
+	var dateFrom = new Date('03/11/2015 ' + deliveryHourFromTokens[0] + ':00:00 ' + deliveryHourFromTokens[1]);
+	var dateTo = new Date('03/11/2015 ' + deliveryHourToTokens[0] + ':00:00 ' + deliveryHourToTokens[1]);
+    if (dateTo < dateFrom) {
+    	validationMsg += "Invalid Delivery Time, "
+    }
+	
+    return validationMsg;
+}
+
+function validateAmount(amt) {
+	return /^\d+\.\d{2}$/.test(amt);
+}
+
+function validatePhone(phone) {
+	return /^[2-9]\d{2}-[2-9]\d{2}-\d{4}$/.test(phone);
+}
+
+function validateDate(date) {
+	var datePattern = "/^([0-9]{2})\/([0-9]{2})\/([0-9]{4})$/";
+	if(!datePattern.test(date)) {
 		return false;
 	}
 	
-	return true;
-}
+	var data = date.split("/");
+    // using ISO 8601 Date String
+    if (isNaN(Date.parse(data[2] + "-" + data[1] + "-" + data[0]))) {
+        return false;
+    }
 
-function validatePayment() {
-	if ($('#orderPayment0\\.paymentMethod').val() != "") {
-		
-	}
+    return true;
 }
 
 function processForm() {
@@ -1278,7 +1502,7 @@ function verifyExchangeOrderAndSubmit() {
 							and modelObject.orderNotes[0].notes != null and modelObject.orderNotes[0].notes.length() > 0}">
 					<c:set var="orderNotesDisabled" value="true" />
 				</c:if>
-				<form:textarea readonly="${orderNotesDisabled}" row="5" path="orderNotes[0].notes" cssClass="form-control" style="width:100%; height:100%;"/>
+				<form:textarea readonly="${orderNotesDisabled}" row="5" path="orderNotes[0].notes" cssClass="form-control" style="width:52%; height:100%;"/>
 				<form:errors path="orderNotes[0].notes" cssClass="errorMessage" />
 			</td>
 		</tr>
