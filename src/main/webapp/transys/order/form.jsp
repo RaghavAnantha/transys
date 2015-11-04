@@ -559,7 +559,7 @@ function populateTotalFees() {
 function validateForm() {
 	var missingData = validateMissingData();
 	if (missingData != "") {
-		var alertMsg = "<b>Please enter/select required data for saving order.  Missing data:</b><br>"
+		var alertMsg = "<span style='color:red'><b>Please enter/select required data for saving order.  Missing data:</b><br></span>"
 					 + missingData;
 		showAlertDialog("Data Validation", alertMsg);
 		
@@ -568,7 +568,7 @@ function validateForm() {
 	
 	var formatValidation = validateDataFormat();
 	if (formatValidation != "") {
-		var alertMsg = "<b>Following invalid data entered/selected.  Please correct the same:</b><br>"
+		var alertMsg = "<span style='color:red'><b>Following invalid data entered/selected.  Please correct the same:</b><br></span>"
 					 + formatValidation;
 		showAlertDialog("Data Validation", alertMsg);
 		
@@ -613,7 +613,7 @@ function validateMissingData() {
 		missingData += "Material Type, "
 	}
 	if ($('#permits\\[0\\]').val() == ""  && $('#permits\\[1\\]').val() == "" && $('#permits\\[2\\]').val() == "") {
-		missingData += "Permits"
+		missingData += "Permits, "
 	}
 	
 	for (i = 1; i < 4; i++) {
@@ -680,7 +680,7 @@ function validateFees() {
 		validationMsg += "City Fee, "
 	}
 	if (cityFeeType == "" && cityFee != "") {
-		validationMsg += "City Fee Type, "
+		validationMsg += "City Fee Description, "
 	}
 	if (cityFee != "") {
 		if (!validateAmount(cityFee)) {
@@ -688,47 +688,8 @@ function validateFees() {
 		}
 	}
 	
-	var additionalFee1Type = $('#additionalFee1Type').val();
-	var additionalFee1 = $('#orderFees\\.additionalFee1').val();
-	if (additionalFee1Type != "" && additionalFee1 == "") {
-		validationMsg += "Additional Fee 1, "
-	}
-	if (additionalFee1Type == "" && additionalFee1 != "") {
-		validationMsg += "Additional Fee 1 Type, "
-	}
-	if (additionalFee1 != "") {
-		if (!validateAmount(additionalFee1)) {
-			validationMsg += "Additional Fee1, "
-		}
-	}
-	
-	var additionalFee2Type = $('#additionalFee2Type').val();
-	var additionalFee2 = $('#orderFees\\.additionalFee2').val();
-	if (additionalFee2Type != "" && additionalFee2 == "") {
-		validationMsg += "Additional Fee 2, "
-	}
-	if (additionalFee2Type == "" && additionalFee2 != "") {
-		validationMsg += "Additional Fee 2 Type, "
-	}
-	if (additionalFee2 != "") {
-		if (!validateAmount(additionalFee2)) {
-			validationMsg += "Additional Fee2, "
-		}
-	}
-	
-	var additionalFee3Type = $('#additionalFee3Type').val();
-	var additionalFee3 = $('#orderFees\\.additionalFee3').val();
-	if (additionalFee3Type != "" && additionalFee3 == "") {
-		validationMsg += "Additional Fee 3, "
-	}
-	if (additionalFee3Type == "" && additionalFee3 != "") {
-		validationMsg += "Additional Fee 3 Type, "
-	}
-	var additionalFee3 = $('#orderFees\\.additionalFee3').val();
-	if (additionalFee3 != "") {
-		if (!validateAmount(additionalFee3)) {
-			validationMsg += "Additional Fee3, "
-		}
+	for (i = 1; i < 4; i++) {
+		validationMsg += validateAdditionalFees(i)
 	}
 	
 	var overweightFee = $('#orderFees\\.overweightFee').val();
@@ -745,24 +706,57 @@ function validateFees() {
 		}
 	}
 	
-	var orderPayment0 = $('#orderPayment0\\.amountPaid').val();
-	if (orderPayment0 != "") {
-		if (!validateAmount(orderPayment0)) {
-			validationMsg += "Order Payment 1, "
+	for (i = 1; i < 4; i++) {
+		validationMsg += validateOrderPaymentAmount(i)
+	}
+	
+	for (i = 1; i < 4; i++) {
+		validationMsg += validatePermitFees(i)
+	}
+	
+	return validationMsg;
+}
+
+function validateAdditionalFees(index) {
+	var validationMsg = "";
+	
+	var additionalFeeType = $('#additionalFee' + index + 'Type').val();
+	var additionalFee = $('#orderFees\\.additionalFee' + index).val();
+	if (additionalFeeType != "" && additionalFee == "") {
+		validationMsg += "Additional Fee " + index + ", "
+	}
+	if (additionalFeeType == "" && additionalFee != "") {
+		validationMsg += "Additional Fee " + index + " Description, "
+	}
+	if (additionalFee != "") {
+		if (!validateAmount(additionalFee)) {
+			validationMsg += "Additional Fee " + index + ", "
 		}
 	}
 	
-	var orderPayment1 = $('#orderPayment1\\.amountPaid').val();
-	if (orderPayment1 != "") {
-		if (!validateAmount(orderPayment1)) {
-			validationMsg += "Order Payment 2, "
+	return validationMsg;
+}
+
+function validateOrderPaymentAmount(index) {
+	var validationMsg = "";
+	
+	var orderPayment = $('#orderPayment' + (index-1) + '\\.amountPaid').val();
+	if (orderPayment != "") {
+		if (!validateAmount(orderPayment)) {
+			validationMsg += "Order Payment " + index + " Amount, "
 		}
 	}
 	
-	var orderPayment2 = $('#orderPayment2\\.amountPaid').val();
-	if (orderPayment2 != "") {
-		if (!validateAmount(orderPayment2)) {
-			validationMsg += "Order Payment 3, "
+	return validationMsg;
+}
+
+function validatePermitFees(index) {
+	var validationMsg = "";
+	
+	var permitFees = $('#orderFees\\.permitFee' + index).val();
+	if (permitFees != "") {
+		if (!validateAmount(permitFees)) {
+			validationMsg += "Permit " + index + " Fee, "
 		}
 	}
 	
@@ -808,12 +802,12 @@ function validateDeliveryTime() {
 	var deliveryHourFrom = $('#deliveryHourFrom').val();
 	var deliveryHourTo = $('#deliveryHourTo').val();
 	
-	var deliveryHourFromTokens = deliveryHourFrom.split("\s");
-	var deliveryHourToTokens = deliveryHourTo.split("\s");
+	var deliveryHourFromTokens = deliveryHourFrom.split(" ");
+	var deliveryHourToTokens = deliveryHourTo.split(" ");
 	
 	var dateFrom = new Date('03/11/2015 ' + deliveryHourFromTokens[0] + ':00:00 ' + deliveryHourFromTokens[1]);
 	var dateTo = new Date('03/11/2015 ' + deliveryHourToTokens[0] + ':00:00 ' + deliveryHourToTokens[1]);
-    if (dateTo < dateFrom) {
+	if (dateTo < dateFrom) {
     	validationMsg += "Delivery Time, "
     }
 	
@@ -1264,11 +1258,11 @@ function verifyExchangeOrderAndSubmit() {
 		</tr>
 	    <tr>
 	    	<td class="form-left">Permit1 Fee</td>
-	        <td class="td-static"><form:input path="orderFees.permitFee1" style="width:172px !important" cssClass="flat" onChange="return populateTotalPermitFees();"/></td>
+	        <td class="td-static"><form:input path="orderFees.permitFee1" style="width:172px !important" maxlength="7" cssClass="flat" onChange="return populateTotalPermitFees();"/></td>
 	        <td class="form-left">Permit2 Fee</td>
-	        <td class="td-static"><form:input path="orderFees.permitFee2" style="width:172px !important" cssClass="flat" onChange="return populateTotalPermitFees();"/></td>
+	        <td class="td-static"><form:input path="orderFees.permitFee2" style="width:172px !important" maxlength="7" cssClass="flat" onChange="return populateTotalPermitFees();"/></td>
 	        <td class="form-left">Permit3 Fee</td>
-	        <td class="td-static"><form:input path="orderFees.permitFee3" style="width:172px !important" cssClass="flat" onChange="return populateTotalPermitFees();"/></td>
+	        <td class="td-static"><form:input path="orderFees.permitFee3" style="width:172px !important" maxlength="7" cssClass="flat" onChange="return populateTotalPermitFees();"/></td>
 	    </tr>
 	</table>
 	<table id="form-table" class="table">
@@ -1377,7 +1371,7 @@ function verifyExchangeOrderAndSubmit() {
 			</td>
 		</tr>
 		<tr>
-			<td class="form-left">Total Fees><span class="errorMessage">*</span></td>
+			<td class="form-left">Total Fees<span class="errorMessage">*</span></td>
 			<td>
 				<form:input path="orderFees.totalFees" cssClass="form-control form-control-ext" readonly="true" style="width:172px;height:22px !important"/>
 			</td>
