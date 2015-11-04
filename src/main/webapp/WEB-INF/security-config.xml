@@ -21,7 +21,7 @@
 		<!-- Controls the login page authentication through Spring -->
  		<security:form-login login-page='/login.do' authentication-success-handler-ref="authenticationSuccessHandler"/>
  		
- 		<!-- <security:logout /> -->
+ 		<security:logout logout-url="/logout.do" logout-success-url="/login.do" invalidate-session="true"/>
 	</security:http>
 	
 	<security:authentication-manager>

@@ -65,8 +65,9 @@
 						</a>
 					</li>
 					<li>
-						<c:if test="${sessionScope.userInfo !=null}">
-							<a href="${ctx}/j_spring_security_logout">Logout</a>
+						<c:if test="${sessionScope.userInfo != null}">
+							<%-- <a href="${ctx}/logout.do">Logout</a> --%>
+							<a href="<c:url value="/logout.do" />" >Logout</a>
 						</c:if>
 					</li>
 				</ul>
