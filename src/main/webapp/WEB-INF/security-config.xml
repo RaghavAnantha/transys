@@ -17,6 +17,13 @@
 		
 		<!-- Rest all pages currently are accessible by Role-Admin -->
 		<security:intercept-url pattern="/**/home.do" access="hasRole('ADMIN')" />
+		<security:intercept-url pattern="/**/order/*" access="hasRole('ADMIN')" />
+		<security:intercept-url pattern="/**/customer/*" access="hasRole('ADMIN')" />
+		<security:intercept-url pattern="/**/orderPermitAlert/*" access="hasRole('ADMIN')" />
+		<security:intercept-url pattern="/**/permit/*" access="hasRole('ADMIN')" />
+		<security:intercept-url pattern="/**/publicMaterialIntake/*" access="hasRole('ADMIN')" />
+		<security:intercept-url pattern="/**/masterData/**" access="hasRole('ADMIN')" />
+		<security:intercept-url pattern="/**/reports/**" access="hasRole('ADMIN')" />
 		
 		<!-- Controls the login page authentication through Spring -->
  		<security:form-login login-page='/login.do' authentication-success-handler-ref="authenticationSuccessHandler"/>
