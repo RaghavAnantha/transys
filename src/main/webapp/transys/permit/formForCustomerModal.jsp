@@ -145,7 +145,7 @@ $("#permitForCustomerModalForm").submit(function (ev) {
 		</tr>
 		<tr>
 			<td colspan=10>
-				<form:textarea row="5" path="permitNotes[0].notes" cssClass="form-control notes" />
+				<form:textarea row="5" path="permitNotes[0].notes" cssClass="form-control notes" style="width:695px;"/>
 				<form:errors path="permitNotes[0].notes" cssClass="errorMessage" />
 			</td>
 		</tr>

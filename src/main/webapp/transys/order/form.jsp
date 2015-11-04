@@ -8,8 +8,10 @@ function validateAndFormatPhone(phoneId) {
 		return;
 	}
 	
-	if (phone.length < 10  || phone.length > 12
-			|| (phone.length > 10 && !phone.match("-"))) {
+	if (phone.length < 10  
+			|| phone.length > 12
+			|| (phone.length > 10 && !phone.match("-"))
+			|| (phone.match("-") && phone.length != 12)) {
 		var alertMsg = "<p>Invalid Phone Number.</p>";
 		showAlertDialog("Data validation", alertMsg);
 		
@@ -352,9 +354,9 @@ function handlePermitClassChange(index) {
 
 function resetPermit(index) {
 	var permitTypeSelect = $("#permitTypes" + index);
-	permitTypeSelect.select(0);
+	permitTypeSelect.val("");
 	
-	var permit1NumbersSelect = $("#permits\\[" + (index-1) + "\\]");
+	var permitNumbersSelect = $("#permits\\[" + (index-1) + "\\]");
 	emptySelect(permitNumbersSelect);
 }
 
@@ -381,7 +383,7 @@ function populatePermitNumbers(index) {
 	
 	if (customerId == "" || deliveryAddressId == "" || permitClassId == "" 
 			|| permitTypeId == "" || deliveryDate == "" || locationTypeId == "") {
-		var alertMsg = "Please select customer, delivery address, delivery date, location, permit class and type for retrieving permits."
+		var alertMsg = "Please select Customer, Delivery address, Delivery date, Location, Permit class and Type for retrieving permits."
 		showAlertDialog("Data Validation", alertMsg);
 		
 		return false;
@@ -557,18 +559,18 @@ function populateTotalFees() {
 function validateForm() {
 	var missingData = validateMissingData();
 	if (missingData != "") {
-		var alertMsg = "Please enter/select required data for saving order.  Missing data:\n"
+		var alertMsg = "<b>Please enter/select required data for saving order.  Missing data:</b><br>"
 					 + missingData;
-		showConfirmDialog("Data Validation", alertMsg);
+		showAlertDialog("Data Validation", alertMsg);
 		
 		return false;
 	}
 	
 	var formatValidation = validateDataFormat();
-	if (formatValidtion != "") {
-		var alertMsg = "Invalid data:\n"
-					 + formatValidtion;
-		showConfirmDialog("Data Validation", alertMsg);
+	if (formatValidation != "") {
+		var alertMsg = "<b>Following invalid data entered/selected.  Please correct the same:</b><br>"
+					 + formatValidation;
+		showAlertDialog("Data Validation", alertMsg);
 		
 		return false;
 	}
@@ -618,6 +620,9 @@ function validateMissingData() {
 		missingData += validateMissingPayment(i)
 	}
 	
+	if (missingData != "") {
+		missingData = missingData.substring(0, missingData.length - 2);
+	}
 	return missingData;
 }
 
@@ -629,6 +634,9 @@ function validateDataFormat() {
 	validationMsg += validateAllDates();
 	validationMsg += validateDeliveryTime();
 	
+	if (validationMsg != "") {
+		validationMsg = validationMsg.substring(0, validationMsg.length - 2);
+	}
 	return validationMsg;
 }
 
@@ -648,7 +656,7 @@ function validateMissingPayment(index) {
 		if (paymentMethod == "3" && ccReferenceNum == "") {
 			missingData += "Cc Refernece # " + index + ", ";
 		// Not cash
-		} else if (paymentMethod != "2" && checkNum == "") {
+		} else if ((paymentMethod == "1" || paymentMethod == "4" || paymentMethod == "5") && checkNum == "") {
 			missingData += "Check # " + index + ", ";
 		} 
 	}
@@ -662,99 +670,99 @@ function validateFees() {
 	var dumpsterPrice = $('#orderFees\\.dumpsterPrice').val();
 	if (dumpsterPrice != "") {
 		if (!validateAmount(dumpsterPrice)) {
-			validationMsg += "Invalid Dumpster Price, "
+			validationMsg += "Dumpster Price, "
 		}
 	}
 	
 	var cityFeeType = $('#orderFees\\.cityFeeType').val();
 	var cityFee = $('#orderFees\\.cityFee').val();
 	if (cityFeeType != "" && cityFee == "") {
-		validationMsg += "Invalid City Fee, "
+		validationMsg += "City Fee, "
 	}
 	if (cityFeeType == "" && cityFee != "") {
-		validationMsg += "Invalid City Fee Type, "
+		validationMsg += "City Fee Type, "
 	}
 	if (cityFee != "") {
 		if (!validateAmount(cityFee)) {
-			validationMsg += "Invalid City Fee, "
+			validationMsg += "City Fee, "
 		}
 	}
 	
 	var additionalFee1Type = $('#additionalFee1Type').val();
 	var additionalFee1 = $('#orderFees\\.additionalFee1').val();
 	if (additionalFee1Type != "" && additionalFee1 == "") {
-		validationMsg += "Invalid Additional Fee 1, "
+		validationMsg += "Additional Fee 1, "
 	}
 	if (additionalFee1Type == "" && additionalFee1 != "") {
-		validationMsg += "Invalid Additional Fee 1 Type, "
+		validationMsg += "Additional Fee 1 Type, "
 	}
 	if (additionalFee1 != "") {
 		if (!validateAmount(additionalFee1)) {
-			validationMsg += "Invalid Additional Fee1, "
+			validationMsg += "Additional Fee1, "
 		}
 	}
 	
 	var additionalFee2Type = $('#additionalFee2Type').val();
 	var additionalFee2 = $('#orderFees\\.additionalFee2').val();
 	if (additionalFee2Type != "" && additionalFee2 == "") {
-		validationMsg += "Invalid Additional Fee 2, "
+		validationMsg += "Additional Fee 2, "
 	}
 	if (additionalFee2Type == "" && additionalFee2 != "") {
-		validationMsg += "Invalid Additional Fee 2 Type, "
+		validationMsg += "Additional Fee 2 Type, "
 	}
 	if (additionalFee2 != "") {
 		if (!validateAmount(additionalFee2)) {
-			validationMsg += "Invalid Additional Fee2, "
+			validationMsg += "Additional Fee2, "
 		}
 	}
 	
 	var additionalFee3Type = $('#additionalFee3Type').val();
 	var additionalFee3 = $('#orderFees\\.additionalFee3').val();
 	if (additionalFee3Type != "" && additionalFee3 == "") {
-		validationMsg += "Invalid Additional Fee 3, "
+		validationMsg += "Additional Fee 3, "
 	}
 	if (additionalFee3Type == "" && additionalFee3 != "") {
-		validationMsg += "Invalid Additional Fee 3 Type, "
+		validationMsg += "Additional Fee 3 Type, "
 	}
 	var additionalFee3 = $('#orderFees\\.additionalFee3').val();
 	if (additionalFee3 != "") {
 		if (!validateAmount(additionalFee3)) {
-			validationMsg += "Invalid Additional Fee3, "
+			validationMsg += "Additional Fee3, "
 		}
 	}
 	
 	var overweightFee = $('#orderFees\\.overweightFee').val();
 	if (overweightFee != "") {
 		if (!validateAmount(overweightFee)) {
-			validationMsg += "Invalid Over weight Fee, "
+			validationMsg += "Over weight Fee, "
 		}
 	}
 	
 	var discountPercentage = $('#orderFees\\.discountPercentage').val();
 	if (discountPercentage != "") {
 		if (!validateAmount(discountPercentage)) {
-			validationMsg += "Invalid Discount Percentage, "
+			validationMsg += "Discount Percentage, "
 		}
 	}
 	
 	var orderPayment0 = $('#orderPayment0\\.amountPaid').val();
 	if (orderPayment0 != "") {
 		if (!validateAmount(orderPayment0)) {
-			validationMsg += "Invalid Order Payment 1, "
+			validationMsg += "Order Payment 1, "
 		}
 	}
 	
 	var orderPayment1 = $('#orderPayment1\\.amountPaid').val();
 	if (orderPayment1 != "") {
 		if (!validateAmount(orderPayment1)) {
-			validationMsg += "Invalid Order Payment 2, "
+			validationMsg += "Order Payment 2, "
 		}
 	}
 	
 	var orderPayment2 = $('#orderPayment2\\.amountPaid').val();
 	if (orderPayment2 != "") {
 		if (!validateAmount(orderPayment2)) {
-			validationMsg += "Invalid Order Payment 3, "
+			validationMsg += "Order Payment 3, "
 		}
 	}
 	
@@ -767,14 +775,14 @@ function validateAllPhones() {
 	var deliveryContactPhone1 = $('#deliveryContactPhone1').val();
 	if (deliveryContactPhone1 != "") {
 		if (!validatePhone(deliveryContactPhone1)) {
-			validationMsg += "Invalid Phone 1, "
+			validationMsg += "Phone 1, "
 		}
 	}
 	
 	var deliveryContactPhone2 = $('#deliveryContactPhone2').val();
 	if (deliveryContactPhone2 != "") {
 		if (!validatePhone(deliveryContactPhone2)) {
-			validationMsg += "Invalid Phone 2, "
+			validationMsg += "Phone 2, "
 		}
 	}
 	
@@ -787,7 +795,7 @@ function validateAllDates() {
 	var deliveryDate = $("[name='deliveryDate']").val();
 	if (deliveryDate != "") {
 		if (!validateDate(deliveryDate)) {
-			validationMsg += "Invalid Delivery Date, "
+			validationMsg += "Delivery Date, "
 		}
 	}
 	
@@ -806,7 +814,7 @@ function validateDeliveryTime() {
 	var dateFrom = new Date('03/11/2015 ' + deliveryHourFromTokens[0] + ':00:00 ' + deliveryHourFromTokens[1]);
 	var dateTo = new Date('03/11/2015 ' + deliveryHourToTokens[0] + ':00:00 ' + deliveryHourToTokens[1]);
     if (dateTo < dateFrom) {
-    	validationMsg += "Invalid Delivery Time, "
+    	validationMsg += "Delivery Time, "
     }
 	
     return validationMsg;
@@ -817,11 +825,11 @@ function validateAmount(amt) {
 }
 
 function validatePhone(phone) {
-	return /^[2-9]\d{2}-[2-9]\d{2}-\d{4}$/.test(phone);
+	return /^[2-9]{1}\d{2}(-)[2-9]{1}\d{2}(-)\d{4}$/.test(phone);
 }
 
 function validateDate(date) {
-	var datePattern = "/^([0-9]{2})\/([0-9]{2})\/([0-9]{4})$/";
+	var datePattern = new RegExp("^([0-9]{2})\/([0-9]{2})\/([0-9]{4})$");
 	if(!datePattern.test(date)) {
 		return false;
 	}
@@ -961,7 +969,7 @@ function verifyExchangeOrderAndSubmit() {
 		<tr>
 			<td class="form-left">Contact Name<span class="errorMessage">*</span></td>
 			<td>
-				<form:input path="deliveryContactName" cssClass="flat" style="width:172px !important" />
+				<form:input path="deliveryContactName" cssClass="flat" style="width:172px !important" maxlength="50" />
 			 	<form:errors path="deliveryContactName" cssClass="errorMessage" />
 			</td>
 		</tr>
@@ -982,7 +990,7 @@ function verifyExchangeOrderAndSubmit() {
 		<tr>
 			<td class="form-left">Delivery Date<span class="errorMessage">*</span></td>
 			<td>
-				<form:input path="deliveryDate" cssClass="flat" style="width:172px !important" id="datepicker7" name="deliveryDate" onChange="return handleDeliveryDateChange();"/>
+				<form:input path="deliveryDate" cssClass="flat" style="width:172px !important" id="datepicker7" name="deliveryDate" maxlength="10" onChange="return handleDeliveryDateChange();"/>
 				 <form:errors path="deliveryDate" cssClass="errorMessage" />
 			</td>
 			<td class="form-left">Delivery Time<span class="errorMessage">*</span></td>
@@ -1282,19 +1290,19 @@ function verifyExchangeOrderAndSubmit() {
 		<tr>
 			<td class="form-left"><transys:label code="Dumpster Price"/><span class="errorMessage">*</span></td>
 			<td>
-				<form:input path="orderFees.dumpsterPrice" cssClass="form-control form-control-ext" style="width:172px;height:22px !important" onChange="return populateTotalFees();"/>
+				<form:input path="orderFees.dumpsterPrice" cssClass="form-control form-control-ext" style="width:172px;height:22px !important" maxlength="7" onChange="return populateTotalFees();"/>
 				<form:errors path="orderFees.dumpsterPrice" cssClass="errorMessage" />
 			</td>
 			<td class="form-left">Overweight Fee<span class="errorMessage">*</span></td>
 			<td>
-				<form:input path="orderFees.overweightFee" cssClass="form-control form-control-ext" style="width:172px;height:22px !important" onChange="return populateTotalFees();"/>
+				<form:input path="orderFees.overweightFee" cssClass="form-control form-control-ext" style="width:172px;height:22px !important" maxlength="7" onChange="return populateTotalFees();"/>
 				<form:errors path="orderFees.overweightFee" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>
 			<td class="form-left">City Fee<span class="errorMessage">*</span></td>
 			<td>
-				<form:input path="orderFees.cityFee" cssClass="form-control form-control-ext" style="width:172px;height:22px !important" onChange="return populateTotalFees();"/>
+				<form:input path="orderFees.cityFee" cssClass="form-control form-control-ext" style="width:172px;height:22px !important" maxlength="7" onChange="return populateTotalFees();"/>
 				<form:errors path="orderFees.cityFee" cssClass="errorMessage" />
 			</td>
 			<td class="form-left">Description<span class="errorMessage">*</span></td>
@@ -1309,7 +1317,7 @@ function verifyExchangeOrderAndSubmit() {
 		<tr>
 			<td class="form-left">Additional Fee1</td>
 			<td>
-				<form:input path="orderFees.additionalFee1" style="width:172px !important" cssClass="flat" onchange="return populateTotalAdditionalFees();"/>
+				<form:input path="orderFees.additionalFee1" style="width:172px !important" cssClass="flat" maxlength="7" onchange="return populateTotalAdditionalFees();"/>
 				<form:errors path="orderFees.additionalFee1" cssClass="errorMessage" />
 			</td>
 			<td class="form-left">Description</td>
@@ -1324,7 +1332,7 @@ function verifyExchangeOrderAndSubmit() {
 		<tr>
 			<td class="form-left">Additional Fee2</td>
 			<td>
-				<form:input path="orderFees.additionalFee2" style="width:172px !important" cssClass="flat" onchange="return populateTotalAdditionalFees();"/>
+				<form:input path="orderFees.additionalFee2" style="width:172px !important" cssClass="flat" maxlength="7" onchange="return populateTotalAdditionalFees();"/>
 				<form:errors path="orderFees.additionalFee2" cssClass="errorMessage" />
 			</td>
 			<td class="form-left">Description</td>
@@ -1339,10 +1347,10 @@ function verifyExchangeOrderAndSubmit() {
 		<tr>
 			<td class="form-left">Additional Fee3</td>
 			<td>
-				<form:input path="orderFees.additionalFee3" style="width:172px !important" cssClass="flat" onchange="return populateTotalAdditionalFees();"/>
+				<form:input path="orderFees.additionalFee3" style="width:172px !important" cssClass="flat" maxlength="7" onchange="return populateTotalAdditionalFees();"/>
 				<form:errors path="orderFees.additionalFee3" cssClass="errorMessage" />
 			</td>
-			<td class="form-left"><transys:label code="Description"/></td>
+			<td class="form-left">Description</td>
 				<td>
 				<form:select id="additionalFee3Type" cssClass="flat form-control input-sm" style="width:172px !important" path="orderFees.additionalFee3Type"> 
 					<form:option value="">-----Please Select-----</form:option>
@@ -1352,24 +1360,24 @@ function verifyExchangeOrderAndSubmit() {
 			</td>
 		</tr>
 		<tr>
-			<td class="form-left"><transys:label code="Total Additional Fees"/></td>
+			<td class="form-left">Total Additional Fees</td>
 			<td>
 				<form:input path="orderFees.totalAdditionalFees" readonly="true" cssClass="form-control form-control-ext" style="width:172px;height:22px !important"/>
 			</td>
 		</tr>
 		<tr>
-			<td class="form-left"><transys:label code="Discount %"/></td>
+			<td class="form-left">Discount %</td>
 			<td>
-				<form:input path="orderFees.discountPercentage" style="width:172px !important" cssClass="flat" onchange="return populateTotalFees();"/>
+				<form:input path="orderFees.discountPercentage" style="width:172px !important" maxlength="6" cssClass="flat" onchange="return populateTotalFees();"/>
 				<br><form:errors path="orderFees.discountPercentage" cssClass="errorMessage" />
 			</td>
-			<td class="form-left"><transys:label code="Discount Amount"/></td>
+			<td class="form-left">Discount Amount</td>
 			<td>
 				<form:input path="orderFees.discountAmount" cssClass="form-control form-control-ext" readonly="true" style="width:172px;height:22px !important"/>
 			</td>
 		</tr>
 		<tr>
-			<td class="form-left"><transys:label code="Total Fees"/><span class="errorMessage">*</span></td>
+			<td class="form-left">Total Fees><span class="errorMessage">*</span></td>
 			<td>
 				<form:input path="orderFees.totalFees" cssClass="form-control form-control-ext" readonly="true" style="width:172px;height:22px !important"/>
 			</td>
@@ -1406,15 +1414,15 @@ function verifyExchangeOrderAndSubmit() {
 				<input type="text" value="${orderPayment1CreatedAt}" class="form-control form-control-ext" readonly style="width:172px;height:22px !important">
 			</td>
 			<td class="wide">
-				<form:input path="orderPayment[0].amountPaid" cssClass="flat" />
+				<form:input path="orderPayment[0].amountPaid" maxlength="7" cssClass="flat" />
 				<br><form:errors path="orderPayment[0].amountPaid" cssClass="errorMessage" />
 			</td>
 			<td class="wide">
-				<form:input path="orderPayment[0].ccReferenceNum" cssClass="flat" />
+				<form:input path="orderPayment[0].ccReferenceNum" maxlength="50" cssClass="flat" />
 				<br><form:errors path="orderPayment[0].ccReferenceNum" cssClass="errorMessage" />
 			</td>
 			<td class="wide">
-				<form:input path="orderPayment[0].checkNum" cssClass="flat" />
+				<form:input path="orderPayment[0].checkNum" maxlength="50" cssClass="flat" />
 				<br><form:errors path="orderPayment[0].checkNum" cssClass="errorMessage" />
 			</td>
 		</tr>
@@ -1434,15 +1442,15 @@ function verifyExchangeOrderAndSubmit() {
 				<input type="text" value="${orderPayment2CreatedAt}" class="form-control form-control-ext" readonly style="width:172px;height:22px !important">
 			</td>
 			<td>
-				<form:input path="orderPayment[1].amountPaid" cssClass="flat" />
+				<form:input path="orderPayment[1].amountPaid" maxlength="7" cssClass="flat" />
 				<br><form:errors path="orderPayment[1].amountPaid" cssClass="errorMessage" />
 			</td>
 			<td class="wide">
-				<form:input path="orderPayment[1].ccReferenceNum" cssClass="flat" />
+				<form:input path="orderPayment[1].ccReferenceNum" maxlength="50" cssClass="flat" />
 				<br><form:errors path="orderPayment[1].ccReferenceNum" cssClass="errorMessage" />
 			</td>
 			<td>
-				<form:input path="orderPayment[1].checkNum" cssClass="flat" />
+				<form:input path="orderPayment[1].checkNum" maxlength="50" cssClass="flat" />
 				<br><form:errors path="orderPayment[1].checkNum" cssClass="errorMessage" />
 			</td>
 		</tr>
@@ -1462,15 +1470,15 @@ function verifyExchangeOrderAndSubmit() {
 				<input type="text" value="${orderPayment3CreatedAt}" class="form-control form-control-ext" readonly style="width:172px;height:22px !important">
 			</td>
 			<td class="wide">
-				<form:input path="orderPayment[2].amountPaid" cssClass="flat" />
+				<form:input path="orderPayment[2].amountPaid" maxlength="7" cssClass="flat" />
 				<br><form:errors path="orderPayment[2].amountPaid" cssClass="errorMessage" />
 			</td>
 			<td>
-				<form:input path="orderPayment[2].ccReferenceNum" cssClass="flat" />
+				<form:input path="orderPayment[2].ccReferenceNum" maxlength="50" cssClass="flat" />
 				<br><form:errors path="orderPayment[2].ccReferenceNum" cssClass="errorMessage" />
 			</td>
 			<td class="wide">
-				<form:input path="orderPayment[2].checkNum" cssClass="flat" />
+				<form:input path="orderPayment[2].checkNum" maxlength="50" cssClass="flat" />
 				<br><form:errors path="orderPayment[2].checkNum" cssClass="errorMessage" />
 			</td>
 		</tr>
@@ -1502,7 +1510,7 @@ function verifyExchangeOrderAndSubmit() {
 							and modelObject.orderNotes[0].notes != null and modelObject.orderNotes[0].notes.length() > 0}">
 					<c:set var="orderNotesDisabled" value="true" />
 				</c:if>
-				<form:textarea readonly="${orderNotesDisabled}" row="5" path="orderNotes[0].notes" cssClass="form-control" style="width:52%; height:100%;"/>
+				<form:textarea readonly="${orderNotesDisabled}" row="5" path="orderNotes[0].notes" cssClass="form-control" style="width:100%; height:100%;"/>
 				<form:errors path="orderNotes[0].notes" cssClass="errorMessage" />
 			</td>
 		</tr>
@@ -1546,7 +1554,7 @@ $("#addCustomerLink").click(function (ev) {
 $("#addDeliveryAddressLink").click(function (ev) {
 	var customerId = $('#customerSelect').val();
 	if (customerId == "") {
-		var alertMsg = "Please select customer for adding delivery address."
+		var alertMsg = "Please select Customer for adding Delivery address."
 		showAlertDialog("Data Validation", alertMsg);
 	}
 	
@@ -1573,7 +1581,7 @@ $("#addPermitLink").click(function (ev) {
 	
 	if (customerId == "" || deliveryAddressId == "" || locationTypeId == "" 
 			|| permitClassId == "" || permitTypeId == "" || deliveryDate == "") {
-		var alertMsg = "Please select customer, delivery address, delivery date, location, permit class and type for the new permit."
+		var alertMsg = "Please select Customer, Delivery address, Delivery date, Location, Permit class and Type for the new permit."
 		showAlertDialog("Data Validation", alertMsg);
 		
 		return false;
