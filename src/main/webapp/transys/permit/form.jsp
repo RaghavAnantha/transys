@@ -131,9 +131,17 @@ function populatePermitFee() {
 		<tr>
 			<td class="form-left">Start Date<span class="errorMessage">*</span></td>
 			<td class="wide">
-				<form:input path="startDate" class="flat"
-				id="datepicker7" name="startDate" style="width: 175px !important"  onChange="populateEndDate();populatePermitFee();"/></td>
-				<form:errors path="startDate" cssClass="errorMessage" />
+			
+			<c:set var="readonlyVar" value='false'/>
+			<c:if test="${not empty associatedOrderID.order.id}">
+				<c:set var="readonlyVar" value='true'/>
+			</c:if>
+			
+			<form:input path="startDate" class="flat flat-ext form-control form-control-ext"
+				id="datepicker7" name="startDate" style="width: 175px !important"  onChange="populateEndDate();populatePermitFee();" readonly="${readonlyVar}"/>
+			
+			</td>
+			<form:errors path="startDate" cssClass="errorMessage" />
 			<td class="form-left">End Date</td>
 			<td>
 				<form:input id="endDateInput" path="endDate" cssClass="flat flat-ext form-control form-control-ext" style="width:175px !important;height:22px !important" readonly="true" />

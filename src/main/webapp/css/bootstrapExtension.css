@@ -15,6 +15,7 @@ input, .input-sm {
 
 textarea {
     font-size: 13px;
+    resize: none;
 }
 
 .td-static {

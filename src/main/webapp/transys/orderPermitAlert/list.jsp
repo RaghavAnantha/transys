@@ -142,8 +142,8 @@
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
 		pagingLink="search.do" multipleDelete="false" searcheable="false" 
 		exportPdf="true" exportXls="true" dataQualifier="orderPermitAlert">
-		<transys:textcolumn headerText="Del. Address #" dataField="order.deliveryAddress.line1" width="100px"/>
-		<transys:textcolumn headerText="Delivery Address Street" dataField="order.deliveryAddress.line2" />
+		<transys:textcolumn headerText="Del. Address #" dataField="permit.deliveryAddress.line1" width="100px"/>
+		<transys:textcolumn headerText="Delivery Address Street" dataField="permit.deliveryAddress.line2" />
 		<transys:textcolumn headerText="Customer Name" dataField="order.customer.companyName" />
 		<transys:textcolumn headerText="Order#" dataField="order.id" type="java.lang.Long" />
 		<transys:textcolumn headerText="Contact" dataField="order.customer.contactName" />

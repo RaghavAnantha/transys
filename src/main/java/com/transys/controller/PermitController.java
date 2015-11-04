@@ -306,7 +306,7 @@ public class PermitController extends CRUDController<Permit> {
 		model.put("customer", customers);
 		
 		List<DeliveryAddress> deliveryAddress = new ArrayList<>();
-		deliveryAddress.add(orderPermitToBeEdited.getOrder().getDeliveryAddress());
+		deliveryAddress.add(permitToBeEdited.getDeliveryAddress());
 		model.addAttribute("deliveryAddress", deliveryAddress);
 		
 		List<LocationType> locationType = new ArrayList<>();
@@ -358,8 +358,40 @@ public class PermitController extends CRUDController<Permit> {
 			model.put("modelObject", permitToBeEdited);
 		} 
 		
-		// get the delivery address
-		model.addAttribute("editDeliveryAddress", permitToBeEdited.getCustomer().getDeliveryAddress());
+		List<BaseModel> orderPermits = (List<BaseModel>)genericDAO.executeSimpleQuery("select obj from OrderPermits obj where obj.permit.id=" +  permitToBeEdited.getId() + " order by obj.id desc");
+		if (orderPermits != null && orderPermits.size() > 0) {
+			BaseModel orderPermitObj = orderPermits.get(0);
+			model.addAttribute("associatedOrderID", orderPermitObj);
+			
+			// TODO: all fields should become non-editable except unrelated fields like parking meter fee / permit number
+			List<Customer> customers = new ArrayList<>();
+			customers.add(permitToBeEdited.getCustomer());
+			model.put("customer", customers);
+			
+			List<DeliveryAddress> deliveryAddress = new ArrayList<>();
+			deliveryAddress.add(permitToBeEdited.getDeliveryAddress());
+			model.addAttribute("editDeliveryAddress", deliveryAddress);
+			System.out.println("Delivery address = " + deliveryAddress.get(0).getFullDeliveryAddress(","));
+			
+			List<LocationType> locationType = new ArrayList<>();
+			locationType.add(permitToBeEdited.getLocationType());
+			model.addAttribute("locationType", locationType);
+			
+			List<PermitClass> permitClass = new ArrayList<>();
+			permitClass.add(permitToBeEdited.getPermitClass());
+			model.addAttribute("permitClass", permitClass);
+
+			List<PermitType> permitType = new ArrayList<>();
+			permitType.add(permitToBeEdited.getPermitType());
+			model.addAttribute("permitType", permitType);
+			
+			/*Map filter = new HashMap<String, Object>();
+			filter.put("permit", permitToBeEdited);
+			model.addAttribute("permitAddressList", genericDAO.findByCriteria(PermitAddress.class, filter, "id", false));*/
+		} else {
+			// get the delivery address
+			model.addAttribute("editDeliveryAddress", permitToBeEdited.getCustomer().getDeliveryAddress());
+		}
 		
 		PermitNotes notes = new PermitNotes();
 		notes.setPermit(permitToBeEdited); 
@@ -373,13 +405,6 @@ public class PermitController extends CRUDController<Permit> {
 		List<BaseModel> permitAddressList = genericDAO.executeSimpleQuery("select obj from PermitAddress obj where obj.permit.id=" +  permitToBeEdited.getId() + " order by obj.id asc");
 		model.addAttribute("permitAddressList", permitAddressList);
 
-		// only in cases of Edit, an order ID can be associated with the permit
-		List<BaseModel> orderPermits = (List<BaseModel>)genericDAO.executeSimpleQuery("select obj from OrderPermits obj where obj.permit.id=" +  permitToBeEdited.getId() + " order by obj.id desc");
-		if (orderPermits != null && orderPermits.size() > 0) {
-			BaseModel orderPermitObj = orderPermits.get(0);
-			model.addAttribute("associatedOrderID", orderPermitObj);
-		}
-	
 		return urlContext + "/permit";
 	}
 	
