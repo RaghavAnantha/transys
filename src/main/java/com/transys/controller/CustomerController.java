@@ -700,6 +700,21 @@ public class CustomerController extends CRUDController<Customer> {
 			return urlContext + "/form";
 		}
 		
+		if (entity.getCustomer().getId() == null) {
+			
+			setupEmptyCreate(model);
+			
+			model.addAttribute("activeTab", "manageCustomer");
+			model.addAttribute("activeSubTab", "customerNotesTab");
+			model.addAttribute("mode", "ADD");
+			
+			model.addAttribute("errorCtx", "manageCustomerNotes");
+			model.addAttribute("error", "Please save valid Customer details first before saving Notes.");
+			
+			return urlContext + "/customer";
+		}
+
+		
 		//beforeSave(request, entity, model);
 		if (entity instanceof AbstractBaseModel) {
 			AbstractBaseModel baseModel = (AbstractBaseModel) entity;
@@ -754,6 +769,23 @@ public class CustomerController extends CRUDController<Customer> {
 		populateAggregartionValues(model, customerId);
 		
 		return urlContext + "/customer";
+	}
+
+	private void setupEmptyCreate(ModelMap model) {
+		Customer emptyCustomer = new Customer();
+		CustomerNotes notes = new CustomerNotes();
+		notes.setCustomer(emptyCustomer);
+		model.addAttribute("notesModelObject", notes);
+
+		List<BaseModel> notesList = new ArrayList<>();
+		model.addAttribute("notesList", notesList);
+		
+		DeliveryAddress address = new DeliveryAddress();
+		address.setCustomer(emptyCustomer);
+		model.addAttribute("deliveryAddressModelObject", address);
+		
+		List<BaseModel> addressList = new ArrayList<>();
+		model.addAttribute("deliveryAddressList", addressList);
 	}
 	
 	private void updateEnteredBy(CustomerNotes entity) {
@@ -810,6 +842,20 @@ public class CustomerController extends CRUDController<Customer> {
 		if (bindingResult.hasErrors()) {
 			setupCreate(model, request);
 			return urlContext + "/form";
+		}
+		
+		if (entity.getCustomer().getId() == null) {
+			
+			setupEmptyCreate(model);
+			
+			model.addAttribute("activeTab", "manageCustomer");
+			model.addAttribute("activeSubTab", "delivery");
+			model.addAttribute("mode", "ADD");
+			
+			model.addAttribute("errorCtx", "manageCustomerDeliveryAddress");
+			model.addAttribute("error", "Please save valid Customer details first before saving Delivery address.");
+			
+			return urlContext + "/customer";
 		}
 		
 		//beforeSave(request, entity, model);

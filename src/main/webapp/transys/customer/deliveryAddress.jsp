@@ -5,6 +5,7 @@
 	<form:hidden path="customer.id" id="customerId" />
 	<jsp:include page="/common/messages.jsp">
 		<jsp:param name="msgCtx" value="manageCustomerDeliveryAddress" />
+		<jsp:param name="errorCtx" value="manageCustomerDeliveryAddress" />
 	</jsp:include>
 	<table id="form-table" class="table customerDeliveryAddress">
 		<tr><td colspan=10></td></tr>

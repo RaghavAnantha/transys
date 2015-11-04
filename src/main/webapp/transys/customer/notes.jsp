@@ -8,6 +8,10 @@ function validateForm() {
 <form:form action="saveCustomerNotes.do" name="customerNotesForm" id="customerNotesForm" commandName="notesModelObject" method="post">
 	<form:hidden path="id" id="id" />
 	<form:hidden path="customer.id" id="customer.id" />
+	<jsp:include page="/common/messages.jsp">
+		<jsp:param name="msgCtx" value="manageCustomerNotes" />
+		<jsp:param name="errorCtx" value="manageCustomerNotes" />
+	</jsp:include>
 	<table id="form-table" class="table">
 		<tr><td colspan=10></td></tr>
 		<tr><td class="form-left">Notes<span class="errorMessage">*</span></td></tr>
