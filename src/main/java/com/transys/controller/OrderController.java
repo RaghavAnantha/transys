@@ -628,7 +628,7 @@ public class OrderController extends CRUDController<Order> {
 		//TODO: why is this reqd?
 		//setupOrderFees(entity);
 		
-		OrderStatus orderStatus = retrieveOrderStatus("Picked Up");
+		OrderStatus orderStatus = retrieveOrderStatus("Closed");
 		entity.setOrderStatus(orderStatus);
 		
 		Long dumpsterSizeId = entity.getDumpsterSize().getId();

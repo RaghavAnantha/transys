@@ -2,43 +2,6 @@
 <%@include file="/common/modal.jsp"%>
 
 <script type="text/javascript">
-function validateAndFormatPhone(phoneId) {	
-	var phone = document.getElementById(phoneId).value;
-	if (phone == "") {
-		return;
-	}
-	
-	if (phone.length < 10  
-			|| phone.length > 12
-			|| (phone.length > 10 && !phone.match("-"))
-			|| (phone.match("-") && phone.length != 12)) {
-		var alertMsg = "<p>Invalid Phone Number.</p>";
-		showAlertDialog("Data validation", alertMsg);
-		
-		document.getElementById(phoneId).value = "";
-		return false;
-	} else {
-		var formattedPhone = formatPhone(phone);
-		document.getElementById(phoneId).value = formattedPhone;
-	}	
-}
-
-function formatPhone(phone) {
-	if (phone.length < 10) {
-		return phone;
-	}
-	
-	var str = new String(phone);
-	if (str.match("-")) {
-		return phone;
-	}
-	
-	var p1 = str.substring(0,3);
-	var p2 = str.substring(3,6);
-	var p3 = str.substring(6,10);				
-	return p1 + "-" + p2 + "-" + p3;
-}
-
 function populateCustomerInfo() {
 	emptyCustomerBillingAddress();
 	
@@ -559,7 +522,7 @@ function populateTotalFees() {
 function validateForm() {
 	var missingData = validateMissingData();
 	if (missingData != "") {
-		var alertMsg = "<span style='color:red'><b>Please enter/select required data for saving order.  Missing data:</b><br></span>"
+		var alertMsg = "<span style='color:red'><b>Please provide following required data:</b><br></span>"
 					 + missingData;
 		showAlertDialog("Data Validation", alertMsg);
 		
@@ -568,7 +531,7 @@ function validateForm() {
 	
 	var formatValidation = validateDataFormat();
 	if (formatValidation != "") {
-		var alertMsg = "<span style='color:red'><b>Following invalid data entered/selected.  Please correct the same:</b><br></span>"
+		var alertMsg = "<span style='color:red'><b>Please correct following invalid data:</b><br></span>"
 					 + formatValidation;
 		showAlertDialog("Data Validation", alertMsg);
 		
@@ -629,6 +592,7 @@ function validateMissingData() {
 function validateDataFormat() {
 	var validationMsg = "";
 	
+	validationMsg += validateAllText();
 	validationMsg += validateFees(); 
 	validationMsg += validateAllPhones();
 	validationMsg += validateAllDates();
@@ -637,6 +601,29 @@ function validateDataFormat() {
 	if (validationMsg != "") {
 		validationMsg = validationMsg.substring(0, validationMsg.length - 2);
 	}
+	return validationMsg;
+}
+
+function validateAllText() {
+	var validationMsg = "";
+	
+	var deliveryContactName = $('#deliveryContactName').val();
+	if (deliveryContactName != "") {
+		if (!validateName(deliveryContactName, 50)) {
+			validationMsg += "Contact Name, "
+		}
+	}
+	var notes = $('#orderNotes0\\.notes').val();
+	if (notes != "") {
+		if (!validateText(notes, 500)) {
+			validationMsg += "Notes, "
+		}
+	}
+	
+	for (i = 1; i < 4; i++) {
+		validationMsg += validatePaymentReferenceNum(i)
+	}
+	
 	return validationMsg;
 }
 
@@ -707,7 +694,7 @@ function validateFees() {
 	}
 	
 	for (i = 1; i < 4; i++) {
-		validationMsg += validateOrderPaymentAmount(i)
+		validationMsg += validatePaymentAmount(i)
 	}
 	
 	for (i = 1; i < 4; i++) {
@@ -737,13 +724,33 @@ function validateAdditionalFees(index) {
 	return validationMsg;
 }
 
-function validateOrderPaymentAmount(index) {
+function validatePaymentAmount(index) {
 	var validationMsg = "";
 	
 	var orderPayment = $('#orderPayment' + (index-1) + '\\.amountPaid').val();
 	if (orderPayment != "") {
 		if (!validateAmount(orderPayment)) {
 			validationMsg += "Order Payment " + index + " Amount, "
+		}
+	}
+	
+	return validationMsg;
+}
+
+function validatePaymentReferenceNum(index) {
+	var validationMsg = "";
+	
+	var ccRefernceNum = $('#orderPayment' + (index-1) + '\\.ccReferenceNum').val();
+	if (ccRefernceNum != "") {
+		if (!validateReferenceNum(ccRefernceNum, 50)) {
+			validationMsg += "Order Payment " + index + " CC Reference #, "
+		}
+	}
+	
+	var checkNum = $('#orderPayment' + (index-1) + '\\.checkNum').val();
+	if (checkNum != "") {
+		if (!validateReferenceNum(checkNum, 50)) {
+			validationMsg += "Order Payment " + index + " Check #, "
 		}
 	}
 	
@@ -812,29 +819,6 @@ function validateDeliveryTime() {
     }
 	
     return validationMsg;
-}
-
-function validateAmount(amt) {
-	return /^\d+\.\d{2}$/.test(amt);
-}
-
-function validatePhone(phone) {
-	return /^[2-9]{1}\d{2}(-)[2-9]{1}\d{2}(-)\d{4}$/.test(phone);
-}
-
-function validateDate(date) {
-	var datePattern = new RegExp("^([0-9]{2})\/([0-9]{2})\/([0-9]{4})$");
-	if(!datePattern.test(date)) {
-		return false;
-	}
-	
-	var data = date.split("/");
-    // using ISO 8601 Date String
-    if (isNaN(Date.parse(data[2] + "-" + data[1] + "-" + data[0]))) {
-        return false;
-    }
-
-    return true;
 }
 
 function processForm() {
@@ -1504,7 +1488,7 @@ function verifyExchangeOrderAndSubmit() {
 							and modelObject.orderNotes[0].notes != null and modelObject.orderNotes[0].notes.length() > 0}">
 					<c:set var="orderNotesDisabled" value="true" />
 				</c:if>
-				<form:textarea readonly="${orderNotesDisabled}" row="5" path="orderNotes[0].notes" cssClass="form-control" style="width:100%; height:100%;"/>
+				<form:textarea readonly="${orderNotesDisabled}" row="5" path="orderNotes[0].notes" maxlength="500" cssClass="form-control" style="width:100%; height:100%;"/>
 				<form:errors path="orderNotes[0].notes" cssClass="errorMessage" />
 			</td>
 		</tr>
@@ -1575,7 +1559,7 @@ $("#addPermitLink").click(function (ev) {
 	
 	if (customerId == "" || deliveryAddressId == "" || locationTypeId == "" 
 			|| permitClassId == "" || permitTypeId == "" || deliveryDate == "") {
-		var alertMsg = "Please select Customer, Delivery address, Delivery date, Location, Permit class and Type for the new permit."
+		var alertMsg = "Please select Customer, Delivery address, Delivery date, Location, Permit class and Type for creating the new permit."
 		showAlertDialog("Data Validation", alertMsg);
 		
 		return false;
