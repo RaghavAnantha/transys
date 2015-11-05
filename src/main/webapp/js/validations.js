@@ -72,17 +72,17 @@ function validateEmail(email) {
 }
 
 function validateText(text, validLength) {
-	var textPattern = new RegExp("^[a-zA-Z0-9-_():;.\"',?/*\\&%$#@!`\s]{1," + validLength + "}$");
+	var textPattern = new RegExp("^[a-zA-Z0-9-_():;.\"',?/*&%$#@!`\\s\\\\]{1," + validLength + "}$");
 	return textPattern.test(text);
 }
 	
 
 function validateName(name, validLength) {
-	var namePattern = new RegExp("^[a-zA-Z-'`\s]{1," + validLength + "}$");
+	var namePattern = new RegExp("^[a-zA-Z-'`\\s/]{1," + validLength + "}$");
 	return namePattern.test(name);
 }
 
 function validateReferenceNum(refNum, validLength) {
-	var refNumPattern = new RegExp("^[a-zA-Z0-9-_():.,/*\\&%$#\s]{1," + validLength + "}$");
+	var refNumPattern = new RegExp("^[a-zA-Z0-9-_():.,/*&%$#\\s\\\\]{1," + validLength + "}$");
 	return refNumPattern.test(refNum);
 }
