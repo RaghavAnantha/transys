@@ -182,7 +182,7 @@ CREATE TABLE `customer` (
 
 LOCK TABLES `customer` WRITE;
 /*!40000 ALTER TABLE `customer` DISABLE KEYS */;
-INSERT INTO `customer` (`id`,`created_at`,`created_by`,`modified_at`,`modified_by`,`customerStatusId`,`billingAddressLine1`,`customerTypeId`,`billingAddressLine2`,`city`,`companyName`,`fax`,`contactName`,`phone`,`zipcode`,`state`,`email`,`altPhone1`,`altPhone2`,`chargeCompany`,`delete_flag`) VALUES (5,'2015-09-10 21:22:45',1,'2015-10-25 18:37:31',1,1,'2324 N Camelback Rd',1,'','Chicago','Aberdeen Construction','123-456-7890','Raghav','123-456-7890','28262',1,'abc@aberdeen.com','','','Yes',1);
+INSERT INTO `customer` (`id`,`created_at`,`created_by`,`modified_at`,`modified_by`,`customerStatusId`,`billingAddressLine1`,`customerTypeId`,`billingAddressLine2`,`city`,`companyName`,`fax`,`contactName`,`phone`,`zipcode`,`state`,`email`,`altPhone1`,`altPhone2`,`chargeCompany`,`delete_flag`) VALUES (5,'2015-09-10 21:22:45',1,'2015-10-25 18:37:31',1,1,'2324 N Camelback Rd',1,'','Chicago','Aberdeen Construction','223-456-7890','Raghav','223-456-7890','28262',1,'abc@aberdeen.com','','','Yes',1);
 INSERT INTO `customer` (`id`,`created_at`,`created_by`,`modified_at`,`modified_by`,`customerStatusId`,`billingAddressLine1`,`customerTypeId`,`billingAddressLine2`,`city`,`companyName`,`fax`,`contactName`,`phone`,`zipcode`,`state`,`email`,`altPhone1`,`altPhone2`,`chargeCompany`,`delete_flag`) VALUES (6,'2015-09-11 21:05:43',1,NULL,NULL,1,'1321 W Main St',1,NULL,'Chicago','Gibbons Construction','435-768-7890','Hema','465-768-7890','22323',1,'xyz@gibbons.com',NULL,NULL,'Yes',1);
 /*!40000 ALTER TABLE `customer` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -440,7 +440,7 @@ CREATE TABLE `transysOrder` (
 
 LOCK TABLES `transysOrder` WRITE;
 /*!40000 ALTER TABLE `transysOrder` DISABLE KEYS */;
-INSERT INTO `transysOrder` (`id`,`customerId`,`deliveryContactName`,`deliveryContactPhone1`,`deliveryContactPhone2`,`deliveryDate`,`deliveryAddressId`,`locationTypeId`,`dumpsterSizeId`,`materialTypeId`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`,`grossWeight`,`netWeightLb`,`netWeightTonnage`,`tare`,`dumpsterId`,`pickupDate`,`orderStatusId`,`pickUpDriverId`,`dropOffDriverId`,`deliveryHourFrom`,`deliveryHourTo`,`deliveryMinutesFrom`,`deliveryMinutesTo`,`pickupOrderId`,`totalAmountPaid`,`balanceAmountDue`) VALUES (1,5,'Raghav','123-456-7890','123-456-7890','2015-10-09 00:00:00',1,1,1,1,'2015-10-09 00:00:00',1,'2015-10-15 14:51:57',1,1,10.00,10.00,10.00,10.00,2,NULL,1,NULL,2,'12 PM','1 PM','00','15',NULL,190.00,45.20);
+INSERT INTO `transysOrder` (`id`,`customerId`,`deliveryContactName`,`deliveryContactPhone1`,`deliveryContactPhone2`,`deliveryDate`,`deliveryAddressId`,`locationTypeId`,`dumpsterSizeId`,`materialTypeId`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`,`grossWeight`,`netWeightLb`,`netWeightTonnage`,`tare`,`dumpsterId`,`pickupDate`,`orderStatusId`,`pickUpDriverId`,`dropOffDriverId`,`deliveryHourFrom`,`deliveryHourTo`,`deliveryMinutesFrom`,`deliveryMinutesTo`,`pickupOrderId`,`totalAmountPaid`,`balanceAmountDue`) VALUES (1,5,'Raghav','223-456-7890','223-456-7890','2015-10-09 00:00:00',1,1,1,1,'2015-10-09 00:00:00',1,'2015-10-15 14:51:57',1,1,10.00,10.00,10.00,10.00,2,NULL,2,NULL,2,'12 PM','1 PM','00','15',NULL,190.00,45.20);
 /*!40000 ALTER TABLE `transysOrder` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -723,8 +723,7 @@ LOCK TABLES `orderStatus` WRITE;
 INSERT INTO `orderStatus` VALUES 
 (1,'Open',NULL,'2015-09-10 21:22:45',1,NULL,NULL,1),
 (2,'Dropped Off',NULL,'2015-09-10 21:22:45',1,NULL,NULL,1),
-(3,'Picked Up',NULL,'2015-09-10 21:22:45',1,NULL,NULL,1),
-(4,'Closed',NULL,'2015-09-10 21:22:45',1,NULL,NULL,1);
+(3,'Closed',NULL,'2015-09-10 21:22:45',1,NULL,NULL,1);
 /*!40000 ALTER TABLE `orderStatus` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1063,6 +1062,7 @@ VALUES ('2', '2012-03-16 14:25:34',1, 5, 1, '2015-09-19 12:41:30', 'aldo', 'aldo
 INSERT INTO `transys`.`userInfo` 
 (`id`, `created_at`, `created_by`, `employeeId`, `accountStatusId`,`lastLoginDate`, `password`, `username`, `roleId`, `delete_flag`) 
 VALUES ('3', '2012-03-16 14:25:34',1, 4, 1, '2015-09-19 12:41:30', 'thomas', 'thomas', 6, '1');
+
 /*!40000 ALTER TABLE `userInfo` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;

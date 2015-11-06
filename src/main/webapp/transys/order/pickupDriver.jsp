@@ -65,7 +65,7 @@
 		<tr>
 			<td>&nbsp;</td>
 			<td colspan="2">
-				<input type="submit" id="submitPickupDriver" onclick="return validate()" value="<transys:label code="Save"/>" class="flat btn btn-primary btn-sm btn-sm-ext" /> 
+				<input type="submit" id="submitPickupDriver" onclick="return validate()" value="<transys:label code="Close Order"/>" class="flat btn btn-primary btn-sm btn-sm-ext" /> 
 				<input type="button" id="cancelPickupDriver" value="Back" class="flat btn btn-primary btn-sm btn-sm-ext" onClick="location.href='main.do'" />
 			</td>
 		</tr>
