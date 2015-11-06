@@ -576,7 +576,7 @@ function validateMissingData() {
 		missingData += "Material Type, "
 	}
 	if ($('#permits\\[0\\]').val() == ""  && $('#permits\\[1\\]').val() == "" && $('#permits\\[2\\]').val() == "") {
-		missingData += "Permits, "
+		missingData += "Permit, "
 	}
 	
 	for (i = 1; i < 4; i++) {
@@ -656,7 +656,7 @@ function validateFees() {
 	
 	var dumpsterPrice = $('#orderFees\\.dumpsterPrice').val();
 	if (dumpsterPrice != "") {
-		if (!validateAmount(dumpsterPrice)) {
+		if (!validateAmount(dumpsterPrice, 1500)) {
 			validationMsg += "Dumpster Price, "
 		}
 	}
@@ -670,7 +670,7 @@ function validateFees() {
 		validationMsg += "City Fee Description, "
 	}
 	if (cityFee != "") {
-		if (!validateAmount(cityFee)) {
+		if (!validateAmount(cityFee, 1000)) {
 			validationMsg += "City Fee, "
 		}
 	}
@@ -681,14 +681,14 @@ function validateFees() {
 	
 	var overweightFee = $('#orderFees\\.overweightFee').val();
 	if (overweightFee != "") {
-		if (!validateAmount(overweightFee)) {
+		if (!validateAmount(overweightFee, 1000)) {
 			validationMsg += "Over weight Fee, "
 		}
 	}
 	
 	var discountPercentage = $('#orderFees\\.discountPercentage').val();
 	if (discountPercentage != "") {
-		if (!validateAmount(discountPercentage)) {
+		if (!validateAmount(discountPercentage, 50)) {
 			validationMsg += "Discount Percentage, "
 		}
 	}
@@ -716,7 +716,7 @@ function validateAdditionalFees(index) {
 		validationMsg += "Additional Fee " + index + " Description, "
 	}
 	if (additionalFee != "") {
-		if (!validateAmount(additionalFee)) {
+		if (!validateAmount(additionalFee, 1000)) {
 			validationMsg += "Additional Fee " + index + ", "
 		}
 	}
@@ -729,7 +729,7 @@ function validatePaymentAmount(index) {
 	
 	var orderPayment = $('#orderPayment' + (index-1) + '\\.amountPaid').val();
 	if (orderPayment != "") {
-		if (!validateAmount(orderPayment)) {
+		if (!validateAmount(orderPayment, null)) {
 			validationMsg += "Order Payment " + index + " Amount, "
 		}
 	}
@@ -762,7 +762,7 @@ function validatePermitFees(index) {
 	
 	var permitFees = $('#orderFees\\.permitFee' + index).val();
 	if (permitFees != "") {
-		if (!validateAmount(permitFees)) {
+		if (!validateAmount(permitFees, 500)) {
 			validationMsg += "Permit " + index + " Fee, "
 		}
 	}

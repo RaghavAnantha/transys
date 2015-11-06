@@ -35,8 +35,16 @@ function formatPhone(phone) {
 	return p1 + "-" + p2 + "-" + p3;
 }
 
-function validateAmount(amt) {
-	return /^\d+\.\d{2}$/.test(amt);
+function validateAmount(amt, maxValue) {
+	if (!/(^\d+\.\d{2}$)|(^\d+$)/.test(amt)) {
+		return false;
+	}
+	
+	if (maxValue !=  null && amt > maxValue) {
+		return false;
+	}
+	
+	return true;
 }
 
 function validatePhone(phone) {
