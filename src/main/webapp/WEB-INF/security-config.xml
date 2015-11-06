@@ -33,6 +33,7 @@
 	
 	<security:authentication-manager>
 		<security:authentication-provider user-service-ref="userDetailService" >
+			<!-- <security:password-encoder hash="sha" base64="true" /> -->
 		</security:authentication-provider>
 	</security:authentication-manager>
 

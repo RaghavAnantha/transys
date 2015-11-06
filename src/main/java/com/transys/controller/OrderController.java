@@ -455,7 +455,7 @@ public class OrderController extends CRUDController<Order> {
 
 	private void updateEnteredBy(OrderNotes entity) {
 		User user = genericDAO.getById(User.class,entity.getCreatedBy());
-		entity.setEnteredBy(user.getName());
+		entity.setEnteredBy(user.getEmployee().getFullName());
 	}
 	
 	private List<List<Permit>> retrievePermitsOfChosenType(Order order) {

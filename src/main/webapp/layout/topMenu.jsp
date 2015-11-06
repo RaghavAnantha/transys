@@ -33,6 +33,7 @@
 						<a href="#" data-toggle="dropdown" class="dropdown-toggle">Master Data<b class="caret"></b></a>
 						<ul class="dropdown-menu">
 							<li><a href="/masterData/employee/main.do">Employees</a></li>
+							<li><a href="/masterData/loginUser/main.do">LoginUser</a></li>
 							<li><a href="/masterData/dumpsters/main.do">Dumpsters</a></li>
 							<li><a href="/masterData/materialType/main.do">Material Type</a></li>
 							<li><a href="/masterData/materialCategory/main.do">Material Category</a></li>
@@ -55,7 +56,7 @@
 								<b><transys:label code="Guest!" /></b>
 							</c:if> 
 							<c:if test="${userInfo!=null}">
-								<b>${userInfo.name}!</b>
+								<b>${userInfo.username}!</b>
 								<br />
 								<span style="font-size: 10px">
 									<transys:label code="Last Login" /> : 

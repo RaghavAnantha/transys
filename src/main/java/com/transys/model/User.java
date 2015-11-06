@@ -10,13 +10,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
@@ -25,9 +24,16 @@ import org.hibernate.validator.constraints.NotEmpty;
 public class User extends AbstractBaseModel implements Comparable, Auditable {
 	private static final long serialVersionUID = 1807241954265797561L;
 	
+	@OneToOne
+	@JoinColumn(name="employeeId")
+	private Employee employee;
+	
 	@Column(name = "username")
 	@NotEmpty(message = "User name is required.")
 	private String username;
+	
+	@Transient
+	private String name;
 	
 	@Column(name = "password")
 	@NotEmpty(message = "Password is required.")
@@ -38,61 +44,22 @@ public class User extends AbstractBaseModel implements Comparable, Auditable {
 	@Transient
 	private String confirmPassword;
 	
-	@Column(name = "email")
-	@Email(message = "Invalid email")
-	private String email;
-	
-	@Column(name = "firstName")
-	@NotEmpty(message = "First Name is required.")
-	private String firstName;
-	
-	@NotEmpty(message = "Last Name is required.")
-	@Column(name = "lastName")
-	private String lastName;
-	
-	@Column(name = "name")
-	private String name;
-	
-	@Column(name = "phoneNumber")
-	//@Pattern(regexp = "[0-9]*", message = "Phone number should be numeric.")
-	private String phoneNumber;
-	
-	//@Pattern(regexp = "[0-9]*", message = "Mobile number should be numeric.")
-	@Column(name = "mobileNo")
-	private String mobileNo;
-	
 	@Column(name = "lastLoginDate")
 	private Date lastLoginDate;
-	
-	@Column(name = "billBatchDate")
-	private Date billBatchDate;
 	
 	@Column(name = "loginAttempts")
 	private Integer loginAttempts = 0;
 	
-	@Column(name = "accountStatus")
-	private Integer accountStatus = 0;
+	@ManyToOne
+	@JoinColumn(name = "accountStatusId")
+	private EmployeeStatus accountStatus;
 	
-	@Column(name = "userType")
-	private Integer userType;
-	
-	@Transient
-	private String membershipType;
-	
-	@Column(name = "agreeTerms")
-	private Byte agreeTerms = 0;
+	@Column(name="comments")
+	private String comments;
 	
 	@ManyToOne
 	@JoinColumn(name="roleId")
 	private Role role;
-	
-	public String getName() {
-		return name;
-	}
-	
-	public void setName(String name) {
-		this.name = name;
-	}
 	
 	public String getUsername() {
 		return username;
@@ -101,35 +68,9 @@ public class User extends AbstractBaseModel implements Comparable, Auditable {
 	public void setUsername(String username) {
 		this.username = username;
 	}
-	
-	/**
-	 * @return the phoneNumber
-	 */
-	public String getPhoneNumber() {
-		return phoneNumber;
-	}
-	
-	/**
-	 * @param phoneNumber
-	 *            the phoneNumber to set
-	 */
-	public void setPhoneNumber(String phoneNumber) {
-		this.phoneNumber = phoneNumber;
-	}
-	
-	/**
-	 * @return the mobileNo
-	 */
-	public String getMobileNo() {
-		return mobileNo;
-	}
-	
-	/**
-	 * @param mobileNo
-	 *            the mobileNo to set
-	 */
-	public void setMobileNo(String mobileNo) {
-		this.mobileNo = mobileNo;
+
+	public String getName() {
+		return this.employee.getFullName();
 	}
 	
 	public String getPassword() {
@@ -138,22 +79,6 @@ public class User extends AbstractBaseModel implements Comparable, Auditable {
 	
 	public void setPassword(String password) {
 		this.password = password;
-	}
-	
-	public String getFirstName() {
-		return firstName;
-	}
-	
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
-	
-	public String getLastName() {
-		return lastName;
-	}
-	
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
 	}
 	
 	public Date getLastLoginDate() {
@@ -172,22 +97,14 @@ public class User extends AbstractBaseModel implements Comparable, Auditable {
 		this.loginAttempts = loginAttempts;
 	}
 	
-	public Integer getAccountStatus() {
+	public EmployeeStatus getAccountStatus() {
 		return accountStatus;
 	}
 	
-	public void setAccountStatus(Integer accountStatus) {
+	public void setAccountStatus(EmployeeStatus accountStatus) {
 		this.accountStatus = accountStatus;
 	}
-	
-	public String getEmail() {
-		return email;
-	}
-	
-	public void setEmail(String email) {
-		this.email = email;
-	}
-	
+
 	public String getConfirmPassword() {
 		return confirmPassword;
 	}
@@ -195,15 +112,7 @@ public class User extends AbstractBaseModel implements Comparable, Auditable {
 	public void setConfirmPassword(String confirmPassword) {
 		this.confirmPassword = confirmPassword;
 	}
-	
-	public Integer getUserType() {
-		return userType;
-	}
-	
-	public void setUserType(Integer userType) {
-		this.userType = userType;
-	}
-	
+
 	@Transient
 	public boolean isOmniAdmin() {
 		if ("ADMIN".equalsIgnoreCase(role.getName())) {
@@ -228,26 +137,29 @@ public class User extends AbstractBaseModel implements Comparable, Auditable {
 		this.role = role;
 	}
 
+	public Employee getEmployee() {
+		return employee;
+	}
+
+	public void setEmployee(Employee employee) {
+		this.employee = employee;
+	}
+
 	//@Override
 	public List getAuditableFields() {
 		List props = new ArrayList();
 		props.add("username");
-		props.add("email");
-		props.add("firstName");
-		props.add("lastName");
-		props.add("mobileNo");
 		props.add("lastLoginDate");
 		props.add("accountStatus");
-		props.add("status");
 		return props;
 	}
 	
-	public Byte getAgreeTerms() {
-		return agreeTerms;
+	public String getComments() {
+		return comments;
 	}
 	
-	public void setAgreeTerms(Byte agreeTerms) {
-		this.agreeTerms = agreeTerms;
+	public void setComments(String comments) {
+		this.comments = comments;
 	}
 	
 	//@Override
@@ -255,14 +167,6 @@ public class User extends AbstractBaseModel implements Comparable, Auditable {
 		return null;
 	}
 	
-	public String getMembershipType() {
-		return membershipType;
-	}
-	
-	public void setMembershipType(String membershipType) {
-		this.membershipType = membershipType;
-	}
-
 	//@Override
 	public String getPrimaryField() {
 		// TODO Auto-generated method stub
@@ -275,11 +179,4 @@ public class User extends AbstractBaseModel implements Comparable, Auditable {
 		return false;
 	}
 
-	public Date getBillBatchDate() {
-		return billBatchDate;
-	}
-
-	public void setBillBatchDate(Date billBatchDate) {
-		this.billBatchDate = billBatchDate;
-	}
 }

@@ -790,7 +790,7 @@ public class CustomerController extends CRUDController<Customer> {
 	
 	private void updateEnteredBy(CustomerNotes entity) {
 		User user = genericDAO.getById(User.class, entity.getCreatedBy());
-		entity.setEnteredBy(user.getName());
+		entity.setEnteredBy(user.getEmployee().getFullName());
 	}
 	
 	private void setupCustomerNotes(Customer customer) {

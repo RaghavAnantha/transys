@@ -1,5 +1,6 @@
 package com.transys.model;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -7,6 +8,9 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import org.apache.commons.lang3.StringUtils;
 
 @Entity
 @Table(name="employee")
@@ -189,5 +193,19 @@ public class Employee extends AbstractBaseModel {
 
 	public void setEmployeeId(String employeeId) {
 		this.employeeId = employeeId;
+	}
+	
+	@Transient
+	public String getFullName() {
+		if (firstName == null) {
+			return StringUtils.EMPTY;
+		}
+		
+		String fullName = firstName;
+		if (lastName == null) {
+			return fullName;
+		}
+		
+		return firstName + " " + lastName;
 	}
 }

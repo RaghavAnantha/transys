@@ -1032,24 +1032,19 @@ CREATE TABLE `userInfo` (
   `created_by` bigint(20) NOT NULL,
   `modified_at` datetime DEFAULT NULL,
   `modified_by` bigint(20) DEFAULT NULL,
-  `accountStatus` int(11) NOT NULL,
-  `agreeTerms` tinyint(4) DEFAULT NULL,
-  `email` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `firstName` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `accountStatusId` bigint(20) NOT NULL,
   `lastLoginDate` datetime DEFAULT NULL,
-  `lastName` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `loginAttempts` int(11) DEFAULT NULL,
-  `mobileNo` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `password` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `phoneNumber` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `userType` int(11) NOT NULL,
   `username` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `roleId` bigint(20) DEFAULT NULL,
-  `billBatchDate` datetime DEFAULT NULL,
+  `employeeId` bigint(20) DEFAULT NULL,
+  `comments` varchar(500) DEFAULT NULL,
   `delete_flag` int(11) DEFAULT '1',
   PRIMARY KEY (`id`),
-  CONSTRAINT `userInfoRole_Ref` FOREIGN KEY (`roleId`) REFERENCES `role` (`id`)
+  CONSTRAINT `userInfoRole_Ref` FOREIGN KEY (`roleId`) REFERENCES `role` (`id`),
+  CONSTRAINT `employeeLoginUser_Ref` FOREIGN KEY (`employeeId`) REFERENCES `employee` (`id`),
+  CONSTRAINT `accountStatus_Ref` FOREIGN KEY (`accountStatusId`) REFERENCES `employeeStatus` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -1059,14 +1054,15 @@ CREATE TABLE `userInfo` (
 
 LOCK TABLES `userInfo` WRITE;
 /*!40000 ALTER TABLE `userInfo` DISABLE KEYS */;
-INSERT INTO `userInfo` VALUES 
-(1,'2012-03-16 14:25:34',1,NULL,NULL,1,NULL,'admin@abc.com','admin','2015-09-10 21:32:56','admin',NULL,NULL,'admin','admin','123-456-7890',1,'admin',1,NULL,1);
 INSERT INTO `transys`.`userInfo` 
-(`id`, `created_at`, `created_by`,`accountStatus`,`firstName`, `lastLoginDate`, `lastName`, `name`, `password`, `username`, `roleId`, `delete_flag`, `email`, `phoneNumber`,`userType`) 
-VALUES ('2', '2012-03-16 14:25:34',1, '1', 'Robert', '2015-09-19 12:41:30', 'De La Rosa', 'Robert De La Rosa', 'robert', 'robert', '6', '1', 'dela@abc.com','123-456-7890', 1);
+(`id`, `created_at`, `created_by`, `employeeId`, `accountStatusId`, `lastLoginDate`, `password`, `username`, `roleId`, `delete_flag`) 
+VALUES ('1', '2012-03-16 14:25:34',1, 1, 1, '2015-09-19 12:41:30', 'admin', 'admin', 1, '1');
 INSERT INTO `transys`.`userInfo` 
-(`id`, `created_at`, `created_by`,`accountStatus`,`firstName`, `lastLoginDate`, `lastName`, `name`, `password`, `username`, `roleId`, `delete_flag`, `email`, `phoneNumber`, `userType`) 
-VALUES ('3', '2012-03-16 14:25:34',1, '1', 'Thomas', '2015-09-19 12:41:30', 'De Silva', 'Thomas de Silva', 'thomas', 'thomas', '6', '1', 'desilva@abc.com','123-456-7890', 1);
+(`id`, `created_at`, `created_by`, `employeeId`, `accountStatusId`, `lastLoginDate`, `password`, `username`, `roleId`, `delete_flag`) 
+VALUES ('2', '2012-03-16 14:25:34',1, 5, 1, '2015-09-19 12:41:30', 'aldo', 'aldo', 6, '1');
+INSERT INTO `transys`.`userInfo` 
+(`id`, `created_at`, `created_by`, `employeeId`, `accountStatusId`,`lastLoginDate`, `password`, `username`, `roleId`, `delete_flag`) 
+VALUES ('3', '2012-03-16 14:25:34',1, 4, 1, '2015-09-19 12:41:30', 'thomas', 'thomas', 6, '1');
 /*!40000 ALTER TABLE `userInfo` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;

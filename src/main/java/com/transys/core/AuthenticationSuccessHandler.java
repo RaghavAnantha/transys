@@ -67,21 +67,21 @@ public class AuthenticationSuccessHandler extends SavedRequestAwareAuthenticatio
 				"select distinct bo from BusinessObject bo, RolePrivilege rp where rp.businessObject.id=bo.id and rp.role.id="
 						+ role.getId());
 		query.append(" order by bo.objectLevel, bo.displayOrder");*/
-		try {
+		/*try {
 			//List<BusinessObject> businessObjects = genericDAO.executeSimpleQuery(query.toString());
 			List<BusinessObject> businessObjects = mockBOList();
 			MenuTree menuTree = MenuHelper.getMenuTree(businessObjects);
 			request.getSession().setAttribute("menuTree", menuTree);
 		} catch (Exception ex) {
 			ex.printStackTrace();
-		}
+		}*/
 
 		super.onAuthenticationSuccess(request, response, auth);
 	}
 	
 	private User mockUser(UserDetails userDetails) {
 		User user = new User();
-		user.setName(userDetails.getUsername());
+		//user.setName(userDetails.getUsername());
 		return user;
 	}
 	

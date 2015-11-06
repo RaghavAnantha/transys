@@ -38,7 +38,6 @@ import com.transys.model.DeliveryAddress;
 import com.transys.model.LocationType;
 import com.transys.model.Order;
 import com.transys.model.OrderFees;
-import com.transys.model.OrderNotes;
 import com.transys.model.OrderPermits;
 import com.transys.model.OrderStatus;
 import com.transys.model.Permit;
@@ -593,7 +592,7 @@ public class PermitController extends CRUDController<Permit> {
 	
 	private void updateEnteredBy(PermitNotes entity) {
 		User user = genericDAO.getById(User.class, entity.getCreatedBy());
-		entity.setEnteredBy(user.getName());
+		entity.setEnteredBy(user.getEmployee().getFullName());
 	}
 	
 	@RequestMapping(method = RequestMethod.POST, value = "/savePermitFromAlert.do")
