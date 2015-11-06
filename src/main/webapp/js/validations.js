@@ -75,7 +75,16 @@ function validateText(text, validLength) {
 	var textPattern = new RegExp("^[a-zA-Z0-9-_():;.\"',?/*&%$#@!`\\s\\\\]{1," + validLength + "}$");
 	return textPattern.test(text);
 }
+
+function validateAddressLine(addressLine, validLength) {
+	var addressLinePattern = new RegExp("^[a-zA-Z0-9-_,:/'#\\s\\\\]{1," + validLength + "}$");
+	return addressLinePattern.test(addressLine);
+}
 	
+function validateAlphaOnly(text, validLength) {
+	var alphaPattern = new RegExp("^[a-zA-Z]{1," + validLength + "}$");
+	return alphaPattern.test(text);
+}
 
 function validateName(name, validLength) {
 	var namePattern = new RegExp("^[a-zA-Z-'`\\s/]{1," + validLength + "}$");
