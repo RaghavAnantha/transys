@@ -1055,13 +1055,13 @@ LOCK TABLES `userInfo` WRITE;
 /*!40000 ALTER TABLE `userInfo` DISABLE KEYS */;
 INSERT INTO `transys`.`userInfo` 
 (`id`, `created_at`, `created_by`, `employeeId`, `accountStatusId`, `lastLoginDate`, `password`, `username`, `roleId`, `delete_flag`) 
-VALUES ('1', '2012-03-16 14:25:34',1, 1, 1, '2015-09-19 12:41:30', 'admin', 'admin', 1, '1');
+VALUES ('1', '2012-03-16 14:25:34',1, 1, 1, '2015-09-19 12:41:30', '$2a$10$9Jz3jhE0r8YDBGOrVficE.QyU277kdCCcOdyl4Smw4dzc2838hnku', 'admin', 1, '1');
 INSERT INTO `transys`.`userInfo` 
 (`id`, `created_at`, `created_by`, `employeeId`, `accountStatusId`, `lastLoginDate`, `password`, `username`, `roleId`, `delete_flag`) 
-VALUES ('2', '2012-03-16 14:25:34',1, 5, 1, '2015-09-19 12:41:30', 'aldo', 'aldo', 6, '1');
+VALUES ('2', '2012-03-16 14:25:34',1, 5, 1, '2015-09-19 12:41:30', '$2a$10$QLEcB0yKXegpSdlNrAGW7.rFRZm4tFkEDoGkG.Jg.k2hoTtCgBrYi', 'aldo', 6, '1');
 INSERT INTO `transys`.`userInfo` 
 (`id`, `created_at`, `created_by`, `employeeId`, `accountStatusId`,`lastLoginDate`, `password`, `username`, `roleId`, `delete_flag`) 
-VALUES ('3', '2012-03-16 14:25:34',1, 4, 1, '2015-09-19 12:41:30', 'thomas', 'thomas', 6, '1');
+VALUES ('3', '2012-03-16 14:25:34',1, 4, 1, '2015-09-19 12:41:30', '$2a$10$Did5mpz3ROVMNa9ZQemgwObia5AuGs8iNmMw0wxIFHb39/CCL2cki', 'thomas', 6, '1');
 
 /*!40000 ALTER TABLE `userInfo` ENABLE KEYS */;
 UNLOCK TABLES;

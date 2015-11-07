@@ -17,6 +17,8 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Entity
 @Table(name = "userInfo")
@@ -38,7 +40,7 @@ public class User extends AbstractBaseModel implements Comparable, Auditable {
 	@Column(name = "password")
 	@NotEmpty(message = "Password is required.")
 	@Size(min = 5, message = "Password should be of minimum 5 characters")
-	@Pattern(regexp = "[a-zA-Z]*[0-9]*", message = "Password should be alpanumeric.")
+//	@Pattern(regexp = "[a-zA-Z]*[0-9]*", message = "Password should be alpanumeric.")
 	private String password;
 	
 	@Transient

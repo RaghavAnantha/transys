@@ -5,6 +5,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -25,6 +27,9 @@ import com.transys.model.User;
 @Controller
 @RequestMapping("/masterData/loginUser")
 public class LoginUserController extends CRUDController<User> {
+
+	@Autowired
+   private PasswordEncoder passwordEncoder;
 
 	public LoginUserController(){
 		setUrlContext("masterData/loginUser");
@@ -88,6 +93,9 @@ public class LoginUserController extends CRUDController<User> {
 		
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		criteria.getSearchMap().remove("_csrf");
+		
+		// encode the password before storing in database
+		entity.setPassword(passwordEncoder.encode(entity.getPassword()));
 		super.save(request, entity,  bindingResult, model);
 		
 		model.addAttribute("msgCtx", "manageLoginUsers");

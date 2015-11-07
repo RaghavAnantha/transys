@@ -33,9 +33,11 @@
 	
 	<security:authentication-manager>
 		<security:authentication-provider user-service-ref="userDetailService" >
-			<!-- <security:password-encoder hash="sha" base64="true" /> -->
+			 <security:password-encoder ref="bcryptEncoder"/>
 		</security:authentication-provider>
 	</security:authentication-manager>
 
+	<bean id="bcryptEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
+ 
 	<bean id="userDetailService" class="com.transys.core.spring.DatabaseUserDetailService"/>
 </beans>
