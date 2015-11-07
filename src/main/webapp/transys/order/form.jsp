@@ -537,6 +537,8 @@ function validateForm() {
 		
 		return false;
 	}
+	
+	return true;
 }
 
 function validateMissingData() {
@@ -597,6 +599,7 @@ function validateDataFormat() {
 	validationMsg += validateAllPhones();
 	validationMsg += validateAllDates();
 	validationMsg += validateDeliveryTime();
+	validationMsg += validateTotalAmountPaid();
 	
 	if (validationMsg != "") {
 		validationMsg = validationMsg.substring(0, validationMsg.length - 2);
@@ -631,13 +634,13 @@ function validateMissingPayment(index) {
 	var missingData = "";
 	
 	var paymentMethod = $('#orderPayment' + (index-1) + '\\.paymentMethod').val();
+	var amountPaid = $('#orderPayment'  + (index-1) + '\\.amountPaid').val();
+	var ccReferenceNum = $('#orderPayment'  + (index-1) +  '\\.ccReferenceNum').val();
+	var checkNum = $('#orderPayment' + (index-1) + '\\.checkNum').val();
 	if (paymentMethod != "") {
-		if ($('#orderPayment'  + (index-1) + '\\.amountPaid').val() == "") {
+		if (amountPaid == "") {
 			missingData += "Payment Amount " + index + ", ";
 		}
-		
-		var ccReferenceNum = $('#orderPayment'  + (index-1) +  '\\.ccReferenceNum').val();
-		var checkNum = $('#orderPayment' + (index-1) + '\\.checkNum').val();
 		
 		// Credit card
 		if (paymentMethod == "3" && ccReferenceNum == "") {
@@ -646,6 +649,10 @@ function validateMissingPayment(index) {
 		} else if ((paymentMethod == "1" || paymentMethod == "4" || paymentMethod == "5") && checkNum == "") {
 			missingData += "Check # " + index + ", ";
 		} 
+	} else {
+		if (amountPaid != "" || ccReferenceNum != "" || checkNum != "") {
+			missingData += "Payment method " + index + ", ";
+		}
 	}
 	
 	return missingData;
@@ -737,6 +744,34 @@ function validatePaymentAmount(index) {
 	return validationMsg;
 }
 
+function validateTotalAmountPaid() {
+	var validationMsg = "";
+	
+	var totalPaid = parseFloat(0.00);
+	var orderPayment1 = $('#orderPayment0\\.amountPaid').val();
+	if (orderPayment1 != "" && validateAmount(orderPayment1, null)) {
+		totalPaid += parseFloat(orderPayment1);
+	}
+	var orderPayment2 = $('#orderPayment1\\.amountPaid').val();
+	if (orderPayment2 != "" && validateAmount(orderPayment2, null)) {
+		totalPaid += parseFloat(orderPayment2);
+	}
+	var orderPayment3 = $('#orderPayment2\\.amountPaid').val();
+	if (orderPayment3 != "" && validateAmount(orderPayment3, null)) {
+		totalPaid += parseFloat(orderPayment3);
+	}
+	
+	var totalFeesStr = $('#orderFees\\.totalFees').val();
+	if (totalFeesStr != "" && validateAmount(totalFeesStr, null)) {
+		var totalFees = parseFloat(totalFeesStr);
+		if (totalPaid > totalFees) {
+			validationMsg += "Total amount paid > Total fees, ";
+		}
+	}
+	
+	return validationMsg;
+}
+
 function validatePaymentReferenceNum(index) {
 	var validationMsg = "";
 	
@@ -752,6 +787,10 @@ function validatePaymentReferenceNum(index) {
 		if (!validateReferenceNum(checkNum, 50)) {
 			validationMsg += "Order Payment " + index + " Check #, "
 		}
+	}
+	
+	if (ccRefernceNum != "" && checkNum != "") {
+		validationMsg += "Order Payment " + index + ": Both CC Reference # and Check # specified, ";
 	}
 	
 	return validationMsg;

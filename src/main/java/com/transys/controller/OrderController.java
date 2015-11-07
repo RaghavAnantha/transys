@@ -1311,8 +1311,10 @@ public class OrderController extends CRUDController<Order> {
 																					+ ")");
 		entity.setPermits(permitList);
 		
-		OrderStatus orderStatus = retrieveOrderStatus("Open");
-		entity.setOrderStatus(orderStatus);
+		if (entity.getId() == null) {
+			OrderStatus orderStatus = retrieveOrderStatus("Open");
+			entity.setOrderStatus(orderStatus);
+		}
 		
 		// TODO: Why both created by and modified by and why set if not changed?
 		setupOrderFees(entity);
