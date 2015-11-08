@@ -603,6 +603,11 @@ public class PermitController extends CRUDController<Permit> {
 			String status = "Assigned";
 			OrderPermits associatedOrderPermitEntry = null;
 			
+			if (!validateParkingMeterFee(entity)) {
+				System.out.println("Please correct following invalid data: Parking Meter Fee");
+				return "ErrorMsg: Please correct following invalid data: Parking Meter Fee";
+			}
+			
 			try {
 				associatedOrderPermitEntry = validatePermitEndDate(entity);
 			} catch (Exception ex) {
@@ -676,7 +681,21 @@ public class PermitController extends CRUDController<Permit> {
 			return "Permit saved successfully";
 	}
 
-	
+	private boolean validateParkingMeterFee(Permit entity) {
+
+		try {
+			BigDecimal parkingMeterFee = entity.getParkingMeterFee();
+			if (parkingMeterFee == null) {
+				return false;
+			} else {
+				return true;
+			}
+		} catch (Exception ex) {
+			return false;
+		}
+		
+	}
+
 	private void updatePermitAndTotalFeesInOrder(HttpServletRequest request, Permit entity, OrderPermits associatedOrderPermitEntry) {
 		// update permit fees in Order
 		OrderFees orderFees = associatedOrderPermitEntry.getOrder().getOrderFees();
@@ -741,6 +760,11 @@ public class PermitController extends CRUDController<Permit> {
 			
 			setupCreate(model, request);
 			return urlContext + "/form";
+		}
+		
+		if (!validateParkingMeterFee(entity)) {
+			System.out.println("Please correct following invalid data: Parking Meter Fee");
+			return "ErrorMsg: Please correct following invalid data: Parking Meter Fee";
 		}
 		
 		// unique permit number check
