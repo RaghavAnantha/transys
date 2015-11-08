@@ -140,6 +140,7 @@ public class OrderController extends CRUDController<Order> {
 			String materialTypeQuery = "select obj from MaterialType obj where obj.id=" + materialTypeId;
 			List<MaterialType> materialTypeList = genericDAO.executeSimpleQuery(materialTypeQuery);
 			materialCategoryId = materialTypeList.get(0).getMaterialCategory().getId();
+			order.setMaterialType(materialTypeList.get(0));
 		} else {
 			materialCategoryId = order.getMaterialType().getMaterialCategory().getId();
 		}
@@ -551,6 +552,10 @@ public class OrderController extends CRUDController<Order> {
 		List<PermitStatus> permitStatusList = genericDAO.executeSimpleQuery(permitStatusQuery);
 		
 		for (Permit aPermit : permitList) {
+			if (status.equals(aPermit.getStatus().getStatus())) {
+				continue;
+			}
+			
 			aPermit.setStatus(permitStatusList.get(0));
 			aPermit.setModifiedAt(Calendar.getInstance().getTime());
 			aPermit.setModifiedBy(modifiedBy);
