@@ -32,8 +32,14 @@
 					<li id="masterDataPage">
 						<a href="#" data-toggle="dropdown" class="dropdown-toggle">Master Data<b class="caret"></b></a>
 						<ul class="dropdown-menu">
-							<li><a href="/masterData/employee/main.do">Employees</a></li>
-							<li><a href="/masterData/loginUser/main.do">LoginUser</a></li>
+							<li class="dropdown dropdown-submenu"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Employees</a>
+								<ul class="dropdown-menu">
+									<li><a href="/masterData/employee/main.do">Manage Employee</a></li>
+									<li><a href="/masterData/loginUser/main.do">Manage User Roles</a></li>
+								</ul>
+							</li>
+							<!-- <li><a href="/masterData/employee/main.do">Employees</a></li> -->
+							<!-- <li><a href="/masterData/loginUser/main.do">LoginUser</a></li> -->
 							<li><a href="/masterData/dumpsters/main.do">Dumpsters</a></li>
 							<li><a href="/masterData/materialType/main.do">Material Type</a></li>
 							<li><a href="/masterData/materialCategory/main.do">Material Category</a></li>

@@ -1,5 +1,4 @@
 <%@include file="/common/taglibs.jsp"%>
-<%@include file="/common/modal.jsp"%>
 
 <script type="text/javascript">
 function populateDeliveryAddress() {
@@ -61,7 +60,7 @@ function populatePermitFee() {
 	}
 }
 
-function validateForm() {
+function validateDetailsForm() {
 	var missingData = validateMissingData();
 	if (missingData != "") {
 		var alertMsg = "<span style='color:red'><b>Please provide following required data:</b><br></span>"
@@ -163,8 +162,8 @@ function validateAllDates() {
 	
 	return validationMsg;
 }
-
 </script>
+
 <form:form action="save.do" name="typeForm" commandName="modelObject" method="post" >
 	<form:hidden path="id" id="id" />
 	<jsp:include page="/common/messages.jsp">
@@ -296,7 +295,7 @@ function validateAllDates() {
 		<tr>
 			<td>&nbsp;</td>
 			<td colspan="2">
-				<input type="button"  id="create" onclick="validateForm();" value="Save" class="flat btn btn-primary btn-sm btn-sm-ext" /> 
+				<input type="button"  id="create" onclick="validateDetailsForm();" value="Save" class="flat btn btn-primary btn-sm btn-sm-ext" /> 
 				<input type="button" id="cancelBtn" value="<transys:label code="Back"/>" class="flat btn btn-primary btn-sm btn-sm-ext" onClick="location.href='main.do'" />
 			</td>
 		</tr>

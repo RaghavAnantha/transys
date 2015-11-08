@@ -1,4 +1,6 @@
 <%@include file="/common/taglibs.jsp"%>
+<%@include file="/common/modal.jsp"%>
+
 <br />
 <h5 style="margin-top: -15px; !important">Add/Edit Permits</h5>
 <ul class="nav nav-tabs" id="permit_edit_tabs">

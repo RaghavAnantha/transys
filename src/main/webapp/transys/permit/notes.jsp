@@ -1,4 +1,48 @@
 <%@include file="/common/taglibs.jsp"%>
+
+<script type="text/javascript">
+
+function validateNotesForm() {
+	
+	var formatValidation = validateDataFormat();
+	if (formatValidation != "") {
+		var alertMsg = "<span style='color:red'><b>Please correct following invalid data:</b><br></span>"
+					 + formatValidation;
+		showAlertDialog("Data Validation", alertMsg);
+		
+		return false;
+	}
+	
+	return true;
+}
+
+function validateDataFormat() {
+	var validationMsg = "";
+	
+	validationMsg += validateAllText();
+	
+	if (validationMsg != "") {
+		validationMsg = validationMsg.substring(0, validationMsg.length - 2);
+	}
+	
+	return validationMsg;
+}
+
+function validateAllText() {
+	var validationMsg = "";
+	
+	var notes = $('#notesTextArea').val();
+	if (notes != "") {
+		if (!validateText(notes, 500)) {
+			validationMsg += "Notes, "
+		}
+	}
+	
+	return validationMsg;
+}
+
+</script>
+
 <form:form  id="permitNotesForm" action="savePermitNotes.do" name="typeForm" commandName="notesModelObject" method="post">
 	<form:hidden path="id" id="id" />
 	<form:hidden path="permit.id" id="permit.id" />
@@ -10,7 +54,6 @@
 	    <tr><td class="form-left">Notes<span class="errorMessage">*</span></td></tr>
 		<tr>
 			<td colspan=10>
-				<%-- <td class="form-left"><transys:label code="Notes" /></td> --%>
 				<form:textarea row="5" id="notesTextArea" path="notes" cssClass="flat notes"/>
 			 	<br><form:errors path="notes" cssClass="errorMessage" />
 			</td>
@@ -19,7 +62,7 @@
 		<tr>
 			<td>&nbsp;</td>
 			<td colspan="2">
-				<input type="submit" id="create" onclick="return validateform()" value="<transys:label code="Save"/>" class="flat btn btn-primary btn-sm btn-sm-ext" /> 
+				<input type="button" id="create" onclick="return validateNotesForm();" value="Save" class="flat btn btn-primary btn-sm btn-sm-ext" /> 
 				<input type="button" id="cancelBtn" value="<transys:label code="Back"/>" class="flat btn btn-primary btn-sm btn-sm-ext" onClick="location.href='main.do'" />
 			</td>
 		</tr>
