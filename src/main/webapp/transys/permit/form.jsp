@@ -1,4 +1,5 @@
 <%@include file="/common/taglibs.jsp"%>
+<%@include file="/common/modal.jsp"%>
 
 <script type="text/javascript">
 function populateDeliveryAddress() {
@@ -58,6 +59,109 @@ function populatePermitFee() {
 			}
 		});
 	}
+}
+
+function validateForm() {
+	var missingData = validateMissingData();
+	if (missingData != "") {
+		var alertMsg = "<span style='color:red'><b>Please provide following required data:</b><br></span>"
+					 + missingData;
+		showAlertDialog("Data Validation", alertMsg);
+		
+		return false;
+	}
+	
+	var formatValidation = validateDataFormat();
+	if (formatValidation != "") {
+		var alertMsg = "<span style='color:red'><b>Please correct following invalid data:</b><br></span>"
+					 + formatValidation;
+		showAlertDialog("Data Validation", alertMsg);
+		
+		return false;
+	}
+	
+	return true;
+}
+
+function validateMissingData() {
+	var missingData = "";
+	
+	if ($('#customerSelect').val() == "") {
+		missingData += "Customer, "
+	}
+	if ($('#deliveryAddressSelect').val() == "") {
+		missingData += "Delivery Address, "
+	}
+	if ($('#locationTypeSelect').val() == "") {
+		missingData += "Location Type, "
+	}
+	if ($('#permitClassSelect').val() == "") {
+		missingData += "Permit Class, "
+	}
+	if ($("#permitTypeSelect").val() == "") {
+		missingData += "Permit Type, "
+	}
+	if ($('#datepicker7').val() == "") {
+		missingData += "Start Date, "
+	}
+	
+	if (missingData != "") {
+		missingData = missingData.substring(0, missingData.length - 2);
+	}
+	
+	return missingData;
+}
+
+function validateDataFormat() {
+	var validationMsg = "";
+	
+	validationMsg += validateAllText();
+	validationMsg += validateFees(); 
+	validationMsg += validateAllDates();
+	
+	if (validationMsg != "") {
+		validationMsg = validationMsg.substring(0, validationMsg.length - 2);
+	}
+	return validationMsg;
+}
+
+function validateAllText() {
+	var validationMsg = "";
+	
+	var notes = $('#permitNotesTextArea').val();
+	if (notes != "") {
+		if (!validateText(notes, 500)) {
+			validationMsg += "Notes, "
+		}
+	}
+	
+	return validationMsg;
+}
+
+function validateFees() {
+	var validationMsg = "";
+	
+	var parkingMeterFee = $('#parkingMeterFeeInput').val();
+	if (parkingMeterFee != "") {
+		if (!validateAmount(parkingMeterFee, 1500)) {
+			validationMsg += "Parking Meter Fee, "
+		}
+	}
+	
+	return validationMsg;
+}
+
+function validateAllDates() {
+	var validationMsg = "";
+	
+	var startDate = $("[name='startDate']").val();
+	if (startDate != "") {
+		if (!validateDate(startDate)) {
+			validationMsg += "Start Date, "
+		}
+	}
+	
+	return validationMsg;
 }
 
 </script>
@@ -151,14 +255,8 @@ function populatePermitFee() {
 			<td class="form-left"><transys:label code="Permit Fee" /><span class="errorMessage">*</span></td>
 			<td class="td-static" id="permitFeeInput">${modelObject.fee}</td>
 			<form:hidden path="fee" id="fee" />
-			<%-- <td>
-				
-				<form:input id="permitFeeInput" path="fee" cssClass="flat" style="width: 175px"  />
-			 	<br><form:errors path="fee" cssClass="errorMessage" />
-			</td>
-		</tr> --%>
 		<tr>
-		<td class="form-left"><transys:label code="Parking Meter" /><span class="errorMessage">*</span></td>
+		<td class="form-left"><transys:label code="Parking Meter" /></td>
 			<td>
 				<form:select cssClass="flat form-control input-sm" path="parkingMeter" style="width: 175px !important" >
 					<form:option value="Yes" label="Yes"></form:option>
@@ -168,7 +266,7 @@ function populatePermitFee() {
 			</td>
 			<td class="form-left"><transys:label code="Parking Meter Fee" /></td>
 			<td>
-				<form:input path="parkingMeterFee" cssClass="flat" style="width: 175px !important"  />
+				<form:input id="parkingMeterFeeInput" path="parkingMeterFee" cssClass="flat" style="width: 175px !important"  />
 			 	<form:errors path="parkingMeterFee" cssClass="errorMessage" />
 			</td>
 		</tr>
@@ -188,7 +286,7 @@ function populatePermitFee() {
 							and modelObject.permitNotes[0].notes != null and modelObject.permitNotes[0].notes.length() > 0}">
 					<c:set var="permitNotesDisabled" value="true" />
 				</c:if>
-				<form:textarea readonly="${permitNotesDisabled}" row="5" path="permitNotes[0].notes" cssClass="form-control notes" style="width:55.5%;" />
+				<form:textarea id="permitNotesTextArea" readonly="${permitNotesDisabled}" row="5" path="permitNotes[0].notes" cssClass="form-control notes" style="width:55.5%;" />
 				<form:errors path="permitNotes[0].notes" cssClass="errorMessage" />
 			</td>
 		</tr>
@@ -198,7 +296,7 @@ function populatePermitFee() {
 		<tr>
 			<td>&nbsp;</td>
 			<td colspan="2">
-				<input type="submit"  id="create" onclick="return true" value="<transys:label code="Save"/>" class="flat btn btn-primary btn-sm btn-sm-ext" /> 
+				<input type="button"  id="create" onclick="validateForm();" value="Save" class="flat btn btn-primary btn-sm btn-sm-ext" /> 
 				<input type="button" id="cancelBtn" value="<transys:label code="Back"/>" class="flat btn btn-primary btn-sm btn-sm-ext" onClick="location.href='main.do'" />
 			</td>
 		</tr>
