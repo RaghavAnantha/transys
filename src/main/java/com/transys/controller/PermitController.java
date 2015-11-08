@@ -57,6 +57,7 @@ import com.transys.model.User;
 public class PermitController extends CRUDController<Permit> {
 	
 	public static final int MAX_NUMBER_OF_ASSOCIATED_PERMITS = 3;
+	public static final String EMPTY_PERMIT_NUMBER = "To Be Assigned";
 	
 	public PermitController(){
 		setUrlContext("permit");
@@ -121,7 +122,7 @@ public class PermitController extends CRUDController<Permit> {
 		//TODO: Fix me 
 		criteria.getSearchMap().remove("_csrf");
 		
-		injectPendingPaymentPermitSearch(criteria);
+//		injectPendingPaymentPermitSearch(criteria);
 		
 		if (!injectOrderSearchCriteria(criteria)) {
 			// search yielded no results
@@ -453,7 +454,7 @@ public class PermitController extends CRUDController<Permit> {
 			BindingResult bindingResult, ModelMap model) {
 		
 			String status = "Pending";
-			if (entity.getNumber() != null && entity.getNumber().length() > 0) {
+			if (nonEmptyPermitNumber(entity)) {
 				// check for duplicate
 				if (isPermitNumberUnique(entity.getNumber())) {
 					status = "Available";
@@ -461,7 +462,8 @@ public class PermitController extends CRUDController<Permit> {
 					return showPermitCreatePageWithError(request, entity, model, "Permit Number " + entity.getNumber() + " already exists.");
 				}
 			} else {
-				entity.setNumber(null);
+				System.out.println("Setting permit number to empty");
+				entity.setNumber(EMPTY_PERMIT_NUMBER);
 			}
 
 			if (entity.getFee() == null) {
@@ -480,9 +482,11 @@ public class PermitController extends CRUDController<Permit> {
 			}
 			
 			SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
-			criteria.getSearchMap().put("id!",0l);
-			//TODO: Fix me 
-			criteria.getSearchMap().remove("_csrf");
+			if(criteria != null && criteria.getSearchMap() != null) {
+				criteria.getSearchMap().put("id!",0l);
+				//TODO: Fix me 
+				criteria.getSearchMap().remove("_csrf");
+			}
 			
 			// return to form if we had errors
 			if (bindingResult.hasErrors()) {
@@ -621,11 +625,13 @@ public class PermitController extends CRUDController<Permit> {
 			}
 			
 			// unique permit number check
-			if(entity.getNumber() != null && entity.getNumber().length() > 0) {
+			if(nonEmptyPermitNumber(entity)) {
 				if (!isPermitNumberUnique(entity.getNumber())) {
 					System.out.println("Permit Number " + entity.getNumber() + " already exists.");
 					return "ErrorMsg: Permit Number " + entity.getNumber() + " already exists.";
 				}
+			} else {
+				entity.setNumber(EMPTY_PERMIT_NUMBER);
 			}
 
 			PermitStatus permitStatus = (PermitStatus)genericDAO.executeSimpleQuery("select obj from PermitStatus obj where obj.status='" + status + "'").get(0);
@@ -679,6 +685,10 @@ public class PermitController extends CRUDController<Permit> {
 			cleanUp(request);
 			
 			return "Permit saved successfully";
+	}
+
+	private boolean nonEmptyPermitNumber(Permit entity) {
+		return (entity.getNumber() != null && entity.getNumber().length() > 0 && !entity.getNumber().equals(EMPTY_PERMIT_NUMBER));
 	}
 
 	private boolean validateParkingMeterFee(Permit entity) {
@@ -768,11 +778,13 @@ public class PermitController extends CRUDController<Permit> {
 		}
 		
 		// unique permit number check
-		if(entity.getNumber() != null && entity.getNumber().length() > 0) {
+		if(nonEmptyPermitNumber(entity)) {
 			if (!isPermitNumberUnique(entity.getNumber())) {
 				System.out.println("Permit Number " + entity.getNumber() + " already exists.");
 				return "ErrorMsg: Permit Number " + entity.getNumber() + " already exists.";
 			}
+		} else {
+			entity.setNumber(EMPTY_PERMIT_NUMBER);
 		}
 				
 		String status = "Pending";

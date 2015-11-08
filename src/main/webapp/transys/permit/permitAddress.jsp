@@ -1,8 +1,19 @@
 <%@include file="/common/taglibs.jsp"%>
 
 <script type="text/javascript">
-	function validateForm() {
-		var missingData = validateMissingData();
+
+	function processPermitAddressForm() {
+		if (validatePermitAddressForm()) {
+			var permitAddressEditForm = $("#permitAddressForm");
+			permitAddressEditForm.submit();
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	function validatePermitAddressForm() {
+		var missingData = validatePermitAddressMissingData();
 		if (missingData != "") {
 			var alertMsg = "<span style='color:red'><b>Please provide following required data:</b><br></span>"
 						 + missingData;
@@ -11,7 +22,7 @@
 			return false;
 		}
 		
-		var formatValidation = validateDataFormat();
+		var formatValidation = validatePermitAddressDataFormat();
 		if (formatValidation != "") {
 			var alertMsg = "<span style='color:red'><b>Please correct following invalid data:</b><br></span>"
 						 + formatValidation;
@@ -23,7 +34,7 @@
 		return true;
 	}
 	
-	function validateMissingData() {
+	function validatePermitAddressMissingData() {
 		var missingData = "";
 		
 		if ($('#permitAddressFormLine1').val() == "") {
@@ -49,10 +60,10 @@
 		return missingData;
 	}
 	
-	function validateDataFormat() {
+	function validatePermitAddressDataFormat() {
 		var validationMsg = "";
 		
-		validationMsg += validateAddressZipCode();
+		validationMsg += validatePermitAddressZipCode();
 		
 		if (validationMsg != "") {
 			validationMsg = validationMsg.substring(0, validationMsg.length - 2);
@@ -60,7 +71,7 @@
 		return validationMsg;
 	}
 	
-	function validateAddressZipCode() {
+	function validatePermitAddressZipCode() {
 		var validationMsg = "";
 		
 		var zipcode = $("#permitAddressFormZipcode").val();
@@ -147,7 +158,7 @@
 		<tr>
 			<td>&nbsp;</td>
 			<td colspan="2">
-				<input type="button" id="create" onclick="return validateForm();" value="Save" class="flat btn btn-primary btn-sm btn-sm-ext" /> 
+				<input type="button" id="create" onclick="return processPermitAddressForm();" value="Save" class="flat btn btn-primary btn-sm btn-sm-ext" /> 
 				<input type="button" id="cancelBtn" value="<transys:label code="Back"/>" class="flat btn btn-primary btn-sm btn-sm-ext" onClick="location.href='main.do'" />
 			</td>
 		</tr>

@@ -60,8 +60,18 @@ function populatePermitFee() {
 	}
 }
 
+function processPermitDetailsForm() {
+	if (validateDetailsForm()) {
+		var permitDetailsEditForm = $("#permitDetailsForm");
+		permitDetailsEditForm.submit();
+		return true;
+	} else {
+		return false;
+	}
+}
+
 function validateDetailsForm() {
-	var missingData = validateMissingData();
+	var missingData = validateDetailsMissingData();
 	if (missingData != "") {
 		var alertMsg = "<span style='color:red'><b>Please provide following required data:</b><br></span>"
 					 + missingData;
@@ -70,7 +80,7 @@ function validateDetailsForm() {
 		return false;
 	}
 	
-	var formatValidation = validateDataFormat();
+	var formatValidation = validateDetailsDataFormat();
 	if (formatValidation != "") {
 		var alertMsg = "<span style='color:red'><b>Please correct following invalid data:</b><br></span>"
 					 + formatValidation;
@@ -82,7 +92,7 @@ function validateDetailsForm() {
 	return true;
 }
 
-function validateMissingData() {
+function validateDetailsMissingData() {
 	var missingData = "";
 	
 	if ($('#customerSelect').val() == "") {
@@ -111,7 +121,7 @@ function validateMissingData() {
 	return missingData;
 }
 
-function validateDataFormat() {
+function validateDetailsDataFormat() {
 	var validationMsg = "";
 	
 	validationMsg += validateAllText();
@@ -164,7 +174,7 @@ function validateAllDates() {
 }
 </script>
 
-<form:form action="save.do" name="typeForm" commandName="modelObject" method="post" >
+<form:form action="save.do" id="permitDetailsForm" name="permitDetailsForm" commandName="modelObject" method="post" >
 	<form:hidden path="id" id="id" />
 	<jsp:include page="/common/messages.jsp">
 		<jsp:param name="msgCtx" value="managePermit" />
@@ -295,7 +305,7 @@ function validateAllDates() {
 		<tr>
 			<td>&nbsp;</td>
 			<td colspan="2">
-				<input type="button"  id="create" onclick="validateDetailsForm();" value="Save" class="flat btn btn-primary btn-sm btn-sm-ext" /> 
+				<input type="button" id="create" onclick="processPermitDetailsForm();" value="Save" class="flat btn btn-primary btn-sm btn-sm-ext" /> 
 				<input type="button" id="cancelBtn" value="<transys:label code="Back"/>" class="flat btn btn-primary btn-sm btn-sm-ext" onClick="location.href='main.do'" />
 			</td>
 		</tr>

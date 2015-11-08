@@ -2,9 +2,28 @@
 
 <script type="text/javascript">
 
+function processPermitNotesForm() {
+	if (validateNotesForm()) {
+		var permitNotesEditForm = $("#permitNotesForm");
+		permitNotesEditForm.submit();
+		return true;
+	} else {
+		return false;
+	}
+}
+
 function validateNotesForm() {
 	
-	var formatValidation = validateDataFormat();
+	var missingData = validatePermitNotesMissingData();
+	if (missingData != "") {
+		var alertMsg = "<span style='color:red'><b>Please provide following required data:</b><br></span>"
+					 + missingData;
+		showAlertDialog("Data Validation", alertMsg);
+		
+		return false;
+	}
+	
+	var formatValidation = validatePermitNotesDataFormat();
 	if (formatValidation != "") {
 		var alertMsg = "<span style='color:red'><b>Please correct following invalid data:</b><br></span>"
 					 + formatValidation;
@@ -16,10 +35,24 @@ function validateNotesForm() {
 	return true;
 }
 
-function validateDataFormat() {
+function validatePermitNotesMissingData() {
+	var missingData = "";
+	
+	if ($('#notesTextArea').val() == "") {
+		missingData += "Permit Notes, "
+	}
+	
+	if (missingData != "") {
+		missingData = missingData.substring(0, missingData.length - 2);
+	}
+	
+	return missingData;
+}
+
+function validatePermitNotesDataFormat() {
 	var validationMsg = "";
 	
-	validationMsg += validateAllText();
+	validationMsg += validatePermitNotesText();
 	
 	if (validationMsg != "") {
 		validationMsg = validationMsg.substring(0, validationMsg.length - 2);
@@ -28,7 +61,7 @@ function validateDataFormat() {
 	return validationMsg;
 }
 
-function validateAllText() {
+function validatePermitNotesText() {
 	var validationMsg = "";
 	
 	var notes = $('#notesTextArea').val();
@@ -62,7 +95,7 @@ function validateAllText() {
 		<tr>
 			<td>&nbsp;</td>
 			<td colspan="2">
-				<input type="button" id="create" onclick="return validateNotesForm();" value="Save" class="flat btn btn-primary btn-sm btn-sm-ext" /> 
+				<input type="button" id="create" onclick="return processPermitNotesForm();" value="Save" class="flat btn btn-primary btn-sm btn-sm-ext" /> 
 				<input type="button" id="cancelBtn" value="<transys:label code="Back"/>" class="flat btn btn-primary btn-sm btn-sm-ext" onClick="location.href='main.do'" />
 			</td>
 		</tr>

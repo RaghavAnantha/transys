@@ -59,7 +59,8 @@ function validateDate(date) {
 	
 	var data = date.split("/");
     // using ISO 8601 Date String
-    if (isNaN(Date.parse(data[2] + "-" + data[1] + "-" + data[0]))) {
+    if (isNaN(Date.parse(data[2] + "-" + data[0] + "-" + data[1]))) {
+    	alert("IsNan");
         return false;
     }
 
