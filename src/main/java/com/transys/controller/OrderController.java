@@ -551,6 +551,10 @@ public class OrderController extends CRUDController<Order> {
 		List<PermitStatus> permitStatusList = genericDAO.executeSimpleQuery(permitStatusQuery);
 		
 		for (Permit aPermit : permitList) {
+			if (status.equals(aPermit.getStatus().getStatus())) {
+				continue;
+			}
+			
 			aPermit.setStatus(permitStatusList.get(0));
 			aPermit.setModifiedAt(Calendar.getInstance().getTime());
 			aPermit.setModifiedBy(modifiedBy);
