@@ -140,6 +140,7 @@ public class OrderController extends CRUDController<Order> {
 			String materialTypeQuery = "select obj from MaterialType obj where obj.id=" + materialTypeId;
 			List<MaterialType> materialTypeList = genericDAO.executeSimpleQuery(materialTypeQuery);
 			materialCategoryId = materialTypeList.get(0).getMaterialCategory().getId();
+			order.setMaterialType(materialTypeList.get(0));
 		} else {
 			materialCategoryId = order.getMaterialType().getMaterialCategory().getId();
 		}
