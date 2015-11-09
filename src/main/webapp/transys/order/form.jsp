@@ -1,5 +1,4 @@
 <%@include file="/common/taglibs.jsp"%>
-<%@include file="/common/modal.jsp"%>
 
 <script type="text/javascript">
 function populateCustomerInfo() {
@@ -519,8 +518,8 @@ function populateTotalFees() {
 	$("#orderFees\\.totalFees").val(totalFees - discountAmount);
 }
 
-function validateForm() {
-	var missingData = validateMissingData();
+function validateOrderForm() {
+	var missingData = validateOrderMissingData();
 	if (missingData != "") {
 		var alertMsg = "<span style='color:red'><b>Please provide following required data:</b><br></span>"
 					 + missingData;
@@ -529,7 +528,7 @@ function validateForm() {
 		return false;
 	}
 	
-	var formatValidation = validateDataFormat();
+	var formatValidation = validateOrderDataFormat();
 	if (formatValidation != "") {
 		var alertMsg = "<span style='color:red'><b>Please correct following invalid data:</b><br></span>"
 					 + formatValidation;
@@ -541,7 +540,7 @@ function validateForm() {
 	return true;
 }
 
-function validateMissingData() {
+function validateOrderMissingData() {
 	var missingData = "";
 	
 	if ($('#customerSelect').val() == "") {
@@ -582,7 +581,7 @@ function validateMissingData() {
 	}
 	
 	for (i = 1; i < 4; i++) {
-		missingData += validateMissingPayment(i)
+		missingData += validateMissingOrderPayment(i)
 	}
 	
 	if (missingData != "") {
@@ -591,15 +590,15 @@ function validateMissingData() {
 	return missingData;
 }
 
-function validateDataFormat() {
+function validateOrderDataFormat() {
 	var validationMsg = "";
 	
-	validationMsg += validateAllText();
-	validationMsg += validateFees(); 
-	validationMsg += validateAllPhones();
-	validationMsg += validateAllDates();
-	validationMsg += validateDeliveryTime();
-	validationMsg += validateTotalAmountPaid();
+	validationMsg += validateAllOrderText();
+	validationMsg += validateOrderFees(); 
+	validationMsg += validateAllOrderPhones();
+	validationMsg += validateAllOrderDates();
+	validationMsg += validateOrderDeliveryTime();
+	validationMsg += validateOrderTotalAmountPaid();
 	
 	if (validationMsg != "") {
 		validationMsg = validationMsg.substring(0, validationMsg.length - 2);
@@ -607,7 +606,7 @@ function validateDataFormat() {
 	return validationMsg;
 }
 
-function validateAllText() {
+function validateAllOrderText() {
 	var validationMsg = "";
 	
 	var deliveryContactName = $('#deliveryContactName').val();
@@ -630,7 +629,7 @@ function validateAllText() {
 	return validationMsg;
 }
 
-function validateMissingPayment(index) {
+function validateMissingOrderPayment(index) {
 	var missingData = "";
 	
 	var paymentMethod = $('#orderPayment' + (index-1) + '\\.paymentMethod').val();
@@ -658,7 +657,7 @@ function validateMissingPayment(index) {
 	return missingData;
 }
 
-function validateFees() {
+function validateOrderFees() {
 	var validationMsg = "";
 	
 	var dumpsterPrice = $('#orderFees\\.dumpsterPrice').val();
@@ -744,7 +743,7 @@ function validatePaymentAmount(index) {
 	return validationMsg;
 }
 
-function validateTotalAmountPaid() {
+function validateOrderTotalAmountPaid() {
 	var validationMsg = "";
 	
 	var totalPaid = parseFloat(0.00);
@@ -809,7 +808,7 @@ function validatePermitFees(index) {
 	return validationMsg;
 }
 
-function validateAllPhones() {
+function validateAllOrderPhones() {
 	var validationMsg = "";
 	
 	var deliveryContactPhone1 = $('#deliveryContactPhone1').val();
@@ -829,7 +828,7 @@ function validateAllPhones() {
 	return validationMsg;
 }
 
-function validateAllDates() {
+function validateAllOrderDates() {
 	var validationMsg = "";
 	
 	var deliveryDate = $("[name='deliveryDate']").val();
@@ -842,7 +841,7 @@ function validateAllDates() {
 	return validationMsg;
 }
 
-function validateDeliveryTime() {
+function validateOrderDeliveryTime() {
 	var validationMsg = "";
 	
 	var deliveryHourFrom = $('#deliveryHourFrom').val();
@@ -860,8 +859,8 @@ function validateDeliveryTime() {
     return validationMsg;
 }
 
-function processForm() {
-	if (validateForm()) {
+function processOrderForm() {
+	if (validateOrderForm()) {
 		verifyExchangeOrderAndSubmit();
 	}
 }
@@ -916,7 +915,7 @@ function verifyExchangeOrderAndSubmit() {
 		<tr><td></td></tr>
 		<tr>
 			<td class="form-left">Order #</td>
-			<td class="wide td-static">${modelObject.id}</td>
+			<td class="wide td-static" id="orderIdTd">${modelObject.id}</td>
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Customer" /><span class="errorMessage">*</span></td>
@@ -1537,7 +1536,7 @@ function verifyExchangeOrderAndSubmit() {
 		<tr>
 			<td></td>
 			<td colspan="2">
-				<input type="button" id="orderCreate" onclick="processForm();" value="Save" class="flat btn btn-primary btn-sm btn-sm-ext" /> 
+				<input type="button" id="orderCreate" onclick="processOrderForm();" value="Save" class="flat btn btn-primary btn-sm btn-sm-ext" /> 
 				<input type="button" id="orderCancelBtn" value="Back" class="flat btn btn-primary btn-sm btn-sm-ext" onClick="location.href='main.do'" />
 				
 				<c:set var="printDisabled" value="" />
@@ -1562,8 +1561,13 @@ $("#confirmDialogYes").click(function (ev) {
 });
 
 $("#addCustomerLink").click(function (ev) {
-	var url = $(this).attr("href");
-	showPopupDialog("Add Customer", url);
+	var orderId = $('#id').val();
+	if (orderId != "") {
+		showAlertDialog("Data Validation", "New customer cannot be added to existing order");
+	} else {
+		var url = $(this).attr("href");
+		showPopupDialog("Add Customer", url);
+	}
 	
 	ev.preventDefault();
 });

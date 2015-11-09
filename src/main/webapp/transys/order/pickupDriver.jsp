@@ -1,5 +1,71 @@
 <%@include file="/common/taglibs.jsp"%>
-<form:form action="savePickupDriver.do" name="savePickupDriverForm" commandName="modelObject" method="post" id="savePickupDriverForm">
+
+<script type="text/javascript">
+function validatePickupDriverForm() {
+	var missingData = validatePickupDriverMissingData();
+	if (missingData != "") {
+		var alertMsg = "<span style='color:red'><b>Please provide following required data:</b><br></span>"
+					 + missingData;
+		showAlertDialog("Data Validation", alertMsg);
+		
+		return false;
+	}
+	
+	var formatValidation = validatePickupDriverDataFormat();
+	if (formatValidation != "") {
+		var alertMsg = "<span style='color:red'><b>Please correct following invalid data:</b><br></span>"
+					 + formatValidation;
+		showAlertDialog("Data Validation", alertMsg);
+		
+		return false;
+	}
+	
+	return true;
+}
+
+function validatePickupDriverMissingData() {
+	var missingData = "";
+	
+	var pickupDate = $("[name='pickupDate']").val();
+	if (pickupDate == "") {
+		missingData += "Pickup Date, "
+	}
+	
+	if ($('#pickupDriverSelect').val() == "") {
+		missingData += "Pickup Driver, "
+	}
+	
+	if (missingData != "") {
+		missingData = missingData.substring(0, missingData.length - 2);
+	}
+	return missingData;
+}
+
+function validatePickupDriverDataFormat() {
+	var validationMsg = "";
+	
+	var checkNum = $('#pickupDriverCheckNum').val();
+	if (checkNum != "") {
+		if (!validateReferenceNum(checkNum, 50)) {
+			validationMsg += "Check #, "
+		}
+	}
+	
+	if (validationMsg != "") {
+		validationMsg = validationMsg.substring(0, validationMsg.length - 2);
+	}
+	return validationMsg;
+}
+
+function processPickupDriverForm() {
+	if (validatePickupDriverForm()) {
+		var pickupDriverForm = $("#pickupDriverAddEditForm");
+		pickupDriverForm.submit();
+	}
+}
+</script>
+
+<form:form action="savePickupDriver.do" name="pickupDriverAddEditForm" commandName="modelObject" method="post" id="pickupDriverAddEditForm">
 	<form:hidden path="id" id="id" />
 	<jsp:include page="/common/messages.jsp">
 		<jsp:param name="msgCtx" value="managePickupDriver" />
@@ -14,9 +80,9 @@
 			</td>
 		</tr>
 		<tr>
-			<td class="form-left"><transys:label code="Pickup Driver" /><span class="errorMessage">*</span></td>
+			<td class="form-left">Pickup Driver<span class="errorMessage">*</span></td>
 			<td>
-				<form:select id="pickupDriver" cssClass="flat form-control input-sm" style="width:172px !important" path="pickupDriver"> 
+				<form:select id="pickupDriverSelect" cssClass="flat form-control input-sm" style="width:172px !important" path="pickupDriver"> 
 					<form:option value="">-----Please Select-----</form:option>
 					<form:options items="${drivers}" itemValue="id" itemLabel="name" />
 				</form:select> 
@@ -24,9 +90,9 @@
 			</td>
 		</tr>
 		<tr>
-			<td class="form-left"><transys:label code="Check #"/></td>
+			<td class="form-left">Check #</td>
 			<td>
-				<form:input path="orderPayment[0].checkNum" cssClass="flat" style="width:172px !important"/>
+				<form:input path="orderPayment[0].checkNum" id="pickupDriverCheckNum" cssClass="flat" style="width:172px !important"/>
 				<br><form:errors path="orderPayment[0].checkNum" cssClass="errorMessage" />
 			</td>
 		</tr>
@@ -38,7 +104,7 @@
 			<td colspan="10"></td>
 		</tr>
 		<tr>
-			<td class="form-left"><transys:label code="Gross"/><span class="errorMessage">*</span></td>
+			<td class="form-left">Gross<span class="errorMessage">*</span></td>
 			<td class="wide">
 				<form:input path="grossWeight" cssClass="flat" style="width:172px !important"/>
 				<br><form:errors path="grossWeight" cssClass="errorMessage" />
@@ -65,8 +131,8 @@
 		<tr>
 			<td>&nbsp;</td>
 			<td colspan="2">
-				<input type="submit" id="submitPickupDriver" onclick="return validate()" value="<transys:label code="Close Order"/>" class="flat btn btn-primary btn-sm btn-sm-ext" /> 
-				<input type="button" id="cancelPickupDriver" value="Back" class="flat btn btn-primary btn-sm btn-sm-ext" onClick="location.href='main.do'" />
+				<input type="button" id="pickupDriverSubmitBtn" onclick="processPickupDriverForm();" value="Close Order" class="flat btn btn-primary btn-sm btn-sm-ext" />
+				<input type="button" id="pickupDriverBackBtn" value="Back" class="flat btn btn-primary btn-sm btn-sm-ext" onClick="location.href='main.do'" />
 			</td>
 		</tr>
 	</table>

@@ -1,5 +1,4 @@
 <%@include file="/common/taglibs.jsp"%>
-<%@include file="/common/modal.jsp"%>
 
 <br />
 <h5 style="margin-top: -15px; !important">Add/Edit Permits</h5>

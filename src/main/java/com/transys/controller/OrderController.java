@@ -1375,10 +1375,14 @@ public class OrderController extends CRUDController<Order> {
 		for (OrderPayment anOrderPayment : orderPaymentList) {
 			if (anOrderPayment.getPaymentMethod() != null) {
 				anOrderPayment.setOrder(order);
-				anOrderPayment.setCreatedAt(order.getCreatedAt());
-				anOrderPayment.setCreatedBy(order.getCreatedBy());
-				//anOrderPayment.setModifiedAt(order.getModifiedAt());
-				//anOrderPayment.setModifiedBy(order.getModifiedBy());
+				
+				if (anOrderPayment.getId() == null) {
+					anOrderPayment.setCreatedAt(order.getCreatedAt());
+					anOrderPayment.setCreatedBy(order.getCreatedBy());
+				} else {
+					//anOrderPayment.setModifiedAt(order.getModifiedAt());
+					//anOrderPayment.setModifiedBy(order.getModifiedBy());
+				}
 				
 				filteredOrderPaymentList.add(anOrderPayment);
 				
@@ -1398,10 +1402,14 @@ public class OrderController extends CRUDController<Order> {
 		OrderFees orderFees = order.getOrderFees();
 		
 		orderFees.setOrder(order);
-		orderFees.setCreatedBy(order.getCreatedBy());
-		orderFees.setCreatedAt(order.getCreatedAt());
-		//orderFees.setModifiedBy(order.getModifiedBy());
-		//orderFees.setModifiedAt(order.getModifiedAt());
+		
+		if (orderFees.getId() == null) {
+			orderFees.setCreatedBy(order.getCreatedBy());
+			orderFees.setCreatedAt(order.getCreatedAt());
+		} else {
+			//orderFees.setModifiedBy(order.getModifiedBy());
+			//orderFees.setModifiedAt(order.getModifiedAt());
+		}
 		
 		/*if (orderFees.getAdditionalFee1() == null) {
 			orderFees.setAdditionalFee1(new BigDecimal(0.00));
@@ -1415,9 +1423,9 @@ public class OrderController extends CRUDController<Order> {
 		if (orderFees.getTotalAdditionalFees() == null) {
 			orderFees.setTotalAdditionalFees(new BigDecimal(0.00));
 		}
-		if (orderFees.getCityFee() == null) {
+		/*if (orderFees.getCityFee() == null) {
 			orderFees.setCityFee(new BigDecimal(0.00));
-		}
+		}*/
 		if (orderFees.getDiscountPercentage() == null) {
 			orderFees.setDiscountPercentage(new BigDecimal(0.00));
 		}
@@ -1455,6 +1463,10 @@ public class OrderController extends CRUDController<Order> {
 		OrderNotes anOrderNotes = orderNotesList.get(0);
 		if (StringUtils.isEmpty(anOrderNotes.getNotes())) {
 			orderNotesList.clear();
+			return;
+		}
+		
+		if (anOrderNotes.getCreatedBy() != null) {
 			return;
 		}
 		

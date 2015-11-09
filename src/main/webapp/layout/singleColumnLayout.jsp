@@ -7,6 +7,7 @@
 <title>Transys</title>
 <%@include file="/common/css.jsp"%>
 <%@include file="/common/scripts.jsp"%>
+<%@include file="/common/modal.jsp"%>
 <decorator:head/>
 </head>
 <body dir="${dir}">
