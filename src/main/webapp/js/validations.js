@@ -111,6 +111,11 @@ function validateName(name, validLength) {
 	return namePattern.test(name);
 }
 
+function validateCompanyName(name, validLength) {
+	var companyNamePattern = new RegExp("^[a-zA-Z0-9-_'`\\s/]{1," + validLength + "}$");
+	return companyNamePattern.test(name);
+}
+
 function validateReferenceNum(refNum, validLength) {
 	var refNumPattern = new RegExp("^[a-zA-Z0-9-_():.,/*&%$#\\s\\\\]{1," + validLength + "}$");
 	return refNumPattern.test(refNum);
