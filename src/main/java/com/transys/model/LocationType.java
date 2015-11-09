@@ -28,4 +28,9 @@ public class LocationType extends AbstractBaseModel {
 	public void setComments(String comments) {
 		this.comments = comments;
 	}
+	
+	@Override
+	public String toString() {
+		return getLocationType();
+	}
 }

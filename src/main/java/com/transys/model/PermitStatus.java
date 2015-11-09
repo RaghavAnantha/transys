@@ -28,4 +28,9 @@ public class PermitStatus  extends AbstractBaseModel {
 	public void setComments(String comments) {
 		this.comments = comments;
 	}
+	
+	@Override
+	public String toString() {
+		return getStatus();
+	}
 }

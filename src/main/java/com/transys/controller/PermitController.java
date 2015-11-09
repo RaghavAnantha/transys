@@ -1,17 +1,20 @@
 package com.transys.controller;
 
+import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.ValidationException;
 
 import org.apache.commons.lang3.StringUtils;
@@ -31,6 +34,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 //import com.google.gson.Gson;
 import com.transys.controller.editor.AbstractModelEditor;
+import com.transys.core.report.generator.ExcelReportGenerator;
 import com.transys.model.AbstractBaseModel;
 import com.transys.model.BaseModel;
 import com.transys.model.Customer;
@@ -1119,5 +1123,69 @@ public class PermitController extends CRUDController<Permit> {
 				}
 			}
 		}
+	}
+	
+	@RequestMapping(method = RequestMethod.GET, value = "/generatePermitReport.do")
+	public void export(ModelMap model, HttpServletRequest request,
+			HttpServletResponse response, @RequestParam("type") String type,
+			Object objectDAO, Class clazz) {
+		try {
+			SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
+			
+			criteria.getSearchMap().remove("_csrf");
+			
+			List<Permit> exportReportData =  retrieveReportData(criteria);
+			 type = setRequestHeaders(response, type, "permitReport");
+			
+			Map<String, String> headers = new LinkedHashMap<>();
+			headers.put("Delivery Address", "deliveryAddress");
+			headers.put("Location Type", "locationType");
+			headers.put("Permit Type", "permitType");
+			headers.put("Permit Class", "permitClass");
+			headers.put("Start Date", "startDate");
+			headers.put("End Date", "endDate");
+			headers.put("Customer Name", "customer");
+			headers.put("Permit Number", "number");
+			headers.put("Permit Fee", "fee");
+			headers.put("Order #", "orderId");
+			headers.put("Status", "status");
+			
+			ExcelReportGenerator reportGenerator = new ExcelReportGenerator();
+			reportGenerator.setTitleMergeCellRange("$A$1:$L$1");
+			ByteArrayOutputStream out = reportGenerator.exportReport("Permit Report", headers, exportReportData);
+			
+			out.writeTo(response.getOutputStream());
+			out.close();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.warn("Unable to create file :" + e);
+			request.getSession().setAttribute("errors", e.getMessage());
+		}
+	}
+
+	private List<Permit> retrieveReportData(SearchCriteria criteria) {
+		criteria.setPageSize(25);
+		//TODO: Fix me 
+		criteria.getSearchMap().remove("_csrf");
+		
+//		injectPendingPaymentPermitSearch(criteria);
+		
+		if (!injectOrderSearchCriteria(criteria)) {
+			// search yielded no results
+			return new ArrayList<Permit>();
+		}
+		
+		List<Permit> listOfPermits = genericDAO.search(getEntityClass(), criteria);
+		
+		for (Permit p : listOfPermits) {
+			List<BaseModel> orders = (List<BaseModel>)genericDAO.executeSimpleQuery("select obj.order from OrderPermits obj where obj.permit.id=" +  p.getId() + " order by obj.id desc");
+			if (orders != null && orders.size() > 0) {
+				BaseModel order = orders.get(0);
+				p.setOrderId(order.getId());
+			}
+		}
+		
+		return listOfPermits;
 	}
 }

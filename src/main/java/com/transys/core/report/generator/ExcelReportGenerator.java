@@ -30,6 +30,7 @@ import com.transys.model.vo.MonthlyIntakeReportVO;
 public class ExcelReportGenerator {
 	
 	public static SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
+	String mergeCellRange = "$A$1:$E$1";
 	
 	public ExcelReportGenerator() {
 		
@@ -56,7 +57,7 @@ public class ExcelReportGenerator {
       Cell titleCell = titleRow.createCell(0);
       titleCell.setCellValue(title);
       titleCell.setCellStyle(styles.get("title"));
-      sheet.addMergedRegion(CellRangeAddress.valueOf("$A$1:$E$1"));
+      sheet.addMergedRegion(CellRangeAddress.valueOf(this.mergeCellRange));
       
     //the header row: centered text in 48pt font
       Row headerRow = sheet.createRow(1);
@@ -110,8 +111,12 @@ public class ExcelReportGenerator {
 						 } else if (value instanceof Integer) {
 							 cell.setCellValue(Integer.parseInt(value.toString()));
 						 } else { 
-							 String valueStr = "Unknown data type for " + field.getName();
+							 //String valueStr = "Unknown data type for " + field.getName();
+							 String valueStr = (value == null ? "" : value.toString());
 							 cell.setCellValue(valueStr);
+							 if (columnWidths.get(columnIndex-1) < valueStr.length()) {
+								 columnWidths.set(columnIndex-1, valueStr.length());
+							 }
 						 }
 						 columnIndex++;
 					} catch (NoSuchFieldException e) {
@@ -242,4 +247,8 @@ public class ExcelReportGenerator {
       style.setTopBorderColor(IndexedColors.BLACK.getIndex());
       return style;
   }
+   
+   public void setTitleMergeCellRange(String mergeRange) {
+   	this.mergeCellRange = mergeRange;
+   }
 }
