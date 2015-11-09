@@ -70,7 +70,11 @@ function processDropOffDriverForm() {
 		<tr>
 			<td>&nbsp;</td>
 			<td colspan="2">
-				<input type="button" id="dropOffDriverCreate" onclick="processDropOffDriverForm();" value="Save" class="flat btn btn-primary btn-sm btn-sm-ext" />
+				<c:set var="saveDisabled" value="" />
+				<c:if test="${modelObject.id == null || modelObject.orderStatus.status != 'Open'}">
+					<c:set var="saveDisabled" value="disabled" />
+				</c:if>
+				<input type="button" id="dropOffDriverCreate" ${saveDisabled} onclick="processDropOffDriverForm();" value="Save" class="flat btn btn-primary btn-sm btn-sm-ext" />
 				<input type="button" id="dropOffDriverBackBtn" value="Back" class="flat btn btn-primary btn-sm btn-sm-ext" onClick="location.href='main.do'" />
 			</td>
 		</tr>

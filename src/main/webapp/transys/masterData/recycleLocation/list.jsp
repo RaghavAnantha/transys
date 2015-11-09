@@ -116,8 +116,8 @@ function populateMaterialTypes() {
 		<transys:textcolumn headerText="Material Type" dataField="materialType.materialName" />
 		<transys:textcolumn headerText="Location" dataField="location"/>
 		<transys:textcolumn headerText="Status" dataField="status" width="80px"/>
-		<transys:textcolumn headerText="Eff Date Fr" dataField="effectiveStartDate" dataFormat="MM/dd/yyy" width="80px"/>
-		<transys:textcolumn headerText="Eff Date To" dataField="effectiveEndDate" dataFormat="MM/dd/yyy" width="80px"/>
+		<transys:textcolumn headerText="Eff Date Fr" dataField="effectiveStartDate" dataFormat="MM/dd/yyyy" width="80px"/>
+		<transys:textcolumn headerText="Eff Date To" dataField="effectiveEndDate" dataFormat="MM/dd/yyyy" width="80px"/>
 		<transys:textcolumn headerText="Notes/Comments" dataField="comments" />
 	</transys:datatable>
 	<%session.setAttribute("recycleLocationColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>

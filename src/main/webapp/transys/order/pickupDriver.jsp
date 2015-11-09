@@ -168,7 +168,11 @@ function processPickupDriverForm() {
 		<tr>
 			<td>&nbsp;</td>
 			<td colspan="2">
-				<input type="button" id="pickupDriverSubmitBtn" onclick="processPickupDriverForm();" value="Close Order" class="flat btn btn-primary btn-sm btn-sm-ext" />
+				<c:set var="saveDisabled" value="" />
+				<c:if test="${modelObject.id == null || modelObject.orderStatus.status != 'Dropped Off'}">
+					<c:set var="saveDisabled" value="disabled" />
+				</c:if>
+				<input type="button" id="pickupDriverSubmitBtn" ${saveDisabled} onclick="processPickupDriverForm();" value="Close Order" class="flat btn btn-primary btn-sm btn-sm-ext" />
 				<input type="button" id="pickupDriverBackBtn" value="Back" class="flat btn btn-primary btn-sm btn-sm-ext" onClick="location.href='main.do'" />
 			</td>
 		</tr>

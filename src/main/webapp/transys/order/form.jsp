@@ -579,6 +579,12 @@ function validateOrderMissingData() {
 	if ($('#permits\\[0\\]').val() == ""  && $('#permits\\[1\\]').val() == "" && $('#permits\\[2\\]').val() == "") {
 		missingData += "Permit, "
 	}
+	if ($('#orderFees\\.dumpsterPrice').val() == "") {
+		missingData += "Dumpster Price, "
+	}
+	if ($('#orderFees\\.cityFee').val() == "") {
+		missingData += "City Fee, "
+	}
 	
 	for (i = 1; i < 4; i++) {
 		missingData += validateMissingOrderPayment(i)
@@ -1526,7 +1532,7 @@ function verifyExchangeOrderAndSubmit() {
 							and modelObject.orderNotes[0].notes != null and modelObject.orderNotes[0].notes.length() > 0}">
 					<c:set var="orderNotesDisabled" value="true" />
 				</c:if>
-				<form:textarea readonly="${orderNotesDisabled}" row="5" path="orderNotes[0].notes" maxlength="500" cssClass="form-control" style="width:100%; height:100%;"/>
+				<form:textarea readonly="${orderNotesDisabled}" row="5" path="orderNotes[0].notes" maxlength="500" cssClass="form-control" style="width:50%; height:100%;"/>
 				<form:errors path="orderNotes[0].notes" cssClass="errorMessage" />
 			</td>
 		</tr>

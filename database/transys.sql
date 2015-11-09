@@ -33,9 +33,9 @@ CREATE TABLE `deliveryAddress` (
   `modified_at` datetime DEFAULT NULL,
   `modified_by` bigint(20) DEFAULT NULL,
   `customerId` bigint(20) NOT NULL,
-  `line1` varchar(150) COLLATE utf8_unicode_ci NOT NULL,
-  `line2` varchar(150) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `city` varchar(150) COLLATE utf8_unicode_ci NOT NULL,
+  `line1` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `line2` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `city` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
   `state` bigint(20) NOT NULL,
   `zip` varchar(12) COLLATE utf8_unicode_ci NOT NULL,
   `delete_flag` int(11) DEFAULT '1',
@@ -153,17 +153,17 @@ CREATE TABLE `customer` (
   `modified_at` datetime DEFAULT NULL,
   `modified_by` bigint(20) DEFAULT NULL,
   `customerStatusId` bigint(20) NOT NULL,
-  `billingAddressLine1` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `billingAddressLine1` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
   `customerTypeId` bigint(20) NOT NULL,
-  `billingAddressLine2` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `billingAddressLine2` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
   `city` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
-  `companyName` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `companyName` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `fax` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `contactName` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `contactName` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `phone` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
-  `zipcode` varchar(25) COLLATE utf8_unicode_ci NOT NULL,
+  `zipcode` varchar(12) COLLATE utf8_unicode_ci NOT NULL,
   `state` bigint(20) NOT NULL,
-  `email` varchar(25) COLLATE utf8_unicode_ci NOT NULL,
+  `email` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
   `altPhone1` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
   `altPhone2` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
   `chargeCompany` varchar(5) NOT NULL,
@@ -274,7 +274,7 @@ CREATE TABLE `employee` (
   `state` bigint(20) NOT NULL,
   `zip` varchar(12) NOT NULL,
   `phone` varchar(20) NOT NULL,
-  `email` varchar(150) NOT NULL,
+  `email` varchar(50) NOT NULL,
   `hireDate` datetime NOT NULL,
   `leaveDate` datetime DEFAULT NULL,
   `comments` longtext,
@@ -440,7 +440,7 @@ CREATE TABLE `transysOrder` (
 
 LOCK TABLES `transysOrder` WRITE;
 /*!40000 ALTER TABLE `transysOrder` DISABLE KEYS */;
-INSERT INTO `transysOrder` (`id`,`customerId`,`deliveryContactName`,`deliveryContactPhone1`,`deliveryContactPhone2`,`deliveryDate`,`deliveryAddressId`,`locationTypeId`,`dumpsterSizeId`,`materialTypeId`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`,`grossWeight`,`netWeightLb`,`netWeightTonnage`,`tare`,`dumpsterId`,`pickupDate`,`orderStatusId`,`pickUpDriverId`,`dropOffDriverId`,`deliveryHourFrom`,`deliveryHourTo`,`deliveryMinutesFrom`,`deliveryMinutesTo`,`pickupOrderId`,`totalAmountPaid`,`balanceAmountDue`) VALUES (1,5,'Raghav','223-456-7890','223-456-7890','2015-10-09 00:00:00',1,1,1,1,'2015-10-09 00:00:00',1,'2015-10-15 14:51:57',1,1,10.00,10.00,10.00,10.00,2,NULL,2,NULL,2,'12 PM','1 PM','00','15',NULL,190.00,45.20);
+INSERT INTO `transysOrder` (`id`,`customerId`,`deliveryContactName`,`deliveryContactPhone1`,`deliveryContactPhone2`,`deliveryDate`,`deliveryAddressId`,`locationTypeId`,`dumpsterSizeId`,`materialTypeId`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`,`grossWeight`,`netWeightLb`,`netWeightTonnage`,`tare`,`dumpsterId`,`pickupDate`,`orderStatusId`,`pickUpDriverId`,`dropOffDriverId`,`deliveryHourFrom`,`deliveryHourTo`,`deliveryMinutesFrom`,`deliveryMinutesTo`,`pickupOrderId`,`totalAmountPaid`,`balanceAmountDue`) VALUES (1,5,'Raghav','223-456-7890','223-456-7890','2015-10-09 00:00:00',1,1,1,1,'2015-10-09 00:00:00',1,'2015-10-15 14:51:57',1,1,NULL,NULL,NULL,NULL,2,NULL,2,NULL,2,'12 PM','1 PM','00','15',NULL,190.00,45.20);
 /*!40000 ALTER TABLE `transysOrder` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -807,7 +807,7 @@ CREATE TABLE `permit` (
 LOCK TABLES `permit` WRITE;
 /*!40000 ALTER TABLE `permit` DISABLE KEYS */;
  INSERT INTO `permit` VALUES
- (1,1,'1301-11W',50,'2015-09-22 00:00:00','2015-09-25 00:00:00',1,3,'2015-09-22 00:00:00',NULL,'2015-09-22 21:51:56', NULL, 1,5,1,'Yes',1.0,1),(2,1,'5667890',90,'2015-09-22 00:00:00','2015-09-25 00:00:00',1,2,'2015-09-23 12:27:14',1,NULL,NULL,1,6,4,'Yes',90,1),
+ (1,1,'1301-11W',50,'2015-09-22 00:00:00','2015-09-25 00:00:00',1,3,'2015-09-22 00:00:00',1,'2015-09-22 21:51:56', NULL, 1,5,1,'Yes',1.0,1),(2,1,'5667890',90,'2015-09-22 00:00:00','2015-09-25 00:00:00',1,2,'2015-09-23 12:27:14',1,NULL,NULL,1,6,4,'Yes',90,1),
  (3,2,'1987-34E',90,'2015-09-22 00:00:00','2015-09-25 00:00:00',1,2,'2015-09-23 12:27:14',1,NULL,NULL,1,6,4,'Yes',90,1);
 /*!40000 ALTER TABLE `permit` ENABLE KEYS */;
 UNLOCK TABLES;

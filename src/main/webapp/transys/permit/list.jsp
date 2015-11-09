@@ -188,8 +188,8 @@
 		<transys:textcolumn headerText="Locn. Type" dataField="locationType.locationType" />
 		<transys:textcolumn headerText="Permit Type" dataField="permitType.permitType" />
 		<transys:textcolumn headerText="Permit Class" dataField="permitClass.permitClass" />
-		<transys:textcolumn headerText="Start Date" dataField="startDate" dataFormat="MM/dd/yyy"/>
-		<transys:textcolumn headerText="End Date" dataField="endDate" dataFormat="MM/dd/yyy"/>
+		<transys:textcolumn headerText="Start Date" dataField="startDate" dataFormat="MM/dd/yyyy"/>
+		<transys:textcolumn headerText="End Date" dataField="endDate" dataFormat="MM/dd/yyyy"/>
 		<transys:textcolumn headerText="Customer Name" dataField="customer.companyName" />
 		<transys:textcolumn headerText="Permit#" dataField="number" />
 		<transys:textcolumn headerText="Permit Fee" dataField="fee" />

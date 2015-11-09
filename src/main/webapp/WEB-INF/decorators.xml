@@ -32,5 +32,6 @@
         <pattern>/transys/permit/formForCustomerModal.jsp</pattern>
         
         <pattern>/transys/orderPermitAlert/**</pattern>
+        <pattern>/transys/customer/customerListReport.jsp</pattern>
     </decorator> 
 </decorators> 

@@ -57,8 +57,8 @@
 		exportPdf="true" exportXls="true" dataQualifier="cityFee">
 		<transys:textcolumn headerText="City" dataField="suburbName" />
 		<transys:textcolumn headerText="Fee" dataField="fee" />
-		<transys:textcolumn headerText="Effective Date From" dataField="effectiveStartDate" dataFormat="MM/dd/yyy" />
-		<transys:textcolumn headerText="Effective Date To" dataField="effectiveEndDate" dataFormat="MM/dd/yyy" />
+		<transys:textcolumn headerText="Effective Date From" dataField="effectiveStartDate" dataFormat="MM/dd/yyyy" />
+		<transys:textcolumn headerText="Effective Date To" dataField="effectiveEndDate" dataFormat="MM/dd/yyyy" />
 	</transys:datatable>
 	<%session.setAttribute("cityFeeColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
 </form:form>

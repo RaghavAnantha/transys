@@ -1,7 +1,7 @@
 <%@include file="/common/taglibs.jsp"%>
 <br />
 <h5 style="margin-top: -15px; !important">Customer List Report</h5>
-<form:form action="customerListReport.do" method="get" name="customersListReport" id="customersListReport">
+<form:form action="customerListReport.do" method="get" name="customersListReportForm" id="customersListReportForm">
 	<table id="form-table" class="table">
 		<tr><td colspan=10></td></tr>
 		<tr>
@@ -67,8 +67,8 @@
 		<tr>
 			<td></td>
 			<td>
-				<input type="button" class="btn btn-primary btn-sm btn-sm-ext" onclick="document.forms['customersListReport'].submit();"
-				value="Preview"/></td>
+				<input type="submit" id="submitCustomerListReportSearch" value="Preview" class="btn btn-primary btn-sm btn-sm-ext" /> 
+			</td>
 		</tr>
 	</table>
 </form:form>
@@ -89,5 +89,22 @@
 	</transys:datatable>
 	<%session.setAttribute("customerListReportColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
 </form:form>
+
+<script type="text/javascript">
+$("#customersListReportForm").submit(function (ev) {
+	var $this = $(this);
+	
+    $.ajax({
+        type: $this.attr('method'),
+        url: $this.attr('action'),
+        data: $this.serialize(),
+        success: function(responseData, textStatus, jqXHR) {
+        	$("#customerListReport").html(responseData)
+        }
+    });
+    
+    ev.preventDefault();
+});
+</script>
 
 

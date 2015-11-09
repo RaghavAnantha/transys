@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
-<!-- 2015-10-31T23:09:16 -->
+<!-- 2015-11-09T14:46:12 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="orderPrint" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="f412ce57-68ae-45e8-90e9-b1c053e29ef7">
 	<parameter name="LOGO_FILE_PATH" class="java.lang.String">
 		<parameterDescription><![CDATA[]]></parameterDescription>
@@ -28,6 +28,10 @@
 	<field name="paymentMethod" class="java.lang.String"/>
 	<field name="referenceNum" class="java.lang.String"/>
 	<field name="companyName" class="java.lang.String"/>
+	<field name="pickupOrderDeliveryDate" class="java.lang.String"/>
+	<field name="pickupOrderDumpsterSize" class="java.lang.String"/>
+	<field name="pickupOrderDeliveryAddress" class="java.lang.String"/>
+	<field name="pickupOrderDeliveryCity" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -656,34 +660,6 @@ On the 4th day box will automatically be moved unless office is notified and an 
 				</textElement>
 				<textFieldExpression><![CDATA[$F{referenceNum}]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="427" y="288" width="115" height="20" uuid="72c6553d-9735-4cee-bf6a-dd430f8eb3bf"/>
-				<textElement>
-					<font isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{deliveryDate}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="366" y="321" width="59" height="20" uuid="c411337e-a729-4699-8048-fef1f41867d6"/>
-				<textElement>
-					<font isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{dumpsterSize}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="414" y="374" width="128" height="20" uuid="8b6dd03c-54f1-4805-84f6-9586f3fd1f20"/>
-				<textElement>
-					<font isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{deliveryAddress}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="414" y="404" width="128" height="20" uuid="1a36d468-0aed-4572-a3f1-8791a6400124"/>
-				<textElement>
-					<font isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{deliveryCity}]]></textFieldExpression>
-			</textField>
 			<staticText>
 				<reportElement x="16" y="492" width="263" height="25" forecolor="#F5100C" uuid="e782696a-17c1-4bcd-9cd3-e31c6567c5d2"/>
 				<textElement>
@@ -692,6 +668,54 @@ On the 4th day box will automatically be moved unless office is notified and an 
 				<text><![CDATA[** Not Responsible For Customer Pavement Or 
     Accompanying Sub Surface **]]></text>
 			</staticText>
+			<textField>
+				<reportElement x="427" y="288" width="115" height="20" uuid="b0867a51-e4be-466a-8a89-9068939cbc0d">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{pickupOrderDeliveryDate}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="366" y="321" width="59" height="20" uuid="349b7c7f-8d19-412c-9da8-962dfe30f65d">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{pickupOrderDumpsterSize}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="414" y="374" width="128" height="20" uuid="9a41b238-7db1-46e9-9673-f5519fd45930">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{pickupOrderDeliveryAddress}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="414" y="404" width="128" height="20" uuid="c7ac3c35-e476-4be1-a477-8b769f10f9c2">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{pickupOrderDeliveryCity}]]></textFieldExpression>
+			</textField>
 		</band>
 	</detail>
 </jasperReport>

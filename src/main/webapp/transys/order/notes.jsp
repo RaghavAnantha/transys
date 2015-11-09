@@ -68,7 +68,7 @@ function processOrderNotesForm() {
 		<tr><td class="form-left">Notes<span class="errorMessage">*</span></td></tr>
 		<tr>
 			<td colspan=10>
-				<form:textarea row="5" id="orderNotesTabNotes" path="notes" cssClass="flat" style="width:100%;"/>
+				<form:textarea row="5" id="orderNotesTabNotes" path="notes" cssClass="flat notes"/>
 				<br><form:errors path="notes" cssClass="errorMessage" />
 			</td>
 		</tr>
@@ -76,7 +76,11 @@ function processOrderNotesForm() {
 		<tr>
 			<td>&nbsp;</td>
 			<td colspan="2">
-				<input type="button" id="orderNotesCreate" onclick="processOrderNotesForm();" value="Save" class="flat btn btn-primary btn-sm btn-sm-ext" />
+				<c:set var="saveDisabled" value="" />
+				<c:if test="${notesModelObject.order.id == null}">
+					<c:set var="saveDisabled" value="disabled" />
+				</c:if>
+				<input type="button" id="orderNotesCreate" ${saveDisabled} onclick="processOrderNotesForm();" value="Save" class="flat btn btn-primary btn-sm btn-sm-ext" />
 				<input type="button" id="orderNotesBackBtn" value="Back" class="flat btn btn-primary btn-sm btn-sm-ext" onClick="location.href='main.do'" />
 			</td>
 		</tr>

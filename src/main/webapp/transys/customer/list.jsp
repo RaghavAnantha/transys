@@ -15,8 +15,8 @@
 						</c:if>
 						<option value="${customer.companyName}" ${selected}>${customer.companyName}</option>
 					</c:forEach>
-			</select></td>
-
+				</select>
+			</td>
 			<td align="${left}" class="form-left">Customer ID</td>
 			<td align="${left}">
 				<select class="flat form-control input-sm" id="customerId" name="id" style="width:175px !important">
@@ -103,7 +103,7 @@
 		<transys:textcolumn headerText="Company Name" dataField="companyName" />
 		<transys:textcolumn headerText="Contact Name" dataField="contactName" />
 		<transys:textcolumn headerText="Phone" dataField="phone" />
-		<transys:textcolumn headerText="Created Date" dataField="createdAt" dataFormat="MM/dd/yyy"/>
+		<transys:textcolumn headerText="Created Date" dataField="createdAt" dataFormat="MM/dd/yyyy"/>
 		<transys:textcolumn headerText="Status" dataField="customerStatus.status" />
 	</transys:datatable>
 	<%session.setAttribute("manageCustomerColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>

@@ -222,6 +222,28 @@ public class CustomerController extends CRUDController<Customer> {
 		return urlContext + "/customer";
 	}
 	
+	@RequestMapping(method = RequestMethod.GET, value = "/customerListReportMain.do")
+	public String customerListReportMain(ModelMap model, HttpServletRequest request) {
+		request.getSession().removeAttribute("searchCriteria");
+		setupList(model, request);
+		
+		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
+		//criteria.getSearchMap().put("id!",0l);
+		criteria.getSearchMap().remove("_csrf");
+		
+		List<CustomerReportVO> customerReportVOList = new ArrayList<CustomerReportVO>();
+		
+		//model.addAttribute("customerListReportList", customerReportVOList);
+		request.getSession().setAttribute("customerListReportList", customerReportVOList);
+		
+		//model.addAttribute("activeTab", "customerReports");
+		//model.addAttribute("activeSubTab", "customerListReport");
+		//model.addAttribute("mode", "MANAGE");
+		
+		return urlContext + "/customerListReport";
+		//return urlContext + "/customer";
+	}
+	
 	@RequestMapping(method = RequestMethod.GET, value = "/customerListReport.do")
 	public String customerListReport(ModelMap model, HttpServletRequest request) {
 		setupList(model, request);
@@ -235,12 +257,12 @@ public class CustomerController extends CRUDController<Customer> {
 		//model.addAttribute("customerListReportList", customerReportVOList);
 		request.getSession().setAttribute("customerListReportList", customerReportVOList);
 		
-		model.addAttribute("activeTab", "customerReports");
-		model.addAttribute("activeSubTab", "customerListReport");
-		model.addAttribute("mode", "MANAGE");
+		//model.addAttribute("activeTab", "customerReports");
+		//model.addAttribute("activeSubTab", "customerListReport");
+		//model.addAttribute("mode", "MANAGE");
 		
-		//return urlContext + "/list";
-		return urlContext + "/customer";
+		return urlContext + "/customerListReport";
+		//return urlContext + "/customer";
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/customerOrdersReport.do")
@@ -294,7 +316,12 @@ public class CustomerController extends CRUDController<Customer> {
 	}
 	
 	private List<CustomerReportVO> retrieveCustomerListReportData(SearchCriteria criteria) {
+		List<CustomerReportVO> customerReportVOList = new ArrayList<CustomerReportVO>();
+		
 		List<Customer> customerList = genericDAO.search(getEntityClass(), criteria, "companyName", null, null);
+		if (customerList.isEmpty()) {
+			return customerReportVOList;
+		}
 		
 		Map<Long, Customer> customerMap = new HashMap<Long, Customer>();
 		
@@ -314,7 +341,6 @@ public class CustomerController extends CRUDController<Customer> {
         
       List<OrderFees> orderFeesList = genericDAO.executeSimpleQuery("select obj from OrderFees obj where obj.order.customer.id IN " + ids.toString());
       
-      List<CustomerReportVO> customerReportVOList = new ArrayList<CustomerReportVO>() ;
       for (Long key : customerMap.keySet()) {
       	CustomerReportVO customerReportVO =  new CustomerReportVO();
 			BigDecimal sum = new BigDecimal("0.00");

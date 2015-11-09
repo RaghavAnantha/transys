@@ -91,7 +91,7 @@ function populateMaterialTypes() {
 		exportPdf="true" exportXls="true" dataQualifier="publicMaterialIntake">
 		<transys:textcolumn headerText="Material Category" dataField="materialType.materialCategory.category" />
 		<transys:textcolumn headerText="Material Type" dataField="materialType.materialName" />
-		<transys:textcolumn headerText="Intake Date" dataField="intakeDate" dataFormat="MM/dd/yyy" width="80px"/>
+		<transys:textcolumn headerText="Intake Date" dataField="intakeDate" dataFormat="MM/dd/yyyy" width="80px"/>
 		<transys:textcolumn headerText="Net Tonnage" dataField="netWeightTonnage" width="80px"/>
 		<transys:textcolumn headerText="Notes/Comments" dataField="comments" />
 	</transys:datatable>

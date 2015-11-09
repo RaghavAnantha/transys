@@ -114,11 +114,13 @@ public class OrderController extends CRUDController<Order> {
 		
 		String dumpsterQuery = "select obj from Dumpster obj where obj.status.status='Available'";
 		Dumpster assignedDumpster = null;
-		if (order != null && order.getDumpster() != null && order.getDumpster().getId() != null) {
-			List<Dumpster> assignedDumpsterList = genericDAO.executeSimpleQuery("select obj from Dumpster obj where obj.id=" + order.getDumpster().getId());
-			assignedDumpster = assignedDumpsterList.get(0);
-			
-			dumpsterQuery += " and obj.dumpsterSize.id=" + assignedDumpster.getDumpsterSize().getId();
+		if (order != null) {
+			dumpsterQuery += " and obj.dumpsterSize.id=" + order.getDumpsterSize().getId();
+		
+			if (order.getDumpster() != null && order.getDumpster().getId() != null) {
+				List<Dumpster> assignedDumpsterList = genericDAO.executeSimpleQuery("select obj from Dumpster obj where obj.id=" + order.getDumpster().getId());
+				assignedDumpster = assignedDumpsterList.get(0);
+			}
 		}
 		dumpsterQuery += " order by obj.id asc";
 				
@@ -750,18 +752,24 @@ public class OrderController extends CRUDController<Order> {
 	@RequestMapping(method = {RequestMethod.GET}, value = "/printOrder.do")
 	public void printOrder(ModelMap model, HttpServletRequest request, HttpServletResponse response, 
 			@RequestParam("orderId") Long orderId) {
+		String query = "select obj from Order obj where obj.id= ";
+		
+		List<Order> orderList = genericDAO.executeSimpleQuery(query + orderId);
+		Order anOrder = orderList.get(0);
+		OrderReportVO anOrderReportVO = new OrderReportVO();
+		map(anOrder, anOrderReportVO);
+		
+		if (anOrder.getPickupOrderId() != null) {
+			List<Order> pickupOrderList = genericDAO.executeSimpleQuery(query + anOrder.getPickupOrderId());
+			Order pickupOrder = pickupOrderList.get(0);
+			mapPickupOrder(pickupOrder, anOrderReportVO);
+		}
+		
+		List<OrderReportVO> orderReportVOList = new ArrayList<OrderReportVO>();
+		orderReportVOList.add(anOrderReportVO);
 		try {
 			response.setHeader("Content-Disposition", "attachment;filename= orderPrint." + "pdf");
 			response.setContentType(MimeUtil.getContentType("pdf"));
-			
-			String query = "select obj from Order obj where obj.id= " + orderId;
-			List<Order> orderList = genericDAO.executeSimpleQuery(query);
-			
-			OrderReportVO anOrderReportVO = new OrderReportVO();
-			map(orderList.get(0), anOrderReportVO);
-			
-			List<OrderReportVO> orderReportVOList = new ArrayList<OrderReportVO>();
-			orderReportVOList.add(anOrderReportVO);
 			
 			String logoFilePath = request.getSession().getServletContext().getRealPath("/images/" + "rds_logo.png");
 			
@@ -780,6 +788,14 @@ public class OrderController extends CRUDController<Order> {
 			request.getSession().setAttribute("errors", e.getMessage());
 			
 		}
+	}
+	
+	private void mapPickupOrder(Order pickupOrder, OrderReportVO anOrderReportVO) {
+		anOrderReportVO.setPickupOrderId(pickupOrder.getId());
+		anOrderReportVO.setPickupOrderDeliveryDate(pickupOrder.getFormattedDeliveryDate());
+		anOrderReportVO.setPickupOrderDeliveryAddress(pickupOrder.getDeliveryAddress().getFullDeliveryAddress("\n"));
+		anOrderReportVO.setPickupOrderDeliveryCity(pickupOrder.getDeliveryAddress().getCity());
+		anOrderReportVO.setPickupOrderDumpsterSize(pickupOrder.getDumpsterSize().getSize());
 	}
 	
 	private void map(Order anOrder, OrderReportVO anOrderReportVO) {
@@ -818,6 +834,9 @@ public class OrderController extends CRUDController<Order> {
 		if (payments != null && !payments.isEmpty()) {
 			anOrderReportVO.setPaymentMethod(payments.get(0).getPaymentMethod().getMethod());
 			anOrderReportVO.setReferenceNum(payments.get(0).getCcReferenceNum());
+		} else {
+			anOrderReportVO.setPaymentMethod(StringUtils.EMPTY);
+			anOrderReportVO.setReferenceNum(StringUtils.EMPTY);
 		}
 		
 		anOrderReportVO.setTotalAmountPaid(anOrder.getTotalAmountPaid());
@@ -1219,7 +1238,8 @@ public class OrderController extends CRUDController<Order> {
 																	  @RequestParam("deliveryAddressId") String deliveryAddressId) {
 		String query = "select obj from Order obj where obj.customer.id=" + customerId
 				+ " and obj.deliveryAddress.id=" + deliveryAddressId
-				+ " and obj.dumpster.dumpsterNum is not null";
+				+ " and obj.dumpster.dumpsterNum is not null"
+				+ " and obj.orderStatus.status = 'Dropped Off'";
 		List<Order> orderList = genericDAO.executeSimpleQuery(query);
 		
 		String existingDroppedOffOrderId = StringUtils.EMPTY;
