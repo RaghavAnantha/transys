@@ -91,8 +91,8 @@
 		<transys:textcolumn headerText="Employee Last Name" dataField="lastName" />
 		<transys:textcolumn headerText="Job Title" dataField="jobTitle.jobTitle" />
 		<transys:textcolumn headerText="Phone" dataField="phone" />
-		<transys:textcolumn headerText="Hire Date" dataField="hireDate" dataFormat="MM/dd/yyy"/>
-		<transys:textcolumn headerText="Termination Date" dataField="leaveDate" dataFormat="MM/dd/yyy" />
+		<transys:textcolumn headerText="Hire Date" dataField="hireDate" dataFormat="MM/dd/yyyy"/>
+		<transys:textcolumn headerText="Termination Date" dataField="leaveDate" dataFormat="MM/dd/yyyy" />
 		<transys:textcolumn headerText="Status" dataField="status.status" />
 
 

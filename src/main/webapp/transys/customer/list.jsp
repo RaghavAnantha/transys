@@ -103,7 +103,7 @@
 		<transys:textcolumn headerText="Company Name" dataField="companyName" />
 		<transys:textcolumn headerText="Contact Name" dataField="contactName" />
 		<transys:textcolumn headerText="Phone" dataField="phone" />
-		<transys:textcolumn headerText="Created Date" dataField="createdAt" dataFormat="MM/dd/yyy"/>
+		<transys:textcolumn headerText="Created Date" dataField="createdAt" dataFormat="MM/dd/yyyy"/>
 		<transys:textcolumn headerText="Status" dataField="customerStatus.status" />
 	</transys:datatable>
 	<%session.setAttribute("manageCustomerColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
