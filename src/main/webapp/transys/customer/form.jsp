@@ -1,5 +1,4 @@
 <%@include file="/common/taglibs.jsp"%>
-<%@include file="/common/modal.jsp"%>
 
 <script type="text/javascript">
 function validateAndFormatPhone(phoneId) {	

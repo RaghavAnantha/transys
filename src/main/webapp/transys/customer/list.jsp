@@ -15,8 +15,8 @@
 						</c:if>
 						<option value="${customer.companyName}" ${selected}>${customer.companyName}</option>
 					</c:forEach>
-			</select></td>
-
+				</select>
+			</td>
 			<td align="${left}" class="form-left">Customer ID</td>
 			<td align="${left}">
 				<select class="flat form-control input-sm" id="customerId" name="id" style="width:175px !important">

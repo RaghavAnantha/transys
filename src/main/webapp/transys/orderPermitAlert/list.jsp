@@ -130,7 +130,7 @@
 		<tr>
 			<td></td>
 			<td>
-				<input type="submit" id="submitOrderPermitsAlertSearch" onclick="return validateForm()" value="<transys:label code="Search"/>" class="btn btn-primary btn-sm" /> 
+				<input type="submit" id="submitOrderPermitsAlertSearch" onclick="return validateForm()" value="Search" class="btn btn-primary btn-sm btn-sm-ext" /> 
 			</td>
 		</tr>
 	</table>
