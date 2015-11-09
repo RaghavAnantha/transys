@@ -113,7 +113,7 @@
 					<option value="To Be Assigned" ${selected}>To Be Assigned</option>
 					
 					<c:forEach items="${permit}" var="permit">
-						<c:if test="${not empty permit.number}">
+						<c:if test="${permit.number != 'To Be Assigned'}">
 						<c:set var="selected" value=""/>
 							<c:if test="${sessionScope.searchCriteria.searchMap['number'] == permit.number}">
 								<c:set var="selected" value="selected"/>
