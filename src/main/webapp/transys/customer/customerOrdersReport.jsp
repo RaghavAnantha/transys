@@ -109,8 +109,8 @@
 		<transys:textcolumn headerText="Del Adds" dataField="deliveryAddressFullLine" />
 		<transys:textcolumn headerText="City" dataField="deliveryCity" />
 		<transys:textcolumn headerText="Status" dataField="status" />
-		<transys:textcolumn headerText="Delivery Date" dataField="deliveryDate" dataFormat="MM/dd/yyy"/>
-		<transys:textcolumn headerText="Pickup Date" dataField="pickupDate" dataFormat="MM/dd/yyy"/>
+		<transys:textcolumn headerText="Delivery Date" dataField="deliveryDate" dataFormat="MM/dd/yyyy"/>
+		<transys:textcolumn headerText="Pickup Date" dataField="pickupDate" dataFormat="MM/dd/yyyy"/>
 		<%--<transys:textcolumn headerText="Pymt. method" dataField="orderPayment[0].paymentMethod.method" />--%>	
 		<transys:textcolumn headerText="Dumpster Price" dataField="dumpsterPrice" />
 		<transys:textcolumn headerText="City Fee" dataField="cityFee" />
