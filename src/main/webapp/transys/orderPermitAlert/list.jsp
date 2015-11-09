@@ -4,16 +4,16 @@
 <form:form action="/orderPermitAlert/list.do" method="get" name="orderPermitsAlertSearchForm" id="orderPermitsAlertSearchForm">
 	<table width="100%" id="form-table">
 		<tr>
-		  <td class="form-left"><transys:label code="End Date From"/></td>
+		  <td class="form-left">End Date From</td>
 		  <td class="wide"><input class="flat" id="datepicker6" name="permit.endDateFrom" value="${sessionScope.searchCriteria.searchMap['permit.endDateFrom']}" style="width: 175px" /></td>
 				
-		  <td class="form-left"><transys:label code="End Date To"/></td>
+		  <td class="form-left">End Date To</td>
 	      <td class="wide"><input class="flat" id="datepicker7" name="permit.endDateTo" value="${sessionScope.searchCriteria.searchMap['permit.endDateTo']}" style="width: 175px" /></td>
 	 	</tr>
 		<tr>
-		  <td class="form-left"><transys:label code="Delivery Address #"/></td>
+		  <td class="form-left">Delivery Address #</td>
 				<td><select class="flat form-control input-sm" id="deliveryAddress" name="order.deliveryAddress.line1" style="width: 175px !important">
-					<option value="">------<transys:label code="Please Select"/>------</option>
+					<option value="">---Please Select---</option>
 					<c:forEach items="${allDeliveryAddresses}" var="deliveryAddressVar">
 						 <c:set var="selected" value=""/>
 						 <c:if test="${sessionScope.searchCriteria.searchMap['order.deliveryAddress.line1'] == deliveryAddressVar.line1}">
@@ -26,7 +26,7 @@
 			
 			<td class="form-left"><transys:label code="Delivery Street"/></td>
 			<td><select class="flat form-control input-sm" id="deliveryStreet" name="order.deliveryAddress.line2" style="width: 175px !important">
-				<option value="">------<transys:label code="Please Select"/>------</option>
+				<option value="">---Please Select---</option>
 				<c:forEach items="${allDeliveryAddresses}" var="deliveryAddress">
 						<c:set var="selected" value=""/>
 						<c:if test="${sessionScope.searchCriteria.searchMap['order.deliveryAddress.line2'] == deliveryAddress.line2}">
@@ -42,7 +42,7 @@
  	 <tr>
 		  <td class="form-left"><transys:label code="Contact Name"/></td>
 				<td><select class="flat form-control input-sm" id="contactName" name="order.customer.contactName" style="width: 175px !important">
-					<option value="">------<transys:label code="Please Select"/>------</option>
+					<option value="">---Please Select---</option>
 					<c:forEach items="${contactName}" var="contactNameVar">
 							<c:set var="selected" value=""/>
 							<c:if test="${sessionScope.searchCriteria.searchMap['order.customer.contactName'] == contactNameVar}">
@@ -55,7 +55,7 @@
 			
 			<td class="form-left"><transys:label code="Phone Number"/></td>
 			<td><select class="flat form-control input-sm" id="phone" name="order.customer.phone" style="width: 175px !important">
-				<option value="">------<transys:label code="Please Select"/>------</option>
+				<option value="">---Please Select---</option>
 				<c:forEach items="${phone}" var="phoneVar">
 						<c:set var="selected" value=""/>
 						<c:if test="${sessionScope.searchCriteria.searchMap['order.customer.phone'] == phoneVar}">
@@ -70,7 +70,7 @@
 	 <tr>
 		  <td class="form-left"><transys:label code="Permit Number"/></td>
 				<td><select class="flat form-control input-sm" id="permitNumber" name="permit.number" style="width: 175px !important">
-					<option value="">------<transys:label code="Please Select"/>------</option>
+					<option value="">---Please Select---</option>
 					<c:forEach items="${permit}" var="permit">
 						<c:if test="${not empty permit.number}">
 							<c:set var="selected" value=""/>
@@ -90,7 +90,7 @@
 			
 			<td class="form-left"><transys:label code="Permit Status"/></td>
 			<td><select class="flat form-control input-sm" id="permitStatus" name="permit.status.status" style="width: 175px !important">
-				<option value="">------<transys:label code="Please Select"/>------</option>
+				<option value="">---Please Select---</option>
 				<c:forEach items="${permitStatus}" var="permitStatus">
 					<c:set var="selected" value=""/>
 					<c:if test="${sessionScope.searchCriteria.searchMap['permit.status.status'] == permitStatus.status}">
@@ -104,7 +104,7 @@
 	 <tr>
 		<td class="form-left"><transys:label code="Order Number"/></td>
 			<td><select id="orderNumber" name="order.id" class="flat form-control input-sm" style="width: 175px !important">
-				<option value="">------<transys:label code="Please Select"/>------</option>
+				<option value="">---Please Select---</option>
 				<c:forEach items="${order}" var="order">
 					<c:set var="selected" value=""/>
 					<c:if test="${sessionScope.searchCriteria.searchMap['order.id'] == order.id}">
@@ -116,7 +116,7 @@
 		</td>
 		<td class="form-left"><transys:label code="Order Status"/></td>
 		<td><select id="orderStatus" name="order.orderStatus" class="flat form-control input-sm" style="width: 175px !important">
-				<option value="">------<transys:label code="Please Select"/>------</option>
+				<option value="">---Please Select---</option>
 				<c:forEach items="${orderStatuses}" var="anOrderStatus">
 					<c:set var="selected" value=""/>
 					<c:if test="${sessionScope.searchCriteria.searchMap['order.orderStatus'] == anOrderStatus.id}">
@@ -149,11 +149,11 @@
 		<transys:textcolumn headerText="Contact" dataField="order.customer.contactName" />
 		<transys:textcolumn headerText="Phone#" dataField="order.customer.phone" />
 		<transys:textcolumn headerText="Order Status" dataField="order.orderStatus.status" />
-		<transys:textcolumn headerText="Delivery Date" dataField="order.deliveryDate" type="java.sql.Timestamp" dataFormat="MM/dd/yyy"/>
+		<transys:textcolumn headerText="Delivery Date" dataField="order.deliveryDate" type="java.sql.Timestamp" dataFormat="MM/dd/yyyy"/>
 		<transys:textcolumn headerText="Permit#" dataField="permit.number" />
 		<transys:textcolumn headerText="Permit Status" dataField="permit.status.status" />
-		<transys:textcolumn headerText="Start Date" dataField="permit.startDate" type="java.sql.Timestamp" dataFormat="MM/dd/yyy"/>
-		<transys:textcolumn headerText="End Date" dataField="permit.endDate" type="java.sql.Timestamp" dataFormat="MM/dd/yyy"/>
+		<transys:textcolumn headerText="Start Date" dataField="permit.startDate" type="java.sql.Timestamp" dataFormat="MM/dd/yyyy"/>
+		<transys:textcolumn headerText="End Date" dataField="permit.endDate" type="java.sql.Timestamp" dataFormat="MM/dd/yyyy"/>
 		<transys:anchorcolumn headerText="New Permit" linkText="Add New Permit" linkUrl="/permit/createModal.do" target="#addNewPermitModal" />
 		<transys:anchorcolumn headerText="Add Order Notes" linkText="Add Order Notes" linkUrl="/order/orderNotesCreateModal.do" target="#addOrderNotesModal" />
 	</transys:datatable>

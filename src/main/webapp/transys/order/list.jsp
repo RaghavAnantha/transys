@@ -201,8 +201,8 @@ function populateCustomerDeliveryAddress() {
 		<transys:textcolumn headerText="City" dataField="deliveryAddress.city" />
 		<transys:textcolumn headerText="Dmpstr Size" dataField="dumpsterSize.size" />
 		<transys:textcolumn headerText="Dmpstr #" dataField="dumpster.dumpsterNum" />
-		<transys:textcolumn headerText="Del Dt" dataField="deliveryDate" dataFormat="MM/dd/yyy"/>
-		<transys:textcolumn headerText="Pickup Dt" dataField="pickupDate" dataFormat="MM/dd/yyy"/>
+		<transys:textcolumn headerText="Del Dt" dataField="deliveryDate" dataFormat="MM/dd/yyyy"/>
+		<transys:textcolumn headerText="Pickup Dt" dataField="pickupDate" dataFormat="MM/dd/yyyy"/>
 		<transys:textcolumn headerText="Dmpstr Price" dataField="orderFees.dumpsterPrice" type="java.math.BigDecimal"/>
 		<transys:textcolumn headerText="Permit Fee" dataField="orderFees.totalPermitFees" type="java.math.BigDecimal"/>
 		<transys:textcolumn headerText="City Fee" dataField="orderFees.cityFee" type="java.math.BigDecimal"/>

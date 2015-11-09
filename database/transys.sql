@@ -440,7 +440,7 @@ CREATE TABLE `transysOrder` (
 
 LOCK TABLES `transysOrder` WRITE;
 /*!40000 ALTER TABLE `transysOrder` DISABLE KEYS */;
-INSERT INTO `transysOrder` (`id`,`customerId`,`deliveryContactName`,`deliveryContactPhone1`,`deliveryContactPhone2`,`deliveryDate`,`deliveryAddressId`,`locationTypeId`,`dumpsterSizeId`,`materialTypeId`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`,`grossWeight`,`netWeightLb`,`netWeightTonnage`,`tare`,`dumpsterId`,`pickupDate`,`orderStatusId`,`pickUpDriverId`,`dropOffDriverId`,`deliveryHourFrom`,`deliveryHourTo`,`deliveryMinutesFrom`,`deliveryMinutesTo`,`pickupOrderId`,`totalAmountPaid`,`balanceAmountDue`) VALUES (1,5,'Raghav','223-456-7890','223-456-7890','2015-10-09 00:00:00',1,1,1,1,'2015-10-09 00:00:00',1,'2015-10-15 14:51:57',1,1,10.00,10.00,10.00,10.00,2,NULL,2,NULL,2,'12 PM','1 PM','00','15',NULL,190.00,45.20);
+INSERT INTO `transysOrder` (`id`,`customerId`,`deliveryContactName`,`deliveryContactPhone1`,`deliveryContactPhone2`,`deliveryDate`,`deliveryAddressId`,`locationTypeId`,`dumpsterSizeId`,`materialTypeId`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`,`grossWeight`,`netWeightLb`,`netWeightTonnage`,`tare`,`dumpsterId`,`pickupDate`,`orderStatusId`,`pickUpDriverId`,`dropOffDriverId`,`deliveryHourFrom`,`deliveryHourTo`,`deliveryMinutesFrom`,`deliveryMinutesTo`,`pickupOrderId`,`totalAmountPaid`,`balanceAmountDue`) VALUES (1,5,'Raghav','223-456-7890','223-456-7890','2015-10-09 00:00:00',1,1,1,1,'2015-10-09 00:00:00',1,'2015-10-15 14:51:57',1,1,NULL,NULL,NULL,NULL,2,NULL,2,NULL,2,'12 PM','1 PM','00','15',NULL,190.00,45.20);
 /*!40000 ALTER TABLE `transysOrder` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -807,7 +807,7 @@ CREATE TABLE `permit` (
 LOCK TABLES `permit` WRITE;
 /*!40000 ALTER TABLE `permit` DISABLE KEYS */;
  INSERT INTO `permit` VALUES
- (1,1,'1301-11W',50,'2015-09-22 00:00:00','2015-09-25 00:00:00',1,3,'2015-09-22 00:00:00',NULL,'2015-09-22 21:51:56', NULL, 1,5,1,'Yes',1.0,1),(2,1,'5667890',90,'2015-09-22 00:00:00','2015-09-25 00:00:00',1,2,'2015-09-23 12:27:14',1,NULL,NULL,1,6,4,'Yes',90,1),
+ (1,1,'1301-11W',50,'2015-09-22 00:00:00','2015-09-25 00:00:00',1,3,'2015-09-22 00:00:00',1,'2015-09-22 21:51:56', NULL, 1,5,1,'Yes',1.0,1),(2,1,'5667890',90,'2015-09-22 00:00:00','2015-09-25 00:00:00',1,2,'2015-09-23 12:27:14',1,NULL,NULL,1,6,4,'Yes',90,1),
  (3,2,'1987-34E',90,'2015-09-22 00:00:00','2015-09-25 00:00:00',1,2,'2015-09-23 12:27:14',1,NULL,NULL,1,6,4,'Yes',90,1);
 /*!40000 ALTER TABLE `permit` ENABLE KEYS */;
 UNLOCK TABLES;

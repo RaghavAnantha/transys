@@ -964,6 +964,7 @@ public class DynamicReportServiceImpl implements DynamicReportService {
 					Integer.valueOf("100"), headerStyle, bigDecimalStyle);
 			report.addColumn(bigDecimalColumn);
 		} else {
+			Style defaultStyle = detailStyle;
 			String type= columnTag.getType();
 			Class fieldType = String.class;
 			if ("int".equalsIgnoreCase(type)) {
@@ -972,14 +973,26 @@ public class DynamicReportServiceImpl implements DynamicReportService {
 				fieldType = Double.class;
 			} else if ("java.math.BigDecimal".equalsIgnoreCase(type)){
 				fieldType = BigDecimal.class;
+				Style bigDecimalStyle = new Style();
+				bigDecimalStyle.setHorizontalAlign(HorizontalAlign.RIGHT);
+				bigDecimalStyle.setPattern("######.00");
+				defaultStyle = bigDecimalStyle;
 			} else if ("java.sql.Timestamp".equalsIgnoreCase(type)){
 				fieldType = Timestamp.class;
+				Style timeStyle = new Style("Timestamp");
+				timeStyle.setHorizontalAlign(HorizontalAlign.LEFT);
+				timeStyle.setPattern("MM/dd/yyyy");
+				defaultStyle = timeStyle;
 			} else if ("java.lang.Long".equalsIgnoreCase(type)){
 				fieldType = Long.class;
+				Style longStyle = new Style();
+				longStyle.setHorizontalAlign(HorizontalAlign.CENTER);
+				longStyle.setTextColor(Color.MAGENTA);
+				defaultStyle = longStyle;
 			}
 			AbstractColumn genericColumn = getColumn(columnTag.getDataField(), fieldType,
 					LabelUtil.getText(columnTag.getHeaderText(), locale),
-					Integer.valueOf("100"), headerStyle, detailStyle);
+					Integer.valueOf("100"), headerStyle, defaultStyle);
 			report.addColumn(genericColumn);
 		}
 	}

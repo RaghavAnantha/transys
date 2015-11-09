@@ -47,6 +47,12 @@ public class OrderReportVO implements BaseVO {
 	private String paymentMethod;
 	private String referenceNum;
 	
+	private Long pickupOrderId;
+	private String pickupOrderDeliveryDate = StringUtils.EMPTY;
+	private String pickupOrderDumpsterSize = StringUtils.EMPTY;
+	private String pickupOrderDeliveryAddress = StringUtils.EMPTY;
+	private String pickupOrderDeliveryCity = StringUtils.EMPTY;
+	
 	public Long getId() {
 		return id;
 	}
@@ -208,5 +214,35 @@ public class OrderReportVO implements BaseVO {
 	}
 	public void setReferenceNum(String referenceNum) {
 		this.referenceNum = referenceNum;
+	}
+	public Long getPickupOrderId() {
+		return pickupOrderId;
+	}
+	public void setPickupOrderId(Long pickupOrderId) {
+		this.pickupOrderId = pickupOrderId;
+	}
+	public String getPickupOrderDeliveryDate() {
+		return pickupOrderDeliveryDate;
+	}
+	public void setPickupOrderDeliveryDate(String pickupOrderDeliveryDate) {
+		this.pickupOrderDeliveryDate = pickupOrderDeliveryDate;
+	}
+	public String getPickupOrderDumpsterSize() {
+		return pickupOrderDumpsterSize;
+	}
+	public void setPickupOrderDumpsterSize(String pickupOrderDumpsterSize) {
+		this.pickupOrderDumpsterSize = pickupOrderDumpsterSize;
+	}
+	public String getPickupOrderDeliveryAddress() {
+		return pickupOrderDeliveryAddress;
+	}
+	public void setPickupOrderDeliveryAddress(String pickupOrderDeliveryAddress) {
+		this.pickupOrderDeliveryAddress = pickupOrderDeliveryAddress;
+	}
+	public String getPickupOrderDeliveryCity() {
+		return pickupOrderDeliveryCity;
+	}
+	public void setPickupOrderDeliveryCity(String pickupOrderDeliveryCity) {
+		this.pickupOrderDeliveryCity = pickupOrderDeliveryCity;
 	}
 }
