@@ -1,4 +1,65 @@
 <%@include file="/common/taglibs.jsp"%>
+
+<script type="text/javascript">
+function validateOrderNotesForm() {
+	var missingData = validateOrderNotesrMissingData();
+	if (missingData != "") {
+		var alertMsg = "<span style='color:red'><b>Please provide following required data:</b><br></span>"
+					 + missingData;
+		showAlertDialog("Data Validation", alertMsg);
+		
+		return false;
+	}
+	
+	var formatValidation = validateOrderNotesDataFormat();
+	if (formatValidation != "") {
+		var alertMsg = "<span style='color:red'><b>Please correct following invalid data:</b><br></span>"
+					 + formatValidation;
+		showAlertDialog("Data Validation", alertMsg);
+		
+		return false;
+	}
+	
+	return true;
+}
+
+function validateOrderNotesrMissingData() {
+	var missingData = "";
+	
+	if ($('#orderNotesTabNotes').val() == "") {
+		missingData += "Notes, "
+	}
+	
+	if (missingData != "") {
+		missingData = missingData.substring(0, missingData.length - 2);
+	}
+	return missingData;
+}
+
+function validateOrderNotesDataFormat() {
+	var validationMsg = "";
+	
+	var notes = $('#orderNotesTabNotes').val();
+	if (notes != "") {
+		if (!validateText(notes, 500)) {
+			validationMsg += "Notes, "
+		}
+	}
+	
+	if (validationMsg != "") {
+		validationMsg = validationMsg.substring(0, validationMsg.length - 2);
+	}
+	return validationMsg;
+}
+
+function processOrderNotesForm() {
+	if (validateOrderNotesForm()) {
+		var orderNotesForm = $("#orderNotesForm");
+		orderNotesForm.submit();
+	}
+}
+</script>
+
 <form:form action="saveOrderNotes.do" name="orderNotesForm" id="orderNotesForm" commandName="notesModelObject" method="post">
 	<form:hidden path="id" id="id" />
 	<form:hidden path="order.id" id="order.id" />
@@ -7,7 +68,7 @@
 		<tr><td class="form-left">Notes<span class="errorMessage">*</span></td></tr>
 		<tr>
 			<td colspan=10>
-				<form:textarea row="5" id="notesTabNotes" path="notes" cssClass="flat" style="width:100%;"/>
+				<form:textarea row="5" id="orderNotesTabNotes" path="notes" cssClass="flat" style="width:100%;"/>
 				<br><form:errors path="notes" cssClass="errorMessage" />
 			</td>
 		</tr>
@@ -15,8 +76,8 @@
 		<tr>
 			<td>&nbsp;</td>
 			<td colspan="2">
-				<input type="submit" id="create" onclick="return validateForm()" value="<transys:label code="Save"/>" class="flat btn btn-primary btn-sm btn-sm-ext" /> 
-				<input type="button" id="cancelBtn" value="<transys:label code="Back"/>" class="flat btn btn-primary btn-sm btn-sm-ext" onClick="location.href='main.do'" />
+				<input type="button" id="orderNotesCreate" onclick="processOrderNotesForm();" value="Save" class="flat btn btn-primary btn-sm btn-sm-ext" />
+				<input type="button" id="orderNotesBackBtn" value="Back" class="flat btn btn-primary btn-sm btn-sm-ext" onClick="location.href='main.do'" />
 			</td>
 		</tr>
 	</table>

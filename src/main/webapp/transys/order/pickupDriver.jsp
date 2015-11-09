@@ -35,6 +35,22 @@ function validatePickupDriverMissingData() {
 		missingData += "Pickup Driver, "
 	}
 	
+	if ($('#grossWeight').val() == "") {
+		missingData += "Gross Weight, "
+	}
+	
+	if ($('#tare').val() == "") {
+		missingData += "Tare, "
+	}
+	
+	if ($('#netWeightLb').val() == "") {
+		missingData += "Net Weight Lb, "
+	}
+	
+	if ($('#netWeightTonnage').val() == "") {
+		missingData += "Net Weight Tonnage, "
+	}
+	
 	if (missingData != "") {
 		missingData = missingData.substring(0, missingData.length - 2);
 	}
@@ -44,10 +60,38 @@ function validatePickupDriverMissingData() {
 function validatePickupDriverDataFormat() {
 	var validationMsg = "";
 	
-	var checkNum = $('#pickupDriverCheckNum').val();
-	if (checkNum != "") {
-		if (!validateReferenceNum(checkNum, 50)) {
-			validationMsg += "Check #, "
+	var pickupDate = $("[name='pickupDate']").val();
+	if (pickupDate != "") {
+		if (!validateDate(pickupDate)) {
+			validationMsg += "Pickup Date, "
+		}
+	}
+	
+	var grossWeight = $('#grossWeight').val();
+	if (grossWeight != "") {
+		if (!validateWeight(grossWeight, 20)) {
+			validationMsg += "Gross Weight, "
+		}
+	}
+	
+	var tare = $('#tare').val();
+	if (tare != "") {
+		if (!validateWeight(tare, 20)) {
+			validationMsg += "Tare, "
+		}
+	}
+	
+	var netWeightLb = $('#netWeightLb').val();
+	if (netWeightLb != "") {
+		if (!validateWeight(netWeightLb, 20)) {
+			validationMsg += "Net Weight Lb, "
+		}
+	}
+	
+	var netWeightTonnage = $('#netWeightTonnage').val();
+	if (netWeightTonnage != "") {
+		if (!validateWeight(netWeightTonnage, 20)) {
+			validationMsg += "Net Weight Tonnage, "
 		}
 	}
 	
@@ -89,13 +133,6 @@ function processPickupDriverForm() {
 				<form:errors path="pickupDriver" cssClass="errorMessage" />
 			</td>
 		</tr>
-		<tr>
-			<td class="form-left">Check #</td>
-			<td>
-				<form:input path="orderPayment[0].checkNum" id="pickupDriverCheckNum" cssClass="flat" style="width:172px !important"/>
-				<br><form:errors path="orderPayment[0].checkNum" cssClass="errorMessage" />
-			</td>
-		</tr>
 		<tr><td colspan="2"></td></tr>
 		<tr>
 			<td colspan=10 class="section-header" style="line-height: 1;font-size: 13px;font-weight: bold;color: white;">Scale/Weights Information</td>
@@ -116,12 +153,12 @@ function processPickupDriverForm() {
 			</td>
 		</tr>
 		<tr>
-			<td class="form-left"><transys:label code="Net Lb"/><span class="errorMessage">*</span></td>
+			<td class="form-left">Net Lb<span class="errorMessage">*</span></td>
 			<td>
 				<form:input path="netWeightLb" cssClass="flat" style="width:172px !important"/>
 				<br><form:errors path="netWeightLb" cssClass="errorMessage" />
 			</td>
-			<td class="form-left"><transys:label code="Net Tonnage"/><span class="errorMessage">*</span></td>
+			<td class="form-left">Net Tonnage<span class="errorMessage">*</span></td>
 			<td>
 				<form:input path="netWeightTonnage" cssClass="flat" style="width:172px !important"/>
 				<br><form:errors path="netWeightTonnage" cssClass="errorMessage" />

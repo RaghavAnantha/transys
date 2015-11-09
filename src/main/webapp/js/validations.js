@@ -47,6 +47,18 @@ function validateAmount(amt, maxValue) {
 	return true;
 }
 
+function validateWeight(weight, maxValue) {
+	if (!/(^\d+\.\d{2}$)|(^\d+$)/.test(weight)) {
+		return false;
+	}
+	
+	if (weight !=  null && weight > maxValue) {
+		return false;
+	}
+	
+	return true;
+}
+
 function validatePhone(phone) {
 	return /^[2-9]{1}\d{2}(-)[2-9]{1}\d{2}(-)\d{4}$/.test(phone);
 }
@@ -60,8 +72,7 @@ function validateDate(date) {
 	var data = date.split("/");
     // using ISO 8601 Date String
     if (isNaN(Date.parse(data[2] + "-" + data[0] + "-" + data[1]))) {
-    	alert("IsNan");
-        return false;
+    	return false;
     }
 
     return true;
