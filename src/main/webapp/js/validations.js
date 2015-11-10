@@ -8,7 +8,7 @@ function validateAndFormatPhone(phoneId) {
 			|| phone.length > 12
 			|| (phone.length > 10 && !phone.match("-"))
 			|| (phone.match("-") && phone.length != 12)) {
-		var alertMsg = "<p>Invalid Phone Number.</p>";
+		var alertMsg = "<p>Invalid Phone/Fax Number.</p>";
 		showAlertDialog("Data validation", alertMsg);
 		
 		document.getElementById(phoneId).value = "";
@@ -83,7 +83,7 @@ function validateZipCode(zipcode) {
 }
 
 function validateEmail(email) {
-	if (email.length > 25) {
+	if (email.length > 50) {
 		return false;
 	}
 	

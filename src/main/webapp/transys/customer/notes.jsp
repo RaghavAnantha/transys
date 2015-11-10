@@ -1,7 +1,62 @@
 <%@include file="/common/taglibs.jsp"%>
+
 <script type="text/javascript">
-function validateForm() {
+function validateCustomerNotesForm() {
+	var missingData = validateCustomerNotesrMissingData();
+	if (missingData != "") {
+		var alertMsg = "<span style='color:red'><b>Please provide following required data:</b><br></span>"
+					 + missingData;
+		showAlertDialog("Data Validation", alertMsg);
+		
+		return false;
+	}
+	
+	var formatValidation = validateCustomerNotesDataFormat();
+	if (formatValidation != "") {
+		var alertMsg = "<span style='color:red'><b>Please correct following invalid data:</b><br></span>"
+					 + formatValidation;
+		showAlertDialog("Data Validation", alertMsg);
+		
+		return false;
+	}
+	
 	return true;
+}
+
+function validateCustomerNotesrMissingData() {
+	var missingData = "";
+	
+	if ($('#customerNotesTabNotes').val() == "") {
+		missingData += "Notes, "
+	}
+	
+	if (missingData != "") {
+		missingData = missingData.substring(0, missingData.length - 2);
+	}
+	return missingData;
+}
+
+function validateCustomerNotesDataFormat() {
+	var validationMsg = "";
+	
+	var notes = $('#customerNotesTabNotes').val();
+	if (notes != "") {
+		if (!validateText(notes, 500)) {
+			validationMsg += "Notes, "
+		}
+	}
+	
+	if (validationMsg != "") {
+		validationMsg = validationMsg.substring(0, validationMsg.length - 2);
+	}
+	return validationMsg;
+}
+
+function processCustomerNotesForm() {
+	if (validateCustomerNotesForm()) {
+		var customerNotesForm = $("#customerNotesForm");
+		customerNotesForm.submit();
+	}
 }
 </script>
 
@@ -17,7 +72,7 @@ function validateForm() {
 		<tr><td class="form-left">Notes<span class="errorMessage">*</span></td></tr>
 		<tr>
 			<td colspan=10>
-				<form:textarea row="5" id="notesTabNotes" path="notes" cssClass="flat notes"/>
+				<form:textarea row="5" id="customerNotesTabNotes" path="notes" cssClass="flat notes" maxlength="500"/>
 				<form:errors path="notes" cssClass="errorMessage" />
 			</td>
 		</tr>
@@ -25,8 +80,12 @@ function validateForm() {
 		<tr>
 			<td>&nbsp;</td>
 			<td colspan="2">
-				<input type="submit" id="create" onclick="return validateForm()" value="<transys:label code="Save"/>" class="flat btn btn-primary btn-sm btn-sm-ext" /> 
-				<input type="button" id="cancelBtn" value="<transys:label code="Back"/>" class="flat btn btn-primary btn-sm btn-sm-ext" onClick="location.href='main.do'" />
+				<c:set var="saveDisabled" value="" />
+				<c:if test="${notesModelObject.customer.id == null}">
+					<c:set var="saveDisabled" value="disabled" />
+				</c:if>
+				<input type="button" id="customerNotesCreate" ${saveDisabled} onclick="processCustomerNotesForm();" value="Save" class="flat btn btn-primary btn-sm btn-sm-ext" />
+				<input type="button" id="customerNotesBackBtn" value="Back" class="flat btn btn-primary btn-sm btn-sm-ext" onClick="location.href='main.do'" />
 			</td>
 		</tr>
 	</table>

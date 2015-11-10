@@ -66,6 +66,10 @@ function validateCustomerMissingData() {
 		missingData += "Phone, "
 	}
 	
+	if ($('#email').val() == "") {
+		missingData += "Email, "
+	}
+	
 	if (missingData != "") {
 		missingData = missingData.substring(0, missingData.length - 2);
 	}
@@ -86,6 +90,13 @@ function validateCustomerDataFormat() {
 	if (billingAddressLine1 != "") {
 		if (!validateAddressLine(billingAddressLine1, 50)) {
 			validationMsg += "Address Line1, "
+		}
+	}
+	
+	var billingAddressLine2 = $('#billingAddressLine2').val();
+	if (billingAddressLine2 != "") {
+		if (!validateAddressLine(billingAddressLine2, 50)) {
+			validationMsg += "Address Line2, "
 		}
 	}
 	
@@ -114,6 +125,13 @@ function validateCustomerDataFormat() {
 	if (phone != "") {
 		if (!validatePhone(phone, 20)) {
 			validationMsg += "Phone, "
+		}
+	}
+	
+	var email = $('#email').val();
+	if (email != "") {
+		if (!validateEmail(email)) {
+			validationMsg += "Email, "
 		}
 	}
 	
@@ -155,7 +173,7 @@ function processCustomerForm() {
 		</tr>
 		<tr>
 			<td class="form-left">Customer Type<span class="errorMessage">*</span></td>
-			<td align="${left}">
+			<td>
 				<form:select cssClass="flat form-control input-sm" style="width:172px !important" id="customerTypeSelect" path="customerType" >
 					<form:option value="">----Please Select----</form:option>
 					<form:options items="${customerTypes}" itemValue="id" itemLabel="customerType"/>
@@ -171,7 +189,7 @@ function processCustomerForm() {
 		</tr>
 		<tr>
 			<td class="form-left">Charge Company<span class="errorMessage">*</span></td>
-			<td align="${left}">
+			<td>
 				<form:select cssClass="flat form-control input-sm" style="width:172px !important" id="chargeCompanySelect" path="chargeCompany" >
 					<form:option value="">----Please Select----</form:option>
 					<form:options items="${chargeCompanyOptions}" />
@@ -187,7 +205,7 @@ function processCustomerForm() {
 		</tr>
 		<tr>
 			<td class="form-left">Status<span class="errorMessage">*</span></td>
-			<td align="${left}">
+			<td>
 				<form:select cssClass="flat form-control input-sm" style="width:172px !important" id="customerStatusSelect" path="customerStatus" >
 					<form:option value="">----Please Select----</form:option>
 					<form:options items="${customerStatuses}" itemValue="id" itemLabel="status" />
@@ -212,31 +230,31 @@ function processCustomerForm() {
 		</tr>
 		<tr>
 			<td class="form-left">Address Line1<span class="errorMessage">*</span></td>
-			<td align="${left}">
+			<td>
 				<form:input path="billingAddressLine1" cssClass="flat flat-ext" maxlength="50" />
 				 <br><form:errors path="billingAddressLine1" cssClass="errorMessage" />
 			</td>
 			<td class="form-left">Address Line2</td>
-			<td align="${left}">
+			<td>
 				<form:input path="billingAddressLine2" cssClass="flat flat-ext" maxlength="50" />
 				 <br><form:errors path="billingAddressLine2" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>
 			<td class="form-left">City<span class="errorMessage">*</span></td>
-			<td align="${left}">
+			<td>
 				<form:input cssClass="flat flat-ext" path="city" maxlength="50" />
 				<br><form:errors path="city" cssClass="errorMessage" />
 			</td>
 			<td class="form-left">Zipcode<span class="errorMessage">*</span></td>
-			<td align="${left}">
+			<td>
 				<form:input path="zipcode" cssClass="flat flat-ext"  maxlength="12" />
 			 	<br><form:errors path="zipcode" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>
 			<td class="form-left">State<span class="errorMessage">*</span></td>
-			<td align="${left}">
+			<td>
 				<form:select cssClass="flat form-control input-sm" path="state" id="stateSelect" style="width:172px !important">
 					<form:option value="">----Please Select----</form:option>
 					<form:options items="${state}" itemValue="id" itemLabel="name" />
@@ -255,35 +273,35 @@ function processCustomerForm() {
 		</tr>
 		<tr>
 		<td class="form-left">Contact Name<span class="errorMessage">*</span></td>
-		<td align="${left}">
+		<td>
 			<form:input path="contactName" cssClass="flat flat-ext" maxlength="100" />	 	
 		</td>
 		<td class="form-left">Alt Phone1</td>
-			<td align="${left}">
+			<td>
 				<form:input path="altPhone1" cssClass="flat flat-ext" maxlength="12" id="altPhone1" onblur="return validateAndFormatPhone('altPhone1');"/>
 			 	<br><form:errors path="altPhone1" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>
 			<td class="form-left">Phone<span class="errorMessage">*</span></td>
-			<td align="${left}">
+			<td>
 				<form:input path="phone" cssClass="flat flat-ext" maxlength="12" id="phone" onblur="return validateAndFormatPhone('phone');"/>
 			 	<br><form:errors path="phone" cssClass="errorMessage" />
 			</td>
 			<td class="form-left">Alt Phone2</td>
-			<td align="${left}">
+			<td>
 				<form:input path="altPhone2" cssClass="flat flat-ext" maxlength="12" id="altPhone2" onblur="return validateAndFormatPhone('altPhone2');"/>
 			 	<br><form:errors path="altPhone2" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>
-			<td class="form-left">Email</td>
-			<td align="${left}">
+			<td class="form-left">Email<span class="errorMessage">*</span></td>
+			<td>
 				<form:input path="email" cssClass="flat flat-ext" id="email" maxlength="50" />
 				<br><form:errors path="email" cssClass="errorMessage" />
 			</td>
 			<td class="form-left">Fax</td>
-			<td align="${left}">
+			<td>
 				<form:input path="fax" cssClass="flat flat-ext" maxlength="12" id="fax" onblur="return validateAndFormatPhone('fax');"/>
 				 <br><form:errors path="fax" cssClass="errorMessage" />
 			</td>
@@ -311,7 +329,7 @@ function processCustomerForm() {
 		<tr><td colspan="2"></td></tr>
 		<tr>
 			<td>&nbsp;</td>
-			<td align="${left}" colspan="2">
+			<td colspan="2">
 				<input type="button" id="customerSubmitBtn" onclick="processCustomerForm();" value="Save" class="flat btn btn-primary btn-sm btn-sm-ext" />
 				<input type="button" id="customerBackBtn" value="Back" class="flat btn btn-primary btn-sm btn-sm-ext" onClick="location.href='main.do'" />
 			</td>
