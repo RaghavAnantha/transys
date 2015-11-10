@@ -5,27 +5,13 @@
 <form:form action="list.do" method="get" name="searchForm">
 	<table id="form-table" class="table">
 		<tr>
-			<td class="form-left"><transys:label code="Employee Id" /></td>
-			<td>
-				<select class="flat form-control input-sm" id="status" name="employeeId" style="width: 175px !important">
-					<option value="">----Please Select----</option>
-					<c:forEach items="${employee}" var="anEmployee">
-						<c:set var="selected" value="" />
-						<c:if test="${sessionScope.searchCriteria.searchMap['employeeId'] == anEmployee.employeeId}">
-							<c:set var="selected" value="selected" />
-						</c:if>
-						<option value="${anEmployee.employeeId}" ${selected}>${anEmployee.employeeId}</option>
-					</c:forEach>
-			</select></td>	
-		</tr>
-		<tr>
 			<td class="form-left form-left-ext"><transys:label
 					code="Employee First Name" /></td>
 			<td><select
-				class="flat form-control input-sm" id="status" name="firstName" style="width: 175px !important">
+				class="flat form-control input-sm" id="status" name="employee.firstName" style="width: 175px !important">
 					<option value="">----Please Select----
 					</option>
-					<c:forEach items="${employee}" var="anEmployee">
+					<c:forEach items="${employees}" var="anEmployee">
 						<c:set var="selected" value="" />
 						<c:if
 							test="${sessionScope.searchCriteria.searchMap['firstName'] == anEmployee.firstName}">
@@ -34,14 +20,13 @@
 						<option value="${anEmployee.firstName}" ${selected}>${anEmployee.firstName}</option>
 					</c:forEach>
 			</select></td>
-
 		</tr>
 		<tr>
-			<td class="form-left form-left-ext"><transys:label code="Employee Last Name" /></td>
-			<td >
-				<select class="flat form-control input-sm" id="lastName" name="lastName" style="width: 175px !important">
+		<td class="form-left form-left-ext"><transys:label code="Employee Last Name" /></td>
+			<td>
+				<select class="flat form-control input-sm" id="lastName" name="employee.lastName" style="width: 175px !important">
 					<option value="">----Please Select----</option>
-					<c:forEach items="${employee}" var="anEmployee">
+					<c:forEach items="${employees}" var="anEmployee">
 						<c:set var="selected" value="" />
 						<c:if
 							test="${sessionScope.searchCriteria.searchMap['lastName'] == anEmployee.lastName}">
@@ -50,21 +35,37 @@
 						<option value="${anEmployee.lastName}" ${selected}>${anEmployee.lastName}</option>
 					</c:forEach>
 			</select></td>	
-
 		</tr>
-		
 		<tr>
 			<td class="form-left"><transys:label
-					code="Status" /></td>
+					code="User Role" /></td>
 			<td><select
-				class="flat form-control input-sm" id="status" name="status.status"
+				class="flat form-control input-sm" id="role" name="role.name"
+				style="width: 175px !important">
+					<option value="">----Please Select----
+					</option>
+					<c:forEach items="${roles}" var="aRole">
+						<c:set var="selected" value="" />
+						<c:if
+							test="${sessionScope.searchCriteria.searchMap['role.name'] == aRole.name}">
+							<c:set var="selected" value="selected" />
+						</c:if>
+						<option value="${aRole.name}" ${selected}>${aRole.name}</option>
+					</c:forEach>
+			</select></td>
+		</tr>
+		<tr>
+			<td class="form-left"><transys:label
+					code="Account Status" /></td>
+			<td><select
+				class="flat form-control input-sm" id="accountStatus" name="accountStatus.status"
 				style="width: 175px !important">
 					<option value="">----Please Select----
 					</option>
 					<c:forEach items="${employeeStatus}" var="employeeStatus">
 						<c:set var="selected" value="" />
 						<c:if
-							test="${sessionScope.searchCriteria.searchMap['status.status'] == employeeStatus.status}">
+							test="${sessionScope.searchCriteria.searchMap['accountStatus.status'] == employeeStatus.status}">
 							<c:set var="selected" value="selected" />
 						</c:if>
 						<option value="${employeeStatus.status}" ${selected}>${employeeStatus.status}</option>

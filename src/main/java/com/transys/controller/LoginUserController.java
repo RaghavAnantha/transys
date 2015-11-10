@@ -18,10 +18,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import com.transys.controller.editor.AbstractModelEditor;
 import com.transys.model.Employee;
 import com.transys.model.EmployeeStatus;
-import com.transys.model.JobTitle;
 import com.transys.model.Role;
 import com.transys.model.SearchCriteria;
-import com.transys.model.State;
 import com.transys.model.User;
 
 @Controller
