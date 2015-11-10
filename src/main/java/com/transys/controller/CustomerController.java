@@ -106,7 +106,6 @@ public class CustomerController extends CRUDController<Customer> {
 		
 		//TODO:  Thisis for order report - think of moving the report to order
 		model.addAttribute("orderStatuses", genericDAO.findByCriteria(OrderStatus.class, criterias, "status", false));
-		
 	}
 	
 	@Override
@@ -871,7 +870,6 @@ public class CustomerController extends CRUDController<Customer> {
 		}
 		
 		if (entity.getCustomer().getId() == null) {
-			
 			setupEmptyCreate(model);
 			
 			model.addAttribute("activeTab", "manageCustomer");
@@ -899,6 +897,13 @@ public class CustomerController extends CRUDController<Customer> {
 					baseModel.setModifiedBy(getUser(request).getId());
 				}
 			}
+		}
+		
+		if (entity.getId() != null) {
+			List<DeliveryAddress> deliveryAddressList = genericDAO.executeSimpleQuery("select obj from DeliveryAddress obj where obj.id=" + entity.getId());
+			DeliveryAddress existingDeliveryAddress = deliveryAddressList.get(0);
+			entity.setCreatedAt(existingDeliveryAddress.getCreatedAt());
+			entity.setCreatedBy(existingDeliveryAddress.getCreatedBy());
 		}
 		
 		genericDAO.saveOrUpdate(entity);
@@ -944,10 +949,10 @@ public class CustomerController extends CRUDController<Customer> {
 		address.setCustomer(customer);
 		model.addAttribute("deliveryAddressModelObject", address);
 		
-		List<BaseModel> customerList = genericDAO.executeSimpleQuery("select obj from Customer obj where obj.id=" + customerId);
+		List<Customer> customerList = genericDAO.executeSimpleQuery("select obj from Customer obj where obj.id=" + customerId);
 		model.addAttribute("modelObject", customerList.get(0));
 		
-		List<BaseModel> addressList = genericDAO.executeSimpleQuery("select obj from DeliveryAddress obj where obj.customer.id=" +  customerId + " order by obj.id asc");
+		List<DeliveryAddress> addressList = genericDAO.executeSimpleQuery("select obj from DeliveryAddress obj where obj.customer.id=" +  customerId + " order by obj.id asc");
 		model.addAttribute("deliveryAddressList", addressList);
 		
 		populateAggregartionValues(model, customerId);

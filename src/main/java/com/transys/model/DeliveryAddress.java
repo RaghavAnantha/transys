@@ -124,6 +124,6 @@ public class DeliveryAddress extends AbstractBaseModel {
 	
 	@Override
 	public String toString() {
-		return getFullDeliveryAddress(",");
+		return getFullDeliveryAddress(", ");
 	}
 }
