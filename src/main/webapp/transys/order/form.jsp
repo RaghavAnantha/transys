@@ -1583,12 +1583,12 @@ $("#addDeliveryAddressLink").click(function (ev) {
 	if (customerId == "") {
 		var alertMsg = "Please select Customer for adding Delivery address."
 		showAlertDialog("Data Validation", alertMsg);
+	} else {
+		var url = $(this).attr("href");
+		url += "?customerId=" + customerId;
+		
+		showPopupDialog("Add Delivery Address", url);
 	}
-	
-	var url = $(this).attr("href");
-	url += "?customerId=" + customerId;
-	
-	showPopupDialog("Add Delivery Address", url);
 	
 	ev.preventDefault();
 });

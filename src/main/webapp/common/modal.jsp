@@ -31,6 +31,14 @@ function displayPopupDialogErrorMessage(message) {
 	$("#popupDialogErrorMessage").html(errorMsgHtml);
 }
 
+function clearPopupDialogErrorMessage() {
+	$("#popupDialogErrorMessage").html("");
+}
+
+function clearPopupDialogSuccessMessage() {
+	$("#popupDialogSuccessMessage").html("");
+}
+
 function displayPopupDialogSuccessMessage(message) {
 	var successMsgHtml = "<img src=\"${ctx}/images/iconInformation.gif\" alt=\"Information\" class=\"icon\" />" 
 					   + "&nbsp;" 
