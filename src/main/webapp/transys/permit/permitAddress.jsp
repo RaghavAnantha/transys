@@ -156,9 +156,13 @@
 		</tr>
 		<tr><td colspan="2"></td></tr>
 		<tr>
+			<c:set var="permitAddressSaveDisabled" value="" />
+				<c:if test="${permitAddressModelObject.permit.id == null}">
+					<c:set var="permitAddressSaveDisabled" value="disabled" />
+			</c:if>
 			<td>&nbsp;</td>
 			<td colspan="2">
-				<input type="button" id="create" onclick="return processPermitAddressForm();" value="Save" class="flat btn btn-primary btn-sm btn-sm-ext" /> 
+				<input type="button" id="create" ${permitAddressSaveDisabled} onclick="return processPermitAddressForm();" value="Save" class="flat btn btn-primary btn-sm btn-sm-ext" /> 
 				<input type="button" id="cancelBtn" value="<transys:label code="Back"/>" class="flat btn btn-primary btn-sm btn-sm-ext" onClick="location.href='main.do'" />
 			</td>
 		</tr>

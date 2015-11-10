@@ -92,10 +92,14 @@ function validatePermitNotesText() {
 			</td>
 		</tr>
 		<tr><td colspan="2"></td></tr>
+			<c:set var="permitNotesSaveDisabled" value="" />
+				<c:if test="${notesModelObject.permit.id == null}">
+					<c:set var="permitNotesSaveDisabled" value="disabled" />
+			</c:if>
 		<tr>
 			<td>&nbsp;</td>
 			<td colspan="2">
-				<input type="button" id="create" onclick="return processPermitNotesForm();" value="Save" class="flat btn btn-primary btn-sm btn-sm-ext" /> 
+				<input type="button" id="create" ${permitNotesSaveDisabled} onclick="return processPermitNotesForm();" value="Save" class="flat btn btn-primary btn-sm btn-sm-ext" /> 
 				<input type="button" id="cancelBtn" value="<transys:label code="Back"/>" class="flat btn btn-primary btn-sm btn-sm-ext" onClick="location.href='main.do'" />
 			</td>
 		</tr>
