@@ -92,7 +92,7 @@
 		<transys:textcolumn headerText="Last Name" dataField="employee.lastName"/>
 		<transys:textcolumn headerText="Username" dataField="username" />
 		<transys:textcolumn headerText="Role" dataField="role.name" />
-		<transys:textcolumn headerText="Last Login Date" dataField="lastLoginDate" />
+		<transys:textcolumn headerText="Last Login Date" dataField="formattedLastLoginDate" />
 		<transys:textcolumn headerText="Status" dataField="employee.status.status" />
 
 
