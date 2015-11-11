@@ -182,7 +182,10 @@
 		 	<div class="modal-header">
         		<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
        			<h4 class="modal-title">Add Order Notes</h4>
-       			<div id="addOrderNotesModalValidations" style="color:red"></div>
+       			<div id="orderNotesModalMessages">
+       				<div id="orderNotesModalErrorMessage" style="color:red; font-size:14px; vertical-align:center;"></div>
+       				<div id="orderNotesModalSuccessMessage" style="color:green; font-size:14px; vertical-align:center;"></div>
+       			</div>
       		 </div>	
 			<div class="modal-body" id="addOrderNotesModalBody"></div>
 		</div>
@@ -211,8 +214,7 @@ $("#orderPermitsAlertSearchForm").submit(function (ev) {
 
 $("#addNewPermitModal").on("show.bs.modal", function(e) {
 	$("#addNewPermitModalBody").html("");
-	$("#permitModalErrorMessage").html("");
-	$("#permitModalSuccessMessage").html("");
+	clearPermitModalMessages();
 	
     var link = $(e.relatedTarget).attr("href");
     $(this).find("#addNewPermitModalBody").load(link);
@@ -220,6 +222,7 @@ $("#addNewPermitModal").on("show.bs.modal", function(e) {
 
 $("#addOrderNotesModal").on("show.bs.modal", function(e) {
 	$("#addOrderNotesModalBody").html("");
+	clearOrderNotestModalMessages();
 	
     var link = $(e.relatedTarget).attr("href");
     $(this).find("#addOrderNotesModalBody").load(link);
@@ -227,12 +230,12 @@ $("#addOrderNotesModal").on("show.bs.modal", function(e) {
 
 $("#addNewPermitModal").on("hidden.bs.modal", function(e) {
 	$("#addNewPermitModalBody").html("");
-	$("#permitModalErrorMessage").html("");
-	$("#permitModalSuccessMessage").html("");
+	clearPermitModalMessages();
 });
 
 $("#addOrderNotesModal").on("hidden.bs.modal", function(e) {
 	$("#addOrderNotesModalBody").html("");
+	clearOrderNotestModalMessages();
 });
 
 function displayPermitModalErrorMessage(message) {
@@ -247,6 +250,46 @@ function displayPermitModalSuccessMessage(message) {
 					   + "&nbsp;" 
 					   + message;
 	$("#permitModalSuccessMessage").html(successMsgHtml);
+}
+
+function clearPermitModalErrorMessage() {
+	$("#permitModalErrorMessage").html("");
+}
+
+function clearPermitModalSuccessMessage() {
+	$("#permitModalSuccessMessage").html("");
+}
+
+function clearPermitModalMessages() {
+	clearPermitModalErrorMessage();
+	clearPermitModalSuccessMessage();
+}
+
+function displayOrderNotesModalErrorMessage(message) {
+	var errorMsgHtml = "<img src=\"${ctx}/images/iconWarning.gif\" alt=\"Warning\" class=\"icon\" />" 
+					 + "&nbsp;" 
+					 + message;
+	$("#orderNotesModalErrorMessage").html(errorMsgHtml);
+}
+
+function displayOrderNotesModalSuccessMessage(message) {
+	var successMsgHtml = "<img src=\"${ctx}/images/iconInformation.gif\" alt=\"Information\" class=\"icon\" />" 
+					   + "&nbsp;" 
+					   + message;
+	$("#orderNotesModalSuccessMessage").html(successMsgHtml);
+}
+
+function clearOrderNotesModalErrorMessage() {
+	$("#orderNotesModalErrorMessage").html("");
+}
+
+function clearOrderNotesModalSuccessMessage() {
+	$("#orderNotesModalSuccessMessage").html("");
+}
+
+function clearOrderNotestModalMessages() {
+	clearOrderNotesModalErrorMessage();
+	clearOrderNotesModalSuccessMessage();
 }
 </script>
 

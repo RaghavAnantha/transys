@@ -1,27 +1,5 @@
 <%@include file="/common/taglibs.jsp"%>
 
-<script type="text/javascript">
-function validateForm() {
-	return true;
-}
-
-$("#orderNotesModalForm").submit(function (ev) {
-	var $this = $(this);
-	
-	clearPopupDialogMessages();
-	
-    $.ajax({
-        type: $this.attr('method'),
-        url: $this.attr('action'),
-        data: $this.serialize(),
-        success: function(responseData, textStatus, jqXHR) {
-        	$this.find("#closeOrderNotes").click();
-        }
-    });
-    
-    ev.preventDefault();
-});
-</script>
 <form:form action="/order/saveOrderNotesModal.do" name="orderNotesModalForm" id="orderNotesModalForm" commandName="notesModelObject" method="post">
 	<form:hidden path="id" id="id" />
 	<form:hidden path="order.id" id="order.id" />
@@ -29,7 +7,7 @@ $("#orderNotesModalForm").submit(function (ev) {
 		<tr><td class="form-left">Notes<span class="errorMessage">*</span></td></tr>
 		<tr>
 			<td colspan=10>
-				<form:textarea row="10" id="notesTabNotesModal" path="notes" cssClass="flat" style="width:100%;height:100%;"/>
+				<form:textarea row="10" id="orderNotesModalNotes" path="notes" cssClass="flat notes" maxlength="500"/>
 				<form:errors path="notes" cssClass="errorMessage" />
 			</td>
 		</tr>
@@ -37,7 +15,7 @@ $("#orderNotesModalForm").submit(function (ev) {
 		<tr>
 			<td>&nbsp;</td>
 			<td colspan="2">
-				<input type="submit" id="submitOrderNotes" onclick="return validateForm()" value="<transys:label code="Save"/>" class="flat btn btn-primary btn-sm btn-sm-ext" /> 
+				<input type="submit" id="submitOrderNotes" value="Save" class="flat btn btn-primary btn-sm btn-sm-ext" /> 
 				<input type="button" id="closeOrderNotes" value="Close" class="flat btn btn-primary btn-sm btn-sm-ext" data-dismiss="modal" />
 			</td>
 		</tr>
@@ -54,3 +32,83 @@ $("#orderNotesModalForm").submit(function (ev) {
 	</transys:datatable>
 	<%session.setAttribute("manageNotesModalColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
 </form:form>
+
+<script type="text/javascript">
+function validateOrderNotesModalForm() {
+	var missingData = validateOrderNotesModalMissingData();
+	if (missingData != "") {
+		var alertMsg = "<span><b>Please provide following required data:</b><br></span>"
+					 + missingData;
+		displayOrderNotesModalErrorMessage(alertMsg);
+		
+		return false;
+	}
+	
+	var formatValidation = validateOrderNotesModalDataFormat();
+	if (formatValidation != "") {
+		var alertMsg = "<span><b>Please correct following invalid data:</b><br></span>"
+					 + formatValidation;
+		displayOrderNotesModalErrorMessage(alertMsg);
+		
+		return false;
+	}
+	
+	return true;
+}
+
+function validateOrderNotesModalMissingData() {
+	var missingData = "";
+	
+	if ($('#orderNotesModalNotes').val() == "") {
+		missingData += "Notes, "
+	}
+	
+	if (missingData != "") {
+		missingData = missingData.substring(0, missingData.length - 2);
+	}
+	
+	return missingData;
+}
+
+function validateOrderNotesModalDataFormat() {
+	var validationMsg = "";
+	
+	var notes = $('#orderNotesModalNotes').val();
+	if (notes != "") {
+		if (!validateText(notes, 500)) {
+			validationMsg += "Notes, "
+		}
+	}
+	
+	if (validationMsg != "") {
+		validationMsg = validationMsg.substring(0, validationMsg.length - 2);
+	}
+	
+	return validationMsg;
+}
+
+$("#orderNotesModalForm").submit(function (ev) {
+	var $this = $(this);
+	
+	clearOrderNotestModalMessages();
+	
+	if (!validateOrderNotesModalForm()) {
+		return false;
+	}
+	
+    $.ajax({
+        type: $this.attr('method'),
+        url: $this.attr('action'),
+        data: $this.serialize(),
+        success: function(responseData, textStatus, jqXHR) {
+        	if (responseData.indexOf("ErrorMsg") >= 0 ) {
+        		displayOrderNotesModalErrorMessage(responseData.replace("ErrorMsg: ", ""));
+        	} else {
+        		$this.find("#closeOrderNotes").click();
+        	}
+        }
+    });
+    
+    ev.preventDefault();
+});
+</script>
