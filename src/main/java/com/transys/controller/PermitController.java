@@ -697,6 +697,7 @@ public class PermitController extends CRUDController<Permit> {
 
 	private boolean validateParkingMeterFee(Permit entity) {
 
+		System.out.println("validating parking meter fee " + entity.getParkingMeterFee());
 		try {
 			BigDecimal parkingMeterFee = entity.getParkingMeterFee();
 			if (parkingMeterFee == null) {
@@ -757,6 +758,7 @@ public class PermitController extends CRUDController<Permit> {
 	public @ResponseBody String saveForCustomerModal(HttpServletRequest request,
 			@ModelAttribute("modelObject") Permit entity,
 			BindingResult bindingResult, ModelMap model) {
+		
 		try {
 			getValidator().validate(entity, bindingResult);
 		} catch (ValidationException e) {
@@ -766,7 +768,7 @@ public class PermitController extends CRUDController<Permit> {
 		}
 		
 		// Return to form if we had errors
-		if (bindingResult.hasErrors()) {
+		/*if (bindingResult.hasErrors()) {
 			List<ObjectError> errors = bindingResult.getAllErrors();
 			for(ObjectError e : errors) {
 				System.out.println("Error: " + e.getDefaultMessage());
@@ -774,7 +776,7 @@ public class PermitController extends CRUDController<Permit> {
 			
 			setupCreate(model, request);
 			return urlContext + "/form";
-		}
+		}*/
 		
 		if (!validateParkingMeterFee(entity)) {
 			System.out.println("Please correct following invalid data: Parking Meter Fee");
@@ -1070,6 +1072,12 @@ public class PermitController extends CRUDController<Permit> {
 		}
 
 		updateBaseProperties(request, entity);
+		if (entity.getId() != null) {
+			List<PermitAddress> permitAddressList = genericDAO.executeSimpleQuery("select obj from PermitAddress obj where obj.id=" + entity.getId());
+			PermitAddress existingPermitAddress = permitAddressList.get(0);
+			entity.setCreatedAt(existingPermitAddress.getCreatedAt());
+			entity.setCreatedBy(existingPermitAddress.getCreatedBy());
+		}
 		genericDAO.saveOrUpdate(entity);
 		cleanUp(request);
 
@@ -1088,6 +1096,7 @@ public class PermitController extends CRUDController<Permit> {
 		model.addAttribute("editDeliveryAddress", ((Permit)permitList.get(0)).getCustomer().getDeliveryAddress());
 		
 		List<BaseModel> addressList = genericDAO.executeSimpleQuery("select obj from PermitAddress obj where obj.permit.id=" +  permitId + " order by obj.id asc");
+		System.out.println("=======" + ((PermitAddress)addressList.get(addressList.size()-1)).getState());
 		model.addAttribute("permitAddressList", addressList);
 		
 		List<BaseModel> notesList = genericDAO.executeSimpleQuery("select obj from PermitNotes obj where obj.permit.id=" +  permitId + " order by obj.id asc");

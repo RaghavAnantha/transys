@@ -110,7 +110,13 @@ public class ExcelReportGenerator {
 							 cell.setCellValue(((BigDecimal)value).doubleValue());
 						 } else if (value instanceof Integer) {
 							 cell.setCellValue(Integer.parseInt(value.toString()));
-						 } else { 
+						 } else if (value instanceof Date) {
+							 String valueStr = new SimpleDateFormat("MM/dd/yyyy").format(value);
+							 cell.setCellValue(valueStr);
+							 if (columnWidths.get(columnIndex-1) < valueStr.length()) {
+								 columnWidths.set(columnIndex-1, valueStr.length());
+							 }
+						 } else {
 							 //String valueStr = "Unknown data type for " + field.getName();
 							 String valueStr = (value == null ? "" : value.toString());
 							 cell.setCellValue(valueStr);

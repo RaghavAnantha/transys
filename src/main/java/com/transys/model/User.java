@@ -1,5 +1,6 @@
 package com.transys.model;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -15,6 +16,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.Size;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -179,5 +181,15 @@ public class User extends AbstractBaseModel implements Comparable, Auditable {
 	public boolean skipAudit() {
 		// TODO Auto-generated method stub
 		return false;
+	}
+	
+	@Transient
+	public String getFormattedLastLoginDate() {
+		if (lastLoginDate == null) {
+			return StringUtils.EMPTY;
+		}
+		
+		SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+		return dateFormat.format(lastLoginDate);
 	}
 }
