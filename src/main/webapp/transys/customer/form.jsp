@@ -248,7 +248,7 @@ function processCustomerForm() {
 			</td>
 			<td class="form-left">Zipcode<span class="errorMessage">*</span></td>
 			<td>
-				<form:input path="zipcode" cssClass="flat flat-ext"  maxlength="12" />
+				<form:input path="zipcode" cssClass="flat flat-ext" maxlength="12" />
 			 	<br><form:errors path="zipcode" cssClass="errorMessage" />
 			</td>
 		</tr>

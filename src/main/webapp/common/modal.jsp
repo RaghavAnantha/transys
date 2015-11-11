@@ -31,6 +31,11 @@ function displayPopupDialogErrorMessage(message) {
 	$("#popupDialogErrorMessage").html(errorMsgHtml);
 }
 
+function clearPopupDialogMessages() {
+	clearPopupDialogErrorMessage();
+	clearPopupDialogSuccessMessage();
+}
+
 function clearPopupDialogErrorMessage() {
 	$("#popupDialogErrorMessage").html("");
 }

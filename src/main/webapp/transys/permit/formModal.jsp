@@ -44,6 +44,9 @@ function populateEndDate() {
 
 $("#permitModalFromAlertForm").submit(function (ev) {
 	var $this = $(this);
+	
+	clearPopupDialogMessages();
+	
     $.ajax({
         type: $this.attr('method'),
         url: $this.attr('action'),
@@ -65,9 +68,6 @@ $("#permitModalFromAlertForm").submit(function (ev) {
 </script>
 <form:form action="/permit/savePermitFromAlert.do" name="permitModalFromAlertForm" id="permitModalFromAlertForm" commandName="modelObject" method="post" >
 	<form:hidden path="orderId" value="${associatedOrderID.id}" />
-	<jsp:include page="/common/messages.jsp">
-		<jsp:param name="msgCtx" value="addPermitFromAlert" />
-	</jsp:include>
 	<table id="form-table" class="table">
 		<tr><td colspan="10"></td></tr>
 		<tr>

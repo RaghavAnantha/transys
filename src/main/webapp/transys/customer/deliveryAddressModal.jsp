@@ -148,7 +148,7 @@ function validateDeliveryAddressModalDataFormat() {
 $("#deliveryAddressModalForm").submit(function (ev) {
 	var $this = $(this);
 	
-	clearPopupDialogErrorMessage();
+	clearPopupDialogMessages();
 	
 	if (!validateDeliveryAddressModalForm()) {
 		return false;

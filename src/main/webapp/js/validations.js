@@ -19,6 +19,29 @@ function validateAndFormatPhone(phoneId) {
 	}	
 }
 
+function validateAndFormatPhoneModal(phoneId) {	
+	var phone = document.getElementById(phoneId).value;
+	if (phone == "") {
+		return;
+	}
+	
+	if (phone.length < 10  
+			|| phone.length > 12
+			|| (phone.length > 10 && !phone.match("-"))
+			|| (phone.match("-") && phone.length != 12)) {
+		var alertMsg = "Invalid Phone/Fax Number.";
+		displayPopupDialogErrorMessage(alertMsg);
+		
+		document.getElementById(phoneId).value = "";
+		return false;
+	} else {
+		var formattedPhone = formatPhone(phone);
+		document.getElementById(phoneId).value = formattedPhone;
+		
+		clearPopupDialogErrorMessage();
+	}	
+}
+
 function formatPhone(phone) {
 	if (phone.length < 10) {
 		return phone;

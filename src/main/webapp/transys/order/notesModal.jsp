@@ -8,6 +8,8 @@ function validateForm() {
 $("#orderNotesModalForm").submit(function (ev) {
 	var $this = $(this);
 	
+	clearPopupDialogMessages();
+	
     $.ajax({
         type: $this.attr('method'),
         url: $this.attr('action'),

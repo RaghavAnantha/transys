@@ -85,27 +85,6 @@
 		
 		return validationMsg;
 	}
-	
-	$("#permitAddressServiceForm").find("tr a").click(function() {	
-		var ids = ["id", "line1", "line2", "city", "zipcode", "state"];
-		
-		for (var i= 0; i<ids.length; i++) {		
-			$("table.editPermitAddress").find('#'+ids[i]).removeClass("border");	
-		}
-		
-	    var tableData = $(this).parent().parent().children("td").map(function() {
-	        return $(this).text();
-	    }).get();
-	    
-	    $("#permitAddressForm").find('#id').val($.trim(tableData[0]));
-	    $("#permitAddressForm").find('#line1').val($.trim(tableData[1]));
-	    $("#permitAddressForm").find('#line2').val($.trim(tableData[2])); 
-	    $('table.editPermitAddress').find('#city').val($.trim(tableData[3]));
-	    $('table.editPermitAddress').find('#zipcode').val($.trim(tableData[5]));
-		$("table.editPermitAddress select option").filter(function() {
-		    return this.text == $.trim(tableData[4]); 
-		}).attr('selected', true);
-	});
 </script>
 
 <form:form id="permitAddressForm" action="savePermitAddress.do" name="permitAddressForm" commandName="permitAddressModelObject" method="post">
@@ -119,28 +98,28 @@
 		<tr>
 			<td class="form-left">Permit Address #<span class="errorMessage">*</span></td>
 			<td>
-				<form:input id="permitAddressFormLine1" path="line1" cssClass="flat flat-ext" onkeyup="checkVal(this.id)"/>
+				<form:input id="permitAddressFormLine1" path="line1" cssClass="flat flat-ext" />
 			 	<br><form:errors path="line1" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Permit Street" /><span class="errorMessage">*</span></td>
 			<td>
-				<form:input id="permitAddressFormLine2" path="line2" cssClass="flat flat-ext" onkeyup="checkVal(this.id)"/>
+				<form:input id="permitAddressFormLine2" path="line2" cssClass="flat flat-ext" />
 			 	<br><form:errors path="line2" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="City" /><span class="errorMessage">*</span></td>
 			<td>
-				<form:input id="permitAddressFormCity" path="city" cssClass="flat flat-ext" onkeyup="checkVal(this.id)"/>
+				<form:input id="permitAddressFormCity" path="city" cssClass="flat flat-ext" />
 			 	<br><form:errors path="city" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>
 			<td class="form-left">State<span class="errorMessage">*</span></td>
 			<td>
-				<form:select id="permitAddressFormState" cssClass="flat form-control input-sm" style="width: 174px !important" path="state" onchange="checkVal(this.id)">
+				<form:select id="permitAddressFormState" cssClass="flat form-control input-sm" style="width: 174px !important" path="state" >
 					<form:option value="">----Please Select----</form:option>
 					<form:options items="${state}" itemValue="id" itemLabel="name" />
 				</form:select> 
@@ -150,7 +129,7 @@
 		<tr>
 			<td class="form-left">Zipcode<span class="errorMessage">*</span></td>
 			<td>
-				<form:input id="permitAddressFormZipcode" path="zipcode" cssClass="flat flat-ext"  onkeyup="checkValDrop(this.id, this.value)"/>
+				<form:input id="permitAddressFormZipcode" path="zipcode" cssClass="flat flat-ext" />
 			 	<br><form:errors path="zipcode" cssClass="errorMessage" />
 			</td>
 		</tr>
@@ -183,4 +162,21 @@
 	</transys:datatable>
 	<%session.setAttribute("managePermitAddressColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
 </form:form>
+
+<script type="text/javascript">
+	$("#permitAddressServiceForm").find("tr a").click(function() {	
+		var tableData = $(this).parent().parent().children("td").map(function() {
+	        return $(this).text();
+	    }).get();
+	    
+	    $("#permitAddressForm").find('#id').val($.trim(tableData[0]));
+	    $("#permitAddressForm").find('#permitAddressFormLine1').val($.trim(tableData[1]));
+	    $("#permitAddressForm").find('#permitAddressFormLine2').val($.trim(tableData[2])); 
+	    $("#permitAddressForm").find('#permitAddressFormCity').val($.trim(tableData[3]));
+	    $("#permitAddressForm").find('#permitAddressFormZipcode').val($.trim(tableData[5]));
+		$("table.editPermitAddress select option").filter(function() {
+		    return this.text == $.trim(tableData[4]); 
+		}).attr('selected', true);
+	});
+</script>
 
