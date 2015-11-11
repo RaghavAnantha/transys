@@ -45,7 +45,7 @@ function populateEndDate() {
 $("#permitModalFromAlertForm").submit(function (ev) {
 	var $this = $(this);
 	
-	clearPopupDialogMessages();
+	clearPermitModalMessages();
 	
     $.ajax({
         type: $this.attr('method'),
@@ -58,7 +58,7 @@ $("#permitModalFromAlertForm").submit(function (ev) {
         	} else {
         		//var permit = jQuery.parseJSON(responseData);
         		displayPermitModalSuccessMessage("Permit saved successfully");
-        		//$this.find("#closePermitFromAlertClose").click();
+        		//$this.find("#closePermitFromAlert").click();
         	}
         }
     });
@@ -188,7 +188,7 @@ $("#permitModalFromAlertForm").submit(function (ev) {
 			<td>&nbsp;</td>
 			<td colspan="2">
 				<input type="submit" id="createPermitFromAlert" onclick="return true;" value="<transys:label code="Save"/>" class="flat btn btn-primary btn-sm btn-sm-ext" />
-				<input type="button" id="closePermitFromAlertClose" value="Close" class="flat btn btn-primary btn-sm btn-sm-ext" data-dismiss="modal" />		
+				<input type="button" id="closePermitFromAlert" value="Close" class="flat btn btn-primary btn-sm btn-sm-ext" data-dismiss="modal" />		
 			</td>
 		</tr>
 	</table>
