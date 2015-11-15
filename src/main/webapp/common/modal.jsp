@@ -17,18 +17,32 @@ function showPopupDialog(title, url) {
 	$("#popupDialog").modal('show');
 	$("#popupDialogTitle").html(title);
 	
-	$("#popupDialogErrorMessage").html("");
-	$("#popupDialogSuccessMessage").html("");
+	clearPopupDialogMessages();
 	
 	$("#popupDialogBody").html("");
 	$("#popupDialogBody").load(url);
 }
 
-function displayPopupDialogErrorMessage(message) {
+function displayPopupDialogErrorMessage(message, displayAlsoInFooter) {
 	var errorMsgHtml = "<img src=\"${ctx}/images/iconWarning.gif\" alt=\"Warning\" class=\"icon\" />" 
 					 + "&nbsp;" 
 					 + message;
 	$("#popupDialogErrorMessage").html(errorMsgHtml);
+	
+	if (displayAlsoInFooter) {
+		$("#popupDialogErrorMessageFooter").html(errorMsgHtml);
+	}
+}
+
+function displayPopupDialogSuccessMessage(message, displayAlsoInFooter) {
+	var successMsgHtml = "<img src=\"${ctx}/images/iconInformation.gif\" alt=\"Information\" class=\"icon\" />" 
+					   + "&nbsp;" 
+					   + message;
+	$("#popupDialogSuccessMessage").html(successMsgHtml);
+	
+	if (displayAlsoInFooter) {
+		$("#popupDialogSuccessMessageFooter").html(successMsgHtml);
+	}
 }
 
 function clearPopupDialogMessages() {
@@ -38,17 +52,12 @@ function clearPopupDialogMessages() {
 
 function clearPopupDialogErrorMessage() {
 	$("#popupDialogErrorMessage").html("");
+	$("#popupDialogErrorMessageFooter").html("");
 }
 
 function clearPopupDialogSuccessMessage() {
 	$("#popupDialogSuccessMessage").html("");
-}
-
-function displayPopupDialogSuccessMessage(message) {
-	var successMsgHtml = "<img src=\"${ctx}/images/iconInformation.gif\" alt=\"Information\" class=\"icon\" />" 
-					   + "&nbsp;" 
-					   + message;
-	$("#popupDialogSuccessMessage").html(successMsgHtml);
+	$("#popupDialogSuccessMessageFooter").html("");
 }
 </script>
 
@@ -92,8 +101,11 @@ function displayPopupDialogSuccessMessage(message) {
        				<div id="popupDialogSuccessMessage" style="color:green; font-size:14px; vertical-align:center;"></div>
        			</div>
       		 </div>	
-			
 			<div class="modal-body" id="popupDialogBody"></div>
+			<div class="modal-footer" id="popupDialogFooter">
+				<div id="popupDialogErrorMessageFooter" style="color:red; font-size:14px; vertical-align:center; text-align:left;"></div>
+       			<div id="popupDialogSuccessMessageFooter" style="color:green; font-size:14px; vertical-align:center;text-align:left;"></div>
+       		</div>
 		</div>
 	</div>
 </div>
@@ -112,7 +124,7 @@ $("#confirmDialog").on("hidden.bs.modal", function(e) {
 $("#popupDialog").on("hidden.bs.modal", function(e) {
 	$("#popupDialogTitle").html("");
 	$("#popupDialogBody").html("");
-	$("#popupDialogErrorMessage").html("");
-	$("#popupDialogSuccessMessage").html("");
+	
+	clearPopupDialogMessages();
 });	
 </script>

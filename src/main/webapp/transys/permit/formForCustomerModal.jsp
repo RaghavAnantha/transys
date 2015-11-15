@@ -31,11 +31,11 @@ $("#permitForCustomerModalForm").submit(function (ev) {
         data: $this.serialize(),
         success: function(responseData, textStatus, jqXHR) {
         	if (responseData.indexOf("ErrorMsg") >= 0 ) {
-            	displayPopupDialogErrorMessage(responseData.replace("ErrorMsg: ", ""));
+            	displayPopupDialogErrorMessage(responseData.replace("ErrorMsg: ", ""), false);
         	} else {
         		var permit = jQuery.parseJSON(responseData);
         		
-        		displayPopupDialogSuccessMessage("Permit saved successfully");
+        		displayPopupDialogSuccessMessage("Permit saved successfully", false);
         		appendPermit(permit);
         	}
         }

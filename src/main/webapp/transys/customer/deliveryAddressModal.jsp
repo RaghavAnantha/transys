@@ -62,7 +62,7 @@ function validateDeliveryAddressModalForm() {
 	if (missingData != "") {
 		var alertMsg = "<span><b>Please provide following required data:</b><br></span>"
 					 + missingData;
-		displayPopupDialogErrorMessage(alertMsg);
+		displayPopupDialogErrorMessage(alertMsg, false);
 		
 		return false;
 	}
@@ -71,7 +71,7 @@ function validateDeliveryAddressModalForm() {
 	if (formatValidation != "") {
 		var alertMsg = "<span><b>Please correct following invalid data:</b><br></span>"
 					 + formatValidation;
-		displayPopupDialogErrorMessage(alertMsg);
+		displayPopupDialogErrorMessage(alertMsg, false);
 		
 		return false;
 	}
@@ -160,11 +160,11 @@ $("#deliveryAddressModalForm").submit(function (ev) {
         data: $this.serialize(),
         success: function(responseData, textStatus, jqXHR) {
         	if (responseData.indexOf("ErrorMsg") >= 0 ) {
-        		displayPopupDialogErrorMessage(responseData);
+        		displayPopupDialogErrorMessage(responseData, false);
         	} else {
         		var address = jQuery.parseJSON(responseData);
         		
-        		displayPopupDialogSuccessMessage("Delivery address saved successfully");
+        		displayPopupDialogSuccessMessage("Delivery address saved successfully", false);
         		appendDeliveryAddress(address);
         	}
         }
