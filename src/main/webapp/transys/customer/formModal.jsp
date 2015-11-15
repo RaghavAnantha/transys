@@ -6,7 +6,7 @@ function validateCustomerModalForm() {
 	if (missingData != "") {
 		var alertMsg = "<span><b>Please provide following required data:</b><br></span>"
 					 + missingData;
-		displayPopupDialogErrorMessage(alertMsg);
+		displayPopupDialogErrorMessage(alertMsg, true);
 		
 		return false;
 	}
@@ -15,7 +15,7 @@ function validateCustomerModalForm() {
 	if (formatValidation != "") {
 		var alertMsg = "<span><b>Please correct following invalid data:</b><br></span>"
 					 + formatValidation;
-		displayPopupDialogErrorMessage(alertMsg);
+		displayPopupDialogErrorMessage(alertMsg, true);
 		
 		return false;
 	}
@@ -232,14 +232,14 @@ $("#customerModalForm").submit(function (ev) {
         data: $this.serialize(),
         success: function(responseData, textStatus, jqXHR) {
         	if (responseData.indexOf("ErrorMsg") >= 0 ) {
-        		displayPopupDialogErrorMessage(responseData);
+        		displayPopupDialogErrorMessage(responseData, true);
         	} else {
         		var customer = jQuery.parseJSON(responseData);
         		
         		$("#tdCustomerModalCustomerId").html(customer.id);
         		$("#tdCustomerModalCustomerCreationDt").html(customer.formattedCreatedAt);
         		
-        		displayPopupDialogSuccessMessage("Customer saved successfully");
+        		displayPopupDialogSuccessMessage("Customer saved successfully", true);
         		appendCustomer(customer);
         	}
         }
@@ -449,9 +449,9 @@ $("#customerModalForm").submit(function (ev) {
 				<form:errors path="customerNotes[0].notes" cssClass="errorMessage" />
 			</td>
 		</tr>
-		<tr><td colspan="2"></td></tr>
+		<tr><td></td></tr>
 		<tr>
-			<td>&nbsp;</td>
+			<td></td>
 			<td colspan="2">
 				<input type="submit" id="customerModalSubmitBtn" value="Save" class="flat btn btn-primary btn-sm btn-sm-ext" />
 				<input type="button" value="Close" class="flat btn btn-primary btn-sm btn-sm-ext" data-dismiss="modal" />

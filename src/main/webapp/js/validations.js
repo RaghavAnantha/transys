@@ -30,7 +30,7 @@ function validateAndFormatPhoneModal(phoneId) {
 			|| (phone.length > 10 && !phone.match("-"))
 			|| (phone.match("-") && phone.length != 12)) {
 		var alertMsg = "Invalid Phone/Fax Number.";
-		displayPopupDialogErrorMessage(alertMsg);
+		displayPopupDialogErrorMessage(alertMsg, false);
 		
 		document.getElementById(phoneId).value = "";
 		return false;
