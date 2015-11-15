@@ -45,8 +45,8 @@ public class ExcelReportGenerator {
 		Sheet sheet = wb.createSheet();
 		
 		//turn off gridlines
-      sheet.setDisplayGridlines(false);
-      sheet.setPrintGridlines(false);
+      sheet.setDisplayGridlines(true);
+      sheet.setPrintGridlines(true);
       sheet.setFitToPage(true);
       sheet.setHorizontallyCenter(true);
       PrintSetup printSetup = sheet.getPrintSetup();
@@ -201,11 +201,11 @@ public class ExcelReportGenerator {
       style.setFont(font1);
       styles.put("cell_b_centered", style);
 
-      style = createBorderedStyle(wb);
-      style.setAlignment(CellStyle.ALIGN_RIGHT);
-      style.setFont(font1);
-      style.setDataFormat(df.getFormat("dd-mmm"));
-      styles.put("cell_b_date", style);
+//      style = createBorderedStyle(wb);
+//      style.setAlignment(CellStyle.ALIGN_RIGHT);
+//      style.setFont(font1);
+//      style.setDataFormat(df.getFormat("dd-mmm"));
+//      styles.put("cell_b_date", style);
       
       style = createBorderedStyle(wb);
       style.setAlignment(CellStyle.ALIGN_LEFT);

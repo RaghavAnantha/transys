@@ -34,8 +34,8 @@ public class RecycleReportGenerator extends ExcelReportGenerator {
 			Sheet sheet = wb.createSheet();
 			
 			//turn off gridlines
-	      sheet.setDisplayGridlines(false);
-	      sheet.setPrintGridlines(false);
+	      sheet.setDisplayGridlines(true);
+	      sheet.setPrintGridlines(true);
 	      sheet.setFitToPage(true);
 	      sheet.setHorizontallyCenter(true);
 	      PrintSetup printSetup = sheet.getPrintSetup();

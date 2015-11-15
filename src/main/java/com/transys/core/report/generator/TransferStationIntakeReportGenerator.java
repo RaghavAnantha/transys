@@ -47,8 +47,8 @@ public class TransferStationIntakeReportGenerator extends ExcelReportGenerator {
 		Sheet sheet = wb.createSheet();
 
 		// turn off gridlines
-		sheet.setDisplayGridlines(false);
-		sheet.setPrintGridlines(false);
+		sheet.setDisplayGridlines(true);
+		sheet.setPrintGridlines(true);
 		sheet.setFitToPage(true);
 		sheet.setHorizontallyCenter(true);
 		PrintSetup printSetup = sheet.getPrintSetup();
@@ -112,7 +112,7 @@ public class TransferStationIntakeReportGenerator extends ExcelReportGenerator {
 				int mergeCol = columnIndex;
 				Cell cell1 = headerRow1.createCell(mergeCol);
 				cell1.setCellStyle(styles.get("header"));
-				String valueForCell = "Tonnage";
+				String valueForCell = " Tonnage ";
 				cell1.setCellValue(valueForCell);
 				columnWidths.add(valueForCell.length());
 				
@@ -176,7 +176,7 @@ public class TransferStationIntakeReportGenerator extends ExcelReportGenerator {
 				
 				cell1 = headerRow1.createCell(mergeCol);
 				cell1.setCellStyle(styles.get("header"));
-				valueForCell = "Tonnage";
+				valueForCell = " Tonnage ";
 				cell1.setCellValue(valueForCell);
 				columnWidths.add(valueForCell.length());
 				
@@ -282,7 +282,7 @@ public class TransferStationIntakeReportGenerator extends ExcelReportGenerator {
 							} else if (value instanceof Integer) {
 								cell.setCellValue(Integer.parseInt(value.toString()));
 							} else if (value instanceof Date) {
-								cell.setCellStyle(styles.get("cell_b_date"));
+//								cell.setCellStyle(styles.get("cell_b_date"));
 								String valueStr = fmt.format(value);
 								cell.setCellValue(valueStr);
 								if (columnWidths.get(0) < valueStr.length()) { // currently only 1 date
