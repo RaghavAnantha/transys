@@ -232,7 +232,7 @@ $("#customerModalForm").submit(function (ev) {
         data: $this.serialize(),
         success: function(responseData, textStatus, jqXHR) {
         	if (responseData.indexOf("ErrorMsg") >= 0 ) {
-        		displayPopupDialogErrorMessage(responseData, true);
+        		displayPopupDialogErrorMessage(responseData.replace("ErrorMsg: ", ""), true);
         	} else {
         		var customer = jQuery.parseJSON(responseData);
         		

@@ -2,6 +2,37 @@
 
 <br />
 <h5 style="margin-top: -15px; !important">Add/Edit Dumpster Price</h5>
+
+<script type="text/javascript">
+function populateMaterialTypes() {
+	var materialCategorySelect = $("#materialCategory");
+	var materialCategoryId = materialCategorySelect.val();
+	
+	if (materialCategoryId == "") {
+		return false;
+	}
+	
+	var materialTypeSelect = $("#materialTypeSelect");
+	materialTypeSelect.empty();
+	
+	var firstOption = $('<option value="">'+ "----Please Select----" +'</option>');
+	materialTypeSelect.append(firstOption);
+	
+	$.ajax({
+  		url: "retrieveMaterialTypes.do?" + "materialCategoryId=" + materialCategoryId,
+       	type: "GET",
+       	success: function(responseData, textStatus, jqXHR) {
+       		var materialTypesList = jQuery.parseJSON(responseData);
+       		$.each(materialTypesList, function () {
+    	   		$("<option />", {
+    	   	        val: this.id,
+    	   	        text: this.materialName
+    	   	    }).appendTo(materialTypeSelect);
+    	   	});
+		}
+	});
+}
+</script>
 <form:form action="save.do" name="typeForm" commandName="modelObject"
 	method="post" id="typeForm">
 	<form:hidden path="id" id="id" />
@@ -9,9 +40,34 @@
 		<jsp:param name="msgCtx" value="manageDumpsterPrice" />
 	</jsp:include>
 	<table id="form-table" class="table">
-	
 		<tr>
-			<td class="form-left"><transys:label code="Dumpster Size" /><span class="errorMessage">*</span></td>
+			<td class="form-left">Material Category<span class="errorMessage">*</span></td>
+			<td>
+				<select class="flat form-control input-sm" id="materialCategory" name="materialCategory" style="width: 175px !important" onChange="return populateMaterialTypes();">
+					<option value="">----Please Select----</option>
+					<c:forEach items="${materialCategories}" var="aMaterialCategory">
+						<c:set var="selected" value="" />
+						<c:if test="${modelObject.materialType.materialCategory.id == aMaterialCategory.id}">
+							<c:set var="selected" value="selected" />
+						</c:if>
+						<option value="${aMaterialCategory.id}" ${selected}>${aMaterialCategory.category}</option>
+					</c:forEach>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td class="form-left">Material Type<span class="errorMessage">*</span></td>
+			<td>
+				<form:select id="materialTypeSelect" cssClass="flat form-control input-sm" path="materialType" style="width: 175px !important" > 
+					<form:option value="">----Please Select----</form:option>
+					<form:options items="${materialTypes}" itemValue="id" itemLabel="materialName" />
+				</form:select> 
+			 	<form:errors path="materialType" cssClass="errorMessage" />
+			</td>
+			<td colspan=10></td>
+		</tr>
+		<tr>
+			<td class="form-left">Dumpster Size<span class="errorMessage">*</span></td>
 			<td>
 				<form:select cssClass="flat form-control input-sm" style="width:173px !important" path="dumpsterSize" >
 					<form:option value="">----Please Select----</form:option>
@@ -21,28 +77,18 @@
 			</td> 
 		</tr>
 		<tr>
-			<td class="form-left"><transys:label code="Material Type" /><span class="errorMessage">*</span></td>
-			<td>
-				<form:select cssClass="flat form-control input-sm" style="width:173px !important" path="materialType" >
-					<form:option value="">----Please Select----</form:option>
-					<form:options items="${materialTypes}" itemValue="id" itemLabel="materialName" />
-				</form:select> 
-				<form:errors path="materialType" cssClass="errorMessage" />
-			</td> 
-		</tr>
-		<tr>
-			<td class="form-left"><transys:label code="Dumpster Price" /><span class="errorMessage">*</span></td>
+			<td class="form-left">Dumpster Price<span class="errorMessage">*</span></td>
 			<td><form:input path="price" cssClass="flat" style="width:173px !important"/>
 			<br> 
 			<form:errors path="price" cssClass="errorMessage" /></td>
 		</tr>
 		<tr>
-			<td class="form-left form-left-ext"><transys:label code="Effective Date From" /><span class="errorMessage">*</span></td>
+			<td class="form-left form-left-ext">Effective Date From<span class="errorMessage">*</span></td>
 			<td>
 			<form:input path="effectiveStartDate" class="flat" id="datepicker7" name="effectiveStartDate" style="width:173px !important"/></td>
 		</tr>
 		<tr>
-			<td class="form-left"><transys:label code="Effective Date To" /><span class="errorMessage">*</span></td>
+			<td class="form-left">Effective Date To<span class="errorMessage">*</span></td>
 			<td>
 			<form:input path="effectiveEndDate" class="flat" id="datepicker8" name="effectiveEndDate"  style="width:173px !important"/></td>
 		</tr>
