@@ -34,7 +34,7 @@
 	 
  	 	<tr>
 		  <td class="form-left"><transys:label code="Contact Name"/></td>
-				<td><select class="flat form-control input-sm" id="contactName" name="customer.contactName" style="width: 175px !important"">
+				<td><select class="flat form-control input-sm" id="contactName" name="customer.contactName" style="width: 175px !important">
 					<option value="">------<transys:label code="Please Select"/>------</option>
 					<c:forEach items="${contactName}" var="contactName">
 							<c:set var="selected" value=""/>
@@ -47,7 +47,7 @@
 				</td>
 			
 			<td class="form-left"><transys:label code="Phone Number"/></td>
-			<td><select class="flat form-control input-sm" id="phoneNum" name="customer.phone" style="width: 175px !important"">
+			<td><select class="flat form-control input-sm" id="phoneNum" name="customer.phone" style="width: 175px !important">
 				<option value="">------<transys:label code="Please Select"/>------</option>
 				<c:forEach items="${phone}" var="phoneVar">
 						<c:set var="selected" value=""/>
@@ -90,7 +90,7 @@
 				</td>
 			
 			<td class="form-left"><transys:label code="Permit Type"/></td>
-			<td><select class="flat form-control input-sm" id="permitType" name="permitType.permitType" style="width: 175px !important"">
+			<td><select class="flat form-control input-sm" id="permitType" name="permitType.permitType" style="width: 175px !important">
 				<option value="">------<transys:label code="Please Select"/>------</option>
 				<c:forEach items="${permitType}" var="permitType">
 						<c:set var="selected" value=""/>
@@ -140,7 +140,7 @@
 	 </tr>
 	 <tr>
 		  <td class="form-left"><transys:label code="Customer Name"/></td>
-				<td><select class="flat form-control input-sm" id="customerName" name="customer.companyName" style="width: 175px !important"">
+				<td><select class="flat form-control input-sm" id="customerName" name="customer.companyName" style="width: 175px !important">
 					<option value="">------<transys:label code="Please Select"/>------</option>
 					<c:forEach items="${customer}" var="customer">
 						<c:if test='${not empty customer.companyName}'>
@@ -181,7 +181,7 @@
 		editable="true" insertable="true" baseObjects="${list}"
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
 		pagingLink="search.do" multipleDelete="false" searcheable="false" 
-		exportPdf="false" exportXls="true" dataQualifier="managePermits">
+		exportPdf="false" exportXlsx="true" dataQualifier="managePermits">
 		<transys:textcolumn headerText="Del. Address #" dataField="deliveryAddress.line1" width="90px"/>
 		<transys:textcolumn headerText="Delivery Street" dataField="deliveryAddress.line2" /> 
 		<transys:textcolumn headerText="Locn. Type" dataField="locationType.locationType" />

@@ -46,6 +46,7 @@ public final class Datatable extends BodyTagSupport {
 	private boolean multipleDelete;
 	private boolean exportPdf;
 	private boolean exportXls;
+	private boolean exportXlsx;
 	private boolean exportCsv;
 	private boolean displayPrint;
 	
@@ -270,6 +271,20 @@ public final class Datatable extends BodyTagSupport {
 	}
 
 	
+	/**
+	 * @return the exportXlsx
+	 */
+	public boolean isExportXlsx() {
+		return exportXlsx;
+	}
+
+
+	/**
+	 * @param exportXlsx the exportXlsx to set
+	 */
+	public void setExportXlsx(boolean exportXlsx) {
+		this.exportXlsx = exportXlsx;
+	}
 
 	/**
 	 * @return the exportXls
@@ -924,13 +939,17 @@ public final class Datatable extends BodyTagSupport {
 			String url = "/"+urlContext+"/export.do?dataQualifier=" + getDataQualifier();
 			//if (authenticationService.hasUserPermission(user, url)) {
 				if (exportPdf) {
-					objOut.write("<a href=\""+pageContext.getAttribute("ctx")+url+"&type=pdf\"><img src=\""+pageContext.getAttribute("resourceCtx")+"/images/pdf.png\" border=\"0\" style=\"padding-left: 36px; \" class=\"toolbarButton\"/></a>&nbsp;");
+					//objOut.write("<a href=\""+pageContext.getAttribute("ctx")+url+"&type=pdf\"><img src=\""+pageContext.getAttribute("resourceCtx")+"/images/pdf.png\" border=\"0\" style=\"padding-left: 36px; \" class=\"toolbarButton\"/></a>&nbsp;");
+					objOut.write("<a href=\""+pageContext.getAttribute("ctx")+url+"&type=pdf\"><img src=\""+pageContext.getAttribute("resourceCtx")+"/images/pdf.png\" border=\"0\" style=\"float:right; \" class=\"toolbarButton\"/></a>&nbsp;");
 				}
 				if (exportXls) {
-					objOut.write("<a href=\""+pageContext.getAttribute("ctx")+url+"&type=xls\"><img src=\""+pageContext.getAttribute("resourceCtx")+"/images/excel.png\" border=\"0\" class=\"toolbarButton\"/></a>");
+					objOut.write("<a href=\""+pageContext.getAttribute("ctx")+url+"&type=xls\"><img src=\""+pageContext.getAttribute("resourceCtx")+"/images/excel.png\" border=\"0\" style=\"float:right; \" class=\"toolbarButton\"/></a>");
+				}
+				if (exportXlsx) {
+					objOut.write("<a href=\""+pageContext.getAttribute("ctx")+url+"&type=xlsx\"><img src=\""+pageContext.getAttribute("resourceCtx")+"/images/excel.png\" border=\"0\" style=\"float:right; \" class=\"toolbarButton\"/></a>");
 				}
 				if (exportCsv) {
-					objOut.write("<a href=\""+pageContext.getAttribute("ctx")+url+"&type=csv\"><img src=\""+pageContext.getAttribute("resourceCtx")+"/images/csv.png\" border=\"0\" class=\"toolbarButton\"/></a>");
+					objOut.write("<a href=\""+pageContext.getAttribute("ctx")+url+"&type=csv\"><img src=\""+pageContext.getAttribute("resourceCtx")+"/images/csv.png\" border=\"0\" style=\"float:right; \" class=\"toolbarButton\"/></a>");
 				}
 			//}
 			objOut.write("</td></tr></table>");

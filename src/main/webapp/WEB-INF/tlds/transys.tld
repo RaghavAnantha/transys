@@ -115,6 +115,11 @@
 			<type>java.lang.Boolean</type>
 		</attribute>
 		<attribute>
+			<name>exportXlsx</name>
+			<rtexprvalue>true</rtexprvalue>
+			<type>java.lang.Boolean</type>
+		</attribute>
+		<attribute>
 			<name>exportCsv</name>
 			<rtexprvalue>true</rtexprvalue>
 			<type>java.lang.Boolean</type>
