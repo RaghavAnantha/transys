@@ -108,6 +108,7 @@ public class MonthlyTransferStationIntakeReportController extends CRUDController
 		
 		return outputDateStr;
 	}
+	
 	private List<MonthlyIntakeReportVO> retrieveReportData(String month, String year) {
 
 		List<MonthlyIntakeReportVO> monthlyIntakeReportVOList = new ArrayList<>();
@@ -119,16 +120,8 @@ public class MonthlyTransferStationIntakeReportController extends CRUDController
 
 		try {
 			
-			/*Calendar c = Calendar.getInstance();
-			Date date = new SimpleDateFormat("yyyy-MMMM-dd").parse(year + "-" + month + "-" + 01);
-			c.setTime(date);*/
-			
 			String intakeDate = convertDateFormat(year + "-" + month + "-" + "01", "yyyy-MMMM-dd", "yyyy-MM-dd");
 			
-			/*String intakeDate = "2015-10-01";
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-			
-			c.setTime(sdf.parse(intakeDate));*/
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			Calendar c = Calendar.getInstance();
 			c.setTime(sdf.parse(intakeDate));
@@ -324,7 +317,7 @@ public class MonthlyTransferStationIntakeReportController extends CRUDController
 		
 		ByteArrayOutputStream out = excelReportGenerator.exportReport("Monthly Transfer Station Intake Report", headerMap, reportDataList);
 		
-		setRequestHeaders(response, "xls", "MonthlyTransferTest");
+		setRequestHeaders(response, "xlsx", "MonthlyTransferTest");
 		
 		try {
 			//FileOutputStream fout = new FileOutputStream("MonthlyTransferTest.xlsx");

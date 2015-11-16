@@ -1147,7 +1147,11 @@ public class PermitController extends CRUDController<Permit> {
 			criteria.getSearchMap().remove("_csrf");
 			
 			List<Permit> exportReportData =  retrieveReportData(criteria);
-			 type = setRequestHeaders(response, type, "permitReport");
+			
+			if (!StringUtils.isEmpty(type) && type.equals("xls")) {
+				type = "xlsx";
+			}
+			type = setRequestHeaders(response, type, "permitReport");
 			
 			Map<String, String> headers = new LinkedHashMap<>();
 			headers.put("Delivery Address", "deliveryAddress");

@@ -6,12 +6,15 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.PrintSetup;
@@ -283,10 +286,11 @@ public class TransferStationIntakeReportGenerator extends ExcelReportGenerator {
 								cell.setCellValue(Integer.parseInt(value.toString()));
 							} else if (value instanceof Date) {
 //								cell.setCellStyle(styles.get("cell_b_date"));
-								String valueStr = fmt.format(value);
+								System.out.println("Date = " + fmt.format(value));
+								String valueStr = convertDateFormat(fmt.format(value), "yyyy-MM-dd", "MM-dd-yyyy");
 								cell.setCellValue(valueStr);
 								if (columnWidths.get(0) < valueStr.length()) { // currently only 1 date
-									columnWidths.set(0, valueStr.length());
+									columnWidths.set(0, valueStr.length() + 2);
 								}
 							} else {
 								String valueStr = "Unknown data type for " + field.getName();
@@ -334,6 +338,22 @@ public class TransferStationIntakeReportGenerator extends ExcelReportGenerator {
 		//convertToPDF(sheet);
 		return out;
 	}
+	
+	 private String convertDateFormat(String inputDateStr, String inputDateFormatStr, String outputDateFormatStr) {
+			SimpleDateFormat inputDateFormat = new SimpleDateFormat(inputDateFormatStr);
+			SimpleDateFormat outputDateFormat = new SimpleDateFormat(outputDateFormatStr);
+			
+			String outputDateStr = StringUtils.EMPTY;
+			try {
+				Date inputDate = inputDateFormat.parse(inputDateStr);
+				outputDateStr = outputDateFormat.format(inputDate);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			return outputDateStr;
+		}
 	
 	/*private void convertToPDF(Sheet my_worksheet) {
 	// To iterate over the rows
