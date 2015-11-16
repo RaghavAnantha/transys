@@ -1134,10 +1134,13 @@ public class PermitController extends CRUDController<Permit> {
 		}
 	}
 	
-	@RequestMapping(method = RequestMethod.GET, value = "/generatePermitReport.do")
+	@Override
+	@RequestMapping(method = { RequestMethod.GET, RequestMethod.POST }, value = "/export.do")
 	public void export(ModelMap model, HttpServletRequest request,
 			HttpServletResponse response, @RequestParam("type") String type,
+			@RequestParam("dataQualifier") String dataQualifier,
 			Object objectDAO, Class clazz) {
+
 		try {
 			SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 			
@@ -1171,8 +1174,9 @@ public class PermitController extends CRUDController<Permit> {
 			log.warn("Unable to create file :" + e);
 			request.getSession().setAttribute("errors", e.getMessage());
 		}
+	
 	}
-
+	
 	private List<Permit> retrieveReportData(SearchCriteria criteria) {
 		criteria.setPageSize(25);
 		//TODO: Fix me 

@@ -176,13 +176,12 @@
 	</table>
 </form:form>
 
-<a href="/permit/generatePermitReport.do?type=xls"><img src="/images/excel.png" border="0" style="float:right" class="toolbarButton"></a>
 <form:form name="delete.do" id="serviceForm" class="tab-color">
 	<transys:datatable urlContext="permit" deletable="true"
 		editable="true" insertable="true" baseObjects="${list}"
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
 		pagingLink="search.do" multipleDelete="false" searcheable="false" 
-		exportPdf="false" exportXls="false" dataQualifier="managePermits">
+		exportPdf="false" exportXls="true" dataQualifier="managePermits">
 		<transys:textcolumn headerText="Del. Address #" dataField="deliveryAddress.line1" width="90px"/>
 		<transys:textcolumn headerText="Delivery Street" dataField="deliveryAddress.line2" /> 
 		<transys:textcolumn headerText="Locn. Type" dataField="locationType.locationType" />
