@@ -11,11 +11,13 @@ import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.ValidationException;
 
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -684,7 +686,26 @@ public class CustomerController extends CRUDController<Customer> {
 		// TODO: Why both created by and modified by and why set if not changed?
 		setupCustomerNotes(entity);
 		
-		genericDAO.saveOrUpdate(entity);
+		try {
+			genericDAO.saveOrUpdate(entity);
+		} catch (PersistenceException e){
+			String errorMsg = extractSaveErrorMsg(e);
+			model.addAttribute("msgCtx", "manageCustomer");
+			model.addAttribute("error", errorMsg);
+			
+			//TODO: is this reqd?
+			setupCreate(model, request);
+			
+			model.addAttribute("modelObject", entity);
+			model.addAttribute("activeTab", "manageCustomer");
+			model.addAttribute("activeSubTab", "billing");
+			model.addAttribute("mode", "ADD");
+			
+			setupEmptyCreate(model);
+			
+			return urlContext + "/customer";
+		}
+		
 		cleanUp(request);
 		
 		//return "redirect:/" + urlContext + "/list.do";
@@ -707,6 +728,21 @@ public class CustomerController extends CRUDController<Customer> {
 		
 		//return list(model, request);
 		return saveSuccess(model, request, entity);
+	}
+	
+	private String extractSaveErrorMsg(Exception e) {
+		String errorMsg = StringUtils.EMPTY;
+		//String errorMsg = e.getCause().getCause().getMessage();
+		if (e.getCause() instanceof ConstraintViolationException) {
+			ConstraintViolationException ce = (ConstraintViolationException) e.getCause();
+			if (ce.getConstraintName().contains("company")) {
+				errorMsg += "Duplicate company name - company name already exists"; 
+			}
+		} else {
+			errorMsg = "Error occured while saving Customer";
+		}
+		
+		return errorMsg;
 	}
 	
 	@RequestMapping(method = RequestMethod.POST, value = "/saveCustomerNotes.do")
@@ -1081,7 +1117,13 @@ public class CustomerController extends CRUDController<Customer> {
 		
 		setupCustomerNotes(entity);
 		
-		genericDAO.saveOrUpdate(entity);
+		try {
+			genericDAO.saveOrUpdate(entity);
+		} catch (PersistenceException e){
+			String errorMsg = "ErrorMsg: " + extractSaveErrorMsg(e);
+			return errorMsg;
+		}
+		
 		cleanUp(request);
 		
 		//return "redirect:/" + urlContext + "/list.do";
@@ -1111,6 +1153,13 @@ public class CustomerController extends CRUDController<Customer> {
 		List<State> stateList = genericDAO.executeSimpleQuery("select obj from State obj where obj.id= " + entity.getState().getId());
 		entity.getState().setName(stateList.get(0).getName());
 		
+		return constructResponseJson(entity);
+				
+		/*String json = (new Gson()).toJson(entity);
+		return json;*/
+	}
+	
+	private String constructResponseJson(Customer entity) {
 		ObjectMapper objectMapper = new ObjectMapper();
 		String json = StringUtils.EMPTY;
 		try {
@@ -1121,8 +1170,5 @@ public class CustomerController extends CRUDController<Customer> {
 		}
 		
 		return json;
-				
-		/*String json = (new Gson()).toJson(entity);
-		return json;*/
 	}
 }

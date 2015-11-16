@@ -188,7 +188,7 @@ public class RecycleLocationController extends CRUDController<RecycleLocation> {
 	
 	private List<MaterialType> retrieveMaterialTypes(Long materialCategoryId) {
 		String query = "select obj from MaterialType obj where";
-		query	+= " obj.materialCategory.id=" + materialCategoryId;
+		query	+= " obj.materialCategory.id=" + materialCategoryId + " order by obj.materialName asc";
 		List<MaterialType> materialTypes = genericDAO.executeSimpleQuery(query);
 		return materialTypes;
 	}

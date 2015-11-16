@@ -292,7 +292,8 @@ function validateAllDates() {
 			<td colspan="10">
 				<c:set var="permitNotesDisabled" value="" />
 				<c:if test="${modelObject.permitNotes != null and modelObject.permitNotes.size() > 0 
-							and modelObject.permitNotes[0].notes != null and modelObject.permitNotes[0].notes.length() > 0}">
+							and modelObject.permitNotes[0].notes != null and modelObject.permitNotes[0].notes.length() > 0
+							and modelObject.id != null}">
 					<c:set var="permitNotesDisabled" value="true" />
 				</c:if>
 				<form:textarea id="permitNotesTextArea" readonly="${permitNotesDisabled}" row="5" path="permitNotes[0].notes" cssClass="form-control notes" style="width:55.5%;" />

@@ -1529,7 +1529,8 @@ function verifyExchangeOrderAndSubmit() {
 			<td colspan="10">
 				<c:set var="orderNotesDisabled" value="" />
 				<c:if test="${modelObject.orderNotes != null and modelObject.orderNotes.size() > 0 
-							and modelObject.orderNotes[0].notes != null and modelObject.orderNotes[0].notes.length() > 0}">
+							and modelObject.orderNotes[0].notes != null and modelObject.orderNotes[0].notes.length() > 0
+							and modelObject.id != null}">
 					<c:set var="orderNotesDisabled" value="true" />
 				</c:if>
 				<form:textarea readonly="${orderNotesDisabled}" row="5" path="orderNotes[0].notes" maxlength="500" cssClass="form-control" style="width:50%; height:100%;"/>

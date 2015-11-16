@@ -319,7 +319,8 @@ function processCustomerForm() {
 			<td colspan=10>
 				<c:set var="customerNotesDisabled" value="" />
 				<c:if test="${modelObject.customerNotes != null and modelObject.customerNotes.size() > 0 
-							and modelObject.customerNotes[0].notes != null and modelObject.customerNotes[0].notes.length() > 0}">
+							and modelObject.customerNotes[0].notes != null and modelObject.customerNotes[0].notes.length() > 0
+							and modelObject.id != null}">
 					<c:set var="customerNotesDisabled" value="true" />
 				</c:if>
 				<form:textarea row="5" readonly="${customerNotesDisabled}" path="customerNotes[0].notes" maxlength="500" cssClass="form-control notes" id="customerNotes" style="width:50%;"/>
