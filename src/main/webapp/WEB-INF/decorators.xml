@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <decorators defaultdir="/layout">
-   <decorator name="login" page="singleColumnLayoutLogin.jsp">
+    <decorator name="login" page="singleColumnLayoutLogin.jsp">
         <pattern>/transys/login/**</pattern>
-   </decorator>
-   <decorator name="home" page="singleColumnLayout.jsp">
+    </decorator>
+    <decorator name="home" page="singleColumnLayout.jsp">
         <pattern>/transys/home*</pattern>
-   </decorator>
-   <decorator name="customer" page="singleColumnLayout.jsp">
+    </decorator>
+    <decorator name="customer" page="singleColumnLayout.jsp">
         <pattern>/transys/customer/**</pattern>
     </decorator>
     <decorator name="order" page="singleColumnLayout.jsp">
@@ -23,7 +23,10 @@
     </decorator>   
     <decorator name="reports" page="singleColumnLayout.jsp">
         <pattern>/transys/reports/**</pattern>
-    </decorator>   
+    </decorator> 
+    <decorator name="migration" page="singleColumnLayout.jsp">
+        <pattern>/transys/migration/**</pattern>
+    </decorator>
     <decorator name="popUp" page="popUpLayout.jsp">
         <pattern>/transys/order/notesModal.jsp</pattern>
         <pattern>/transys/customer/formModal.jsp</pattern>
