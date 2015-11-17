@@ -1,10 +1,14 @@
-package com.transys.model;
+package com.transys.model.migration;
 
+import java.io.Serializable;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -16,26 +20,25 @@ import javax.validation.constraints.Size;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.transys.model.AbstractBaseModel;
+import com.transys.model.State;
 
 @Entity
-@Table(name="customer")
-public class Customer extends AbstractBaseModel {
-	@NotEmpty
-	@Size(max=50)
+@Table(name="oldCustomers")
+public class OldCustomer extends AbstractBaseModel {
 	@Column(name="companyName")
 	private String companyName;
 	
 	@Column(name="contactName")
 	private String contactName;
 	
-	@ManyToOne
-	@JoinColumn(name="customerTypeId") 
-	private CustomerType customerType;
+	@Column(name="custtype")
+	private String customerType;
 	
-	@ManyToOne
-	@JoinColumn(name="customerStatusId") //Enum?
-	private CustomerStatus customerStatus;
+	@Column(name="status")
+	private String customerStatus;
 	
 	// Billing Info
 	@Column(name="chargeCompany")
@@ -52,22 +55,21 @@ public class Customer extends AbstractBaseModel {
 	private String altPhone2;
 	
 	@NotEmpty
-	@Column(name="billingAddressLine1")
+	@Column(name="Address1")
 	private String billingAddressLine1;
 	
-	@Column(name="billingAddressLine2")
+	@Column(name="Address2")
 	private String billingAddressLine2;
 	
 	@NotEmpty
 	@Column(name="city")
 	private String city;
 	
-   @ManyToOne
-	@JoinColumn(name="state")
-	private State state;
+   @Column(name="state")
+	private String state;
 	
 	@NotNull 
-	@Column(name="zipcode")
+	@Column(name="zip")
 	private String zipcode;
 	
 	@Column(name="fax")
@@ -76,31 +78,24 @@ public class Customer extends AbstractBaseModel {
 	@Column(name="email")
 	private String email;
 	
-	/******** Notes Info ************/
-	@OneToMany(mappedBy="customer", cascade = CascadeType.ALL)
-	@JsonManagedReference
-	private List<CustomerNotes> customerNotes;
+	@Column(name="comments")
+	private String notes;
 	
-	public List<CustomerNotes> getCustomerNotes() {
-		return customerNotes;
-	}
-
-	public void setCustomerNotes(List<CustomerNotes> customerNotes) {
-		this.customerNotes = customerNotes;
-	}
-
-	@OneToMany(mappedBy="customer", cascade = CascadeType.ALL)
-	@JsonManagedReference
-	private List<DeliveryAddress> deliveryAddress;
+	@Column(name="whocreated")
+	protected Long whocreated;
 	
-	public List<DeliveryAddress> getDeliveryAddress() {
-		return deliveryAddress;
-	}
+	@Column(name="whoedited")
+	protected Long whoedited;
+	
+	@Column(name="whencreated")
+	protected Date whencreated = Calendar.getInstance().getTime();
+	
+	@Column(name="whenedited")
+	protected Date whenedited;
 
-	public void setDeliveryAddress(List<DeliveryAddress> deliveryAddress) {
-		this.deliveryAddress = deliveryAddress;
-	}
-
+	@Transient
+	private List<OldDeliveryAddress> deliveryAddress;
+	
 	public String getCompanyName() {
 		return companyName;
 	}
@@ -111,22 +106,6 @@ public class Customer extends AbstractBaseModel {
 	
 	public String getContactName() {
 		return contactName;
-	}
-
-	public CustomerType getCustomerType() {
-		return customerType;
-	}
-
-	public void setCustomerType(CustomerType customerType) {
-		this.customerType = customerType;
-	}
-	
-	public CustomerStatus getCustomerStatus() {
-		return customerStatus;
-	}
-
-	public void setCustomerStatus(CustomerStatus customerStatus) {
-		this.customerStatus = customerStatus;
 	}
 
 	public String getChargeCompany() {
@@ -181,12 +160,78 @@ public class Customer extends AbstractBaseModel {
 		this.city = city;
 	}
 
-	public State getState() {
+	public String getCustomerType() {
+		return customerType;
+	}
+
+	public void setCustomerType(String customerType) {
+		this.customerType = customerType;
+	}
+
+	public String getCustomerStatus() {
+		return customerStatus;
+	}
+
+	public void setCustomerStatus(String customerStatus) {
+		this.customerStatus = customerStatus;
+	}
+
+	public String getState() {
 		return state;
 	}
 
-	public void setState(State state) {
+	public void setState(String state) {
 		this.state = state;
+	}
+
+	public String getNotes() {
+		return notes;
+	}
+
+	public void setNotes(String notes) {
+		this.notes = notes;
+	}
+
+	public Long getWhocreated() {
+		return whocreated;
+	}
+
+	public void setWhocreated(Long whocreated) {
+		this.whocreated = whocreated;
+	}
+
+	public Long getWhoedited() {
+		return whoedited;
+	}
+
+	public void setWhoedited(Long whoedited) {
+		this.whoedited = whoedited;
+	}
+
+	public Date getWhencreated() {
+		return whencreated;
+	}
+
+	public void setWhencreated(Date whencreated) {
+		this.whencreated = whencreated;
+	}
+
+	public Date getWhenedited() {
+		return whenedited;
+	}
+
+	public void setWhenedited(Date whenedited) {
+		this.whenedited = whenedited;
+	}
+
+	@Transient
+	public List<OldDeliveryAddress> getDeliveryAddress() {
+		return deliveryAddress;
+	}
+
+	@Transient
+	public void setDeliveryAddress(List<OldDeliveryAddress> deliveryAddress) {
+		this.deliveryAddress = deliveryAddress;
 	}
 
 	public void setZipcode(String zipcode) {
@@ -217,8 +262,8 @@ public class Customer extends AbstractBaseModel {
 			addressBuff.append(lineSeparator + getCity());
 		}
 		if (getState() != null) {
-			if (StringUtils.isNotEmpty(getState().getName())) {
-				addressBuff.append(" " + getState().getName());
+			if (StringUtils.isNotEmpty(getState())) {
+				addressBuff.append(" " + getState());
 			}
 		}
 		if (StringUtils.isNotEmpty(getZipcode())) {

@@ -38,8 +38,6 @@
 									<li><a href="/masterData/loginUser/main.do">Manage User Roles</a></li>
 								</ul>
 							</li>
-							<!-- <li><a href="/masterData/employee/main.do">Employees</a></li> -->
-							<!-- <li><a href="/masterData/loginUser/main.do">LoginUser</a></li> -->
 							<li><a href="/masterData/dumpsters/main.do">Dumpsters</a></li>
 							<li><a href="/masterData/materialType/main.do">Material Type</a></li>
 							<li><a href="/masterData/materialCategory/main.do">Material Category</a></li>
@@ -53,6 +51,7 @@
 							<li><a href="/masterData/recycleLocation/main.do">Recycle Location</a></li>
 						</ul>
 					</li>
+					<li id="migrationPage"><a href="/migration/main.do">Migration</a></li>
 				</ul>
 				<ul class="nav navbar-nav navbar-right">
 					<li>
@@ -95,7 +94,9 @@
 			$('#reportPage').addClass("active");
 		} else if (loc.match('/masterData/')) {
 			$('#masterDataPage').addClass("active");
-		}
+		} else if (loc.match('/migration/')) {
+			$('#migrationPage').addClass("active");
+		} 
 	});
 </script>
 </html>

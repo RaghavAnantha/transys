@@ -157,7 +157,7 @@ CREATE TABLE `customer` (
   `customerTypeId` bigint(20) NOT NULL,
   `billingAddressLine2` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
   `city` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
-  `companyName` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `companyName` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
   `fax` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
   `contactName` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `phone` varchar(20) COLLATE utf8_unicode_ci NOT NULL,

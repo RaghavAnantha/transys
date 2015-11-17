@@ -81,7 +81,7 @@ function validateCustomerDataFormat() {
 	
 	var companyName = $('#companyName').val();
 	if (companyName != "") {
-		if (!validateCompanyName(companyName, 100)) {
+		if (!validateCompanyName(companyName, 50)) {
 			validationMsg += "Company Name, "
 		}
 	}
