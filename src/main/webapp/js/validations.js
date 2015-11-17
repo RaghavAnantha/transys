@@ -135,7 +135,7 @@ function validateName(name, validLength) {
 }
 
 function validateCompanyName(name, validLength) {
-	var companyNamePattern = new RegExp("^[a-zA-Z0-9-_'`\\s/]{1," + validLength + "}$");
+	var companyNamePattern = new RegExp("^[a-zA-Z0-9-_'`\\s/.,&]{1," + validLength + "}$");
 	return companyNamePattern.test(name);
 }
 
