@@ -23,11 +23,13 @@
 				<select class="flat form-control input-sm" id="customerOrdersReport.contactName" name="customer.contactName" style="width:175px !important">
 					<option value="">----Please Select----</option>
 					<c:forEach items="${contactNames}" var="aContactName">
-						<c:set var="selected" value="" />
-						<c:if test="${sessionScope.searchCriteria.searchMap['customer.contactName'] == aContactName}">
-							<c:set var="selected" value="selected" />
+						<c:if test="${not empty aContactName}">
+							<c:set var="selected" value="" />
+							<c:if test="${sessionScope.searchCriteria.searchMap['customer.contactName'] == aContactName}">
+								<c:set var="selected" value="selected" />
+							</c:if>
+							<option value="${aContactName}" ${selected}>${aContactName}</option>
 						</c:if>
-						<option value="${aContactName}" ${selected}>${aContactName}</option>
 					</c:forEach>
 				</select>
 			</td>
