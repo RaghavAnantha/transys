@@ -53,10 +53,10 @@ CREATE TABLE `deliveryAddress` (
 
 LOCK TABLES `deliveryAddress` WRITE;
 /*!40000 ALTER TABLE `deliveryAddress` DISABLE KEYS */;
-INSERT INTO `deliveryAddress` VALUES (1,'2015-09-10 21:22:45',1,NULL,NULL,5,'4818 W','Van Buren','Chicago',1,'28262',1),
-(3,'2015-09-10 21:22:45',1,NULL,NULL,5,'1121 E','Lemon st','Chicago',1,'28262',1);
+INSERT INTO `deliveryAddress` VALUES (1,'2015-09-10 21:22:45',1,NULL,NULL,5,'4818 W Van Buren',NULL,'Chicago',1,'28262',1),
+(3,'2015-09-10 21:22:45',1,NULL,NULL,5,'1121 E Lemon st',NULL,'Chicago',1,'28262',1);
 INSERT INTO `deliveryAddress` (`id`, `created_at`, `created_by`, `customerId`, `line1`, `line2`, `city`, `state`, `zip`, `delete_flag`) 
-VALUES ('4', '2015-09-10 21:22:45',1,'6', '1890', 'Chesterfield Ct', 'Chicago', '1', '28262', '1');
+VALUES ('4', '2015-09-10 21:22:45',1,'6', '1890 Chesterfield Ct', NULL, 'Chicago', '1', '28262', '1');
 /*!40000 ALTER TABLE `deliveryAddress` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -94,8 +94,8 @@ CREATE TABLE `permitAddress` (
 
 LOCK TABLES `permitAddress` WRITE;
 /*!40000 ALTER TABLE `permitAddress` DISABLE KEYS */;
-INSERT INTO `permitAddress` VALUES (1,'2015-09-10 21:22:45',1,NULL,NULL,1,'4818 W','VAN BUREN','Chicago',1,'28262',1),
-(2,'2015-09-10 21:22:45',1,NULL,NULL,1,'1121 E','Lemon st','Chicago',1,'28262',1);
+INSERT INTO `permitAddress` VALUES (1,'2015-09-10 21:22:45',1,NULL,NULL,1,'4818 W VAN BUREN',NULL,'Chicago',1,'28262',1),
+(2,'2015-09-10 21:22:45',1,NULL,NULL,1,'1121 E Lemon st',NULL,'Chicago',1,'28262',1);
 /*!40000 ALTER TABLE `permitAddress` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -157,7 +157,7 @@ CREATE TABLE `customer` (
   `customerTypeId` bigint(20) NOT NULL,
   `billingAddressLine2` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
   `city` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
-  `companyName` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `companyName` varchar(60) COLLATE utf8_unicode_ci NOT NULL,
   `fax` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
   `contactName` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `phone` varchar(20) COLLATE utf8_unicode_ci NOT NULL,

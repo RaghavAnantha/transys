@@ -427,7 +427,7 @@ public class PermitController extends CRUDController<Permit> {
 		
 		List<DeliveryAddress> addresses = genericDAO.findUniqueByCriteria(DeliveryAddress.class, criterias, "line1", false);
 	   model.addAttribute("allDeliveryAddresses", addresses);
-	   List<Customer> customerList = genericDAO.findByCriteria(Customer.class, criterias, "contactName", false);
+	   List<Customer> customerList = genericDAO.findByCriteria(Customer.class, criterias, "companyName", false);
 		model.addAttribute("customer", customerList);
 		model.addAttribute("locationType", genericDAO.findByCriteria(LocationType.class, criterias, "id", false));
 		model.addAttribute("order", genericDAO.findByCriteria(Order.class, criterias, "id", false));

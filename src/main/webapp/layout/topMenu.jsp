@@ -51,7 +51,7 @@
 							<li><a href="/masterData/recycleLocation/main.do">Recycle Location</a></li>
 						</ul>
 					</li>
-					<li id="migrationPage"><a href="/migration/main.do">Migration</a></li>
+					<!-- <li id="migrationPage"><a href="/migration/main.do">Migration</a></li> -->
 				</ul>
 				<ul class="nav navbar-nav navbar-right">
 					<li>
@@ -72,7 +72,6 @@
 					</li>
 					<li>
 						<c:if test="${sessionScope.userInfo != null}">
-							<%-- <a href="${ctx}/logout.do">Logout</a> --%>
 							<a href="<c:url value="/logout.do" />" >Logout</a>
 						</c:if>
 					</li>
@@ -94,9 +93,9 @@
 			$('#reportPage').addClass("active");
 		} else if (loc.match('/masterData/')) {
 			$('#masterDataPage').addClass("active");
-		} else if (loc.match('/migration/')) {
+		} /*else if (loc.match('/migration/')) {
 			$('#migrationPage').addClass("active");
-		} 
+		} */
 	});
 </script>
 </html>

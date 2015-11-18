@@ -11,28 +11,32 @@
 	      <td class="wide"><input class="flat" id="datepicker7" name="permit.endDateTo" value="${sessionScope.searchCriteria.searchMap['permit.endDateTo']}" style="width: 175px" /></td>
 	 	</tr>
 		<tr>
-		  <td class="form-left">Delivery Address #</td>
+		  <td class="form-left form-left-ext">Delivery Addrs Line1</td>
 				<td><select class="flat form-control input-sm" id="deliveryAddress" name="order.deliveryAddress.line1" style="width: 175px !important">
 					<option value="">---Please Select---</option>
 					<c:forEach items="${allDeliveryAddresses}" var="deliveryAddressVar">
-						 <c:set var="selected" value=""/>
-						 <c:if test="${sessionScope.searchCriteria.searchMap['order.deliveryAddress.line1'] == deliveryAddressVar.line1}">
-							<c:set var="selected" value="selected"/>
-						</c:if> 
+						<c:if test="${not empty deliveryAddressVar.line1}">
+							<c:set var="selected" value=""/>
+							<c:if test="${sessionScope.searchCriteria.searchMap['order.deliveryAddress.line1'] == deliveryAddressVar.line1}">
+								<c:set var="selected" value="selected"/>
+							</c:if> 
 							<option value="${deliveryAddressVar.line1}" ${selected}>${deliveryAddressVar.line1}</option>
+						</c:if>
 					</c:forEach>
 				</select>
 				</td>
 			
-			<td class="form-left"><transys:label code="Delivery Street"/></td>
+			<td class="form-left form-left-ext"><transys:label code="Delivery Addrs Line2"/></td>
 			<td><select class="flat form-control input-sm" id="deliveryStreet" name="order.deliveryAddress.line2" style="width: 175px !important">
 				<option value="">---Please Select---</option>
 				<c:forEach items="${allDeliveryAddresses}" var="deliveryAddress">
+					<c:if test="${not empty deliveryAddress.line2}">
 						<c:set var="selected" value=""/>
 						<c:if test="${sessionScope.searchCriteria.searchMap['order.deliveryAddress.line2'] == deliveryAddress.line2}">
 							<c:set var="selected" value="selected"/>
 						</c:if> 
 						<option value="${deliveryAddress.line2}" ${selected}>${deliveryAddress.line2}</option>
+					</c:if>
 				</c:forEach>
 			</select>
 			</td> 
@@ -44,11 +48,13 @@
 				<td><select class="flat form-control input-sm" id="contactName" name="order.customer.contactName" style="width: 175px !important">
 					<option value="">---Please Select---</option>
 					<c:forEach items="${contactName}" var="contactNameVar">
+						<c:if test="${not empty contactNameVar}">
 							<c:set var="selected" value=""/>
 							<c:if test="${sessionScope.searchCriteria.searchMap['order.customer.contactName'] == contactNameVar}">
 								<c:set var="selected" value="selected"/>
 							</c:if>
-								<option value="${contactNameVar}" ${selected}>${contactNameVar}</option>
+							<option value="${contactNameVar}" ${selected}>${contactNameVar}</option>
+						</c:if>
 					</c:forEach>
 				</select>
 				</td>
@@ -142,8 +148,8 @@
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
 		pagingLink="search.do" multipleDelete="false" searcheable="false" 
 		exportPdf="true" exportXls="true" dataQualifier="orderPermitAlert">
-		<transys:textcolumn headerText="Del. Address #" dataField="permit.deliveryAddress.line1" width="100px"/>
-		<transys:textcolumn headerText="Delivery Address Street" dataField="permit.deliveryAddress.line2" />
+		<transys:textcolumn headerText="Del. L1" dataField="permit.deliveryAddress.line1"/>
+		<transys:textcolumn headerText="Del. L2" dataField="permit.deliveryAddress.line2" />
 		<transys:textcolumn headerText="Customer Name" dataField="order.customer.companyName" />
 		<transys:textcolumn headerText="Order#" dataField="order.id" type="java.lang.Long" />
 		<transys:textcolumn headerText="Contact" dataField="order.customer.contactName" />

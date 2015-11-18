@@ -25,11 +25,13 @@
 				<select class="flat form-control input-sm" id="deliveryAddress" name="deliveryAddress" style="width: 175px !important">
 					<option value="">------<transys:label code="Please Select" />------</option>
 					<c:forEach items="${deliveryAddresses}" var="aDeliveryAddress">
-						<c:set var="selected" value=""/>
-						<c:if test="${sessionScope.searchCriteria.searchMap['deliveryAddress'] == aDeliveryAddress.id}">
-							<c:set var="selected" value="selected" />
+						<c:if test="${not empty aDeliveryAddress.line1}">
+							<c:set var="selected" value=""/>
+							<c:if test="${sessionScope.searchCriteria.searchMap['deliveryAddress'] == aDeliveryAddress.id}">
+								<c:set var="selected" value="selected" />
+							</c:if>
+							<option value="${aDeliveryAddress.id}" ${selected}>${aDeliveryAddress.fullLine}</option>
 						</c:if>
-						<option value="${aDeliveryAddress.id}" ${selected}>${aDeliveryAddress.line1} , ${aDeliveryAddress.line2}</option>
 					</c:forEach>
 				</select>
 			</td>

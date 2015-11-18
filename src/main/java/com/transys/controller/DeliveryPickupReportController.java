@@ -57,7 +57,9 @@ public class DeliveryPickupReportController extends CRUDController<Order> {
 		model.addAttribute("ordersList",orderList);
 		model.addAttribute("dumpsterSizeAggregation", setDumpsterSizeAggregation(model, orderList));
 		
-		model.addAttribute("deliveryAddresses", genericDAO.findAll(DeliveryAddress.class));
+		String addrssQuery = "select obj from DeliveryAddress obj order by obj.line1 asc";
+		List<DeliveryAddress> addresses = genericDAO.executeSimpleQuery(addrssQuery);
+		model.addAttribute("deliveryAddresses", addresses);
 		model.addAttribute("deliveryDateFrom", criteria.getSearchMap().get("deliveryDateFrom"));
 		model.addAttribute("deliveryDateTo", criteria.getSearchMap().get("deliveryDateTo"));
 		model.addAttribute("pickupDateFrom", criteria.getSearchMap().get("pickDateFrom"));

@@ -4,28 +4,32 @@
 <form:form action="list.do" method="get" name="permitSearchForm" id="permitSearchForm">
 	<table width="100%" id="form-table">
 		<tr>
-		  	<td class="form-left"><transys:label code="Delivery Address #"/></td>
+		  	<td class="form-left form-left-ext"><transys:label code="Delivery Addrs Line1"/></td>
 			<td>
 				<select class="flat form-control input-sm" id="deliveryAddress" name="deliveryAddress.line1" style="width: 175px !important">
 					<option value="">------<transys:label code="Please Select"/>------</option>
 					<c:forEach items="${allDeliveryAddresses}" var="deliveryAddressVar">
-						 <c:set var="selected" value=""/>
-						 <c:if test="${sessionScope.searchCriteria.searchMap['deliveryAddress.line1'] == deliveryAddressVar.line1}">
-							<c:set var="selected" value="selected"/>
-						</c:if> 
+						<c:if test="${not empty deliveryAddressVar.line1}">
+							<c:set var="selected" value=""/>
+							<c:if test="${sessionScope.searchCriteria.searchMap['deliveryAddress.line1'] == deliveryAddressVar.line1}">
+								<c:set var="selected" value="selected"/>
+							</c:if> 
 							<option value="${deliveryAddressVar.line1}" ${selected}>${deliveryAddressVar.line1}</option>
+						</c:if>
 					</c:forEach>
 				</select>
 			</td>
-			<td class="form-left"><transys:label code="Delivery Street"/></td>
+			<td class="form-left form-left-ext"><transys:label code="Delivery Addrs Line2"/></td>
 			<td><select class="flat form-control input-sm" id="deliveryStreet" name="deliveryAddress.line2" style="width: 175px !important"">
 				<option value="">------<transys:label code="Please Select"/>------</option>
 				<c:forEach items="${allDeliveryAddresses}" var="deliveryAddress">
+					<c:if test="${not empty deliveryAddress.line2}">
 						<c:set var="selected" value=""/>
 						<c:if test="${sessionScope.searchCriteria.searchMap['deliveryAddress.line2'] == deliveryAddress.line2}">
 							<c:set var="selected" value="selected"/>
 						</c:if> 
 						<option value="${deliveryAddress.line2}" ${selected}>${deliveryAddress.line2}</option>
+					</c:if>
 				</c:forEach>
 			</select>
 			</td>
@@ -37,11 +41,13 @@
 				<td><select class="flat form-control input-sm" id="contactName" name="customer.contactName" style="width: 175px !important">
 					<option value="">------<transys:label code="Please Select"/>------</option>
 					<c:forEach items="${contactName}" var="contactName">
+						<c:if test="${not empty contactName}">
 							<c:set var="selected" value=""/>
 							<c:if test="${sessionScope.searchCriteria.searchMap['customer.contactName'] == contactName}">
 								<c:set var="selected" value="selected"/>
 							</c:if>
-								<option value="${contactName}" ${selected}>${contactName}</option>
+							<option value="${contactName}" ${selected}>${contactName}</option>
+						</c:if>
 					</c:forEach>
 				</select>
 				</td>
@@ -182,8 +188,8 @@
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
 		pagingLink="search.do" multipleDelete="false" searcheable="false" 
 		exportPdf="false" exportXlsx="true" dataQualifier="managePermits">
-		<transys:textcolumn headerText="Del. Address #" dataField="deliveryAddress.line1" width="90px"/>
-		<transys:textcolumn headerText="Delivery Street" dataField="deliveryAddress.line2" /> 
+		<transys:textcolumn headerText="Del. Addrs Line1" dataField="deliveryAddress.line1"/>
+		<transys:textcolumn headerText="Del. Addrs Line2" dataField="deliveryAddress.line2" /> 
 		<transys:textcolumn headerText="Locn. Type" dataField="locationType.locationType" />
 		<transys:textcolumn headerText="Permit Type" dataField="permitType.permitType" />
 		<transys:textcolumn headerText="Permit Class" dataField="permitClass.permitClass" />

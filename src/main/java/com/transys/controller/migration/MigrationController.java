@@ -17,6 +17,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import javax.persistence.PersistenceException;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -33,6 +34,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.transys.controller.CRUDController;
 import com.transys.core.report.generator.ExcelReportGenerator;
 import com.transys.core.report.generator.TransferStationIntakeReportGenerator;
+import com.transys.core.util.MimeUtil;
+import com.transys.core.util.ValidationUtil;
 import com.transys.model.Customer;
 import com.transys.model.CustomerStatus;
 import com.transys.model.CustomerType;
@@ -66,7 +69,7 @@ public class MigrationController extends CRUDController<Order> {
 	}
 
 	@RequestMapping(method = RequestMethod.POST, value = "/migrate.do")
-	public String migrate(ModelMap model, HttpServletRequest request) {
+	public void migrate(ModelMap model, HttpServletRequest request, HttpServletResponse response) {
 		String oldCustomerQuery = "select obj from OldCustomer obj order by obj.id asc";
 		List<OldCustomer> oldCustomerList = genericDAO.executeSimpleQuery(oldCustomerQuery);
 	
@@ -76,30 +79,65 @@ public class MigrationController extends CRUDController<Order> {
 		Map<Long, List<OldDeliveryAddress>> oldAddressMap = new HashMap<Long, List<OldDeliveryAddress>>(); 
 		map(oldAddressList, oldAddressMap);
 		
+		StringBuffer customerDataNotImportedBuff = new StringBuffer("Old Customer Id|Company Name|Error\n");
+		StringBuffer addressDataNotImportedBuff = new StringBuffer("Old Customer Id|Old Delivery Address Id|New customer Id|Address Line1|Error\n");
 		for (OldCustomer anOldCustomer : oldCustomerList) {
 			Customer aNewCustomer = new Customer();
 			map(anOldCustomer, aNewCustomer);
 			
-			if (!StringUtils.isEmpty(aNewCustomer.getCompanyName())) {
-				try {
-					genericDAO.save(aNewCustomer);
-					saveDeliveryAddress(aNewCustomer, anOldCustomer, oldAddressMap);
-				} catch (PersistenceException e) {
-					if (e.getCause() instanceof ConstraintViolationException) {
-						ConstraintViolationException ce = (ConstraintViolationException) e.getCause();
-						if (ce.getConstraintName().contains("company")) {
-							continue;
-						}
-					} 
-				}
+			if (StringUtils.isEmpty(aNewCustomer.getCompanyName())) {
+				customerDataNotImportedBuff.append(anOldCustomer.getId())
+				 						 			.append("|" + anOldCustomer.getCompanyName())
+				 						 			.append("|" + "Data validation failed")
+				 						 			.append("\n");
+				continue;
+			}
+			
+			try {
+				genericDAO.save(aNewCustomer);
+				saveDeliveryAddress(aNewCustomer, anOldCustomer, oldAddressMap, addressDataNotImportedBuff);
+			} catch (PersistenceException e) {
+				String errorMsg = extractSaveErrorMsg(e);
+				customerDataNotImportedBuff.append(anOldCustomer.getId())
+										 		   .append("|" + aNewCustomer.getCompanyName())
+										 		   .append("|" + errorMsg)
+										 		   .append("\n");
+				
 			}
 		}
 		
-		setupList(model, request);
-		return urlContext + "/list";
+		response.setHeader("Content-Disposition", "attachment;filename= " + "DataNotImported.txt");
+		response.setContentType(MimeUtil.getContentType("txt"));
+		
+		try {
+			ServletOutputStream out = response.getOutputStream();
+			out.write(customerDataNotImportedBuff.toString().getBytes());
+			String dataSep = "\n---------------------------------------------------------\n";
+			out.write(dataSep.getBytes());
+			out.write(addressDataNotImportedBuff.toString().getBytes());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
-	private void saveDeliveryAddress(Customer aNewCustomer, OldCustomer anOldCustomer, Map<Long, List<OldDeliveryAddress>> oldAddressMap) {
+	private String extractSaveErrorMsg(Exception e) {
+		String errorMsg = StringUtils.EMPTY;
+		//String errorMsg = e.getCause().getCause().getMessage();
+		if (e.getCause() instanceof ConstraintViolationException) {
+			ConstraintViolationException ce = (ConstraintViolationException) e.getCause();
+			if (ce.getConstraintName().contains("company")) {
+				errorMsg += "Duplicate company name - company name already exists"; 
+			}
+		} else {
+			errorMsg = "Error occured while saving Customer";
+		}
+		
+		return errorMsg;
+	}
+	
+	private void saveDeliveryAddress(Customer aNewCustomer, OldCustomer anOldCustomer, 
+			Map<Long, List<OldDeliveryAddress>> oldAddressMap, StringBuffer addressDataNotImportedBuff) {
 		List<OldDeliveryAddress> oldAddressList = oldAddressMap.get(anOldCustomer.getId());
 		if (oldAddressList == null || oldAddressList.isEmpty()) {
 			return;
@@ -113,7 +151,13 @@ public class MigrationController extends CRUDController<Order> {
 			try {
 				genericDAO.save(newAddress);
 			} catch (PersistenceException e) {
-				e.printStackTrace();
+				addressDataNotImportedBuff.append(anOldCustomer.getId())
+				 								  .append("|" + anOldDeliveryAddress.getId())
+												  .append("|" + aNewCustomer.getId())
+												  .append("|" + newAddress.getLine1())
+												  .append("|" +"PersistenceException")
+												  .append("\n");
+
 			}
 		}
 	}
@@ -131,6 +175,15 @@ public class MigrationController extends CRUDController<Order> {
 	}
 	
 	private void map(OldCustomer oldCustomer, Customer newCustomer) {
+		String oldCompanyName = oldCustomer.getCompanyName();
+		if (StringUtils.isEmpty(oldCompanyName)) {
+			return;
+		}
+		oldCompanyName = StringUtils.remove(oldCompanyName, '*');
+		if (!ValidationUtil.validateCompanyName(oldCompanyName, 60)) {
+			return;
+		}
+				
 		String oldCustomerType = oldCustomer.getCustomerType();
 		if (StringUtils.isEmpty(oldCustomerType) || "R".equals(oldCustomerType)) {
 			return;
@@ -142,8 +195,7 @@ public class MigrationController extends CRUDController<Order> {
 		}
 		
 		newCustomer.setCreatedBy(1l);
-		
-		newCustomer.setCompanyName(oldCustomer.getCompanyName());
+		newCustomer.setCompanyName(oldCompanyName);
 		
 		CustomerType newCustomerType = new CustomerType();
 		newCustomerType.setId(1l);
@@ -170,61 +222,101 @@ public class MigrationController extends CRUDController<Order> {
 		}
 		newCustomer.setCustomerStatus(newCustomerStatus);
 		
-		newCustomer.setContactName(oldCustomer.getContactName());
-		newCustomer.setBillingAddressLine1(oldCustomer.getBillingAddressLine1());
-		newCustomer.setBillingAddressLine2(oldCustomer.getBillingAddressLine2());
-		newCustomer.setCity(oldCustomer.getCity());
+		String oldContactName = oldCustomer.getContactName();
+		if (!ValidationUtil.validateName(oldContactName, 100)) {
+			oldContactName = StringUtils.EMPTY;
+		}
+		newCustomer.setContactName(oldContactName);
+		
+		String oldBillingAddressLine1 = oldCustomer.getBillingAddressLine1();
+		if (!ValidationUtil.validateAddressLine(oldBillingAddressLine1, 50)) {
+			oldBillingAddressLine1 = StringUtils.EMPTY;
+		}
+		newCustomer.setBillingAddressLine1(oldBillingAddressLine1);
+		
+		String oldBillingAddressLine2 = oldCustomer.getBillingAddressLine2();
+		if (!ValidationUtil.validateAddressLine(oldBillingAddressLine2, 50)) {
+			oldBillingAddressLine2 = StringUtils.EMPTY;
+		}
+		newCustomer.setBillingAddressLine2(oldBillingAddressLine2);
+		
+		String oldCity = oldCustomer.getCity();
+		if (!ValidationUtil.validateName(oldCity, 50)) {
+			oldCity = StringUtils.EMPTY;
+		}
+		newCustomer.setCity(oldCity);
 		
 		State newState = new State();
 		newState.setId(1l);
 		newCustomer.setState(newState);
 		
-		newCustomer.setZipcode(oldCustomer.getZipcode());
+		String oldZipcode = oldCustomer.getZipcode();
+		if (!ValidationUtil.validateZipcode(oldZipcode)) {
+			oldZipcode = StringUtils.EMPTY;
+		}
+		newCustomer.setZipcode(oldZipcode);
 		
 		String oldPhone = oldCustomer.getPhone();
-		if (!validatePhone(oldPhone)) {
+		if (!ValidationUtil.validatePhone(oldPhone)) {
 			oldPhone = StringUtils.EMPTY;
 		}
 		newCustomer.setPhone(oldPhone);
 		
 		String oldAltPhone1 = oldCustomer.getAltPhone1();
-		if (!validatePhone(oldAltPhone1)) {
+		if (!ValidationUtil.validatePhone(oldAltPhone1)) {
 			oldAltPhone1 = StringUtils.EMPTY;
 		}
 		newCustomer.setAltPhone1(oldAltPhone1);
 		
 		String oldAltPhone2 = oldCustomer.getAltPhone2();
-		if (!validatePhone(oldAltPhone2)) {
+		if (!ValidationUtil.validatePhone(oldAltPhone2)) {
 			oldAltPhone2 = StringUtils.EMPTY;
 		}
 		newCustomer.setAltPhone2(oldAltPhone2);
 		
 		String oldFax = oldCustomer.getFax();
-		if (!validatePhone(oldFax)) {
+		if (!ValidationUtil.validatePhone(oldFax)) {
 			oldFax = StringUtils.EMPTY;
 		}
 		newCustomer.setFax(oldFax);
 		
-		newCustomer.setEmail(oldCustomer.getEmail());
+		String oldEmail = oldCustomer.getEmail();
+		if (!ValidationUtil.validateEmail(oldEmail)) {
+			oldEmail = StringUtils.EMPTY;
+		}
+		newCustomer.setEmail(oldEmail);
 	}
 	
 	private void map(OldDeliveryAddress oldAddress, DeliveryAddress newAddress) {
 		newAddress.setCreatedBy(1l);
 		
-		newAddress.setLine1(oldAddress.getLine1());
-		newAddress.setLine2(oldAddress.getLine2());
-		newAddress.setCity(oldAddress.getCity());
+		String oldLine1 = oldAddress.getLine1();
+		if (!ValidationUtil.validateAddressLine(oldLine1, 50)) {
+			oldLine1 = StringUtils.EMPTY;
+		}
+		newAddress.setLine1(oldLine1);
+		
+		String oldLine2 = oldAddress.getLine2();
+		if (!ValidationUtil.validateAddressLine(oldLine2, 50)) {
+			oldLine2 = StringUtils.EMPTY;
+		}
+		newAddress.setLine2(oldLine2);
+		
+		String oldCity = oldAddress.getCity();
+		if (!ValidationUtil.validateName(oldCity, 50)) {
+			oldCity = StringUtils.EMPTY;
+		}
+		newAddress.setCity(oldCity);
 		
 		State newState = new State();
 		newState.setId(1l);
 		newAddress.setState(newState);
 		
-		newAddress.setZipcode(oldAddress.getZipcode());
-	}
-	
-	private boolean validatePhone(String phone) {
-		//Regex
-		return phone.matches("^[2-9]{1}\\d{2}(-)[2-9]{1}\\d{2}(-)\\d{4}$");
+		String oldZipcode = oldAddress.getZipcode();
+		if (!ValidationUtil.validateZipcode(oldZipcode)) {
+			oldZipcode = StringUtils.EMPTY;
+		}
+		newAddress.setZipcode(oldZipcode);
 	}
 	
 	@Override
