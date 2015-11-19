@@ -153,7 +153,7 @@ function validateMissingData() {
 		<tr>
 			<td>&nbsp;</td>
 			<td colspan="2">
-			<input type="button" id="create" onclick="return validateLoginUserForm();" value="Save" class="flat btn btn-primary btn-sm btn-sm-ext" /> 
+			<input type="submit" id="create" onclick="return validateLoginUserForm();" value="Save" class="flat btn btn-primary btn-sm btn-sm-ext" /> 
 			<input type="button" id="cancelBtn" value="<transys:label code="Back"/>" class="flat btn btn-primary btn-sm btn-sm-ext" onClick="location.href='main.do'" /></td>
 		</tr>
 	</table>

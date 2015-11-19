@@ -137,10 +137,10 @@ public class GenericJpaDAO implements GenericDAO {
 					} else if (criterias.get(keyArray[i]).toString().contains("<>")
 							|| criterias.get(keyArray[i]).toString().contains("!=")) {
 						query.append(" obj.").append(keyArray[i]).append("!=:").append("p" + i);
-					} else if (criterias.get(keyArray[i]).toString().contains(",")) {
+					} else if (criterias.get(keyArray[i]).toString().contains(",") && criterias.get(keyArray[i].toString()).toString().startsWith("$INCLUDE_COMMA$")) {
 						StringBuilder valBuilder = new StringBuilder();
 						String[] values = criterias.get(keyArray[i]).toString().trim().split(",");
-						for (int j = 0; j < values.length; j++) {
+						for (int j = 1; j < values.length; j++) {
 							values[j] = "'" + values[j] + "',";
 							valBuilder.append(values[j]);
 						}
@@ -177,10 +177,10 @@ public class GenericJpaDAO implements GenericDAO {
 						e.printStackTrace();
 					}
 					query.append(" and obj.").append(keyArray[i]).append(">:").append("p" + i);
-				} else if (criterias.get(keyArray[i]).toString().contains(",")) {
+				} else if (criterias.get(keyArray[i]).toString().contains(",")  && criterias.get(keyArray[i].toString()).toString().startsWith("$INCLUDE_COMMA$")) {
 					StringBuilder valBuilder = new StringBuilder();
 					String[] values = criterias.get(keyArray[i]).toString().trim().split(",");
-					for (int j = 0; j < values.length; j++) {
+					for (int j = 1; j < values.length; j++) {
 						values[j] = "'" + values[j] + "',";
 						valBuilder.append(values[j]);
 					}
@@ -224,7 +224,7 @@ public class GenericJpaDAO implements GenericDAO {
 							.substring(criterias.get(keyArray[i]).toString().lastIndexOf("=") + 1));
 				else if (criterias.get(keyArray[i]).toString().contains("null")) {
 					// Do nothing
-				} else if (criterias.get(keyArray[i]).toString().contains(",")) {
+				} else if (criterias.get(keyArray[i]).toString().contains(",") && criterias.get(keyArray[i].toString()).toString().startsWith("$INCLUDE_COMMA$")) {
 					// Do nothing
 				} else if (keyArray[i].toString().equalsIgnoreCase("dateField")) {
 					// Do nothing
@@ -494,7 +494,7 @@ public class GenericJpaDAO implements GenericDAO {
 							.substring(criterias.get(keyArray[i]).toString().lastIndexOf("=") + 1));
 				else if (criterias.get(keyArray[i]).toString().contains("null")) {
 					// Do nothing
-				} else if (criterias.get(keyArray[i]).toString().contains(",")) {
+				} else if (criterias.get(keyArray[i]).toString().contains(",")  && criterias.get(keyArray[i].toString()).toString().startsWith("$INCLUDE_COMMA$")) {
 					// Do nothing
 				} else if (keyArray[i].toString().equalsIgnoreCase("dateField")) {
 					// Do nothing
@@ -600,11 +600,11 @@ public class GenericJpaDAO implements GenericDAO {
 				searchString.append("p." + criteriaKey + " IS NOT NULL");
 			else
 				searchString.append("p." + criteriaKey + " IS NULL");
-		} else if (criterias.get(param.toString()).toString().contains(",")) {
+		} else if (criterias.get(param.toString()).toString().contains(",") && criterias.get(param.toString()).toString().startsWith("$INCLUDE_COMMA$")) {
 			
 			StringBuilder valBuilder = new StringBuilder();
 			String[] values = criterias.get(param.toString()).toString().trim().split(",");
-			for (int i = 0; i < values.length; i++) {
+			for (int i = 1; i < values.length; i++) {
 				values[i] = "'" + values[i] + "',";
 				valBuilder.append(values[i]);
 			}

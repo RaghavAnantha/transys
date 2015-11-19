@@ -213,14 +213,14 @@ public class PermitController extends CRUDController<Permit> {
 		
 		System.out.println("Found permits for order = " + permitIDSearchCriteria);
 		//searchMap.remove(param[i].toString());
-		return permitIDSearchCriteria.substring(0, permitIDSearchCriteria.lastIndexOf(",")).toString();
+		return "$INCLUDE_COMMA$," + permitIDSearchCriteria.substring(0, permitIDSearchCriteria.lastIndexOf(",")).toString();
 	}
 
 	private List<OrderPermits> getOrderRelatedPermits(Map<String, Object> searchMap, Object[] param, int i) {
 		SearchCriteria innerSearch = new SearchCriteria();
 		Map innerSearchCriteria = new HashMap<String, Object>();
-		innerSearch.setSearchMap(innerSearchCriteria);
 		innerSearchCriteria.put("order", searchMap.get(param[i].toString()));
+		innerSearch.setSearchMap(innerSearchCriteria);
 		List<OrderPermits> orderPermits = genericDAO.search(OrderPermits.class, innerSearch, "id", null, null);
 		return orderPermits;
 	}
