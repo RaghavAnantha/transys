@@ -1492,14 +1492,14 @@ function verifyExchangeOrderAndSubmit() {
 		</tr>
 		<tr>
 			<td></td>
-			<td class="form-left">Total Amount Paid</td>
-			<td class="td-static" style="font-weight: bold">${modelObject.totalAmountPaid}</td>
-			<td class="form-left">Balance Due</td>
+			<td class="form-left" style="text-align: right;">Total Amount Paid:</td>
+			<td class="td-static"><span style="font-weight: bold; padding: 0 10px;">${modelObject.totalAmountPaid}</span></td>
+			<td class="form-left" style="text-align: right;">Balance Due:</td>
 			<c:set var="balanceDueAlertClass" value="" />
 			<c:if test="${modelObject.balanceAmountDue > 0}">
 				<c:set var="balanceDueAlertClass" value="errorMessage" />
 			</c:if>
-			<td class="td-static"><span class="${balanceDueAlertClass}">${modelObject.balanceAmountDue}</span></td>
+			<td class="td-static"><span class="${balanceDueAlertClass}" style="font-weight: bold;font-size: 13px; padding: 0 10px;">${modelObject.balanceAmountDue}</span></td>
 		</tr>
 	</table>
 	<table id="form-table" class="table">
