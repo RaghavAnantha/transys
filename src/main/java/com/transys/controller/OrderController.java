@@ -877,7 +877,13 @@ public class OrderController extends CRUDController<Order> {
 			OrderFees orderFees = order.getOrderFees();
 			if (orderFees != null) {
 				aReportRow.put("dumpsterPrice", StringUtils.defaultIfEmpty(orderFees.getDumpsterPrice().toString(), "0.00"));
-				aReportRow.put("cityFee", StringUtils.defaultIfEmpty(orderFees.getCityFee().toString(), "0.00"));
+				
+				String cityFee = "0.00";
+				if (orderFees.getCityFee() != null) {
+					cityFee = orderFees.getCityFee().toString();
+				}
+				aReportRow.put("cityFee", cityFee);
+				
 				aReportRow.put("permitFees", StringUtils.defaultIfEmpty(orderFees.getTotalPermitFees().toString(), "0.00"));
 				aReportRow.put("overweightFee", StringUtils.defaultIfEmpty(orderFees.getOverweightFee().toString(), "0.00"));
 				aReportRow.put("additionalFees", StringUtils.defaultIfEmpty(orderFees.getTotalAdditionalFees().toString(), "0.00"));
@@ -1126,12 +1132,12 @@ public class OrderController extends CRUDController<Order> {
 			 													     @RequestParam(value = "dumpsterSizeId") Long dumpsterSizeId,
 			 													     @RequestParam(value = "materialCategoryId") Long materialCategoryId,
 			 													     @RequestParam(value = "netWeightTonnage") BigDecimal netWeightTonnage) {
-		BigDecimal cityFee = retrieveOverweightFee(dumpsterSizeId, materialCategoryId, netWeightTonnage);
+		BigDecimal overweightFee = retrieveOverweightFee(dumpsterSizeId, materialCategoryId, netWeightTonnage);
 		
 		ObjectMapper objectMapper = new ObjectMapper();
 		String json = StringUtils.EMPTY;
 		try {
-			json = objectMapper.writeValueAsString(cityFee);
+			json = objectMapper.writeValueAsString(overweightFee);
 		} catch (JsonProcessingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
