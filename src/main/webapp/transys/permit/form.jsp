@@ -245,13 +245,13 @@ function validateAllDates() {
 			<td class="form-left">Start Date<span class="errorMessage">*</span></td>
 			<td class="wide">
 			
-			<c:set var="readonlyVar" value='false'/>
-			<c:if test="${not empty associatedOrderID.order.id}">
+			<%--<c:set var="readonlyVar" value='false'/>
+			 <c:if test="${not empty associatedOrderID.order.id}">
 				<c:set var="readonlyVar" value='true'/>
-			</c:if>
+			</c:if> --%>
 			
 			<form:input path="startDate" class="flat flat-ext form-control form-control-ext"
-				id="datepicker7" name="startDate" style="width: 175px !important"  onChange="populateEndDate();populatePermitFee();" readonly="${readonlyVar}"/>
+				id="datepicker7" name="startDate" style="width: 175px !important"  onChange="populateEndDate();populatePermitFee();" /> <%-- readonly="${readonlyVar}"/> --%>
 			
 			</td>
 			<form:errors path="startDate" cssClass="errorMessage" />
