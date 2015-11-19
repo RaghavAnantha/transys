@@ -7,11 +7,14 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
 @Table(name="permitNotes")
 public class PermitNotes extends AbstractBaseModel {
 	@ManyToOne
 	@JoinColumn(name="permitId")
+	@JsonBackReference
 	private Permit permit;
 	
 	@Column(name="notes")
