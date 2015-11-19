@@ -56,11 +56,13 @@
 			<td><select class="flat form-control input-sm" id="phoneNum" name="customer.phone" style="width: 175px !important">
 				<option value="">------<transys:label code="Please Select"/>------</option>
 				<c:forEach items="${phone}" var="phoneVar">
+					<c:if test="${not empty phoneVar}">
 						<c:set var="selected" value=""/>
 						<c:if test="${sessionScope.searchCriteria.searchMap['customer.phone'] == phoneVar}">
 							<c:set var="selected" value="selected"/>
-					</c:if>
+						</c:if>
 						<option value="${phoneVar}" ${selected}>${phoneVar}</option>
+					</c:if>
 				</c:forEach>
 			</select>
 			</td>
@@ -120,11 +122,11 @@
 					
 					<c:forEach items="${permit}" var="permit">
 						<c:if test="${permit.number != 'To Be Assigned'}">
-						<c:set var="selected" value=""/>
+							<c:set var="selected" value=""/>
 							<c:if test="${sessionScope.searchCriteria.searchMap['number'] == permit.number}">
 								<c:set var="selected" value="selected"/>
 							</c:if>
-								<option value="${permit.number}" ${selected}>${permit.number}</option>
+							<option value="${permit.number}" ${selected}>${permit.number}</option>
 						</c:if>
 					</c:forEach>
 					<c:set var="selected" value=""/>

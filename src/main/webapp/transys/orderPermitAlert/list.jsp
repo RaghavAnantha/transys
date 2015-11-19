@@ -63,11 +63,13 @@
 			<td><select class="flat form-control input-sm" id="phone" name="order.customer.phone" style="width: 175px !important">
 				<option value="">---Please Select---</option>
 				<c:forEach items="${phone}" var="phoneVar">
+					<c:if test="${not empty phoneVar}">
 						<c:set var="selected" value=""/>
 						<c:if test="${sessionScope.searchCriteria.searchMap['order.customer.phone'] == phoneVar}">
 							<c:set var="selected" value="selected"/>
 						</c:if>
 						<option value="${phoneVar}" ${selected}>${phoneVar}</option>
+					</c:if>
 				</c:forEach>
 			</select>
 			</td>
@@ -75,23 +77,24 @@
 	 <tr>
 	 <tr>
 		  <td class="form-left"><transys:label code="Permit Number"/></td>
-				<td><select class="flat form-control input-sm" id="permitNumber" name="permit.number" style="width: 175px !important">
-					<option value="">---Please Select---</option>
-					<c:forEach items="${permit}" var="permit">
-						<c:if test="${not empty permit.number}">
-							<c:set var="selected" value=""/>
-							<c:if test="${sessionScope.searchCriteria.searchMap['permit.number'] == permit.number}">
-								<c:set var="selected" value="selected"/>
+				<td>
+					<select class="flat form-control input-sm" id="permitNumber" name="permit.number" style="width: 175px !important">
+						<option value="">---Please Select---</option>
+						<c:forEach items="${permit}" var="permit">
+							<c:if test="${not empty permit.number}">
+								<c:set var="selected" value=""/>
+								<c:if test="${sessionScope.searchCriteria.searchMap['permit.number'] == permit.number}">
+									<c:set var="selected" value="selected"/>
+								</c:if>
+									<option value="${permit.number}" ${selected}>${permit.number}</option>
 							</c:if>
-								<option value="${permit.number}" ${selected}>${permit.number}</option>
+						</c:forEach>
+						<c:set var="selected" value=""/>
+						<c:if test="${sessionScope.searchCriteria.searchMap['number'] == 'To Be Assigned'}">
+							<c:set var="selected" value="selected"/>
 						</c:if>
-					</c:forEach>
-					<c:set var="selected" value=""/>
-					<c:if test="${sessionScope.searchCriteria.searchMap['number'] == 'Pending Payment'}">
-						<c:set var="selected" value="selected"/>
-					</c:if>
-					<option value="Pending Payment" ${selected}>Pending Payment</option>
-				</select>
+						<option value="To Be Assigned" ${selected}>To Be Assigned</option>
+					</select>
 				</td>
 			
 			<td class="form-left"><transys:label code="Permit Status"/></td>

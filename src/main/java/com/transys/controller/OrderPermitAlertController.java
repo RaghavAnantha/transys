@@ -80,7 +80,7 @@ public class OrderPermitAlertController extends CRUDController<OrderPermits> {
 		model.addAttribute("permitClass", genericDAO.findByCriteria(PermitClass.class, criterias, "permitClass", false));
 		model.addAttribute("permitType", genericDAO.findByCriteria(PermitType.class, criterias, "permitType", false));
 		model.addAttribute("permitStatus", genericDAO.findByCriteria(PermitStatus.class, criterias, "status", false));
-		model.addAttribute("permit", genericDAO.findByCriteria(Permit.class, criterias, "id", false));
+		model.addAttribute("permit", genericDAO.findByCriteria(Permit.class, criterias, "number", false));
 		model.addAttribute("orderStatuses", genericDAO.findByCriteria(OrderStatus.class, criterias, "status", false));
 		model.addAttribute("state", genericDAO.findAll(State.class));
 
@@ -123,7 +123,7 @@ public class OrderPermitAlertController extends CRUDController<OrderPermits> {
 			Object[] param = searchMap.keySet().toArray();
 			for (int i = 0; i < param.length; i++) {
 				String key = param[i].toString();
-				if(key.toUpperCase().contains("NUMBER") && searchMap.get(key).toString().equalsIgnoreCase("Pending Payment") ) {
+				if(key.toUpperCase().contains("NUMBER") && searchMap.get(key).toString().equalsIgnoreCase(PermitController.EMPTY_PERMIT_NUMBER) ) {
 					searchMap.put("permit.number", "null");
 				}
 			}

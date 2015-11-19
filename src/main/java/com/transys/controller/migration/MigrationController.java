@@ -146,8 +146,11 @@ public class MigrationController extends CRUDController<Order> {
 		for (OldDeliveryAddress anOldDeliveryAddress : oldAddressList) {
 			DeliveryAddress newAddress = new DeliveryAddress();
 			map(anOldDeliveryAddress, newAddress);
-			newAddress.setCustomer(aNewCustomer);
+			if(newAddress.getCreatedBy() == null) {
+				continue;
+			}
 			
+			newAddress.setCustomer(aNewCustomer);
 			try {
 				genericDAO.save(newAddress);
 			} catch (PersistenceException e) {
@@ -288,6 +291,11 @@ public class MigrationController extends CRUDController<Order> {
 	}
 	
 	private void map(OldDeliveryAddress oldAddress, DeliveryAddress newAddress) {
+		String oldStatus = oldAddress.getStatus();
+		if (StringUtils.isEmpty(oldStatus) || "I".equals(oldStatus)) {
+			return;
+		}
+		
 		newAddress.setCreatedBy(1l);
 		
 		String oldLine1 = oldAddress.getLine1();
