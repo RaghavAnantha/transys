@@ -316,7 +316,7 @@ public class Order extends AbstractBaseModel {
 		}
 		
 		if (!StringUtils.isEmpty(deliveryHourFrom)) {
-			deliveryDate += " ";
+			deliveryDate += "  ";
 			deliveryDate += deliveryHourFrom;
 		}
 		
