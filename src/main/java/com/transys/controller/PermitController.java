@@ -17,8 +17,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.ValidationException;
 
+import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
+import org.jfree.util.BooleanUtilities;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -696,8 +698,12 @@ public class PermitController extends CRUDController<Permit> {
 	}
 
 	private boolean validateParkingMeterFee(Permit entity) {
+		
+		if (entity.getParkingMeter().equalsIgnoreCase("No")) {
+			return true;
+		}
 
-		System.out.println("validating parking meter fee " + entity.getParkingMeterFee());
+		System.out.println("Validating parking meter fee " + entity.getParkingMeterFee());
 		try {
 			BigDecimal parkingMeterFee = entity.getParkingMeterFee();
 			if (parkingMeterFee == null) {

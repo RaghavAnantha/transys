@@ -121,7 +121,7 @@ $("#permitForCustomerModalForm").submit(function (ev) {
 		<td class="td-static" id="fee">$${modelObject.fee}</td>
 		</tr>
 		<tr>
-			<td class="form-left">Parking Meter<span class="errorMessage">*</span></td>
+			<td class="form-left">Parking Meter</td>
 			<td>
 				<form:select cssClass="flat form-control input-sm" path="parkingMeter" style="width: 175px !important" >
 					<form:option value="Yes"></form:option>
