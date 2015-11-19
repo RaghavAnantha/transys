@@ -736,6 +736,7 @@ public class PermitController extends CRUDController<Permit> {
 		
 		orderFees.setTotalPermitFees(orderFees.getTotalPermitFees().add(permitFees));
 		orderFees.setTotalFees(orderFees.getTotalFees().add(permitFees));
+		associatedOrderPermitEntry.getOrder().setBalanceAmountDue(orderFees.getTotalFees().subtract(associatedOrderPermitEntry.getOrder().getTotalAmountPaid()));
 		
 		updateBaseProperties(request, orderFees);
 		genericDAO.saveOrUpdate(orderFees);
