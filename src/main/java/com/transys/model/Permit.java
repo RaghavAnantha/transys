@@ -69,6 +69,7 @@ public class Permit  extends AbstractBaseModel {
 	private BigDecimal parkingMeterFee;
 	
 	@OneToMany(mappedBy="permit", cascade = CascadeType.ALL)
+	@JsonManagedReference
 	private List<PermitNotes> permitNotes;
 	
 	@Transient
