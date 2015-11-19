@@ -80,8 +80,14 @@
 				<td>
 					<select class="flat form-control input-sm" id="permitNumber" name="permit.number" style="width: 175px !important">
 						<option value="">---Please Select---</option>
+						
+						<c:if test="${sessionScope.searchCriteria.searchMap['number'] == 'To Be Assigned'}">
+							<c:set var="selected" value="selected"/>
+						</c:if>
+						<option value="To Be Assigned" ${selected}>To Be Assigned</option>
+					
 						<c:forEach items="${permit}" var="permit">
-							<c:if test="${not empty permit.number}">
+							<c:if test="${permit.number != 'To Be Assigned'}">
 								<c:set var="selected" value=""/>
 								<c:if test="${sessionScope.searchCriteria.searchMap['permit.number'] == permit.number}">
 									<c:set var="selected" value="selected"/>
@@ -89,11 +95,6 @@
 									<option value="${permit.number}" ${selected}>${permit.number}</option>
 							</c:if>
 						</c:forEach>
-						<c:set var="selected" value=""/>
-						<c:if test="${sessionScope.searchCriteria.searchMap['number'] == 'To Be Assigned'}">
-							<c:set var="selected" value="selected"/>
-						</c:if>
-						<option value="To Be Assigned" ${selected}>To Be Assigned</option>
 					</select>
 				</td>
 			
