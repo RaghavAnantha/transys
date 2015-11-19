@@ -268,8 +268,8 @@ function validateAllDates() {
 		<td class="form-left"><transys:label code="Parking Meter" /></td>
 			<td>
 				<form:select cssClass="flat form-control input-sm" path="parkingMeter" style="width: 175px !important" >
-					<form:option value="Yes" label="Yes"></form:option>
 					<form:option value="No" label="No"></form:option>
+					<form:option value="Yes" label="Yes"></form:option>
 				</form:select> 
 			 	<form:errors path="parkingMeter" cssClass="errorMessage" />
 			</td>

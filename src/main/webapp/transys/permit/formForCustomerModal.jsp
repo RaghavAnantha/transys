@@ -124,8 +124,8 @@ $("#permitForCustomerModalForm").submit(function (ev) {
 			<td class="form-left">Parking Meter</td>
 			<td>
 				<form:select cssClass="flat form-control input-sm" path="parkingMeter" style="width: 175px !important" >
-					<form:option value="Yes"></form:option>
 					<form:option value="No"></form:option>
+					<form:option value="Yes"></form:option>
 				</form:select> 
 			 	<form:errors path="parkingMeter" cssClass="errorMessage" />
 			</td>

@@ -154,8 +154,8 @@ $("#permitModalFromAlertForm").submit(function (ev) {
 		<td class="form-left"><transys:label code="Parking Meter" /><span class="errorMessage">*</span></td>
 			<td>
 				<form:select cssClass="flat form-control input-sm" path="parkingMeter" style="width: 175px !important" >
-					<form:option value="Yes"></form:option>
 					<form:option value="No"></form:option>
+					<form:option value="Yes"></form:option>
 				</form:select> 
 			 	<br><form:errors path="parkingMeter" cssClass="errorMessage" />
 			</td>
