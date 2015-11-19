@@ -35,7 +35,7 @@ function validatePickupDriverMissingData() {
 		missingData += "Pickup Driver, "
 	}
 	
-	if ($('#grossWeight').val() == "") {
+	/*if ($('#grossWeight').val() == "") {
 		missingData += "Gross Weight, "
 	}
 	
@@ -49,7 +49,7 @@ function validatePickupDriverMissingData() {
 	
 	if ($('#netWeightTonnage').val() == "") {
 		missingData += "Net Weight Tonnage, "
-	}
+	}*/
 	
 	if (missingData != "") {
 		missingData = missingData.substring(0, missingData.length - 2);
@@ -69,28 +69,28 @@ function validatePickupDriverDataFormat() {
 	
 	var grossWeight = $('#grossWeight').val();
 	if (grossWeight != "") {
-		if (!validateWeight(grossWeight, 20)) {
+		if (!validateWeight(grossWeight, 20000)) {
 			validationMsg += "Gross Weight, "
 		}
 	}
 	
 	var tare = $('#tare').val();
 	if (tare != "") {
-		if (!validateWeight(tare, 20)) {
+		if (!validateWeight(tare, 20000)) {
 			validationMsg += "Tare, "
 		}
 	}
 	
 	var netWeightLb = $('#netWeightLb').val();
 	if (netWeightLb != "") {
-		if (!validateWeight(netWeightLb, 20)) {
+		if (!validateWeight(netWeightLb, 20000)) {
 			validationMsg += "Net Weight Lb, "
 		}
 	}
 	
 	var netWeightTonnage = $('#netWeightTonnage').val();
 	if (netWeightTonnage != "") {
-		if (!validateWeight(netWeightTonnage, 20)) {
+		if (!validateWeight(netWeightTonnage, 20000)) {
 			validationMsg += "Net Weight Tonnage, "
 		}
 	}
@@ -141,24 +141,24 @@ function processPickupDriverForm() {
 			<td colspan="10"></td>
 		</tr>
 		<tr>
-			<td class="form-left">Gross<span class="errorMessage">*</span></td>
+			<td class="form-left">Gross</td>
 			<td class="wide">
 				<form:input path="grossWeight" cssClass="flat" style="width:172px !important"/>
 				<br><form:errors path="grossWeight" cssClass="errorMessage" />
 			</td>
-			<td class="form-left">Tare<span class="errorMessage">*</span></td>
+			<td class="form-left">Tare</td>
 			<td>
 				<form:input path="tare" cssClass="flat" style="width:172px !important"/>
 				<br><form:errors path="tare" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>
-			<td class="form-left">Net Lb<span class="errorMessage">*</span></td>
+			<td class="form-left">Net Lb</td>
 			<td>
 				<form:input path="netWeightLb" cssClass="flat" style="width:172px !important"/>
 				<br><form:errors path="netWeightLb" cssClass="errorMessage" />
 			</td>
-			<td class="form-left">Net Tonnage<span class="errorMessage">*</span></td>
+			<td class="form-left">Net Tonnage</td>
 			<td>
 				<form:input path="netWeightTonnage" cssClass="flat" style="width:172px !important"/>
 				<br><form:errors path="netWeightTonnage" cssClass="errorMessage" />

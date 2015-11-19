@@ -71,7 +71,7 @@ function validateAmount(amt, maxValue) {
 }
 
 function validateWeight(weight, maxValue) {
-	if (!/(^\d+\.\d{2}$)|(^\d+$)/.test(weight)) {
+	if (!/(^\d+\.\d{1,2}$)|(^\d+$)|(^\.\d{1,2}$)/.test(weight)) {
 		return false;
 	}
 	

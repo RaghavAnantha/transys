@@ -594,7 +594,6 @@ CREATE TABLE `orderFees` (
   `additionalFee3Id` bigint(20) DEFAULT NULL,
   `additionalFee3` decimal(6,2) DEFAULT 0.00,
   `totalAdditionalFees` decimal(6,2) DEFAULT 0.00,
-  `discountPercentage` decimal(6,2) DEFAULT 0.00,
   `discountAmount` decimal(6,2) DEFAULT 0.00,
   `totalFees` decimal(6,2) DEFAULT 0.00,
   `created_at` datetime NOT NULL,
