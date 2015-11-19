@@ -53,7 +53,7 @@
 	</table>
 </form:form>
 <form:form name="additionalFee.do" id="additionalFeeObj" class="tab-color">
-	<transys:datatable urlContext="masterData/additionalFee" deletable="true"
+	<transys:datatable urlContext="masterData/additionalFee" deletable="false"
 		editable="true" insertable="true" baseObjects="${list}"
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
 		pagingLink="search.do" multipleDelete="false" searcheable="false"

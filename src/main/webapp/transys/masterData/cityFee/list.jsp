@@ -50,7 +50,7 @@
 	</table>
 </form:form>
 <form:form name="cityFee.do" id="cityFeeObj" class="tab-color">
-	<transys:datatable urlContext="masterData/cityFee" deletable="true"
+	<transys:datatable urlContext="masterData/cityFee" deletable="false"
 		editable="true" insertable="true" baseObjects="${list}"
 		searchCriteria="${sessionScope['cityFeeSearchCriteria']}" cellPadding="2"
 		pagingLink="search.do" multipleDelete="false" searcheable="false"

@@ -187,7 +187,7 @@ function populateCustomerDeliveryAddress() {
 </form:form>
 
 <form:form name="orderServiceForm" id="orderServiceForm" class="tab-color">
-	<transys:datatable urlContext="order" deletable="true"
+	<transys:datatable urlContext="order" deletable="false"
 		editable="true" insertable="true" baseObjects="${list}"
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
 		pagingLink="search.do" multipleDelete="false" searcheable="false"

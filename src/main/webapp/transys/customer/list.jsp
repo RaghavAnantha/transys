@@ -98,7 +98,7 @@
 	</table>
 </form:form>
 <form:form name="customerServiceForm" id="customerServiceForm" class="tab-color">
-	<transys:datatable urlContext="customer" deletable="true"
+	<transys:datatable urlContext="customer" deletable="false"
 		editable="true" insertable="true" baseObjects="${list}"
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
 		pagingLink="search.do" multipleDelete="false" searcheable="false"

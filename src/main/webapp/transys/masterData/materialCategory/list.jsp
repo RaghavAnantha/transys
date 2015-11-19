@@ -30,7 +30,7 @@
 	</table>
 </form:form>
 <form:form name="materialCategory.do" id="materialCategory" class="tab-color">
-	<transys:datatable urlContext="masterData/materialCategory" deletable="true"
+	<transys:datatable urlContext="masterData/materialCategory" deletable="false"
 		editable="true" insertable="true" baseObjects="${list}"
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
 		pagingLink="search.do" multipleDelete="false" searcheable="false"

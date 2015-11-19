@@ -84,7 +84,7 @@ function populateMaterialTypes() {
 	</table>
 </form:form>
 <form:form name="materialIntakeServiceForm" id="materialIntakeServiceForm" class="tab-color">
-	<transys:datatable urlContext="publicMaterialIntake" deletable="true"
+	<transys:datatable urlContext="publicMaterialIntake" deletable="false"
 		editable="true" insertable="true" baseObjects="${list}"
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
 		pagingLink="search.do" multipleDelete="false" searcheable="false"

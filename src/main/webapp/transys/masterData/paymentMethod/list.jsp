@@ -33,7 +33,7 @@
 	</table>
 </form:form>
 <form:form name="paymentMethod.do" id="paymentMethod" class="tab-color">
-	<transys:datatable urlContext="masterData/paymentMethod" deletable="true"
+	<transys:datatable urlContext="masterData/paymentMethod" deletable="false"
 		editable="true" insertable="true" baseObjects="${list}"
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
 		pagingLink="search.do" multipleDelete="false" searcheable="false"

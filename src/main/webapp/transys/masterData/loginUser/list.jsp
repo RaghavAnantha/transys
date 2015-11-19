@@ -82,7 +82,7 @@
 	</table>
 </form:form>
 <form:form name="loginUser.do" id="loginUser" class="tab-color">
-	<transys:datatable urlContext="masterData/loginUser" deletable="true"
+	<transys:datatable urlContext="masterData/loginUser" deletable="false"
 		editable="true" insertable="true" baseObjects="${list}"
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
 		pagingLink="search.do" multipleDelete="false" searcheable="false"

@@ -185,7 +185,7 @@
 </form:form>
 
 <form:form name="delete.do" id="serviceForm" class="tab-color">
-	<transys:datatable urlContext="permit" deletable="true"
+	<transys:datatable urlContext="permit" deletable="false"
 		editable="true" insertable="true" baseObjects="${list}"
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
 		pagingLink="search.do" multipleDelete="false" searcheable="false" 
