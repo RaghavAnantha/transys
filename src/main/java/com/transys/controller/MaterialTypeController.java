@@ -110,6 +110,7 @@ public class MaterialTypeController extends CRUDController<MaterialType> {
 
 		model.addAttribute("msgCtx", "manageMaterialTypes");
 		model.addAttribute("msg", "Material Type saved successfully");
+		model.addAttribute("modelObject", new MaterialType());
 		
 		return urlContext + "/form";
 	}

@@ -84,7 +84,8 @@ public class DumpsterController extends CRUDController<Dumpster> {
 		
 		model.addAttribute("msgCtx", "manageDumpsters");
 		model.addAttribute("msg", "Dumpster saved successfully");
-
+		model.addAttribute("modelObject", new Dumpster());
+				
 		return urlContext + "/form";
 
 	}

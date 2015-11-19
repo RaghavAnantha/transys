@@ -91,7 +91,8 @@ public class OverweightFeeController extends CRUDController<OverweightFee> {
 		
 		model.addAttribute("msgCtx", "manageOverweightFee");
 		model.addAttribute("msg", "Overweight Fee saved successfully");
-
+		model.addAttribute("modelObject", new OverweightFee());
+		
 		return urlContext + "/form";
 	}
 	
