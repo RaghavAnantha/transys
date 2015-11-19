@@ -215,7 +215,7 @@ public class CustomerController extends CRUDController<Customer> {
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		//criteria.getSearchMap().put("id!",0l);
 		criteria.getSearchMap().remove("_csrf");
-		criteria.setPageSize(15);
+		criteria.setPageSize(20);
 		model.addAttribute("list",genericDAO.search(getEntityClass(), criteria,"companyName",null,null));
 		model.addAttribute("activeTab", "manageCustomer");
 		//model.addAttribute("activeSubTab", "billing");
@@ -628,7 +628,7 @@ public class CustomerController extends CRUDController<Customer> {
 		setupList(model, request);
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		criteria.getSearchMap().put("id!",0l);
-		criteria.setPageSize(15);
+		criteria.setPageSize(20);
 		model.addAttribute("list", genericDAO.search(getEntityClass(), criteria, "companyName", null, null));
 		model.addAttribute("activeTab", "manageCustomer");
 		model.addAttribute("mode", "MANAGE");

@@ -59,9 +59,6 @@ public class OrderFees extends AbstractBaseModel {
 		@Column(name="additionalFee3")
 		private BigDecimal additionalFee3;
 		
-		@Column(name="discountPercentage")
-		private BigDecimal discountPercentage;
-		
 		@Column(name="discountAmount")
 		private BigDecimal discountAmount;
 		
@@ -180,15 +177,7 @@ public class OrderFees extends AbstractBaseModel {
 		public BigDecimal getTotalFees() {
 			return totalFees;
 		}
-
-		public BigDecimal getDiscountPercentage() {
-			return discountPercentage;
-		}
-
-		public void setDiscountPercentage(BigDecimal discountPercentage) {
-			this.discountPercentage = discountPercentage;
-		}
-
+		
 		public BigDecimal getDiscountAmount() {
 			return discountAmount;
 		}

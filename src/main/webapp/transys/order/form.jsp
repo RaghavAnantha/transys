@@ -494,7 +494,7 @@ function populateTotalFees() {
 	var cityFee = $("#orderFees\\.cityFee").val();
 	var totalPermitFees = $("#orderFees\\.totalPermitFees").val();
 	var totalAdditionalFees = $("#orderFees\\.totalAdditionalFees").val();
-	var discountPercentage = $("#orderFees\\.discountPercentage").val();
+	var discountAmount = $("#orderFees\\.discountAmount").val();
 	
 	var totalFees = parseFloat(dumpsterPrice);
 	if (overweightFee != "") {
@@ -509,13 +509,12 @@ function populateTotalFees() {
 	if (totalAdditionalFees != "") {
 		totalFees += parseFloat(totalAdditionalFees);
 	}
-	var discountAmount = parseFloat(0.00);
-	if (discountPercentage != "") {
-		discountAmount = ((totalFees * parseFloat(discountPercentage))/parseFloat(100.00));
-	}
+	var discountAmountFloat = parseFloat(0.00);
+	if (discountAmount != "") {
+		discountAmountFloat = parseFloat(discountAmount);
+	} 
 	
-	$("#orderFees\\.discountAmount").val(discountAmount);
-	$("#orderFees\\.totalFees").val(totalFees - discountAmount);
+	$("#orderFees\\.totalFees").val(totalFees - discountAmountFloat);
 }
 
 function validateOrderForm() {
@@ -581,9 +580,6 @@ function validateOrderMissingData() {
 	}
 	if ($('#orderFees\\.dumpsterPrice').val() == "") {
 		missingData += "Dumpster Price, "
-	}
-	if ($('#orderFees\\.cityFee').val() == "") {
-		missingData += "City Fee, "
 	}
 	
 	for (i = 1; i < 4; i++) {
@@ -695,13 +691,6 @@ function validateOrderFees() {
 	if (overweightFee != "") {
 		if (!validateAmount(overweightFee, 1000)) {
 			validationMsg += "Over weight Fee, "
-		}
-	}
-	
-	var discountPercentage = $('#orderFees\\.discountPercentage').val();
-	if (discountPercentage != "") {
-		if (!validateAmount(discountPercentage, 50)) {
-			validationMsg += "Discount Percentage, "
 		}
 	}
 	
@@ -1018,13 +1007,13 @@ function verifyExchangeOrderAndSubmit() {
 			<td class="form-left">Delivery Time<span class="errorMessage">*</span></td>
 			<td>
 				<label style="display: inline-block; font-weight: normal">
-					<form:select id="deliveryHourFrom" cssClass="flat form-control input-sm" style="width:79px !important" path="deliveryHourFrom"> 
+					<form:select id="deliveryHourFrom" cssClass="flat form-control input-sm" style="width:85px !important" path="deliveryHourFrom"> 
 						<form:options items="${deliveryHours}" />
 					</form:select>
 				</label>
 				&nbsp;to&nbsp;
 				<label style="display: inline-block; font-weight: normal">
-					<form:select id="deliveryHourTo" cssClass="flat form-control input-sm" style="width:79px !important" path="deliveryHourTo"> 
+					<form:select id="deliveryHourTo" cssClass="flat form-control input-sm" style="width:85px !important" path="deliveryHourTo"> 
 						<form:options items="${deliveryHours}" />
 					</form:select>
 				</label>
@@ -1315,19 +1304,21 @@ function verifyExchangeOrderAndSubmit() {
 				<form:input path="orderFees.dumpsterPrice" cssClass="form-control form-control-ext" style="width:172px;height:22px !important" maxlength="7" onChange="return populateTotalFees();"/>
 				<form:errors path="orderFees.dumpsterPrice" cssClass="errorMessage" />
 			</td>
-			<td class="form-left">Overweight Fee<span class="errorMessage">*</span></td>
+		</tr>
+		<tr>
+			<td class="form-left">Overweight Fee</td>
 			<td>
 				<form:input path="orderFees.overweightFee" cssClass="form-control form-control-ext" style="width:172px;height:22px !important" maxlength="7" onChange="return populateTotalFees();"/>
 				<form:errors path="orderFees.overweightFee" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>
-			<td class="form-left">City Fee<span class="errorMessage">*</span></td>
+			<td class="form-left">City Fee</td>
 			<td>
 				<form:input path="orderFees.cityFee" cssClass="form-control form-control-ext" style="width:172px;height:22px !important" maxlength="7" onChange="return populateTotalFees();"/>
 				<form:errors path="orderFees.cityFee" cssClass="errorMessage" />
 			</td>
-			<td class="form-left">Description<span class="errorMessage">*</span></td>
+			<td class="form-left">Description</td>
 			<td>
 				<form:select id="orderFees.cityFeeType" cssClass="flat form-control input-sm" style="width:172px !important" path="orderFees.cityFeeType" onChange="return populateCityFee();"> 
 					<form:option value="">-----Please Select-----</form:option>
@@ -1388,14 +1379,9 @@ function verifyExchangeOrderAndSubmit() {
 			</td>
 		</tr>
 		<tr>
-			<td class="form-left">Discount %</td>
-			<td>
-				<form:input path="orderFees.discountPercentage" style="width:172px !important" maxlength="6" cssClass="flat" onchange="return populateTotalFees();"/>
-				<br><form:errors path="orderFees.discountPercentage" cssClass="errorMessage" />
-			</td>
 			<td class="form-left">Discount Amount</td>
 			<td>
-				<form:input path="orderFees.discountAmount" cssClass="form-control form-control-ext" readonly="true" style="width:172px;height:22px !important"/>
+				<form:input path="orderFees.discountAmount" cssClass="form-control form-control-ext" style="width:172px;height:22px !important" onchange="return populateTotalFees();"/>
 			</td>
 		</tr>
 		<tr>
@@ -1505,6 +1491,7 @@ function verifyExchangeOrderAndSubmit() {
 			</td>
 		</tr>
 		<tr>
+			<td></td>
 			<td class="form-left">Total Amount Paid</td>
 			<td class="td-static" style="font-weight: bold">${modelObject.totalAmountPaid}</td>
 			<td class="form-left">Balance Due</td>

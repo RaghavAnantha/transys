@@ -861,7 +861,7 @@ public class OrderController extends CRUDController<Order> {
 			aReportRow.put("status", order.getOrderStatus().getStatus());
 			
 			aReportRow.put("deliveryDate", order.getFormattedDeliveryDate());
-			aReportRow.put("pickupDate", order.getFormattedDeliveryDate());
+			aReportRow.put("pickupDate", order.getFormattedPickupDate());
 			
 			/*List<OrderPayment> orderPaymentList = order.getOrderPayment();
 			if (orderPaymentList != null && !orderPaymentList.isEmpty()) {
@@ -1446,9 +1446,6 @@ public class OrderController extends CRUDController<Order> {
 		/*if (orderFees.getCityFee() == null) {
 			orderFees.setCityFee(new BigDecimal(0.00));
 		}*/
-		if (orderFees.getDiscountPercentage() == null) {
-			orderFees.setDiscountPercentage(new BigDecimal(0.00));
-		}
 		if (orderFees.getDiscountAmount() == null) {
 			orderFees.setDiscountAmount(new BigDecimal(0.00));
 		}
