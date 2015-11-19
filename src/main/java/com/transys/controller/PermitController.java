@@ -993,7 +993,7 @@ public class PermitController extends CRUDController<Permit> {
 		
 		String tokens[] = permitTypeObj.getPermitType().split("\\s");
 		int noOfDays = new Integer(tokens[0]).intValue();
-		Date endDate = DateUtils.addDays(startDate, noOfDays);
+		Date endDate = DateUtils.addDays(startDate, (noOfDays-1));
 		return endDate;
 	}
 	
