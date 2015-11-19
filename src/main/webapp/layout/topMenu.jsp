@@ -47,6 +47,7 @@
 							<!-- <li><a href="/customerDumpsterPrice/main.do">Customer Dumpster Price</a></li> -->
 							<li><a href="/masterData/cityFee/main.do">City Fee</a></li>
 							<li><a href="/masterData/permitFee/main.do">Permit Fee</a></li>
+							<li><a href="/masterData/overweightFee/main.do">Overweight Fee</a></li>
 							<li><a href="/masterData/additionalFee/main.do">Additional Fee</a></li>
 							<li><a href="/masterData/recycleLocation/main.do">Recycle Location</a></li>
 						</ul>
