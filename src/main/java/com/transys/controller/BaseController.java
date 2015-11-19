@@ -208,13 +208,17 @@ public class BaseController {
 		Map<String, Object> searchMap = criteria.getSearchMap();
 		
 		if (searchMap.containsKey("effectiveStartDate")) {
-			searchMap.put("effectiveStartDate", searchMap.get("effectiveStartDate").toString().substring(2));
-			System.out.println("Resetting effective start date");
+			if (searchMap.get("effectiveStartDate").toString().startsWith(">=") || searchMap.get("effectiveStartDate").toString().startsWith("<=")) {
+				searchMap.put("effectiveStartDate", searchMap.get("effectiveStartDate").toString().substring(2));
+				System.out.println("Resetting effective start date");
+			}
 		}
 		
 		if (searchMap.containsKey("effectiveEndDate")) {
-			searchMap.put("effectiveEndDate", searchMap.get("effectiveEndDate").toString().substring(2));
-			System.out.println("Resetting effective end date");
+			if (searchMap.get("effectiveEndDate").toString().startsWith(">=") || searchMap.get("effectiveEndDate").toString().startsWith("<=")) {
+				searchMap.put("effectiveEndDate", searchMap.get("effectiveEndDate").toString().substring(2));
+				System.out.println("Resetting effective end date");
+			}
 		}
 		
 		criteria.setSearchMap(searchMap);
