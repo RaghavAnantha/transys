@@ -147,6 +147,13 @@ public class MigrationController extends CRUDController<Order> {
 			DeliveryAddress newAddress = new DeliveryAddress();
 			map(anOldDeliveryAddress, newAddress);
 			if(newAddress.getCreatedBy() == null) {
+				addressDataNotImportedBuff.append(anOldCustomer.getId())
+				  .append("|" + anOldDeliveryAddress.getId())
+				  .append("|" + aNewCustomer.getId())
+				  .append("|" + anOldDeliveryAddress.getLine1())
+				  .append("|" +"Inactive status or Data Validation")
+				  .append("\n");
+				
 				continue;
 			}
 			
