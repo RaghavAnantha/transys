@@ -69,28 +69,28 @@ function validatePickupDriverDataFormat() {
 	
 	var grossWeight = $('#grossWeight').val();
 	if (grossWeight != "") {
-		if (!validateWeight(grossWeight, 300000)) {
+		if (!validateWeight(grossWeight, 500000)) {
 			validationMsg += "Gross Weight, "
 		}
 	}
 	
 	var tare = $('#tare').val();
 	if (tare != "") {
-		if (!validateWeight(tare, 300000)) {
+		if (!validateWeight(tare, 500000)) {
 			validationMsg += "Tare, "
 		}
 	}
 	
 	var netWeightLb = $('#netWeightLb').val();
 	if (netWeightLb != "") {
-		if (!validateWeight(netWeightLb, 300000)) {
+		if (!validateWeight(netWeightLb, 500000)) {
 			validationMsg += "Net Weight Lb, "
 		}
 	}
 	
 	var netWeightTonnage = $('#netWeightTonnage').val();
 	if (netWeightTonnage != "") {
-		if (!validateWeight(netWeightTonnage, 300000)) {
+		if (!validateWeight(netWeightTonnage, 500000)) {
 			validationMsg += "Net Weight Tonnage, "
 		}
 	}
