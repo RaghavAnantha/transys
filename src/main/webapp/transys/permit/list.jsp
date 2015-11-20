@@ -189,7 +189,7 @@
 		editable="true" insertable="true" baseObjects="${list}"
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
 		pagingLink="search.do" multipleDelete="false" searcheable="false" 
-		exportPdf="false" exportXlsx="true" dataQualifier="managePermits">
+		exportPdf="false" exportXls="true" dataQualifier="managePermits">
 		<transys:textcolumn headerText="Del. Addrs Line1" dataField="deliveryAddress.line1"/>
 		<transys:textcolumn headerText="Del. Addrs Line2" dataField="deliveryAddress.line2" /> 
 		<transys:textcolumn headerText="Locn. Type" dataField="locationType.locationType" />
