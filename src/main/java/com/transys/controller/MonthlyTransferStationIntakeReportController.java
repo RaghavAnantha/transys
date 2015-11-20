@@ -317,7 +317,7 @@ public class MonthlyTransferStationIntakeReportController extends CRUDController
 		
 		ByteArrayOutputStream out = excelReportGenerator.exportReport("Monthly Transfer Station Intake Report", headerMap, reportDataList);
 		
-		setRequestHeaders(response, "xlsx", "MonthlyTransferTest");
+		setRequestHeaders(response, "xls", "MonthlyTransferTest");
 		
 		try {
 			//FileOutputStream fout = new FileOutputStream("MonthlyTransferTest.xlsx");
