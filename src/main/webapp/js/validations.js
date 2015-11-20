@@ -75,7 +75,7 @@ function validateWeight(weight, maxValue) {
 		return false;
 	}
 	
-	if (weight !=  null && weight > maxValue) {
+	if (weight != null && weight > maxValue) {
 		return false;
 	}
 	
