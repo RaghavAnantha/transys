@@ -140,7 +140,8 @@
 		<tr>
 			<td></td>
 			<td>
-				<input type="submit" id="submitOrderPermitsAlertSearch" onclick="return validateForm()" value="Search" class="btn btn-primary btn-sm btn-sm-ext" /> 
+				<input type="submit" id="submitOrderPermitsAlertSearch" onclick="return validateForm()" value="Search" class="btn btn-primary btn-sm btn-sm-ext" />
+				<input type="reset" class="btn btn-primary btn-sm btn-sm-ext" value="Clear"/> 
 			</td>
 		</tr>
 	</table>

@@ -41,8 +41,10 @@
 		<tr><td colspan="10"></td><td colspan="10"></td></tr>
 		<tr>
 			<td></td>
-			<td><input type="button" class="btn btn-primary btn-sm btn-sm-ext" onclick="document.forms['monthlyTransferStationIntakeReportForm'].submit();"
-				value="<transys:label code="Generate Excel"/>" />
+			<td>
+				<input type="button" class="btn btn-primary btn-sm btn-sm-ext" onclick="document.forms['monthlyTransferStationIntakeReportForm'].submit();"
+					value="<transys:label code="Generate Excel"/>" />
+				<input type="reset" class="btn btn-primary btn-sm btn-sm-ext" value="Clear"/>
 			</td>
 		</tr>
 	</table>
