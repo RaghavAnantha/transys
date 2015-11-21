@@ -323,8 +323,9 @@ public class PermitController extends CRUDController<Permit> {
 		permitClass.add(permitToBeEdited.getPermitClass());
 		model.addAttribute("permitClass", permitClass);
 
-		List<PermitType> permitType = new ArrayList<>();
-		permitType.add(permitToBeEdited.getPermitType());
+		/*List<PermitType> permitType = new ArrayList<>();
+		permitType.add(permitToBeEdited.getPermitType());*/
+		List<PermitType> permitType = genericDAO.findAll(PermitType.class);
 		model.addAttribute("permitType", permitType);
 		
 		criterias = new HashMap<String, Object>();
@@ -618,11 +619,16 @@ public class PermitController extends CRUDController<Permit> {
 				return "ErrorMsg: Please correct following invalid data: Parking Meter Fee";
 			}
 			
-			try {
+			/*try {
 				associatedOrderPermitEntry = validatePermitEndDate(entity);
 			} catch (Exception ex) {
 				System.out.println("Exception while validating permit end date = " + ex.getMessage());
 				return ex.getMessage();
+			}*/
+			
+			List<BaseModel> orderPermits = (List<BaseModel>)genericDAO.executeSimpleQuery("select obj from OrderPermits obj where obj.id=" +  entity.getOrderId()+ " order by obj.id desc");
+			if (orderPermits != null && orderPermits.size() > 0) {
+				associatedOrderPermitEntry = (OrderPermits) orderPermits.get(0);
 			}
 			
 			if (!validateMaxPermitsAllowable(associatedOrderPermitEntry)) {
