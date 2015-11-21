@@ -1,6 +1,29 @@
 <%@include file="/common/taglibs.jsp"%>
 
 <script type="text/javascript">
+function populateNetWeight() {
+	var grossWeight = $('#grossWeight').val();
+	var tare = $('#tare').val();
+	
+	if (grossWeight == "" || tare == "") {
+		return;
+	}
+
+	var grossWeightFloat = parseFloat(grossWeight);
+	var tareFloat = parseFloat(tare);
+	if (tareFloat > grossWeightFloat) {
+		var validationMsg = "Tare cannot be greater than Gross Weight"
+		showAlertDialog("Data Validation", validationMsg);
+		return false;
+	}
+	
+	var netLbFloat = grossWeightFloat - tareFloat;
+	var netTonnageFloat = netLbFloat/2000.00;
+
+	$('#netWeightLb').val(netLbFloat)
+	$('#netWeightTonnage').val(netTonnageFloat);
+}
+
 function validatePickupDriverForm() {
 	var missingData = validatePickupDriverMissingData();
 	if (missingData != "") {
@@ -143,12 +166,12 @@ function processPickupDriverForm() {
 		<tr>
 			<td class="form-left">Gross</td>
 			<td class="wide">
-				<form:input path="grossWeight" cssClass="flat" style="width:172px !important"/>
+				<form:input path="grossWeight" cssClass="flat" style="width:172px !important" onChange="populateNetWeight();"/>
 				<br><form:errors path="grossWeight" cssClass="errorMessage" />
 			</td>
 			<td class="form-left">Tare</td>
 			<td>
-				<form:input path="tare" cssClass="flat" style="width:172px !important"/>
+				<form:input path="tare" cssClass="flat" style="width:172px !important" onChange="populateNetWeight();"/>
 				<br><form:errors path="tare" cssClass="errorMessage" />
 			</td>
 		</tr>
