@@ -34,10 +34,13 @@
 		</tr>
 		<tr>
 			<td align="${left}"></td>
-			<td align="${left}"><input type="button"
+			<td align="${left}">
+				<input type="button"
 				class="btn btn-primary btn-sm btn-sm-ext"
 				onclick="document.forms['dumpstersOnsiteReportsearchForm'].submit();"
-				value="<transys:label code="Preview"/>" /></td>
+				value="<transys:label code="Preview"/>" />
+				<input type="reset" class="btn btn-primary btn-sm btn-sm-ext" value="Clear"/>
+			</td>
 		</tr>
 	</table>
 </form:form>

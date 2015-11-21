@@ -72,6 +72,7 @@
 			<td></td>
 			<td>
 				<input type="submit" id="submitCustomerListReportSearch" value="Preview" class="btn btn-primary btn-sm btn-sm-ext" /> 
+				<input type="reset" class="btn btn-primary btn-sm btn-sm-ext" value="Clear"/>
 			</td>
 		</tr>
 	</table>

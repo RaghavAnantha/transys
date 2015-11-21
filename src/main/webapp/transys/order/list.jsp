@@ -180,7 +180,8 @@ function populateCustomerDeliveryAddress() {
 			<td></td>
 			<td>
 				<input type="button" class="btn btn-primary btn-sm btn-sm-ext" onclick="document.forms['orderSearchForm'].submit();"
-					value="<transys:label code="Search"/>" />
+					value="Search" />
+				<input type="reset" class="btn btn-primary btn-sm btn-sm-ext" value="Clear"/>
 			</td>
 		</tr>
 	</table>

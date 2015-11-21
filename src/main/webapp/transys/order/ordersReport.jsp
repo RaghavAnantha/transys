@@ -77,6 +77,7 @@
 			<td>
 				<input type="button" class="btn btn-primary btn-sm btn-sm-ext" onclick="document.forms['orderReportSearchForm'].submit();"
 					value="Preview" />
+				<input type="reset" class="btn btn-primary btn-sm btn-sm-ext" value="Clear"/>
 			</td>
 			<td></td>
 		</tr>

@@ -13,8 +13,11 @@
 	 </tr>
 	<tr>
 		<td></td>
-		<td><input type="button" class="btn btn-primary btn-sm btn-sm-ext" onclick="document.forms['materialIntakeDailyReportForm'].submit();"
-			value="<transys:label code="Preview"/>" /></td>
+		<td>
+			<input type="button" class="btn btn-primary btn-sm btn-sm-ext" onclick="document.forms['materialIntakeDailyReportForm'].submit();"
+				value="<transys:label code="Preview"/>" />
+			<input type="reset" class="btn btn-primary btn-sm btn-sm-ext" value="Clear"/>
+		</td>
 	</tr>
 	</table>
 </form:form>
