@@ -56,7 +56,11 @@ public class OrdersRevenueReportController extends CRUDController<Order> {
 		criteria.getSearchMap().remove("_csrf");
 		
 		List<Order> orderList = genericDAO.search(getEntityClass(), criteria,"id",null,null);
-		model.addAttribute("ordersList",orderList);
+		model.addAttribute("ordersList", orderList);
+		
+		if (orderList == null || orderList.isEmpty()) {
+			return;
+		}
 		
 		String[] aggregationValues = getOrdersRevenueData(orderList);
 		
@@ -72,9 +76,10 @@ public class OrdersRevenueReportController extends CRUDController<Order> {
 
 	private String[] getOrdersRevenueData(List<Order> orderList) {
 		StringBuffer selectedOrderIds = new StringBuffer();
-		if (orderList == null && orderList.size() == 0) {
+		if (orderList == null || orderList.isEmpty()) {
 			// throw Exception??
 			System.out.println("No orders matching criteria, report will be empty.");
+			return new String[0];
 		}
 		
 		for(Order o : orderList) {
