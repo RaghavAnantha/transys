@@ -928,8 +928,8 @@ function updateTotalPaid() {
 	
 	totalPaidFloat = amountPaid1Float + amountPaid2Float + amountPaid3Float;
 	balanceDueFloat = totaFeesFloat - totalPaidFloat;
-	$('#totalPaid').html(totalPaidFloat); 
-	$('#balanceDue').html(balanceDueFloat); 
+	$('#totalPaid').html(totalPaidFloat.toFixed(2)); 
+	$('#balanceDue').html(balanceDueFloat.toFixed(2)); 
 }
 </script>
 <form:form action="save.do" name="orderAddEditForm" commandName="modelObject" method="post" id="orderAddEditForm">
