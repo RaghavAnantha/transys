@@ -898,6 +898,39 @@ function verifyExchangeOrderAndSubmit() {
     
     return false;
 }
+
+function updateTotalPaid() {
+	var amountPaid1 = $('#orderPayment'  + 0 + '\\.amountPaid').val();
+	var amountPaid2 = $('#orderPayment'  + 1 + '\\.amountPaid').val();
+	var amountPaid3 = $('#orderPayment'  + 2 + '\\.amountPaid').val();
+	
+	var amountPaid1Float = parseFloat(0.00);
+	if (amountPaid1 != "") {
+		amountPaid1Float = parseFloat(amountPaid1);
+	}
+	var amountPaid2Float = parseFloat(0.00);
+	if (amountPaid2 != "") {
+		amountPaid2Float = parseFloat(amountPaid2);
+	}
+	var amountPaid3Float = parseFloat(0.00);
+	if (amountPaid3 != "") {
+		amountPaid3Float = parseFloat(amountPaid3);
+	}
+	
+	var totaFeesFloat = parseFloat(0.00);
+	var totaFees = $('#orderFees\\.totalFees').val(); 
+	if (totaFees != "") {
+		totaFeesFloat = parseFloat(totaFees);
+	}
+	
+	var totalPaidFloat = parseFloat(0.00);
+	var balanceDueFloat = parseFloat(0.00);
+	
+	totalPaidFloat = amountPaid1Float + amountPaid2Float + amountPaid3Float;
+	balanceDueFloat = totaFeesFloat - totalPaidFloat;
+	$('#totalPaid').html(totalPaidFloat); 
+	$('#balanceDue').html(balanceDueFloat); 
+}
 </script>
 <form:form action="save.do" name="orderAddEditForm" commandName="modelObject" method="post" id="orderAddEditForm">
 	<form:hidden path="id" id="id" />
@@ -1422,7 +1455,7 @@ function verifyExchangeOrderAndSubmit() {
 				<input type="text" value="${orderPayment1CreatedAt}" class="form-control form-control-ext" readonly style="width:172px;height:22px !important">
 			</td>
 			<td class="wide">
-				<form:input path="orderPayment[0].amountPaid" maxlength="7" cssClass="flat" />
+				<form:input path="orderPayment[0].amountPaid" maxlength="7" cssClass="flat" onChange="updateTotalPaid();"/>
 				<br><form:errors path="orderPayment[0].amountPaid" cssClass="errorMessage" />
 			</td>
 			<td class="wide">
@@ -1450,7 +1483,7 @@ function verifyExchangeOrderAndSubmit() {
 				<input type="text" value="${orderPayment2CreatedAt}" class="form-control form-control-ext" readonly style="width:172px;height:22px !important">
 			</td>
 			<td>
-				<form:input path="orderPayment[1].amountPaid" maxlength="7" cssClass="flat" />
+				<form:input path="orderPayment[1].amountPaid" maxlength="7" cssClass="flat" onChange="updateTotalPaid();"/>
 				<br><form:errors path="orderPayment[1].amountPaid" cssClass="errorMessage" />
 			</td>
 			<td class="wide">
@@ -1478,7 +1511,7 @@ function verifyExchangeOrderAndSubmit() {
 				<input type="text" value="${orderPayment3CreatedAt}" class="form-control form-control-ext" readonly style="width:172px;height:22px !important">
 			</td>
 			<td class="wide">
-				<form:input path="orderPayment[2].amountPaid" maxlength="7" cssClass="flat" />
+				<form:input path="orderPayment[2].amountPaid" maxlength="7" cssClass="flat" onChange="updateTotalPaid();"/>
 				<br><form:errors path="orderPayment[2].amountPaid" cssClass="errorMessage" />
 			</td>
 			<td>
@@ -1493,14 +1526,16 @@ function verifyExchangeOrderAndSubmit() {
 		<tr>
 			<td class="form-left" style="text-align: right;" colspan="2">Total Amount Paid:</td>
 			<td class="td-static">
-				<span style="font-weight: bold; padding: 0 10px;">${modelObject.totalAmountPaid}</span>
+				<span id="totalPaid" style="font-weight: bold; padding: 0 10px;">${modelObject.totalAmountPaid}</span>
 				<span style="font-weight: bold; float:right;">Balance Due:</span>
 			</td>
 			<c:set var="balanceDueAlertClass" value="" />
 			<c:if test="${modelObject.balanceAmountDue > 0}">
 				<c:set var="balanceDueAlertClass" value="errorMessage" />
 			</c:if>
-			<td class="td-static"><span class="${balanceDueAlertClass}" style="font-weight: bold;font-size: 13px; padding: 0 10px;">${modelObject.balanceAmountDue}</span></td>
+			<td class="td-static">
+				<span class="${balanceDueAlertClass}" id="balanceDue" style="font-weight: bold;font-size: 13px; padding: 0 10px;">${modelObject.balanceAmountDue}</span>
+			</td>
 			<td></td>
 			<td></td>
 		</tr>
