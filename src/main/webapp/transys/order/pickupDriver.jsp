@@ -20,8 +20,8 @@ function populateNetWeight() {
 	var netLbFloat = grossWeightFloat - tareFloat;
 	var netTonnageFloat = netLbFloat/2000.00;
 
-	$('#netWeightLb').val(netLbFloat)
-	$('#netWeightTonnage').val(netTonnageFloat);
+	$('#netWeightLb').val(netLbFloat.toFixed(2))
+	$('#netWeightTonnage').val(netTonnageFloat.toFixed(2));
 }
 
 function validatePickupDriverForm() {
