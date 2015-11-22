@@ -1159,7 +1159,7 @@ public class OrderController extends CRUDController<Order> {
 		
 		List<OverweightFee> overweightFeeList = genericDAO.executeSimpleQuery(overweightFeeQuery);
 		if (overweightFeeList.isEmpty()) {
-			return new BigDecimal(0.0);
+			return new BigDecimal(0.00);
 		} else {
 			OverweightFee overweightFee = overweightFeeList.get(0);
 			

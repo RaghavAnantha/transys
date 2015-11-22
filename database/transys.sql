@@ -616,7 +616,7 @@ CREATE TABLE `orderFees` (
 
 LOCK TABLES `orderFees` WRITE;
 /*!40000 ALTER TABLE `orderFees` DISABLE KEYS */;
-INSERT INTO `orderFees` (`id`,`orderId`,`dumpsterPrice`,`cityFee`,`cityFeeId`,`permitFee1`,`permitFee2`,`permitFee3`,`totalPermitFees`,`overweightFee`,`additionalFee1Id`,`additionalFee1`,`additionalFee2Id`,`additionalFee2`,`additionalFee3Id`,`additionalFee3`,`totalAdditionalFees`,`discountPercentage`,`discountAmount`,`totalFees`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (1,1,240.00,0.00,5,50.00,NULL,NULL,50.00,0.00,NULL,NULL,NULL,NULL,NULL,NULL,0.00,2.00,4.80,235.20,'2015-10-09 19:19:03',1,NULL,1,1);
+INSERT INTO `orderFees` (`id`,`orderId`,`dumpsterPrice`,`cityFee`,`cityFeeId`,`permitFee1`,`permitFee2`,`permitFee3`,`totalPermitFees`,`overweightFee`,`additionalFee1Id`,`additionalFee1`,`additionalFee2Id`,`additionalFee2`,`additionalFee3Id`,`additionalFee3`,`totalAdditionalFees`,`discountAmount`,`totalFees`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`) VALUES (1,1,240.00,0.00,5,50.00,NULL,NULL,50.00,0.00,NULL,NULL,NULL,NULL,NULL,NULL,0.00,4.80,235.20,'2015-10-09 19:19:03',1,NULL,1,1);
 /*!40000 ALTER TABLE `orderFees` ENABLE KEYS */;
 UNLOCK TABLES;
 
