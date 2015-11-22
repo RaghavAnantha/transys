@@ -639,6 +639,7 @@ public class GenericJpaDAO implements GenericDAO {
 				|| param.toString().toUpperCase().startsWith("MODIFIEDAT"))) {
 			
 			String dateValue = criterias.get(param.toString()).toString();
+			System.out.println("What is the date value = " + dateValue);
 			 if (dateValue.startsWith(">=") || dateValue.startsWith("<=")) {
 				appendSearchStringWithDate(criterias, searchString, param, orQuery, criteriaKey);
 			} else {
@@ -721,7 +722,7 @@ public class GenericJpaDAO implements GenericDAO {
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}
-		} else {
+		} else if (!fieldName.endsWith("From") && !fieldName.endsWith("To") ) { 
 			// a date equals check
 			try {
 				Timestamp dateVal = new Timestamp(
