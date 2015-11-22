@@ -721,7 +721,17 @@ public class GenericJpaDAO implements GenericDAO {
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}
-		} 
+		} else {
+			// a date equals check
+			try {
+				Timestamp dateVal = new Timestamp(
+						((Date) BaseController.dateFormat.parse(criterias.get(fieldName).toString())).getTime());
+				searchString.append(" and p." + fieldName + " = '" + dateVal + "'");
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}			
+		}
 	}
 
 	/*

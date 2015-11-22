@@ -63,6 +63,7 @@ public class PublicMaterialIntakeController extends CRUDController<PublicMateria
 		setupList(model, request);
 		
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
+		System.out.println("Criteria valiue = " + criteria.getSearchMap().get("intakeDate"));
 		// TODO:
 		criteria.getSearchMap().remove("_csrf");
 		criteria.setPageSize(25);
