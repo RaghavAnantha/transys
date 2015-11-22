@@ -44,7 +44,7 @@ public class LoginUserController extends CRUDController<User> {
 		request.getSession().removeAttribute("searchCriteria");
 		setupList(model, request);
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
-		model.addAttribute("list", genericDAO.search(User.class, criteria, "id", null, null));
+		model.addAttribute("list", genericDAO.search(User.class, criteria, "employee.firstName", null, null));
 		return urlContext + "/list";
 	}
 	
@@ -64,7 +64,7 @@ public class LoginUserController extends CRUDController<User> {
 		setupCreate(model, request);
 		
 		Map criterias = new HashMap();
-		model.addAttribute("employees", genericDAO.findByCriteria(Employee.class, criterias, "id", false));
+		//model.addAttribute("employees", genericDAO.findByCriteria(Employee.class, criterias, "firstName", false));
 				
 //		super.create(model, request);
 		return urlContext + "/form";
@@ -79,7 +79,7 @@ public class LoginUserController extends CRUDController<User> {
 	@Override
 	public void setupCreate(ModelMap model, HttpServletRequest request) {
 		Map criterias = new HashMap();
-		model.addAttribute("employees", genericDAO.findByCriteria(Employee.class, criterias, "id", false));
+		model.addAttribute("employees", genericDAO.findByCriteria(Employee.class, criterias, "firstName", false));
 		model.addAttribute("employeeStatus", genericDAO.findByCriteria(EmployeeStatus.class, criterias, "status", false));
 		model.addAttribute("roles", genericDAO.findByCriteria(Role.class, criterias, "name", false));
 	}

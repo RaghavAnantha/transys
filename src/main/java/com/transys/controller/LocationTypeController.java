@@ -36,7 +36,7 @@ public class LocationTypeController extends CRUDController<LocationType> {
 		request.getSession().removeAttribute("searchCriteria");
 		setupList(model, request);
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
-		model.addAttribute("list", genericDAO.search(LocationType.class, criteria, "id", null, null));
+		model.addAttribute("list", genericDAO.search(LocationType.class, criteria, "locationType", null, null));
 		return urlContext + "/list";
 	}
 
@@ -47,7 +47,7 @@ public class LocationTypeController extends CRUDController<LocationType> {
 		// TODO:
 		criteria.getSearchMap().remove("_csrf");
 		criteria.setPageSize(25);
-		model.addAttribute("list", genericDAO.search(LocationType.class, criteria, "id", false));
+		model.addAttribute("list", genericDAO.search(LocationType.class, criteria, "locationType", false));
 		return urlContext + "/list";
 	}
 
@@ -66,7 +66,7 @@ public class LocationTypeController extends CRUDController<LocationType> {
 	@Override
 	public void setupCreate(ModelMap model, HttpServletRequest request) {
 		Map criterias = new HashMap();
-		model.addAttribute("locationTypes", genericDAO.findByCriteria(LocationType.class, criterias, "id", false));
+		model.addAttribute("locationTypes", genericDAO.findByCriteria(LocationType.class, criterias, "locationType", false));
 	}
 
 	@RequestMapping(method = RequestMethod.POST, value = "/save.do")

@@ -41,7 +41,7 @@ public class PermitFeeController extends CRUDController<PermitFee> {
 		request.getSession().removeAttribute("searchCriteria");
 		setupList(model, request);
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
-		model.addAttribute("list", genericDAO.search(PermitFee.class, criteria, "id", null, null));
+		model.addAttribute("list", genericDAO.search(PermitFee.class, criteria, "permitClass", null, null));
 		return urlContext + "/list";
 	}
 
@@ -53,7 +53,7 @@ public class PermitFeeController extends CRUDController<PermitFee> {
 		criteria.getSearchMap().remove("_csrf");
 		criteria.setPageSize(25);
 		
-		model.addAttribute("list", genericDAO.search(PermitFee.class, criteria, "id", false));
+		model.addAttribute("list", genericDAO.search(PermitFee.class, criteria, "permitClass", false));
 		cleanUp(request);
 		
 		return urlContext + "/list";
@@ -74,7 +74,7 @@ public class PermitFeeController extends CRUDController<PermitFee> {
 	@Override
 	public void setupCreate(ModelMap model, HttpServletRequest request) {
 		Map criterias = new HashMap();
-		model.addAttribute("permitFees", genericDAO.executeSimpleQuery("select DISTINCT(obj.fee) from PermitFee obj order by obj.fee desc"));
+		model.addAttribute("permitFees", genericDAO.executeSimpleQuery("select DISTINCT(obj.fee) from PermitFee obj order by obj.fee asc"));
 		model.addAttribute("permitClass", genericDAO.findByCriteria(PermitClass.class, criterias, "id", false));
 		model.addAttribute("permitType", genericDAO.findByCriteria(PermitType.class, criterias, "id", false));
 	}

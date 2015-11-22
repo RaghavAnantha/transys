@@ -251,14 +251,14 @@ public class PermitController extends CRUDController<Permit> {
 		List<Customer> customerList = genericDAO.executeSimpleQuery(customerQuery);
 		model.put("customer", customerList);
 		
-		String deliveryAddressQuery = "select obj from DeliveryAddress obj where obj.id=" + deliveryAddressId;
+		String deliveryAddressQuery = "select obj from DeliveryAddress obj where obj.id=" + deliveryAddressId + " order by line1 asc";
 		List<DeliveryAddress> deliveryAddressList = genericDAO.executeSimpleQuery(deliveryAddressQuery);
 		model.addAttribute("deliveryAddress", deliveryAddressList);
 
 		// For new permit, first permit address will be the delivery address
 		model.addAttribute("permitAddress", deliveryAddressList);
 		
-		String locationTypesQuery = "select obj from LocationType obj where obj.id=" + locationTypeId;
+		String locationTypesQuery = "select obj from LocationType obj where obj.id=" + locationTypeId + "order by locationType asc";
 		List<LocationType> locationTypeList = genericDAO.executeSimpleQuery(locationTypesQuery);
 		model.addAttribute("locationType", locationTypeList);
 		
@@ -432,14 +432,14 @@ public class PermitController extends CRUDController<Permit> {
 	   model.addAttribute("allDeliveryAddresses", addresses);
 	   List<Customer> customerList = genericDAO.findByCriteria(Customer.class, criterias, "companyName", false);
 		model.addAttribute("customer", customerList);
-		model.addAttribute("locationType", genericDAO.findByCriteria(LocationType.class, criterias, "id", false));
+		model.addAttribute("locationType", genericDAO.findByCriteria(LocationType.class, criterias, "locationType", false));
 		model.addAttribute("order", genericDAO.findByCriteria(Order.class, criterias, "id", false));
 		model.addAttribute("permitClass", genericDAO.findByCriteria(PermitClass.class, criterias, "permitClass", false));
 		model.addAttribute("permitType", genericDAO.findByCriteria(PermitType.class, criterias, "permitType", false));
 		model.addAttribute("permitStatus", genericDAO.findByCriteria(PermitStatus.class, criterias, "status", false));
 		model.addAttribute("permit", genericDAO.findByCriteria(Permit.class, criterias, "number", false));
 		model.addAttribute("orderStatuses", genericDAO.findByCriteria(OrderStatus.class, criterias, "status", false));
-		model.addAttribute("state", genericDAO.findAll(State.class));
+		model.addAttribute("state", genericDAO.findByCriteria(State.class, criterias, "name", false));
 		
 		SortedSet<String> phoneSet = new TreeSet<String>();
 		SortedSet<String> contactNameSet = new TreeSet<String>();
@@ -531,7 +531,7 @@ public class PermitController extends CRUDController<Permit> {
 		model.addAttribute("activeSubTab", "permitDetails"); // Permit Address?
 		model.addAttribute("mode", "ADD");
 		
-		List<BaseModel> deliveryAddressList = genericDAO.executeSimpleQuery("select obj from DeliveryAddress obj where obj.id=" + entity.getDeliveryAddress().getId());
+		List<DeliveryAddress> deliveryAddressList = genericDAO.executeSimpleQuery("select obj from DeliveryAddress obj where obj.id=" + entity.getDeliveryAddress().getId());
 		System.out.println("select obj from DeliveryAddress obj where obj.id=" + entity.getDeliveryAddress().getId());
 		model.addAttribute("editDeliveryAddress", deliveryAddressList);
 		
@@ -909,7 +909,7 @@ public class PermitController extends CRUDController<Permit> {
 		//permitAddress.setPermit(entity);
 		permitAddress.setPermit(emptyPermit);
 		model.addAttribute("permitAddressModelObject", permitAddress);
-		List<BaseModel> permitAddressList = genericDAO.executeSimpleQuery("select obj from PermitAddress obj where obj.permit.id=" +  entity.getId() + " order by obj.id asc");
+		List<BaseModel> permitAddressList = genericDAO.executeSimpleQuery("select obj from PermitAddress obj where obj.permit.id=" +  entity.getId() + " order by obj.line1 asc");
 		model.addAttribute("permitAddressList", permitAddressList);
 		
 		return urlContext + "/permit";
@@ -918,7 +918,7 @@ public class PermitController extends CRUDController<Permit> {
 	@RequestMapping(method = RequestMethod.GET, value = "/customerDeliveryAddress")
 	public @ResponseBody String displayCustomerDeliveryAddress(ModelMap model, HttpServletRequest request) {
 		String customerId = request.getParameter("customerId");
-		List<DeliveryAddress> addressList  = genericDAO.executeSimpleQuery("select obj from DeliveryAddress obj where obj.customer.id=" + customerId  + " and obj.city like 'Chicago'");
+		List<DeliveryAddress> addressList  = genericDAO.executeSimpleQuery("select obj from DeliveryAddress obj where obj.customer.id=" + customerId  + " and obj.city like 'Chicago'" + " order by line1");
 		
 		ObjectMapper objectMapper = new ObjectMapper();
 		String json = StringUtils.EMPTY;
@@ -1051,7 +1051,7 @@ public class PermitController extends CRUDController<Permit> {
 		
 		model.addAttribute("editDeliveryAddress", ((Permit)permitList.get(0)).getCustomer().getDeliveryAddress());
 		
-		List<BaseModel> addressList = genericDAO.executeSimpleQuery("select obj from PermitAddress obj where obj.permit.id=" +  permitId + " order by obj.id asc");
+		List<BaseModel> addressList = genericDAO.executeSimpleQuery("select obj from PermitAddress obj where obj.permit.id=" +  permitId + " order by obj.line1 asc");
 		model.addAttribute("permitAddressList", addressList);
 		
 		PermitAddress emptyPermitAddress = new PermitAddress();

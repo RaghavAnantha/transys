@@ -42,7 +42,7 @@ public class EmployeeController extends CRUDController<Employee> {
 		request.getSession().removeAttribute("searchCriteria");
 		setupList(model, request);
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
-		model.addAttribute("list", genericDAO.search(Employee.class, criteria, "id", null, null));
+		model.addAttribute("list", genericDAO.search(Employee.class, criteria, "firstName", null, null));
 		return urlContext + "/list";
 	}
 	
@@ -53,7 +53,7 @@ public class EmployeeController extends CRUDController<Employee> {
 		// TODO:
 		criteria.getSearchMap().remove("_csrf");
 		criteria.setPageSize(25);
-		model.addAttribute("list",genericDAO.search(Employee.class, criteria));
+		model.addAttribute("list",genericDAO.search(Employee.class, criteria, "firstName", null, null));
 		return urlContext + "/list";
 	}
 	
@@ -68,7 +68,7 @@ public class EmployeeController extends CRUDController<Employee> {
 		setupCreate(model, request);
 		
 		Map criterias = new HashMap();
-		model.addAttribute("employee", genericDAO.findByCriteria(Employee.class, criterias, "id", false));
+		model.addAttribute("employee", genericDAO.findByCriteria(Employee.class, criterias, "firstName", false));
 				
 //		super.create(model, request);
 		return urlContext + "/form";
@@ -80,7 +80,7 @@ public class EmployeeController extends CRUDController<Employee> {
 		model.addAttribute("jobTitleValues", genericDAO.findByCriteria(JobTitle.class, criterias, "jobTitle", false));
 		model.addAttribute("state", genericDAO.findByCriteria(State.class, criterias, "name", false));
 		model.addAttribute("employeeStatus", genericDAO.findByCriteria(EmployeeStatus.class, criterias, "status", false));
-		model.addAttribute("employee", genericDAO.findByCriteria(Employee.class, criterias, "id", false));
+		model.addAttribute("employee", genericDAO.findByCriteria(Employee.class, criterias, "firstName", false));
 	}
 	
 	@RequestMapping(method = RequestMethod.POST, value = "/save.do")
