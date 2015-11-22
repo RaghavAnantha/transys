@@ -193,7 +193,15 @@ public class GenericJpaDAO implements GenericDAO {
 					query.append(" and obj.").append(criterias.get("dateField"));
 					Timestamp firstDate = new Timestamp(((Date) criterias.get("from")).getTime());
 					Timestamp secondDate = new Timestamp(((Date) criterias.get("to")).getTime() + 86399999);
-					query.append(" Between '" + firstDate + "' AND '" + secondDate + "'");
+					//query.append(" Between '" + firstDate + "' AND '" + secondDate + "'");
+					/** 
+					 * Added
+					 */
+					query.append(" and obj.").append(criterias.get("dateField")); 
+					query.append(" >= '" + firstDate + "' AND <= '" + secondDate + "'");
+					/** 
+					 * Ended
+					 */
 				} else {
 					if (keyArray[i].toString().equalsIgnoreCase("dateField")) {
 						// Do nothing
@@ -431,10 +439,14 @@ public class GenericJpaDAO implements GenericDAO {
 				if (criteria.getSearchMap().get(param[i]) != null)
 					if (!criteria.getSearchMap().get(param[i]).equals("")) {
 						if (i == 0)
-							searchString.append(" where p.createdAt BETWEEN ");
+							searchString.append(" where p.createdAt >= ");
+							//searchString.append(" where p.createdAt BETWEEN ");
 						searchString.append(" '" + criteria.getSearchMap().get(param[i]) + "' and ");
-						if (i == 1)
+						if (i == 1) {
+							searchString.append(" where p.createdAt <= ");
 							searchString.append("1=1");
+							//searchString.append("1=1");
+						}
 					}
 			}
 			queryCount.append(searchString.toString());
@@ -627,6 +639,7 @@ public class GenericJpaDAO implements GenericDAO {
 				|| param.toString().toUpperCase().startsWith("MODIFIEDAT"))) {
 			
 			String dateValue = criterias.get(param.toString()).toString();
+			System.out.println("What is the date value = " + dateValue);
 			 if (dateValue.startsWith(">=") || dateValue.startsWith("<=")) {
 				appendSearchStringWithDate(criterias, searchString, param, orQuery, criteriaKey);
 			} else {
@@ -698,14 +711,28 @@ public class GenericJpaDAO implements GenericDAO {
 				Timestamp fromDate = new Timestamp(
 						((Date) BaseController.dateFormat.parse(criterias.get(fieldName).toString())).getTime());
 				String fieldType = fieldName.substring(0, fieldName.indexOf("From")); // ex.,
-																												// startDate
-				Timestamp toDate = new Timestamp(
-						((Date) BaseController.dateFormat.parse(criterias.get(fieldType + "To").toString())).getTime());
-				searchString.append(" and UPPER(p." + fieldType + ") Between '" + fromDate + "' AND '" + toDate + "'");
+				searchString.append(" and (p." + fieldType + ") >= '" + fromDate + "'");																								// startDate
+				
+				if (criterias.containsKey(fieldType + "To") && !StringUtils.isEmpty(criterias.get(fieldType + "To").toString())) {
+					Timestamp toDate = new Timestamp(
+							((Date) BaseController.dateFormat.parse(criterias.get(fieldType + "To").toString())).getTime());
+					searchString.append(" AND (p." + fieldType + ") <= '" + toDate + "'");
+				}
+				//searchString.append(" and UPPER(p." + fieldType + ") Between '" + fromDate + "' AND '" + toDate + "'");
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}
-		} 
+		} else if (!fieldName.endsWith("From") && !fieldName.endsWith("To") ) { 
+			// a date equals check
+			try {
+				Timestamp dateVal = new Timestamp(
+						((Date) BaseController.dateFormat.parse(criterias.get(fieldName).toString())).getTime());
+				searchString.append(" and p." + fieldName + " = '" + dateVal + "'");
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}			
+		}
 	}
 
 	/*

@@ -81,7 +81,8 @@ public class OrderPermitAlertController extends CRUDController<OrderPermits> {
 		model.addAttribute("permitType", genericDAO.findByCriteria(PermitType.class, criterias, "permitType", false));
 		model.addAttribute("permitStatus", genericDAO.findByCriteria(PermitStatus.class, criterias, "status", false));
 		model.addAttribute("permit", genericDAO.findByCriteria(Permit.class, criterias, "number", false));
-		model.addAttribute("orderStatuses", genericDAO.findByCriteria(OrderStatus.class, criterias, "status", false));
+		model.addAttribute("orderStatuses", genericDAO.executeSimpleQuery("select obj from OrderStatus obj where obj.status != 'Closed'"));
+//		model.addAttribute("orderStatuses", genericDAO.findByCriteria(OrderStatus.class, criterias, "status", false));
 		model.addAttribute("state", genericDAO.findAll(State.class));
 
 		SortedSet<String> phoneSet = new TreeSet<String>();
@@ -105,7 +106,7 @@ public class OrderPermitAlertController extends CRUDController<OrderPermits> {
 		setupList(model, request);
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		
-		injectPendingPaymentPermitSearch(criteria);
+//		injectPendingPaymentPermitSearch(criteria);
 		
 		// Search for permits corresponding to open orders and status=expired or expiring in the next 7 days
 		List<OrderPermits> orderPermits = getToBeAlertedPermits(criteria);
@@ -138,7 +139,6 @@ public class OrderPermitAlertController extends CRUDController<OrderPermits> {
 	 * @return
 	 */
 	private List<OrderPermits> getToBeAlertedPermits(SearchCriteria searchCriteria) {
-			// TODO: open orders --> include DroppedOff?
 			Object existingSearchValue = setupOrderPermitSearchCriteria(searchCriteria);
 			
 			List<OrderPermits> orderPermits = genericDAO.search(OrderPermits.class, searchCriteria, "id", null, null);
@@ -157,6 +157,7 @@ public class OrderPermitAlertController extends CRUDController<OrderPermits> {
 			List<OrderPermits> expiredOrderPermitEntriesForOrder = null;
 			
 			for (OrderPermits op : orderPermits) {
+				System.out.println("Order ID = " + op.getOrder().getId());
 				if (!orderPermitsSortedOnOrderId.containsKey(op.getOrder().getId())) {
 					expiredOrderPermitEntriesForOrder = new ArrayList<>();
 					expiredOrderPermitEntriesForOrder.add(op);
@@ -164,6 +165,7 @@ public class OrderPermitAlertController extends CRUDController<OrderPermits> {
 				} else {
 					expiredOrderPermitEntriesForOrder = orderPermitsSortedOnOrderId.get(op.getOrder().getId());
 					expiredOrderPermitEntriesForOrder.add(op);
+					System.out.println("Added");
 				}
 				orderPermitsSortedOnOrderId.put(op.getOrder().getId(), expiredOrderPermitEntriesForOrder);
 			}
@@ -171,7 +173,13 @@ public class OrderPermitAlertController extends CRUDController<OrderPermits> {
 			// for each orderPermitsSortedOnOrderId, ensure that the corresponding permits for this order has atleast 1 unexpired permit
 			for (Long orderId : orderPermitsSortedOnOrderId.keySet()) {
 				List<OrderPermits> orderPermitsForThisOrder = orderPermitsSortedOnOrderId.get(orderId);
-				if (unExpiredPermitAvailable(orderId, orderPermitsForThisOrder)) {
+				
+				SearchCriteria criteria = new SearchCriteria();
+				criteria.getSearchMap().put("order.id", orderId);
+				setupOrderPermitSearchCriteria(criteria);
+				List<OrderPermits> actualPermitsForIrder = genericDAO.search(OrderPermits.class, criteria, "id", null, null);
+				
+				if (unExpiredPermitAvailable(orderId, actualPermitsForIrder)) {
 					continue;
 				}
 				
@@ -195,6 +203,9 @@ public class OrderPermitAlertController extends CRUDController<OrderPermits> {
 		if (currentOrder.getPermits().size() == orderPermits.size()) {
 			// all permits of the current order are expired
 			return false;
+		} else if (currentOrder.getPermits().size() > orderPermits.size()) {
+			// order has atleast 1 permit not available in expired order list, so it is a valid permit
+			return true;
 		}
 		
 		boolean isExpiredPermit = false;
@@ -218,6 +229,7 @@ public class OrderPermitAlertController extends CRUDController<OrderPermits> {
 		
 		Object existingSearchValue = null;
 		Map searchMap = searchCriteria.getSearchMap();
+		
 		
 		if (searchMap.containsKey("order.orderStatus.status") && !StringUtils.isEmpty(searchMap.get("order.orderStatus.status").toString())) {
 			existingSearchValue = searchMap.get("order.orderStatus.status");

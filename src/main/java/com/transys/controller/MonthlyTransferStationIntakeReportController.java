@@ -145,7 +145,7 @@ public class MonthlyTransferStationIntakeReportController extends CRUDController
 				// AND deliveryDate='2015-10-09' group by dumpstersizeId";
 				// gets the number of dumpsters grouped by dumpsterSize for orders
 				// on a particular delivery date
-				String rollOffBoxesPerYardQuery = "select dumpsterSize0_.size as SIZE, ifnull(count(order0_.dumpsterSizeId),0) AS COUNT, (dumpsterSize0_.size * ifnull(count(order0_.dumpsterSizeId),0)) AS cubicYards FROM `transys`.dumpsterSize dumpsterSize0_ LEFT JOIN `transys`.transysOrder order0_ ON (dumpsterSize0_.id = order0_.dumpsterSizeId AND deliveryDate='"
+				String rollOffBoxesPerYardQuery = "select dumpsterSize0_.size as SIZE, ifnull(count(order0_.dumpsterSizeId),0) AS COUNT, (dumpsterSize0_.size * ifnull(count(order0_.dumpsterSizeId),0)) AS cubicYards FROM `transys`.dumpsterSize dumpsterSize0_ LEFT JOIN `transys`.transysOrder order0_ ON (dumpsterSize0_.id = order0_.dumpsterSizeId AND pickupDate='"
 						+ intakeDate + "') group by dumpsterSize0_.size order by dumpsterSize0_.id";
 				List<?> rollOffBoxesPerYardResults = genericDAO.executeNativeQuery(rollOffBoxesPerYardQuery);
 
@@ -170,7 +170,7 @@ public class MonthlyTransferStationIntakeReportController extends CRUDController
 					monthlyIntakeReportVO.setTotalBoxes(totalBoxes);
 					monthlyIntakeReportVO.setRollOffCubicYards(rollOffCubicYards);
 
-					String rollOffTonnageQuery = "select SUM(netWeightTonnage) from Order obj where obj.deliveryDate='"
+					String rollOffTonnageQuery = "select SUM(netWeightTonnage) from Order obj where obj.pickupDate='"
 							+ intakeDate + "'";// '2015-10-09'";
 					List<?> rollOffTonnageResult = genericDAO.executeSimpleQuery(rollOffTonnageQuery);
 
