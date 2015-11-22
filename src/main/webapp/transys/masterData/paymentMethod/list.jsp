@@ -28,7 +28,9 @@
 			<td><input type="button"
 				class="btn btn-primary btn-sm btn-sm-ext"
 				onclick="document.forms['searchForm'].submit();"
-				value="<transys:label code="Search"/>" /></td>
+				value="<transys:label code="Search"/>" />
+				<input type="reset" class="btn btn-primary btn-sm btn-sm-ext" value="Clear"/>
+			</td>
 		</tr>
 	</table>
 </form:form>

@@ -39,7 +39,7 @@ public class DumpsterController extends CRUDController<Dumpster> {
 		request.getSession().removeAttribute("searchCriteria");
 		setupList(model, request);
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
-		model.addAttribute("list", genericDAO.search(Dumpster.class, criteria, "id", null, null));
+		model.addAttribute("list", genericDAO.search(Dumpster.class, criteria, "dumpsterNum", null, null));
 		return urlContext + "/list";
 	}
 
@@ -69,8 +69,8 @@ public class DumpsterController extends CRUDController<Dumpster> {
 	@Override
 	public void setupCreate(ModelMap model, HttpServletRequest request) {
 		Map criterias = new HashMap();
-		model.addAttribute("dumpsters", genericDAO.findByCriteria(Dumpster.class, criterias, "id", false));
-		model.addAttribute("dumpsterStatus", genericDAO.findByCriteria(DumpsterStatus.class, criterias, "id", false));
+		model.addAttribute("dumpsters", genericDAO.findByCriteria(Dumpster.class, criterias, "dumpsterNum", false));
+		model.addAttribute("dumpsterStatus", genericDAO.findByCriteria(DumpsterStatus.class, criterias, "status", false));
 		model.addAttribute("dumpsterSizes", genericDAO.findUniqueByCriteria(DumpsterSize.class, criterias, "size", false));
 	}
 

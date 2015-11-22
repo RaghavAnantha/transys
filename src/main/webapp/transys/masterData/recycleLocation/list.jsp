@@ -101,7 +101,8 @@ function populateMaterialTypes() {
 			<td></td>
 			<td>
 				<input type="button" class="btn btn-primary btn-sm btn-sm-ext" onclick="document.forms['recycleLocationSearchForm'].submit();"
-				value="Search" />
+					value="Search" />
+				<input type="reset" class="btn btn-primary btn-sm btn-sm-ext" value="Clear"/>
 			</td>
 		</tr>
 	</table>

@@ -72,7 +72,9 @@
 		<tr>
 			<td></td>
 			<td><input type="button" class="btn btn-primary btn-sm btn-sm-ext" onclick="document.forms['searchForm'].submit();"
-				value="Search" /></td>
+					value="Search" />
+				<input type="reset" class="btn btn-primary btn-sm btn-sm-ext" value="Clear"/>
+			</td>
 		</tr>
 	</table>
 </form:form>
