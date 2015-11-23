@@ -32,6 +32,45 @@ function populateMaterialTypes() {
 		}
 	});
 }
+
+function validateFormForDate() {
+	if (validateDetailsForm()) {
+		var recycleReportForm = $("#recycleReportForm");
+		recycleReportForm.submit();
+		return true;
+	} else {
+		return false;
+	}
+}
+
+function validateDetailsForm() {
+	var missingData = validateDetailsMissingData();
+	if (missingData != "") {
+		var alertMsg = "<span style='color:red'><b>Please enter the search date range</b><br></span>";
+		showAlertDialog("Data Validation", alertMsg);
+		return false;
+	}
+	
+	return true;
+}
+
+function validateDetailsMissingData() {
+	var missingData = "";
+	
+	if ($('#datepicker1').val() == "") {
+		missingData += "Date From, "
+	}
+	if ($('#datepicker2').val() == "") {
+		missingData += "Date To, "
+	}
+	
+	if (missingData != "") {
+		missingData = missingData.substring(0, missingData.length - 2);
+	}
+	
+	return missingData;
+}
+
 </script>
 
 <form:form action="list.do" method="get" name="recycleReportForm" id="recycleReportForm" >
@@ -77,7 +116,9 @@ function populateMaterialTypes() {
 	<tr>
 		<td></td>
 		<td>
-			<input type="button" class="btn btn-primary btn-sm btn-sm-ext" onclick="document.forms['recycleReportForm'].submit();"
+			<!-- <input type="button" class="btn btn-primary btn-sm btn-sm-ext" onclick="document.forms['recycleReportForm'].submit();"
+				value="Preview" /> -->
+				<input type="button" class="btn btn-primary btn-sm btn-sm-ext" onclick="validateFormForDate();"
 				value="Preview" />
 			<input type="reset" class="btn btn-primary btn-sm btn-sm-ext" value="Clear"/>
 		</td>
