@@ -483,7 +483,7 @@ function populateTotalAdditionalFees() {
 		totalAdditionalFees += parseFloat(additionalFee3);
 	}
 	
-	$("#orderFees\\.totalAdditionalFees").val(totalAdditionalFees);
+	$("#orderFees\\.totalAdditionalFees").val(totalAdditionalFees.toFixed(2));
 	
 	populateTotalFees();
 }
@@ -514,7 +514,12 @@ function populateTotalFees() {
 		discountAmountFloat = parseFloat(discountAmount);
 	} 
 	
-	$("#orderFees\\.totalFees").val(totalFees - discountAmountFloat);
+	var finalTotalFees = (totalFees - discountAmountFloat).toFixed(2);
+	$("#orderFees\\.totalFees").val(finalTotalFees);
+	
+	var totalPaid = parseFloat($('#totalPaid').html());
+	var balanceDue = finalTotalFees - totalPaid;
+	$('#balanceDue').html(balanceDue.toFixed(2)); 
 }
 
 function validateOrderForm() {

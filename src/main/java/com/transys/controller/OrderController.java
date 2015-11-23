@@ -207,21 +207,21 @@ public class OrderController extends CRUDController<Order> {
 		model.addAttribute("dumpsters", genericDAO.executeSimpleQuery("select obj from Dumpster obj where obj.id!=0 order by obj.id asc"));
       model.addAttribute("dumpsterSizes", genericDAO.executeSimpleQuery("select obj from DumpsterSize obj where obj.id!=0 order by obj.id asc"));
       
-      model.addAttribute("dusmpsterLocationTypes", genericDAO.executeSimpleQuery("select obj from LocationType obj where obj.id!=0 order by obj.id asc"));
+      model.addAttribute("dusmpsterLocationTypes", genericDAO.executeSimpleQuery("select obj from LocationType obj where obj.id!=0 order by obj.locationType asc"));
       
       //model.addAttribute("permitClasses", genericDAO.executeSimpleQuery("select obj from PermitClass obj where obj.id!=0 order by obj.id asc"));
       model.addAttribute("permitTypes", genericDAO.executeSimpleQuery("select obj from PermitType obj where obj.id!=0 order by obj.id asc"));
       
-      model.addAttribute("additionalFeeTypes", genericDAO.executeSimpleQuery("select obj from AdditionalFee obj where obj.id!=0 order by obj.id asc"));
+      model.addAttribute("additionalFeeTypes", genericDAO.executeSimpleQuery("select obj from AdditionalFee obj where obj.id!=0 order by obj.description asc"));
      
-      model.addAttribute("paymentMethods", genericDAO.executeSimpleQuery("select obj from PaymentMethodType obj where obj.id!=0 order by obj.id asc"));
+      model.addAttribute("paymentMethods", genericDAO.executeSimpleQuery("select obj from PaymentMethodType obj where obj.id!=0 order by obj.method asc"));
       
-      model.addAttribute("cityFeeDetails", genericDAO.executeSimpleQuery("select obj from CityFee obj where obj.id!=0 order by obj.id asc"));
+      model.addAttribute("cityFeeDetails", genericDAO.executeSimpleQuery("select obj from CityFee obj where obj.id!=0 order by obj.suburbName asc"));
       		
       populateDeliveryTimeSettings(model);
       
       String driverRole = "DRIVER";
-      List<BaseModel> driversList = genericDAO.executeSimpleQuery("select obj from User obj where obj.id!=0 and obj.accountStatus=1 and obj.role.name='" + driverRole + "' order by obj.id asc");
+      List<BaseModel> driversList = genericDAO.executeSimpleQuery("select obj from User obj where obj.id!=0 and obj.accountStatus=1 and obj.role.name='" + driverRole + "' order by obj.employee.firstName asc");
       model.addAttribute("drivers", driversList);
 	}
 	
@@ -1159,7 +1159,7 @@ public class OrderController extends CRUDController<Order> {
 		
 		List<OverweightFee> overweightFeeList = genericDAO.executeSimpleQuery(overweightFeeQuery);
 		if (overweightFeeList.isEmpty()) {
-			return new BigDecimal(0.0);
+			return new BigDecimal(0.00);
 		} else {
 			OverweightFee overweightFee = overweightFeeList.get(0);
 			
@@ -1226,7 +1226,7 @@ public class OrderController extends CRUDController<Order> {
 	@RequestMapping(method = RequestMethod.GET, value = "/customerDeliveryAddress.do")
 	public @ResponseBody String retrieveCustomerDeliveryAddress(ModelMap model, HttpServletRequest request) {
 		String customerId = request.getParameter("id");
-		List<DeliveryAddress> addressList  = genericDAO.executeSimpleQuery("select obj from DeliveryAddress obj where obj.customer.id=" + customerId);
+		List<DeliveryAddress> addressList  = genericDAO.executeSimpleQuery("select obj from DeliveryAddress obj where obj.customer.id=" + customerId + " order by line1 asc");
 		
 		ObjectMapper objectMapper = new ObjectMapper();
 		String json = StringUtils.EMPTY;

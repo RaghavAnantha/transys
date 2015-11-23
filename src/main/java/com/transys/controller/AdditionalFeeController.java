@@ -30,7 +30,7 @@ public class AdditionalFeeController extends CRUDController<AdditionalFee> {
 		request.getSession().removeAttribute("searchCriteria");
 		setupList(model, request);
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
-		model.addAttribute("list", genericDAO.search(AdditionalFee.class, criteria, "id", null, null));
+		model.addAttribute("list", genericDAO.search(AdditionalFee.class, criteria, "description", null, null));
 		return urlContext + "/list";
 	}
 
@@ -42,7 +42,7 @@ public class AdditionalFeeController extends CRUDController<AdditionalFee> {
 		criteria.getSearchMap().remove("_csrf");
 		criteria.setPageSize(25);
 		
-		model.addAttribute("list", genericDAO.search(AdditionalFee.class, criteria, "id", false));
+		model.addAttribute("list", genericDAO.search(AdditionalFee.class, criteria, "description", false));
 		cleanUp(request);
 		
 		return urlContext + "/list";
@@ -63,8 +63,8 @@ public class AdditionalFeeController extends CRUDController<AdditionalFee> {
 	@Override
 	public void setupCreate(ModelMap model, HttpServletRequest request) {
 		Map criterias = new HashMap();
-		model.addAttribute("additionalFees", genericDAO.findByCriteria(AdditionalFee.class, criterias, "id", false));
-		model.addAttribute("uniqueAdditionalFees", genericDAO.executeSimpleQuery("select DISTINCT(obj.fee) from AdditionalFee obj order by obj.fee desc"));
+		model.addAttribute("additionalFees", genericDAO.findByCriteria(AdditionalFee.class, criterias, "description", false));
+		model.addAttribute("uniqueAdditionalFees", genericDAO.executeSimpleQuery("select DISTINCT(obj.fee) from AdditionalFee obj order by obj.fee asc"));
 	}
 
 	@RequestMapping(method = RequestMethod.POST, value = "/save.do")

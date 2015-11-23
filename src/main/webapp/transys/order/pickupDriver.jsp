@@ -20,8 +20,8 @@ function populateNetWeight() {
 	var netLbFloat = grossWeightFloat - tareFloat;
 	var netTonnageFloat = netLbFloat/2000.00;
 
-	$('#netWeightLb').val(netLbFloat)
-	$('#netWeightTonnage').val(netTonnageFloat);
+	$('#netWeightLb').val(netLbFloat.toFixed(2))
+	$('#netWeightTonnage').val(netTonnageFloat.toFixed(2));
 }
 
 function validatePickupDriverForm() {
@@ -92,28 +92,28 @@ function validatePickupDriverDataFormat() {
 	
 	var grossWeight = $('#grossWeight').val();
 	if (grossWeight != "") {
-		if (!validateWeight(grossWeight, 500000)) {
+		if (!validateWeight(grossWeight, 700000)) {
 			validationMsg += "Gross Weight, "
 		}
 	}
 	
 	var tare = $('#tare').val();
 	if (tare != "") {
-		if (!validateWeight(tare, 500000)) {
+		if (!validateWeight(tare, 700000)) {
 			validationMsg += "Tare, "
 		}
 	}
 	
 	var netWeightLb = $('#netWeightLb').val();
 	if (netWeightLb != "") {
-		if (!validateWeight(netWeightLb, 500000)) {
+		if (!validateWeight(netWeightLb, 700000)) {
 			validationMsg += "Net Weight Lb, "
 		}
 	}
 	
 	var netWeightTonnage = $('#netWeightTonnage').val();
 	if (netWeightTonnage != "") {
-		if (!validateWeight(netWeightTonnage, 500000)) {
+		if (!validateWeight(netWeightTonnage, 700000)) {
 			validationMsg += "Net Weight Tonnage, "
 		}
 	}

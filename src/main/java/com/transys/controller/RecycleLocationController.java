@@ -56,7 +56,7 @@ public class RecycleLocationController extends CRUDController<RecycleLocation> {
 		setupList(model, request);
 		
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
-		model.addAttribute("list", genericDAO.search(RecycleLocation.class, criteria, "id", null, null));
+		model.addAttribute("list", genericDAO.search(RecycleLocation.class, criteria, "materialType.materialCategory.category", null, null));
 		
 		return urlContext + "/list";
 	}
@@ -70,7 +70,7 @@ public class RecycleLocationController extends CRUDController<RecycleLocation> {
 		criteria.getSearchMap().remove("_csrf");
 		criteria.setPageSize(25);
 		
-		model.addAttribute("list", genericDAO.search(RecycleLocation.class, criteria, "id", false));
+		model.addAttribute("list", genericDAO.search(RecycleLocation.class, criteria, "materialType.materialCategory.category", false));
 		cleanUp(request);
 		return urlContext + "/list";
 	}
@@ -91,7 +91,7 @@ public class RecycleLocationController extends CRUDController<RecycleLocation> {
 	public void setupCreate(ModelMap model, HttpServletRequest request) {
 		Map criterias = new HashMap();
 		
-		model.addAttribute("materialCategories", genericDAO.findByCriteria(MaterialCategory.class, criterias, "id", false));
+		model.addAttribute("materialCategories", genericDAO.findByCriteria(MaterialCategory.class, criterias, "category", false));
 		
 		List<String> statusList = new ArrayList<String>();
 		statusList.add("Active");

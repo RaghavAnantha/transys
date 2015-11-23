@@ -36,7 +36,7 @@ public class PaymentMethodController extends CRUDController<PaymentMethodType> {
 		request.getSession().removeAttribute("searchCriteria");
 		setupList(model, request);
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
-		model.addAttribute("list", genericDAO.search(PaymentMethodType.class, criteria, "id", null, null));
+		model.addAttribute("list", genericDAO.search(PaymentMethodType.class, criteria, "method", null, null));
 		return urlContext + "/list";
 	}
 
@@ -47,7 +47,7 @@ public class PaymentMethodController extends CRUDController<PaymentMethodType> {
 		// TODO:
 		criteria.getSearchMap().remove("_csrf");
 		criteria.setPageSize(25);
-		model.addAttribute("list", genericDAO.search(PaymentMethodType.class, criteria, "id", false));
+		model.addAttribute("list", genericDAO.search(PaymentMethodType.class, criteria, "method", false));
 		return urlContext + "/list";
 	}
 
@@ -66,7 +66,7 @@ public class PaymentMethodController extends CRUDController<PaymentMethodType> {
 	@Override
 	public void setupCreate(ModelMap model, HttpServletRequest request) {
 		Map criterias = new HashMap();
-		model.addAttribute("paymentMethods", genericDAO.findByCriteria(PaymentMethodType.class, criterias, "id", false));
+		model.addAttribute("paymentMethods", genericDAO.findByCriteria(PaymentMethodType.class, criterias, "method", false));
 	}
 
 	@RequestMapping(method = RequestMethod.POST, value = "/save.do")
