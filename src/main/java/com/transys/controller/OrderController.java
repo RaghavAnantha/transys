@@ -642,6 +642,7 @@ public class OrderController extends CRUDController<Order> {
 		Long materialCategoryId = entity.getMaterialType().getMaterialCategory().getId();
 		BigDecimal netWeightTonnage = entity.getNetWeightTonnage();
 		BigDecimal overweightFee = retrieveOverweightFee(dumpsterSizeId, materialCategoryId, netWeightTonnage);
+		overweightFee = overweightFee.setScale(2);
 		
 		OrderFees orderFees = entity.getOrderFees();
 		orderFees.setOverweightFee(overweightFee);
