@@ -39,7 +39,9 @@ public class DumpsterOnsiteReportController extends CRUDController<Dumpster> {
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		//TODO fix me
 		criteria.getSearchMap().remove("_csrf");
-		model.addAttribute("dumpsterStatus", genericDAO.findAll(DumpsterStatus.class));
+		
+		String query = "select obj from DumpsterStatus obj where obj.status != 'Dropped Off' and delete_flag=1";
+		model.addAttribute("dumpsterStatus", genericDAO.executeSimpleQuery(query));
 		model.addAttribute("dumpsterSizes", genericDAO.findAll(DumpsterSize.class));
 	}
 	
@@ -49,6 +51,7 @@ public class DumpsterOnsiteReportController extends CRUDController<Dumpster> {
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		//TODO fix me
 		criteria.getSearchMap().remove("_csrf");
+		criteria.getSearchMap().put("status.status", "!=Dropped Off");
 		model.addAttribute("dumpsterInfoList", genericDAO.search(getEntityClass(), criteria,"id",null,null));
 		return urlContext + "/list";
 	}

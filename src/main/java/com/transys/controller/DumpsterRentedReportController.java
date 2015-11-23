@@ -37,7 +37,9 @@ public class DumpsterRentedReportController extends CRUDController<Dumpster> {
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		//TODO fix me
 		criteria.getSearchMap().remove("_csrf");
-		model.addAttribute("dumpsterStatus", genericDAO.findAll(DumpsterStatus.class));
+		
+		String query = "select obj from DumpsterStatus obj where obj.status = 'Dropped Off' and delete_flag=1";
+		model.addAttribute("dumpsterStatus", genericDAO.executeSimpleQuery(query));
 		model.addAttribute("dumpsterSizes", genericDAO.findAll(DumpsterSize.class));
 	}
 	
@@ -47,6 +49,7 @@ public class DumpsterRentedReportController extends CRUDController<Dumpster> {
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		//TODO fix me
 		criteria.getSearchMap().remove("_csrf");
+		criteria.getSearchMap().put("status.status", "Dropped Off");
 		List<Dumpster> dumpsterInfoList = genericDAO.search(getEntityClass(), criteria,"id",null,null);
 		
 		setDeliveryDetailsForDumpster(dumpsterInfoList);
@@ -61,7 +64,9 @@ public class DumpsterRentedReportController extends CRUDController<Dumpster> {
 			// get the latest delivery address & delivery date for the corresponding dumpster# from transysOrder table
 			Map<String, Object> criterias = new HashMap<String, Object>();
 			criterias.put("dumpster.id", aDumpster.getId());
+			criterias.put("orderStatus.status", "Dropped Off");
 			List<Order> ordersForDumpster = genericDAO.findByCriteria(Order.class, criterias, "id", true);
+			System.out.println("List of orders for this dumpster = " + ordersForDumpster.size());
 			
 			//List<?> deliveryDetailsForDumpster = genericDAO.executeSimpleQuery("select obj from Order p where p.dumpster.id = " + aDumpster.getId() + " order by p.id desc");
 			if (ordersForDumpster.isEmpty()) {
@@ -73,7 +78,9 @@ public class DumpsterRentedReportController extends CRUDController<Dumpster> {
 
 			// set 2 transient fields for deliveryAddress and deliveryDate in DumpsterInfo
 			aDumpster.setDeliveryAddress(orderForDumpster.getDeliveryAddress().getFullLine());
+			System.out.println("Setting delivery address = " + orderForDumpster.getDeliveryAddress().getFullLine());
 			aDumpster.setDeliveryDate(orderForDumpster.getFormattedDeliveryDate());
+			System.out.println("Setting delivery date = " + orderForDumpster.getFormattedDeliveryDate());
 		}
 	}
 	

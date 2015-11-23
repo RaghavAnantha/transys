@@ -463,10 +463,12 @@ public class PermitController extends CRUDController<Permit> {
 			String status = "Pending";
 			if (nonEmptyPermitNumber(entity)) {
 				// check for duplicate
-				if (isPermitNumberUnique(entity.getNumber())) {
-					status = "Available";
-				} else {
-					return showPermitCreatePageWithError(request, entity, model, "Permit Number " + entity.getNumber() + " already exists.");
+				if (entity.getId() == null) { // check for uniqueness only if its new permit, exclude for edit permits
+					if (isPermitNumberUnique(entity.getNumber())) {
+						status = "Available";
+					} else {
+						return showPermitCreatePageWithError(request, entity, model, "Permit Number " + entity.getNumber() + " already exists.");
+					}
 				}
 			} else {
 				System.out.println("Setting permit number to empty");
@@ -638,7 +640,7 @@ public class PermitController extends CRUDController<Permit> {
 			
 			// unique permit number check
 			if(nonEmptyPermitNumber(entity)) {
-				if (!isPermitNumberUnique(entity.getNumber())) {
+				if (!isPermitNumberUnique(entity.getNumber())) {  // always a new permit, so this validation mandatory
 					System.out.println("Permit Number " + entity.getNumber() + " already exists.");
 					return "ErrorMsg: Permit Number " + entity.getNumber() + " already exists.";
 				}
@@ -798,7 +800,7 @@ public class PermitController extends CRUDController<Permit> {
 		
 		// unique permit number check
 		if(nonEmptyPermitNumber(entity)) {
-			if (!isPermitNumberUnique(entity.getNumber())) {
+			if (!isPermitNumberUnique(entity.getNumber())) { // always new permit, so validation mandatory
 				System.out.println("Permit Number " + entity.getNumber() + " already exists.");
 				return "ErrorMsg: Permit Number " + entity.getNumber() + " already exists.";
 			}
