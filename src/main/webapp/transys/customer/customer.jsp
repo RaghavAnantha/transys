@@ -22,7 +22,7 @@
 		</div>
 		<div id="customerReports" class="tab-pane" style="background-color: white;padding-top: 5px;">
 			<ul class="nav nav-tabs" id="customer_reports_tabs">
-				<li><a href="/customer/customerListReportMain.do" id="customerListReportTab" data-toggle="tabajax" data-target="#customerListReport">Customer List Report</a></li>
+				<li><a href="${ctx}/customer/customerListReportMain.do" id="customerListReportTab" data-toggle="tabajax" data-target="#customerListReport">Customer List Report</a></li>
 				<li><a href="#customerOrdersReport" data-toggle="tab">Customer Orders Report</a></li>
 			</ul>
 			<div class="tab-content" style="background-color: white;padding-top: 5px;">

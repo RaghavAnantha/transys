@@ -9,24 +9,24 @@
 	<nav class="navbar navbar-inverse navbar-fixed-top navheight" role="navigation">
 		<div class="container-fluid">
 			<div class="navbar-header">
-				<a class="navbar-brand active" href="/home.do">Transys</a>
+				<a class="navbar-brand active" href="${ctx}/home.do">Transys</a>
 			</div>
 			<div>
 				<ul class="nav navbar-nav">
-					<li id="orderPage"><a href="/order/main.do">Orders</a></li>
-					<li id="permitPage"><a href="/permit/main.do">Permits</a></li>
-					<li id="customerPage"><a href="/customer/main.do">Customers</a></li>
-					<li id="materialIntake"><a href="/publicMaterialIntake/main.do">Public Material Intake</a></li>
+					<li id="orderPage"><a href="${ctx}/order/main.do">Orders</a></li>
+					<li id="permitPage"><a href="${ctx}/permit/main.do">Permits</a></li>
+					<li id="customerPage"><a href="${ctx}/customer/main.do">Customers</a></li>
+					<li id="materialIntake"><a href="${ctx}/publicMaterialIntake/main.do">Public Material Intake</a></li>
 					<li id="reportPage">
 						<a href="#" data-toggle="dropdown" class="dropdown-toggle">Reports<b class="caret"></b></a>
 						<ul class="dropdown-menu">
-							<li><a href="/reports/ordersRevenueReport/main.do">Revenue Report</a></li>
-							<li><a href="/reports/deliveryPickupReport/main.do">Delivery/Pickup Report</a></li>
-							<li><a href="/reports/dumpsterOnsiteReport/main.do">Dumpsters On-site Report</a></li>
-							<li><a href="/reports/dumpsterRentedReport/main.do">Dumpsters Rented Report</a></li>
-							<li><a href="/reports/recycleReport/main.do">Recycle Report</a></li>
-							<li><a href="/reports/materialIntakeDailyReport/main.do">Material Intake Daily Report</a></li>
-							<li><a href="/reports/monthlyTransferStationIntakeReport/main.do">Monthly Transfer Station Intake Report</a></li>
+							<li><a href="${ctx}/reports/ordersRevenueReport/main.do">Revenue Report</a></li>
+							<li><a href="${ctx}/reports/deliveryPickupReport/main.do">Delivery/Pickup Report</a></li>
+							<li><a href="${ctx}/reports/dumpsterOnsiteReport/main.do">Dumpsters On-site Report</a></li>
+							<li><a href="${ctx}/reports/dumpsterRentedReport/main.do">Dumpsters Rented Report</a></li>
+							<li><a href="${ctx}/reports/recycleReport/main.do">Recycle Report</a></li>
+							<li><a href="${ctx}/reports/materialIntakeDailyReport/main.do">Material Intake Daily Report</a></li>
+							<li><a href="${ctx}/reports/monthlyTransferStationIntakeReport/main.do">Monthly Transfer Station Intake Report</a></li>
 						</ul>
 					</li>
 					<li id="masterDataPage">
@@ -34,25 +34,25 @@
 						<ul class="dropdown-menu">
 							<li class="dropdown dropdown-submenu"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Employees</a>
 								<ul class="dropdown-menu">
-									<li><a href="/masterData/employee/main.do">Manage Employee</a></li>
-									<li><a href="/masterData/loginUser/main.do">Manage User Roles</a></li>
+									<li><a href="${ctx}/masterData/employee/main.do">Manage Employee</a></li>
+									<li><a href="${ctx}/masterData/loginUser/main.do">Manage User Roles</a></li>
 								</ul>
 							</li>
-							<li><a href="/masterData/materialType/main.do">Material Type</a></li>
-							<li><a href="/masterData/materialCategory/main.do">Material Category</a></li>
-							<li><a href="/masterData/locationType/main.do">Location Type</a></li>
-							<li><a href="/masterData/recycleLocation/main.do">Recycle Location</a></li>
-							<li><a href="/masterData/paymentMethod/main.do">Payment Method</a></li>
-							<li><a href="/masterData/dumpsters/main.do">Dumpsters</a></li>
-							<li><a href="/masterData/dumpsterPrice/main.do">Dumpster Price</a></li>
-							<!-- <li><a href="/customerDumpsterPrice/main.do">Customer Dumpster Price</a></li> -->
-							<li><a href="/masterData/additionalFee/main.do">Additional Fee</a></li>
-							<li><a href="/masterData/cityFee/main.do">City Fee</a></li>
-							<li><a href="/masterData/overweightFee/main.do">Overweight Fee</a></li>
-							<li><a href="/masterData/permitFee/main.do">Permit Fee</a></li>
+							<li><a href="${ctx}/masterData/materialType/main.do">Material Type</a></li>
+							<li><a href="${ctx}/masterData/materialCategory/main.do">Material Category</a></li>
+							<li><a href="${ctx}/masterData/locationType/main.do">Location Type</a></li>
+							<li><a href="${ctx}/masterData/recycleLocation/main.do">Recycle Location</a></li>
+							<li><a href="${ctx}/masterData/paymentMethod/main.do">Payment Method</a></li>
+							<li><a href="${ctx}/masterData/dumpsters/main.do">Dumpsters</a></li>
+							<li><a href="${ctx}/masterData/dumpsterPrice/main.do">Dumpster Price</a></li>
+							<!-- <li><a href="${ctx}/customerDumpsterPrice/main.do">Customer Dumpster Price</a></li> -->
+							<li><a href="${ctx}/masterData/additionalFee/main.do">Additional Fee</a></li>
+							<li><a href="${ctx}/masterData/cityFee/main.do">City Fee</a></li>
+							<li><a href="${ctx}/masterData/overweightFee/main.do">Overweight Fee</a></li>
+							<li><a href="${ctx}/masterData/permitFee/main.do">Permit Fee</a></li>
 						</ul>
 					</li>
-					<!-- <li id="migrationPage"><a href="/migration/main.do">Migration</a></li> -->
+					<!-- <li id="migrationPage"><a href="${ctx}/migration/main.do">Migration</a></li> -->
 				</ul>
 				<ul class="nav navbar-nav navbar-right">
 					<li>
@@ -73,7 +73,7 @@
 					</li>
 					<li>
 						<c:if test="${sessionScope.userInfo != null}">
-							<a href="<c:url value="/logout.do" />" >Logout</a>
+							<a href="<c:url value="${ctx}/logout.do" />" >Logout</a>
 						</c:if>
 					</li>
 				</ul>

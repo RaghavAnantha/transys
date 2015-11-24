@@ -3,7 +3,7 @@
 <br/>
 <h4 style="margin-top: -15px; !important">Monthly Transfer Station Intake Report</h4>
 
-<form:form action="/reports/monthlyTransferStationIntakeReport/generateExcelReport.do" method="POST" name="monthlyTransferStationIntakeReportForm" id="monthlyTransferStationIntakeReportForm" >
+<form:form action="generateExcelReport.do" method="POST" name="monthlyTransferStationIntakeReportForm" id="monthlyTransferStationIntakeReportForm" >
 	<table id="form-table" class="table">
 	 	<tr><td colspan="10"></td><td colspan="10"></td></tr>
  		<tr>

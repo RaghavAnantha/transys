@@ -965,7 +965,7 @@ function updateTotalPaid() {
 				<label style="display: inline-block; font-weight: normal">
 					&nbsp;
 					<a href="/customer/createModal.do" id="addCustomerLink">
-						<img src="/images/addnew.png" border="0" style="float:bottom" class="toolbarButton">
+						<img src="${ctx}/images/addnew.png" border="0" style="float:bottom" class="toolbarButton">
 					</a>
 				</label> 
 				<form:errors path="customer" cssClass="errorMessage" />
@@ -1008,7 +1008,7 @@ function updateTotalPaid() {
 				<label style="display: inline-block; font-weight: normal">
 					&nbsp;
 					<a href="/customer/deliveryAddressCreateModal.do" id="addDeliveryAddressLink" >
-						<img src="/images/addnew.png" border="0" style="float:bottom" class="toolbarButton">
+						<img src="${ctx}/images/addnew.png" border="0" style="float:bottom" class="toolbarButton">
 					</a>
 				</label>
 				<form:errors path="deliveryAddress" cssClass="errorMessage" />
@@ -1227,7 +1227,7 @@ function updateTotalPaid() {
 				<label style="display: inline-block; font-weight: normal">
 					&nbsp;
 					<a href="/permit/createForCustomerModal.do" id="addPermitLink" >
-						<img src="/images/addnew.png" border="0" style="float:bottom" class="toolbarButton">
+						<img src="${ctx}/images/addnew.png" border="0" style="float:bottom" class="toolbarButton">
 					</a>
 				</label>
 	        </td>

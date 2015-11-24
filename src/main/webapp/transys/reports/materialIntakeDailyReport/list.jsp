@@ -22,8 +22,8 @@
 	</table>
 </form:form>
 
-<a href="/reports/materialIntakeDailyReport/generateMaterialIntakeDailyReport.do?type=xls"><img src="/images/excel.png" border="0" style="float:right" class="toolbarButton"></a>
-<a href="/reports/materialIntakeDailyReport/generateMaterialIntakeDailyReport.do?type=pdf"><img src="/images/pdf.png" border="0" style="float:right" class="toolbarButton"></a>
+<a href="generateMaterialIntakeDailyReport.do?type=xls"><img src="${ctx}/images/excel.png" border="0" style="float:right" class="toolbarButton"></a>
+<a href="generateMaterialIntakeDailyReport.do?type=pdf"><img src="${ctx}/images/pdf.png" border="0" style="float:right" class="toolbarButton"></a>
 <form:form name="materialIntakeDailyReport" id="materialIntakeDailyReport" class="tab-color">
  	<transys:datatable urlContext="reports/materialIntakeDailyReport"  baseObjects="${list}"
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
