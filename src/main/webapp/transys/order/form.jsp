@@ -517,9 +517,12 @@ function populateTotalFees() {
 	var finalTotalFees = (totalFees - discountAmountFloat).toFixed(2);
 	$("#orderFees\\.totalFees").val(finalTotalFees);
 	
-	var totalPaid = parseFloat($('#totalPaid').html());
-	var balanceDue = finalTotalFees - totalPaid;
-	$('#balanceDue').html(balanceDue.toFixed(2)); 
+	var totalPaid = $('#totalPaid').html();
+	if (totalPaid != "") {
+		var totalPaidFloat = parseFloat(totalPaid);
+		var balanceDue = finalTotalFees - totalPaidFloat;
+		$('#balanceDue').html(balanceDue.toFixed(2)); 
+	}
 }
 
 function validateOrderForm() {
