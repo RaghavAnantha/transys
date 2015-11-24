@@ -1,30 +1,6 @@
 <%@include file="/common/taglibs.jsp"%>
 
 <script type="text/javascript">
-function populateDeliveryAddress() {
-	
-	var deliveryAddressSelect = $('#deliveryAddressSelect');
-	deliveryAddressSelect.empty();
-	
-	var firstOption = $('<option value="">'+ "----Please Select----" +'</option>');
-	deliveryAddressSelect.append(firstOption);
-	
-	var customerId = $('#customerSelect').val();
-	$.ajax({
-  		url: "customerDeliveryAddress.do?customerId=" + customerId,
-       	type: "GET",
-       	success: function(responseData, textStatus, jqXHR) {
-    	   	var addressList = jQuery.parseJSON(responseData);
-    	   	$.each(addressList, function () {
-    	   	    $("<option />", {
-    	   	        val: this.id,
-    	   	        text: this.line1 + ", " + this.line2
-    	   	    }).appendTo(deliveryAddressSelect);
-    	   	});
-		}
-	}); 
-}
-
 function populateEndDate() {
 	$('#endDateInput').empty();
 	var startDateValue = $('#datepicker8').val();

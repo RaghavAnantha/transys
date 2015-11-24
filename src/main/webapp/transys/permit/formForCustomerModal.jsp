@@ -12,7 +12,7 @@ function populatePermitEndDate() {
 	}
 	
 	$.ajax({
-  		url: "/permit/calculatePermitEndDate.do?startDate=" + startDate + "&permitTypeId=" + permitTypeId,
+  		url: "${ctx}/permit/calculatePermitEndDate.do?startDate=" + startDate + "&permitTypeId=" + permitTypeId,
        	type: "GET",
        	success: function(responseData, textStatus, jqXHR) {
        		permitEndDateInput.val(responseData);
@@ -44,7 +44,7 @@ $("#permitForCustomerModalForm").submit(function (ev) {
     ev.preventDefault();
 });
 </script>
-<form:form action="/permit/saveForCustomerModal.do" name="permitForCustomerModalForm" id="permitForCustomerModalForm" commandName="modelObject" method="post" >
+<form:form action="${ctx}/permit/saveForCustomerModal.do" name="permitForCustomerModalForm" id="permitForCustomerModalForm" commandName="modelObject" method="post" >
 	<table id="form-table" class="table">
 		<tr><td colspan="10"></td></tr>
 		<tr>

@@ -964,7 +964,7 @@ function updateTotalPaid() {
 				</label>
 				<label style="display: inline-block; font-weight: normal">
 					&nbsp;
-					<a href="/customer/createModal.do" id="addCustomerLink">
+					<a href="${ctx}/customer/createModal.do" id="addCustomerLink">
 						<img src="${ctx}/images/addnew.png" border="0" style="float:bottom" class="toolbarButton">
 					</a>
 				</label> 
@@ -1007,7 +1007,7 @@ function updateTotalPaid() {
 				</label>
 				<label style="display: inline-block; font-weight: normal">
 					&nbsp;
-					<a href="/customer/deliveryAddressCreateModal.do" id="addDeliveryAddressLink" >
+					<a href="${ctx}/customer/deliveryAddressCreateModal.do" id="addDeliveryAddressLink" >
 						<img src="${ctx}/images/addnew.png" border="0" style="float:bottom" class="toolbarButton">
 					</a>
 				</label>
@@ -1226,7 +1226,7 @@ function updateTotalPaid() {
 				</label>
 				<label style="display: inline-block; font-weight: normal">
 					&nbsp;
-					<a href="/permit/createForCustomerModal.do" id="addPermitLink" >
+					<a href="${ctx}/permit/createForCustomerModal.do" id="addPermitLink" >
 						<img src="${ctx}/images/addnew.png" border="0" style="float:bottom" class="toolbarButton">
 					</a>
 				</label>
@@ -1653,7 +1653,7 @@ $("#addPermitLink").click(function (ev) {
 	var newPermitUrl = $(this).attr("href");
 	
 	$.ajax({
-  		url: "/permit/validatePermitCanBeAdded.do?orderId=" + orderId + "&deliveryAddressId=" + deliveryAddressId,
+  		url: "${ctx}/permit/validatePermitCanBeAdded.do?orderId=" + orderId + "&deliveryAddressId=" + deliveryAddressId,
        	type: "GET",
        	success: function(responseData, textStatus, jqXHR) {
     	   	var validationErrorMsg = jQuery.parseJSON(responseData);
