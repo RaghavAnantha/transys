@@ -73,7 +73,7 @@
 					</li>
 					<li>
 						<c:if test="${sessionScope.userInfo != null}">
-							<a href="<c:url value="logout.do" />" >Logout</a>
+							<a href="<c:url value="/logout.do" />" >Logout</a>
 						</c:if>
 					</li>
 				</ul>
