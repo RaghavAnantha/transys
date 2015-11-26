@@ -28,6 +28,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -40,11 +41,13 @@ import com.transys.model.Customer;
 import com.transys.model.CustomerStatus;
 import com.transys.model.CustomerType;
 import com.transys.model.DeliveryAddress;
+import com.transys.model.Dumpster;
 import com.transys.model.Order;
 import com.transys.model.SearchCriteria;
 import com.transys.model.State;
 import com.transys.model.migration.OldCustomer;
 import com.transys.model.migration.OldDeliveryAddress;
+import com.transys.model.migration.OldDumpster;
 import com.transys.model.vo.MonthlyIntakeReportVO;
 import com.transys.model.vo.PublicMaterialIntakeVO;
 import com.transys.model.vo.RollOffBoxesPerYardVO;
@@ -69,7 +72,69 @@ public class MigrationController extends CRUDController<Order> {
 	}
 
 	@RequestMapping(method = RequestMethod.POST, value = "/migrate.do")
-	public void migrate(ModelMap model, HttpServletRequest request, HttpServletResponse response) {
+	public void migrate(ModelMap model, HttpServletRequest request, HttpServletResponse response,
+			@RequestParam(value = "migrationDataType") String migrationDataType) {
+		StringBuffer dataNotImportedBuff = new StringBuffer();
+		if ("Customers".equals(migrationDataType)) {
+			migrateCustomers(dataNotImportedBuff);
+		} else if ("Dumpsters".equals(migrationDataType)) {
+			migrateDumpsters(dataNotImportedBuff);
+		}
+		
+		response.setHeader("Content-Disposition", "attachment;filename= " + "DataNotImported.txt");
+		response.setContentType(MimeUtil.getContentType("txt"));
+		
+		try {
+			ServletOutputStream out = response.getOutputStream();
+			out.write(dataNotImportedBuff.toString().getBytes());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	private void migrateDumpsters(StringBuffer dataNotImportedBuff) {
+		String oldDumpsterQuery = "select obj from OldDumpster obj order by obj.id asc";
+		List<OldDumpster> oldDumpsterList = genericDAO.executeSimpleQuery(oldDumpsterQuery);
+		
+		StringBuffer dumpsterDataNotImportedBuff = new StringBuffer("Old Dumpster Id|Dumpster Num|Error\n");
+		for (OldDumpster anOldDumpster : oldDumpsterList) {
+			Dumpster aNewDumpster = new Dumpster();
+			map(anOldDumpster, aNewDumpster);
+			
+			if (StringUtils.isEmpty(aNewDumpster.getDumpsterNum())) {
+				dumpsterDataNotImportedBuff.append(anOldDumpster.getId())
+				 						 			.append("|" + anOldDumpster.getDumpsterNum())
+				 						 			.append("|" + "Data validation failed")
+				 						 			.append("\n");
+				continue;
+			}
+			
+			try {
+				genericDAO.save(aNewDumpster);
+			} catch (PersistenceException e) {
+				String errorMsg = extractSaveErrorMsg(e);
+				dumpsterDataNotImportedBuff.append(anOldDumpster.getId())
+										 		   .append("|" + aNewDumpster.getDumpsterNum())
+										 		   .append("|" + errorMsg)
+										 		   .append("\n");
+				
+			}
+		}
+		
+		dataNotImportedBuff.append(dumpsterDataNotImportedBuff);
+	}
+
+	private void map(OldDumpster anOldDumpster, Dumpster aNewDumpster) {
+		aNewDumpster.setDumpsterNum(anOldDumpster.getDumpsterNum());
+		//aNewDumpster.setDumpsterSize(anOldDumpster.getDumpsterSize());
+		
+		//aNewDumpster.setStatus(anOldDumpster.get);
+		
+		aNewDumpster.setComments(anOldDumpster.getComments());
+	}
+
+	private void migrateCustomers(StringBuffer dataNotImportedBuff) {
 		String oldCustomerQuery = "select obj from OldCustomer obj order by obj.id asc";
 		List<OldCustomer> oldCustomerList = genericDAO.executeSimpleQuery(oldCustomerQuery);
 	
@@ -106,21 +171,11 @@ public class MigrationController extends CRUDController<Order> {
 			}
 		}
 		
-		response.setHeader("Content-Disposition", "attachment;filename= " + "DataNotImported.txt");
-		response.setContentType(MimeUtil.getContentType("txt"));
-		
-		try {
-			ServletOutputStream out = response.getOutputStream();
-			out.write(customerDataNotImportedBuff.toString().getBytes());
-			String dataSep = "\n---------------------------------------------------------\n";
-			out.write(dataSep.getBytes());
-			out.write(addressDataNotImportedBuff.toString().getBytes());
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		dataNotImportedBuff.append(customerDataNotImportedBuff)
+								 .append("\n---------------------------------------------------------\n")
+								 .append(addressDataNotImportedBuff);
 	}
-	
+
 	private String extractSaveErrorMsg(Exception e) {
 		String errorMsg = StringUtils.EMPTY;
 		//String errorMsg = e.getCause().getCause().getMessage();
@@ -342,5 +397,9 @@ public class MigrationController extends CRUDController<Order> {
 
 	@Override
 	public void setupCreate(ModelMap model, HttpServletRequest request) {
+		List<String> migrationDataTypeList = new ArrayList<String>();
+		migrationDataTypeList.add("Customers");
+		migrationDataTypeList.add("Dumpsters");
+		model.addAttribute("migrationDataTypeList", migrationDataTypeList);
 	}
 }
