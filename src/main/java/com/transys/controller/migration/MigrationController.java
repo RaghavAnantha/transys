@@ -42,6 +42,8 @@ import com.transys.model.CustomerStatus;
 import com.transys.model.CustomerType;
 import com.transys.model.DeliveryAddress;
 import com.transys.model.Dumpster;
+import com.transys.model.DumpsterSize;
+import com.transys.model.DumpsterStatus;
 import com.transys.model.Order;
 import com.transys.model.SearchCriteria;
 import com.transys.model.State;
@@ -97,15 +99,22 @@ public class MigrationController extends CRUDController<Order> {
 		String oldDumpsterQuery = "select obj from OldDumpster obj order by obj.id asc";
 		List<OldDumpster> oldDumpsterList = genericDAO.executeSimpleQuery(oldDumpsterQuery);
 		
+		String dumpsterSizeQuery = "select obj from DumpsterSize obj order by obj.id asc";
+		List<DumpsterSize> dumpsterSizeList = genericDAO.executeSimpleQuery(dumpsterSizeQuery);
+		Map<String, DumpsterSize> dumpsterSizeMap = new HashMap<String, DumpsterSize>();
+		for (DumpsterSize aDumpsterSize : dumpsterSizeList) {
+			dumpsterSizeMap.put(aDumpsterSize.getSize(), aDumpsterSize);
+		}
+		
 		StringBuffer dumpsterDataNotImportedBuff = new StringBuffer("Old Dumpster Id|Dumpster Num|Error\n");
 		for (OldDumpster anOldDumpster : oldDumpsterList) {
 			Dumpster aNewDumpster = new Dumpster();
-			map(anOldDumpster, aNewDumpster);
+			map(anOldDumpster, aNewDumpster, dumpsterSizeMap);
 			
 			if (StringUtils.isEmpty(aNewDumpster.getDumpsterNum())) {
 				dumpsterDataNotImportedBuff.append(anOldDumpster.getId())
 				 						 			.append("|" + anOldDumpster.getDumpsterNum())
-				 						 			.append("|" + "Data validation failed")
+				 						 			.append("|" + "Data validation failed or inactive dumpster")
 				 						 			.append("\n");
 				continue;
 			}
@@ -113,7 +122,7 @@ public class MigrationController extends CRUDController<Order> {
 			try {
 				genericDAO.save(aNewDumpster);
 			} catch (PersistenceException e) {
-				String errorMsg = extractSaveErrorMsg(e);
+				String errorMsg = extractDumpsterSaveErrorMsg(e);
 				dumpsterDataNotImportedBuff.append(anOldDumpster.getId())
 										 		   .append("|" + aNewDumpster.getDumpsterNum())
 										 		   .append("|" + errorMsg)
@@ -125,15 +134,35 @@ public class MigrationController extends CRUDController<Order> {
 		dataNotImportedBuff.append(dumpsterDataNotImportedBuff);
 	}
 
-	private void map(OldDumpster anOldDumpster, Dumpster aNewDumpster) {
-		aNewDumpster.setDumpsterNum(anOldDumpster.getDumpsterNum());
-		//aNewDumpster.setDumpsterSize(anOldDumpster.getDumpsterSize());
+	private void map(OldDumpster anOldDumpster, Dumpster aNewDumpster, Map<String, DumpsterSize> dumpsterSizeMap) {
+		if ("I".equals(anOldDumpster.getStatus())) {
+			return;
+		}
 		
-		//aNewDumpster.setStatus(anOldDumpster.get);
+		if ("1".equals(anOldDumpster.getInRepair())) {
+			return;
+		}
+		
+		DumpsterSize dumpsterSize = dumpsterSizeMap.get(anOldDumpster.getDumpsterSize() + " yd");
+		if (dumpsterSize == null) {
+			return;
+		}
+		
+		if (!ValidationUtil.validateDumpsterNum(anOldDumpster.getDumpsterNum(), 25)) {
+			return;
+		}
+		
+		aNewDumpster.setDumpsterSize(dumpsterSize);
+		aNewDumpster.setDumpsterNum(anOldDumpster.getDumpsterNum());
+		aNewDumpster.setCreatedBy(1l);
+		
+		DumpsterStatus status = new DumpsterStatus();
+		status.setId(1l);
+		aNewDumpster.setStatus(status);
 		
 		aNewDumpster.setComments(anOldDumpster.getComments());
 	}
-
+	
 	private void migrateCustomers(StringBuffer dataNotImportedBuff) {
 		String oldCustomerQuery = "select obj from OldCustomer obj order by obj.id asc";
 		List<OldCustomer> oldCustomerList = genericDAO.executeSimpleQuery(oldCustomerQuery);
@@ -162,7 +191,7 @@ public class MigrationController extends CRUDController<Order> {
 				genericDAO.save(aNewCustomer);
 				saveDeliveryAddress(aNewCustomer, anOldCustomer, oldAddressMap, addressDataNotImportedBuff);
 			} catch (PersistenceException e) {
-				String errorMsg = extractSaveErrorMsg(e);
+				String errorMsg = extractCustomerSaveErrorMsg(e);
 				customerDataNotImportedBuff.append(anOldCustomer.getId())
 										 		   .append("|" + aNewCustomer.getCompanyName())
 										 		   .append("|" + errorMsg)
@@ -176,16 +205,35 @@ public class MigrationController extends CRUDController<Order> {
 								 .append(addressDataNotImportedBuff);
 	}
 
-	private String extractSaveErrorMsg(Exception e) {
+	private String extractCustomerSaveErrorMsg(Exception e) {
 		String errorMsg = StringUtils.EMPTY;
 		//String errorMsg = e.getCause().getCause().getMessage();
 		if (e.getCause() instanceof ConstraintViolationException) {
 			ConstraintViolationException ce = (ConstraintViolationException) e.getCause();
-			if (ce.getConstraintName().contains("company")) {
+			if (StringUtils.contains(ce.getConstraintName(), "company")) {
 				errorMsg += "Duplicate company name - company name already exists"; 
+			} else {
+				errorMsg += " Persistence exception while saving Customer";
 			}
 		} else {
-			errorMsg = "Error occured while saving Customer";
+			errorMsg += " Persistence exception while saving Customer";
+		}
+		
+		return errorMsg;
+	}
+	
+	private String extractDumpsterSaveErrorMsg(Exception e) {
+		String errorMsg = StringUtils.EMPTY;
+		//String errorMsg = e.getCause().getCause().getMessage();
+		if (e.getCause() instanceof ConstraintViolationException) {
+			ConstraintViolationException ce = (ConstraintViolationException) e.getCause();
+			if (StringUtils.contains(ce.getConstraintName(), "dumpsterNum")) {
+				errorMsg += "Duplicate dumspter num - dumspter num already exists"; 
+			} else {
+				errorMsg += " Persistence exception while saving Dumpster";
+			}
+		} else {
+			errorMsg += " Persistence exception while saving Dumpster";
 		}
 		
 		return errorMsg;

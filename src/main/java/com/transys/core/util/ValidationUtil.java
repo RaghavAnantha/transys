@@ -55,4 +55,12 @@ public class ValidationUtil {
 		
 		return companyName.matches("^[a-zA-Z0-9-_'`\\s/.,&]{1," + validLength + "}$");
 	}
+	
+	public static boolean validateDumpsterNum(String dumpsterNum, int validLength) {
+		if (StringUtils.isEmpty(StringUtils.stripToEmpty(dumpsterNum))) {
+			return false;
+		}
+		
+		return dumpsterNum.matches("^[a-zA-Z0-9-_]{1," + validLength + "}$");
+	}
 }
