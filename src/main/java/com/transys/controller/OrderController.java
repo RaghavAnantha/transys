@@ -1360,24 +1360,6 @@ public class OrderController extends CRUDController<Order> {
 		
 		cleanUp(request);
 		
-		//return "redirect:/" + urlContext + "/list.do";
-		//model.addAttribute("activeTab", "manageCustomer");
-		//return urlContext + "/list";
-		
-		/*SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
-		//criteria.getSearchMap().put("id!",0l);
-		//TODO: Fix me 
-		criteria.getSearchMap().remove("_csrf");*/
-		
-		/*setupList(model, request);
-		
-		model.addAttribute("list",genericDAO.search(getEntityClass(), criteria,"companyName",null,null));
-		model.addAttribute("activeTab", "manageCustomer");
-		//return urlContext + "/list";
-		return urlContext + "/customer";*/
-		//request.getSession().removeAttribute("searchCriteria");
-		//request.getParameterMap().remove("_csrf");
-		
 		//return list(model, request);
 		return saveSuccess(model, request, entity);
 	}
@@ -1539,7 +1521,11 @@ public class OrderController extends CRUDController<Order> {
 	}*/
 	
 	public String saveSuccess(ModelMap model, HttpServletRequest request, Order entity) {
-		setupCreate(model, request);
+		if (entity.getModifiedBy() == null) {
+			setupCreate(model, request);
+		} else {
+			setupCreate(model, request, entity);
+		}
 		
 		model.addAttribute("msgCtx", "manageOrder");
 		model.addAttribute("msg", "Order saved successfully");
@@ -1548,37 +1534,38 @@ public class OrderController extends CRUDController<Order> {
 		model.addAttribute("activeSubTab", "orderDetails");
 		model.addAttribute("mode", "ADD");
 		
-		Order emptyOrder = new Order();
-		model.addAttribute("modelObject", emptyOrder);
-		
-		OrderNotes notes = new OrderNotes();
-		notes.setOrder(emptyOrder);
-		model.addAttribute("notesModelObject", notes);
-		
-		/*EMPTY_ORDER change
-		model.addAttribute("modelObject", entity);
-		
-		Order emptyOrder = new Order();
-		emptyOrder.setId(entity.getId());
-		OrderNotes notes = new OrderNotes();
-		notes.setOrder(emptyOrder);
-		model.addAttribute("notesModelObject", notes);
-		
-		List<OrderNotes> notesList = genericDAO.executeSimpleQuery("select obj from OrderNotes obj where obj.order.id=" +  entity.getId() + " order by obj.id asc");
-		model.addAttribute("notesList", notesList);
-		
-		String query = "select obj from DeliveryAddress obj where obj.customer.id=" +  entity.getCustomer().getId() + " order by obj.line1 asc";
-		model.addAttribute("deliveryAddresses", genericDAO.executeSimpleQuery(query));
-		
-		List<List<Permit>> allPermitsOfChosenTypesList = retrievePermitsOfChosenType(entity);
-		model.addAttribute("allPermitsOfChosenTypesList", allPermitsOfChosenTypesList);
-		
-		Long customerId = entity.getCustomer().getId();
-		List<Customer> customerList = genericDAO.executeSimpleQuery("select obj from Customer obj where obj.id=" + customerId);
-		Customer orderCustomer = customerList.get(0);
-		
-		entity.setCustomer(orderCustomer);
-		EMPTY_ORDER change*/
+		//EMPTY_ORDER change
+		if (entity.getModifiedBy() == null) {
+			Order emptyOrder = new Order();
+			model.addAttribute("modelObject", emptyOrder);
+			
+			OrderNotes notes = new OrderNotes();
+			notes.setOrder(emptyOrder);
+			model.addAttribute("notesModelObject", notes);
+		} else {
+			model.addAttribute("modelObject", entity);
+			
+			Order emptyOrder = new Order();
+			emptyOrder.setId(entity.getId());
+			OrderNotes notes = new OrderNotes();
+			notes.setOrder(emptyOrder);
+			model.addAttribute("notesModelObject", notes);
+			
+			List<OrderNotes> notesList = genericDAO.executeSimpleQuery("select obj from OrderNotes obj where obj.order.id=" +  entity.getId() + " order by obj.id asc");
+			model.addAttribute("notesList", notesList);
+			
+			String query = "select obj from DeliveryAddress obj where obj.customer.id=" +  entity.getCustomer().getId() + " order by obj.line1 asc";
+			model.addAttribute("deliveryAddresses", genericDAO.executeSimpleQuery(query));
+			
+			List<List<Permit>> allPermitsOfChosenTypesList = retrievePermitsOfChosenType(entity);
+			model.addAttribute("allPermitsOfChosenTypesList", allPermitsOfChosenTypesList);
+			
+			Long customerId = entity.getCustomer().getId();
+			List<Customer> customerList = genericDAO.executeSimpleQuery("select obj from Customer obj where obj.id=" + customerId);
+			Customer orderCustomer = customerList.get(0);
+			
+			entity.setCustomer(orderCustomer);
+		}
 		
 		//return urlContext + "/form";
 		return urlContext + "/order";
