@@ -126,7 +126,6 @@ public abstract class CRUDController<T extends BaseModel> extends BaseController
 	public String save(HttpServletRequest request,
 			@ModelAttribute("modelObject") T entity,
 			BindingResult bindingResult, ModelMap model) {
-		
 		try {
 			getValidator().validate(entity, bindingResult);
 		} catch (ValidationException e) {
@@ -134,11 +133,6 @@ public abstract class CRUDController<T extends BaseModel> extends BaseController
 			System.out.println("Error in validation " + e);
 			log.warn("Error in validation :" + e);
 		}
-		
-		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
-		criteria.getSearchMap().put("id!",0l);
-		//TODO: Fix me 
-		criteria.getSearchMap().remove("_csrf");
 		
 		// return to form if we had errors
 		if (bindingResult.hasErrors()) {
@@ -154,24 +148,6 @@ public abstract class CRUDController<T extends BaseModel> extends BaseController
 		beforeSave(request, entity, model);
 		genericDAO.saveOrUpdate(entity);
 		cleanUp(request);
-		
-		//return "redirect:/" + urlContext + "/list.do";
-		//model.addAttribute("activeTab", "manageCustomer");
-		//return urlContext + "/list";
-		
-		/*SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
-		//criteria.getSearchMap().put("id!",0l);
-		//TODO: Fix me 
-		criteria.getSearchMap().remove("_csrf");*/
-		
-		/*setupList(model, request);
-		
-		model.addAttribute("list",genericDAO.search(getEntityClass(), criteria,"companyName",null,null));
-		model.addAttribute("activeTab", "manageCustomer");
-		//return urlContext + "/list";
-		return urlContext + "/customer";*/
-		//request.getSession().removeAttribute("searchCriteria");
-		//request.getParameterMap().remove("_csrf");
 		
 		return list(model, request);
 		//return saveSuccess(model, request, entity);

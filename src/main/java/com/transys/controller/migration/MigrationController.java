@@ -228,7 +228,7 @@ public class MigrationController extends CRUDController<Order> {
 		if (e.getCause() instanceof ConstraintViolationException) {
 			ConstraintViolationException ce = (ConstraintViolationException) e.getCause();
 			if (StringUtils.contains(ce.getConstraintName(), "dumpsterNum")) {
-				errorMsg += "Duplicate dumspter num - dumspter num already exists"; 
+				errorMsg += "Duplicate dumpster num - dumpster num already exists"; 
 			} else {
 				errorMsg += " Persistence exception while saving Dumpster";
 			}
