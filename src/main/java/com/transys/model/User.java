@@ -24,7 +24,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Entity
 @Table(name = "userInfo")
-@NamedQueries({@NamedQuery(name = "user.getByName", query = "select obj from User obj where obj.username=:name")})
+@NamedQueries({@NamedQuery(name = "user.getByName", query = "select obj from User obj where obj.username=:name and obj.deleteFlag='1'")})
 public class User extends AbstractBaseModel implements Comparable, Auditable {
 	private static final long serialVersionUID = 1807241954265797561L;
 	

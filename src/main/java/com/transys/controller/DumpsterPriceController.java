@@ -78,7 +78,7 @@ public class DumpsterPriceController extends CRUDController<DumpsterPrice> {
 		
 		DumpsterPrice dumpsterPriceToBeEdited = (DumpsterPrice)model.get("modelObject");
 		
-		String query = "select obj from MaterialType obj where obj.materialCategory.id=" + dumpsterPriceToBeEdited.getMaterialType().getMaterialCategory().getId();
+		String query = "select obj from MaterialType obj where obj.deleteFlag='1' and obj.materialCategory.id=" + dumpsterPriceToBeEdited.getMaterialType().getMaterialCategory().getId();
 		List<MaterialType> materialTypesForSelMatCat = genericDAO.executeSimpleQuery(query);
 		model.addAttribute("materialTypes", materialTypesForSelMatCat);
 		
@@ -105,7 +105,7 @@ public class DumpsterPriceController extends CRUDController<DumpsterPrice> {
 		Map criterias = new HashMap();
 		model.addAttribute("dumpsterSizes", genericDAO.findUniqueByCriteria(DumpsterSize.class, criterias, "id", false));
 		//model.addAttribute("materialTypes", genericDAO.findByCriteria(MaterialType.class, criterias, "materialName", false));
-		model.addAttribute("dumpsterPrices", genericDAO.executeSimpleQuery("select DISTINCT(obj.price) from DumpsterPrice obj order by obj.price asc"));
+		model.addAttribute("dumpsterPrices", genericDAO.executeSimpleQuery("select DISTINCT(obj.price) from DumpsterPrice obj where obj.deleteFlag='1' order by obj.price asc"));
 		model.addAttribute("materialCategories", genericDAO.findByCriteria(MaterialCategory.class, criterias, "category", false));
 	}
 
@@ -137,11 +137,11 @@ public class DumpsterPriceController extends CRUDController<DumpsterPrice> {
 		
 		setupCreate(model, request);
 		
-		String query = "select obj from MaterialType obj where obj.id=" + entity.getMaterialType().getId();
+		String query = "select obj from MaterialType obj where obj.deleteFlag='1' and obj.id=" + entity.getMaterialType().getId();
 		List<MaterialType> materialTypeList = genericDAO.executeSimpleQuery(query);
 		entity.setMaterialType(materialTypeList.get(0));
 		
-		query = "select obj from MaterialType obj where obj.materialCategory.id=" + entity.getMaterialType().getMaterialCategory().getId();
+		query = "select obj from MaterialType obj where obj.deleteFlag='1' and obj.materialCategory.id=" + entity.getMaterialType().getMaterialCategory().getId();
 		List<MaterialType> materialTypesForSelMatCat = genericDAO.executeSimpleQuery(query);
 		model.addAttribute("materialTypes", materialTypesForSelMatCat);
 			
@@ -170,7 +170,7 @@ public class DumpsterPriceController extends CRUDController<DumpsterPrice> {
 	}
 	
 	private List<MaterialType> retrieveMaterialTypes(Long materialCategoryId) {
-		String query = "select obj from MaterialType obj where";
+		String query = "select obj from MaterialType obj where obj.deleteFlag='1' and ";
 		query	+= " obj.materialCategory.id=" + materialCategoryId + " order by obj.materialName asc";
 		List<MaterialType> materialTypes = genericDAO.executeSimpleQuery(query);
 		return materialTypes;

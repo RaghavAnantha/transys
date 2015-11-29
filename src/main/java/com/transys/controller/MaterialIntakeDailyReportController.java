@@ -70,11 +70,11 @@ public class MaterialIntakeDailyReportController extends CRUDController<Order> {
 			return (new ArrayList<MaterialIntakeReportVO>());
 		}
 		
-		String rollOffAggregationQuery = "select materialType.materialName, sum(netWeightTonnage) from Order obj where obj.pickupDate='" 
+		String rollOffAggregationQuery = "select materialType.materialName, sum(netWeightTonnage) from Order obj where obj.deleteFlag='1' and obj.pickupDate='" 
 								+ intakeDate + "' group by obj.materialType.id";
 		List<?> rollOffAggregationQueryResults = genericDAO.executeSimpleQuery(rollOffAggregationQuery);
 		
-		String publicIntakeAggregationQuery = "select materialType.materialName, sum(netWeightTonnage) from PublicMaterialIntake obj where obj.intakeDate='" 
+		String publicIntakeAggregationQuery = "select materialType.materialName, sum(netWeightTonnage) from PublicMaterialIntake obj where obj.deleteFlag='1' and obj.intakeDate='" 
 				+ intakeDate + "' group by obj.materialType.id";
 		List<?> publicIntakeAggregationQueryResults = genericDAO.executeSimpleQuery(publicIntakeAggregationQuery);
 		

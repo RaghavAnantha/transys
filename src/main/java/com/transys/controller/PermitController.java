@@ -91,7 +91,7 @@ public class PermitController extends CRUDController<Permit> {
 		List<Permit> listOfPermits = genericDAO.search(Permit.class, criteria, "id", null, null);
 		
 		for (Permit p : listOfPermits) {
-			List<BaseModel> orders = (List<BaseModel>)genericDAO.executeSimpleQuery("select obj.order from OrderPermits obj where obj.permit.id=" +  p.getId() + " order by obj.id desc");
+			List<BaseModel> orders = (List<BaseModel>)genericDAO.executeSimpleQuery("select obj.order from OrderPermits obj where obj.deleteFlag='1' and obj.permit.id=" +  p.getId() + " order by obj.id desc");
 			if (orders != null && orders.size() > 0) {
 				BaseModel order = orders.get(0);
 				p.setOrderId(order.getId());
@@ -143,7 +143,7 @@ public class PermitController extends CRUDController<Permit> {
 		List<Permit> listOfPermits = genericDAO.search(getEntityClass(), criteria);
 		
 		for (Permit p : listOfPermits) {
-			List<BaseModel> orders = (List<BaseModel>)genericDAO.executeSimpleQuery("select obj.order from OrderPermits obj where obj.permit.id=" +  p.getId() + " order by obj.id desc");
+			List<BaseModel> orders = (List<BaseModel>)genericDAO.executeSimpleQuery("select obj.order from OrderPermits obj where obj.deleteFlag='1' and obj.permit.id=" +  p.getId() + " order by obj.id desc");
 			if (orders != null && orders.size() > 0) {
 				BaseModel order = orders.get(0);
 				p.setOrderId(order.getId());
@@ -247,26 +247,26 @@ public class PermitController extends CRUDController<Permit> {
 			@RequestParam(value = "permitClassId") Long permitClassId,
 			@RequestParam(value = "permitTypeId") Long permitTypeId,
 			@RequestParam(value = "deliveryDate") Date deliveryDate) {
-		String customerQuery = "select obj from Customer obj where obj.id=" + customerId;
+		String customerQuery = "select obj from Customer obj where obj.deleteFlag='1' and obj.id=" + customerId;
 		List<Customer> customerList = genericDAO.executeSimpleQuery(customerQuery);
 		model.put("customer", customerList);
 		
-		String deliveryAddressQuery = "select obj from DeliveryAddress obj where obj.id=" + deliveryAddressId + " order by line1 asc";
+		String deliveryAddressQuery = "select obj from DeliveryAddress obj where obj.deleteFlag='1' and obj.id=" + deliveryAddressId + " order by line1 asc";
 		List<DeliveryAddress> deliveryAddressList = genericDAO.executeSimpleQuery(deliveryAddressQuery);
 		model.addAttribute("deliveryAddress", deliveryAddressList);
 
 		// For new permit, first permit address will be the delivery address
 		model.addAttribute("permitAddress", deliveryAddressList);
 		
-		String locationTypesQuery = "select obj from LocationType obj where obj.id=" + locationTypeId + "order by locationType asc";
+		String locationTypesQuery = "select obj from LocationType obj where obj.deleteFlag='1' and obj.id=" + locationTypeId + "order by locationType asc";
 		List<LocationType> locationTypeList = genericDAO.executeSimpleQuery(locationTypesQuery);
 		model.addAttribute("locationType", locationTypeList);
 		
-		String permitClassQuery = "select obj from PermitClass obj where obj.id=" + permitClassId;
+		String permitClassQuery = "select obj from PermitClass obj where obj.deleteFlag='1' and obj.id=" + permitClassId;
 		List<PermitClass> permitClassList = genericDAO.executeSimpleQuery(permitClassQuery);
 		model.addAttribute("permitClass", permitClassList);
 		
-		String permitTypeQuery = "select obj from PermitType obj where obj.id=" + permitTypeId;
+		String permitTypeQuery = "select obj from PermitType obj where obj.deleteFlag='1' and obj.id=" + permitTypeId;
 		List<PermitType> permitTypeList = genericDAO.executeSimpleQuery(permitTypeQuery);
 		model.addAttribute("permitType", permitTypeList);
 		
@@ -325,7 +325,7 @@ public class PermitController extends CRUDController<Permit> {
 
 		/*List<PermitType> permitType = new ArrayList<>();
 		permitType.add(permitToBeEdited.getPermitType());*/
-		List<PermitType> permitType = genericDAO.findAll(PermitType.class);
+		List<PermitType> permitType = genericDAO.findAll(PermitType.class, true);
 		model.addAttribute("permitType", permitType);
 		
 		criterias = new HashMap<String, Object>();
@@ -339,7 +339,7 @@ public class PermitController extends CRUDController<Permit> {
 
 	private boolean validateMaxPermitsAllowable(OrderPermits orderPermitToBeEdited) {
 		// validate if this order has < 3 permits, else show alert
-		List<BaseModel> orderPermitsForThisOrder = (List<BaseModel>)genericDAO.executeSimpleQuery("select obj from OrderPermits obj where obj.order.id=" +  orderPermitToBeEdited.getOrder().getId());
+		List<BaseModel> orderPermitsForThisOrder = (List<BaseModel>)genericDAO.executeSimpleQuery("select obj from OrderPermits obj where obj.deleteFlag='1' and obj.order.id=" +  orderPermitToBeEdited.getOrder().getId());
 		if (orderPermitsForThisOrder != null && orderPermitsForThisOrder.size() >= MAX_NUMBER_OF_ASSOCIATED_PERMITS) {
 			//do not create modal, show alert
 			return false;
@@ -365,7 +365,7 @@ public class PermitController extends CRUDController<Permit> {
 			model.put("modelObject", permitToBeEdited);
 		} 
 		
-		List<BaseModel> orderPermits = (List<BaseModel>)genericDAO.executeSimpleQuery("select obj from OrderPermits obj where obj.permit.id=" +  permitToBeEdited.getId() + " order by obj.id desc");
+		List<BaseModel> orderPermits = (List<BaseModel>)genericDAO.executeSimpleQuery("select obj from OrderPermits obj where obj.deleteFlag='1' and obj.permit.id=" +  permitToBeEdited.getId() + " order by obj.id desc");
 		if (orderPermits != null && orderPermits.size() > 0) {
 			BaseModel orderPermitObj = orderPermits.get(0);
 			model.addAttribute("associatedOrderID", orderPermitObj);
@@ -403,13 +403,13 @@ public class PermitController extends CRUDController<Permit> {
 		PermitNotes notes = new PermitNotes();
 		notes.setPermit(permitToBeEdited); 
 		model.addAttribute("notesModelObject", notes);
-		List<BaseModel> notesList = genericDAO.executeSimpleQuery("select obj from PermitNotes obj where obj.permit.id=" +  permitToBeEdited.getId() + " order by obj.id asc");
+		List<BaseModel> notesList = genericDAO.executeSimpleQuery("select obj from PermitNotes obj where obj.deleteFlag='1' and obj.permit.id=" +  permitToBeEdited.getId() + " order by obj.id asc");
 		model.addAttribute("notesList", notesList);
 	
 		PermitAddress permitAddress = new PermitAddress();
 		permitAddress.setPermit(permitToBeEdited); 
 		model.addAttribute("permitAddressModelObject", permitAddress);
-		List<BaseModel> permitAddressList = genericDAO.executeSimpleQuery("select obj from PermitAddress obj where obj.permit.id=" +  permitToBeEdited.getId() + " order by obj.id asc");
+		List<BaseModel> permitAddressList = genericDAO.executeSimpleQuery("select obj from PermitAddress obj where obj.deleteFlag='1' and obj.permit.id=" +  permitToBeEdited.getId() + " order by obj.id asc");
 		model.addAttribute("permitAddressList", permitAddressList);
 
 		return urlContext + "/permit";
@@ -479,7 +479,7 @@ public class PermitController extends CRUDController<Permit> {
 				return showPermitCreatePageWithError(request, entity, model, "Permit Fee for the required class/type for the given date range = " + entity.getFormattedStartDate() + " to " + entity.getFormattedEndDate() + " is not available.");
 			} 
 			
-			PermitStatus permitStatus = (PermitStatus)genericDAO.executeSimpleQuery("select obj from PermitStatus obj where obj.status='" + status + "'").get(0);
+			PermitStatus permitStatus = (PermitStatus)genericDAO.executeSimpleQuery("select obj from PermitStatus obj where obj.deleteFlag='1' and obj.status='" + status + "'").get(0);
 			entity.setStatus(permitStatus);
 			
 			try {
@@ -533,12 +533,12 @@ public class PermitController extends CRUDController<Permit> {
 		model.addAttribute("activeSubTab", "permitDetails"); // Permit Address?
 		model.addAttribute("mode", "ADD");
 		
-		List<DeliveryAddress> deliveryAddressList = genericDAO.executeSimpleQuery("select obj from DeliveryAddress obj where obj.id=" + entity.getDeliveryAddress().getId());
-		System.out.println("select obj from DeliveryAddress obj where obj.id=" + entity.getDeliveryAddress().getId());
+		List<DeliveryAddress> deliveryAddressList = genericDAO.executeSimpleQuery("select obj from DeliveryAddress obj where obj.deleteFlag='1' and obj.id=" + entity.getDeliveryAddress().getId());
+		System.out.println("select obj from DeliveryAddress obj where obj.deleteFlag='1' and obj.id=" + entity.getDeliveryAddress().getId());
 		model.addAttribute("editDeliveryAddress", deliveryAddressList);
 		
-		List<BaseModel> locationTypeList = genericDAO.executeSimpleQuery("select obj from LocationType obj where obj.id=" + entity.getLocationType().getId());
-		System.out.println("select obj from LocationType obj where obj.id=" + entity.getLocationType().getId());
+		List<BaseModel> locationTypeList = genericDAO.executeSimpleQuery("select obj from LocationType obj where obj.deleteFlag='1' and obj.id=" + entity.getLocationType().getId());
+		System.out.println("select obj from LocationType obj where obj.deleteFlag='1' and obj.id=" + entity.getLocationType().getId());
 		model.addAttribute("locationType", locationTypeList);
 		
 		PermitNotes notes = new PermitNotes();
@@ -628,7 +628,7 @@ public class PermitController extends CRUDController<Permit> {
 				return ex.getMessage();
 			}*/
 			
-			List<BaseModel> orderPermits = (List<BaseModel>)genericDAO.executeSimpleQuery("select obj from OrderPermits obj where obj.id=" +  entity.getOrderId()+ " order by obj.id desc");
+			List<BaseModel> orderPermits = (List<BaseModel>)genericDAO.executeSimpleQuery("select obj from OrderPermits obj where obj.deleteFlag='1' and obj.id=" +  entity.getOrderId()+ " order by obj.id desc");
 			if (orderPermits != null && orderPermits.size() > 0) {
 				associatedOrderPermitEntry = (OrderPermits) orderPermits.get(0);
 			}
@@ -648,7 +648,7 @@ public class PermitController extends CRUDController<Permit> {
 				entity.setNumber(EMPTY_PERMIT_NUMBER);
 			}
 
-			PermitStatus permitStatus = (PermitStatus)genericDAO.executeSimpleQuery("select obj from PermitStatus obj where obj.status='" + status + "'").get(0);
+			PermitStatus permitStatus = (PermitStatus)genericDAO.executeSimpleQuery("select obj from PermitStatus obj where obj.deleteFlag='1' and obj.status='" + status + "'").get(0);
 			entity.setStatus(permitStatus);
 			
 			try {
@@ -753,7 +753,7 @@ public class PermitController extends CRUDController<Permit> {
 
 	private OrderPermits validatePermitEndDate(Permit entity) throws Exception {
 		OrderPermits associatedOrderPermitEntry = null;
-		List<BaseModel> orderPermits = (List<BaseModel>)genericDAO.executeSimpleQuery("select obj from OrderPermits obj where obj.id=" +  entity.getOrderId()+ " order by obj.id desc");
+		List<BaseModel> orderPermits = (List<BaseModel>)genericDAO.executeSimpleQuery("select obj from OrderPermits obj where obj.deleteFlag='1' and obj.id=" +  entity.getOrderId()+ " order by obj.id desc");
 		if (orderPermits != null && orderPermits.size() > 0) {
 			associatedOrderPermitEntry = (OrderPermits) orderPermits.get(0);
 			if (entity.getEndDate().before(associatedOrderPermitEntry.getOrder().getDeliveryDate())) {
@@ -809,7 +809,7 @@ public class PermitController extends CRUDController<Permit> {
 		}
 				
 		String status = "Pending";
-		PermitStatus permitStatus = (PermitStatus)genericDAO.executeSimpleQuery("select obj from PermitStatus obj where obj.status='" + status + "'").get(0);
+		PermitStatus permitStatus = (PermitStatus)genericDAO.executeSimpleQuery("select obj from PermitStatus obj where obj.deleteFlag='1' and obj.status='" + status + "'").get(0);
 		entity.setStatus(permitStatus);
 		
 		beforeSave(request, entity, model);
@@ -836,7 +836,7 @@ public class PermitController extends CRUDController<Permit> {
 	}
 
 	private void addDeliveryAddAsPermitAdd(HttpServletRequest request, Permit entity) {
-		DeliveryAddress deliveryAddress =  (DeliveryAddress)genericDAO.executeSimpleQuery("select obj from DeliveryAddress obj where obj.id='" + entity.getDeliveryAddress().getId() + "'").get(0);
+		DeliveryAddress deliveryAddress =  (DeliveryAddress)genericDAO.executeSimpleQuery("select obj from DeliveryAddress obj where obj.deleteFlag='1' and obj.id='" + entity.getDeliveryAddress().getId() + "'").get(0);
 		PermitAddress permitAddress = new PermitAddress();
 		permitAddress.setLine1(deliveryAddress.getLine1());
 		permitAddress.setLine2(deliveryAddress.getLine2());
@@ -904,14 +904,14 @@ public class PermitController extends CRUDController<Permit> {
 		//notes.setPermit(entity);
 		notes.setPermit(emptyPermit);
 		model.addAttribute("notesModelObject", notes);
-		List<BaseModel> notesList = genericDAO.executeSimpleQuery("select obj from PermitNotes obj where obj.permit.id=" +  entity.getId() + " order by obj.id asc");
+		List<BaseModel> notesList = genericDAO.executeSimpleQuery("select obj from PermitNotes obj where obj.deleteFlag='1' and obj.permit.id=" +  entity.getId() + " order by obj.id asc");
 		model.addAttribute("notesList", notesList);
 		
 		PermitAddress permitAddress = new PermitAddress();
 		//permitAddress.setPermit(entity);
 		permitAddress.setPermit(emptyPermit);
 		model.addAttribute("permitAddressModelObject", permitAddress);
-		List<BaseModel> permitAddressList = genericDAO.executeSimpleQuery("select obj from PermitAddress obj where obj.permit.id=" +  entity.getId() + " order by obj.line1 asc");
+		List<BaseModel> permitAddressList = genericDAO.executeSimpleQuery("select obj from PermitAddress obj where obj.deleteFlag='1' and obj.permit.id=" +  entity.getId() + " order by obj.line1 asc");
 		model.addAttribute("permitAddressList", permitAddressList);
 		
 		return urlContext + "/permit";
@@ -920,7 +920,7 @@ public class PermitController extends CRUDController<Permit> {
 	@RequestMapping(method = RequestMethod.GET, value = "/customerDeliveryAddress")
 	public @ResponseBody String displayCustomerDeliveryAddress(ModelMap model, HttpServletRequest request) {
 		String customerId = request.getParameter("customerId");
-		List<DeliveryAddress> addressList  = genericDAO.executeSimpleQuery("select obj from DeliveryAddress obj where obj.customer.id=" + customerId  + " and obj.city like 'Chicago'" + " order by line1");
+		List<DeliveryAddress> addressList  = genericDAO.executeSimpleQuery("select obj from DeliveryAddress obj where obj.deleteFlag='1' and obj.customer.id=" + customerId  + " and obj.city like 'Chicago'" + " order by line1");
 		
 		ObjectMapper objectMapper = new ObjectMapper();
 		String json = StringUtils.EMPTY;
@@ -942,13 +942,13 @@ public class PermitController extends CRUDController<Permit> {
 		String validationErrorMsg = StringUtils.EMPTY;
 		
 		if (orderId != null) {
-			List<OrderPermits> orderPermitList = genericDAO.executeSimpleQuery("select obj from OrderPermits obj where obj.order.id=" + orderId);
+			List<OrderPermits> orderPermitList = genericDAO.executeSimpleQuery("select obj from OrderPermits obj where obj.deleteFlag='1' and obj.order.id=" + orderId);
 			if (orderPermitList != null && orderPermitList.size() == 3) {
 				validationErrorMsg = "There are already " + MAX_NUMBER_OF_ASSOCIATED_PERMITS + " permits for this order.";
 			}
 		}
 		
-		List<DeliveryAddress> deliveryAddressList = genericDAO.executeSimpleQuery("select obj from DeliveryAddress obj where obj.id=" + deliveryAddressId);
+		List<DeliveryAddress> deliveryAddressList = genericDAO.executeSimpleQuery("select obj from DeliveryAddress obj where obj.deleteFlag='1' and obj.id=" + deliveryAddressId);
 		DeliveryAddress deliveryAddress = deliveryAddressList.get(0);
 		String city = deliveryAddress.getCity();
 		
@@ -988,7 +988,7 @@ public class PermitController extends CRUDController<Permit> {
 		
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 		String startDateStr = formatter.format(startDate);
-		List<PermitFee> permitFee = genericDAO.executeSimpleQuery("select obj from PermitFee obj where obj.permitType=" + permitTypeId + "and obj.permitClass=" + permitClassId + " and '" + startDateStr + "' BETWEEN obj.effectiveStartDate and obj.effectiveEndDate");
+		List<PermitFee> permitFee = genericDAO.executeSimpleQuery("select obj from PermitFee obj where obj.deleteFlag='1' and obj.permitType=" + permitTypeId + "and obj.permitClass=" + permitClassId + " and '" + startDateStr + "' BETWEEN obj.effectiveStartDate and obj.effectiveEndDate");
 		if (permitFee.isEmpty()) {
 			return StringUtils.EMPTY;
 		} else {
@@ -1001,7 +1001,7 @@ public class PermitController extends CRUDController<Permit> {
 			return null;
 		}
 		
-		PermitType permitTypeObj = (PermitType) genericDAO.executeSimpleQuery("select obj from PermitType obj where obj.id=" + permitTypeId).get(0);
+		PermitType permitTypeObj = (PermitType) genericDAO.executeSimpleQuery("select obj from PermitType obj where obj.deleteFlag='1' and obj.id=" + permitTypeId).get(0);
 		if (permitTypeObj.getPermitType() == null) {
 			return null;
 		}
@@ -1045,15 +1045,15 @@ public class PermitController extends CRUDController<Permit> {
 		notes.setPermit(permit);
 		model.addAttribute("notesModelObject", notes);
 		
-		List<BaseModel> notesList = genericDAO.executeSimpleQuery("select obj from PermitNotes obj where obj.permit.id=" +  permitId + " order by obj.id asc");
+		List<BaseModel> notesList = genericDAO.executeSimpleQuery("select obj from PermitNotes obj where obj.deleteFlag='1' and obj.permit.id=" +  permitId + " order by obj.id asc");
 		model.addAttribute("notesList", notesList);
 		
-		List<BaseModel> permitList = genericDAO.executeSimpleQuery("select obj from Permit obj where obj.id=" + permitId);
+		List<BaseModel> permitList = genericDAO.executeSimpleQuery("select obj from Permit obj where obj.deleteFlag='1' and obj.id=" + permitId);
 		model.addAttribute("modelObject", permitList.get(0));
 		
 		model.addAttribute("editDeliveryAddress", ((Permit)permitList.get(0)).getCustomer().getDeliveryAddress());
 		
-		List<BaseModel> addressList = genericDAO.executeSimpleQuery("select obj from PermitAddress obj where obj.permit.id=" +  permitId + " order by obj.line1 asc");
+		List<BaseModel> addressList = genericDAO.executeSimpleQuery("select obj from PermitAddress obj where obj.deleteFlag='1' and obj.permit.id=" +  permitId + " order by obj.line1 asc");
 		model.addAttribute("permitAddressList", addressList);
 		
 		PermitAddress emptyPermitAddress = new PermitAddress();
@@ -1088,7 +1088,7 @@ public class PermitController extends CRUDController<Permit> {
 
 		updateBaseProperties(request, entity);
 		if (entity.getId() != null) {
-			List<PermitAddress> permitAddressList = genericDAO.executeSimpleQuery("select obj from PermitAddress obj where obj.id=" + entity.getId());
+			List<PermitAddress> permitAddressList = genericDAO.executeSimpleQuery("select obj from PermitAddress obj where obj.deleteFlag='1' and obj.id=" + entity.getId());
 			PermitAddress existingPermitAddress = permitAddressList.get(0);
 			entity.setCreatedAt(existingPermitAddress.getCreatedAt());
 			entity.setCreatedBy(existingPermitAddress.getCreatedBy());
@@ -1105,16 +1105,16 @@ public class PermitController extends CRUDController<Permit> {
 		model.addAttribute("permitAddressModelObject", address);
 		
 		Long permitId = entity.getPermit().getId();
-		List<BaseModel> permitList = genericDAO.executeSimpleQuery("select obj from Permit obj where obj.id=" + permitId);
+		List<BaseModel> permitList = genericDAO.executeSimpleQuery("select obj from Permit obj where obj.deleteFlag='1' and obj.id=" + permitId);
 		model.addAttribute("modelObject", permitList.get(0));
 		
 		model.addAttribute("editDeliveryAddress", ((Permit)permitList.get(0)).getCustomer().getDeliveryAddress());
 		
-		List<BaseModel> addressList = genericDAO.executeSimpleQuery("select obj from PermitAddress obj where obj.permit.id=" +  permitId + " order by obj.id asc");
+		List<BaseModel> addressList = genericDAO.executeSimpleQuery("select obj from PermitAddress obj where obj.deleteFlag='1' and obj.permit.id=" +  permitId + " order by obj.id asc");
 		System.out.println("=======" + ((PermitAddress)addressList.get(addressList.size()-1)).getState());
 		model.addAttribute("permitAddressList", addressList);
 		
-		List<BaseModel> notesList = genericDAO.executeSimpleQuery("select obj from PermitNotes obj where obj.permit.id=" +  permitId + " order by obj.id asc");
+		List<BaseModel> notesList = genericDAO.executeSimpleQuery("select obj from PermitNotes obj where obj.deleteFlag='1' and obj.permit.id=" +  permitId + " order by obj.id asc");
 		model.addAttribute("notesList", notesList);
 		
 		PermitNotes emptyPermitNotes = new PermitNotes();
@@ -1211,7 +1211,7 @@ public class PermitController extends CRUDController<Permit> {
 		List<Permit> listOfPermits = genericDAO.search(getEntityClass(), criteria);
 		
 		for (Permit p : listOfPermits) {
-			List<BaseModel> orders = (List<BaseModel>)genericDAO.executeSimpleQuery("select obj.order from OrderPermits obj where obj.permit.id=" +  p.getId() + " order by obj.id desc");
+			List<BaseModel> orders = (List<BaseModel>)genericDAO.executeSimpleQuery("select obj.order from OrderPermits obj where obj.deleteFlag='1' and obj.permit.id=" +  p.getId() + " order by obj.id desc");
 			if (orders != null && orders.size() > 0) {
 				BaseModel order = orders.get(0);
 				p.setOrderId(order.getId());

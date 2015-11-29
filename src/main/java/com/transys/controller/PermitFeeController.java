@@ -74,7 +74,7 @@ public class PermitFeeController extends CRUDController<PermitFee> {
 	@Override
 	public void setupCreate(ModelMap model, HttpServletRequest request) {
 		Map criterias = new HashMap();
-		model.addAttribute("permitFees", genericDAO.executeSimpleQuery("select DISTINCT(obj.fee) from PermitFee obj order by obj.fee asc"));
+		model.addAttribute("permitFees", genericDAO.executeSimpleQuery("select DISTINCT(obj.fee) from PermitFee obj where obj.deleteFlag='1' order by obj.fee asc"));
 		model.addAttribute("permitClass", genericDAO.findByCriteria(PermitClass.class, criterias, "id", false));
 		model.addAttribute("permitType", genericDAO.findByCriteria(PermitType.class, criterias, "id", false));
 	}

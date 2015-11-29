@@ -57,7 +57,7 @@ public class DeliveryPickupReportController extends CRUDController<Order> {
 		model.addAttribute("ordersList",orderList);
 		model.addAttribute("dumpsterSizeAggregation", setDumpsterSizeAggregation(model, orderList));
 		
-		String addrssQuery = "select obj from DeliveryAddress obj order by obj.line1 asc";
+		String addrssQuery = "select obj from DeliveryAddress obj where obj.deleteFlag='1' order by obj.line1 asc";
 		List<DeliveryAddress> addresses = genericDAO.executeSimpleQuery(addrssQuery);
 		model.addAttribute("deliveryAddresses", addresses);
 		model.addAttribute("deliveryDateFrom", criteria.getSearchMap().get("deliveryDateFrom"));
@@ -76,7 +76,7 @@ public class DeliveryPickupReportController extends CRUDController<Order> {
 		for(Order o : orderList) {
 			selectedOrderIds.append(o.getId() + ",");
 		}
-		List<?> aggregationResults = genericDAO.executeSimpleQuery("select dumpsterSize.size, count(*) from Order p where p.id IN (" + selectedOrderIds.substring(0,selectedOrderIds.lastIndexOf(",")) + ") group by p.dumpsterSize.size");
+		List<?> aggregationResults = genericDAO.executeSimpleQuery("select dumpsterSize.size, count(*) from Order p where p.deleteFlag='1' and p.id IN (" + selectedOrderIds.substring(0,selectedOrderIds.lastIndexOf(",")) + ") group by p.dumpsterSize.size");
 		List<String> dumpsterSizes = new ArrayList<String>();
 		List<String> count = new ArrayList<String>();
 		

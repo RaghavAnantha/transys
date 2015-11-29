@@ -38,9 +38,9 @@ public class DumpsterRentedReportController extends CRUDController<Dumpster> {
 		//TODO fix me
 		criteria.getSearchMap().remove("_csrf");
 		
-		String query = "select obj from DumpsterStatus obj where obj.status = 'Dropped Off' and delete_flag=1";
+		String query = "select obj from DumpsterStatus obj where obj.status = 'Dropped Off' and obj.deleteFlag='1'";
 		model.addAttribute("dumpsterStatus", genericDAO.executeSimpleQuery(query));
-		model.addAttribute("dumpsterSizes", genericDAO.findAll(DumpsterSize.class));
+		model.addAttribute("dumpsterSizes", genericDAO.findAll(DumpsterSize.class, true));
 	}
 	
 	@Override

@@ -81,9 +81,9 @@ public class OrderPermitAlertController extends CRUDController<OrderPermits> {
 		model.addAttribute("permitType", genericDAO.findByCriteria(PermitType.class, criterias, "permitType", false));
 		model.addAttribute("permitStatus", genericDAO.findByCriteria(PermitStatus.class, criterias, "status", false));
 		model.addAttribute("permit", genericDAO.findByCriteria(Permit.class, criterias, "number", false));
-		model.addAttribute("orderStatuses", genericDAO.executeSimpleQuery("select obj from OrderStatus obj where obj.status != 'Closed'"));
+		model.addAttribute("orderStatuses", genericDAO.executeSimpleQuery("select obj from OrderStatus obj where obj.deleteFlag='1' and obj.status != 'Closed'"));
 //		model.addAttribute("orderStatuses", genericDAO.findByCriteria(OrderStatus.class, criterias, "status", false));
-		model.addAttribute("state", genericDAO.findAll(State.class));
+		model.addAttribute("state", genericDAO.findAll(State.class, true));
 
 		SortedSet<String> phoneSet = new TreeSet<String>();
 		SortedSet<String> contactNameSet = new TreeSet<String>();
@@ -263,7 +263,7 @@ public class OrderPermitAlertController extends CRUDController<OrderPermits> {
 		}
 				
 		String permitType = request.getParameter("permitType");
-		PermitType permitTypeObj = (PermitType) genericDAO.executeSimpleQuery("select obj from PermitType obj where obj.id=" + permitType).get(0);
+		PermitType permitTypeObj = (PermitType) genericDAO.executeSimpleQuery("select obj from PermitType obj where obj.deleteFlag='1' and obj.id=" + permitType).get(0);
 		if (startDateObj != null && permitTypeObj.getPermitType() != null) {
 			String tokens[] = permitTypeObj.getPermitType().split("\\s");
 			int noOfDays = new Integer(tokens[0]).intValue();

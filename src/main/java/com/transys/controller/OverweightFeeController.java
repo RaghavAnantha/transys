@@ -76,9 +76,9 @@ public class OverweightFeeController extends CRUDController<OverweightFee> {
 	public void setupCreate(ModelMap model, HttpServletRequest request) {
 		Map criterias = new HashMap();
 		model.addAttribute("dumpsterSizes", genericDAO.findUniqueByCriteria(DumpsterSize.class, criterias, "id", false));
-		model.addAttribute("overweightFee", genericDAO.executeSimpleQuery("select DISTINCT(obj.fee) from OverweightFee obj order by obj.fee asc"));
+		model.addAttribute("overweightFee", genericDAO.executeSimpleQuery("select DISTINCT(obj.fee) from OverweightFee obj where obj.deleteFlag='1' order by obj.fee asc"));
 		model.addAttribute("materialCategories", genericDAO.findByCriteria(MaterialCategory.class, criterias, "category", false));
-		model.addAttribute("tonLimits", genericDAO.executeSimpleQuery("select DISTINCT(obj.tonLimit) from OverweightFee obj order by obj.tonLimit asc"));
+		model.addAttribute("tonLimits", genericDAO.executeSimpleQuery("select DISTINCT(obj.tonLimit) from OverweightFee obj where obj.deleteFlag='1' order by obj.tonLimit asc"));
 	}
 
 	@RequestMapping(method = RequestMethod.POST, value = "/save.do")

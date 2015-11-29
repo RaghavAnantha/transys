@@ -146,10 +146,10 @@ public class MonthlyTransferStationIntakeReportController extends CRUDController
 				// gets the number of dumpsters grouped by dumpsterSize for orders
 				// on a particular delivery date
 				String rollOffBoxesPerYardQuery = "select dumpsterSize0_.size as SIZE, ifnull(count(order0_.dumpsterSizeId),0) AS COUNT, (dumpsterSize0_.size * ifnull(count(order0_.dumpsterSizeId),0)) AS cubicYards FROM `transys`.dumpsterSize dumpsterSize0_ LEFT JOIN `transys`.transysOrder order0_ ON (dumpsterSize0_.id = order0_.dumpsterSizeId AND pickupDate='"
-						+ intakeDate + "') group by dumpsterSize0_.size order by dumpsterSize0_.id";
+						+ intakeDate + "' AND dumpsterSize0_.delete_flag='1' AND order0_.delete_flag='1') group by dumpsterSize0_.size order by dumpsterSize0_.id";
 				List<?> rollOffBoxesPerYardResults = genericDAO.executeNativeQuery(rollOffBoxesPerYardQuery);
 
-				String publicIntakeTonnageQuery = "select ifnull(sum(obj.netWeightTonnage),0) AS tonnage, ifnull(((sum(obj.netWeightTonnage)) * 3.3),0) as cubicYards from `transys`.publicMaterialIntake obj where obj.intakeDate = '"
+				String publicIntakeTonnageQuery = "select ifnull(sum(obj.netWeightTonnage),0) AS tonnage, ifnull(((sum(obj.netWeightTonnage)) * 3.3),0) as cubicYards from `transys`.publicMaterialIntake obj where obj.delete_flag='1' and obj.intakeDate = '"
 						+ intakeDate + "'";// ='2015-10-09'";
 				List<?> publicIntakeTonnageResults = genericDAO.executeNativeQuery(publicIntakeTonnageQuery);
 
@@ -170,7 +170,7 @@ public class MonthlyTransferStationIntakeReportController extends CRUDController
 					monthlyIntakeReportVO.setTotalBoxes(totalBoxes);
 					monthlyIntakeReportVO.setRollOffCubicYards(rollOffCubicYards);
 
-					String rollOffTonnageQuery = "select SUM(netWeightTonnage) from Order obj where obj.pickupDate='"
+					String rollOffTonnageQuery = "select SUM(netWeightTonnage) from Order obj where obj.deleteFlag='1' and obj.pickupDate='"
 							+ intakeDate + "'";// '2015-10-09'";
 					List<?> rollOffTonnageResult = genericDAO.executeSimpleQuery(rollOffTonnageQuery);
 

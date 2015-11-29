@@ -106,7 +106,7 @@ public class RecycleLocationController extends CRUDController<RecycleLocation> {
 		if (materialCategoryObj != null) {
 			String materialCategoryId = materialCategoryObj.toString();
 			if (StringUtils.isNotEmpty(materialCategoryId)) {
-				String query = "select obj from MaterialType obj where obj.materialCategory.id=" + materialCategoryId;
+				String query = "select obj from MaterialType obj where obj.deleteFlag='1' and obj.materialCategory.id=" + materialCategoryId;
 				List<MaterialType> materialTypeList = genericDAO.executeSimpleQuery(query);
 				model.addAttribute("materialTypes", materialTypeList);
 			}
@@ -141,11 +141,11 @@ public class RecycleLocationController extends CRUDController<RecycleLocation> {
 		
 		setupCreate(model, request);
 		
-		String query = "select obj from MaterialType obj where obj.id=" + entity.getMaterialType().getId();
+		String query = "select obj from MaterialType obj where obj.deleteFlag='1' and obj.id=" + entity.getMaterialType().getId();
 		List<MaterialType> materialTypeList = genericDAO.executeSimpleQuery(query);
 		entity.setMaterialType(materialTypeList.get(0));
 		
-		query = "select obj from MaterialType obj where obj.materialCategory.id=" + entity.getMaterialType().getMaterialCategory().getId();
+		query = "select obj from MaterialType obj where obj.deleteFlag='1' and obj.materialCategory.id=" + entity.getMaterialType().getMaterialCategory().getId();
 		List<MaterialType> materialTypesForSelMatCat = genericDAO.executeSimpleQuery(query);
 		model.addAttribute("materialTypes", materialTypesForSelMatCat);
 		
@@ -161,7 +161,7 @@ public class RecycleLocationController extends CRUDController<RecycleLocation> {
 		
 		RecycleLocation recycleLocationToBeEdited = (RecycleLocation)model.get("modelObject");
 		
-		String query = "select obj from MaterialType obj where obj.materialCategory.id=" + recycleLocationToBeEdited.getMaterialType().getMaterialCategory().getId();
+		String query = "select obj from MaterialType obj where obj.deleteFlag='1' and obj.materialCategory.id=" + recycleLocationToBeEdited.getMaterialType().getMaterialCategory().getId();
 		List<MaterialType> materialTypesForSelMatCat = genericDAO.executeSimpleQuery(query);
 		model.addAttribute("materialTypes", materialTypesForSelMatCat);
 		
@@ -187,7 +187,7 @@ public class RecycleLocationController extends CRUDController<RecycleLocation> {
 	}
 	
 	private List<MaterialType> retrieveMaterialTypes(Long materialCategoryId) {
-		String query = "select obj from MaterialType obj where";
+		String query = "select obj from MaterialType obj where obj.deleteFlag='1' and";
 		query	+= " obj.materialCategory.id=" + materialCategoryId + " order by obj.materialName asc";
 		List<MaterialType> materialTypes = genericDAO.executeSimpleQuery(query);
 		return materialTypes;

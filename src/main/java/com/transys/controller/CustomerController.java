@@ -76,9 +76,9 @@ public class CustomerController extends CRUDController<Customer> {
 	 */
 	@Override
 	public void setupCreate(ModelMap model, HttpServletRequest request) {
-		model.addAttribute("customerIds", genericDAO.executeSimpleQuery("select obj.id from Customer obj order by obj.id asc"));
+		model.addAttribute("customerIds", genericDAO.executeSimpleQuery("select obj.id from Customer obj where obj.deleteFlag='1' order by obj.id asc"));
 		
-		List<Customer> customerList = genericDAO.executeSimpleQuery("select obj from Customer obj order by obj.companyName asc");
+		List<Customer> customerList = genericDAO.executeSimpleQuery("select obj from Customer obj where obj.deleteFlag='1' order by obj.companyName asc");
 		model.addAttribute("customer", customerList);
 		
 		SortedSet<String> phoneSet = new TreeSet<String>();
@@ -192,7 +192,7 @@ public class CustomerController extends CRUDController<Customer> {
 		notes.setCustomer(emptyCustomer);
 		model.addAttribute("notesModelObject", notes);
 	
-		List<BaseModel> notesList = genericDAO.executeSimpleQuery("select obj from CustomerNotes obj where obj.customer.id=" +  customerId + " order by obj.id asc");
+		List<BaseModel> notesList = genericDAO.executeSimpleQuery("select obj from CustomerNotes obj where obj.customer.id=" +  customerId + " and obj.deleteFlag='1' order by obj.id asc");
 		model.addAttribute("notesList", notesList);
 		
 		Customer customer = new Customer();
@@ -200,7 +200,7 @@ public class CustomerController extends CRUDController<Customer> {
 		DeliveryAddress address = new DeliveryAddress();
 		address.setCustomer(customer);
 		model.addAttribute("deliveryAddressModelObject", address);
-		List<BaseModel> addressList = genericDAO.executeSimpleQuery("select obj from DeliveryAddress obj where obj.customer.id=" +  customerId + " order by obj.line1 asc");
+		List<BaseModel> addressList = genericDAO.executeSimpleQuery("select obj from DeliveryAddress obj where obj.customer.id=" +  customerId + " and obj.deleteFlag='1' order by obj.line1 asc");
 		model.addAttribute("deliveryAddressList", addressList);
 		
 		populateAggregartionValues(model, customerId);
@@ -341,7 +341,7 @@ public class CustomerController extends CRUDController<Customer> {
 			customerMap.put(customer.getId(), customer);
 		}
         
-      List<OrderFees> orderFeesList = genericDAO.executeSimpleQuery("select obj from OrderFees obj where obj.order.customer.id IN " + ids.toString());
+      List<OrderFees> orderFeesList = genericDAO.executeSimpleQuery("select obj from OrderFees obj where obj.deleteFlag='1' and obj.order.customer.id IN " + ids.toString());
       
       for (Long key : customerMap.keySet()) {
       	CustomerReportVO customerReportVO =  new CustomerReportVO();
@@ -563,7 +563,7 @@ public class CustomerController extends CRUDController<Customer> {
 		notes.setCustomer(emptyCustomer);
 		model.addAttribute("notesModelObject", notes);
 	
-		List<BaseModel> notesList = genericDAO.executeSimpleQuery("select obj from CustomerNotes obj where obj.customer.id=" +  customerId + " order by obj.id asc");
+		List<BaseModel> notesList = genericDAO.executeSimpleQuery("select obj from CustomerNotes obj where obj.customer.id=" +  customerId + " and obj.deleteFlag='1' order by obj.id asc");
 		model.addAttribute("notesList", notesList);
 		
 		emptyCustomer = new Customer();
@@ -572,7 +572,7 @@ public class CustomerController extends CRUDController<Customer> {
 		address.setCustomer(emptyCustomer);
 		model.addAttribute("deliveryAddressModelObject", address);
 		
-		List<BaseModel> addressList = genericDAO.executeSimpleQuery("select obj from DeliveryAddress obj where obj.customer.id=" +  customerId + " order by obj.line1 asc");
+		List<BaseModel> addressList = genericDAO.executeSimpleQuery("select obj from DeliveryAddress obj where obj.customer.id=" +  customerId + " and obj.deleteFlag='1' order by obj.line1 asc");
 		model.addAttribute("deliveryAddressList", addressList);
 		
 		populateAggregartionValues(model, customerId);
@@ -583,7 +583,7 @@ public class CustomerController extends CRUDController<Customer> {
 	
 	private void populateAggregartionValues(ModelMap model, Long customerId) {
 		String orderQuery = "select obj from Order obj where"
-								+ " obj.customer.id=" +  customerId + " order by obj.id desc";
+								+ " obj.customer.id=" +  customerId + " and obj.deleteFlag='1' order by obj.id desc";
 		List<Order> orderList = genericDAO.executeSimpleQuery(orderQuery);
 		Integer totalOrders = orderList.size();
 		
@@ -801,7 +801,7 @@ public class CustomerController extends CRUDController<Customer> {
 		
 		Long customerId = entity.getCustomer().getId();
 		
-		List<Customer> customerList = genericDAO.executeSimpleQuery("select obj from Customer obj where obj.id=" + customerId);
+		List<Customer> customerList = genericDAO.executeSimpleQuery("select obj from Customer obj where obj.id=" + customerId + " and obj.deleteFlag='1'");
 		Customer savedCustomer = customerList.get(0);
 		model.addAttribute("modelObject", savedCustomer);
 
@@ -818,7 +818,7 @@ public class CustomerController extends CRUDController<Customer> {
 		notes.setCustomer(emptyCustomer);
 		model.addAttribute("notesModelObject", notes);
 	
-		List<BaseModel> notesList = genericDAO.executeSimpleQuery("select obj from CustomerNotes obj where obj.customer.id=" +  customerId + " order by obj.id asc");
+		List<BaseModel> notesList = genericDAO.executeSimpleQuery("select obj from CustomerNotes obj where obj.customer.id=" +  customerId + " and obj.deleteFlag='1' order by obj.id asc");
 		model.addAttribute("notesList", notesList);
 		
 		Customer customer = new Customer();
@@ -827,7 +827,7 @@ public class CustomerController extends CRUDController<Customer> {
 		address.setCustomer(customer);
 		model.addAttribute("deliveryAddressModelObject", address);
 		
-		List<BaseModel> addressList = genericDAO.executeSimpleQuery("select obj from DeliveryAddress obj where obj.customer.id=" +  customerId + " order by obj.line1 asc");
+		List<BaseModel> addressList = genericDAO.executeSimpleQuery("select obj from DeliveryAddress obj where obj.customer.id=" +  customerId + " and obj.deleteFlag='1' order by obj.line1 asc");
 		model.addAttribute("deliveryAddressList", addressList);
 		
 		populateAggregartionValues(model, customerId);
@@ -939,7 +939,7 @@ public class CustomerController extends CRUDController<Customer> {
 		}
 		
 		if (entity.getId() != null) {
-			List<DeliveryAddress> deliveryAddressList = genericDAO.executeSimpleQuery("select obj from DeliveryAddress obj where obj.id=" + entity.getId());
+			List<DeliveryAddress> deliveryAddressList = genericDAO.executeSimpleQuery("select obj from DeliveryAddress obj where obj.id=" + entity.getId() + " and obj.deleteFlag='1'");
 			DeliveryAddress existingDeliveryAddress = deliveryAddressList.get(0);
 			entity.setCreatedAt(existingDeliveryAddress.getCreatedAt());
 			entity.setCreatedBy(existingDeliveryAddress.getCreatedBy());
@@ -979,7 +979,7 @@ public class CustomerController extends CRUDController<Customer> {
 		notes.setCustomer(emptyCustomer);
 		model.addAttribute("notesModelObject", notes);
 	
-		List<BaseModel> notesList = genericDAO.executeSimpleQuery("select obj from CustomerNotes obj where obj.customer.id=" +  customerId + " order by obj.id asc");
+		List<BaseModel> notesList = genericDAO.executeSimpleQuery("select obj from CustomerNotes obj where obj.customer.id=" +  customerId + " and obj.deleteFlag='1' order by obj.id asc");
 		model.addAttribute("notesList", notesList);
 		
 		Customer customer = new Customer();
@@ -988,10 +988,10 @@ public class CustomerController extends CRUDController<Customer> {
 		address.setCustomer(customer);
 		model.addAttribute("deliveryAddressModelObject", address);
 		
-		List<Customer> customerList = genericDAO.executeSimpleQuery("select obj from Customer obj where obj.id=" + customerId);
+		List<Customer> customerList = genericDAO.executeSimpleQuery("select obj from Customer obj where obj.id=" + customerId + " and obj.deleteFlag='1'");
 		model.addAttribute("modelObject", customerList.get(0));
 		
-		List<DeliveryAddress> addressList = genericDAO.executeSimpleQuery("select obj from DeliveryAddress obj where obj.customer.id=" +  customerId + " order by obj.line1 asc");
+		List<DeliveryAddress> addressList = genericDAO.executeSimpleQuery("select obj from DeliveryAddress obj where obj.customer.id=" +  customerId + " and obj.deleteFlag='1' order by obj.line1 asc");
 		model.addAttribute("deliveryAddressList", addressList);
 		
 		populateAggregartionValues(model, customerId);
@@ -1153,7 +1153,7 @@ public class CustomerController extends CRUDController<Customer> {
 		//model.addAttribute("modelObject", entity);
 		
 		//Or retrieve cust again?
-		List<State> stateList = genericDAO.executeSimpleQuery("select obj from State obj where obj.id= " + entity.getState().getId() + " order by obj.name");
+		List<State> stateList = genericDAO.executeSimpleQuery("select obj from State obj where obj.id= " + entity.getState().getId() + " and obj.deleteFlag='1' order by obj.name");
 		entity.getState().setName(stateList.get(0).getName());
 		
 		return constructResponseJson(entity);

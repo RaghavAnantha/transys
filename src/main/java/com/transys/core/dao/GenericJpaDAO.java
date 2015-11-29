@@ -98,7 +98,11 @@ public class GenericJpaDAO implements GenericDAO {
 	@Override
 	public <T extends BaseModel> List<T> findAll(Class<T> clazz, boolean activeOnly) {
 		Map criterias = new HashMap();
-		criterias.put("status", 1);
+//		criterias.put("status", 1);
+		if (activeOnly) {
+			updateSearchForNonDeletedItems(criterias);
+		} 
+		
 		return findByCriteria(clazz, criterias);
 	}
 
@@ -110,144 +114,9 @@ public class GenericJpaDAO implements GenericDAO {
 	@Override
 	public <T extends BaseModel> List<T> findByCriteria(Class<T> clazz, Map criterias, String sortField, boolean desc) {
 		// Build the Query String with Search Criteria
-		int count = 0;
-		int counter = 0;
-		StringBuilder query = new StringBuilder("Select obj from ").append(clazz.getSimpleName())
-				.append(" obj where 1=1");
-		if (criterias != null && criterias.size() > 0) {
-			Object[] keyArray = criterias.keySet().toArray();
-			for (int i = 0; i < keyArray.length; i++) {
-				if (keyArray[i].toString().startsWith("||")) {
-					counter++;
-				}
-			}
-			if (counter == 1)
-				query = new StringBuilder("Select obj from ").append(clazz.getSimpleName()).append(" obj where 1!=1");
-			for (int i = 0; i < keyArray.length; i++) {
-				if (keyArray[i].toString().startsWith("||")) {
-					if (count == 0 && counter > 1)
-						query.append(" and ( ");
-					else
-						query.append(" or ");
-					if (criterias.get(keyArray[i]).toString().contains("null")) {
-						if (criterias.get(keyArray[i]).toString().contains("!"))
-							query.append(" obj.").append(keyArray[i]).append(" IS NOT NULL");
-						else
-							query.append(" obj.").append(keyArray[i]).append(" IS NULL");
-					} else if (criterias.get(keyArray[i]).toString().contains("<>")
-							|| criterias.get(keyArray[i]).toString().contains("!=")) {
-						query.append(" obj.").append(keyArray[i]).append("!=:").append("p" + i);
-					} else if (criterias.get(keyArray[i]).toString().contains(",") && criterias.get(keyArray[i].toString()).toString().startsWith("$INCLUDE_COMMA$")) {
-						StringBuilder valBuilder = new StringBuilder();
-						String[] values = criterias.get(keyArray[i]).toString().trim().split(",");
-						for (int j = 1; j < values.length; j++) {
-							values[j] = "'" + values[j] + "',";
-							valBuilder.append(values[j]);
-						}
-						if (valBuilder.length() > 1) {
-							valBuilder = valBuilder.deleteCharAt(valBuilder.length() - 1);
-							query.append(" obj.").append(keyArray[i]).append(" IN (" + valBuilder.toString() + ")");
-						}
-					} else
-						query.append(" obj.")
-								.append(keyArray[i].toString().substring(keyArray[i].toString().indexOf("|") + 2)).append("=:")
-								.append("p" + i);
-					count++;
-				}
-			}
-			if (count > 1)
-				query.append(" )");
-			for (int i = 0; i < keyArray.length; i++) {
-				if (keyArray[i].toString().startsWith("||")) {
-					continue;
-				} else if (criterias.get(keyArray[i]).toString().contains("null")) {
-					if (criterias.get(keyArray[i]).toString().contains("!"))
-						query.append(" and obj.").append(keyArray[i]).append(" IS NOT NULL");
-					else
-						query.append(" and obj.").append(keyArray[i]).append(" IS NULL");
-				} else if (criterias.get(keyArray[i]).toString().contains("<>")
-						|| criterias.get(keyArray[i]).toString().contains("!=")) {
-					query.append(" and obj.").append(keyArray[i]).append("!=:").append("p" + i);
-				} else if (criterias.get(keyArray[i]).toString().contains(">")) {
-					SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-					String modifiedValue = criterias.get(keyArray[i]).toString().replace(">", "");
-					try {
-						criterias.put(keyArray[i], dateFormat.parse(modifiedValue));
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-					query.append(" and obj.").append(keyArray[i]).append(">:").append("p" + i);
-				} else if (criterias.get(keyArray[i]).toString().contains(",")  && criterias.get(keyArray[i].toString()).toString().startsWith("$INCLUDE_COMMA$")) {
-					StringBuilder valBuilder = new StringBuilder();
-					String[] values = criterias.get(keyArray[i]).toString().trim().split(",");
-					for (int j = 1; j < values.length; j++) {
-						values[j] = "'" + values[j] + "',";
-						valBuilder.append(values[j]);
-					}
-					if (valBuilder.length() > 1) {
-						valBuilder = valBuilder.deleteCharAt(valBuilder.length() - 1);
-						query.append(" and obj.").append(keyArray[i]).append(" IN (" + valBuilder.toString() + ")");
-					}
-				} else if (keyArray[i].toString().equalsIgnoreCase("dateField") && criterias.get("from") != null
-						&& criterias.get("to") != null) {
-					query.append(" and obj.").append(criterias.get("dateField"));
-					Timestamp firstDate = new Timestamp(((Date) criterias.get("from")).getTime());
-					Timestamp secondDate = new Timestamp(((Date) criterias.get("to")).getTime() + 86399999);
-					//query.append(" Between '" + firstDate + "' AND '" + secondDate + "'");
-					/** 
-					 * Added
-					 */
-					query.append(" and obj.").append(criterias.get("dateField")); 
-					query.append(" >= '" + firstDate + "' AND <= '" + secondDate + "'");
-					/** 
-					 * Ended
-					 */
-				} else {
-					if (keyArray[i].toString().equalsIgnoreCase("dateField")) {
-						// Do nothing
-					} else if (keyArray[i].toString().equalsIgnoreCase("from")) {
-						// Do nothing
-					} else if (keyArray[i].toString().equalsIgnoreCase("to")) {
-						// Do nothing
-					} else
-						query.append(" and obj.").append(keyArray[i]).append("=:").append("p" + i);
-				}
-			}
-		}
-		if (sortField != null) {
-			query.append(" ORDER BY obj.").append(sortField);
-			if (!desc)
-				query.append(" asc");
-			else
-				query.append(" desc");
-		}
-		// Build the query Object
-		Query jpaQuery = entityManager.createQuery(query.toString());
-		// Set the search Parameters for the query
-		if (criterias != null && criterias.size() > 0) {
-			Object[] keyArray = criterias.keySet().toArray();
-			for (int i = 0; i < keyArray.length; i++) {
-				if (criterias.get(keyArray[i]).toString().contains("!="))
-					jpaQuery.setParameter("p" + i, criterias.get(keyArray[i]).toString()
-							.substring(criterias.get(keyArray[i]).toString().lastIndexOf("=") + 1));
-				else if (criterias.get(keyArray[i]).toString().contains("null")) {
-					// Do nothing
-				} else if (criterias.get(keyArray[i]).toString().contains(",") && criterias.get(keyArray[i].toString()).toString().startsWith("$INCLUDE_COMMA$")) {
-					// Do nothing
-				} else if (keyArray[i].toString().equalsIgnoreCase("dateField")) {
-					// Do nothing
-				} else if (keyArray[i].toString().equalsIgnoreCase("from")) {
-					// Do nothing
-				} else if (keyArray[i].toString().equalsIgnoreCase("to")) {
-					// Do nothing
-				} else
-					jpaQuery.setParameter("p" + i, criterias.get(keyArray[i]));
-			}
-		}
-		// Execute the query and return List of objects
-		return jpaQuery.getResultList();
+		return findByCriteria(clazz, criterias, true, sortField, desc, null);
 	}
-
+	
 	@Override
 	public <T extends BaseModel> List<T> findByNamedQuery(String namedQuery, Map<String, Object> map) {
 		Query q = entityManager.createNamedQuery(namedQuery);
@@ -342,18 +211,20 @@ public class GenericJpaDAO implements GenericDAO {
 		queryCount.append(searchString.toString());
 		if (groupField != null)
 			searchString.append(" GROUP BY " + groupField);
-		if (orderField != null)
+		if (orderField != null) {
 			searchString.append(" ORDER BY " + orderField);
-		else {
+			
+			if (desc != null) {
+				if (!desc)
+					searchString.append(" asc");
+				else
+					searchString.append(" desc");
+			}
+		} else {
 			// Setting default search result to be sorted by created at
 			searchString.append(" ORDER BY createdAt DESC");
 		}
-		if (desc != null) {
-			if (!desc)
-				searchString.append(" asc");
-			else
-				searchString.append(" desc");
-		}
+		
 		Long recordCount = (Long) entityManager.createQuery(queryCount.toString()).getSingleResult();
 		criteria.setRecordCount(recordCount.intValue());
 		StringBuffer queryStmt = new StringBuffer(" from " + clazz.getSimpleName() + " p where 1=1 ");
@@ -380,18 +251,20 @@ public class GenericJpaDAO implements GenericDAO {
 		//queryCount.append(searchString.toString());
 		if (groupField != null)
 			searchString.append(" GROUP BY " + groupField);
-		if (orderField != null)
+		if (orderField != null) {
 			searchString.append(" ORDER BY " + orderField);
-		else {
+			
+			if (desc != null) {
+				if (!desc)
+					searchString.append(" asc");
+				else
+					searchString.append(" desc");
+			}
+		} else {
 			// Setting default search result to be sorted by created at
 			searchString.append(" ORDER BY createdAt DESC");
 		}
-		if (desc != null) {
-			if (!desc)
-				searchString.append(" asc");
-			else
-				searchString.append(" desc");
-		}
+		
 		//Long recordCount = (Long) entityManager.createQuery(queryCount.toString()).getSingleResult();
 		//criteria.setRecordCount(recordCount.intValue());
 		StringBuffer queryStmt = new StringBuffer(" from " + clazz.getSimpleName() + " p where 1=1 ");
@@ -434,6 +307,7 @@ public class GenericJpaDAO implements GenericDAO {
 		StringBuffer queryCount = new StringBuffer("select p from " + clazz.getSimpleName() + " p");
 		StringBuffer searchString = new StringBuffer("");
 		if (criteria != null && criteria.getSearchMap() != null) {
+			updateSearchForNonDeletedItems(criteria.getSearchMap());
 			Object[] param = criteria.getSearchMap().keySet().toArray();
 			for (int i = 0; i < param.length; i++) {
 				if (criteria.getSearchMap().get(param[i]) != null)
@@ -454,49 +328,45 @@ public class GenericJpaDAO implements GenericDAO {
 		Query q = entityManager.createQuery(queryCount.toString());
 		return q.getResultList();
 	}
-
+	
 	@Override
 	public <T extends BaseModel> List<T> findByCriteria(Class<T> clazz, Map criterias, boolean orderResult,
 			String sortField, boolean desc, String groupField) {
-		// Build the Query String with Search Criteria
-		StringBuilder query = new StringBuilder("Select obj from ").append(clazz.getSimpleName())
-				.append(" obj where 1=1");
-		if (criterias != null && criterias.size() > 0) {
-			Object[] keyArray = criterias.keySet().toArray();
-			for (int i = 0; i < keyArray.length; i++) {
-				if (criterias.get(keyArray[i]).toString().contains("null")) {
-					if (criterias.get(keyArray[i]).toString().contains("!"))
-						query.append(" and obj.").append(keyArray[i]).append(" IS NOT NULL");
-					else
-						query.append(" and obj.").append(keyArray[i]).append(" IS NULL");
-				} else {
-					query.append(" and obj.").append(keyArray[i]).append("=:").append("p" + i);
-				}
-			}
+		Boolean containsOr = false;
+		int count = 0;
+		StringBuffer queryCount = new StringBuffer("select count(p) from " + clazz.getSimpleName() + " p where 1=1 ");
+		StringBuffer searchString = new StringBuffer("");
+		if (criterias != null) {
+			searchString = createQueryFromCriterias(clazz, criterias, containsOr, count);
 		}
-		if (orderResult) {
-			if (sortField != null) {
-				query.append(" ORDER BY obj.").append(sortField);
-				if (!desc)
-					query.append(" asc");
-				else
-					query.append(" desc");
-			}
+		if (containsOr && count == 1)
+			queryCount = new StringBuffer("select count(p) from " + clazz.getSimpleName() + " p where 1!=1 ");
+		queryCount.append(searchString.toString());
+		if (groupField != null)
+			searchString.append(" GROUP BY " + groupField);
+		if (orderResult && sortField != null) {
+			searchString.append(" ORDER BY " + sortField);
+		
+			if (!desc)
+				searchString.append(" asc");
+			else
+				searchString.append(" desc");
+			
+		} else {
+			// Setting default search result to be sorted by created at
+			searchString.append(" ORDER BY createdAt DESC");
 		}
-		if (groupField != null) {
-			query.append(" GROUP BY obj.").append(groupField);
-		}
-		// Build the query Object
-		int index = 0;
-		if (criterias != null && criterias.size() > 0) {
-			Object[] keyArray = criterias.keySet().toArray();
-			for (int i = 0; i < keyArray.length; i++) {
-				if (!criterias.get(keyArray[i]).toString().contains("null")) {
-					index++;
-				}
-			}
-		}
-		Query jpaQuery = entityManager.createQuery(query.toString());
+
+		StringBuffer queryStmt = new StringBuffer(" from " + clazz.getSimpleName() + " p where 1=1 ");
+		if (containsOr && count == 1)
+			queryStmt = new StringBuffer(" from " + clazz.getSimpleName() + " p where 1!=1 ");
+		queryStmt.append(searchString.toString());
+		System.out.println("***** the search string is " + queryStmt.toString());
+		
+		return entityManager.createQuery(queryStmt.toString()).getResultList();
+				
+		/*Query jpaQuery = entityManager.createQuery(queryStmt.toString());
+		System.out.println("JPA query = " + jpaQuery.toString());
 		// Set the search Parameters for the query
 		if (criterias != null && criterias.size() > 0) {
 			Object[] keyArray = criterias.keySet().toArray();
@@ -515,11 +385,13 @@ public class GenericJpaDAO implements GenericDAO {
 				} else if (keyArray[i].toString().equalsIgnoreCase("to")) {
 					// Do nothing
 				} else
-					jpaQuery.setParameter("p" + i, criterias.get(keyArray[i]));
+//					jpaQuery.setParameter("p" + i, criterias.get(keyArray[i]));
+					jpaQuery.setParameter("obj", criterias.get(keyArray[i]));
 			}
 		}
 		// Execute the query and return List of objects
-		return jpaQuery.getResultList();
+		System.out.println("JPA query (2) = " + jpaQuery.toString());
+		return jpaQuery.getResultList();*/
 	}
 
 	@Override
@@ -545,6 +417,7 @@ public class GenericJpaDAO implements GenericDAO {
 		int counter = 0;
 		StringBuffer searchString = new StringBuffer("");
 		if (criterias != null) {
+			updateSearchForNonDeletedItems(criterias); 
 			for (Object param : criterias.keySet()) {
 				if (param.toString().toUpperCase().startsWith("||EXCLUDE.")) {
 					continue;
@@ -589,6 +462,10 @@ public class GenericJpaDAO implements GenericDAO {
 			}
 		}
 		return searchString;
+	}
+
+	private void updateSearchForNonDeletedItems(Map criterias) {
+		criterias.put("deleteFlag", "1");
 	}
 
 	private void createSingleSearchCriteria(Map criterias, StringBuffer searchString, Object param) {

@@ -92,7 +92,7 @@ public class MaterialTypeController extends CRUDController<MaterialType> {
 		if (materialCategoryObj != null) {
 			String materialCategoryId = materialCategoryObj.toString();
 			if (StringUtils.isNotEmpty(materialCategoryId)) {
-				String query = "select obj from MaterialType obj where obj.materialCategory.id=" + materialCategoryId 
+				String query = "select obj from MaterialType obj where obj.deleteFlag='1' and obj.materialCategory.id=" + materialCategoryId 
 						+ " order by obj.materialName asc";
 				List<MaterialType> materialTypeList = genericDAO.executeSimpleQuery(query);
 				model.addAttribute("materialTypes", materialTypeList);
@@ -134,7 +134,7 @@ public class MaterialTypeController extends CRUDController<MaterialType> {
 	}
 	
 	private List<MaterialType> retrieveMaterialTypes(Long materialCategoryId) {
-		String query = "select obj from MaterialType obj where";
+		String query = "select obj from MaterialType obj where obj.deleteFlag='1' and";
 		query	+= " obj.materialCategory.id=" + materialCategoryId + " order by obj.materialName asc";
 		List<MaterialType> materialTypes = genericDAO.executeSimpleQuery(query);
 		return materialTypes;
