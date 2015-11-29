@@ -103,8 +103,16 @@ public class ExcelReportGenerator {
 						 
 						 if (value instanceof String) {
 							 cell.setCellValue(value.toString());
-							 if (columnWidths.get(columnIndex-1) < value.toString().length()) {
-								 columnWidths.set(columnIndex-1, value.toString().length());
+							 String regex = "^[A-Z0-9]+$";
+							 int length = value.toString().length();
+							 if (!((String) value).matches(regex)) {
+								 System.out.println("Special character - increasing column width by 5");
+								 // special character, give more spaces
+								 length += 5;
+							 }
+							 
+							 if (columnWidths.get(columnIndex-1) < length) {
+								 columnWidths.set(columnIndex-1, length);
 							 }
 						 } else if (value instanceof BigDecimal) {
 							 cell.setCellValue(((BigDecimal)value).doubleValue());

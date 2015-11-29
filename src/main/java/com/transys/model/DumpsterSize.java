@@ -43,4 +43,9 @@ public class DumpsterSize extends AbstractBaseModel {
 	public void setPermitClass(PermitClass permitClass) {
 		this.permitClass = permitClass;
 	}
+	
+	@Override
+	public String toString() {
+		return getSize();
+	}
 }

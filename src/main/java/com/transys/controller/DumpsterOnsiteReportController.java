@@ -3,6 +3,7 @@ package com.transys.controller;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.transys.core.report.generator.ExcelReportGenerator;
 import com.transys.core.util.MimeUtil;
 import com.transys.model.Customer;
 import com.transys.model.DeliveryAddress;
@@ -77,17 +79,17 @@ public class DumpsterOnsiteReportController extends CRUDController<Dumpster> {
 			HttpServletResponse response, @RequestParam("type") String type,
 			Object objectDAO, Class clazz) {
 		try {
-			List<Map<String,Object>> reportData = prepareReportData(model, request);
+			List<Dumpster> reportData = prepareReportData(model, request);
 			type = setRequestHeaders(response, type, "dumpsterOnsiteReport");
-			
-			ByteArrayOutputStream out = new ByteArrayOutputStream();
-			Map<String, Object> params = new HashMap<String, Object>();
 
-			out = dynamicReportService.generateStaticReport("dumpsterOnsiteReport", reportData, params, type, request);
-			/*} else {
-				out = dynamicReportService.generateStaticReport("ordersRevenueReport" + "print", reportData, params, type,
-						request);
-			}*/
+			Map<String, String> headers = new LinkedHashMap<>();
+			headers.put("Dumpster Size", "dumpsterSize");
+			headers.put("Dumpster #", "dumpsterNum");
+			headers.put("Status", "status");
+			
+			ExcelReportGenerator reportGenerator = new ExcelReportGenerator();
+			reportGenerator.setTitleMergeCellRange("$A$1:$D$1");
+			ByteArrayOutputStream out = reportGenerator.exportReport("Dumpster On-site Report", headers, reportData);
 
 			out.writeTo(response.getOutputStream());
 			out.close();
@@ -100,32 +102,14 @@ public class DumpsterOnsiteReportController extends CRUDController<Dumpster> {
 		}
 	}
 	
-	private List<Map<String, Object>> prepareReportData(ModelMap model, HttpServletRequest request) {
+	private List<Dumpster> prepareReportData(ModelMap model, HttpServletRequest request) {
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		criteria.getSearchMap().remove("_csrf");
+		criteria.getSearchMap().put("status.status", "!=Dropped Off");
 	
 		List<Dumpster> dumpsterInfoList = genericDAO.search(getEntityClass(), criteria, "id", null, null);
-		List<Map<String, Object>> reportData = new ArrayList<Map<String, Object>>();
-
-		for (Dumpster aDumpster : dumpsterInfoList) {
-			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("dumpsterSize", aDumpster.getDumpsterSize().getSize());
-			map.put("dumpsterNum", aDumpster.getDumpsterNum());
-			map.put("status",aDumpster.getStatus().getStatus());
-			
-			ObjectMapper objectMapper = new ObjectMapper();
-			String jSonResponse = StringUtils.EMPTY;
-			try {
-				jSonResponse = objectMapper.writeValueAsString(map);
-				System.out.println(jSonResponse);
-			} catch (JsonProcessingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-			reportData.add(map);
-		}
-		return reportData;
+		
+		return dumpsterInfoList;
 	}
 
 }
