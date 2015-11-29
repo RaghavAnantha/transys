@@ -517,9 +517,12 @@ function populateTotalFees() {
 	var finalTotalFees = (totalFees - discountAmountFloat).toFixed(2);
 	$("#orderFees\\.totalFees").val(finalTotalFees);
 	
-	var totalPaid = parseFloat($('#totalPaid').html());
-	var balanceDue = finalTotalFees - totalPaid;
-	$('#balanceDue').html(balanceDue.toFixed(2)); 
+	var totalPaid = $('#totalPaid').html();
+	if (totalPaid != "") {
+		var totalPaidFloat = parseFloat(totalPaid);
+		var balanceDue = finalTotalFees - totalPaidFloat;
+		$('#balanceDue').html(balanceDue.toFixed(2)); 
+	}
 }
 
 function validateOrderForm() {
@@ -961,8 +964,8 @@ function updateTotalPaid() {
 				</label>
 				<label style="display: inline-block; font-weight: normal">
 					&nbsp;
-					<a href="/customer/createModal.do" id="addCustomerLink">
-						<img src="/images/addnew.png" border="0" style="float:bottom" class="toolbarButton">
+					<a href="${ctx}/customer/createModal.do" id="addCustomerLink">
+						<img src="${ctx}/images/addnew.png" border="0" style="float:bottom" class="toolbarButton">
 					</a>
 				</label> 
 				<form:errors path="customer" cssClass="errorMessage" />
@@ -1004,8 +1007,8 @@ function updateTotalPaid() {
 				</label>
 				<label style="display: inline-block; font-weight: normal">
 					&nbsp;
-					<a href="/customer/deliveryAddressCreateModal.do" id="addDeliveryAddressLink" >
-						<img src="/images/addnew.png" border="0" style="float:bottom" class="toolbarButton">
+					<a href="${ctx}/customer/deliveryAddressCreateModal.do" id="addDeliveryAddressLink" >
+						<img src="${ctx}/images/addnew.png" border="0" style="float:bottom" class="toolbarButton">
 					</a>
 				</label>
 				<form:errors path="deliveryAddress" cssClass="errorMessage" />
@@ -1223,8 +1226,8 @@ function updateTotalPaid() {
 				</label>
 				<label style="display: inline-block; font-weight: normal">
 					&nbsp;
-					<a href="/permit/createForCustomerModal.do" id="addPermitLink" >
-						<img src="/images/addnew.png" border="0" style="float:bottom" class="toolbarButton">
+					<a href="${ctx}/permit/createForCustomerModal.do" id="addPermitLink" >
+						<img src="${ctx}/images/addnew.png" border="0" style="float:bottom" class="toolbarButton">
 					</a>
 				</label>
 	        </td>
@@ -1650,7 +1653,7 @@ $("#addPermitLink").click(function (ev) {
 	var newPermitUrl = $(this).attr("href");
 	
 	$.ajax({
-  		url: "/permit/validatePermitCanBeAdded.do?orderId=" + orderId + "&deliveryAddressId=" + deliveryAddressId,
+  		url: "${ctx}/permit/validatePermitCanBeAdded.do?orderId=" + orderId + "&deliveryAddressId=" + deliveryAddressId,
        	type: "GET",
        	success: function(responseData, textStatus, jqXHR) {
     	   	var validationErrorMsg = jQuery.parseJSON(responseData);

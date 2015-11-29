@@ -1,37 +1,12 @@
 <%@include file="/common/taglibs.jsp"%>
 
 <script type="text/javascript">
-function populateDeliveryAddress() {
-	
-	var deliveryAddressSelect = $('#deliveryAddressSelect');
-	deliveryAddressSelect.empty();
-	
-	var firstOption = $('<option value="">'+ "----Please Select----" +'</option>');
-	deliveryAddressSelect.append(firstOption);
-	
-	var customerId = $('#customerSelect').val();
-	$.ajax({
-  		url: "customerDeliveryAddress.do?customerId=" + customerId,
-       	type: "GET",
-       	success: function(responseData, textStatus, jqXHR) {
-    	   	var addressList = jQuery.parseJSON(responseData);
-    	   	$.each(addressList, function () {
-    	   	    $("<option />", {
-    	   	        val: this.id,
-    	   	        text: this.line1 + ", " + this.line2
-    	   	    }).appendTo(deliveryAddressSelect);
-    	   	});
-		}
-	}); 
-}
-
 function populateEndDate() {
 	$('#endDateInput').empty();
 	var startDateValue = $('#datepicker8').val();
-	var permitTypeValue = $('#permitTypeSelect').val();
+	var permitTypeValue = $('#permitTypeSelectModal').val();
 	
-	if (startDateValue != '' && permitTypeValue != '') {
-		
+	if (startDateValue != "" && permitTypeValue != "") {
 		$.ajax({
 	  		url: "calculatePermitEndDate.do?startDate=" + startDateValue + "&permitTypeId=" + permitTypeValue,
 	       	type: "GET",
@@ -66,7 +41,7 @@ $("#permitModalFromAlertForm").submit(function (ev) {
     ev.preventDefault();
 });
 </script>
-<form:form action="/permit/savePermitFromAlert.do" name="permitModalFromAlertForm" id="permitModalFromAlertForm" commandName="modelObject" method="post" >
+<form:form action="${ctx}/permit/savePermitFromAlert.do" name="permitModalFromAlertForm" id="permitModalFromAlertForm" commandName="modelObject" method="post" >
 	<form:hidden path="orderId" value="${associatedOrderID.id}" />
 	<table id="form-table" class="table">
 		<tr><td colspan="10"></td></tr>
@@ -127,7 +102,7 @@ $("#permitModalFromAlertForm").submit(function (ev) {
 			
 			<td class="form-left"><transys:label code="Permit Type" /><span class="errorMessage">*</span></td>
 			<td>
-				<form:select id="permitTypeSelect" cssClass="flat form-control input-sm" path="permitType" style="width: 175px !important" onChange="return populateEndDate();">
+				<form:select id="permitTypeSelectModal" cssClass="flat form-control input-sm" path="permitType" style="width: 175px !important" onChange="return populateEndDate();">
 					<form:options items="${permitType}" itemValue="id" itemLabel="permitType" />
 				</form:select>
 			 	<form:errors path="permitType.permitType" cssClass="errorMessage" />

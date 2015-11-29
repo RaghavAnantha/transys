@@ -103,8 +103,8 @@
 	</tr>
 </table>
 
-<a href="/customer/generateCustomerOrdersReport.do?type=xlsx"><img src="/images/excel.png" border="0" style="float:right" class="toolbarButton"></a>
-<a href="/customer/generateCustomerOrdersReport.do?type=pdf"><img src="/images/pdf.png" border="0" style="float:right" class="toolbarButton"></a>
+<a href="generateCustomerOrdersReport.do?type=xlsx"><img src="${ctx}/images/excel.png" border="0" style="float:right" class="toolbarButton"></a>
+<a href="generateCustomerOrdersReport.do?type=pdf"><img src="${ctx}/images/pdf.png" border="0" style="float:right" class="toolbarButton"></a>
 <form:form name="customerOrdersReportDetails" id="customerOrdersReportDetails" class="tab-color">
 	<transys:datatable urlContext="customer" baseObjects="${customerOrdersReportList[0].orderList}"
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"

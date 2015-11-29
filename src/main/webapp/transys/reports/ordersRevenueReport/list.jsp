@@ -52,8 +52,8 @@
 	</tr>
 </table>
 
-<a href="/reports/ordersRevenueReport/generateOrdersRevenueReport.do?type=xls"><img src="/images/excel.png" border="0" style="float:right" class="toolbarButton"></a>
-<a href="/reports/ordersRevenueReport/generateOrdersRevenueReport.do?type=pdf"><img src="/images/pdf.png" border="0" style="float:right" class="toolbarButton"></a>
+<a href="generateOrdersRevenueReport.do?type=xls"><img src="${ctx}/images/excel.png" border="0" style="float:right" class="toolbarButton"></a>
+<a href="generateOrdersRevenueReport.do?type=pdf"><img src="${ctx}/images/pdf.png" border="0" style="float:right" class="toolbarButton"></a>
 <form:form name="ordersRevenueReport" id="ordersRevenueReport" class="tab-color">
 	<transys:datatable urlContext="reports/ordersRevenueReports"  baseObjects="${ordersList}"
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"

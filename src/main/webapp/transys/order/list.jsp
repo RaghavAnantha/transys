@@ -145,17 +145,17 @@ function populateCustomerDeliveryAddress() {
 			</td>
 		</tr>
 		<tr>
-			<td class="form-left"><transys:label code="Pick Up Date From" /></td>
+			<td class="form-left">Pick Up Date From</td>
 			<td class="wide">
 				<input class="flat" id="datepicker2" name="pickupDateFrom" value="${sessionScope.searchCriteria.searchMap['pickupDateFrom']}" style="width: 175px !important" />
 			</td>
-			<td class="form-left"><transys:label code="Pick Up Date To" /></td>
+			<td class="form-left">Pick Up Date To</td>
 			<td>
 				<input class="flat" id="datepicker3" name="pickupDateTo" value="${sessionScope.searchCriteria.searchMap['pickupDateTo']}" style="width: 175px !important" />
 			</td>
 		</tr>
 		<tr>
-			<td class="form-left form-left-ext"><transys:label code="Balance Amount Due" /></td>
+			<td class="form-left form-left-ext">Balance Amount Due</td>
 			<td>
 				<c:set var="balanceAmountDueYesChecked" value="" />
 				<c:if test="${sessionScope.searchCriteria.searchMap['balanceAmountDue'] == '!=0.00'}">

@@ -172,7 +172,7 @@
 </form:form>
 
 <div class="modal fade" id="addNewPermitModal" role="dialog" data-backdrop="static" data-remote="false" data-toggle="modal">
-	<div class="modal-dialog" style="width:90% !important">
+	<div class="modal-dialog" style="width:60% !important">
 		<div class="modal-content">
 		 	<div class="modal-header">
         		<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -188,7 +188,7 @@
 </div>
 
 <div class="modal fade" id="addOrderNotesModal" role="dialog" data-backdrop="static" data-remote="false" data-toggle="modal">
-	<div class="modal-dialog" style="width:90% !important">
+	<div class="modal-dialog" style="width:60% !important">
 		<div class="modal-content">
 		 	<div class="modal-header">
         		<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>

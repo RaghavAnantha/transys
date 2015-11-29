@@ -443,7 +443,9 @@ public class CustomerController extends CRUDController<Customer> {
 		
 		OrderFees anOrderFees = anOrder.getOrderFees();
 		anOrderReportVO.setDumpsterPrice(anOrderFees.getDumpsterPrice());
-		anOrderReportVO.setCityFee(anOrderFees.getCityFee());
+		
+		anOrderReportVO.setCityFee(anOrderFees.getCityFee() == null ? (new BigDecimal("0.00")) : anOrderFees.getCityFee());
+		
 		anOrderReportVO.setPermitFees(anOrderFees.getTotalPermitFees());
 		anOrderReportVO.setOverweightFee(anOrderFees.getOverweightFee());
 		anOrderReportVO.setAdditionalFees(anOrderFees.getTotalAdditionalFees());

@@ -91,7 +91,7 @@ function clearPopupDialogSuccessMessage() {
 </div>
 
 <div class="modal fade" id="popupDialog" role="dialog" data-backdrop="static" data-keyboard="false">
-	<div class="modal-dialog" style="width:90% !important">
+	<div class="modal-dialog" style="width:60% !important">
 		<div class="modal-content">
 		 	<div class="modal-header" id="popupDialogHeader">
         		<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>

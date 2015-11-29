@@ -136,8 +136,8 @@ function validateDetailsMissingData() {
 	</tr>
 </table>
 
-<a href="/reports/recycleReport/generateRecycleReport.do?type=xls"><img src="/images/excel.png" border="0" style="float:right" class="toolbarButton"></a>
-<a href="/reports/recycleReport/generateRecycleReport.do?type=pdf"><img src="/images/pdf.png" border="0" style="float:right" class="toolbarButton"></a>
+<a href="generateRecycleReport.do?type=xls"><img src="${ctx}/images/excel.png" border="0" style="float:right" class="toolbarButton"></a>
+<a href="generateRecycleReport.do?type=pdf"><img src="${ctx}/images/pdf.png" border="0" style="float:right" class="toolbarButton"></a>
 <form:form name="recycleReport" id="recycleReport" class="tab-color">
  	<transys:datatable urlContext="reports/recycleReport"  baseObjects="${list}"
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"

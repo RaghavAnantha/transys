@@ -42,5 +42,19 @@ CREATE TABLE `oldAddresses` (
 --  CONSTRAINT `oldAddressesCustomerRef` FOREIGN KEY (`custID`) REFERENCES `oldCustomers` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+CREATE TABLE `oldDumpsters` (
+  `id` int(11) NOT NULL,
+  `dumpsternum` varchar(20) DEFAULT NULL,
+  `dumpstersize` decimal(18,0) DEFAULT NULL,
+  `comments` longtext,
+  `InRepair` char(1) DEFAULT NULL,
+  `orderID` int(11) DEFAULT NULL,
+  `RentedAddressID` int(11) DEFAULT NULL,
+  `status` char(1) DEFAULT NULL,
+  `WhoEdited` int(11) DEFAULT NULL,
+  `WhenEdited` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
 
 

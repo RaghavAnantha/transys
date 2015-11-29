@@ -140,6 +140,7 @@ public class OrderController extends CRUDController<Order> {
 		if (order.getMaterialType().getMaterialCategory() == null) {
 			Long materialTypeId = order.getMaterialType().getId();
 			String materialTypeQuery = "select obj from MaterialType obj where obj.deleteFlag='1' and obj.id=" + materialTypeId;
+
 			List<MaterialType> materialTypeList = genericDAO.executeSimpleQuery(materialTypeQuery);
 			materialCategoryId = materialTypeList.get(0).getMaterialCategory().getId();
 			order.setMaterialType(materialTypeList.get(0));
@@ -161,18 +162,6 @@ public class OrderController extends CRUDController<Order> {
 			permitClassList.add(permits.get(0).getPermitClass());
 			model.addAttribute("permitClasses", permitClassList);
 		}
-		
-		/*BigDecimal totalAmountPaid = new BigDecimal(0.00);
-		if (order.getOrderPayment() != null) {
-			for (OrderPayment anOrderPayment : order.getOrderPayment()) {
-				totalAmountPaid = totalAmountPaid.add(anOrderPayment.getAmountPaid());
-			}
-			
-			order.setTotalAmountPaid(totalAmountPaid);
-			
-			BigDecimal balanceDue = order.getOrderFees().getTotalFees().subtract(totalAmountPaid);
-			order.setBalanceAmountDue(balanceDue);
-		}*/
    }
 	
 	/*
@@ -184,7 +173,7 @@ public class OrderController extends CRUDController<Order> {
 		model.addAttribute("orderIds", genericDAO.executeSimpleQuery("select obj.id from Order obj where obj.deleteFlag='1' order by obj.id asc"));
 		
 		List<Order> orderList = genericDAO.executeSimpleQuery("select obj from Order obj where obj.deleteFlag='1' order by obj.id asc");
-		model.addAttribute("order", orderList);
+//		model.addAttribute("order", orderList);
 		
 		SortedSet<String> contactNameSet = new TreeSet<String>();
 		SortedSet<String> phoneSet = new TreeSet<String>();
@@ -642,6 +631,7 @@ public class OrderController extends CRUDController<Order> {
 		Long materialCategoryId = entity.getMaterialType().getMaterialCategory().getId();
 		BigDecimal netWeightTonnage = entity.getNetWeightTonnage();
 		BigDecimal overweightFee = retrieveOverweightFee(dumpsterSizeId, materialCategoryId, netWeightTonnage);
+		overweightFee = overweightFee.setScale(2);
 		
 		OrderFees orderFees = entity.getOrderFees();
 		orderFees.setOverweightFee(overweightFee);
@@ -1370,24 +1360,6 @@ public class OrderController extends CRUDController<Order> {
 		
 		cleanUp(request);
 		
-		//return "redirect:/" + urlContext + "/list.do";
-		//model.addAttribute("activeTab", "manageCustomer");
-		//return urlContext + "/list";
-		
-		/*SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
-		//criteria.getSearchMap().put("id!",0l);
-		//TODO: Fix me 
-		criteria.getSearchMap().remove("_csrf");*/
-		
-		/*setupList(model, request);
-		
-		model.addAttribute("list",genericDAO.search(getEntityClass(), criteria,"companyName",null,null));
-		model.addAttribute("activeTab", "manageCustomer");
-		//return urlContext + "/list";
-		return urlContext + "/customer";*/
-		//request.getSession().removeAttribute("searchCriteria");
-		//request.getParameterMap().remove("_csrf");
-		
 		//return list(model, request);
 		return saveSuccess(model, request, entity);
 	}
@@ -1549,40 +1521,51 @@ public class OrderController extends CRUDController<Order> {
 	}*/
 	
 	public String saveSuccess(ModelMap model, HttpServletRequest request, Order entity) {
-		setupCreate(model, request, entity);
+		if (entity.getModifiedBy() == null) {
+			setupCreate(model, request);
+		} else {
+			setupCreate(model, request, entity);
+		}
 		
 		model.addAttribute("msgCtx", "manageOrder");
 		model.addAttribute("msg", "Order saved successfully");
 		
-		model.addAttribute("modelObject", entity);
 		model.addAttribute("activeTab", "manageOrders");
 		model.addAttribute("activeSubTab", "orderDetails");
 		model.addAttribute("mode", "ADD");
 		
-		Order emptyOrder = new Order();
-		emptyOrder.setId(entity.getId());
-		OrderNotes notes = new OrderNotes();
-		notes.setOrder(emptyOrder);
-		model.addAttribute("notesModelObject", notes);
-		
-		List<BaseModel> notesList = genericDAO.executeSimpleQuery("select obj from OrderNotes obj where obj.deleteFlag='1' and obj.order.id=" +  entity.getId() + " order by obj.id asc");
-		model.addAttribute("notesList", notesList);
-		
-		String query = "select obj from DeliveryAddress obj where obj.deleteFlag='1' and obj.customer.id=" +  entity.getCustomer().getId() + " order by obj.line1 asc";
-		model.addAttribute("deliveryAddresses", genericDAO.executeSimpleQuery(query));
-		
-		List<List<Permit>> allPermitsOfChosenTypesList = retrievePermitsOfChosenType(entity);
-		model.addAttribute("allPermitsOfChosenTypesList", allPermitsOfChosenTypesList);
-		
-		Long customerId = entity.getCustomer().getId();
-		List<Customer> customerList = genericDAO.executeSimpleQuery("select obj from Customer obj where obj.deleteFlag='1' and obj.id=" + customerId);
-		Customer orderCustomer = customerList.get(0);
-		
-		/*//Or set hibernate fetch all?
-		List<State> stateList = genericDAO.executeSimpleQuery("select obj from State obj where obj.id= " + orderCustomer.getState().getId());
-		orderCustomer.getState().setName(stateList.get(0).getName());*/
-		
-		entity.setCustomer(orderCustomer);
+		//EMPTY_ORDER change
+		if (entity.getModifiedBy() == null) {
+			Order emptyOrder = new Order();
+			model.addAttribute("modelObject", emptyOrder);
+			
+			OrderNotes notes = new OrderNotes();
+			notes.setOrder(emptyOrder);
+			model.addAttribute("notesModelObject", notes);
+		} else {
+			model.addAttribute("modelObject", entity);
+			
+			Order emptyOrder = new Order();
+			emptyOrder.setId(entity.getId());
+			OrderNotes notes = new OrderNotes();
+			notes.setOrder(emptyOrder);
+			model.addAttribute("notesModelObject", notes);
+			
+			List<OrderNotes> notesList = genericDAO.executeSimpleQuery("select obj from OrderNotes obj where obj.deleteFlag='1' and obj.order.id=" +  entity.getId() + " order by obj.id asc");
+			model.addAttribute("notesList", notesList);
+			
+			String query = "select obj from DeliveryAddress obj where obj.deleteFlag='1' and obj.customer.id=" +  entity.getCustomer().getId() + " order by obj.line1 asc";
+			model.addAttribute("deliveryAddresses", genericDAO.executeSimpleQuery(query));
+			
+			List<List<Permit>> allPermitsOfChosenTypesList = retrievePermitsOfChosenType(entity);
+			model.addAttribute("allPermitsOfChosenTypesList", allPermitsOfChosenTypesList);
+			
+			Long customerId = entity.getCustomer().getId();
+			List<Customer> customerList = genericDAO.executeSimpleQuery("select obj from Customer obj where obj.deleteFlag='1' and obj.id=" + customerId);
+			Customer orderCustomer = customerList.get(0);
+			
+			entity.setCustomer(orderCustomer);
+		}
 		
 		//return urlContext + "/form";
 		return urlContext + "/order";

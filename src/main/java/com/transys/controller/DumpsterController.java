@@ -49,8 +49,15 @@ public class DumpsterController extends CRUDController<Dumpster> {
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		// TODO:
 		criteria.getSearchMap().remove("_csrf");
-		criteria.setPageSize(25);
-		model.addAttribute("list", genericDAO.search(getEntityClass(), criteria,"dumpsterSize.id",null,null));
+		model.addAttribute("list", genericDAO.search(Dumpster.class, criteria,"dumpsterSize",null,null));
+		return urlContext + "/list";
+	}
+	
+	@RequestMapping(method = { RequestMethod.GET, RequestMethod.POST }, value = "/search.do")
+	public String search2(ModelMap model, HttpServletRequest request) {
+		setupList(model, request);
+		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
+		model.addAttribute("list", genericDAO.search(Dumpster.class, criteria,"dumpsterSize",null,null));
 		return urlContext + "/list";
 	}
 
@@ -77,17 +84,15 @@ public class DumpsterController extends CRUDController<Dumpster> {
 	@RequestMapping(method = RequestMethod.POST, value = "/save.do")
 	public String save(HttpServletRequest request, @ModelAttribute("modelObject") Dumpster entity,
 			BindingResult bindingResult, ModelMap model) {
-
-		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
-		criteria.getSearchMap().remove("_csrf");
 		super.save(request, entity, bindingResult, model);
 		
 		model.addAttribute("msgCtx", "manageDumpsters");
 		model.addAttribute("msg", "Dumpster saved successfully");
-		model.addAttribute("modelObject", new Dumpster());
+		
+		if (entity.getModifiedBy() == null) {
+			model.addAttribute("modelObject", new Dumpster());
+		}
 				
 		return urlContext + "/form";
-
 	}
-
 }

@@ -249,7 +249,7 @@ $("#customerModalForm").submit(function (ev) {
 });
 </script>
 
-<form:form action="/customer/saveModal.do" name="customerModalForm" commandName="modelObject" method="post" id="customerModalForm">
+<form:form action="${ctx}/customer/saveModal.do" name="customerModalForm" commandName="modelObject" method="post" id="customerModalForm">
 	<table id="form-table" class="table">
 		<tr>
 			<td class="form-left">Company Name<span class="errorMessage">*</span></td>
