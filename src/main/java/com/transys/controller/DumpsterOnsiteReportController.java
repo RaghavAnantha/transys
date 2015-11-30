@@ -94,7 +94,6 @@ public class DumpsterOnsiteReportController extends CRUDController<Dumpster> {
 				out = reportGenerator.exportReport("Dumpster On-site Report", headers, reportData);
 			} else if (type.equals("pdf")) {
 				List<Map<String, Object>> reportDataCollection = getReportDataAsCollection(reportData);
-				type = setRequestHeaders(response, type, "dumpsterOnsiteReport");
 				
 				out = new ByteArrayOutputStream();
 				Map<String, Object> params = new HashMap<String, Object>();

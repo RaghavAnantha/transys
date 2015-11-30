@@ -111,16 +111,27 @@ public class DumpsterRentedReportController extends CRUDController<Dumpster> {
 			List<Dumpster> reportData = prepareReportData(model, request);
 			type = setRequestHeaders(response, type, "dumpsterRentedReport");
 			
-			Map<String, String> headers = new LinkedHashMap<>();
-			headers.put("Dumpster Size", "dumpsterSize");
-			headers.put("Dumpster#", "dumpsterNum");
-			headers.put("Delivery Address", "deliveryAddress");
-			headers.put("Delivery Date", "deliveryDate");
-			headers.put("Status", "status");
-			
-			ExcelReportGenerator reportGenerator = new ExcelReportGenerator();
-			reportGenerator.setTitleMergeCellRange("$A$1:$F$1");
-			ByteArrayOutputStream out = reportGenerator.exportReport("Dumpster Rented Report", headers, reportData);
+			ByteArrayOutputStream out = new ByteArrayOutputStream();
+			if (type.equals("xls")) {
+				Map<String, String> headers = new LinkedHashMap<>();
+				headers.put("Dumpster Size", "dumpsterSize");
+				headers.put("Dumpster#", "dumpsterNum");
+				headers.put("Delivery Address", "deliveryAddress");
+				headers.put("Delivery Date", "deliveryDate");
+				headers.put("Status", "status");
+				
+				ExcelReportGenerator reportGenerator = new ExcelReportGenerator();
+				reportGenerator.setTitleMergeCellRange("$A$1:$F$1");
+				out = reportGenerator.exportReport("Dumpster Rented Report", headers, reportData);
+				
+			} else if (type.equals("pdf")) {
+				List<Map<String, Object>> reportDataCollection = getReportDataAsCollection(reportData);
+				
+				out = new ByteArrayOutputStream();
+				Map<String, Object> params = new HashMap<String, Object>();
+
+				out = dynamicReportService.generateStaticReport("dumpsterRentedReport", reportDataCollection, params, type, request);
+			}
 			
 			out.writeTo(response.getOutputStream());
 			out.close();
@@ -142,5 +153,32 @@ public class DumpsterRentedReportController extends CRUDController<Dumpster> {
 		
 		return dumpsterInfoList;
 	}
+	
+	private List<Map<String, Object>> getReportDataAsCollection(List<Dumpster> dumpsterInfoList) {
+
+		List<Map<String, Object>> reportData = new ArrayList<Map<String, Object>>();
+		for (Dumpster aDumpster : dumpsterInfoList) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("dumpsterSize", aDumpster.getDumpsterSize().getSize());
+			map.put("dumpsterNum", aDumpster.getDumpsterNum());
+			map.put("status", aDumpster.getStatus().getStatus());
+			map.put("deliveryAddress", StringUtils.defaultIfEmpty(aDumpster.getDeliveryAddress(), StringUtils.EMPTY));
+			map.put("deliveryDate", StringUtils.defaultIfEmpty(aDumpster.getDeliveryDate(), StringUtils.EMPTY));
+			
+			ObjectMapper objectMapper = new ObjectMapper();
+			String jSonResponse = StringUtils.EMPTY;
+			try {
+				jSonResponse = objectMapper.writeValueAsString(map);
+				System.out.println(jSonResponse);
+			} catch (JsonProcessingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			reportData.add(map);
+		}
+		return reportData;
+	}
+
 
 }
