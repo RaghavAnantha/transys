@@ -115,6 +115,10 @@ function validateEmail(email) {
 }
 
 function validateText(text, validLength) {
+	if (text.trim() == "") {
+		return false;
+	}
+	
 	var textPattern = new RegExp("^[a-zA-Z0-9-_():;.\"',?/*&%$#@!`\\s\\\\]{1," + validLength + "}$");
 	return textPattern.test(text);
 }
@@ -142,4 +146,13 @@ function validateCompanyName(companyName, validLength) {
 function validateReferenceNum(refNum, validLength) {
 	var refNumPattern = new RegExp("^[a-zA-Z0-9-_():.,/*&%$#\\s\\\\]{1," + validLength + "}$");
 	return refNumPattern.test(refNum);
+}
+
+function validateDumpsterNum(dumpsterNum, validLength) {
+	if (dumpsterNum.trim() == "") {
+		return false;
+	}
+	
+	var dumpsterNumPattern = new RegExp("^[a-zA-Z0-9-_]{1," + validLength + "}$");
+	return dumpsterNumPattern.test(dumpsterNum);
 }

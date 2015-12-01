@@ -44,7 +44,7 @@ function validateDumpsterMissingData() {
 		missingData += "Dumpster Number, "
 	}
 	if ($('#dumpsterStatus').val() == "") {
-		missingData += "Dumpster Size, "
+		missingData += "Dumpster Status, "
 	}
 	
 	if (missingData != "") {
@@ -56,6 +56,11 @@ function validateDumpsterMissingData() {
 
 function validateDumpsterDataFormat() {
 	var validationMsg = "";
+	
+	var dumpsterNum = $('#dumpsterNum').val();
+	if (!validateDumpsterNum(dumpsterNum, 50)) {
+		validationMsg += "Dumpster Num, ";
+	}
 	
 	validationMsg += validateDumpsterCommentsText();
 	
