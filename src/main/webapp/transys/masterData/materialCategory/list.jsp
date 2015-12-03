@@ -37,9 +37,9 @@
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
 		pagingLink="search.do" multipleDelete="false" searcheable="false"
 		exportPdf="true" exportXls="true" dataQualifier="materialCategory" >
-		
 		<transys:textcolumn headerText="Material Category ID" dataField="id" width="150px"/>
 		<transys:textcolumn headerText="Material Category" dataField="category" />
+		<transys:textcolumn headerText="Notes/Comments" dataField="comments" />
 	</transys:datatable>
 	<%session.setAttribute("materialCategoryColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
 </form:form>

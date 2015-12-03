@@ -156,3 +156,12 @@ function validateDumpsterNum(dumpsterNum, validLength) {
 	var dumpsterNumPattern = new RegExp("^[a-zA-Z0-9-_]{1," + validLength + "}$");
 	return dumpsterNumPattern.test(dumpsterNum);
 }
+
+function validateMaterial(material, validLength) {
+	if (material.trim() == "") {
+		return false;
+	}
+	
+	var materialPattern = new RegExp("^[a-zA-Z0-9-_()/&\\s\\\\]{1," + validLength + "}$");
+	return materialPattern.test(material);
+}

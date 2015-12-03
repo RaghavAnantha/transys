@@ -49,7 +49,7 @@ public class MaterialTypeController extends CRUDController<MaterialType> {
 		setupList(model, request);
 		
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
-		model.addAttribute("list", genericDAO.search(MaterialType.class, criteria, "materialCategory.id", null, null));
+		model.addAttribute("list", genericDAO.search(MaterialType.class, criteria, "materialCategory.category", null, null));
 		
 		return urlContext + "/list";
 	}
@@ -58,12 +58,12 @@ public class MaterialTypeController extends CRUDController<MaterialType> {
 	public String list(ModelMap model, HttpServletRequest request) {
 		setupList(model, request);
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
-		// TODO:
 		
+		// TODO:
 		criteria.getSearchMap().remove("_csrf");
 		criteria.setPageSize(25);
 		
-		model.addAttribute("list", genericDAO.search(MaterialType.class, criteria, "materialCategory.id", false));
+		model.addAttribute("list", genericDAO.search(MaterialType.class, criteria, "materialCategory.category", false));
 		return urlContext + "/list";
 	}
 
@@ -103,14 +103,14 @@ public class MaterialTypeController extends CRUDController<MaterialType> {
 	@RequestMapping(method = RequestMethod.POST, value = "/save.do")
 	public String save(HttpServletRequest request, @ModelAttribute("modelObject") MaterialType entity,
 			BindingResult bindingResult, ModelMap model) {
-		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
-		criteria.getSearchMap().remove("_csrf");
-		
 		super.save(request, entity, bindingResult, model);
 
 		model.addAttribute("msgCtx", "manageMaterialTypes");
 		model.addAttribute("msg", "Material Type saved successfully");
-		model.addAttribute("modelObject", new MaterialType());
+		
+		if (entity.getModifiedBy() == null) {
+			model.addAttribute("modelObject", new MaterialType());
+		}
 		
 		return urlContext + "/form";
 	}

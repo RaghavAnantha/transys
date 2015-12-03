@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.transys.controller.editor.AbstractModelEditor;
+import com.transys.model.Dumpster;
 import com.transys.model.MaterialCategory;
 import com.transys.model.SearchCriteria;
 
@@ -36,7 +37,7 @@ public class MaterialCategoryController extends CRUDController<MaterialCategory>
 		request.getSession().removeAttribute("searchCriteria");
 		setupList(model, request);
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
-		model.addAttribute("list", genericDAO.search(MaterialCategory.class, criteria, "id", null, null));
+		model.addAttribute("list", genericDAO.search(MaterialCategory.class, criteria, "category", null, null));
 		return urlContext + "/list";
 	}
 
@@ -47,7 +48,7 @@ public class MaterialCategoryController extends CRUDController<MaterialCategory>
 		// TODO:
 		criteria.getSearchMap().remove("_csrf");
 		criteria.setPageSize(25);
-		model.addAttribute("list", genericDAO.search(MaterialCategory.class, criteria, "id", false));
+		model.addAttribute("list", genericDAO.search(MaterialCategory.class, criteria, "category", false));
 		return urlContext + "/list";
 	}
 
@@ -66,19 +67,20 @@ public class MaterialCategoryController extends CRUDController<MaterialCategory>
 	@Override
 	public void setupCreate(ModelMap model, HttpServletRequest request) {
 		Map criterias = new HashMap();
-		model.addAttribute("materialCategories", genericDAO.findByCriteria(MaterialCategory.class, criterias, "id", false));
+		model.addAttribute("materialCategories", genericDAO.findByCriteria(MaterialCategory.class, criterias, "category", false));
 	}
 
 	@RequestMapping(method = RequestMethod.POST, value = "/save.do")
 	public String save(HttpServletRequest request, @ModelAttribute("modelObject") MaterialCategory entity,
 			BindingResult bindingResult, ModelMap model) {
-
-		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
-		criteria.getSearchMap().remove("_csrf");
 		super.save(request, entity, bindingResult, model);
 		
 		model.addAttribute("msgCtx", "manageMaterialCategories");
 		model.addAttribute("msg", "Material Category saved successfully");
+		
+		if (entity.getModifiedBy() == null) {
+			model.addAttribute("modelObject", new MaterialCategory());
+		}
 
 		return urlContext + "/form";
 	}
