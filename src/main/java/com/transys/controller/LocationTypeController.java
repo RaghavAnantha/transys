@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.transys.controller.editor.AbstractModelEditor;
 import com.transys.model.LocationType;
+import com.transys.model.MaterialType;
 import com.transys.model.SearchCriteria;
 
 @Controller
@@ -73,14 +74,15 @@ public class LocationTypeController extends CRUDController<LocationType> {
 	public String save(HttpServletRequest request, @ModelAttribute("modelObject") LocationType entity,
 			BindingResult bindingResult, ModelMap model) {
 
-		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
-		criteria.getSearchMap().remove("_csrf");
 		super.save(request, entity, bindingResult, model);
 		
 		model.addAttribute("msgCtx", "manageLocationTypes");
 		model.addAttribute("msg", "Location Type saved successfully");
+		
+		if (entity.getModifiedBy() == null) {
+			model.addAttribute("modelObject", new LocationType());
+		}
 
 		return urlContext + "/form";
-
 	}
 }

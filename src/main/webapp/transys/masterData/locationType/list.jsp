@@ -43,6 +43,7 @@
 		exportPdf="true" exportXls="true" dataQualifier="locationType">
 		<transys:textcolumn headerText="Location Type ID" dataField="id" width="125px"/>
 		<transys:textcolumn headerText="Location Type" dataField="locationType" />
+		<transys:textcolumn headerText="Notes/Comments" dataField="comments" />
 	</transys:datatable>
 	<%session.setAttribute("locationTypeColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
 </form:form>

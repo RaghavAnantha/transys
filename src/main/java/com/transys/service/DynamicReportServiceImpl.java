@@ -919,7 +919,7 @@ public class DynamicReportServiceImpl implements DynamicReportService {
 		}  else if (field.getType() == Long.class) {
 			Style longStyle = new Style();
 			//longStyle.setBorder(Border.THIN);
-			longStyle.setHorizontalAlign(HorizontalAlign.CENTER);
+			longStyle.setHorizontalAlign(HorizontalAlign.LEFT);
 			longStyle.setTextColor(Color.MAGENTA);
 			AbstractColumn longColumn = getColumn(columnTag.getDataField(), Long.class,
 					LabelUtil.getText(columnTag.getHeaderText(), locale),
@@ -928,7 +928,7 @@ public class DynamicReportServiceImpl implements DynamicReportService {
 		} else if (field.getType() == Double.class) {
 			Style doubleStyle = new Style();
 			//doubleStyle.setBorder(Border.THIN);
-			doubleStyle.setHorizontalAlign(HorizontalAlign.RIGHT);
+			doubleStyle.setHorizontalAlign(HorizontalAlign.LEFT);
 			doubleStyle.setPattern("####.000");
 			doubleStyle.setTextColor(Color.RED);
 			AbstractColumn doubleColumn = getColumn(columnTag.getDataField(), Double.class,
@@ -956,7 +956,7 @@ public class DynamicReportServiceImpl implements DynamicReportService {
 		} else if (field.getType() == BigDecimal.class) {
 			Style bigDecimalStyle = new Style();
 			//doubleStyle.setBorder(Border.THIN);
-			bigDecimalStyle.setHorizontalAlign(HorizontalAlign.RIGHT);
+			bigDecimalStyle.setHorizontalAlign(HorizontalAlign.LEFT);
 			bigDecimalStyle.setPattern("######.00");
 			//bigDecimalStyle.setTextColor(Color.RED);
 			AbstractColumn bigDecimalColumn = getColumn(columnTag.getDataField(), BigDecimal.class,
@@ -974,7 +974,7 @@ public class DynamicReportServiceImpl implements DynamicReportService {
 			} else if ("java.math.BigDecimal".equalsIgnoreCase(type)){
 				fieldType = BigDecimal.class;
 				Style bigDecimalStyle = new Style();
-				bigDecimalStyle.setHorizontalAlign(HorizontalAlign.RIGHT);
+				bigDecimalStyle.setHorizontalAlign(HorizontalAlign.LEFT);
 				bigDecimalStyle.setPattern("######.00");
 				defaultStyle = bigDecimalStyle;
 			} else if ("java.sql.Timestamp".equalsIgnoreCase(type)){
@@ -986,7 +986,7 @@ public class DynamicReportServiceImpl implements DynamicReportService {
 			} else if ("java.lang.Long".equalsIgnoreCase(type)){
 				fieldType = Long.class;
 				Style longStyle = new Style();
-				longStyle.setHorizontalAlign(HorizontalAlign.CENTER);
+				longStyle.setHorizontalAlign(HorizontalAlign.LEFT);
 				longStyle.setTextColor(Color.MAGENTA);
 				defaultStyle = longStyle;
 			}

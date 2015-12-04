@@ -137,17 +137,21 @@ public class DumpsterPriceController extends CRUDController<DumpsterPrice> {
 		
 		setupCreate(model, request);
 		
-		String query = "select obj from MaterialType obj where obj.deleteFlag='1' and obj.id=" + entity.getMaterialType().getId();
-		List<MaterialType> materialTypeList = genericDAO.executeSimpleQuery(query);
-		entity.setMaterialType(materialTypeList.get(0));
-		
-		query = "select obj from MaterialType obj where obj.deleteFlag='1' and obj.materialCategory.id=" + entity.getMaterialType().getMaterialCategory().getId();
-		List<MaterialType> materialTypesForSelMatCat = genericDAO.executeSimpleQuery(query);
-		model.addAttribute("materialTypes", materialTypesForSelMatCat);
-			
 		model.addAttribute("msgCtx", "manageDumpsterPrice");
 		model.addAttribute("msg", "Dumpster Price saved successfully");
-
+		
+		if (entity.getModifiedBy() == null) {
+			model.addAttribute("modelObject", new DumpsterPrice());
+		} else {
+			String query = "select obj from MaterialType obj where obj.deleteFlag='1' and obj.id=" + entity.getMaterialType().getId();
+			List<MaterialType> materialTypeList = genericDAO.executeSimpleQuery(query);
+			entity.setMaterialType(materialTypeList.get(0));
+			
+			query = "select obj from MaterialType obj where obj.deleteFlag='1' and obj.materialCategory.id=" + entity.getMaterialType().getMaterialCategory().getId();
+			List<MaterialType> materialTypesForSelMatCat = genericDAO.executeSimpleQuery(query);
+			model.addAttribute("materialTypes", materialTypesForSelMatCat);
+		}
+		
 		return urlContext + "/form";
 	}
 	

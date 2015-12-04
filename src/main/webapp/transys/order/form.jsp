@@ -850,14 +850,9 @@ function validateOrderDeliveryTime() {
 	var deliveryHourFrom = $('#deliveryHourFrom').val();
 	var deliveryHourTo = $('#deliveryHourTo').val();
 	
-	var deliveryHourFromTokens = deliveryHourFrom.split(" ");
-	var deliveryHourToTokens = deliveryHourTo.split(" ");
-	
-	var dateFrom = new Date('03/11/2015 ' + deliveryHourFromTokens[0] + ':00:00 ' + deliveryHourFromTokens[1]);
-	var dateTo = new Date('03/11/2015 ' + deliveryHourToTokens[0] + ':00:00 ' + deliveryHourToTokens[1]);
-	if (dateTo < dateFrom) {
-    	validationMsg += "Delivery Time, "
-    }
+	if (!validateTimeRange(deliveryHourFrom, deliveryHourTo)) {
+		validationMsg += "Delivery Time, "
+	}
 	
     return validationMsg;
 }

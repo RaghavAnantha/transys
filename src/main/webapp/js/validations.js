@@ -101,6 +101,44 @@ function validateDate(date) {
     return true;
 }
 
+function validateTimeRange(timeFrom, timeTo) {
+	var timeFromTrimmed = timeFrom.trim();
+	var timeToTrimmed = timeTo.trim();
+	
+	if (timeFromTrimmed == "" || timeToTrimmed == "") {
+		return false;
+	}
+	
+	var timeFromTrimmedTokens = timeFromTrimmed.split(" ");
+	var timeToTrimmedTokens = timeToTrimmed.split(" ");
+	
+	var dateFrom = new Date('03/11/2015 ' + timeFromTrimmedTokens[0] + ':00:00 ' + timeFromTrimmedTokens[1]);
+	var dateTo = new Date('03/11/2015 ' + timeToTrimmedTokens[0] + ':00:00 ' + timeToTrimmedTokens[1]);
+	if (dateTo < dateFrom) {
+    	return false;
+    } else {
+    	return true;
+    }
+}
+	
+function validateDateRange(dateFrom, dateTo) {
+	var dateFromTrimmed = dateFrom.trim();
+	var dateToTrimmed = dateTo.trim();
+	
+	if (dateFromTrimmed == "" || dateToTrimmed == "") {
+		return false;
+	}
+	
+	var dateFromMsec = Date.parse(dateFromTrimmed);
+	var dateToMsec = Date.parse(dateToTrimmed);
+	
+	if (dateToMsec < dateFromMsec) {
+    	return false;
+    } else {
+    	return true;
+    }
+}
+
 function validateZipCode(zipcode) {
 	return /(^\d{5}$)|(^\d{5}-\d{4}$)/.test(zipcode);
 }

@@ -1,5 +1,101 @@
 <%@include file="/common/taglibs.jsp"%>
 
+<script type="text/javascript">
+function processRecycleLocationForm() {
+	if (validateRecycleLocationForm()) {
+		var recycleLocationForm = $("#recycleLocationForm");
+		recycleLocationForm.submit();
+		return true;
+	} else {
+		return false;
+	}
+}
+
+function validateRecycleLocationForm() {
+	var missingData = validateRecycleLocationMissingData();
+	if (missingData != "") {
+		var alertMsg = "<span style='color:red'><b>Please provide following required data:</b><br></span>"
+					 + missingData;
+		showAlertDialog("Data Validation", alertMsg);
+		
+		return false;
+	}
+	
+	var formatValidation = validateRecycleLocationDataFormat();
+	if (formatValidation != "") {
+		var alertMsg = "<span style='color:red'><b>Please correct following invalid data:</b><br></span>"
+					 + formatValidation;
+		showAlertDialog("Data Validation", alertMsg);
+		
+		return false;
+	}
+	
+	return true;
+}
+
+function validateRecycleLocationMissingData() {
+	var missingData = "";
+	
+	if ($('#location').val() == "") {
+		missingData += "Location, "
+	}
+	
+	if ($('#materialCategory').val() == "") {
+		missingData += "Material Category, "
+	}
+	
+	if ($('#materialTypeSelect').val() == "") {
+		missingData += "Material Type, "
+	}
+	
+	if ($('#status').val() == "") {
+		missingData += "Status, "
+	}
+	
+	if ($("[name='effectiveStartDate']").val() == "") {
+		missingData += "Effective Start Date, "
+	}
+	
+	if ($("[name='effectiveEndDate']").val() == "") {
+		missingData += "Effective End Date, "
+	}
+	
+	if (missingData != "") {
+		missingData = missingData.substring(0, missingData.length - 2);
+	}
+	
+	return missingData;
+}
+
+function validateRecycleLocationDataFormat() {
+	var validationMsg = "";
+	
+	var location = $('#location').val();
+	if (!validateMaterial(location, 100)) {
+		validationMsg += "Location, ";
+	}
+	
+	var effectiveStartDate = $("[name='effectiveStartDate']").val();
+	var effectiveEndDate = $("[name='effectiveEndDate']").val();
+	if (!validateDateRange(effectiveStartDate, effectiveEndDate)) {
+		validationMsg += "Effectve date range, ";
+	}
+	
+	var notes = $('#recycleLocationComments').val();
+	if (notes != "") {
+		if (!validateText(notes, 500)) {
+			validationMsg += "Comments, "
+		}
+	}
+	
+	if (validationMsg != "") {
+		validationMsg = validationMsg.substring(0, validationMsg.length - 2);
+	}
+	
+	return validationMsg;
+}
+</script>
+
 <br />
 <h5 style="margin-top: -15px; !important">Add/Edit Recycle Location</h5>
 
@@ -115,8 +211,10 @@ function populateMaterialTypes() {
 		<tr>
 			<td>&nbsp;</td>
 			<td colspan="2">
-				<input type="submit" id="recycleLocationCreate" onclick="return validate()" value="Save" class="flat btn btn-primary btn-sm btn-sm-ext" /> 
-				<input type="button" id="recycleLocationCancel" value="Back" class="flat btn btn-primary btn-sm btn-sm-ext" onClick="window.location.href='main.do'" />
+				<input type="button" id="create" onclick="return processRecycleLocationForm();" value="Save"
+					class="flat btn btn-primary btn-sm btn-sm-ext" /> 
+				<input type="button" id="cancelBtn" value="Back"
+					class="flat btn btn-primary btn-sm btn-sm-ext" onClick="window.location.href='list.do'" />
 			</td>
 		</tr>
 	</table> 

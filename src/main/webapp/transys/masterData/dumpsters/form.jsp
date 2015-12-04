@@ -1,7 +1,6 @@
 <%@include file="/common/taglibs.jsp"%>
 
 <script type="text/javascript">
-
 function processDumpsterForm() {
 	if (validateDumpsterForm()) {
 		var dumpsterEditForm = $("#dumpsterEditForm");
@@ -83,7 +82,6 @@ function validateDumpsterCommentsText() {
 	
 	return validationMsg;
 }
-
 </script>
 
 <br />
@@ -144,7 +142,7 @@ function validateDumpsterCommentsText() {
 				<input type="button" id="create" onclick="return processDumpsterForm();" value="Save"
 					class="flat btn btn-primary btn-sm btn-sm-ext" /> 
 				<input type="button" id="cancelBtn" value="Back"
-					class="flat btn btn-primary btn-sm btn-sm-ext" onClick="location.href='main.do'" />
+					class="flat btn btn-primary btn-sm btn-sm-ext" onClick="location.href='list.do'" />
 			</td>
 		</tr>
 	</table>
