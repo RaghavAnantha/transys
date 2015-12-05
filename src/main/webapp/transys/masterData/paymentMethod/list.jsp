@@ -42,6 +42,7 @@
 		exportPdf="true" exportXls="true" dataQualifier="paymentMethod">
 		<transys:textcolumn headerText="Payment Method Id" dataField="id" width="150px"/>
 		<transys:textcolumn headerText="Payment Method" dataField="method" />
+		<transys:textcolumn headerText="Notes/Comments" dataField="comments" />
 	</transys:datatable>
 	<%session.setAttribute("paymentMethodColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
 </form:form>

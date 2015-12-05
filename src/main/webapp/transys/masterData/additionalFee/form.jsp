@@ -1,9 +1,101 @@
 <%@include file="/common/taglibs.jsp"%>
 
+<script type="text/javascript">
+function processAdditionalFeeForm() {
+	if (validateAdditionalFeeForm()) {
+		var additionalFeeForm = $("#additionalFeeForm");
+		additionalFeeForm.submit();
+		return true;
+	} else {
+		return false;
+	}
+}
+
+function validateAdditionalFeeForm() {
+	var missingData = validateAdditionalFeeMissingData();
+	if (missingData != "") {
+		var alertMsg = "<span style='color:red'><b>Please provide following required data:</b><br></span>"
+					 + missingData;
+		showAlertDialog("Data Validation", alertMsg);
+		
+		return false;
+	}
+	
+	var formatValidation = validateAdditionalFeeDataFormat();
+	if (formatValidation != "") {
+		var alertMsg = "<span style='color:red'><b>Please correct following invalid data:</b><br></span>"
+					 + formatValidation;
+		showAlertDialog("Data Validation", alertMsg);
+		
+		return false;
+	}
+	
+	return true;
+}
+
+function validateAdditionalFeeMissingData() {
+	var missingData = "";
+	
+	if ($('#description').val() == "") {
+		missingData += "Description, "
+	}
+	
+	if ($('#fee').val() == "") {
+		missingData += "Fee, "
+	}
+	
+	if ($("[name='effectiveStartDate']").val() == "") {
+		missingData += "Effective Start Date, "
+	}
+	
+	if ($("[name='effectiveEndDate']").val() == "") {
+		missingData += "Effective End Date, "
+	}
+	
+	if (missingData != "") {
+		missingData = missingData.substring(0, missingData.length - 2);
+	}
+	
+	return missingData;
+}
+
+function validateAdditionalFeeDataFormat() {
+	var validationMsg = "";
+	
+	var description = $('#description').val();
+	if (!validateMaterial(description, 100)) {
+		validationMsg += "Description, ";
+	}
+	
+	var fee = $('#fee').val();
+	if (!validateAmount(fee, 3000)) {
+		validationMsg += "Fee, ";
+	}
+	
+	var effectiveStartDate = $("[name='effectiveStartDate']").val();
+	var effectiveEndDate = $("[name='effectiveEndDate']").val();
+	if (!validateDateRange(effectiveStartDate, effectiveEndDate)) {
+		validationMsg += "Effectve date range, ";
+	}
+	
+	var notes = $('#additionalFeeComments').val();
+	if (notes != "") {
+		if (!validateText(notes, 500)) {
+			validationMsg += "Comments, "
+		}
+	}
+	
+	if (validationMsg != "") {
+		validationMsg = validationMsg.substring(0, validationMsg.length - 2);
+	}
+	
+	return validationMsg;
+}
+</script>
+
 <br />
 <h5 style="margin-top: -15px; !important">Add/Edit Additional Fee</h5>
-<form:form action="save.do" name="typeForm" commandName="modelObject"
-	method="post" id="typeForm">
+<form:form action="save.do" name="additionalFeeForm" commandName="modelObject" method="post" id="additionalFeeForm">
 	<form:hidden path="id" id="id" />
 	<jsp:include page="/common/messages.jsp">
 		<jsp:param name="msgCtx" value="manageAdditionalFees" />
@@ -51,9 +143,12 @@
 		</tr>
 		<tr>
 			<td>&nbsp;</td>
-			<td colspan="2"><input type="submit" id="create" onclick="return validate()" value="<transys:label code="Save"/>"
-				class="flat btn btn-primary btn-sm btn-sm-ext" /> <input type="button" id="cancelBtn" value="<transys:label code="Back"/>"
-				class="flat btn btn-primary btn-sm btn-sm-ext" onClick="location.href='main.do'" /></td>
+			<td colspan="2">
+				<input type="button" id="create" onclick="return processAdditionalFeeForm();" value="Save"
+					class="flat btn btn-primary btn-sm btn-sm-ext" /> 
+				<input type="button" id="cancelBtn" value="Back"
+					class="flat btn btn-primary btn-sm btn-sm-ext" onClick="location.href='list.do'" />
+			</td>
 		</tr>
 	</table>
 </form:form>

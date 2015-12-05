@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.transys.controller.editor.AbstractModelEditor;
 import com.transys.model.DumpsterPrice;
+import com.transys.model.OverweightFee;
 import com.transys.model.PermitClass;
 import com.transys.model.PermitFee;
 import com.transys.model.PermitType;
@@ -23,7 +24,6 @@ import com.transys.model.SearchCriteria;
 @Controller
 @RequestMapping("/masterData/permitFee")
 public class PermitFeeController extends CRUDController<PermitFee> {
-
 	public PermitFeeController() {
 		setUrlContext("masterData/permitFee");
 	}
@@ -70,27 +70,38 @@ public class PermitFeeController extends CRUDController<PermitFee> {
 		setupCreate(model, request);
 		return urlContext + "/form";
 	}
+	
+	@Override
+	public String search2(ModelMap model, HttpServletRequest request) {
+		setupList(model, request);
+		
+		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
+		model.addAttribute("list", genericDAO.search(PermitFee.class, criteria, "permitClass", false));
+		
+		return urlContext + "/list";
+	}
 
 	@Override
 	public void setupCreate(ModelMap model, HttpServletRequest request) {
 		Map criterias = new HashMap();
 		model.addAttribute("permitFees", genericDAO.executeSimpleQuery("select DISTINCT(obj.fee) from PermitFee obj where obj.deleteFlag='1' order by obj.fee asc"));
-		model.addAttribute("permitClass", genericDAO.findByCriteria(PermitClass.class, criterias, "id", false));
-		model.addAttribute("permitType", genericDAO.findByCriteria(PermitType.class, criterias, "id", false));
+		model.addAttribute("permitClass", genericDAO.findByCriteria(PermitClass.class, criterias, "permitClass", false));
+		model.addAttribute("permitType", genericDAO.findByCriteria(PermitType.class, criterias, "permitType", false));
 	}
 
 	@RequestMapping(method = RequestMethod.POST, value = "/save.do")
 	public String save(HttpServletRequest request, @ModelAttribute("modelObject") PermitFee entity,
 			BindingResult bindingResult, ModelMap model) {
-
-		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
-		criteria.getSearchMap().remove("_csrf");
 		super.save(request, entity, bindingResult, model);
 
 		model.addAttribute("msgCtx", "managePermitFee");
 		model.addAttribute("msg", "Permit Fee saved successfully");
+		
+		if (entity.getModifiedBy() == null) {
+			model.addAttribute("modelObject", new PermitFee());
+		}
+		
 		return urlContext + "/form";
-
 	}
 	
 }

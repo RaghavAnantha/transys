@@ -25,7 +25,6 @@ import com.transys.model.User;
 @Controller
 @RequestMapping("/masterData/loginUser")
 public class LoginUserController extends CRUDController<User> {
-
 	@Autowired
    private PasswordEncoder passwordEncoder;
 

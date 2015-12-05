@@ -24,7 +24,6 @@ import com.transys.model.State;
 @Controller
 @RequestMapping("/masterData/employee")
 public class EmployeeController extends CRUDController<Employee> {
-	
 	public EmployeeController(){
 		setUrlContext("masterData/employee");
 	}

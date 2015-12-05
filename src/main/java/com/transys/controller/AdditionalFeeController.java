@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.transys.model.AdditionalFee;
+import com.transys.model.CityFee;
 import com.transys.model.DumpsterPrice;
 import com.transys.model.SearchCriteria;
 
@@ -47,6 +48,15 @@ public class AdditionalFeeController extends CRUDController<AdditionalFee> {
 		
 		return urlContext + "/list";
 	}
+	
+	@Override
+	public String search2(ModelMap model, HttpServletRequest request) {
+		setupList(model, request);
+		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
+		model.addAttribute("list", genericDAO.search(AdditionalFee.class, criteria, "description", false));
+		
+		return urlContext + "/list";
+	}
 
 	@Override
 	public void setupList(ModelMap model, HttpServletRequest request) {
@@ -70,15 +80,15 @@ public class AdditionalFeeController extends CRUDController<AdditionalFee> {
 	@RequestMapping(method = RequestMethod.POST, value = "/save.do")
 	public String save(HttpServletRequest request, @ModelAttribute("modelObject") AdditionalFee entity,
 			BindingResult bindingResult, ModelMap model) {
-
-		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
-		criteria.getSearchMap().remove("_csrf");
 		super.save(request, entity, bindingResult, model);
+		
+		if (entity.getModifiedBy() == null) {
+			model.addAttribute("modelObject", new AdditionalFee());
+		}
 
 		model.addAttribute("msgCtx", "manageAdditionalFees");
 		model.addAttribute("msg", "Additional Fee saved successfully");
 		return urlContext + "/form";
-
 	}
 
 }

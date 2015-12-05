@@ -240,7 +240,8 @@ CREATE TABLE `dumpsterStatus` (
   `modified_at` datetime DEFAULT NULL,
   `modified_by` bigint(20) DEFAULT NULL,
   `delete_flag` int(11) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `UK_dumpsterStatus` (`status`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -269,7 +270,7 @@ CREATE TABLE `employee` (
   `firstName` varchar(50) NOT NULL,
   `lastName` varchar(50) NOT NULL,
   `jobTitleId` bigint(20) NOT NULL,
-  `address` tinytext,
+  `address` tinytext NOT NULL,
   `city` varchar(50) NOT NULL,
   `state` bigint(20) NOT NULL,
   `zip` varchar(12) NOT NULL,
@@ -277,9 +278,7 @@ CREATE TABLE `employee` (
   `email` varchar(50) NOT NULL,
   `hireDate` datetime NOT NULL,
   `leaveDate` datetime DEFAULT NULL,
-  `comments` longtext,
-  `username` varchar(50) DEFAULT NULL,
-  `password` varchar(12) DEFAULT NULL,
+  `comments` longtext DEFAULT NULL,
   `created_at` datetime NOT NULL,
   `created_by` bigint(20) NOT NULL,
   `modified_at` datetime DEFAULT NULL,
@@ -304,10 +303,10 @@ CREATE TABLE `employee` (
 
 LOCK TABLES `employee` WRITE;
 /*!40000 ALTER TABLE `employee` DISABLE KEYS */;
-INSERT INTO `employee` (`id`,`firstName`,`lastName`,`jobTitleId`,`address`,`city`,`state`,`zip`,`phone`,`email`,`hireDate`,`leaveDate`,`comments`,`username`,`password`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`,`status`,`employeeId`) VALUES (1,'Raghav','Anantha',1,'123 Claude Freeman Dr','Chicago',1,'28262','773-987-2221','kasiaFigura@gmail.com','2015-09-02 00:00:00','2015-09-30 00:00:00',NULL,NULL,NULL,'2015-09-24 12:21:31',1,'2015-09-24 14:39:45',1,1,1,'007');
-INSERT INTO `employee` (`id`,`firstName`,`lastName`,`jobTitleId`,`address`,`city`,`state`,`zip`,`phone`,`email`,`hireDate`,`leaveDate`,`comments`,`username`,`password`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`,`status`,`employeeId`) VALUES (2,'Kasia','Figura',5,'5521 Milwaukee','Chicago',1,'60630','773-987-2221','kasiaFigura@gmail.com','2015-09-01 00:00:00','2015-09-29 00:00:00',NULL,NULL,NULL,'2015-09-24 12:21:31',1,NULL,NULL,1,1,'123');
-INSERT INTO `employee` (`id`,`firstName`,`lastName`,`jobTitleId`,`address`,`city`,`state`,`zip`,`phone`,`email`,`hireDate`,`leaveDate`,`comments`,`username`,`password`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`,`status`,`employeeId`) VALUES (4,'Scott','Eaker',2,'5521 Milwaukee','Chicago',1,'60630','773-987-2221','kasiaFigura@gmail.com','2015-09-01 00:00:00','2015-09-14 00:00:00',NULL,NULL,NULL,'2015-09-24 12:28:04',1,NULL,NULL,1,1,'234');
-INSERT INTO `employee` (`id`,`firstName`,`lastName`,`jobTitleId`,`address`,`city`,`state`,`zip`,`phone`,`email`,`hireDate`,`leaveDate`,`comments`,`username`,`password`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`,`status`,`employeeId`) VALUES (5,'Aldo','Valazquez',7,'5521 Milwaukee','Chicago',1,'60630','773-987-2221','kasiaFigura@gmail.com','2015-09-01 00:00:00','2015-09-29 00:00:00',NULL,NULL,NULL,'2015-09-24 12:40:41',1,NULL,NULL,1,1,'345');
+INSERT INTO `employee` (`id`,`firstName`,`lastName`,`jobTitleId`,`address`,`city`,`state`,`zip`,`phone`,`email`,`hireDate`,`leaveDate`,`comments`, `created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`,`status`,`employeeId`) VALUES (1,'Raghav','Anantha',1,'123 Claude Freeman Dr','Chicago',1,'28262','773-987-2221','kasiaFigura@gmail.com','2015-09-02 00:00:00',NULL,NULL,'2015-09-24 12:21:31',1,'2015-09-24 14:39:45',1,1,1,'007');
+INSERT INTO `employee` (`id`,`firstName`,`lastName`,`jobTitleId`,`address`,`city`,`state`,`zip`,`phone`,`email`,`hireDate`,`leaveDate`,`comments`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`,`status`,`employeeId`) VALUES (2,'Kasia','Figura',5,'5521 Milwaukee','Chicago',1,'60630','773-987-2221','kasiaFigura@gmail.com','2015-09-01 00:00:00',NULL,NULL,'2015-09-24 12:21:31',1,NULL,NULL,1,1,'123');
+INSERT INTO `employee` (`id`,`firstName`,`lastName`,`jobTitleId`,`address`,`city`,`state`,`zip`,`phone`,`email`,`hireDate`,`leaveDate`,`comments`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`,`status`,`employeeId`) VALUES (4,'Scott','Eaker',2,'5521 Milwaukee','Chicago',1,'60630','773-987-2221','kasiaFigura@gmail.com','2015-09-01 00:00:00',NULL,NULL,'2015-09-24 12:28:04',1,NULL,NULL,1,1,'234');
+INSERT INTO `employee` (`id`,`firstName`,`lastName`,`jobTitleId`,`address`,`city`,`state`,`zip`,`phone`,`email`,`hireDate`,`leaveDate`,`comments`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`,`status`,`employeeId`) VALUES (5,'Aldo','Valazquez',7,'5521 Milwaukee','Chicago',1,'60630','773-987-2221','kasiaFigura@gmail.com','2015-09-01 00:00:00',NULL,'2015-09-24 12:40:41',1,NULL,NULL,1,1,'345');
 /*!40000 ALTER TABLE `employee` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -327,7 +326,8 @@ CREATE TABLE `employeeStatus` (
   `modified_at` datetime DEFAULT NULL,
   `modified_by` bigint(20) DEFAULT NULL,
   `delete_flag` int(11) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `UK_employeeStatus` (`status`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -709,7 +709,8 @@ CREATE TABLE `orderStatus` (
   `modified_at` datetime DEFAULT NULL,
   `modified_by` bigint(20) DEFAULT NULL,
   `delete_flag` int(11) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `UK_orderStatus` (`status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -742,7 +743,8 @@ CREATE TABLE `customerStatus` (
   `modified_at` datetime DEFAULT NULL,
   `modified_by` bigint(20) DEFAULT NULL,
   `delete_flag` int(11) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `UK_customerStatus` (`status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -859,7 +861,8 @@ CREATE TABLE `permitStatus` (
   `modified_at` datetime DEFAULT NULL,
   `modified_by` bigint(20) DEFAULT NULL,
   `delete_flag` int(11) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `UK_permitStatus` (`status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -937,12 +940,12 @@ CREATE TABLE `role` (
 
 LOCK TABLES `role` WRITE;
 /*!40000 ALTER TABLE `role` DISABLE KEYS */;
-INSERT INTO `role` VALUES (1,'2015-09-10 21:22:45',1,NULL,NULL,1,'ADMIN',NULL,NULL),
-(2,'2015-09-10 21:22:45',1,NULL,NULL,1,'OPERATOR',NULL,NULL),
-(3,'2015-09-10 21:22:45',1,NULL,NULL,1,'REPORTUSER',NULL,NULL),
-(4,'2012-03-16 01:43:40',1,NULL,NULL,1,'DATA ENTRY_BILLING',NULL,NULL),
-(5,'2012-03-16 14:25:34',1,NULL,NULL,1,'TEST',NULL,NULL),
-(6,'2012-03-16 14:25:34',1,NULL,NULL,1,'DRIVER',NULL,NULL);
+INSERT INTO `role` VALUES (1,'2015-09-10 21:22:45',0,NULL,NULL,1,'ADMIN',NULL,1),
+(2,'2015-09-10 21:22:45',1,NULL,NULL,0,'OPERATOR',NULL,1),
+(3,'2015-09-10 21:22:45',1,NULL,NULL,0,'REPORTUSER',NULL,1),
+(4,'2012-03-16 01:43:40',1,NULL,NULL,0,'DATA ENTRY_BILLING',NULL,1),
+(5,'2012-03-16 14:25:34',1,NULL,NULL,0,'TEST',NULL,1),
+(6,'2012-03-16 14:25:34',1,NULL,NULL,0,'DRIVER',NULL,1);
 /*!40000 ALTER TABLE `role` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1041,8 +1044,8 @@ CREATE TABLE `userInfo` (
   `delete_flag` int(11) DEFAULT '1',
   PRIMARY KEY (`id`),
   CONSTRAINT `userInfoRole_Ref` FOREIGN KEY (`roleId`) REFERENCES `role` (`id`),
-  CONSTRAINT `employeeLoginUser_Ref` FOREIGN KEY (`employeeId`) REFERENCES `employee` (`id`),
-  CONSTRAINT `accountStatus_Ref` FOREIGN KEY (`accountStatusId`) REFERENCES `employeeStatus` (`id`)
+  CONSTRAINT `userInfoEmployee_Ref` FOREIGN KEY (`employeeId`) REFERENCES `employee` (`id`),
+  CONSTRAINT `userInfoAccountStatus_Ref` FOREIGN KEY (`accountStatusId`) REFERENCES `employeeStatus` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -1395,7 +1398,7 @@ CREATE TABLE `overweightFee` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `dumpsterSizeId` bigint(20) NOT NULL,
   `materialCategoryId` bigint(20) NOT NULL,
-  `tonLimit` decimal(6,2) NOT NULL,
+  `tonLimit` decimal(9,2) NOT NULL,
   `fee` decimal(6,2) NOT NULL,
   `comments` varchar(500) DEFAULT NULL,
   `effectiveStartDate` datetime NOT NULL,

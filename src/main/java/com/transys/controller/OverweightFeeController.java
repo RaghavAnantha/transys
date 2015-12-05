@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.transys.controller.editor.AbstractModelEditor;
+import com.transys.model.Dumpster;
 import com.transys.model.DumpsterSize;
 import com.transys.model.MaterialCategory;
 import com.transys.model.OverweightFee;
@@ -42,6 +43,16 @@ public class OverweightFeeController extends CRUDController<OverweightFee> {
 		
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		model.addAttribute("list", genericDAO.search(OverweightFee.class, criteria, "materialCategory.category", null, null));
+		
+		return urlContext + "/list";
+	}
+	
+	@Override
+	public String search2(ModelMap model, HttpServletRequest request) {
+		setupList(model, request);
+		
+		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
+		model.addAttribute("list", genericDAO.search(OverweightFee.class, criteria,"materialCategory.category",null,null));
 		
 		return urlContext + "/list";
 	}
@@ -84,14 +95,14 @@ public class OverweightFeeController extends CRUDController<OverweightFee> {
 	@RequestMapping(method = RequestMethod.POST, value = "/save.do")
 	public String save(HttpServletRequest request, @ModelAttribute("modelObject") OverweightFee entity,
 			BindingResult bindingResult, ModelMap model) {
-		
-		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
-		criteria.getSearchMap().remove("_csrf");
 		super.save(request, entity, bindingResult, model);
 		
 		model.addAttribute("msgCtx", "manageOverweightFee");
 		model.addAttribute("msg", "Overweight Fee saved successfully");
-		model.addAttribute("modelObject", new OverweightFee());
+		
+		if (entity.getModifiedBy() == null) {
+			model.addAttribute("modelObject", new OverweightFee());
+		}
 		
 		return urlContext + "/form";
 	}

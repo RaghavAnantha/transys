@@ -1572,7 +1572,7 @@ function updateTotalPaid() {
 			<td></td>
 			<td colspan="2">
 				<input type="button" id="orderCreate" onclick="processOrderForm();" value="Save" class="flat btn btn-primary btn-sm btn-sm-ext" /> 
-				<input type="button" id="orderCancelBtn" value="Back" class="flat btn btn-primary btn-sm btn-sm-ext" onClick="location.href='main.do'" />
+				<input type="button" id="orderCancelBtn" value="Back" class="flat btn btn-primary btn-sm btn-sm-ext" onClick="location.href='list.do'" />
 				
 				<c:set var="printDisabled" value="" />
 				<c:if test="${modelObject.id == null}">

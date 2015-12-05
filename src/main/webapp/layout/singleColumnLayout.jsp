@@ -23,6 +23,7 @@
 		</td>
 	</tr>
 	<tr>
+		<td></td>
 		<td class="footer navbar-fixed-bottom"><jsp:include page="footer.jsp" /></td>
 	</tr>
 </table>

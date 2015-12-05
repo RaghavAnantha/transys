@@ -83,6 +83,7 @@
 		<transys:textcolumn headerText="Permit Fee" dataField="fee" />
 		<transys:textcolumn headerText="Effective Date From" dataField="effectiveStartDate" dataFormat="MM/dd/yyyy" />
 		<transys:textcolumn headerText="Effective Date To" dataField="effectiveEndDate" dataFormat="MM/dd/yyyy" />
+		<transys:textcolumn headerText="Notes/Comments" dataField="comments" />
 	</transys:datatable>
 	<%session.setAttribute("permitFeeColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
 </form:form>

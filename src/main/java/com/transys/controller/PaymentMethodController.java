@@ -15,12 +15,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.transys.controller.editor.AbstractModelEditor;
 import com.transys.model.PaymentMethodType;
+import com.transys.model.PermitFee;
 import com.transys.model.SearchCriteria;
 
 @Controller
 @RequestMapping("/masterData/paymentMethod")
 public class PaymentMethodController extends CRUDController<PaymentMethodType> {
-
 	public PaymentMethodController() {
 		setUrlContext("masterData/paymentMethod");
 	}
@@ -62,6 +62,16 @@ public class PaymentMethodController extends CRUDController<PaymentMethodType> {
 		setupCreate(model, request);
 		return urlContext + "/form";
 	}
+	
+	@Override
+	public String search2(ModelMap model, HttpServletRequest request) {
+		setupList(model, request);
+		
+		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
+		model.addAttribute("list", genericDAO.search(PaymentMethodType.class, criteria, "method", false));
+		
+		return urlContext + "/list";
+	}
 
 	@Override
 	public void setupCreate(ModelMap model, HttpServletRequest request) {
@@ -72,14 +82,15 @@ public class PaymentMethodController extends CRUDController<PaymentMethodType> {
 	@RequestMapping(method = RequestMethod.POST, value = "/save.do")
 	public String save(HttpServletRequest request, @ModelAttribute("modelObject") PaymentMethodType entity,
 			BindingResult bindingResult, ModelMap model) {
-
-		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
-		criteria.getSearchMap().remove("_csrf");
 		super.save(request, entity, bindingResult, model);
 
 		model.addAttribute("msgCtx", "managePaymentMethods");
 		model.addAttribute("msg", "Payment Method saved successfully");
+		
+		if (entity.getModifiedBy() == null) {
+			model.addAttribute("modelObject", new PaymentMethodType());
+		}
+		
 		return urlContext + "/form";
-
 	}
 }

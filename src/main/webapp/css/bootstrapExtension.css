@@ -23,6 +23,12 @@ textarea {
 	text-align: top;
 }
 
+.paging {
+	font-size: 13px;
+	font-weight: bold;
+	background-color: #f8f8f8;
+}
+
 .section-header {
     background-color: #337ab7 !important;
 }

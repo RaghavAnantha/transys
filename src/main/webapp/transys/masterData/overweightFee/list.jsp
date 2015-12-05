@@ -90,6 +90,7 @@
 		<transys:textcolumn headerText="Overweight Fee" dataField="fee" />
 		<transys:textcolumn headerText="Effective Date From" dataField="effectiveStartDate" dataFormat="MM/dd/yyyy" />
 		<transys:textcolumn headerText="Effective Date To" dataField="effectiveEndDate" dataFormat="MM/dd/yyyy" />
+		<transys:textcolumn headerText="Notes/Comments" dataField="comments" />
 	</transys:datatable>
 	<%session.setAttribute("overweightFeeColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
 </form:form>

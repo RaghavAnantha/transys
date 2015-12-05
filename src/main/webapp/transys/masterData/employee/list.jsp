@@ -97,8 +97,7 @@
 		<transys:textcolumn headerText="Hire Date" dataField="hireDate" dataFormat="MM/dd/yyyy"/>
 		<transys:textcolumn headerText="Termination Date" dataField="leaveDate" dataFormat="MM/dd/yyyy" />
 		<transys:textcolumn headerText="Status" dataField="status.status" />
-
-
+		<transys:textcolumn headerText="Notes/Comments" dataField="comments" />
 	</transys:datatable>
 	<%session.setAttribute("employeeColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
 </form:form>

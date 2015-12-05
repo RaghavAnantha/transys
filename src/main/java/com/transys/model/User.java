@@ -36,9 +36,6 @@ public class User extends AbstractBaseModel implements Comparable, Auditable {
 	@NotEmpty(message = "User name is required.")
 	private String username;
 	
-	@Transient
-	private String name;
-	
 	@Column(name = "password")
 	@NotEmpty(message = "Password is required.")
 	@Size(min = 5, message = "Password should be of minimum 5 characters")
@@ -73,6 +70,7 @@ public class User extends AbstractBaseModel implements Comparable, Auditable {
 		this.username = username;
 	}
 
+	@Transient
 	public String getName() {
 		return this.employee.getFullName();
 	}

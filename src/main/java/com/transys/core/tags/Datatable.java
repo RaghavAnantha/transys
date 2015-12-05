@@ -758,7 +758,9 @@ public final class Datatable extends BodyTagSupport {
 				if (this.searchCriteria != null) {
 					objOut.println("<tr>");
 					objOut.println("<td colspan=" + this.columns.size() + ">");
+					objOut.println("<span class=\"paging\">");
 					drawTablePaging();
+					objOut.println("</span>");
 					objOut.println("</td>");
 					objOut.println("</tr>");
 				} 

@@ -1,6 +1,6 @@
 <%@include file="/common/taglibs.jsp"%>
 <br />
-<h5 style="margin-top: -15px; !important">Manage Login Users</h5>
+<h5 style="margin-top: -15px; !important">Manage User Logins</h5>
 
 <form:form action="list.do" method="get" name="searchForm">
 	<table id="form-table" class="table">
@@ -97,8 +97,7 @@
 		<transys:textcolumn headerText="Role" dataField="role.name" />
 		<transys:textcolumn headerText="Last Login Date" dataField="formattedLastLoginDate" />
 		<transys:textcolumn headerText="Status" dataField="employee.status.status" />
-
-
+		<transys:textcolumn headerText="Notes/Comments" dataField="comments" />
 	</transys:datatable>
 	<%session.setAttribute("loginUserColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
 </form:form>

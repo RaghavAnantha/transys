@@ -53,12 +53,6 @@ public class Employee extends AbstractBaseModel {
 	@Column(name="comments")
 	private String comments;
 	
-	@Column(name="username")
-	private String username;
-	
-	@Column(name="password")
-	private String password; // TODO: to encrypt
-	
 	@ManyToOne
 	@JoinColumn(name="status")
 	private EmployeeStatus status;
@@ -157,24 +151,7 @@ public class Employee extends AbstractBaseModel {
 	public void setComments(String comments) {
 		this.comments = comments;
 	}
-
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	// TODO: Encode
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
+	
 	public void setJobTitle(JobTitle jobTitle) {
 		this.jobTitle = jobTitle;
 	}

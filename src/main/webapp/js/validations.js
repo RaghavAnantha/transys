@@ -1,6 +1,6 @@
 function validateAndFormatPhone(phoneId) {	
 	var phone = document.getElementById(phoneId).value;
-	if (phone == "") {
+	if (phone.trim() == "") {
 		return;
 	}
 	
@@ -21,7 +21,7 @@ function validateAndFormatPhone(phoneId) {
 
 function validateAndFormatPhoneModal(phoneId) {	
 	var phone = document.getElementById(phoneId).value;
-	if (phone == "") {
+	if (phone.trim() == "") {
 		return;
 	}
 	
@@ -43,6 +43,10 @@ function validateAndFormatPhoneModal(phoneId) {
 }
 
 function formatPhone(phone) {
+	if (phone.trim() == "") {
+		return phone;
+	}
+	
 	if (phone.length < 10) {
 		return phone;
 	}
@@ -59,6 +63,10 @@ function formatPhone(phone) {
 }
 
 function validateAmount(amt, maxValue) {
+	if (amt.trim() == "") {
+		return false;
+	}
+	
 	if (!/(^\d+\.\d{2}$)|(^\d+$)/.test(amt)) {
 		return false;
 	}
@@ -71,6 +79,10 @@ function validateAmount(amt, maxValue) {
 }
 
 function validateWeight(weight, maxValue) {
+	if (weight.trim() == "") {
+		return false;
+	}
+	
 	if (!/(^\d+\.\d{1,2}$)|(^\d+$)|(^\.\d{1,2}$)/.test(weight)) {
 		return false;
 	}
@@ -83,10 +95,18 @@ function validateWeight(weight, maxValue) {
 }
 
 function validatePhone(phone) {
+	if (phone.trim() == "") {
+		return false;
+	}
+	
 	return /^[2-9]{1}\d{2}(-)[2-9]{1}\d{2}(-)\d{4}$/.test(phone);
 }
 
 function validateDate(date) {
+	if (date.trim() == "") {
+		return false;
+	}
+	
 	var datePattern = new RegExp("^([0-9]{2})\/([0-9]{2})\/([0-9]{4})$");
 	if(!datePattern.test(date)) {
 		return false;
@@ -114,6 +134,7 @@ function validateTimeRange(timeFrom, timeTo) {
 	
 	var dateFrom = new Date('03/11/2015 ' + timeFromTrimmedTokens[0] + ':00:00 ' + timeFromTrimmedTokens[1]);
 	var dateTo = new Date('03/11/2015 ' + timeToTrimmedTokens[0] + ':00:00 ' + timeToTrimmedTokens[1]);
+	
 	if (dateTo < dateFrom) {
     	return false;
     } else {
@@ -140,10 +161,18 @@ function validateDateRange(dateFrom, dateTo) {
 }
 
 function validateZipCode(zipcode) {
+	if (zipcode.trim() == "") {
+		return false;
+	}
+	
 	return /(^\d{5}$)|(^\d{5}-\d{4}$)/.test(zipcode);
 }
 
 function validateEmail(email) {
+	if (email.trim() == "") {
+		return false;
+	}
+	
 	if (email.length > 50) {
 		return false;
 	}
@@ -162,26 +191,46 @@ function validateText(text, validLength) {
 }
 
 function validateAddressLine(addressLine, validLength) {
+	if (addressLine.trim() == "") {
+		return false;
+	}
+	
 	var addressLinePattern = new RegExp("^[a-zA-Z0-9-_,:/'#\\s\\\\]{1," + validLength + "}$");
 	return addressLinePattern.test(addressLine);
 }
 	
 function validateAlphaOnly(text, validLength) {
+	if (text.trim() == "") {
+		return false;
+	}
+	
 	var alphaPattern = new RegExp("^[a-zA-Z]{1," + validLength + "}$");
 	return alphaPattern.test(text);
 }
 
 function validateName(name, validLength) {
+	if (name.trim() == "") {
+		return false;
+	}
+	
 	var namePattern = new RegExp("^[a-zA-Z-'`\\s/]{1," + validLength + "}$");
 	return namePattern.test(name);
 }
 
 function validateCompanyName(companyName, validLength) {
+	if (companyName.trim() == "") {
+		return false;
+	}
+	
 	var companyNamePattern = new RegExp("^[a-zA-Z0-9-_'`\\s/.,&]{1," + validLength + "}$");
 	return companyNamePattern.test(companyName);
 }
 
 function validateReferenceNum(refNum, validLength) {
+	if (refNum.trim() == "") {
+		return false;
+	}
+	
 	var refNumPattern = new RegExp("^[a-zA-Z0-9-_():.,/*&%$#\\s\\\\]{1," + validLength + "}$");
 	return refNumPattern.test(refNum);
 }
@@ -202,4 +251,13 @@ function validateMaterial(material, validLength) {
 	
 	var materialPattern = new RegExp("^[a-zA-Z0-9-_()/&\\s\\\\]{1," + validLength + "}$");
 	return materialPattern.test(material);
+}
+
+function validateRegex(text, regex, validLength) {
+	if (text.trim() == "") {
+		return false;
+	}
+	
+	var textPattern = new RegExp("^[" + regex + "]{1," + validLength + "}$");
+	return textPattern.test(text);
 }

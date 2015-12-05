@@ -34,8 +34,8 @@
 						<ul class="dropdown-menu">
 							<li class="dropdown dropdown-submenu"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Employees</a>
 								<ul class="dropdown-menu">
-									<li><a href="${ctx}/masterData/employee/main.do">Manage Employee</a></li>
-									<li><a href="${ctx}/masterData/loginUser/main.do">Manage User Roles</a></li>
+									<li><a href="${ctx}/masterData/employee/main.do">Manage Employees</a></li>
+									<li><a href="${ctx}/masterData/loginUser/main.do">Manage User Logins</a></li>
 								</ul>
 							</li>
 							<li><a href="${ctx}/masterData/materialType/main.do">Material Type</a></li>
