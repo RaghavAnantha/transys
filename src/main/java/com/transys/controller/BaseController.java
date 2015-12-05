@@ -119,7 +119,7 @@ public class BaseController {
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute(searchCriteriaName);
 		if (criteria == null) {
 			criteria = new SearchCriteria();
-			criteria.setPageSize(20);
+			criteria.setPageSize(25);
 		}
 		
 		criteria.setRequestParams(params);

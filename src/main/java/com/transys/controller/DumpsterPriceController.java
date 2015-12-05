@@ -57,6 +57,15 @@ public class DumpsterPriceController extends CRUDController<DumpsterPrice> {
 		
 		return urlContext + "/list";
 	}
+	
+	@Override
+	public String search2(ModelMap model, HttpServletRequest request) {
+		setupList(model, request);
+		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
+		model.addAttribute("list", genericDAO.search(DumpsterPrice.class, criteria, "materialType.materialCategory.category", null, null));
+		
+		return urlContext + "/list";
+	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/list.do")
 	public String list(ModelMap model, HttpServletRequest request) {
@@ -78,7 +87,9 @@ public class DumpsterPriceController extends CRUDController<DumpsterPrice> {
 		
 		DumpsterPrice dumpsterPriceToBeEdited = (DumpsterPrice)model.get("modelObject");
 		
-		String query = "select obj from MaterialType obj where obj.deleteFlag='1' and obj.materialCategory.id=" + dumpsterPriceToBeEdited.getMaterialType().getMaterialCategory().getId();
+		String query = "select obj from MaterialType obj where obj.deleteFlag='1' and obj.materialCategory.id=" 
+						 + dumpsterPriceToBeEdited.getMaterialType().getMaterialCategory().getId()
+						 + " order by obj.materialName asc";
 		List<MaterialType> materialTypesForSelMatCat = genericDAO.executeSimpleQuery(query);
 		model.addAttribute("materialTypes", materialTypesForSelMatCat);
 		
@@ -147,7 +158,9 @@ public class DumpsterPriceController extends CRUDController<DumpsterPrice> {
 			List<MaterialType> materialTypeList = genericDAO.executeSimpleQuery(query);
 			entity.setMaterialType(materialTypeList.get(0));
 			
-			query = "select obj from MaterialType obj where obj.deleteFlag='1' and obj.materialCategory.id=" + entity.getMaterialType().getMaterialCategory().getId();
+			query = "select obj from MaterialType obj where obj.deleteFlag='1' and obj.materialCategory.id=" 
+					+ entity.getMaterialType().getMaterialCategory().getId()
+					+ " order by obj.materialName asc";;
 			List<MaterialType> materialTypesForSelMatCat = genericDAO.executeSimpleQuery(query);
 			model.addAttribute("materialTypes", materialTypesForSelMatCat);
 		}
