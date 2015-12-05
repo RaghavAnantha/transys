@@ -559,6 +559,10 @@ public class GenericJpaDAO implements GenericDAO {
 		
 		String operator = criterias.get(param.toString()).toString().trim().substring(0, 2);
 		String operand = criterias.get(param.toString()).toString().trim().substring(2);
+		System.out.println("Operand: " + operand);
+		if (StringUtils.isEmpty(operand)) {
+			return;
+		}
 		
 		try {
 			String toAppend = "p." + criteriaKey + operator + " '"

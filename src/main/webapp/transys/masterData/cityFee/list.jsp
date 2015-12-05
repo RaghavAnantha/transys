@@ -44,7 +44,7 @@
 			<td></td>
 			<td>
 				<input type="button"
-				class="btn btn-primary btn-sm"
+				class="btn btn-primary btn-sm btn-sm-ext"
 				onclick="document.forms['searchForm'].submit();"
 				value="<transys:label code="Search"/>" />
 				<input type="reset" class="btn btn-primary btn-sm btn-sm-ext" value="Clear"/>
@@ -62,6 +62,7 @@
 		<transys:textcolumn headerText="Fee" dataField="fee" />
 		<transys:textcolumn headerText="Effective Date From" dataField="effectiveStartDate" dataFormat="MM/dd/yyyy" />
 		<transys:textcolumn headerText="Effective Date To" dataField="effectiveEndDate" dataFormat="MM/dd/yyyy" />
+		<transys:textcolumn headerText="Notes/Comments" dataField="comments" />
 	</transys:datatable>
 	<%session.setAttribute("cityFeeColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
 </form:form>

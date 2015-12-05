@@ -20,7 +20,6 @@ import com.transys.model.SearchCriteria;
 @Controller
 @RequestMapping("/masterData/cityFee")
 public class CityFeeController extends CRUDController<CityFee> {
-
 	public CityFeeController() {
 		setUrlContext("masterData/cityFee");
 	}
@@ -31,6 +30,15 @@ public class CityFeeController extends CRUDController<CityFee> {
 		setupList(model, request);
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		model.addAttribute("list", genericDAO.search(CityFee.class, criteria, "suburbName", null, null));
+		return urlContext + "/list";
+	}
+	
+	@Override
+	public String search2(ModelMap model, HttpServletRequest request) {
+		setupList(model, request);
+		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
+		model.addAttribute("list", genericDAO.search(CityFee.class, criteria, "suburbName", null, null));
+		
 		return urlContext + "/list";
 	}
 
@@ -70,16 +78,15 @@ public class CityFeeController extends CRUDController<CityFee> {
 	@RequestMapping(method = RequestMethod.POST, value = "/save.do")
 	public String save(HttpServletRequest request, @ModelAttribute("modelObject") CityFee entity,
 			BindingResult bindingResult, ModelMap model) {
-
-		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
-		criteria.getSearchMap().remove("_csrf");
 		super.save(request, entity, bindingResult, model);
 		
 		model.addAttribute("msgCtx", "manageCityFee");
 		model.addAttribute("msg", "City Fee saved successfully");
+		
+		if (entity.getModifiedBy() == null) {
+			model.addAttribute("modelObject", new CityFee());
+		}
 
 		return urlContext + "/form";
-
 	}
-	
 }
