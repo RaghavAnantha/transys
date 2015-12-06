@@ -217,6 +217,15 @@ function validateName(name, validLength) {
 	return namePattern.test(name);
 }
 
+function validatePassword(passwd, validLength) {
+	if (passwd.trim() == "") {
+		return false;
+	}
+
+	var passwdPattern = new RegExp("^[a-zA-Z0-9-_():.,~/*&%$#\\\\]{1," + validLength + "}$");
+	return passwdPattern.test(passwd);
+}
+
 function validateCompanyName(companyName, validLength) {
 	if (companyName.trim() == "") {
 		return false;

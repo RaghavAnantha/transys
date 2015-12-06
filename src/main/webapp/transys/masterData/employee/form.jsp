@@ -1,47 +1,195 @@
 <%@include file="/common/taglibs.jsp"%>
-<%@include file="/common/modal.jsp"%>
 
 <script type="text/javascript">
-function validateAndFormatPhone(phoneId) {	
-	var phone = document.getElementById(phoneId).value;
-	if (phone == "") {
-		return;
-	}
-	
-	if (phone.length < 10  || phone.length > 12 
-			|| (phone.length > 10 && !phone.match("-"))) {
-		var alertMsg = "<p>Invalid Phone Number.</p>";
-		showAlertDialog("Data validation", alertMsg);
-		
-		document.getElementById(phoneId).value = "";
-		return false;
+
+function processEmployeeForm() {
+	if (validateEmployeeForm()) {
+		var employeeForm = $("#employeeForm");
+		employeeForm.submit();
+		return true;
 	} else {
-		var formattedPhone = formatPhone(phone);
-		document.getElementById(phoneId).value = formattedPhone;
-	}	
+		return false;
+	}
 }
 
-function formatPhone(phone) {
-	if (phone.length < 10) {
-		return phone;
+function validateEmployeeForm() {
+	var missingData = validateEmployeeMissingData();
+	if (missingData != "") {
+		var alertMsg = "<span style='color:red'><b>Please provide following required data:</b><br></span>"
+					 + missingData;
+		showAlertDialog("Data Validation", alertMsg);
+		
+		return false;
 	}
 	
-	var str = new String(phone);
-	if (str.match("-")) {
-		return phone;
+	var formatValidation = validateEmployeeDataFormat();
+	if (formatValidation != "") {
+		var alertMsg = "<span style='color:red'><b>Please correct following invalid data:</b><br></span>"
+					 + formatValidation;
+		showAlertDialog("Data Validation", alertMsg);
+		
+		return false;
 	}
 	
-	var p1 = str.substring(0,3);
-	var p2 = str.substring(3,6);
-	var p3 = str.substring(6,10);				
-	return p1 + "-" + p2 + "-" + p3;
+	return true;
+}
+
+function validateEmployeeMissingData() {
+	var missingData = "";
+	
+	if ($('#employeeId').val() == "") {
+		missingData += "Employee Id, "
+	}
+	
+	if ($('#firstName').val() == "") {
+		missingData += "First Name, "
+	}
+	
+	if ($('#lastName').val() == "") {
+		missingData += "Last Name, "
+	}
+	
+	if ($('#jobTitle').val() == "") {
+		missingData += "Job Title, "
+	}
+	
+	if ($('#address').val() == "") {
+		missingData += "Address, "
+	}
+	
+	if ($('#city').val() == "") {
+		missingData += "City, "
+	}
+	
+	if ($('#state').val() == "") {
+		missingData += "State, "
+	}
+	
+	if ($('#zipcode').val() == "") {
+		missingData += "Zipcode, "
+	}
+	
+	if ($('#phone').val() == "") {
+		missingData += "Phone, "
+	}
+	
+	if ($('#email').val() == "") {
+		missingData += "Email, "
+	}
+	
+	if ($("[name='hireDate']").val() == "") {
+		missingData += "Hire Date, "
+	}
+	
+	if ($('#status').val() == "") {
+		missingData += "Status, "
+	}
+	
+	if (missingData != "") {
+		missingData = missingData.substring(0, missingData.length - 2);
+	}
+	
+	return missingData;
+}
+
+function validateEmployeeDataFormat() {
+	var validationMsg = "";
+	
+	var employeeId = $('#employeeId').val();
+	if (employeeId != "") {
+		if (!validateDumpsterNum(employeeId, 15)) {
+			validationMsg += "Employee Id, "
+		}
+	}
+	
+	var firstName = $('#firstName').val();
+	if (firstName != "") {
+		if (!validateName(firstName, 50)) {
+			validationMsg += "First Name, "
+		}
+	}
+	
+	var lastName = $('#lastName').val();
+	if (lastName != "") {
+		if (!validateName(lastName, 50)) {
+			validationMsg += "Last Name, "
+		}
+	}
+	
+	var address = $('#address').val();
+	if (address != "") {
+		if (!validateAddressLine(address, 100)) {
+			validationMsg += "Address, "
+		}
+	}
+	
+	var zipcode = $('#zipcode').val();
+	if (zipcode != "") {
+		if (!validateZipCode(zipcode, 12)) {
+			validationMsg += "Zipcode, "
+		}
+	}
+	
+	var city = $('#city').val();
+	if (city != "") {
+		if (!validateName(city, 50)) {
+			validationMsg += "City, "
+		}
+	}
+	
+	var phone = $('#phone').val();
+	if (phone != "") {
+		if (!validatePhone(phone, 20)) {
+			validationMsg += "Phone, "
+		}
+	}
+	
+	var email = $('#email').val();
+	if (email != "") {
+		if (!validateEmail(email)) {
+			validationMsg += "Email, "
+		}
+	}
+	
+	var hireDate = $("[name='hireDate']").val();
+	if (hireDate != "") {
+		if (!validateDate(hireDate)) {
+			validationMsg += "Hire Date, "
+		}
+	}
+	
+	var leaveDate = $("[name='leaveDate']").val();
+	if (leaveDate != "") {
+		if (!validateDate(leaveDate)) {
+			validationMsg += "Termination Date, "
+		}
+	}
+	
+	if (hireDate != "" && leaveDate != "") {
+		if (!validateDateRange(hireDate, leaveDate)) {
+			validationMsg += "Hire Date > Termination date, ";
+		}
+	}
+	
+	var notes = $('#employeeComments').val();
+	if (notes != "") {
+		if (!validateText(notes, 500)) {
+			validationMsg += "Comments, "
+		}
+	}
+	
+	if (validationMsg != "") {
+		validationMsg = validationMsg.substring(0, validationMsg.length - 2);
+	}
+	
+	return validationMsg;
 }
 </script>
+
 <br />
 
 <h5 style="margin-top: -15px; !important">Add/Edit Employee</h5>
-<form:form action="save.do" name="typeForm" commandName="modelObject"
-	method="post" id="typeForm">
+<form:form action="save.do" name="employeeForm" commandName="modelObject" method="post" id="employeeForm">
 	<form:hidden path="id" id="id" />
 	<jsp:include page="/common/messages.jsp">
 		<jsp:param name="msgCtx" value="manageEmployees" />
@@ -91,11 +239,11 @@ function formatPhone(phone) {
 		<tr>
 			<td class="form-left"><transys:label code="State" /><span class="errorMessage">*</span></td>
 			<td>
-				<form:select cssClass="flat form-control input-sm" path="state.id" style="width:172px !important">
+				<form:select cssClass="flat form-control input-sm" path="state" style="width:172px !important">
 					<form:option value="">-----Please Select-----</form:option>
 					<form:options items="${state}" itemValue="id" itemLabel="name" />
 				</form:select> 
-				<form:errors path="state.id" cssClass="errorMessage" />
+				<form:errors path="state" cssClass="errorMessage" />
 			</td>
 			
 			<td class="form-left"><transys:label code="Zipcode" /><span class="errorMessage">*</span></td>
@@ -157,8 +305,11 @@ function formatPhone(phone) {
 		<tr>
 			<td>&nbsp;</td>
 			<td colspan="2">
-			<input type="submit" id="create" onclick="return validate()" value="<transys:label code="Save"/>" class="flat btn btn-primary btn-sm btn-sm-ext" /> 
-			<input type="button" id="cancelBtn" value="<transys:label code="Back"/>" class="flat btn btn-primary btn-sm btn-sm-ext" onClick="location.href='list.do'" /></td>
+				<input type="button" id="create" onclick="return processEmployeeForm();" value="Save"
+					class="flat btn btn-primary btn-sm btn-sm-ext" /> 
+				<input type="button" id="cancelBtn" value="Back"
+					class="flat btn btn-primary btn-sm btn-sm-ext" onClick="window.location.href='list.do'" />
+			</td>
 		</tr>
 	</table>
 </form:form>

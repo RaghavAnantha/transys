@@ -3,8 +3,10 @@ package com.transys.controller;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.transys.controller.editor.AbstractModelEditor;
+import com.transys.model.Dumpster;
 import com.transys.model.Employee;
 import com.transys.model.EmployeeStatus;
 import com.transys.model.JobTitle;
@@ -82,20 +85,40 @@ public class EmployeeController extends CRUDController<Employee> {
 		model.addAttribute("employee", genericDAO.findByCriteria(Employee.class, criterias, "firstName", false));
 	}
 	
-	@RequestMapping(method = RequestMethod.POST, value = "/save.do")
-	public String save(HttpServletRequest request,
-			@ModelAttribute("modelObject") Employee entity,
+	@Override
+	public String save(HttpServletRequest request, @ModelAttribute("modelObject") Employee entity,
 			BindingResult bindingResult, ModelMap model) {
-		
-		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
-		criteria.getSearchMap().remove("_csrf");
-		super.save(request, entity,  bindingResult, model);
-		
+		setupCreate(model, request);
 		model.addAttribute("msgCtx", "manageEmployees");
+		
+		try {
+			beforeSave(request, entity, model);
+			genericDAO.saveOrUpdate(entity);
+			cleanUp(request);
+		} catch (PersistenceException e){
+			String errorMsg = extractSaveErrorMsg(e);
+			model.addAttribute("error", errorMsg);
+			
+			return urlContext + "/form";
+		}
+		
 		model.addAttribute("msg", "Employee saved successfully");
 		
+		if (entity.getModifiedBy() == null) {
+			model.addAttribute("modelObject", new Employee());
+		}
+				
 		return urlContext + "/form";
-		
 	}
 	
+	private String extractSaveErrorMsg(Exception e) {
+		String errorMsg = StringUtils.EMPTY;
+		if (isConstraintError(e, "employee")) {
+			errorMsg = "Duplicate employee id - employee id already exists"; 
+		} else {
+			errorMsg = "Error occured while saving Employee";
+		}
+		
+		return errorMsg;
+	}
 }

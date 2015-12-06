@@ -1,5 +1,4 @@
 <%@include file="/common/taglibs.jsp"%>
-<%@include file="/common/modal.jsp"%>
 
 <script type="text/javascript">
 /*function updateEncodedPassword() {
@@ -10,9 +9,18 @@
 	alert(encodedString + ">" + plainString);	
 }*/
 
-function validateLoginUserForm() {
-	
-	var missingData = validateMissingData();
+function processUserLoginForm() {
+	if (validateUserLoginForm()) {
+		var userLoginForm = $("#userLoginForm");
+		userLoginForm.submit();
+		return true;
+	} else {
+		return false;
+	}
+}
+
+function validateUserLoginForm() {
+	var missingData = validateUserLoginMissingData();
 	if (missingData != "") {
 		var alertMsg = "<span style='color:red'><b>Please provide following required data:</b><br></span>"
 					 + missingData;
@@ -21,7 +29,7 @@ function validateLoginUserForm() {
 		return false;
 	}
 	
-	var formatValidation = validateDataFormat();
+	var formatValidation = validateUserLoginDataFormat();
 	if (formatValidation != "") {
 		var alertMsg = "<span style='color:red'><b>Please correct following invalid data:</b><br></span>"
 					 + formatValidation;
@@ -31,24 +39,9 @@ function validateLoginUserForm() {
 	}
 	
 	return true;
-	
 }
 
-function validateDataFormat() {
-	
-	var validationMsg = "";
-	
-	var pswd = $('#passwordInput').val();
-	var changePswd = $('#changePassword').val();
-	
-	if (pswd != changePswd) {
-		validationMsg += "Passwords do not match.";
-	}
-	
-	return validationMsg;
-}
-
-function validateMissingData() {
+function validateUserLoginMissingData() {
 	var missingData = "";
 	
 	if ($('#employee').val() == "") {
@@ -59,6 +52,9 @@ function validateMissingData() {
 	}
 	if ($('#passwordInput').val() == "") {
 		missingData += "Password, "
+	}
+	if ($('#changePassword').val() == "") {
+		missingData += "Confirm Password, "
 	}
 	if ($('#role').val() == "") {
 		missingData += "Role, "
@@ -74,13 +70,49 @@ function validateMissingData() {
 	return missingData;
 }
 
-</script>
+function validateUserLoginDataFormat() {
+	var validationMsg = "";
+	
+	var userName = $('#username').val();
+	if (userName != "") {
+		if (!validateName(userName, 15)) {
+			validationMsg += "Username, "
+		}
+	}
+	
+	var passwordInput = $('#passwordInput').val();
+	if (passwordInput != "") {
+		if (!validatePassword(passwordInput, 15)) {
+			validationMsg += "Password, "
+		}
+	}
+	
+	var changePassword = $('#changePassword').val();
+	if (changePassword != "") {
+		if (!validatePassword(changePassword, 15)) {
+			validationMsg += "Confirm Password, "
+		}
+	}
+	
+	if (passwordInput != changePassword) {
+		validationMsg += "Passwords do not match.";
+	}
+	
+	var notes = $('#loginUserComments').val();
+	if (notes != "") {
+		if (!validateText(notes, 500)) {
+			validationMsg += "Comments, "
+		}
+	}
+	
+	return validationMsg;
+}
 
+</script>
 
 <br />
 <h5 style="margin-top: -15px; !important">Add/Edit User Logins</h5>
-<form:form action="save.do" name="typeForm" commandName="modelObject"
-	method="post" id="typeForm">
+<form:form action="save.do" name="userLoginForm" commandName="modelObject" method="post" id="userLoginForm">
 	<form:hidden path="id" id="id" />
 	<jsp:include page="/common/messages.jsp">
 		<jsp:param name="msgCtx" value="manageLoginUsers" />
@@ -89,11 +121,11 @@ function validateMissingData() {
 		<tr>
 		<td class="form-left"><transys:label code="Employee Name" /><span class="errorMessage">*</span></td>
 			<td>
-				<form:select id="employee" cssClass="flat form-control input-sm" path="employee.id" style="width: 175px !important" onChange="return populateDeliveryAddress();"> 
+				<form:select cssClass="flat form-control input-sm" path="employee" style="width: 175px !important"> 
 					<form:option value="">-----Please Select-----</form:option>
 					<form:options items="${employees}" itemValue="id" itemLabel="fullName" />
 				</form:select> 
-			 	<form:errors path="employee.id" cssClass="errorMessage" />
+			 	<form:errors path="employee" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>
@@ -108,28 +140,27 @@ function validateMissingData() {
 			<form:errors path="password" cssClass="errorMessage" /></td>
 		</tr>
 		<tr>
-			<td class="form-left"><transys:label code="Confirm Password" /><span
-				class="errorMessage">*</span></td>
+			<td class="form-left"><transys:label code="Confirm Password" /><span class="errorMessage">*</span></td>
 			<td><input id="changePassword" type="password" class="flat" style="width: 175px !important"/> <br>
 		</tr>
 		<tr>
 		<td class="form-left"><transys:label code="Role" /><span class="errorMessage">*</span></td>
 			<td>
-				<form:select id="role" cssClass="flat form-control input-sm" path="role.id" style="width:175px !important">
+				<form:select cssClass="flat form-control input-sm" path="role" style="width:175px !important">
 					<form:option value="">-----Please Select-----</form:option>
 					<form:options items="${roles}" itemValue="id" itemLabel="name" />
 				</form:select> 
-				<form:errors path="role.id" cssClass="errorMessage" />
+				<form:errors path="role" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>
 		<td class="form-left"><transys:label code="Account Status" /></td>
 			<td>
-				<form:select id="accountStatus" cssClass="flat form-control input-sm" path="accountStatus.id" style="width:175px !important">
+				<form:select cssClass="flat form-control input-sm" path="accountStatus" style="width:175px !important">
 					<form:option value="">-----Please Select-----</form:option>
 					<form:options items="${employeeStatus}" itemValue="id" itemLabel="status" />
 				</form:select> 
-				<br><form:errors path="accountStatus.id" cssClass="errorMessage" />
+				<br><form:errors path="accountStatus" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>
@@ -153,8 +184,11 @@ function validateMissingData() {
 		<tr>
 			<td>&nbsp;</td>
 			<td colspan="2">
-			<input type="submit" id="create" onclick="return validateLoginUserForm();" value="Save" class="flat btn btn-primary btn-sm btn-sm-ext" /> 
-			<input type="button" id="cancelBtn" value="<transys:label code="Back"/>" class="flat btn btn-primary btn-sm btn-sm-ext" onClick="location.href='list.do'" /></td>
+				<input type="button" id="create" onclick="return processUserLoginForm();" value="Save"
+					class="flat btn btn-primary btn-sm btn-sm-ext" /> 
+				<input type="button" id="cancelBtn" value="Back"
+					class="flat btn btn-primary btn-sm btn-sm-ext" onClick="window.location.href='list.do'" />
+			</td>
 		</tr>
 	</table>
 </form:form>

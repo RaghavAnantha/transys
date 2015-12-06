@@ -3,8 +3,10 @@ package com.transys.controller;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -83,22 +85,44 @@ public class LoginUserController extends CRUDController<User> {
 		model.addAttribute("roles", genericDAO.findByCriteria(Role.class, criterias, "name", false));
 	}
 	
-	@RequestMapping(method = RequestMethod.POST, value = "/save.do")
-	public String save(HttpServletRequest request,
-			@ModelAttribute("modelObject") User entity,
+	@Override
+	public String save(HttpServletRequest request, @ModelAttribute("modelObject") User entity,
 			BindingResult bindingResult, ModelMap model) {
-		
-		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
-		criteria.getSearchMap().remove("_csrf");
+		setupCreate(model, request);
+		model.addAttribute("msgCtx", "manageLoginUsers");
 		
 		// encode the password before storing in database
 		entity.setPassword(passwordEncoder.encode(entity.getPassword()));
-		super.save(request, entity,  bindingResult, model);
+		try {
+			beforeSave(request, entity, model);
+			genericDAO.saveOrUpdate(entity);
+			cleanUp(request);
+		} catch (PersistenceException e){
+			String errorMsg = extractSaveErrorMsg(e);
+			model.addAttribute("error", errorMsg);
+			
+			return urlContext + "/form";
+		}
 		
-		model.addAttribute("msgCtx", "manageLoginUsers");
 		model.addAttribute("msg", "Login User saved successfully");
 		
+		if (entity.getModifiedBy() == null) {
+			model.addAttribute("modelObject", new User());
+		}
+				
 		return urlContext + "/form";
+	}
+	
+	private String extractSaveErrorMsg(Exception e) {
+		String errorMsg = StringUtils.EMPTY;
+		if (isConstraintError(e, "employee")) {
+			errorMsg = "Duplicate employee id - employee id already exists"; 
+		} else if (isConstraintError(e, "username")) {
+			errorMsg = "Duplicate username - username already exists"; 
+		} else {
+			errorMsg = "Error occured while saving User";
+		}
 		
+		return errorMsg;
 	}
 }

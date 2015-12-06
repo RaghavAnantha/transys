@@ -169,7 +169,7 @@ CREATE TABLE `customer` (
   `chargeCompany` varchar(5) NOT NULL,
   `delete_flag` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `UK_companyName` (`companyName`),
+  UNIQUE KEY `UK_customerCompanyName` (`companyName`),
   CONSTRAINT `customerStateRef` FOREIGN KEY (`state`) REFERENCES `state` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `customerStatusRef` FOREIGN KEY (`customerStatusId`) REFERENCES `customerStatus` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `customerTypeRef` FOREIGN KEY (`customerTypeId`) REFERENCES `customerType` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
@@ -206,7 +206,7 @@ CREATE TABLE `dumpster` (
   `modified_by` bigint(20) DEFAULT NULL,
   `delete_flag` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `UK_dumpsterNum` (`dumpsterNum`),
+  UNIQUE KEY `UK_dumpsterDumpsterNum` (`dumpsterNum`),
   KEY `dumpsterInfoDumpsterStatusRef_Idx` (`status`),
   CONSTRAINT `dumpsterInfoDumpsterStatusRef` FOREIGN KEY (`status`) REFERENCES `dumpsterStatus` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `dumpsterInfoDumpsterSizeRef` FOREIGN KEY (`dumpsterSizeId`) REFERENCES `dumpsterSize` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
@@ -241,7 +241,7 @@ CREATE TABLE `dumpsterStatus` (
   `modified_by` bigint(20) DEFAULT NULL,
   `delete_flag` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `UK_dumpsterStatus` (`status`)
+  UNIQUE KEY `UK_dumpsterStatusDumpsterStatus` (`status`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -287,7 +287,7 @@ CREATE TABLE `employee` (
   `status` bigint(20) NOT NULL,
   `employeeId` varchar(45) NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `UK_employeeId` (`employeeId`),
+  UNIQUE KEY `UK_employeeEmployeeId` (`employeeId`),
   KEY `employeeJobTitleRef_idx` (`jobTitleId`),
   KEY `employeeStateRef_idx` (`state`),
   KEY `employeeStatusRef_idx` (`status`),
@@ -327,7 +327,7 @@ CREATE TABLE `employeeStatus` (
   `modified_by` bigint(20) DEFAULT NULL,
   `delete_flag` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `UK_employeeStatus` (`status`)
+  UNIQUE KEY `UK_employeeStatusStatus` (`status`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -461,7 +461,7 @@ CREATE TABLE `locationType` (
   `modified_by` bigint(20) DEFAULT NULL,
   `delete_flag` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `UK_locationType` (`locationType`)
+  UNIQUE KEY `UK_locationTypeLocationType` (`locationType`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -492,7 +492,7 @@ CREATE TABLE `customerType` (
   `modified_by` bigint(20) DEFAULT NULL,
   `delete_flag` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `UK_customerType` (`customerType`)
+  UNIQUE KEY `UK_customerTypeCustomerType` (`customerType`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -710,7 +710,7 @@ CREATE TABLE `orderStatus` (
   `modified_by` bigint(20) DEFAULT NULL,
   `delete_flag` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `UK_orderStatus` (`status`)
+  UNIQUE KEY `UK_orderStatusStatus` (`status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -744,7 +744,7 @@ CREATE TABLE `customerStatus` (
   `modified_by` bigint(20) DEFAULT NULL,
   `delete_flag` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `UK_customerStatus` (`status`)
+  UNIQUE KEY `UK_customerStatusStatus` (`status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -831,7 +831,7 @@ CREATE TABLE `permitClass` (
   `permitClass` varchar(25) NOT NULL,
   `comments` varchar(500) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `UK_permitClass` (`permitClass`)
+  UNIQUE KEY `UK_permitClassClass` (`permitClass`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -862,7 +862,7 @@ CREATE TABLE `permitStatus` (
   `modified_by` bigint(20) DEFAULT NULL,
   `delete_flag` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `UK_permitStatus` (`status`)
+  UNIQUE KEY `UK_permitStatusStatus` (`status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -897,7 +897,7 @@ CREATE TABLE `permitType` (
   `modified_by` bigint(20) DEFAULT NULL,
   `delete_flag` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `UK_permitType` (`permitType`)
+  UNIQUE KEY `UK_permitTypeType` (`permitType`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -1001,7 +1001,7 @@ CREATE TABLE `state` (
   `code` varchar(5) COLLATE utf8_unicode_ci NOT NULL,
   `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `UK_stateCode` (`code`),
+  UNIQUE KEY `UK_stateStateCode` (`code`),
   UNIQUE KEY `UK_stateName` (`name`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -1035,14 +1035,16 @@ CREATE TABLE `userInfo` (
   `modified_by` bigint(20) DEFAULT NULL,
   `accountStatusId` bigint(20) NOT NULL,
   `lastLoginDate` datetime DEFAULT NULL,
-  `loginAttempts` int(11) DEFAULT NULL,
-  `password` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `username` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `loginAttempts` int(11) DEFAULT 0,
+  `password` varchar(150) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `username` varchar(15) COLLATE utf8_unicode_ci DEFAULT NULL,
   `roleId` bigint(20) DEFAULT NULL,
   `employeeId` bigint(20) DEFAULT NULL,
   `comments` varchar(500) DEFAULT NULL,
   `delete_flag` int(11) DEFAULT '1',
   PRIMARY KEY (`id`),
+  UNIQUE KEY `UK_userInfoUsername` (`username`),
+  UNIQUE KEY `UK_userInfoEmployeeId` (`employeeId`),
   CONSTRAINT `userInfoRole_Ref` FOREIGN KEY (`roleId`) REFERENCES `role` (`id`),
   CONSTRAINT `userInfoEmployee_Ref` FOREIGN KEY (`employeeId`) REFERENCES `employee` (`id`),
   CONSTRAINT `userInfoAccountStatus_Ref` FOREIGN KEY (`accountStatusId`) REFERENCES `employeeStatus` (`id`)
@@ -1120,7 +1122,7 @@ CREATE TABLE `materialType` (
   `modified_by` bigint(20) DEFAULT NULL,
   `delete_flag` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `UK_materialName` (`materialName`),
+  UNIQUE KEY `UK_materialTypeMaterialName` (`materialName`),
   CONSTRAINT `materialTypeMaterialCategoryRef` FOREIGN KEY (`materialCategoryId`) REFERENCES `materialCategory` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -1159,7 +1161,7 @@ CREATE TABLE `materialCategory` (
   `modified_by` bigint(20) DEFAULT NULL,
   `delete_flag` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `UK_materialCategory` (`category`)
+  UNIQUE KEY `UK_materialCategoryMaterialCategory` (`category`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -1194,7 +1196,7 @@ CREATE TABLE `dumpsterSize` (
   `modified_by` bigint(20) DEFAULT NULL,
   `delete_flag` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `UK_dumpsterSize` (`size`),
+  UNIQUE KEY `UK_dumpsterSizeDumpsterSize` (`size`),
   CONSTRAINT `dumpsterSizePermitClassRef` FOREIGN KEY (`permitClassId`) REFERENCES `permitClass` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -1232,7 +1234,7 @@ CREATE TABLE `paymentMethodType` (
   `modified_by` bigint(20) DEFAULT NULL,
   `delete_flag` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `UK_paymentMethod` (`method`)
+  UNIQUE KEY `UK_paymentMethodTypePaymentMethod` (`method`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 

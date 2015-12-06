@@ -290,7 +290,7 @@ public abstract class CRUDController<T extends BaseModel> extends BaseController
 		}
 		
 		ConstraintViolationException ce = (ConstraintViolationException) e.getCause();
-		if (StringUtils.contains(ce.getConstraintName(), errorKey)) {
+		if (StringUtils.containsIgnoreCase(ce.getConstraintName(), errorKey)) {
 			return true;
 		} else {
 			return false;
