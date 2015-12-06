@@ -221,6 +221,10 @@ function validatePassword(passwd, validLength) {
 	if (passwd.trim() == "") {
 		return false;
 	}
+	
+	if (passwd.trim().length < 5) {
+		return false;
+	}
 
 	var passwdPattern = new RegExp("^[a-zA-Z0-9-_():.,~/*&%$#\\\\]{1," + validLength + "}$");
 	return passwdPattern.test(passwd);
