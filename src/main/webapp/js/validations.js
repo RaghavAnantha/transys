@@ -222,7 +222,7 @@ function validatePassword(passwd, validLength) {
 		return false;
 	}
 	
-	if (passwd.trim().length < 5) {
+	if (passwd.trim().length < 8) {
 		return false;
 	}
 
