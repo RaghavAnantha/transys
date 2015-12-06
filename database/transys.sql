@@ -288,6 +288,7 @@ CREATE TABLE `employee` (
   `employeeId` varchar(45) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `UK_employeeEmployeeId` (`employeeId`),
+  UNIQUE KEY `UK_employeeEmployeeName` (`firstName`, `lastName`),
   KEY `employeeJobTitleRef_idx` (`jobTitleId`),
   KEY `employeeStateRef_idx` (`state`),
   KEY `employeeStatusRef_idx` (`status`),

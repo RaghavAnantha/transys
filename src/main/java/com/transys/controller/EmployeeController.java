@@ -113,8 +113,10 @@ public class EmployeeController extends CRUDController<Employee> {
 	
 	private String extractSaveErrorMsg(Exception e) {
 		String errorMsg = StringUtils.EMPTY;
-		if (isConstraintError(e, "employee")) {
+		if (isConstraintError(e, "employeeId")) {
 			errorMsg = "Duplicate employee id - employee id already exists"; 
+		} else if (isConstraintError(e, "employeeName")) {
+			errorMsg = "Duplicate employee name - employee name already exists"; 
 		} else {
 			errorMsg = "Error occured while saving Employee";
 		}
