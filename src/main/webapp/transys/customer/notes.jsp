@@ -85,7 +85,7 @@ function processCustomerNotesForm() {
 					<c:set var="saveDisabled" value="disabled" />
 				</c:if>
 				<input type="button" id="customerNotesCreate" ${saveDisabled} onclick="processCustomerNotesForm();" value="Save" class="flat btn btn-primary btn-sm btn-sm-ext" />
-				<input type="button" id="customerNotesBackBtn" value="Back" class="flat btn btn-primary btn-sm btn-sm-ext" onClick="location.href='main.do'" />
+				<input type="button" id="customerNotesBackBtn" value="Back" class="flat btn btn-primary btn-sm btn-sm-ext" onClick="location.href='list.do'" />
 			</td>
 		</tr>
 	</table>
