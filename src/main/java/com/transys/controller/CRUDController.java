@@ -14,6 +14,7 @@ import javax.validation.ValidationException;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.core.Logger;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.ui.ModelMap;
@@ -282,4 +283,17 @@ public abstract class CRUDController<T extends BaseModel> extends BaseController
 		binder.registerCustomEditor(byte[].class, new ByteArrayMultipartFileEditor());
 	}
 
+	protected boolean isConstraintError(Exception e, String errorKey) {
+		//String errorMsg = e.getCause().getCause().getMessage();
+		if (!(e.getCause() instanceof ConstraintViolationException)) {
+			return false;
+		}
+		
+		ConstraintViolationException ce = (ConstraintViolationException) e.getCause();
+		if (StringUtils.contains(ce.getConstraintName(), errorKey)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 }

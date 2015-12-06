@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ValidationException;
 
@@ -120,9 +121,13 @@ public class DumpsterPriceController extends CRUDController<DumpsterPrice> {
 		model.addAttribute("materialCategories", genericDAO.findByCriteria(MaterialCategory.class, criterias, "category", false));
 	}
 
-	@RequestMapping(method = RequestMethod.POST, value = "/save.do")
+	@Override
 	public String save(HttpServletRequest request, @ModelAttribute("modelObject") DumpsterPrice entity,
 			BindingResult bindingResult, ModelMap model) {
+		setupCreate(model, request);
+		
+		model.addAttribute("msgCtx", "manageDumpsterPrice");
+		
 		try {
 			getValidator().validate(entity, bindingResult);
 		} catch (ValidationException e) {
@@ -138,17 +143,20 @@ public class DumpsterPriceController extends CRUDController<DumpsterPrice> {
 				System.out.println("Error: " + e.getDefaultMessage());
 			}
 			
-			setupCreate(model, request);
 			return urlContext + "/form";
 		}
 		
-		beforeSave(request, entity, model);
-		genericDAO.saveOrUpdate(entity);
-		cleanUp(request);
+		try {
+			beforeSave(request, entity, model);
+			genericDAO.saveOrUpdate(entity);
+			cleanUp(request);
+		} catch (PersistenceException e){
+			String errorMsg = extractSaveErrorMsg(e);
+			model.addAttribute("error", errorMsg);
+			
+			return urlContext + "/form";
+		}
 		
-		setupCreate(model, request);
-		
-		model.addAttribute("msgCtx", "manageDumpsterPrice");
 		model.addAttribute("msg", "Dumpster Price saved successfully");
 		
 		if (entity.getModifiedBy() == null) {
@@ -166,6 +174,11 @@ public class DumpsterPriceController extends CRUDController<DumpsterPrice> {
 		}
 		
 		return urlContext + "/form";
+	}
+	
+	private String extractSaveErrorMsg(Exception e) {
+		String errorMsg = "Error occured while saving Dumpster Price";
+		return errorMsg;
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/retrieveMaterialTypes.do")

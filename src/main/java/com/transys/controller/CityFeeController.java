@@ -3,8 +3,10 @@ package com.transys.controller;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.transys.model.CityFee;
 import com.transys.model.DumpsterPrice;
+import com.transys.model.MaterialType;
 import com.transys.model.SearchCriteria;
 
 @Controller
@@ -74,19 +77,35 @@ public class CityFeeController extends CRUDController<CityFee> {
 		model.addAttribute("cityFees", genericDAO.findByCriteria(CityFee.class, criterias, "suburbName", false));
 		model.addAttribute("uniqueCityFees", genericDAO.executeSimpleQuery("select DISTINCT(obj.fee) from CityFee obj where obj.deleteFlag='1' order by obj.fee asc"));
 	}
-
-	@RequestMapping(method = RequestMethod.POST, value = "/save.do")
+	
+	@Override
 	public String save(HttpServletRequest request, @ModelAttribute("modelObject") CityFee entity,
 			BindingResult bindingResult, ModelMap model) {
-		super.save(request, entity, bindingResult, model);
-		
+		setupCreate(model, request);
 		model.addAttribute("msgCtx", "manageCityFee");
+		
+		try {
+			beforeSave(request, entity, model);
+			genericDAO.saveOrUpdate(entity);
+			cleanUp(request);
+		} catch (PersistenceException e){
+			String errorMsg = extractSaveErrorMsg(e);
+			model.addAttribute("error", errorMsg);
+			
+			return urlContext + "/form";
+		}
+		
 		model.addAttribute("msg", "City Fee saved successfully");
 		
 		if (entity.getModifiedBy() == null) {
 			model.addAttribute("modelObject", new CityFee());
 		}
-
+				
 		return urlContext + "/form";
+	}
+	
+	private String extractSaveErrorMsg(Exception e) {
+		String errorMsg = "Error occured while saving city fee";
+		return errorMsg;
 	}
 }

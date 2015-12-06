@@ -110,7 +110,7 @@ function validateMaterialCategoryDataFormat() {
 				<input type="button" id="create" onclick="return processMaterialCategoryForm();" value="Save"
 					class="flat btn btn-primary btn-sm btn-sm-ext" /> 
 				<input type="button" id="cancelBtn" value="Back"
-					class="flat btn btn-primary btn-sm btn-sm-ext" onClick="location.href='main.do'" />
+					class="flat btn btn-primary btn-sm btn-sm-ext" onClick="location.href='list.do'" />
 			</td>
 		</tr>
 	</table>

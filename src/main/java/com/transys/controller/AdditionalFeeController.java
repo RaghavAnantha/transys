@@ -3,6 +3,7 @@ package com.transys.controller;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Controller;
@@ -76,19 +77,35 @@ public class AdditionalFeeController extends CRUDController<AdditionalFee> {
 		model.addAttribute("additionalFees", genericDAO.findByCriteria(AdditionalFee.class, criterias, "description", false));
 		model.addAttribute("uniqueAdditionalFees", genericDAO.executeSimpleQuery("select DISTINCT(obj.fee) from AdditionalFee obj where obj.deleteFlag='1' order by obj.fee asc"));
 	}
-
-	@RequestMapping(method = RequestMethod.POST, value = "/save.do")
+	
+	@Override
 	public String save(HttpServletRequest request, @ModelAttribute("modelObject") AdditionalFee entity,
 			BindingResult bindingResult, ModelMap model) {
-		super.save(request, entity, bindingResult, model);
+		setupCreate(model, request);
+		model.addAttribute("msgCtx", "manageAdditionalFees");
+		
+		try {
+			beforeSave(request, entity, model);
+			genericDAO.saveOrUpdate(entity);
+			cleanUp(request);
+		} catch (PersistenceException e){
+			String errorMsg = extractSaveErrorMsg(e);
+			model.addAttribute("error", errorMsg);
+			
+			return urlContext + "/form";
+		}
+		
+		model.addAttribute("msg", "Additional Fee saved successfully");
 		
 		if (entity.getModifiedBy() == null) {
 			model.addAttribute("modelObject", new AdditionalFee());
 		}
-
-		model.addAttribute("msgCtx", "manageAdditionalFees");
-		model.addAttribute("msg", "Additional Fee saved successfully");
+				
 		return urlContext + "/form";
 	}
-
+	
+	private String extractSaveErrorMsg(Exception e) {
+		String errorMsg = "Error occured while saving additional fee";
+		return errorMsg;
+	}
 }

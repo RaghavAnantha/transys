@@ -3,8 +3,10 @@ package com.transys.controller;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -69,20 +71,41 @@ public class LocationTypeController extends CRUDController<LocationType> {
 		Map criterias = new HashMap();
 		model.addAttribute("locationTypes", genericDAO.findByCriteria(LocationType.class, criterias, "locationType", false));
 	}
-
-	@RequestMapping(method = RequestMethod.POST, value = "/save.do")
+	
+	@Override
 	public String save(HttpServletRequest request, @ModelAttribute("modelObject") LocationType entity,
 			BindingResult bindingResult, ModelMap model) {
-
-		super.save(request, entity, bindingResult, model);
-		
+		setupCreate(model, request);
 		model.addAttribute("msgCtx", "manageLocationTypes");
+		
+		try {
+			beforeSave(request, entity, model);
+			genericDAO.saveOrUpdate(entity);
+			cleanUp(request);
+		} catch (PersistenceException e){
+			String errorMsg = extractSaveErrorMsg(e);
+			model.addAttribute("error", errorMsg);
+			
+			return urlContext + "/form";
+		}
+		
 		model.addAttribute("msg", "Location Type saved successfully");
 		
 		if (entity.getModifiedBy() == null) {
 			model.addAttribute("modelObject", new LocationType());
 		}
-
+				
 		return urlContext + "/form";
+	}
+	
+	private String extractSaveErrorMsg(Exception e) {
+		String errorMsg = StringUtils.EMPTY;
+		if (isConstraintError(e, "location")) {
+			errorMsg = "Duplicate location type - location type already exists"; 
+		} else {
+			errorMsg = "Error occured while saving location type";
+		}
+		
+		return errorMsg;
 	}
 }

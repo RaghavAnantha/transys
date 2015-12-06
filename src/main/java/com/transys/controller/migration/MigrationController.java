@@ -204,19 +204,13 @@ public class MigrationController extends CRUDController<Order> {
 								 .append("\n---------------------------------------------------------\n")
 								 .append(addressDataNotImportedBuff);
 	}
-
+	
 	private String extractCustomerSaveErrorMsg(Exception e) {
 		String errorMsg = StringUtils.EMPTY;
-		//String errorMsg = e.getCause().getCause().getMessage();
-		if (e.getCause() instanceof ConstraintViolationException) {
-			ConstraintViolationException ce = (ConstraintViolationException) e.getCause();
-			if (StringUtils.contains(ce.getConstraintName(), "company")) {
-				errorMsg += "Duplicate company name - company name already exists"; 
-			} else {
-				errorMsg += " Persistence exception while saving Customer";
-			}
+		if (isConstraintError(e, "company")) {
+			errorMsg = "Duplicate company name - company name already exists"; 
 		} else {
-			errorMsg += " Persistence exception while saving Customer";
+			errorMsg = "Persistence exception while saving Customer";
 		}
 		
 		return errorMsg;
@@ -224,16 +218,10 @@ public class MigrationController extends CRUDController<Order> {
 	
 	private String extractDumpsterSaveErrorMsg(Exception e) {
 		String errorMsg = StringUtils.EMPTY;
-		//String errorMsg = e.getCause().getCause().getMessage();
-		if (e.getCause() instanceof ConstraintViolationException) {
-			ConstraintViolationException ce = (ConstraintViolationException) e.getCause();
-			if (StringUtils.contains(ce.getConstraintName(), "dumpsterNum")) {
-				errorMsg += "Duplicate dumpster num - dumpster num already exists"; 
-			} else {
-				errorMsg += " Persistence exception while saving Dumpster";
-			}
+		if (isConstraintError(e, "dumpsterNum")) {
+			errorMsg = "Duplicate dumpster num - company name already exists"; 
 		} else {
-			errorMsg += " Persistence exception while saving Dumpster";
+			errorMsg = "Persistence exception while saving Dumpster";
 		}
 		
 		return errorMsg;

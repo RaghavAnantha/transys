@@ -3,8 +3,10 @@ package com.transys.controller;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import com.transys.controller.editor.AbstractModelEditor;
 import com.transys.model.Dumpster;
 import com.transys.model.MaterialCategory;
+import com.transys.model.MaterialType;
 import com.transys.model.SearchCriteria;
 
 @Controller
@@ -69,19 +72,41 @@ public class MaterialCategoryController extends CRUDController<MaterialCategory>
 		Map criterias = new HashMap();
 		model.addAttribute("materialCategories", genericDAO.findByCriteria(MaterialCategory.class, criterias, "category", false));
 	}
-
-	@RequestMapping(method = RequestMethod.POST, value = "/save.do")
+	
+	@Override
 	public String save(HttpServletRequest request, @ModelAttribute("modelObject") MaterialCategory entity,
 			BindingResult bindingResult, ModelMap model) {
-		super.save(request, entity, bindingResult, model);
-		
+		setupCreate(model, request);
 		model.addAttribute("msgCtx", "manageMaterialCategories");
+		
+		try {
+			beforeSave(request, entity, model);
+			genericDAO.saveOrUpdate(entity);
+			cleanUp(request);
+		} catch (PersistenceException e){
+			String errorMsg = extractSaveErrorMsg(e);
+			model.addAttribute("error", errorMsg);
+			
+			return urlContext + "/form";
+		}
+		
 		model.addAttribute("msg", "Material Category saved successfully");
 		
 		if (entity.getModifiedBy() == null) {
 			model.addAttribute("modelObject", new MaterialCategory());
 		}
-
+				
 		return urlContext + "/form";
+	}
+	
+	private String extractSaveErrorMsg(Exception e) {
+		String errorMsg = StringUtils.EMPTY;
+		if (isConstraintError(e, "material")) {
+			errorMsg = "Duplicate material category - material category already exists"; 
+		} else {
+			errorMsg = "Error occured while saving material category";
+		}
+		
+		return errorMsg;
 	}
 }

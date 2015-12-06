@@ -3,8 +3,10 @@ package com.transys.controller;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.transys.controller.editor.AbstractModelEditor;
+import com.transys.model.LocationType;
 import com.transys.model.PaymentMethodType;
 import com.transys.model.PermitFee;
 import com.transys.model.SearchCriteria;
@@ -78,19 +81,41 @@ public class PaymentMethodController extends CRUDController<PaymentMethodType> {
 		Map criterias = new HashMap();
 		model.addAttribute("paymentMethods", genericDAO.findByCriteria(PaymentMethodType.class, criterias, "method", false));
 	}
-
-	@RequestMapping(method = RequestMethod.POST, value = "/save.do")
+	
+	@Override
 	public String save(HttpServletRequest request, @ModelAttribute("modelObject") PaymentMethodType entity,
 			BindingResult bindingResult, ModelMap model) {
-		super.save(request, entity, bindingResult, model);
-
+		setupCreate(model, request);
 		model.addAttribute("msgCtx", "managePaymentMethods");
+		
+		try {
+			beforeSave(request, entity, model);
+			genericDAO.saveOrUpdate(entity);
+			cleanUp(request);
+		} catch (PersistenceException e){
+			String errorMsg = extractSaveErrorMsg(e);
+			model.addAttribute("error", errorMsg);
+			
+			return urlContext + "/form";
+		}
+		
 		model.addAttribute("msg", "Payment Method saved successfully");
 		
 		if (entity.getModifiedBy() == null) {
 			model.addAttribute("modelObject", new PaymentMethodType());
 		}
-		
+				
 		return urlContext + "/form";
+	}
+	
+	private String extractSaveErrorMsg(Exception e) {
+		String errorMsg = StringUtils.EMPTY;
+		if (isConstraintError(e, "payment")) {
+			errorMsg = "Duplicate payment method - payment method already exists"; 
+		} else {
+			errorMsg = "Error occured while saving payment method";
+		}
+		
+		return errorMsg;
 	}
 }

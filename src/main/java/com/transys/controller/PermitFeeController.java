@@ -3,6 +3,7 @@ package com.transys.controller;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Controller;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.transys.controller.editor.AbstractModelEditor;
+import com.transys.model.AdditionalFee;
 import com.transys.model.DumpsterPrice;
 import com.transys.model.OverweightFee;
 import com.transys.model.PermitClass;
@@ -88,20 +90,35 @@ public class PermitFeeController extends CRUDController<PermitFee> {
 		model.addAttribute("permitClass", genericDAO.findByCriteria(PermitClass.class, criterias, "permitClass", false));
 		model.addAttribute("permitType", genericDAO.findByCriteria(PermitType.class, criterias, "permitType", false));
 	}
-
-	@RequestMapping(method = RequestMethod.POST, value = "/save.do")
+	
+	@Override
 	public String save(HttpServletRequest request, @ModelAttribute("modelObject") PermitFee entity,
 			BindingResult bindingResult, ModelMap model) {
-		super.save(request, entity, bindingResult, model);
-
+		setupCreate(model, request);
 		model.addAttribute("msgCtx", "managePermitFee");
+		
+		try {
+			beforeSave(request, entity, model);
+			genericDAO.saveOrUpdate(entity);
+			cleanUp(request);
+		} catch (PersistenceException e){
+			String errorMsg = extractSaveErrorMsg(e);
+			model.addAttribute("error", errorMsg);
+			
+			return urlContext + "/form";
+		}
+		
 		model.addAttribute("msg", "Permit Fee saved successfully");
 		
 		if (entity.getModifiedBy() == null) {
 			model.addAttribute("modelObject", new PermitFee());
 		}
-		
+				
 		return urlContext + "/form";
 	}
 	
+	private String extractSaveErrorMsg(Exception e) {
+		String errorMsg = "Error occured while saving permit fee";
+		return errorMsg;
+	}
 }

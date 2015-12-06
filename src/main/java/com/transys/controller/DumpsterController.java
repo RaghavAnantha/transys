@@ -3,8 +3,11 @@ package com.transys.controller;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -81,12 +84,23 @@ public class DumpsterController extends CRUDController<Dumpster> {
 		model.addAttribute("dumpsterSizes", genericDAO.findUniqueByCriteria(DumpsterSize.class, criterias, "id", false));
 	}
 
-	@RequestMapping(method = RequestMethod.POST, value = "/save.do")
+	@Override
 	public String save(HttpServletRequest request, @ModelAttribute("modelObject") Dumpster entity,
 			BindingResult bindingResult, ModelMap model) {
-		super.save(request, entity, bindingResult, model);
-		
+		setupCreate(model, request);
 		model.addAttribute("msgCtx", "manageDumpsters");
+		
+		try {
+			beforeSave(request, entity, model);
+			genericDAO.saveOrUpdate(entity);
+			cleanUp(request);
+		} catch (PersistenceException e){
+			String errorMsg = extractSaveErrorMsg(e);
+			model.addAttribute("error", errorMsg);
+			
+			return urlContext + "/form";
+		}
+		
 		model.addAttribute("msg", "Dumpster saved successfully");
 		
 		if (entity.getModifiedBy() == null) {
@@ -94,5 +108,16 @@ public class DumpsterController extends CRUDController<Dumpster> {
 		}
 				
 		return urlContext + "/form";
+	}
+	
+	private String extractSaveErrorMsg(Exception e) {
+		String errorMsg = StringUtils.EMPTY;
+		if (isConstraintError(e, "dumpster")) {
+			errorMsg = "Duplicate dumpster num - dumpster num already exists"; 
+		} else {
+			errorMsg = "Error occured while saving Dumpster";
+		}
+		
+		return errorMsg;
 	}
 }

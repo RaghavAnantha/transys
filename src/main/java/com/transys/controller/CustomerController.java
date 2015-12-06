@@ -737,14 +737,10 @@ public class CustomerController extends CRUDController<Customer> {
 	
 	private String extractSaveErrorMsg(Exception e) {
 		String errorMsg = StringUtils.EMPTY;
-		//String errorMsg = e.getCause().getCause().getMessage();
-		if (e.getCause() instanceof ConstraintViolationException) {
-			ConstraintViolationException ce = (ConstraintViolationException) e.getCause();
-			if (ce.getConstraintName().contains("company")) {
-				errorMsg += "Duplicate company name - company name already exists"; 
-			}
+		if (isConstraintError(e, "company")) {
+			errorMsg = "Duplicate company name - company name already exists"; 
 		} else {
-			errorMsg = "Error occured while saving Customer";
+			errorMsg = "Error occured while saving Custome";
 		}
 		
 		return errorMsg;

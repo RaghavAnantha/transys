@@ -3,6 +3,7 @@ package com.transys.controller;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Controller;
@@ -18,6 +19,7 @@ import com.transys.model.Dumpster;
 import com.transys.model.DumpsterSize;
 import com.transys.model.MaterialCategory;
 import com.transys.model.OverweightFee;
+import com.transys.model.PermitFee;
 import com.transys.model.SearchCriteria;
 
 @Controller
@@ -91,20 +93,35 @@ public class OverweightFeeController extends CRUDController<OverweightFee> {
 		model.addAttribute("materialCategories", genericDAO.findByCriteria(MaterialCategory.class, criterias, "category", false));
 		model.addAttribute("tonLimits", genericDAO.executeSimpleQuery("select DISTINCT(obj.tonLimit) from OverweightFee obj where obj.deleteFlag='1' order by obj.tonLimit asc"));
 	}
-
-	@RequestMapping(method = RequestMethod.POST, value = "/save.do")
+	
+	@Override
 	public String save(HttpServletRequest request, @ModelAttribute("modelObject") OverweightFee entity,
 			BindingResult bindingResult, ModelMap model) {
-		super.save(request, entity, bindingResult, model);
-		
+		setupCreate(model, request);
 		model.addAttribute("msgCtx", "manageOverweightFee");
+		
+		try {
+			beforeSave(request, entity, model);
+			genericDAO.saveOrUpdate(entity);
+			cleanUp(request);
+		} catch (PersistenceException e){
+			String errorMsg = extractSaveErrorMsg(e);
+			model.addAttribute("error", errorMsg);
+			
+			return urlContext + "/form";
+		}
+		
 		model.addAttribute("msg", "Overweight Fee saved successfully");
 		
 		if (entity.getModifiedBy() == null) {
 			model.addAttribute("modelObject", new OverweightFee());
 		}
-		
+				
 		return urlContext + "/form";
 	}
 	
+	private String extractSaveErrorMsg(Exception e) {
+		String errorMsg = "Error occured while saving overweight fee";
+		return errorMsg;
+	}
 }
