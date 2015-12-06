@@ -14,7 +14,7 @@
 					<c:forEach items="${employees}" var="anEmployee">
 						<c:set var="selected" value="" />
 						<c:if
-							test="${sessionScope.searchCriteria.searchMap['firstName'] == anEmployee.firstName}">
+							test="${sessionScope.searchCriteria.searchMap['employee.firstName'] == anEmployee.firstName}">
 							<c:set var="selected" value="selected" />
 						</c:if>
 						<option value="${anEmployee.firstName}" ${selected}>${anEmployee.firstName}</option>
@@ -29,7 +29,7 @@
 					<c:forEach items="${employees}" var="anEmployee">
 						<c:set var="selected" value="" />
 						<c:if
-							test="${sessionScope.searchCriteria.searchMap['lastName'] == anEmployee.lastName}">
+							test="${sessionScope.searchCriteria.searchMap['employee.lastName'] == anEmployee.lastName}">
 							<c:set var="selected" value="selected" />
 						</c:if>
 						<option value="${anEmployee.lastName}" ${selected}>${anEmployee.lastName}</option>

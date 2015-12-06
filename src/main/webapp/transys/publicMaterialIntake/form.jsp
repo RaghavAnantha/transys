@@ -90,7 +90,7 @@ function populateMaterialTypes() {
 		</tr>
 		<tr>
 			<td colspan=10>
-				<form:textarea row="5" path="comments" cssClass="flat" id="publicMaterialIntakeComments" style="width:100%; height:100%;"/>
+				<form:textarea row="5" path="comments" cssClass="flat" id="publicMaterialIntakeComments" style="width:50%; height:100%;"/>
 				<br><form:errors path="comments" cssClass="errorMessage" />
 			</td>
 		</tr>
@@ -101,7 +101,7 @@ function populateMaterialTypes() {
 			<td>&nbsp;</td>
 			<td colspan="2">
 				<input type="submit" id="publicMaterialIntakeCreate" onclick="return validate()" value="Save" class="flat btn btn-primary btn-sm btn-sm-ext" /> 
-				<input type="button" id="publicMaterialIntakeCancel" value="Back" class="flat btn btn-primary btn-sm btn-sm-ext" onClick="location.href='main.do'" />
+				<input type="button" id="publicMaterialIntakeCancel" value="Back" class="flat btn btn-primary btn-sm btn-sm-ext" onClick="location.href='list.do'" />
 			</td>
 		</tr>
 	</table>
