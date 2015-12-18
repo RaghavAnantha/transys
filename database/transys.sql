@@ -1037,7 +1037,7 @@ CREATE TABLE `userInfo` (
   `accountStatusId` bigint(20) NOT NULL,
   `lastLoginDate` datetime DEFAULT NULL,
   `loginAttempts` int(11) DEFAULT 0,
-  `password` varchar(150) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `password` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `username` varchar(15) COLLATE utf8_unicode_ci DEFAULT NULL,
   `roleId` bigint(20) DEFAULT NULL,
   `employeeId` bigint(20) DEFAULT NULL,
