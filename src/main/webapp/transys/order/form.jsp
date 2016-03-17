@@ -1014,6 +1014,16 @@ function updateTotalPaid() {
 			</td>
 		</tr>
 		<tr>
+			<td class="form-left">City</td>
+			<td>
+				<form:select id="orderFees.cityFeeType" cssClass="flat form-control input-sm" style="width:172px !important" path="orderFees.cityFeeType" onChange="return populateCityFee();"> 
+					<form:option value="">-----Please Select-----</form:option>
+					<form:options items="${cityFeeDetails}" itemValue="id" itemLabel="suburbName" />
+				</form:select>
+				<form:errors path="orderFees.cityFeeType" cssClass="errorMessage" />
+			</td>
+		</tr>
+		<tr>
 			<td class="form-left">Contact Name<span class="errorMessage">*</span></td>
 			<td>
 				<form:input path="deliveryContactName" cssClass="flat" style="width:172px !important" maxlength="50" />
@@ -1354,14 +1364,6 @@ function updateTotalPaid() {
 				<form:input path="orderFees.cityFee" cssClass="form-control form-control-ext" style="width:172px;height:22px !important" maxlength="7" onChange="return populateTotalFees();"/>
 				<form:errors path="orderFees.cityFee" cssClass="errorMessage" />
 			</td>
-			<td class="form-left">Description</td>
-			<td>
-				<form:select id="orderFees.cityFeeType" cssClass="flat form-control input-sm" style="width:172px !important" path="orderFees.cityFeeType" onChange="return populateCityFee();"> 
-					<form:option value="">-----Please Select-----</form:option>
-					<form:options items="${cityFeeDetails}" itemValue="id" itemLabel="suburbName" />
-				</form:select>
-				<form:errors path="orderFees.cityFeeType" cssClass="errorMessage" />
-			</td>
 		</tr>
 		<tr>
 			<td class="form-left">Additional Fee1</td>
@@ -1439,8 +1441,8 @@ function updateTotalPaid() {
 			<td class="form-left">Payment Method<span class="errorMessage">*</span></td>
 			<td class="form-left">Payment Date</td>
 			<td class="form-left">Amount<span class="errorMessage">*</span></td>
-			<td class="form-left">CC Reference #<span class="errorMessage">*</span></td>
-			<td class="form-left">Check #<span class="errorMessage">*</span></td>
+			<td class="form-left">CC Reference #</td>
+			<td class="form-left">Check #</td>
 		</tr>
 		<tr>
 			<td class="wide">
