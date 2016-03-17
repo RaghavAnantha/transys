@@ -39,7 +39,7 @@
 			</td>
 		</tr>
 		<tr>
-			<td class="form-left">Zipcode<span class="errorMessage">*</span></td>
+			<td class="form-left">Zipcode</td>
 			<td>
 				<form:input path="zipcode" cssClass="flat flat-ext" id="deliveryAddressModalZipcode" maxlength="12"/>
 			 	<br><form:errors path="zipcode" cssClass="errorMessage" />
@@ -94,9 +94,9 @@ function validateDeliveryAddressModalMissingData() {
 		missingData += "City, "
 	}
 	
-	if ($('#deliveryAddressModalZipcode').val() == "") {
+	/*if ($('#deliveryAddressModalZipcode').val() == "") {
 		missingData += "Zipcode, "
-	}
+	}*/
 	
 	if ($('#deliveryAddressModalStateSelect').val() == "") {
 		missingData += "State, "

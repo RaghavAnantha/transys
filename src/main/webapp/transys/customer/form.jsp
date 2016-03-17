@@ -50,9 +50,9 @@ function validateCustomerMissingData() {
 		missingData += "City, "
 	}
 	
-	if ($('#zipcode').val() == "") {
+	/*if ($('#zipcode').val() == "") {
 		missingData += "Zipcode, "
-	}
+	}*/
 	
 	if ($('#stateSelect').val() == "") {
 		missingData += "State, "
@@ -66,9 +66,9 @@ function validateCustomerMissingData() {
 		missingData += "Phone, "
 	}
 	
-	if ($('#email').val() == "") {
+	/*if ($('#email').val() == "") {
 		missingData += "Email, "
-	}
+	}*/
 	
 	if (missingData != "") {
 		missingData = missingData.substring(0, missingData.length - 2);
@@ -246,7 +246,7 @@ function processCustomerForm() {
 				<form:input cssClass="flat flat-ext" path="city" maxlength="50" />
 				<br><form:errors path="city" cssClass="errorMessage" />
 			</td>
-			<td class="form-left">Zipcode<span class="errorMessage">*</span></td>
+			<td class="form-left">Zipcode</td>
 			<td>
 				<form:input path="zipcode" cssClass="flat flat-ext" maxlength="12" />
 			 	<br><form:errors path="zipcode" cssClass="errorMessage" />
@@ -295,7 +295,7 @@ function processCustomerForm() {
 			</td>
 		</tr>
 		<tr>
-			<td class="form-left">Email<span class="errorMessage">*</span></td>
+			<td class="form-left">Email</td>
 			<td>
 				<form:input path="email" cssClass="flat flat-ext" id="email" maxlength="50" />
 				<br><form:errors path="email" cssClass="errorMessage" />

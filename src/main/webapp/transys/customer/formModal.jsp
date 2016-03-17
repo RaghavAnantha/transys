@@ -50,9 +50,9 @@ function validateCustomerModalMissingData() {
 		missingData += "City, "
 	}
 	
-	if ($('#customerModalZipcode').val() == "") {
+	/*if ($('#customerModalZipcode').val() == "") {
 		missingData += "Zipcode, "
-	}
+	}*/
 	
 	if ($('#customerModalStateSelect').val() == "") {
 		missingData += "State, "
@@ -66,9 +66,9 @@ function validateCustomerModalMissingData() {
 		missingData += "Phone, "
 	}
 	
-	if ($('#customerModalEmail').val() == "") {
+	/*if ($('#customerModalEmail').val() == "") {
 		missingData += "Email, "
-	}
+	}*/
 	
 	if ($('#customerModalDeliveryAddressLine1').val() == "") {
 		missingData += "Delivery Address #, "
@@ -82,9 +82,9 @@ function validateCustomerModalMissingData() {
 		missingData += "Delivery City, "
 	}
 	
-	if ($('#customerModalDeliveryAddressZipcode').val() == "") {
+	/*if ($('#customerModalDeliveryAddressZipcode').val() == "") {
 		missingData += "Delivery Zipcode, "
-	}
+	}*/
 	
 	if ($('#customerModalDeliveryAddressStateSelect').val() == "") {
 		missingData += "Delivery State, "
@@ -197,16 +197,16 @@ function validateCustomerModalDataFormat() {
 		}
 	}
 	
-	var zipcode = $('#customerModalDeliveryAddressZipcode').val();
-	if (zipcode != "") {
-		if (!validateZipCode(zipcode, 12)) {
+	var deliveryAddressZipcode = $('#customerModalDeliveryAddressZipcode').val();
+	if (deliveryAddressZipcode != "") {
+		if (!validateZipCode(deliveryAddressZipcode, 12)) {
 			validationMsg += "Delivery Zipcode, "
 		}
 	}
 	
-	var city = $('#customerModalDeliveryAddressCity').val();
-	if (city != "") {
-		if (!validateName(city, 50)) {
+	var deliveryAddressCity = $('#customerModalDeliveryAddressCity').val();
+	if (deliveryAddressCity != "") {
+		if (!validateName(deliveryAddressCity, 50)) {
 			validationMsg += "Delivery City, "
 		}
 	}
@@ -323,7 +323,7 @@ $("#customerModalForm").submit(function (ev) {
 				<form:input cssClass="flat flat-ext" path="city" id="customerModalCity" maxlength="50"/>
 				<br><form:errors path="city" cssClass="errorMessage" />
 			</td>
-			<td class="form-left">Zipcode<span class="errorMessage">*</span></td>
+			<td class="form-left">Zipcode</td>
 			<td>
 				<form:input path="zipcode" cssClass="flat flat-ext" id="customerModalZipcode" maxlength="12" />
 			 	<br><form:errors path="zipcode" cssClass="errorMessage" />
@@ -428,7 +428,7 @@ $("#customerModalForm").submit(function (ev) {
 			</td>
 		</tr>
 		<tr>
-			<td class="form-left">Zipcode<span class="errorMessage">*</span></td>
+			<td class="form-left">Zipcode</td>
 			<td>
 				<form:input path="deliveryAddress[0].zipcode" id="customerModalDeliveryAddressZipcode" cssClass="flat flat-ext" maxlength="12"/>
 			 	<br><form:errors path="deliveryAddress[0].zipcode" cssClass="errorMessage" />

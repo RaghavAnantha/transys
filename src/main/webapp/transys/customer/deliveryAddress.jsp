@@ -38,9 +38,9 @@ function validateDeliveryAddressMissingData() {
 		missingData += "City, "
 	}
 	
-	if ($('#deliveryAddressZipcode').val() == "") {
+	/*if ($('#deliveryAddressZipcode').val() == "") {
 		missingData += "Zipcode, "
-	}
+	}*/
 	
 	if ($('#deliveryAddressStateSelect').val() == "") {
 		missingData += "State, "
@@ -142,7 +142,7 @@ function processDeliveryAddressForm() {
 			</td>
 		</tr>
 		<tr>
-			<td class="form-left">Zipcode<span class="errorMessage">*</span></td>
+			<td class="form-left">Zipcode</td>
 			<td>
 				<form:input path="zipcode" cssClass="flat flat-ext" id="deliveryAddressZipcode" maxlength="12"/>
 			 	<br><form:errors path="zipcode" cssClass="errorMessage" />

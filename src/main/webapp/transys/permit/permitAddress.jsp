@@ -49,9 +49,9 @@
 		if ($('#permitAddressFormState').val() == "") {
 			missingData += "State, "
 		}
-		if ($("#permitAddressFormZipcode").val() == "") {
+		/*if ($("#permitAddressFormZipcode").val() == "") {
 			missingData += "Zipcode, "
-		}
+		}*/
 		
 		if (missingData != "") {
 			missingData = missingData.substring(0, missingData.length - 2);
@@ -76,8 +76,6 @@
 		
 		var zipcode = $("#permitAddressFormZipcode").val();
 		if (zipcode != "") {
-			var chk = validateZipCode(zipcode);
-			
 			if (!validateZipCode(zipcode)) {
 				validationMsg += "Zipcode, "
 			}
@@ -127,7 +125,7 @@
 			</td>
 		</tr>
 		<tr>
-			<td class="form-left">Zipcode<span class="errorMessage">*</span></td>
+			<td class="form-left">Zipcode</td>
 			<td>
 				<form:input id="permitAddressFormZipcode" path="zipcode" cssClass="flat flat-ext" />
 			 	<br><form:errors path="zipcode" cssClass="errorMessage" />
