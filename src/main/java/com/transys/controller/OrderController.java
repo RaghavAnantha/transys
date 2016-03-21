@@ -357,8 +357,11 @@ public class OrderController extends CRUDController<Order> {
 			}
 		}
 		
+		entity.setNotesType(OrderNotes.NOTES_TYPE_USER);
 		updateEnteredBy(entity);
+		
 		genericDAO.saveOrUpdate(entity);
+		
 		cleanUp(request);
 		
 		return "Order notes saved successfully";
@@ -409,6 +412,7 @@ public class OrderController extends CRUDController<Order> {
 			}
 		}
 		
+		entity.setNotesType(OrderNotes.NOTES_TYPE_USER);
 		updateEnteredBy(entity);
 		
 		genericDAO.saveOrUpdate(entity);
@@ -433,7 +437,7 @@ public class OrderController extends CRUDController<Order> {
 		notes.setOrder(emptyOrder);
 		model.addAttribute("notesModelObject", notes);
 	
-		List<BaseModel> notesList = genericDAO.executeSimpleQuery("select obj from OrderNotes obj where obj.deleteFlag='1' and obj.order.id=" +  orderId + " order by obj.id asc");
+		List<OrderNotes> notesList = genericDAO.executeSimpleQuery("select obj from OrderNotes obj where obj.deleteFlag='1' and obj.order.id=" +  orderId + " order by obj.id asc");
 		model.addAttribute("notesList", notesList);
 		
 		String query = "select obj from DeliveryAddress obj where obj.deleteFlag='1' and obj.customer.id=" +  savedOrder.getCustomer().getId() + " order by obj.line1 asc";
@@ -446,7 +450,7 @@ public class OrderController extends CRUDController<Order> {
 	}
 
 	private void updateEnteredBy(OrderNotes entity) {
-		User user = genericDAO.getById(User.class,entity.getCreatedBy());
+		User user = genericDAO.getById(User.class, entity.getCreatedBy());
 		entity.setEnteredBy(user.getEmployee().getFullName());
 	}
 	
@@ -497,8 +501,10 @@ public class OrderController extends CRUDController<Order> {
 		
 		//beforeSave(request, entity, model);
 		
-		OrderStatus orderStatus = retrieveOrderStatus("Dropped Off");
+		OrderStatus orderStatus = retrieveOrderStatus(OrderStatus.ORDER_STATUS_DROPPED_OFF);
 		entity.setOrderStatus(orderStatus);
+		
+		populateAuditOrderNotes(entity, "Order status changed to Drop Off", entity.getModifiedBy());
 		
 		genericDAO.saveOrUpdate(entity);
 		
@@ -517,7 +523,7 @@ public class OrderController extends CRUDController<Order> {
 		model.addAttribute("msg", "Drop off data saved successfully");
 		
 		Long orderId = entity.getId();
-		List<BaseModel> orderList = genericDAO.executeSimpleQuery("select obj from Order obj where obj.deleteFlag='1' and obj.id=" + orderId);
+		List<Order> orderList = genericDAO.executeSimpleQuery("select obj from Order obj where obj.deleteFlag='1' and obj.id=" + orderId);
 		model.addAttribute("modelObject", orderList.get(0));
 		
 		Order emptyOrder = new Order();
@@ -526,7 +532,7 @@ public class OrderController extends CRUDController<Order> {
 		notes.setOrder(emptyOrder);
 		model.addAttribute("notesModelObject", notes);
 	
-		List<BaseModel> notesList = genericDAO.executeSimpleQuery("select obj from OrderNotes obj where obj.deleteFlag='1' and obj.order.id=" +  orderId + " order by obj.id asc");
+		List<OrderNotes> notesList = genericDAO.executeSimpleQuery("select obj from OrderNotes obj where obj.deleteFlag='1' and obj.order.id=" +  orderId + " order by obj.id asc");
 		model.addAttribute("notesList", notesList);
 		
 		String query = "select obj from DeliveryAddress obj where obj.deleteFlag='1' and obj.customer.id=" +  entity.getCustomer().getId() + " order by obj.line1 asc";
@@ -624,7 +630,7 @@ public class OrderController extends CRUDController<Order> {
 		//TODO: why is this reqd?
 		//setupOrderFees(entity);
 		
-		OrderStatus orderStatus = retrieveOrderStatus("Closed");
+		OrderStatus orderStatus = retrieveOrderStatus(OrderStatus.ORDER_STATUS_CLOSED);
 		entity.setOrderStatus(orderStatus);
 		
 		Long dumpsterSizeId = entity.getDumpsterSize().getId();
@@ -637,13 +643,15 @@ public class OrderController extends CRUDController<Order> {
 		orderFees.setOverweightFee(overweightFee);
 		
 		orderFees.setTotalFees(orderFees.getTotalFees().add(overweightFee));
-		entity.setBalanceAmountDue(orderFees.getTotalFees().subtract(entity.getTotalAmountPaid())); 
+		entity.setBalanceAmountDue(orderFees.getTotalFees().subtract(entity.getTotalAmountPaid()));
+		
+		populateAuditOrderNotes(entity, "Order status changed to Closed", entity.getModifiedBy()); 
 		
 		genericDAO.saveOrUpdate(entity);
 		
-		Long modifiedBy = getUser(request).getId();
-		updateDumpsterStatus(entity.getDumpster(), "Available", modifiedBy);
-		updatePermitStatus(entity.getPermits(), "Available", modifiedBy);
+		Long modifiedBy = entity.getModifiedBy();
+		updateDumpsterStatus(entity.getDumpster(), DumpsterStatus.DUMPSTER_STATUS_AVAILABLE, modifiedBy);
+		updatePermitStatus(entity.getPermits(), PermitStatus.PERMIT_STATUS_AVAILABLE, modifiedBy);
 		
 		cleanUp(request);
 
@@ -658,7 +666,7 @@ public class OrderController extends CRUDController<Order> {
 		model.addAttribute("msg", "Pickup data saved successfully");
 		
 		Long orderId = entity.getId();
-		List<BaseModel> orderList = genericDAO.executeSimpleQuery("select obj from Order obj where obj.deleteFlag='1' and obj.id=" + orderId);
+		List<Order> orderList = genericDAO.executeSimpleQuery("select obj from Order obj where obj.deleteFlag='1' and obj.id=" + orderId);
 		model.addAttribute("modelObject", orderList.get(0));
 		
 		Order emptyOrder = new Order();
@@ -667,7 +675,7 @@ public class OrderController extends CRUDController<Order> {
 		notes.setOrder(emptyOrder);
 		model.addAttribute("notesModelObject", notes);
 	
-		List<BaseModel> notesList = genericDAO.executeSimpleQuery("select obj from OrderNotes obj where obj.deleteFlag='1' and obj.order.id=" +  orderId + " order by obj.id asc");
+		List<OrderNotes> notesList = genericDAO.executeSimpleQuery("select obj from OrderNotes obj where obj.deleteFlag='1' and obj.order.id=" +  orderId + " order by obj.id asc");
 		model.addAttribute("notesList", notesList);
 		
 		String query = "select obj from DeliveryAddress obj where obj.deleteFlag='1' and obj.customer.id=" +  entity.getCustomer().getId() + " order by obj.line1 asc";
@@ -704,7 +712,17 @@ public class OrderController extends CRUDController<Order> {
 			model.addAttribute("deliveryAddresses", genericDAO.executeSimpleQuery(deliveryAddressQuery));
 	   }*/
 		
-		model.addAttribute("list", genericDAO.search(getEntityClass(), criteria, "id", null, null));
+		String orderBy = "id"; 
+		String deliveryDateFrom = (String)criteria.getSearchMap().get("deliveryDateFrom");
+		String deliveryDateTo = (String)criteria.getSearchMap().get("deliveryDateTo");
+		String pickupDateFrom = (String)criteria.getSearchMap().get("pickupDateFrom");
+		String pickupDateTo = (String)criteria.getSearchMap().get("pickupDateTo");
+		if ( (StringUtils.isNotEmpty(deliveryDateFrom) && StringUtils.isNotEmpty(deliveryDateTo)) ||
+				(StringUtils.isNotEmpty(pickupDateFrom) && StringUtils.isNotEmpty(pickupDateTo)) ) {
+			orderBy = "deliveryAddress.line1";
+		}
+		
+		model.addAttribute("list", genericDAO.search(getEntityClass(), criteria, orderBy, null, null));
 		model.addAttribute("activeTab", "manageOrder");
 		return urlContext + "/order";
 	}
@@ -1338,7 +1356,7 @@ public class OrderController extends CRUDController<Order> {
 		entity.setPermits(permitList);
 		
 		if (entity.getId() == null) {
-			OrderStatus orderStatus = retrieveOrderStatus("Open");
+			OrderStatus orderStatus = retrieveOrderStatus(OrderStatus.ORDER_STATUS_OPEN);
 			entity.setOrderStatus(orderStatus);
 		}
 		
@@ -1450,42 +1468,49 @@ public class OrderController extends CRUDController<Order> {
 	}
 	
 	private void setupOrderNotes(Order order) {
-		/*if (order.getId() != null) {
-			// First notes should not be editable
-			return;
-		}*/
-		
 		List<OrderNotes> orderNotesList = order.getOrderNotes();
-		if (orderNotesList == null || orderNotesList.isEmpty()) {
-			return;
+		if (orderNotesList == null) {
+			orderNotesList = new ArrayList<OrderNotes>();
+			order.setOrderNotes(orderNotesList);
 		}
-		
-		OrderNotes anOrderNotes = orderNotesList.get(0);
-		if (StringUtils.isEmpty(anOrderNotes.getNotes())) {
-			orderNotesList.clear();
-			return;
-		}
-		
-		if (anOrderNotes.getCreatedBy() != null) {
-			return;
-		}
-		
-		anOrderNotes.setOrder(order);
 		
 		Long createdBy = null;
+		String orderAuditMsg = StringUtils.EMPTY;
 		if (order.getId() == null) {
 			createdBy = order.getCreatedBy();
+			orderAuditMsg = "Order created";
 		} else {
 			createdBy = order.getModifiedBy();
+			orderAuditMsg = "Order updated";
 		}
 		
-		anOrderNotes.setCreatedBy(createdBy);
-		anOrderNotes.setCreatedAt(Calendar.getInstance().getTime());
+		if (!orderNotesList.isEmpty()) {
+			OrderNotes lastNotes = orderNotesList.get(orderNotesList.size() - 1);
+			String notesStr = lastNotes.getNotes();
+			if (StringUtils.isEmpty(notesStr)) {
+				orderNotesList.remove(orderNotesList.size() - 1);
+			} else if (lastNotes.getCreatedBy() == null) {
+				lastNotes.setNotesType(OrderNotes.NOTES_TYPE_USER);
+				lastNotes.setOrder(order);
+				lastNotes.setCreatedAt(Calendar.getInstance().getTime());
+				lastNotes.setCreatedBy(createdBy);
+				updateEnteredBy(lastNotes);
+			}
+		}
 		
-		updateEnteredBy(anOrderNotes);
+		populateAuditOrderNotes(order, orderAuditMsg, createdBy);
+	}
+	
+	private void populateAuditOrderNotes(Order order, String orderAuditMsg, Long createdBy) {
+		OrderNotes auditOrderNotes = new OrderNotes();
+		auditOrderNotes.setNotesType(OrderNotes.NOTES_TYPE_AUDIT);
+		auditOrderNotes.setNotes("***AUDIT: " + orderAuditMsg + "***");
+		auditOrderNotes.setOrder(order);
+		auditOrderNotes.setCreatedAt(Calendar.getInstance().getTime());
+		auditOrderNotes.setCreatedBy(createdBy);
+		updateEnteredBy(auditOrderNotes);
 		
-		//anOrderNotes.setModifiedBy(order.getModifiedBy());
-		//anOrderNotes.setModifiedAt(order.getModifiedAt());
+		order.getOrderNotes().add(auditOrderNotes);
 	}
 	
 	/*@Override
@@ -1534,7 +1559,7 @@ public class OrderController extends CRUDController<Order> {
 		model.addAttribute("activeSubTab", "orderDetails");
 		model.addAttribute("mode", "ADD");
 		
-		//EMPTY_ORDER change
+		//EMPTY_ORDER after save change
 		if (entity.getModifiedBy() == null) {
 			Order emptyOrder = new Order();
 			model.addAttribute("modelObject", emptyOrder);

@@ -16,6 +16,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import com.transys.controller.editor.AbstractModelEditor;
 import com.transys.model.Customer;
 import com.transys.model.CustomerDumpsterPrice;
+import com.transys.model.DumpsterPrice;
+import com.transys.model.DumpsterSize;
+import com.transys.model.MaterialCategory;
 import com.transys.model.MaterialType;
 import com.transys.model.SearchCriteria;
 
@@ -29,8 +32,11 @@ public class CustomerDumpsterPriceController extends CRUDController<CustomerDump
 
 	@Override
 	public void initBinder(WebDataBinder binder) {
-//		binder.registerCustomEditor(CustomerDumpsterPrice.class, new AbstractModelEditor(CustomerDumpsterPrice.class));
 		binder.registerCustomEditor(Customer.class, new AbstractModelEditor(Customer.class));
+		binder.registerCustomEditor(DumpsterSize.class, new AbstractModelEditor(DumpsterSize.class));
+		binder.registerCustomEditor(MaterialType.class, new AbstractModelEditor(MaterialType.class));
+		binder.registerCustomEditor(MaterialCategory.class, new AbstractModelEditor(MaterialCategory.class));
+		binder.registerCustomEditor(DumpsterPrice.class, new AbstractModelEditor(DumpsterPrice.class));
 		super.initBinder(binder);
 	}
 
@@ -57,6 +63,9 @@ public class CustomerDumpsterPriceController extends CRUDController<CustomerDump
 	public void setupList(ModelMap model, HttpServletRequest request) {
 		populateSearchCriteria(request, request.getParameterMap());
 		setupCreate(model, request);
+		
+		Map criterias = new HashMap();
+		model.addAttribute("materialTypes", genericDAO.findByCriteria(MaterialType.class, criterias, "materialName", false));
 	}
 
 	@Override
@@ -68,8 +77,10 @@ public class CustomerDumpsterPriceController extends CRUDController<CustomerDump
 	@Override
 	public void setupCreate(ModelMap model, HttpServletRequest request) {
 		Map criterias = new HashMap();
-		model.addAttribute("dumpsterPrices", genericDAO.findByCriteria(CustomerDumpsterPrice.class, criterias, "id", false));
 		model.addAttribute("customers", genericDAO.findByCriteria(Customer.class, criterias, "id", false));
+		model.addAttribute("materialCategories", genericDAO.findByCriteria(MaterialCategory.class, criterias, "category", false));
+		model.addAttribute("dumpsterSizes", genericDAO.findUniqueByCriteria(DumpsterSize.class, criterias, "id", false));
+		model.addAttribute("dumpsterPrices", genericDAO.executeSimpleQuery("select DISTINCT(obj.price) from CustomerDumpsterPrice obj where obj.deleteFlag='1' order by obj.price asc"));
 	}
 
 	@RequestMapping(method = RequestMethod.POST, value = "/save.do")

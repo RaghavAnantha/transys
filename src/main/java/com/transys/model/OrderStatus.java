@@ -3,10 +3,17 @@ package com.transys.model;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name="orderStatus")
 public class OrderStatus extends AbstractBaseModel {
+	@Transient
+	public static final String ORDER_STATUS_OPEN = "Open";
+	@Transient
+	public static final String ORDER_STATUS_DROPPED_OFF = "Dropped Off";
+	@Transient
+	public static final String ORDER_STATUS_CLOSED = "Closed";
 
 	// TODO: Make an ENUM?
 	@Column(name="status")

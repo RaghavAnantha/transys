@@ -3,10 +3,14 @@ package com.transys.model;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name="permitStatus")
 public class PermitStatus  extends AbstractBaseModel {
+	@Transient
+	public static final String PERMIT_STATUS_AVAILABLE = "Available";
+	
 	@Column(name="status")
 	private String status;
 

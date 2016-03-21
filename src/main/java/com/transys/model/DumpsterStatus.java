@@ -3,10 +3,13 @@ package com.transys.model;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name="dumpsterStatus")
 public class DumpsterStatus extends AbstractBaseModel {
+	@Transient
+	public static final String DUMPSTER_STATUS_AVAILABLE = "Available";
 	
 	@Column(name="status")
 	private String status;

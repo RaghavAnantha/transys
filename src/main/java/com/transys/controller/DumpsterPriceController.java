@@ -40,7 +40,6 @@ public class DumpsterPriceController extends CRUDController<DumpsterPrice> {
 
 	@Override
 	public void initBinder(WebDataBinder binder) {
-		binder.registerCustomEditor(DumpsterPrice.class, new AbstractModelEditor(DumpsterPrice.class));
 		binder.registerCustomEditor(DumpsterSize.class, new AbstractModelEditor(DumpsterSize.class));
 		binder.registerCustomEditor(MaterialType.class, new AbstractModelEditor(MaterialType.class));
 		binder.registerCustomEditor(MaterialCategory.class, new AbstractModelEditor(MaterialCategory.class));

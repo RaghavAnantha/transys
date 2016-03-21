@@ -30,7 +30,6 @@ public class LocationTypeController extends CRUDController<LocationType> {
 
 	@Override
 	public void initBinder(WebDataBinder binder) {
-		binder.registerCustomEditor(LocationType.class, new AbstractModelEditor(LocationType.class));
 		super.initBinder(binder);
 	}
 

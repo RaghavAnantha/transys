@@ -94,12 +94,7 @@ function validateDumpsterPriceDataFormat() {
 	
 	return validationMsg;
 }
-</script>
 
-<br />
-<h5 style="margin-top: -15px; !important">Add/Edit Dumpster Price</h5>
-
-<script type="text/javascript">
 function populateMaterialTypes() {
 	var materialCategorySelect = $("#materialCategory");
 	var materialCategoryId = materialCategorySelect.val();
@@ -129,6 +124,10 @@ function populateMaterialTypes() {
 	});
 }
 </script>
+
+<br />
+<h5 style="margin-top: -15px; !important">Add/Edit Dumpster Price</h5>
+
 <form:form action="save.do" name="dumpsterPriceForm" commandName="modelObject" method="post" id="dumpsterPriceForm">
 	<form:hidden path="id" id="id" />
 	<jsp:include page="/common/messages.jsp">
@@ -173,19 +172,23 @@ function populateMaterialTypes() {
 		</tr>
 		<tr>
 			<td class="form-left">Dumpster Price<span class="errorMessage">*</span></td>
-			<td><form:input path="price" cssClass="flat" style="width:173px !important"/>
-			<br> 
-			<form:errors path="price" cssClass="errorMessage" /></td>
+			<td>
+				<form:input path="price" cssClass="flat" style="width:173px !important"/>
+				<br> 
+				<form:errors path="price" cssClass="errorMessage" />
+			</td>
 		</tr>
 		<tr>
 			<td class="form-left form-left-ext">Effective Date From<span class="errorMessage">*</span></td>
 			<td>
-			<form:input path="effectiveStartDate" class="flat" id="datepicker7" name="effectiveStartDate" style="width:173px !important"/></td>
+				<form:input path="effectiveStartDate" class="flat" id="datepicker7" name="effectiveStartDate" style="width:173px !important"/>
+			</td>
 		</tr>
 		<tr>
 			<td class="form-left">Effective Date To<span class="errorMessage">*</span></td>
 			<td>
-			<form:input path="effectiveEndDate" class="flat" id="datepicker8" name="effectiveEndDate"  style="width:173px !important"/></td>
+				<form:input path="effectiveEndDate" class="flat" id="datepicker8" name="effectiveEndDate"  style="width:173px !important"/>
+			</td>
 		</tr>
 		<tr>
 			<td colspan=10></td>

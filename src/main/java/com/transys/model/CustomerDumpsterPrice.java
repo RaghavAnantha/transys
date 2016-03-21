@@ -20,6 +20,9 @@ public class CustomerDumpsterPrice extends AbstractFeeMasterData {
 	@JoinColumn(name="dumpsterSizeId") //Enum?
 	private DumpsterSize dumpsterSize;
 	
+	@Column(name="price")
+	private BigDecimal price;
+	
 	@ManyToOne
 	@JoinColumn(name="materialTypeId")
 	private MaterialType materialType;
@@ -39,9 +42,6 @@ public class CustomerDumpsterPrice extends AbstractFeeMasterData {
 	public void setMaterialType(MaterialType materialType) {
 		this.materialType = materialType;
 	}
-	
-	@Column(name="price")
-	private BigDecimal price;
 	
 	public Customer getCustomer() {
 		return customer;

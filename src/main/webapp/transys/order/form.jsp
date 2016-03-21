@@ -949,7 +949,7 @@ function updateTotalPaid() {
 			<td class="wide td-static" id="orderIdTd">${modelObject.id}</td>
 		</tr>
 		<tr>
-			<td class="form-left"><transys:label code="Customer" /><span class="errorMessage">*</span></td>
+			<td class="form-left">Customer<span class="errorMessage">*</span></td>
 			<td>
 				<label style="display: inline-block; font-weight: normal">
 					<form:select id="customerSelect" cssClass="flat form-control input-sm" style="width:172px !important" path="customer" onChange="return populateCustomerInfo();"> 
@@ -1080,7 +1080,7 @@ function updateTotalPaid() {
 				<form:select id="dumpsterSize" cssClass="flat form-control input-sm" style="width:172px !important" path="dumpsterSize" onchange="return handleDumpsterSizeChange();"> 
 					<form:option value="">-----Please Select-----</form:option>
 					<form:options items="${dumpsterSizes}" itemValue="id" itemLabel="size" />
-				</form:select> 
+				</form:select>
 			 	<form:errors path="dumpsterSize" cssClass="errorMessage" />
 			</td>
 		</tr>
@@ -1132,7 +1132,7 @@ function updateTotalPaid() {
 					</c:forEach>
 				</select>
 		 	</td>
-		 	<td class="form-left"><transys:label code="Permit2 Class"/></td>
+		 	<td class="form-left">Permit2 Class/></td>
 	        <td>
 				<select class="flat form-control input-sm" id="permitClasses2" name="permitClasses2" style="width:172px !important" onChange="return handlePermitClassChange(2);">
 					<option value="">-----Please Select-----</option>
@@ -1179,7 +1179,7 @@ function updateTotalPaid() {
 					</c:forEach>
 				</select>
 	        </td>
-	        <td class="form-left"><transys:label code="Permit2 Type"/><span class="errorMessage">*</span></td>
+	        <td class="form-left">Permit2 Type<span class="errorMessage">*</span></td>
 	        <td>
 	        	<select class="flat form-control input-sm" id="permitTypes2" name="permitTypes2" style="width:172px !important" onChange="return populatePermitNumbers(2);">
 					<option value="">-----Please Select-----</option>
@@ -1194,7 +1194,7 @@ function updateTotalPaid() {
 					</c:forEach>
 				</select>
 	        </td>
-	        <td class="form-left"><transys:label code="Permit3 Type"/><span class="errorMessage">*</span></td>
+	        <td class="form-left">Permit3 Type<span class="errorMessage">*</span></td>
 	        <td>
 	        	<select class="flat form-control input-sm" id="permitTypes3" name="permitTypes3" style="width:172px !important" onChange="return populatePermitNumbers(3);">
 					<option value="">-----Please Select-----</option>
@@ -1236,7 +1236,7 @@ function updateTotalPaid() {
 					</a>
 				</label>
 	        </td>
-	        <td class="form-left"><transys:label code="Permit2 Number"/><span class="errorMessage">*</span></td>
+	        <td class="form-left">Permit2 Number<span class="errorMessage">*</span></td>
 	        <td>
 	        	<select class="flat form-control input-sm" id="permits[1]" name="permits[1]" style="width:172px !important" onChange="return retrievePermitDetails(2);">
 					<option value="">-----Please Select-----</option>
@@ -1253,7 +1253,7 @@ function updateTotalPaid() {
 					</c:if>
 				</select>
 	        </td>
-	        <td class="form-left"><transys:label code="Permit3 Number"/><span class="errorMessage">*</span></td>
+	        <td class="form-left">Permit3 Number<span class="errorMessage">*</span></td>
 	        <td>
 	        	<select class="flat form-control input-sm" id="permits[2]" name="permits[2]" style="width:172px !important" onChange="return retrievePermitDetails(3);">
 					<option value="">-----Please Select-----</option>
@@ -1272,19 +1272,19 @@ function updateTotalPaid() {
 	        </td>
 		</tr>
 	    <tr>
-	    	<td class="form-left"><transys:label code="Permit1 Valid From"/></td>
+	    	<td class="form-left">Permit1 Valid From</td>
 	        <td class="td-static" id="permitValidFrom1">${modelObject.permits[0].formattedStartDate}</td>
-	        <td class="form-left"><transys:label code="Permit2 Valid From"/></td>
+	        <td class="form-left">Permit2 Valid From</td>
 	        <td class="td-static" id="permitValidFrom2">${modelObject.permits[1].formattedStartDate}</td>
-	        <td class="form-left"><transys:label code="Permit3 Valid From"/></td>
+	        <td class="form-left">Permit3 Valid From</td>
 	        <td class="td-static" id="permitValidFrom3">${modelObject.permits[2].formattedStartDate}</td>
 	    </tr>
 	    <tr>
-	    	<td class="form-left"><transys:label code="Permit1 Valid To"/></td>
+	    	<td class="form-left">Permit1 Valid To</td>
 	        <td class="td-static" id="permitValidTo1">${modelObject.permits[0].formattedEndDate}</td>
-	        <td class="form-left" ><transys:label code="Permit2 Valid To"/></td>
+	        <td class="form-left" >Permit2 Valid To</td>
 	        <td class="td-static" id="permitValidTo2">${modelObject.permits[1].formattedEndDate}</td>
-	        <td class="form-left"><transys:label code="Permit3 Valid To"/></td>
+	        <td class="form-left">Permit3 Valid To</td>
 	        <td class="td-static" id="permitValidTo3">${modelObject.permits[2].formattedEndDate}</td>
 	    </tr>
 	    <tr>
@@ -1345,7 +1345,7 @@ function updateTotalPaid() {
 			</td>
 		</tr>
 		<tr>
-			<td class="form-left"><transys:label code="Dumpster Price"/><span class="errorMessage">*</span></td>
+			<td class="form-left">Dumpster Price<span class="errorMessage">*</span></td>
 			<td>
 				<form:input path="orderFees.dumpsterPrice" cssClass="form-control form-control-ext" style="width:172px;height:22px !important" maxlength="7" onChange="return populateTotalFees();"/>
 				<form:errors path="orderFees.dumpsterPrice" cssClass="errorMessage" />

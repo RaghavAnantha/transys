@@ -212,7 +212,7 @@ function processCustomerForm() {
 				</form:select> 
 				<form:errors path="customerStatus" cssClass="errorMessage" />
 			</td> 
-			<td class="form-left"><transys:label code="Last Delivery" /></td>
+			<td class="form-left">Last Delivery/></td>
 			<td class="td-static">
 				<c:if test="${formattedDeliveryDate != null}">
 					${formattedDeliveryDate}

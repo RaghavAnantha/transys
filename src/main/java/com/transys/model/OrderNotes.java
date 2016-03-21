@@ -11,12 +11,20 @@ import javax.persistence.Transient;
 @Entity
 @Table(name="orderNotes")
 public class OrderNotes extends AbstractBaseModel {
+	@Transient
+	public static final String NOTES_TYPE_USER = "USER";
+	@Transient
+	public static final String NOTES_TYPE_AUDIT = "AUDIT";
+	
 	@ManyToOne
 	@JoinColumn(name="orderId") 
 	private Order order;
 
 	@Column(name="notes")
 	private String notes;
+	
+	@Column(name="notesType")
+	private String notesType;
 	
 	@Column(name="entered_by")
 	private String enteredBy;
@@ -44,5 +52,12 @@ public class OrderNotes extends AbstractBaseModel {
 	public void setNotes(String notes) {
 		this.notes = notes;
 	}
-	
+
+	public String getNotesType() {
+		return notesType;
+	}
+
+	public void setNotesType(String notesType) {
+		this.notesType = notesType;
+	}
 }

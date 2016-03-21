@@ -550,6 +550,7 @@ CREATE TABLE `orderNotes` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `orderId` bigint(20) NOT NULL,
   `notes` varchar(500) NOT NULL,
+  `notesType` VARCHAR(10) NOT NULL,
   `entered_by` varchar(255) NOT NULL,
   `created_at` datetime NOT NULL,
   `created_by` bigint(20) NOT NULL,

@@ -45,7 +45,7 @@
 							<li><a href="${ctx}/masterData/paymentMethod/main.do">Payment Method</a></li>
 							<li><a href="${ctx}/masterData/dumpsters/main.do">Dumpsters</a></li>
 							<li><a href="${ctx}/masterData/dumpsterPrice/main.do">Dumpster Price</a></li>
-							<!-- <li><a href="${ctx}/customerDumpsterPrice/main.do">Customer Dumpster Price</a></li> -->
+							<li><a href="${ctx}/masterData/customerDumpsterPrice/main.do">Customer Dumpster Price</a></li>
 							<li><a href="${ctx}/masterData/additionalFee/main.do">Additional Fee</a></li>
 							<li><a href="${ctx}/masterData/cityFee/main.do">City Fee</a></li>
 							<li><a href="${ctx}/masterData/overweightFee/main.do">Overweight Fee</a></li>
