@@ -13,6 +13,8 @@ public class OrderStatus extends AbstractBaseModel {
 	@Transient
 	public static final String ORDER_STATUS_DROPPED_OFF = "Dropped Off";
 	@Transient
+	public static final String ORDER_STATUS_PICK_UP = "Pick Up";
+	@Transient
 	public static final String ORDER_STATUS_CLOSED = "Closed";
 
 	// TODO: Make an ENUM?

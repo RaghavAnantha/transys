@@ -124,7 +124,80 @@ function validatePickupDriverDataFormat() {
 	return validationMsg;
 }
 
+function processOrderReadyForPickup() {
+	clearProcessOrderMsgs();
+	
+	var orderId = $('#id').val();
+	var readyForPickup = $('#readyForPickupSelect').val();
+	
+	if (readyForPickup == "") {
+		return false;
+	}
+	
+	$.ajax({
+  		url: "processOrderReadyForPickup.do?" + "orderId=" + orderId 
+  								  		 	  + "&readyForPickup=" + readyForPickup,
+       	type: "GET",
+       	success: function(responseData, textStatus, jqXHR) {
+       		if (responseData.indexOf("successfully") == -1) {
+       			var errorMsgDiv = $('#processOrderErrorMessage');
+       			errorMsgDiv.html(responseData);
+       		} else {
+       			var successMsgDiv = $('#processOrderSuccessMessage');
+	       		successMsgDiv.html(responseData);
+	       		
+	       		var pickupDriverCloseBtn = $('#pickupDriverCloseBtn');
+	       		if (readyForPickup == 'Yes') {
+	       			pickupDriverCloseBtn.removeAttr('disabled');
+	       		} else {
+	       			pickupDriverCloseBtn.attr('disabled', 'disabled');
+	       		}
+       		}
+		}
+	});
+}
+
+function processOrderReopen() {
+	clearProcessOrderMsgs();
+	
+	var orderId = $('#id').val();
+	
+	$.ajax({
+  		url: "processOrderReopen.do?" + "orderId=" + orderId,
+       	type: "GET",
+       	success: function(responseData, textStatus, jqXHR) {
+       		if (responseData.indexOf("successfully") == -1) {
+       			var errorMsgDiv = $('#processOrderErrorMessage');
+       			errorMsgDiv.html(responseData);
+       		} else {
+       			var successMsgDiv = $('#processOrderSuccessMessage');
+	       		successMsgDiv.html(responseData);
+	       		
+	       		var pickupDriverCloseBtn = $('#pickupDriverCloseBtn');
+	       		pickupDriverCloseBtn.removeAttr('disabled');
+	       		
+	       		var pickupDriverReopenBtn = $('#pickupDriverReopenBtn');
+	       		pickupDriverReopenBtn.attr('disabled', 'disabled');
+	       		
+	       		var readyForPickupSelect = $('#readyForPickupSelect');
+	       		readyForPickupSelect.val('Yes');
+	       		var readyForPickupSubmitBtn = $('#readyForPickupSubmitBtn');
+	       		readyForPickupSubmitBtn.removeAttr('disabled');
+       		}
+		}
+	});
+}
+
+function clearProcessOrderMsgs() {
+	var errorMsgDiv = $('#processOrderErrorMessage');
+	var successMsgDiv = $('#processOrderSuccessMessage');
+	errorMsgDiv.html("");
+	successMsgDiv.html("");
+}
+
 function processPickupDriverForm() {
+	clearProcessOrderMsgs();
+	
 	if (validatePickupDriverForm()) {
 		var pickupDriverForm = $("#pickupDriverAddEditForm");
 		pickupDriverForm.submit();
@@ -138,12 +211,50 @@ function processPickupDriverForm() {
 		<jsp:param name="msgCtx" value="managePickupDriver" />
 	</jsp:include>
 	<table id="form-table" class="table">
+		<tr>
+			<td colspan="2">
+				<div id="processOrderErrorMessage" style="color:red; font-size:14px; vertical-align:center;"></div>
+   				<div id="processOrderSuccessMessage" style="color:green; font-size:14px; vertical-align:center;"></div>
+			</td>
+		</tr>
+		<tr>
+			<td class="form-left">Ready For Pickup<span class="errorMessage">*</span></td>
+			<td>
+				<c:set var="yesSelected" value="" />
+				<c:if test="${modelObject.orderStatus.status == 'Pick Up'}">
+					<c:set var="yesSelected" value="selected" />
+				</c:if>
+				<c:set var="noSelected" value="" />
+				<c:if test="${modelObject.orderStatus.status == 'Dropped Off'}">
+					<c:set var="noSelected" value="selected" />
+				</c:if>
+				<select class="flat form-control input-sm" id="readyForPickupSelect" name="readyForPickupSelect" style="width: 175px !important">
+					<option value="">------Please Select------</option>
+					<option value="Yes" ${yesSelected}>Yes</option>
+					<option value="No" ${noSelected}>No</option>
+				</select>
+			</td>
+			<td>
+				<c:set var="readyForPickupDisabled" value="" />
+				<c:if test="${modelObject.id == null 
+					|| (modelObject.orderStatus.status != 'Dropped Off' && modelObject.orderStatus.status != 'Pick Up')}">
+					<c:set var="readyForPickupDisabled" value="disabled" />
+				</c:if>
+				<input type="button" id="readyForPickupSubmitBtn" ${readyForPickupDisabled} onclick="processOrderReadyForPickup();" value="Save" class="flat btn btn-primary btn-sm btn-sm-ext" />
+			</td>
+		</tr>
 		<tr><td colspan="2"></td></tr>
+		<tr>
+			<td colspan=10 class="section-header" style="line-height: 1;font-size: 13px;font-weight: bold;color: white;">Pickup Information</td>
+		</tr>
+		<tr>
+			<td colspan="10"></td>
+		</tr>
 		<tr>
 			<td class="form-left">Pickup Date<span class="errorMessage">*</span></td>
 			<td>
 				<form:input path="pickupDate" cssClass="flat" id="datepicker6" name="pickupDate" style="width:172px !important"/>
-				 <form:errors path="pickupDate" cssClass="errorMessage" />
+				<form:errors path="pickupDate" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>
@@ -191,11 +302,16 @@ function processPickupDriverForm() {
 		<tr>
 			<td>&nbsp;</td>
 			<td colspan="2">
-				<c:set var="saveDisabled" value="" />
-				<c:if test="${modelObject.id == null || modelObject.orderStatus.status != 'Dropped Off'}">
-					<c:set var="saveDisabled" value="disabled" />
+				<c:set var="closeDisabled" value="" />
+				<c:if test="${modelObject.id == null || modelObject.orderStatus.status != 'Pick Up'}">
+					<c:set var="closeDisabled" value="disabled" />
 				</c:if>
-				<input type="button" id="pickupDriverSubmitBtn" ${saveDisabled} onclick="processPickupDriverForm();" value="Close Order" class="flat btn btn-primary btn-sm btn-sm-ext" />
+				<c:set var="reopenDisabled" value="" />
+				<c:if test="${modelObject.id == null || modelObject.orderStatus.status != 'Closed'}">
+					<c:set var="reopenDisabled" value="disabled" />
+				</c:if>
+				<input type="button" id="pickupDriverCloseBtn" ${closeDisabled} onclick="processPickupDriverForm();" value="Close Order" class="flat btn btn-primary btn-sm btn-sm-ext" />
+				<input type="button" id="pickupDriverReopenBtn" ${reopenDisabled} onclick="processOrderReopen();" value="Re-Open Order" class="flat btn btn-primary btn-sm btn-sm-ext" />
 				<input type="button" id="pickupDriverBackBtn" value="Back" class="flat btn btn-primary btn-sm btn-sm-ext" onClick="location.href='list.do'" />
 			</td>
 		</tr>

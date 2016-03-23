@@ -5,6 +5,23 @@
 <form:form action="list.do" method="get" name="searchForm">
 	<table id="form-table" class="table">
 		<tr>
+			<td class="form-left">Customer</td>
+			<td class="wide">
+				<select class="flat form-control input-sm" id="customer" name="customer" style="width: 175px !important">
+					<option value="">----Please Select----</option>
+					<c:forEach items="${customers}" var="aCustomer">
+						<c:set var="selected" value="" />
+						<c:if
+							test="${sessionScope.searchCriteria.searchMap['customer'] == aCustomer.id}">
+							<c:set var="selected" value="selected" />
+						</c:if>
+						<option value="${aCustomer.id}" ${selected}>${aCustomer.companyName}</option>
+					</c:forEach>
+				</select>
+			</td>
+			<td colspan=10></td>	
+		</tr>
+		<tr>
 			<td class="form-left">Material Category</td>
 			<td class="wide">
 				<select class="flat form-control input-sm" id="materialType.materialCategory" name="materialType.materialCategory" style="width: 175px !important">
@@ -84,6 +101,7 @@
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
 		pagingLink="search.do" multipleDelete="false" searcheable="false"
 		exportPdf="true" exportXls="true" dataQualifier="dumpsterPrice">
+		<transys:textcolumn headerText="Customer" dataField="customer.companyName" />
 		<transys:textcolumn headerText="Material Category" dataField="materialType.materialCategory.category" />
 		<transys:textcolumn headerText="Material Type" dataField="materialType.materialName" />
 		<transys:textcolumn headerText="Dumpster Size" dataField="dumpsterSize.size" />

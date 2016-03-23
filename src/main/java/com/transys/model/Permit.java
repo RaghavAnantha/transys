@@ -14,6 +14,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
@@ -84,7 +86,19 @@ public class Permit  extends AbstractBaseModel {
 	public void setOrderId(Long orderId) {
 		this.orderId = orderId;
 	}
-
+	
+	@Transient
+	//TODO: Move to utils?
+	public String getFullPermitAddressLine() {
+		List<PermitAddress> permitAddressList = getPermitAddress();
+		if (permitAddressList.isEmpty()) {
+			return StringUtils.EMPTY;
+		}
+		
+		return permitAddressList.get(0).getFullLine();
+	}
+	
+	
 	public Customer getCustomer() {
 		return customer;
 	}

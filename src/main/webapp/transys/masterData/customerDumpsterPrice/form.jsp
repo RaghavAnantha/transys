@@ -137,7 +137,7 @@ function populateMaterialTypes() {
 		<tr>
 			<td class="form-left">Customer<span class="errorMessage">*</span></td>
 			<td>
-				<form:select cssClass="flat form-control input-sm" style="width:172px !important" path="customer" >
+				<form:select cssClass="flat form-control input-sm" style="width:175px !important" path="customer" >
 					<form:option value="">----Please Select----</form:option>
 					<form:options items="${customers}" itemValue="id"  itemLabel="companyName" />
 				</form:select> 
@@ -173,7 +173,7 @@ function populateMaterialTypes() {
 		<tr>
 			<td class="form-left">Dumpster Size<span class="errorMessage">*</span></td>
 			<td>
-				<form:select cssClass="flat form-control input-sm" style="width:173px !important" path="dumpsterSize" >
+				<form:select cssClass="flat form-control input-sm" style="width:175px !important" path="dumpsterSize" >
 					<form:option value="">----Please Select----</form:option>
 					<form:options items="${dumpsterSizes}" itemValue="id"  itemLabel="size" />
 				</form:select> 
@@ -183,7 +183,7 @@ function populateMaterialTypes() {
 		<tr>
 			<td class="form-left">Dumpster Price<span class="errorMessage">*</span></td>
 			<td>
-				<form:input path="price" cssClass="flat" style="width:173px !important"/>
+				<form:input path="price" cssClass="flat" style="width:175px !important"/>
 				<br> 
 				<form:errors path="price" cssClass="errorMessage" />
 			</td>
@@ -191,13 +191,13 @@ function populateMaterialTypes() {
 		<tr>
 			<td class="form-left form-left-ext">Effective Date From<span class="errorMessage">*</span></td>
 			<td>
-				<form:input path="effectiveStartDate" class="flat" id="datepicker7" name="effectiveStartDate" style="width:173px !important"/>
+				<form:input path="effectiveStartDate" class="flat" id="datepicker7" name="effectiveStartDate" style="width:175px !important"/>
 			</td>
 		</tr>
 		<tr>
 			<td class="form-left">Effective Date To<span class="errorMessage">*</span></td>
 			<td>
-				<form:input path="effectiveEndDate" class="flat" id="datepicker8" name="effectiveEndDate"  style="width:173px !important"/>
+				<form:input path="effectiveEndDate" class="flat" id="datepicker8" name="effectiveEndDate"  style="width:175px !important"/>
 			</td>
 		</tr>
 		<tr>

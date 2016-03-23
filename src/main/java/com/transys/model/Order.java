@@ -16,16 +16,12 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-import javax.persistence.UniqueConstraint;
 
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.format.annotation.NumberFormat;
-import org.springframework.format.annotation.NumberFormat.Style;
 
 @Entity
 @Table(name="transysOrder")
 public class Order extends AbstractBaseModel {
-
 	// TODO: Do we need table size restriction here?
 	
 	/******** Customer Info ************/
@@ -82,7 +78,6 @@ public class Order extends AbstractBaseModel {
      //uniqueConstraints = @UniqueConstraint(columnNames = {"orderId", "permitId"})
 	)
 	private List<Permit> permits;
-	 
 	public List<Permit> getPermits() {
 		return permits;
 	}
@@ -231,11 +226,7 @@ public class Order extends AbstractBaseModel {
 	/******** Order Notes ************/
 	/*@JoinColumn(name="notes")
 	private OrderNotes notes;*/
-
-	public Customer getCustomer() {
-		return customer;
-	}
-
+	
 	public BigDecimal getGrossWeight() {
 		return grossWeight;
 	}
@@ -266,6 +257,10 @@ public class Order extends AbstractBaseModel {
 
 	public void setTare(BigDecimal tare) {
 		this.tare = tare;
+	}
+
+	public Customer getCustomer() {
+		return customer;
 	}
 
 	public void setCustomer(Customer customer) {

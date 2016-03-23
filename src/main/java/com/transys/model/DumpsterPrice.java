@@ -13,6 +13,10 @@ import javax.persistence.Table;
 @Table(name="dumpsterPrice")
 public class DumpsterPrice extends AbstractFeeMasterData {
 	@ManyToOne
+	@JoinColumn(name="customerId")
+	private Customer customer;
+	
+	@ManyToOne
 	@JoinColumn(name="dumpsterSizeId") //Enum?
 	private DumpsterSize dumpsterSize;
 	
@@ -27,6 +31,14 @@ public class DumpsterPrice extends AbstractFeeMasterData {
 	@Column(name="price")
 	private BigDecimal price;
 	
+	public Customer getCustomer() {
+		return customer;
+	}
+
+	public void setCustomer(Customer customer) {
+		this.customer = customer;
+	}
+
 	public DumpsterSize getDumpsterSize() {
 		return dumpsterSize;
 	}

@@ -135,6 +135,16 @@ function populateMaterialTypes() {
 	</jsp:include>
 	<table id="form-table" class="table">
 		<tr>
+			<td class="form-left">Customer</td>
+			<td>
+				<form:select cssClass="flat form-control input-sm" style="width:175px !important" path="customer" >
+					<form:option value="">----Please Select----</form:option>
+					<form:options items="${customers}" itemValue="id"  itemLabel="companyName" />
+				</form:select> 
+				<form:errors path="customer" cssClass="errorMessage" />
+			</td> 
+		</tr>
+		<tr>
 			<td class="form-left">Material Category<span class="errorMessage">*</span></td>
 			<td>
 				<select class="flat form-control input-sm" id="materialCategory" name="materialCategory" style="width: 175px !important" onChange="return populateMaterialTypes();">

@@ -617,7 +617,7 @@ public class OrderController extends CRUDController<Order> {
 			log.warn("Error in validation :" + e);
 		}
 		
-		// return to form if we had errors
+		// Return to form if we had errors
 		if (bindingResult.hasErrors()) {
 			setupCreate(model, request, entity);
 			return urlContext + "/form";
@@ -645,14 +645,20 @@ public class OrderController extends CRUDController<Order> {
 		orderFees.setTotalFees(orderFees.getTotalFees().add(overweightFee));
 		entity.setBalanceAmountDue(orderFees.getTotalFees().subtract(entity.getTotalAmountPaid()));
 		
-		populateAuditOrderNotes(entity, "Order status changed to Closed", entity.getModifiedBy()); 
-		
 		genericDAO.saveOrUpdate(entity);
+		
+		OrderNotes auditOrderNotes = populateAuditOrderNotes(entity, "Order status changed to Closed", entity.getModifiedBy());  
+		genericDAO.saveOrUpdate(auditOrderNotes);
+		entity.getOrderNotes().add(auditOrderNotes);
 		
 		Long modifiedBy = entity.getModifiedBy();
 		updateDumpsterStatus(entity.getDumpster(), DumpsterStatus.DUMPSTER_STATUS_AVAILABLE, modifiedBy);
 		updatePermitStatus(entity.getPermits(), PermitStatus.PERMIT_STATUS_AVAILABLE, modifiedBy);
 		
+		return pickupSaveSuccess(request, entity, model);
+	}
+	
+	private String pickupSaveSuccess(HttpServletRequest request, Order entity, ModelMap model) {
 		cleanUp(request);
 
 		setupCreate(model, request, entity);
@@ -686,6 +692,83 @@ public class OrderController extends CRUDController<Order> {
 		
 		return urlContext + "/order";
 	}
+	
+	@RequestMapping(method = RequestMethod.GET, value = "/processOrderReadyForPickup.do")
+	public @ResponseBody String processOrderReadyForPickup(ModelMap model, HttpServletRequest request,
+															 @RequestParam(value = "orderId") String orderId,
+															 @RequestParam(value = "readyForPickup") boolean readyForPickup) {
+		String query = "select obj from Order obj where obj.deleteFlag='1' and obj.id=" + orderId;
+		List<Order> orderList = genericDAO.executeSimpleQuery(query);
+		if (orderList.isEmpty()) {
+			return "Specified Order not found";
+		}
+		
+		Order order = orderList.get(0);
+		OrderStatus currentOrderStatus = order.getOrderStatus();
+		if (readyForPickup &&
+				StringUtils.equals(OrderStatus.ORDER_STATUS_PICK_UP, currentOrderStatus.getStatus())) {
+			return "Order already in Pick Up status";
+		}
+		if (!readyForPickup &&
+				StringUtils.equals(OrderStatus.ORDER_STATUS_DROPPED_OFF, currentOrderStatus.getStatus())) {
+			return "Order already not in Pick Up status";
+		}
+		
+		String pickUpOrderStatusStr = StringUtils.EMPTY;
+		String pickUpOrderStatusAuditMsg = StringUtils.EMPTY;
+		if (readyForPickup) {
+			pickUpOrderStatusStr = OrderStatus.ORDER_STATUS_PICK_UP;
+			pickUpOrderStatusAuditMsg = "Order status changed to Pick Up";
+		} else {
+			pickUpOrderStatusStr = OrderStatus.ORDER_STATUS_DROPPED_OFF;
+			pickUpOrderStatusAuditMsg = "Order status reverted to Dropped Off";
+		}
+		
+		order.setModifiedAt(Calendar.getInstance().getTime());
+		order.setModifiedBy(getUser(request).getId());
+		
+		OrderStatus pickUpOrderStatus = retrieveOrderStatus(pickUpOrderStatusStr);
+		order.setOrderStatus(pickUpOrderStatus);
+		
+		genericDAO.saveOrUpdate(order);
+		
+		OrderNotes auditOrderNotes = populateAuditOrderNotes(order, pickUpOrderStatusAuditMsg, order.getModifiedBy()); 
+		genericDAO.saveOrUpdate(auditOrderNotes);
+		order.getOrderNotes().add(auditOrderNotes);
+		
+		return "Order status changed successfully";
+	}
+	
+	@RequestMapping(method = RequestMethod.GET, value = "/processOrderReopen.do")
+	public @ResponseBody String processOrderReopen(ModelMap model, HttpServletRequest request,
+															 @RequestParam(value = "orderId") String orderId) {
+		String query = "select obj from Order obj where obj.deleteFlag='1' and obj.id=" + orderId;
+		List<Order> orderList = genericDAO.executeSimpleQuery(query);
+		if (orderList.isEmpty()) {
+			return "Specified Order not found";
+		}
+		
+		Order order = orderList.get(0);
+		OrderStatus currentOrderStatus = order.getOrderStatus();
+		if (!StringUtils.equals(OrderStatus.ORDER_STATUS_CLOSED, currentOrderStatus.getStatus())) {
+			return "Order not in Closed status";
+		}
+		
+		order.setModifiedAt(Calendar.getInstance().getTime());
+		order.setModifiedBy(getUser(request).getId());
+		
+		OrderStatus orderStatus = retrieveOrderStatus(OrderStatus.ORDER_STATUS_PICK_UP);
+		order.setOrderStatus(orderStatus);
+		
+		genericDAO.saveOrUpdate(order);
+		
+		OrderNotes auditOrderNotes = populateAuditOrderNotes(order, "Order re-opened; status reverted to Pick Up", order.getModifiedBy()); 
+		genericDAO.saveOrUpdate(auditOrderNotes);
+		order.getOrderNotes().add(auditOrderNotes);
+		
+		return "Order status changed successfully";
+	}
+
 
 	@RequestMapping(method = RequestMethod.GET, value = "/main.do")
 	public String displayMain(ModelMap model, HttpServletRequest request) {
@@ -1006,8 +1089,9 @@ public class OrderController extends CRUDController<Order> {
 	@RequestMapping(method = RequestMethod.GET, value = "/retrieveDumpsterPrice.do")
 	public @ResponseBody String retrieveDumpsterPrice(ModelMap model, HttpServletRequest request,
 														    @RequestParam(value = "dumpsterSizeId") String dumpsterSizeId,
-															 @RequestParam(value = "materialTypeId") String materialTypeId) {
-		BigDecimal dumpsterPrice = retrieveDumpsterPrice(dumpsterSizeId, materialTypeId);
+															 @RequestParam(value = "materialTypeId") String materialTypeId,
+															 @RequestParam(value = "customerId") String customerId) {
+		BigDecimal dumpsterPrice = retrieveDumpsterPrice(dumpsterSizeId, materialTypeId, customerId);
 		
 		ObjectMapper objectMapper = new ObjectMapper();
 		String json = StringUtils.EMPTY;
@@ -1022,16 +1106,25 @@ public class OrderController extends CRUDController<Order> {
 		//return json;
 	}
 	
-	private BigDecimal retrieveDumpsterPrice(String dumpsterSizeId, String materialTypeId) {
+	private BigDecimal retrieveDumpsterPrice(String dumpsterSizeId, String materialTypeId, String customerId) {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd"); 
 		String todaysDateStr = dateFormat.format(new Date());
 		
-		String dumpsterPriceQuery = "select obj from DumpsterPrice obj where obj.deleteFlag='1' and";
-		dumpsterPriceQuery += " obj.dumpsterSize.id=" + dumpsterSizeId
-				    		  	 +  " and obj.materialType.id=" + materialTypeId
-				    		  	 +  " and '" + todaysDateStr + "' between obj.effectiveStartDate and obj.effectiveEndDate";
+		String baseDumpsterPriceQuery = "select obj from DumpsterPrice obj where obj.deleteFlag='1'";
+		baseDumpsterPriceQuery += " and obj.dumpsterSize.id=" + dumpsterSizeId
+				    		  	 	  +  " and obj.materialType.id=" + materialTypeId
+				    		  	 	  +  " and '" + todaysDateStr + "' between obj.effectiveStartDate and obj.effectiveEndDate";
+		String customerCondn = StringUtils.EMPTY;
+		if (StringUtils.isNotEmpty(customerId)) {
+			customerCondn = " and obj.customer.id=" + customerId; 
+		}
 		
-		List<DumpsterPrice> dumsterPriceList = genericDAO.executeSimpleQuery(dumpsterPriceQuery);
+		List<DumpsterPrice> dumsterPriceList = genericDAO.executeSimpleQuery(baseDumpsterPriceQuery + customerCondn);
+		if (dumsterPriceList.isEmpty()) { 
+			dumsterPriceList = genericDAO.executeSimpleQuery(baseDumpsterPriceQuery);
+		}
+		
+		
 		return dumsterPriceList.get(0).getPrice();
 	}
 	
@@ -1501,16 +1594,20 @@ public class OrderController extends CRUDController<Order> {
 		populateAuditOrderNotes(order, orderAuditMsg, createdBy);
 	}
 	
-	private void populateAuditOrderNotes(Order order, String orderAuditMsg, Long createdBy) {
+	private OrderNotes populateAuditOrderNotes(Order order, String orderAuditMsg, Long createdBy) {
 		OrderNotes auditOrderNotes = new OrderNotes();
 		auditOrderNotes.setNotesType(OrderNotes.NOTES_TYPE_AUDIT);
 		auditOrderNotes.setNotes("***AUDIT: " + orderAuditMsg + "***");
-		auditOrderNotes.setOrder(order);
+		
+		Order emptyOrder = new Order();
+		emptyOrder.setId(order.getId());
+		auditOrderNotes.setOrder(emptyOrder);
+		
 		auditOrderNotes.setCreatedAt(Calendar.getInstance().getTime());
 		auditOrderNotes.setCreatedBy(createdBy);
 		updateEnteredBy(auditOrderNotes);
 		
-		order.getOrderNotes().add(auditOrderNotes);
+		return auditOrderNotes;
 	}
 	
 	/*@Override

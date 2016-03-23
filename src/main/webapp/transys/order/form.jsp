@@ -229,13 +229,17 @@ function populateDusmpsterPrice() {
 	var materialTypeSelect = $("#materialType");
 	var materialTypeId = materialTypeSelect.val();
 	
-	if (dumpsterSizeId == "" || materialTypeId == "") {
+	var customerSelect = $('#customerSelect');
+	var customerId = customerSelect.val();
+	
+	if (dumpsterSizeId == "" || materialTypeId == "" || customerId == "") {
 		return false;
 	}
 	
 	$.ajax({
   		url: "retrieveDumpsterPrice.do?" + "dumpsterSizeId=" + dumpsterSizeId 
-  								  		 + "&materialTypeId=" + materialTypeId,
+  								  		 + "&materialTypeId=" + materialTypeId
+  								  		 + "&customerId=" + customerId,
   								  
        	type: "GET",
        	success: function(responseData, textStatus, jqXHR) {

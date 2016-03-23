@@ -75,6 +75,12 @@ public class DeliveryAddress extends AbstractBaseModel {
 	
 	@Transient
 	//TODO: Move to utils
+	public String getFullDeliveryAddress() {
+		return getFullDeliveryAddress(", "); 
+	}
+	
+	@Transient
+	//TODO: Move to utils
 	public String getFullDeliveryAddress(String lineSeparator) {
 		StringBuffer addressBuff = new StringBuffer();
 		if (StringUtils.isNotEmpty(getLine1())) {

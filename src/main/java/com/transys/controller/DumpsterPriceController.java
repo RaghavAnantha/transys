@@ -1,11 +1,14 @@
 package com.transys.controller;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.ValidationException;
 
 import org.apache.commons.lang3.StringUtils;
@@ -23,7 +26,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.transys.controller.editor.AbstractModelEditor;
+import com.transys.core.tags.IColumnTag;
+import com.transys.core.util.MimeUtil;
 import com.transys.model.BaseModel;
+import com.transys.model.Customer;
 import com.transys.model.DumpsterPrice;
 import com.transys.model.DumpsterSize;
 import com.transys.model.MaterialCategory;
@@ -40,6 +46,7 @@ public class DumpsterPriceController extends CRUDController<DumpsterPrice> {
 
 	@Override
 	public void initBinder(WebDataBinder binder) {
+		binder.registerCustomEditor(Customer.class, new AbstractModelEditor(Customer.class));
 		binder.registerCustomEditor(DumpsterSize.class, new AbstractModelEditor(DumpsterSize.class));
 		binder.registerCustomEditor(MaterialType.class, new AbstractModelEditor(MaterialType.class));
 		binder.registerCustomEditor(MaterialCategory.class, new AbstractModelEditor(MaterialCategory.class));
@@ -53,7 +60,8 @@ public class DumpsterPriceController extends CRUDController<DumpsterPrice> {
 		setupList(model, request);
 		
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
-		model.addAttribute("list", genericDAO.search(DumpsterPrice.class, criteria, "materialType.materialCategory.category", null, null));
+		List<DumpsterPrice> dumpsterPriceList = retrieveDusmpsterPrice(criteria);
+		model.addAttribute("list", dumpsterPriceList);
 		
 		return urlContext + "/list";
 	}
@@ -61,8 +69,10 @@ public class DumpsterPriceController extends CRUDController<DumpsterPrice> {
 	@Override
 	public String search2(ModelMap model, HttpServletRequest request) {
 		setupList(model, request);
+		
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
-		model.addAttribute("list", genericDAO.search(DumpsterPrice.class, criteria, "materialType.materialCategory.category", null, null));
+		List<DumpsterPrice> dumpsterPriceList = retrieveDusmpsterPrice(criteria);
+		model.addAttribute("list", dumpsterPriceList);
 		
 		return urlContext + "/list";
 	}
@@ -75,7 +85,8 @@ public class DumpsterPriceController extends CRUDController<DumpsterPrice> {
 		criteria.getSearchMap().remove("_csrf");
 		criteria.setPageSize(25);
 		
-		model.addAttribute("list", genericDAO.search(DumpsterPrice.class, criteria, "materialType.materialCategory.category", false));
+		List<DumpsterPrice> dumpsterPriceList = retrieveDusmpsterPrice(criteria);
+		model.addAttribute("list", dumpsterPriceList);
 		cleanUp(request);
 		
 		return urlContext + "/list";
@@ -114,6 +125,7 @@ public class DumpsterPriceController extends CRUDController<DumpsterPrice> {
 	@Override
 	public void setupCreate(ModelMap model, HttpServletRequest request) {
 		Map criterias = new HashMap();
+		model.addAttribute("customers", genericDAO.findByCriteria(Customer.class, criterias, "id", false));
 		model.addAttribute("dumpsterSizes", genericDAO.findUniqueByCriteria(DumpsterSize.class, criterias, "id", false));
 		//model.addAttribute("materialTypes", genericDAO.findByCriteria(MaterialType.class, criterias, "materialName", false));
 		model.addAttribute("dumpsterPrices", genericDAO.executeSimpleQuery("select DISTINCT(obj.price) from DumpsterPrice obj where obj.deleteFlag='1' order by obj.price asc"));
@@ -173,6 +185,52 @@ public class DumpsterPriceController extends CRUDController<DumpsterPrice> {
 		}
 		
 		return urlContext + "/form";
+	}
+	
+	@Override
+	public void export(ModelMap model, HttpServletRequest request,
+			HttpServletResponse response, @RequestParam("type") String type,
+			@RequestParam("dataQualifier") String dataQualifier,
+			Object objectDAO, Class clazz) {
+		List columnPropertyList = (List) request.getSession().getAttribute(dataQualifier + "ColumnPropertyList");
+		//List columnPropertyList = (List) request.getSession().getAttribute("columnPropertyList");
+		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
+
+		response.setContentType(MimeUtil.getContentType(type));
+		if (!type.equals("html"))
+			response.setHeader("Content-Disposition", "attachment;filename="
+					+ urlContext + "Report." + type);
+		try {
+			criteria.setPageSize(100000);
+			String label = getCriteriaAsString(criteria);
+			System.out.println("Criteria: " + label);
+			
+			/*ByteArrayOutputStream out = dynamicReportService.exportReport(
+					urlContext + "Report", type, getEntityClass(),
+					columnPropertyList, criteria, request);*/
+			
+			List<DumpsterPrice> dumpsterPriceList = retrieveDusmpsterPrice(criteria);
+			ByteArrayOutputStream out = dynamicReportService.exportReport(
+					urlContext + "Report", type, getEntityClass(), dumpsterPriceList,
+					columnPropertyList, request);
+			
+			out.writeTo(response.getOutputStream());
+			if (type.equals("html"))
+				response.getOutputStream()
+						.println(
+								"<script language=\"javascript\">window.print()</script>");
+			criteria.setPageSize(25);
+			out.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+			log.warn("Unable to create file :" + e);
+		}
+	}
+	
+	private List<DumpsterPrice> retrieveDusmpsterPrice(SearchCriteria criteria) {
+		String orderBy = "materialType.materialCategory.category, materialType.materialName, dumpsterSize.id, effectiveStartDate";
+		List<DumpsterPrice> dumpsterPriceList = genericDAO.search(DumpsterPrice.class, criteria, orderBy, null, null);
+		return dumpsterPriceList;
 	}
 	
 	private String extractSaveErrorMsg(Exception e) {

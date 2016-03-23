@@ -725,7 +725,9 @@ LOCK TABLES `orderStatus` WRITE;
 INSERT INTO `orderStatus` VALUES 
 (1,'Open',NULL,'2015-09-10 21:22:45',1,NULL,NULL,1),
 (2,'Dropped Off',NULL,'2015-09-10 21:22:45',1,NULL,NULL,1),
-(3,'Closed',NULL,'2015-09-10 21:22:45',1,NULL,NULL,1);
+(3,'Closed',NULL,'2015-09-10 21:22:45',1,NULL,NULL,1),
+(4,'Pick Up',NULL,'2015-09-10 21:22:45',1,NULL,NULL,1);
+
 /*!40000 ALTER TABLE `orderStatus` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1266,6 +1268,7 @@ CREATE TABLE `dumpsterPrice` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `dumpsterSizeId` bigint(20) NOT NULL,
   `materialTypeId` bigint(20) NOT NULL,
+  `customerId` bigint(20) DEFAULT NULL,
   `price` decimal(6,2) NOT NULL,
   `comments` varchar(500) DEFAULT NULL,
   `effectiveStartDate` datetime NOT NULL,
@@ -1278,7 +1281,8 @@ CREATE TABLE `dumpsterPrice` (
   PRIMARY KEY (`id`),
   KEY `dumpsterPriceMaterialTypeRef_idx` (`materialTypeId`),
   CONSTRAINT `dumpsterPriceMaterialTypeRef` FOREIGN KEY (`materialTypeId`) REFERENCES `materialType` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `dumpsterPriceDumpsterSizeRef` FOREIGN KEY (`dumpsterSizeId`) REFERENCES `dumpsterSize` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `dumpsterPriceDumpsterSizeRef` FOREIGN KEY (`dumpsterSizeId`) REFERENCES `dumpsterSize` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `dumpsterPriceCustomerRef` FOREIGN KEY (`customerId`) REFERENCES `customer` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 

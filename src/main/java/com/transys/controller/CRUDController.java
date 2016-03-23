@@ -256,6 +256,7 @@ public abstract class CRUDController<T extends BaseModel> extends BaseController
 		try {
 			criteria.setPageSize(100000);
 			String label = getCriteriaAsString(criteria);
+			System.out.println("Criteria: " + label);
 			ByteArrayOutputStream out = dynamicReportService.exportReport(
 					urlContext + "Report", type, getEntityClass(),
 					columnPropertyList, criteria, request);
