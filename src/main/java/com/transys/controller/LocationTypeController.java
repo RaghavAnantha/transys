@@ -15,9 +15,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.transys.controller.editor.AbstractModelEditor;
 import com.transys.model.LocationType;
-import com.transys.model.MaterialType;
 import com.transys.model.SearchCriteria;
 
 @Controller
