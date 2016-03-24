@@ -143,10 +143,10 @@ public class PermitController extends CRUDController<Permit> {
 		List<Permit> listOfPermits = genericDAO.search(getEntityClass(), criteria);
 		
 		for (Permit p : listOfPermits) {
-			List<BaseModel> orders = (List<BaseModel>)genericDAO.executeSimpleQuery("select obj.order from OrderPermits obj where obj.deleteFlag='1' and obj.permit.id=" +  p.getId() + " order by obj.id desc");
+			List<Order> orders = genericDAO.executeSimpleQuery("select obj.order from OrderPermits obj where obj.deleteFlag='1' and obj.permit.id=" +  p.getId() + " order by obj.id desc");
 			if (orders != null && orders.size() > 0) {
-				BaseModel order = orders.get(0);
-				p.setOrderId(order.getId());
+				Order anOrder = orders.get(0);
+				p.setOrderId(anOrder.getId());
 			}
 		}
 		
@@ -428,10 +428,30 @@ public class PermitController extends CRUDController<Permit> {
 	public void setupCreate(ModelMap model, HttpServletRequest request) {
 		Map criterias = new HashMap();
 		
-		List<DeliveryAddress> addresses = genericDAO.findUniqueByCriteria(DeliveryAddress.class, criterias, "line1", false);
-	   model.addAttribute("allDeliveryAddresses", addresses);
+		List<DeliveryAddress> deliveryAddresses = genericDAO.findUniqueByCriteria(DeliveryAddress.class, criterias, "line1", false);
+	   model.addAttribute("allDeliveryAddresses", deliveryAddresses);
+	  
+	   List<PermitAddress> permitAddresses = genericDAO.findByCriteria(PermitAddress.class, criterias, "line1", false);
+	   SortedSet<String> permitAddressLine1Set = new TreeSet<String>();
+		SortedSet<String> permitAddressLine2Set = new TreeSet<String>();
+		for (PermitAddress aPermitAddress : permitAddresses) {
+			if (StringUtils.isNotEmpty(aPermitAddress.getLine1())) {
+				permitAddressLine1Set.add(aPermitAddress.getLine1());
+			}
+			if (StringUtils.isNotEmpty(aPermitAddress.getLine2())) {
+				permitAddressLine2Set.add(aPermitAddress.getLine2());
+			}
+		}
+		
+		String[] permitAddressLine1Arr = permitAddressLine1Set.toArray(new String[0]);
+		String[] permitAddressLine2Arr = permitAddressLine2Set.toArray(new String[0]);
+		
+		model.addAttribute("allPermitAddressesLine1", permitAddressLine1Arr);
+		model.addAttribute("allPermitAddressesLine2", permitAddressLine2Arr);
+	   
 	   List<Customer> customerList = genericDAO.findByCriteria(Customer.class, criterias, "companyName", false);
 		model.addAttribute("customer", customerList);
+		
 		model.addAttribute("locationType", genericDAO.findByCriteria(LocationType.class, criterias, "locationType", false));
 		model.addAttribute("order", genericDAO.findByCriteria(Order.class, criterias, "id", false));
 		model.addAttribute("permitClass", genericDAO.findByCriteria(PermitClass.class, criterias, "permitClass", false));
@@ -1170,6 +1190,9 @@ public class PermitController extends CRUDController<Permit> {
 			
 			Map<String, String> headers = new LinkedHashMap<>();
 			headers.put("Delivery Address", "deliveryAddress");
+			/*headers.put("Delivery Address", "deliveryAddress.fullLine");
+			headers.put("Permit Address1", "fullLinePermitAddress1");
+			headers.put("Permit Address2", "fullLinePermitAddress2");*/
 			headers.put("Location Type", "locationType");
 			headers.put("Permit Type", "permitType");
 			headers.put("Permit Class", "permitClass");
@@ -1211,10 +1234,10 @@ public class PermitController extends CRUDController<Permit> {
 		List<Permit> listOfPermits = genericDAO.search(getEntityClass(), criteria);
 		
 		for (Permit p : listOfPermits) {
-			List<BaseModel> orders = (List<BaseModel>)genericDAO.executeSimpleQuery("select obj.order from OrderPermits obj where obj.deleteFlag='1' and obj.permit.id=" +  p.getId() + " order by obj.id desc");
+			List<Order> orders = genericDAO.executeSimpleQuery("select obj.order from OrderPermits obj where obj.deleteFlag='1' and obj.permit.id=" +  p.getId() + " order by obj.id desc");
 			if (orders != null && orders.size() > 0) {
-				BaseModel order = orders.get(0);
-				p.setOrderId(order.getId());
+				Order anOrder = orders.get(0);
+				p.setOrderId(anOrder.getId());
 			}
 		}
 		

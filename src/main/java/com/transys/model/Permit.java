@@ -89,7 +89,7 @@ public class Permit  extends AbstractBaseModel {
 	
 	@Transient
 	//TODO: Move to utils?
-	public String getFullPermitAddressLine() {
+	public String getFullLinePermitAddress1() {
 		List<PermitAddress> permitAddressList = getPermitAddress();
 		if (permitAddressList.isEmpty()) {
 			return StringUtils.EMPTY;
@@ -98,6 +98,16 @@ public class Permit  extends AbstractBaseModel {
 		return permitAddressList.get(0).getFullLine();
 	}
 	
+	@Transient
+	//TODO: Move to utils?
+	public String getFullLinePermitAddress2() {
+		List<PermitAddress> permitAddressList = getPermitAddress();
+		if (permitAddressList.size() <= 1 ) {
+			return StringUtils.EMPTY;
+		}
+		
+		return permitAddressList.get(1).getFullLine();
+	}
 	
 	public Customer getCustomer() {
 		return customer;

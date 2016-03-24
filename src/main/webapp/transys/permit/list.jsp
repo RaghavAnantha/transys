@@ -8,34 +8,65 @@
 			<td>
 				<select class="flat form-control input-sm" id="deliveryAddress" name="deliveryAddress.line1" style="width: 175px !important">
 					<option value="">------Please Select------</option>
-					<c:forEach items="${allDeliveryAddresses}" var="deliveryAddressVar">
-						<c:if test="${not empty deliveryAddressVar.line1}">
+					<c:forEach items="${allDeliveryAddresses}" var="deliveryAddressVar1">
+						<c:if test="${not empty deliveryAddressVar1.line1}">
 							<c:set var="selected" value=""/>
-							<c:if test="${sessionScope.searchCriteria.searchMap['deliveryAddress.line1'] == deliveryAddressVar.line1}">
+							<c:if test="${sessionScope.searchCriteria.searchMap['deliveryAddress.line1'] == deliveryAddressVar1.line1}">
 								<c:set var="selected" value="selected"/>
 							</c:if> 
-							<option value="${deliveryAddressVar.line1}" ${selected}>${deliveryAddressVar.line1}</option>
+							<option value="${deliveryAddressVar1.line1}" ${selected}>${deliveryAddressVar1.line1}</option>
 						</c:if>
 					</c:forEach>
 				</select>
 			</td>
 			<td class="form-left form-left-ext">Delivery Addrs Line2</td>
-			<td><select class="flat form-control input-sm" id="deliveryStreet" name="deliveryAddress.line2" style="width: 175px !important"">
+			<td><select class="flat form-control input-sm" id="deliveryStreet" name="deliveryAddress.line2" style="width: 175px !important">
 				<option value="">------Please Select------</option>
-				<c:forEach items="${allDeliveryAddresses}" var="deliveryAddress">
-					<c:if test="${not empty deliveryAddress.line2}">
+				<c:forEach items="${allDeliveryAddresses}" var="deliveryAddressVar2">
+					<c:if test="${not empty deliveryAddressVar2.line2}">
 						<c:set var="selected" value=""/>
-						<c:if test="${sessionScope.searchCriteria.searchMap['deliveryAddress.line2'] == deliveryAddress.line2}">
+						<c:if test="${sessionScope.searchCriteria.searchMap['deliveryAddress.line2'] == deliveryAddressVar2.line2}">
 							<c:set var="selected" value="selected"/>
 						</c:if> 
-						<option value="${deliveryAddress.line2}" ${selected}>${deliveryAddress.line2}</option>
+						<option value="${deliveryAddressVar2.line2}" ${selected}>${deliveryAddressVar2.line2}</option>
 					</c:if>
 				</c:forEach>
 			</select>
 			</td>
 			<td colspan=10></td>
 	 	</tr>
-	 
+	 	<tr>
+		  	<td class="form-left form-left-ext">Permit Addrs Line1</td>
+			<td>
+				<select class="flat form-control input-sm" id="permitAddress" name="permitAddress[0].line1" style="width: 175px !important">
+					<option value="">------Please Select------</option>
+					<c:forEach items="${allPermitAddressesLine1}" var="aPermitAddressLine1">
+						<c:if test="${not empty aPermitAddressLine1}">
+							<c:set var="selected" value=""/>
+							<c:if test="${sessionScope.searchCriteria.searchMap['permitAddress[0].line1'] == aPermitAddressLine1}">
+								<c:set var="selected" value="selected"/>
+							</c:if> 
+							<option value="${aPermitAddressLine1}" ${selected}>${aPermitAddressLine1}</option>
+						</c:if>
+					</c:forEach>
+				</select>
+			</td>
+			<td class="form-left form-left-ext">Permit Addrs Line2</td>
+			<td><select class="flat form-control input-sm" id="permitStreet" name="permitAddress[0].line2" style="width: 175px !important">
+				<option value="">------Please Select------</option>
+				<c:forEach items="${allPermitAddressesLine2}" var="aPermitAddressLine2">
+					<c:if test="${not empty aPermitAddressLine2}">
+						<c:set var="selected" value=""/>
+						<c:if test="${sessionScope.searchCriteria.searchMap['permitAddress[0].line2'] == aPermitAddressLine2}">
+							<c:set var="selected" value="selected"/>
+						</c:if> 
+						<option value="${aPermitAddressLine2}" ${selected}>${aPermitAddressLine2}</option>
+					</c:if>
+				</c:forEach>
+			</select>
+			</td>
+			<td colspan=10></td>
+	 	</tr>
  	 	<tr>
 		  <td class="form-left">Contact Name</td>
 				<td><select class="flat form-control input-sm" id="contactName" name="customer.contactName" style="width: 175px !important">
@@ -193,7 +224,8 @@
 		pagingLink="search.do" multipleDelete="false" searcheable="false" 
 		exportPdf="false" exportXls="true" dataQualifier="managePermits">
 		<transys:textcolumn headerText="Delivery Address" dataField="deliveryAddress.fullLine"/>
-		<transys:textcolumn headerText="Permit Address" dataField="fullPermitAddressLine" />
+		<transys:textcolumn headerText="Permit Address1" dataField="fullLinePermitAddress1" />
+		<transys:textcolumn headerText="Permit Address2" dataField="fullLinePermitAddress2" />
 		<transys:textcolumn headerText="Locn. Type" dataField="locationType.locationType" />
 		<transys:textcolumn headerText="Permit Type" dataField="permitType.permitType" />
 		<transys:textcolumn headerText="Permit Class" dataField="permitClass.permitClass" />

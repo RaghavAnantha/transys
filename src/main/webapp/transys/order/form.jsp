@@ -455,13 +455,20 @@ function populateTotalPermitFees() {
 	if (permitFee1 != "") {
 		totalPermitFees += parseFloat(permitFee1);
 	}
-	var permitFee2 = $("#orderFees\\.permitFee" + 2).val();
-	if (permitFee2 != "") {
-		totalPermitFees += parseFloat(permitFee2);
+	var permitFee2Elem = $("#orderFees\\.permitFee" + 2);
+	alert(permitFee2Elem);
+	if (permitFee2Elem.length) {
+		var permitFee2 = permitFee2Elem.val();
+		if (permitFee2 != "") {
+			totalPermitFees += parseFloat(permitFee2);
+		}
 	}
-	var permitFee3 = $("#orderFees\\.permitFee" + 3).val();
-	if (permitFee3 != "") {
-		totalPermitFees += parseFloat(permitFee3);
+	var permitFee3Elem = $("#orderFees\\.permitFee" + 3);
+	if (permitFee3Elem.length) {
+		var permitFee3 = permitFee3Elem.val();
+		if (permitFee3 != "") {
+			totalPermitFees += parseFloat(permitFee3);
+		}
 	}
 	
 	$("#orderFees\\.totalPermitFees").val(totalPermitFees);
@@ -1136,36 +1143,36 @@ function updateTotalPaid() {
 					</c:forEach>
 				</select>
 		 	</td>
-		 	<td class="form-left">Permit2 Class/></td>
-	        <td>
-				<select class="flat form-control input-sm" id="permitClasses2" name="permitClasses2" style="width:172px !important" onChange="return handlePermitClassChange(2);">
-					<option value="">-----Please Select-----</option>
-					<c:forEach items="${permitClasses}" var="aPermitClass">
-						<c:set var="selected" value="" />
-						<c:if test="${modelObject.permits != null and modelObject.permits[1] != null and modelObject.permits[1].permitClass != null}">
+		 	<c:if test="${modelObject.permits != null and modelObject.permits[1] != null and modelObject.permits[1].permitClass != null}">
+				<td class="form-left">Permit2 Class/></td>
+		        <td>
+					<select class="flat form-control input-sm" id="permitClasses2" name="permitClasses2" style="width:172px !important" onChange="return handlePermitClassChange(2);">
+						<option value="">-----Please Select-----</option>
+						<c:forEach items="${permitClasses}" var="aPermitClass">
+							<c:set var="selected" value="" />
 							<c:if test="${modelObject.permits[1].permitClass.id == aPermitClass.id}">
 								<c:set var="selected" value="selected" />
 							</c:if>
-						</c:if>
-						<option value="${aPermitClass.id}" ${selected}>${aPermitClass.permitClass}</option>
-					</c:forEach>
-				</select>
-		 	</td>
-		 	<td class="form-left">Permit3 Class</td>
-	        <td>
-				<select class="flat form-control input-sm" id="permitClasses3" name="permitClasses3" style="width:172px !important" onChange="return handlePermitClassChange(3);">
-					<option value="">-----Please Select-----</option>
-					<c:forEach items="${permitClasses}" var="aPermitClass">
-						<c:set var="selected" value="" />
-						<c:if test="${modelObject.permits != null and modelObject.permits[2] != null and modelObject.permits[2].permitClass != null}">
+							<option value="${aPermitClass.id}" ${selected}>${aPermitClass.permitClass}</option>
+						</c:forEach>
+					</select>
+			 	</td>
+			</c:if>
+			<c:if test="${modelObject.permits != null and modelObject.permits[2] != null and modelObject.permits[2].permitClass != null}">
+				<td class="form-left">Permit3 Class</td>
+		        <td>
+					<select class="flat form-control input-sm" id="permitClasses3" name="permitClasses3" style="width:172px !important" onChange="return handlePermitClassChange(3);">
+						<option value="">-----Please Select-----</option>
+						<c:forEach items="${permitClasses}" var="aPermitClass">
+							<c:set var="selected" value="" />
 							<c:if test="${modelObject.permits[2].permitClass.id == aPermitClass.id}">
 								<c:set var="selected" value="selected" />
 							</c:if>
-						</c:if>
-						<option value="${aPermitClass.id}" ${selected}>${aPermitClass.permitClass}</option>
-					</c:forEach>
-				</select>
-		 	</td>
+							<option value="${aPermitClass.id}" ${selected}>${aPermitClass.permitClass}</option>
+						</c:forEach>
+					</select>
+			 	</td>
+			</c:if>
 	    </tr>
 	    <tr>
 	    	<td class="form-left">Permit1 Type<span class="errorMessage">*</span></td>
@@ -1183,36 +1190,36 @@ function updateTotalPaid() {
 					</c:forEach>
 				</select>
 	        </td>
-	        <td class="form-left">Permit2 Type<span class="errorMessage">*</span></td>
-	        <td>
-	        	<select class="flat form-control input-sm" id="permitTypes2" name="permitTypes2" style="width:172px !important" onChange="return populatePermitNumbers(2);">
-					<option value="">-----Please Select-----</option>
-					<c:forEach items="${permitTypes}" var="aPermitType">
-						<c:set var="selected" value="" />
-						<c:if test="${modelObject.permits != null and modelObject.permits[1] != null and modelObject.permits[1].permitType != null}">
+	        <c:if test="${modelObject.permits != null and modelObject.permits[1] != null and modelObject.permits[1].permitType != null}">
+				<td class="form-left">Permit2 Type<span class="errorMessage">*</span></td>
+		        <td>
+		        	<select class="flat form-control input-sm" id="permitTypes2" name="permitTypes2" style="width:172px !important" onChange="return populatePermitNumbers(2);">
+						<option value="">-----Please Select-----</option>
+						<c:forEach items="${permitTypes}" var="aPermitType">
+							<c:set var="selected" value="" />
 							<c:if test="${modelObject.permits[1].permitType.id == aPermitType.id}">
 								<c:set var="selected" value="selected" />
 							</c:if>
-						</c:if>
-						<option value="${aPermitType.id}" ${selected}>${aPermitType.permitType}</option>
-					</c:forEach>
-				</select>
-	        </td>
-	        <td class="form-left">Permit3 Type<span class="errorMessage">*</span></td>
-	        <td>
-	        	<select class="flat form-control input-sm" id="permitTypes3" name="permitTypes3" style="width:172px !important" onChange="return populatePermitNumbers(3);">
-					<option value="">-----Please Select-----</option>
-					<c:forEach items="${permitTypes}" var="aPermitType">
-						<c:set var="selected" value="" />
-						<c:if test="${modelObject.permits != null and modelObject.permits[2] != null and modelObject.permits[2].permitType != null}">
+							<option value="${aPermitType.id}" ${selected}>${aPermitType.permitType}</option>
+						</c:forEach>
+					</select>
+		        </td>
+			</c:if>
+	        <c:if test="${modelObject.permits != null and modelObject.permits[2] != null and modelObject.permits[2].permitType != null}">
+				<td class="form-left">Permit3 Type<span class="errorMessage">*</span></td>
+		        <td>
+		        	<select class="flat form-control input-sm" id="permitTypes3" name="permitTypes3" style="width:172px !important" onChange="return populatePermitNumbers(3);">
+						<option value="">-----Please Select-----</option>
+						<c:forEach items="${permitTypes}" var="aPermitType">
+							<c:set var="selected" value="" />
 							<c:if test="${modelObject.permits[2].permitType.id == aPermitType.id}">
 								<c:set var="selected" value="selected" />
 							</c:if>
-						</c:if>
-						<option value="${aPermitType.id}" ${selected}>${aPermitType.permitType}</option>
-					</c:forEach>
-				</select>
-	        </td>
+							<option value="${aPermitType.id}" ${selected}>${aPermitType.permitType}</option>
+						</c:forEach>
+					</select>
+		        </td>
+			</c:if>
 	    </tr>
 	    <tr>
 	    	<td class="form-left">Permit1 Number<span class="errorMessage">*</span></td>
@@ -1240,11 +1247,11 @@ function updateTotalPaid() {
 					</a>
 				</label>
 	        </td>
-	        <td class="form-left">Permit2 Number<span class="errorMessage">*</span></td>
-	        <td>
-	        	<select class="flat form-control input-sm" id="permits[1]" name="permits[1]" style="width:172px !important" onChange="return retrievePermitDetails(2);">
-					<option value="">-----Please Select-----</option>
-					<c:if test="${modelObject.permits != null and modelObject.permits[1] != null and modelObject.permits[1].number != null}">
+	        <c:if test="${modelObject.permits != null and modelObject.permits[1] != null and modelObject.permits[1].number != null}">
+				<td class="form-left">Permit2 Number<span class="errorMessage">*</span></td>
+		        <td>
+		        	<select class="flat form-control input-sm" id="permits[1]" name="permits[1]" style="width:172px !important" onChange="return retrievePermitDetails(2);">
+						<option value="">-----Please Select-----</option>
 						<c:set var="chosenPermit" value="${modelObject.permits[1]}" />
 						<c:set var="allPermitsOfChosenType" value="${allPermitsOfChosenTypesList[1]}" />
 						<c:forEach items="${allPermitsOfChosenType}" var="aPermitOfChosenType">
@@ -1254,14 +1261,14 @@ function updateTotalPaid() {
 							</c:if>
 							<option value="${aPermitOfChosenType.id}" ${selected}>${aPermitOfChosenType.number}</option>
 						</c:forEach>
-					</c:if>
-				</select>
-	        </td>
-	        <td class="form-left">Permit3 Number<span class="errorMessage">*</span></td>
-	        <td>
-	        	<select class="flat form-control input-sm" id="permits[2]" name="permits[2]" style="width:172px !important" onChange="return retrievePermitDetails(3);">
-					<option value="">-----Please Select-----</option>
-					<c:if test="${modelObject.permits != null and modelObject.permits[2] != null and modelObject.permits[2].number != null}">
+					</select>
+		        </td>
+			</c:if>
+			<c:if test="${modelObject.permits != null and modelObject.permits[2] != null and modelObject.permits[2].number != null}">
+				<td class="form-left">Permit3 Number<span class="errorMessage">*</span></td>
+		        <td>
+		        	<select class="flat form-control input-sm" id="permits[2]" name="permits[2]" style="width:172px !important" onChange="return retrievePermitDetails(3);">
+						<option value="">-----Please Select-----</option>
 						<c:set var="chosenPermit" value="${modelObject.permits[2]}" />
 						<c:set var="allPermitsOfChosenType" value="${allPermitsOfChosenTypesList[2]}" />
 						<c:forEach items="${allPermitsOfChosenType}" var="aPermitOfChosenType">
@@ -1271,25 +1278,33 @@ function updateTotalPaid() {
 							</c:if>
 							<option value="${aPermitOfChosenType.id}" ${selected}>${aPermitOfChosenType.number}</option>
 						</c:forEach>
-					</c:if>
-				</select>
-	        </td>
+					</select>
+		        </td>	
+			</c:if>	
 		</tr>
 	    <tr>
 	    	<td class="form-left">Permit1 Valid From</td>
 	        <td class="td-static" id="permitValidFrom1">${modelObject.permits[0].formattedStartDate}</td>
-	        <td class="form-left">Permit2 Valid From</td>
-	        <td class="td-static" id="permitValidFrom2">${modelObject.permits[1].formattedStartDate}</td>
-	        <td class="form-left">Permit3 Valid From</td>
-	        <td class="td-static" id="permitValidFrom3">${modelObject.permits[2].formattedStartDate}</td>
+	        <c:if test="${modelObject.permits != null and modelObject.permits[1] != null and modelObject.permits[1].number != null}">
+				<td class="form-left">Permit2 Valid From</td>
+	       		<td class="td-static" id="permitValidFrom2">${modelObject.permits[1].formattedStartDate}</td>
+			</c:if>
+			<c:if test="${modelObject.permits != null and modelObject.permits[2] != null and modelObject.permits[2].number != null}">
+				<td class="form-left">Permit3 Valid From</td>
+	        	<td class="td-static" id="permitValidFrom3">${modelObject.permits[2].formattedStartDate}</td>
+			</c:if>
 	    </tr>
 	    <tr>
 	    	<td class="form-left">Permit1 Valid To</td>
 	        <td class="td-static" id="permitValidTo1">${modelObject.permits[0].formattedEndDate}</td>
-	        <td class="form-left" >Permit2 Valid To</td>
-	        <td class="td-static" id="permitValidTo2">${modelObject.permits[1].formattedEndDate}</td>
-	        <td class="form-left">Permit3 Valid To</td>
-	        <td class="td-static" id="permitValidTo3">${modelObject.permits[2].formattedEndDate}</td>
+	        <c:if test="${modelObject.permits != null and modelObject.permits[1] != null and modelObject.permits[1].number != null}">
+				<td class="form-left" >Permit2 Valid To</td>
+		        <td class="td-static" id="permitValidTo2">${modelObject.permits[1].formattedEndDate}</td>
+			</c:if>	
+	        <c:if test="${modelObject.permits != null and modelObject.permits[2] != null and modelObject.permits[2].number != null}">
+				<td class="form-left">Permit3 Valid To</td>
+	        	<td class="td-static" id="permitValidTo3">${modelObject.permits[2].formattedEndDate}</td>
+			</c:if>
 	    </tr>
 	    <tr>
 	      <td class="form-left">Permit1 Address</td>
@@ -1302,34 +1317,38 @@ function updateTotalPaid() {
 				</c:if>
 			</select>
 	      </td>
-	      <td class="form-left">Permit2 Address</td>
-	      <td>
-        	<select class="flat form-control input-sm" id="permitAddress2" name="permitAddress2" style="width:172px !important">
-				<c:if test="${modelObject.permits != null and modelObject.permits[1] != null and modelObject.permits[1].number != null}">
+	      <c:if test="${modelObject.permits != null and modelObject.permits[1] != null and modelObject.permits[1].number != null}">
+		  	<td class="form-left">Permit2 Address</td>
+		      <td>
+	        	<select class="flat form-control input-sm" id="permitAddress2" name="permitAddress2" style="width:172px !important">
 					<c:forEach items="${modelObject.permits[1].permitAddress}" var="aPermitAddress">
 						<option value="${aPermitAddress.id}" ${selected}>${aPermitAddress.fullLine}</option>
 					</c:forEach>
-				</c:if>
-			</select>
-	      </td>
-	      <td class="form-left">Permit3 Address</td>
-	      <td>
-        	<select class="flat form-control input-sm" id="permitAddress3" name="permitAddress3" style="width:172px !important">
-				<c:if test="${modelObject.permits != null and modelObject.permits[2] != null and modelObject.permits[2].number != null}">
+				</select>
+		      </td>
+		  </c:if>		
+	      <c:if test="${modelObject.permits != null and modelObject.permits[2] != null and modelObject.permits[2].number != null}">
+		  	<td class="form-left">Permit3 Address</td>
+		      <td>
+	        	<select class="flat form-control input-sm" id="permitAddress3" name="permitAddress3" style="width:172px !important">
 					<c:forEach items="${modelObject.permits[2].permitAddress}" var="aPermitAddress">
 						<option value="${aPermitAddress.id}" ${selected}>${aPermitAddress.fullLine}</option>
 					</c:forEach>
-				</c:if>
-			</select>
-	      </td>
+				</select>
+		      </td>
+		  </c:if>
 		</tr>
 	    <tr>
 	    	<td class="form-left">Permit1 Fee</td>
 	        <td class="td-static"><form:input path="orderFees.permitFee1" style="width:172px !important" maxlength="7" cssClass="flat" onChange="return populateTotalPermitFees();"/></td>
-	        <td class="form-left">Permit2 Fee</td>
-	        <td class="td-static"><form:input path="orderFees.permitFee2" style="width:172px !important" maxlength="7" cssClass="flat" onChange="return populateTotalPermitFees();"/></td>
-	        <td class="form-left">Permit3 Fee</td>
-	        <td class="td-static"><form:input path="orderFees.permitFee3" style="width:172px !important" maxlength="7" cssClass="flat" onChange="return populateTotalPermitFees();"/></td>
+	        <c:if test="${modelObject.permits != null and modelObject.permits[1] != null and modelObject.permits[1].number != null}">
+				<td class="form-left">Permit2 Fee</td>
+	        	<td class="td-static"><form:input path="orderFees.permitFee2" style="width:172px !important" maxlength="7" cssClass="flat" onChange="return populateTotalPermitFees();"/></td>
+	        </c:if>
+	        <c:if test="${modelObject.permits != null and modelObject.permits[1] != null and modelObject.permits[1].number != null}">
+				<td class="form-left">Permit3 Fee</td>
+	        	<td class="td-static"><form:input path="orderFees.permitFee3" style="width:172px !important" maxlength="7" cssClass="flat" onChange="return populateTotalPermitFees();"/></td>
+			</c:if>
 	    </tr>
 	</table>
 	<table id="form-table" class="table">

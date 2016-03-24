@@ -504,7 +504,7 @@ public class OrderController extends CRUDController<Order> {
 		OrderStatus orderStatus = retrieveOrderStatus(OrderStatus.ORDER_STATUS_DROPPED_OFF);
 		entity.setOrderStatus(orderStatus);
 		
-		populateAuditOrderNotes(entity, "Order status changed to Drop Off", entity.getModifiedBy());
+		createAuditOrderNotes(entity, "Order status changed to Drop Off", entity.getModifiedBy());
 		
 		genericDAO.saveOrUpdate(entity);
 		
@@ -647,8 +647,7 @@ public class OrderController extends CRUDController<Order> {
 		
 		genericDAO.saveOrUpdate(entity);
 		
-		OrderNotes auditOrderNotes = populateAuditOrderNotes(entity, "Order status changed to Closed", entity.getModifiedBy());  
-		genericDAO.saveOrUpdate(auditOrderNotes);
+		OrderNotes auditOrderNotes = createAuditOrderNotes(entity, "Order status changed to Closed", entity.getModifiedBy());  
 		entity.getOrderNotes().add(auditOrderNotes);
 		
 		Long modifiedBy = entity.getModifiedBy();
@@ -732,9 +731,7 @@ public class OrderController extends CRUDController<Order> {
 		
 		genericDAO.saveOrUpdate(order);
 		
-		OrderNotes auditOrderNotes = populateAuditOrderNotes(order, pickUpOrderStatusAuditMsg, order.getModifiedBy()); 
-		genericDAO.saveOrUpdate(auditOrderNotes);
-		order.getOrderNotes().add(auditOrderNotes);
+		createAuditOrderNotes(order, pickUpOrderStatusAuditMsg, order.getModifiedBy()); 
 		
 		return "Order status changed successfully";
 	}
@@ -762,9 +759,7 @@ public class OrderController extends CRUDController<Order> {
 		
 		genericDAO.saveOrUpdate(order);
 		
-		OrderNotes auditOrderNotes = populateAuditOrderNotes(order, "Order re-opened; status reverted to Pick Up", order.getModifiedBy()); 
-		genericDAO.saveOrUpdate(auditOrderNotes);
-		order.getOrderNotes().add(auditOrderNotes);
+		createAuditOrderNotes(order, "Order re-opened; status reverted to Pick Up", order.getModifiedBy()); 
 		
 		return "Order status changed successfully";
 	}
@@ -1440,30 +1435,37 @@ public class OrderController extends CRUDController<Order> {
 			}
 		}
 		
-		// TODO: why is permit updating even when not changed? Change to list of order permits instead?
-		// TODO: create/modified date not updated
+		// TODO: Why is permit/order permit updating even when not changed? Change to list of order permits instead?
+		// TODO: Create/modified date not updated
 		String permitIds = permitIdsBuff.substring(0, (permitIdsBuff.length() - 2));
 		List<Permit> permitList = genericDAO.executeSimpleQuery("select obj from Permit obj where obj.deleteFlag='1' and obj.id in (" 
 																					+ permitIds
 																					+ ")");
 		entity.setPermits(permitList);
 		
-		if (entity.getId() == null) {
-			OrderStatus orderStatus = retrieveOrderStatus(OrderStatus.ORDER_STATUS_OPEN);
-			entity.setOrderStatus(orderStatus);
-		}
-		
 		// TODO: Why both created by and modified by and why set if not changed?
 		setupOrderFees(entity);
 		
+		Long modifiedBy = getUser(request).getId();
+		
 		// TODO: Why both created by and modified by and why set if not changed?
-		setupOrderNotes(entity);
+		setupOrderNotes(entity, modifiedBy);
 		
 		setupOrderPayment(entity);
+		
+		String orderAuditMsg = StringUtils.EMPTY;
+		if (entity.getId() == null) {
+			orderAuditMsg = "Order created";
+			
+			OrderStatus orderStatus = retrieveOrderStatus(OrderStatus.ORDER_STATUS_OPEN);
+			entity.setOrderStatus(orderStatus);
+		} else {
+			orderAuditMsg = "Order updated";
+		}
 
 		genericDAO.saveOrUpdate(entity);
 		
-		Long modifiedBy = getUser(request).getId();
+		createAuditOrderNotes(entity, orderAuditMsg, modifiedBy);
 		
 		updatePermitStatus(permitList, "Assigned", modifiedBy);
 		
@@ -1560,21 +1562,11 @@ public class OrderController extends CRUDController<Order> {
 		}
 	}
 	
-	private void setupOrderNotes(Order order) {
+	private void setupOrderNotes(Order order, Long modifiedBy) {
 		List<OrderNotes> orderNotesList = order.getOrderNotes();
 		if (orderNotesList == null) {
 			orderNotesList = new ArrayList<OrderNotes>();
 			order.setOrderNotes(orderNotesList);
-		}
-		
-		Long createdBy = null;
-		String orderAuditMsg = StringUtils.EMPTY;
-		if (order.getId() == null) {
-			createdBy = order.getCreatedBy();
-			orderAuditMsg = "Order created";
-		} else {
-			createdBy = order.getModifiedBy();
-			orderAuditMsg = "Order updated";
 		}
 		
 		if (!orderNotesList.isEmpty()) {
@@ -1586,15 +1578,13 @@ public class OrderController extends CRUDController<Order> {
 				lastNotes.setNotesType(OrderNotes.NOTES_TYPE_USER);
 				lastNotes.setOrder(order);
 				lastNotes.setCreatedAt(Calendar.getInstance().getTime());
-				lastNotes.setCreatedBy(createdBy);
+				lastNotes.setCreatedBy(modifiedBy);
 				updateEnteredBy(lastNotes);
 			}
 		}
-		
-		populateAuditOrderNotes(order, orderAuditMsg, createdBy);
 	}
 	
-	private OrderNotes populateAuditOrderNotes(Order order, String orderAuditMsg, Long createdBy) {
+	private OrderNotes createAuditOrderNotes(Order order, String orderAuditMsg, Long createdBy) {
 		OrderNotes auditOrderNotes = new OrderNotes();
 		auditOrderNotes.setNotesType(OrderNotes.NOTES_TYPE_AUDIT);
 		auditOrderNotes.setNotes("***AUDIT: " + orderAuditMsg + "***");
@@ -1606,6 +1596,9 @@ public class OrderController extends CRUDController<Order> {
 		auditOrderNotes.setCreatedAt(Calendar.getInstance().getTime());
 		auditOrderNotes.setCreatedBy(createdBy);
 		updateEnteredBy(auditOrderNotes);
+		
+		genericDAO.save(auditOrderNotes);
+		order.getOrderNotes().add(auditOrderNotes);
 		
 		return auditOrderNotes;
 	}
