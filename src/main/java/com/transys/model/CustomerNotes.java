@@ -13,6 +13,11 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 @Entity
 @Table(name="customerNotes")
 public class CustomerNotes extends AbstractBaseModel {
+	@Transient
+	public static final String NOTES_TYPE_USER = "USER";
+	@Transient
+	public static final String NOTES_TYPE_AUDIT = "AUDIT";
+	
 	@ManyToOne
 	@JoinColumn(name="customerId")
 	@JsonBackReference
@@ -20,6 +25,9 @@ public class CustomerNotes extends AbstractBaseModel {
 
 	@Column(name="notes")
 	private String notes;
+	
+	@Column(name="notesType")
+	private String notesType;
 	
 	@Column(name="entered_by")
 	private String enteredBy;
@@ -47,5 +55,12 @@ public class CustomerNotes extends AbstractBaseModel {
 	public void setNotes(String notes) {
 		this.notes = notes;
 	}
-	
+
+	public String getNotesType() {
+		return notesType;
+	}
+
+	public void setNotesType(String notesType) {
+		this.notesType = notesType;
+	}
 }

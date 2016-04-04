@@ -46,6 +46,7 @@ import com.transys.model.OrderNotes;
 import com.transys.model.OrderPayment;
 import com.transys.model.OrderStatus;
 import com.transys.model.Permit;
+import com.transys.model.PermitNotes;
 //import com.transys.model.FuelVendor;
 //import com.transys.model.Location;
 import com.transys.model.SearchCriteria;
@@ -688,8 +689,17 @@ public class CustomerController extends CRUDController<Customer> {
 		
 		beforeSave(request, entity, model);
 		
+		Long modifiedBy = getUser(request).getId();
+		
 		// TODO: Why both created by and modified by and why set if not changed?
-		setupCustomerNotes(entity);
+		setupCustomerNotes(entity, modifiedBy);
+		
+		String customerAuditMsg = StringUtils.EMPTY;
+		if (entity.getId() == null) {
+			customerAuditMsg = "Customer created";
+		} else {
+			customerAuditMsg = "Customer updated";
+		}
 		
 		try {
 			genericDAO.saveOrUpdate(entity);
@@ -710,6 +720,8 @@ public class CustomerController extends CRUDController<Customer> {
 			
 			return urlContext + "/customer";
 		}
+		
+		createAuditCustomerNotes(entity, customerAuditMsg, modifiedBy);
 		
 		cleanUp(request);
 		
@@ -763,7 +775,6 @@ public class CustomerController extends CRUDController<Customer> {
 		}
 		
 		if (entity.getCustomer().getId() == null) {
-			
 			setupEmptyCreate(model);
 			
 			model.addAttribute("activeTab", "manageCustomer");
@@ -793,8 +804,11 @@ public class CustomerController extends CRUDController<Customer> {
 			}
 		}
 		
+		entity.setNotesType(CustomerNotes.NOTES_TYPE_USER);
 		updateEnteredBy(entity);
+		
 		genericDAO.saveOrUpdate(entity);
+		
 		cleanUp(request);
 		
 		Long customerId = entity.getCustomer().getId();
@@ -816,7 +830,7 @@ public class CustomerController extends CRUDController<Customer> {
 		notes.setCustomer(emptyCustomer);
 		model.addAttribute("notesModelObject", notes);
 	
-		List<BaseModel> notesList = genericDAO.executeSimpleQuery("select obj from CustomerNotes obj where obj.customer.id=" +  customerId + " and obj.deleteFlag='1' order by obj.id asc");
+		List<CustomerNotes> notesList = genericDAO.executeSimpleQuery("select obj from CustomerNotes obj where obj.customer.id=" +  customerId + " and obj.deleteFlag='1' order by obj.id asc");
 		model.addAttribute("notesList", notesList);
 		
 		Customer customer = new Customer();
@@ -825,7 +839,7 @@ public class CustomerController extends CRUDController<Customer> {
 		address.setCustomer(customer);
 		model.addAttribute("deliveryAddressModelObject", address);
 		
-		List<BaseModel> addressList = genericDAO.executeSimpleQuery("select obj from DeliveryAddress obj where obj.customer.id=" +  customerId + " and obj.deleteFlag='1' order by obj.line1 asc");
+		List<DeliveryAddress> addressList = genericDAO.executeSimpleQuery("select obj from DeliveryAddress obj where obj.customer.id=" +  customerId + " and obj.deleteFlag='1' order by obj.line1 asc");
 		model.addAttribute("deliveryAddressList", addressList);
 		
 		populateAggregartionValues(model, customerId);
@@ -839,14 +853,14 @@ public class CustomerController extends CRUDController<Customer> {
 		notes.setCustomer(emptyCustomer);
 		model.addAttribute("notesModelObject", notes);
 
-		List<BaseModel> notesList = new ArrayList<>();
+		List<CustomerNotes> notesList = new ArrayList<>();
 		model.addAttribute("notesList", notesList);
 		
 		DeliveryAddress address = new DeliveryAddress();
 		address.setCustomer(emptyCustomer);
 		model.addAttribute("deliveryAddressModelObject", address);
 		
-		List<BaseModel> addressList = new ArrayList<>();
+		List<DeliveryAddress> addressList = new ArrayList<>();
 		model.addAttribute("deliveryAddressList", addressList);
 	}
 	
@@ -855,39 +869,48 @@ public class CustomerController extends CRUDController<Customer> {
 		entity.setEnteredBy(user.getEmployee().getFullName());
 	}
 	
-	private void setupCustomerNotes(Customer customer) {
-		/*if (customer.getId() != null) {
-			// First notes should not be editable
-			return;
-		}*/
-		
+	private void setupCustomerNotes(Customer customer, Long modifiedBy) {
 		List<CustomerNotes> customerNotesList = customer.getCustomerNotes();
-		if (customerNotesList == null || customerNotesList.isEmpty()) {
-			return;
+		if (customerNotesList == null) {
+			customerNotesList = new ArrayList<CustomerNotes>();
+			customer.setCustomerNotes(customerNotesList);
 		}
 		
-		CustomerNotes aCustomerNotes = customerNotesList.get(0);
-		if (StringUtils.isEmpty(aCustomerNotes.getNotes())) {
-			customerNotesList.clear();
-			return;
+		if (!customerNotesList.isEmpty()) {
+			CustomerNotes lastNotes = customerNotesList.get(customerNotesList.size() - 1);
+			String notesStr = lastNotes.getNotes();
+			if (StringUtils.isEmpty(notesStr)) {
+				customerNotesList.remove(customerNotesList.size() - 1);
+			} else if (lastNotes.getCreatedBy() == null) {
+				lastNotes.setNotesType(CustomerNotes.NOTES_TYPE_USER);
+				lastNotes.setCustomer(customer);
+				lastNotes.setCreatedAt(Calendar.getInstance().getTime());
+				lastNotes.setCreatedBy(modifiedBy);
+				updateEnteredBy(lastNotes);
+			}
 		}
-		
-		aCustomerNotes.setCustomer(customer);
-		
-		Long createdBy = null;
-		if (customer.getId() == null) {
-			createdBy = customer.getCreatedBy();
-		} else {
-			createdBy = customer.getModifiedBy();
-		}
-		
-		aCustomerNotes.setCreatedBy(createdBy);
-		aCustomerNotes.setCreatedAt(Calendar.getInstance().getTime());
-		
-		updateEnteredBy(aCustomerNotes);
+	}
 	
-		//aCustomerNotes.setModifiedBy(customer.getModifiedBy());
-		//aCustomerNotes.setModifiedAt(customer.getModifiedAt());
+	private CustomerNotes createAuditCustomerNotes(Customer customer, String customerAuditMsg, Long createdBy) {
+		CustomerNotes auditCustomerNotes = new CustomerNotes();
+		auditCustomerNotes.setNotesType(CustomerNotes.NOTES_TYPE_AUDIT);
+		auditCustomerNotes.setNotes("***AUDIT: " + customerAuditMsg + "***");
+		
+		Customer emptyCustomer = new Customer();
+		emptyCustomer.setId(customer.getId());
+		auditCustomerNotes.setCustomer(emptyCustomer);
+		
+		auditCustomerNotes.setCreatedAt(Calendar.getInstance().getTime());
+		auditCustomerNotes.setCreatedBy(createdBy);
+		updateEnteredBy(auditCustomerNotes);
+		
+		genericDAO.save(auditCustomerNotes);
+		
+		if (customer.getCustomerNotes() != null) {
+			customer.getCustomerNotes().add(auditCustomerNotes);
+		}
+		
+		return auditCustomerNotes;
 	}
 	
 	@RequestMapping(method = RequestMethod.POST, value = "/saveDeliveryAddress.do")
@@ -943,7 +966,22 @@ public class CustomerController extends CRUDController<Customer> {
 			entity.setCreatedBy(existingDeliveryAddress.getCreatedBy());
 		}
 		
+		String customerAuditMsg = StringUtils.EMPTY;
+		if (entity.getId() == null) {
+			customerAuditMsg = "Delivery address created";
+		} else {
+			customerAuditMsg = "Delivery address updated";
+		}
+		
 		genericDAO.saveOrUpdate(entity);
+		
+		Long modifiedBy = getUser(request).getId();
+		Long customerId = entity.getCustomer().getId();
+		
+		Customer emptyCustomer = new Customer();
+		emptyCustomer.setId(customerId);
+		createAuditCustomerNotes(emptyCustomer, customerAuditMsg, modifiedBy);
+		
 		cleanUp(request);
 		
 		//return "redirect:/" + urlContext + "/list.do";
@@ -969,15 +1007,13 @@ public class CustomerController extends CRUDController<Customer> {
 		setupCreate(model, request);
 		//model.addAttribute("modelObject", entity);
 		
-		Long customerId = entity.getCustomer().getId();
-		
-		Customer emptyCustomer = new Customer();
-		emptyCustomer.setId(customerId);
+		Customer emptyCustomer2 = new Customer();
+		emptyCustomer2.setId(customerId);
 		CustomerNotes notes = new CustomerNotes();
-		notes.setCustomer(emptyCustomer);
+		notes.setCustomer(emptyCustomer2);
 		model.addAttribute("notesModelObject", notes);
 	
-		List<BaseModel> notesList = genericDAO.executeSimpleQuery("select obj from CustomerNotes obj where obj.customer.id=" +  customerId + " and obj.deleteFlag='1' order by obj.id asc");
+		List<CustomerNotes> notesList = genericDAO.executeSimpleQuery("select obj from CustomerNotes obj where obj.customer.id=" +  customerId + " and obj.deleteFlag='1' order by obj.id asc");
 		model.addAttribute("notesList", notesList);
 		
 		Customer customer = new Customer();
@@ -1038,7 +1074,22 @@ public class CustomerController extends CRUDController<Customer> {
 			}
 		}
 		
+		String customerAuditMsg = StringUtils.EMPTY;
+		if (entity.getId() == null) {
+			customerAuditMsg = "Delivery address created";
+		} else {
+			customerAuditMsg = "Delivery address updated";
+		}
+		
 		genericDAO.saveOrUpdate(entity);
+		
+		Long modifiedBy = getUser(request).getId();
+		Long customerId = entity.getCustomer().getId();
+		
+		Customer emptyCustomer = new Customer();
+		emptyCustomer.setId(customerId);
+		createAuditCustomerNotes(emptyCustomer, customerAuditMsg, modifiedBy);
+		
 		cleanUp(request);
 		
 		//return "redirect:/" + urlContext + "/list.do";
@@ -1116,7 +1167,17 @@ public class CustomerController extends CRUDController<Customer> {
 		entity.getDeliveryAddress().get(0).setCreatedBy(entity.getCreatedBy());
 		entity.getDeliveryAddress().get(0).setCreatedAt(entity.getCreatedAt());
 		
-		setupCustomerNotes(entity);
+		Long modifiedBy = getUser(request).getId();
+		
+		// TODO: Why both created by and modified by and why set if not changed?
+		setupCustomerNotes(entity, modifiedBy);
+		
+		String customerAuditMsg = StringUtils.EMPTY;
+		if (entity.getId() == null) {
+			customerAuditMsg = "Customer created";
+		} else {
+			customerAuditMsg = "Customer updated";
+		}
 		
 		try {
 			genericDAO.saveOrUpdate(entity);
@@ -1124,6 +1185,8 @@ public class CustomerController extends CRUDController<Customer> {
 			String errorMsg = "ErrorMsg: " + extractSaveErrorMsg(e);
 			return errorMsg;
 		}
+		
+		createAuditCustomerNotes(entity, customerAuditMsg, modifiedBy);
 		
 		cleanUp(request);
 		

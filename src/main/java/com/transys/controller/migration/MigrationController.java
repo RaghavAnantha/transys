@@ -38,6 +38,7 @@ import com.transys.core.report.generator.TransferStationIntakeReportGenerator;
 import com.transys.core.util.MimeUtil;
 import com.transys.core.util.ValidationUtil;
 import com.transys.model.Customer;
+import com.transys.model.CustomerNotes;
 import com.transys.model.CustomerStatus;
 import com.transys.model.CustomerType;
 import com.transys.model.DeliveryAddress;
@@ -47,6 +48,7 @@ import com.transys.model.DumpsterStatus;
 import com.transys.model.Order;
 import com.transys.model.SearchCriteria;
 import com.transys.model.State;
+import com.transys.model.User;
 import com.transys.model.migration.OldCustomer;
 import com.transys.model.migration.OldDeliveryAddress;
 import com.transys.model.migration.OldDumpster;
@@ -190,6 +192,9 @@ public class MigrationController extends CRUDController<Order> {
 			try {
 				genericDAO.save(aNewCustomer);
 				saveDeliveryAddress(aNewCustomer, anOldCustomer, oldAddressMap, addressDataNotImportedBuff);
+				
+				String customerAuditMsg = "Customer and delivery address uploaded";
+				createAuditCustomerNotes(aNewCustomer, customerAuditMsg, aNewCustomer.getId());
 			} catch (PersistenceException e) {
 				String errorMsg = extractCustomerSaveErrorMsg(e);
 				customerDataNotImportedBuff.append(anOldCustomer.getId())
@@ -203,6 +208,33 @@ public class MigrationController extends CRUDController<Order> {
 		dataNotImportedBuff.append(customerDataNotImportedBuff)
 								 .append("\n---------------------------------------------------------\n")
 								 .append(addressDataNotImportedBuff);
+	}
+	
+	private CustomerNotes createAuditCustomerNotes(Customer customer, String customerAuditMsg, Long createdBy) {
+		CustomerNotes auditCustomerNotes = new CustomerNotes();
+		auditCustomerNotes.setNotesType(CustomerNotes.NOTES_TYPE_AUDIT);
+		auditCustomerNotes.setNotes("***AUDIT: " + customerAuditMsg + "***");
+		
+		Customer emptyCustomer = new Customer();
+		emptyCustomer.setId(customer.getId());
+		auditCustomerNotes.setCustomer(emptyCustomer);
+		
+		auditCustomerNotes.setCreatedAt(Calendar.getInstance().getTime());
+		auditCustomerNotes.setCreatedBy(createdBy);
+		updateEnteredBy(auditCustomerNotes);
+		
+		genericDAO.save(auditCustomerNotes);
+		
+		if (customer.getCustomerNotes() != null) {
+			customer.getCustomerNotes().add(auditCustomerNotes);
+		}
+		
+		return auditCustomerNotes;
+	}
+	
+	private void updateEnteredBy(CustomerNotes entity) {
+		User user = genericDAO.getById(User.class, entity.getCreatedBy());
+		entity.setEnteredBy(user.getEmployee().getFullName());
 	}
 	
 	private String extractCustomerSaveErrorMsg(Exception e) {

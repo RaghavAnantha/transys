@@ -38,7 +38,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.transys.controller.editor.AbstractModelEditor;
 import com.transys.core.report.generator.ExcelReportGenerator;
 import com.transys.model.AbstractBaseModel;
-import com.transys.model.BaseModel;
 import com.transys.model.Customer;
 import com.transys.model.DeliveryAddress;
 import com.transys.model.LocationType;
@@ -91,9 +90,9 @@ public class PermitController extends CRUDController<Permit> {
 		List<Permit> listOfPermits = genericDAO.search(Permit.class, criteria, "id", null, null);
 		
 		for (Permit p : listOfPermits) {
-			List<BaseModel> orders = (List<BaseModel>)genericDAO.executeSimpleQuery("select obj.order from OrderPermits obj where obj.deleteFlag='1' and obj.permit.id=" +  p.getId() + " order by obj.id desc");
+			List<Order> orders = genericDAO.executeSimpleQuery("select obj.order from OrderPermits obj where obj.deleteFlag='1' and obj.permit.id=" +  p.getId() + " order by obj.id desc");
 			if (orders != null && orders.size() > 0) {
-				BaseModel order = orders.get(0);
+				Order order = orders.get(0);
 				p.setOrderId(order.getId());
 			}
 		}
@@ -339,7 +338,7 @@ public class PermitController extends CRUDController<Permit> {
 
 	private boolean validateMaxPermitsAllowable(OrderPermits orderPermitToBeEdited) {
 		// validate if this order has < 3 permits, else show alert
-		List<BaseModel> orderPermitsForThisOrder = (List<BaseModel>)genericDAO.executeSimpleQuery("select obj from OrderPermits obj where obj.deleteFlag='1' and obj.order.id=" +  orderPermitToBeEdited.getOrder().getId());
+		List<OrderPermits> orderPermitsForThisOrder = genericDAO.executeSimpleQuery("select obj from OrderPermits obj where obj.deleteFlag='1' and obj.order.id=" +  orderPermitToBeEdited.getOrder().getId());
 		if (orderPermitsForThisOrder != null && orderPermitsForThisOrder.size() >= MAX_NUMBER_OF_ASSOCIATED_PERMITS) {
 			//do not create modal, show alert
 			return false;
@@ -365,9 +364,9 @@ public class PermitController extends CRUDController<Permit> {
 			model.put("modelObject", permitToBeEdited);
 		} 
 		
-		List<BaseModel> orderPermits = (List<BaseModel>)genericDAO.executeSimpleQuery("select obj from OrderPermits obj where obj.deleteFlag='1' and obj.permit.id=" +  permitToBeEdited.getId() + " order by obj.id desc");
+		List<OrderPermits> orderPermits = genericDAO.executeSimpleQuery("select obj from OrderPermits obj where obj.deleteFlag='1' and obj.permit.id=" +  permitToBeEdited.getId() + " order by obj.id desc");
 		if (orderPermits != null && orderPermits.size() > 0) {
-			BaseModel orderPermitObj = orderPermits.get(0);
+			OrderPermits orderPermitObj = orderPermits.get(0);
 			model.addAttribute("associatedOrderID", orderPermitObj);
 			
 			// TODO: all fields should become non-editable except unrelated fields like parking meter fee / permit number
@@ -403,13 +402,13 @@ public class PermitController extends CRUDController<Permit> {
 		PermitNotes notes = new PermitNotes();
 		notes.setPermit(permitToBeEdited); 
 		model.addAttribute("notesModelObject", notes);
-		List<BaseModel> notesList = genericDAO.executeSimpleQuery("select obj from PermitNotes obj where obj.deleteFlag='1' and obj.permit.id=" +  permitToBeEdited.getId() + " order by obj.id asc");
+		List<PermitNotes> notesList = genericDAO.executeSimpleQuery("select obj from PermitNotes obj where obj.deleteFlag='1' and obj.permit.id=" +  permitToBeEdited.getId() + " order by obj.id asc");
 		model.addAttribute("notesList", notesList);
 	
 		PermitAddress permitAddress = new PermitAddress();
 		permitAddress.setPermit(permitToBeEdited); 
 		model.addAttribute("permitAddressModelObject", permitAddress);
-		List<BaseModel> permitAddressList = genericDAO.executeSimpleQuery("select obj from PermitAddress obj where obj.deleteFlag='1' and obj.permit.id=" +  permitToBeEdited.getId() + " order by obj.id asc");
+		List<PermitAddress> permitAddressList = genericDAO.executeSimpleQuery("select obj from PermitAddress obj where obj.deleteFlag='1' and obj.permit.id=" +  permitToBeEdited.getId() + " order by obj.id asc");
 		model.addAttribute("permitAddressList", permitAddressList);
 
 		return urlContext + "/permit";
@@ -530,10 +529,21 @@ public class PermitController extends CRUDController<Permit> {
 			
 			beforeSave(request, entity, model);
 			
+			Long modifiedBy = getUser(request).getId();
+			
 			// TODO: Why both created by and modified by and why set if not changed?
-			setupPermitNotes(entity);
+			setupPermitNotes(entity, modifiedBy);
+			
+			String permitAuditMsg = StringUtils.EMPTY;
+			if (entity.getId() == null) {
+				permitAuditMsg = "Permit created";
+			} else {
+				permitAuditMsg = "Permit updated";
+			}
 			
 			genericDAO.saveOrUpdate(entity);
+			
+			createAuditPermitNotes(entity, permitAuditMsg, modifiedBy);
 			
 			// The delivery address entered will automatically be stored as one of the Permit Addresses. Users can add more.
 			addDeliveryAddAsPermitAdd(request, entity);
@@ -541,6 +551,28 @@ public class PermitController extends CRUDController<Permit> {
 			cleanUp(request);
 			
 			return saveSuccess(model, request, entity);
+	}
+	
+	private PermitNotes createAuditPermitNotes(Permit permit, String permitAuditMsg, Long createdBy) {
+		PermitNotes auditPermitNotes = new PermitNotes();
+		auditPermitNotes.setNotesType(PermitNotes.NOTES_TYPE_AUDIT);
+		auditPermitNotes.setNotes("***AUDIT: " + permitAuditMsg + "***");
+		
+		Permit emptyPermit = new Permit();
+		emptyPermit.setId(permit.getId());
+		auditPermitNotes.setPermit(emptyPermit);
+		
+		auditPermitNotes.setCreatedAt(Calendar.getInstance().getTime());
+		auditPermitNotes.setCreatedBy(createdBy);
+		updateEnteredBy(auditPermitNotes);
+		
+		genericDAO.save(auditPermitNotes);
+		
+		if (permit.getPermitNotes() != null) {
+			permit.getPermitNotes().add(auditPermitNotes);
+		}
+		
+		return auditPermitNotes;
 	}
 
 	private String showPermitCreatePageWithError(HttpServletRequest request, Permit entity, ModelMap model, String errorMessage) {
@@ -557,20 +589,20 @@ public class PermitController extends CRUDController<Permit> {
 		System.out.println("select obj from DeliveryAddress obj where obj.deleteFlag='1' and obj.id=" + entity.getDeliveryAddress().getId());
 		model.addAttribute("editDeliveryAddress", deliveryAddressList);
 		
-		List<BaseModel> locationTypeList = genericDAO.executeSimpleQuery("select obj from LocationType obj where obj.deleteFlag='1' and obj.id=" + entity.getLocationType().getId());
+		List<LocationType> locationTypeList = genericDAO.executeSimpleQuery("select obj from LocationType obj where obj.deleteFlag='1' and obj.id=" + entity.getLocationType().getId());
 		System.out.println("select obj from LocationType obj where obj.deleteFlag='1' and obj.id=" + entity.getLocationType().getId());
 		model.addAttribute("locationType", locationTypeList);
 		
 		PermitNotes notes = new PermitNotes();
 		notes.setPermit(entity);
 		model.addAttribute("notesModelObject", notes);
-		List<BaseModel> notesList = new ArrayList<>(); 
+		List<PermitNotes> notesList = new ArrayList<>(); 
 		model.addAttribute("notesList", notesList);
 		
 		PermitAddress permitAddress = new PermitAddress();
 		permitAddress.setPermit(entity);
 		model.addAttribute("permitAddressModelObject", permitAddress);
-		List<BaseModel> permitAddressList =  new ArrayList<>();
+		List<PermitAddress> permitAddressList =  new ArrayList<>();
 		model.addAttribute("permitAddressList", permitAddressList);
 		
 		return urlContext + "/permit";
@@ -588,12 +620,7 @@ public class PermitController extends CRUDController<Permit> {
  		}
 	}
 
-	private void setupPermitNotes(Permit permit) {
-		/*if (permit.getId() != null) {
-			// First notes should not be editable
-			return;
-		}*/
-		
+	/*private void setupPermitNotes(Permit permit) {
 		List<PermitNotes> permitNotesList = permit.getPermitNotes();
 		if (permitNotesList == null || permitNotesList.isEmpty()) {
 			return;
@@ -621,6 +648,28 @@ public class PermitController extends CRUDController<Permit> {
 		
 		//aPermitNotes.setModifiedBy(order.getModifiedBy());
 		//aPermitNotes.setModifiedAt(order.getModifiedAt());
+	}*/
+	
+	private void setupPermitNotes(Permit permit, Long modifiedBy) {
+		List<PermitNotes> permitNotesList = permit.getPermitNotes();
+		if (permitNotesList == null) {
+			permitNotesList = new ArrayList<PermitNotes>();
+			permit.setPermitNotes(permitNotesList);
+		}
+		
+		if (!permitNotesList.isEmpty()) {
+			PermitNotes lastNotes = permitNotesList.get(permitNotesList.size() - 1);
+			String notesStr = lastNotes.getNotes();
+			if (StringUtils.isEmpty(notesStr)) {
+				permitNotesList.remove(permitNotesList.size() - 1);
+			} else if (lastNotes.getCreatedBy() == null) {
+				lastNotes.setNotesType(PermitNotes.NOTES_TYPE_USER);
+				lastNotes.setPermit(permit);
+				lastNotes.setCreatedAt(Calendar.getInstance().getTime());
+				lastNotes.setCreatedBy(modifiedBy);
+				updateEnteredBy(lastNotes);
+			}
+		}
 	}
 	
 	private void updateEnteredBy(PermitNotes entity) {
@@ -648,7 +697,7 @@ public class PermitController extends CRUDController<Permit> {
 				return ex.getMessage();
 			}*/
 			
-			List<BaseModel> orderPermits = (List<BaseModel>)genericDAO.executeSimpleQuery("select obj from OrderPermits obj where obj.deleteFlag='1' and obj.id=" +  entity.getOrderId()+ " order by obj.id desc");
+			List<OrderPermits> orderPermits = genericDAO.executeSimpleQuery("select obj from OrderPermits obj where obj.deleteFlag='1' and obj.id=" +  entity.getOrderId()+ " order by obj.id desc");
 			if (orderPermits != null && orderPermits.size() > 0) {
 				associatedOrderPermitEntry = (OrderPermits) orderPermits.get(0);
 			}
@@ -705,9 +754,21 @@ public class PermitController extends CRUDController<Permit> {
 			
 			beforeSave(request, entity, model);
 			
-			setupPermitNotes(entity);
+			Long modifiedBy = getUser(request).getId();
+			
+			// TODO: Why both created by and modified by and why set if not changed?
+			setupPermitNotes(entity, modifiedBy);
+			
+			String permitAuditMsg = StringUtils.EMPTY;
+			if (entity.getId() == null) {
+				permitAuditMsg = "Permit created";
+			} else {
+				permitAuditMsg = "Permit updated";
+			}
 			
 			genericDAO.saveOrUpdate(entity);
+			
+			createAuditPermitNotes(entity, permitAuditMsg, modifiedBy);
 			
 			// The delivery address entered will automatically be stored as one of the Permit Addresses. Users can add more.
 			addDeliveryAddAsPermitAdd(request, entity);
@@ -773,7 +834,7 @@ public class PermitController extends CRUDController<Permit> {
 
 	private OrderPermits validatePermitEndDate(Permit entity) throws Exception {
 		OrderPermits associatedOrderPermitEntry = null;
-		List<BaseModel> orderPermits = (List<BaseModel>)genericDAO.executeSimpleQuery("select obj from OrderPermits obj where obj.deleteFlag='1' and obj.id=" +  entity.getOrderId()+ " order by obj.id desc");
+		List<OrderPermits> orderPermits = genericDAO.executeSimpleQuery("select obj from OrderPermits obj where obj.deleteFlag='1' and obj.id=" +  entity.getOrderId()+ " order by obj.id desc");
 		if (orderPermits != null && orderPermits.size() > 0) {
 			associatedOrderPermitEntry = (OrderPermits) orderPermits.get(0);
 			if (entity.getEndDate().before(associatedOrderPermitEntry.getOrder().getDeliveryDate())) {
@@ -834,9 +895,21 @@ public class PermitController extends CRUDController<Permit> {
 		
 		beforeSave(request, entity, model);
 		
-		setupPermitNotes(entity);
+		Long modifiedBy = getUser(request).getId();
+		
+		// TODO: Why both created by and modified by and why set if not changed?
+		setupPermitNotes(entity, modifiedBy);
 		
 		genericDAO.saveOrUpdate(entity);
+		
+		String permitAuditMsg = StringUtils.EMPTY;
+		if (entity.getId() == null) {
+			permitAuditMsg = "Permit created";
+		} else {
+			permitAuditMsg = "Permit updated";
+		}
+		
+		createAuditPermitNotes(entity, permitAuditMsg, modifiedBy);
 		
 		// The delivery address entered will automatically be stored as one of the Permit Addresses. Users can add more.
 		addDeliveryAddAsPermitAdd(request, entity);
@@ -924,14 +997,14 @@ public class PermitController extends CRUDController<Permit> {
 		//notes.setPermit(entity);
 		notes.setPermit(emptyPermit);
 		model.addAttribute("notesModelObject", notes);
-		List<BaseModel> notesList = genericDAO.executeSimpleQuery("select obj from PermitNotes obj where obj.deleteFlag='1' and obj.permit.id=" +  entity.getId() + " order by obj.id asc");
+		List<PermitNotes> notesList = genericDAO.executeSimpleQuery("select obj from PermitNotes obj where obj.deleteFlag='1' and obj.permit.id=" +  entity.getId() + " order by obj.id asc");
 		model.addAttribute("notesList", notesList);
 		
 		PermitAddress permitAddress = new PermitAddress();
 		//permitAddress.setPermit(entity);
 		permitAddress.setPermit(emptyPermit);
 		model.addAttribute("permitAddressModelObject", permitAddress);
-		List<BaseModel> permitAddressList = genericDAO.executeSimpleQuery("select obj from PermitAddress obj where obj.deleteFlag='1' and obj.permit.id=" +  entity.getId() + " order by obj.line1 asc");
+		List<PermitAddress> permitAddressList = genericDAO.executeSimpleQuery("select obj from PermitAddress obj where obj.deleteFlag='1' and obj.permit.id=" +  entity.getId() + " order by obj.line1 asc");
 		model.addAttribute("permitAddressList", permitAddressList);
 		
 		return urlContext + "/permit";
@@ -1050,6 +1123,7 @@ public class PermitController extends CRUDController<Permit> {
 		
 		updateBaseProperties(request, entity);
 		
+		entity.setNotesType(PermitNotes.NOTES_TYPE_USER);
 		updateEnteredBy(entity);
 		
 		genericDAO.saveOrUpdate(entity);
@@ -1065,15 +1139,15 @@ public class PermitController extends CRUDController<Permit> {
 		notes.setPermit(permit);
 		model.addAttribute("notesModelObject", notes);
 		
-		List<BaseModel> notesList = genericDAO.executeSimpleQuery("select obj from PermitNotes obj where obj.deleteFlag='1' and obj.permit.id=" +  permitId + " order by obj.id asc");
+		List<PermitNotes> notesList = genericDAO.executeSimpleQuery("select obj from PermitNotes obj where obj.deleteFlag='1' and obj.permit.id=" +  permitId + " order by obj.id asc");
 		model.addAttribute("notesList", notesList);
 		
-		List<BaseModel> permitList = genericDAO.executeSimpleQuery("select obj from Permit obj where obj.deleteFlag='1' and obj.id=" + permitId);
+		List<Permit> permitList = genericDAO.executeSimpleQuery("select obj from Permit obj where obj.deleteFlag='1' and obj.id=" + permitId);
 		model.addAttribute("modelObject", permitList.get(0));
 		
 		model.addAttribute("editDeliveryAddress", ((Permit)permitList.get(0)).getCustomer().getDeliveryAddress());
 		
-		List<BaseModel> addressList = genericDAO.executeSimpleQuery("select obj from PermitAddress obj where obj.deleteFlag='1' and obj.permit.id=" +  permitId + " order by obj.line1 asc");
+		List<PermitAddress> addressList = genericDAO.executeSimpleQuery("select obj from PermitAddress obj where obj.deleteFlag='1' and obj.permit.id=" +  permitId + " order by obj.line1 asc");
 		model.addAttribute("permitAddressList", addressList);
 		
 		PermitAddress emptyPermitAddress = new PermitAddress();
@@ -1113,32 +1187,44 @@ public class PermitController extends CRUDController<Permit> {
 			entity.setCreatedAt(existingPermitAddress.getCreatedAt());
 			entity.setCreatedBy(existingPermitAddress.getCreatedBy());
 		}
+		
+		String permitAuditMsg = StringUtils.EMPTY;
+		if (entity.getId() == null) {
+			permitAuditMsg = "Permit address created";
+		} else {
+			permitAuditMsg = "Permit address updated";
+		}
+		
 		genericDAO.saveOrUpdate(entity);
+		
+		Long modifiedBy = getUser(request).getId();
+		Permit emptyPermit = new Permit();
+		emptyPermit.setId(entity.getPermit().getId());
+		createAuditPermitNotes(emptyPermit, permitAuditMsg, modifiedBy);
+		
 		cleanUp(request);
 
 		setupCreate(model, request);
 		
-		Permit permit = new Permit();
-		permit.setId(entity.getPermit().getId());
 		PermitAddress address = new PermitAddress();
-		address.setPermit(permit);
+		address.setPermit(emptyPermit);
 		model.addAttribute("permitAddressModelObject", address);
 		
 		Long permitId = entity.getPermit().getId();
-		List<BaseModel> permitList = genericDAO.executeSimpleQuery("select obj from Permit obj where obj.deleteFlag='1' and obj.id=" + permitId);
+		List<Permit> permitList = genericDAO.executeSimpleQuery("select obj from Permit obj where obj.deleteFlag='1' and obj.id=" + permitId);
 		model.addAttribute("modelObject", permitList.get(0));
 		
-		model.addAttribute("editDeliveryAddress", ((Permit)permitList.get(0)).getCustomer().getDeliveryAddress());
+		model.addAttribute("editDeliveryAddress", permitList.get(0).getCustomer().getDeliveryAddress());
 		
-		List<BaseModel> addressList = genericDAO.executeSimpleQuery("select obj from PermitAddress obj where obj.deleteFlag='1' and obj.permit.id=" +  permitId + " order by obj.id asc");
-		System.out.println("=======" + ((PermitAddress)addressList.get(addressList.size()-1)).getState());
+		List<PermitAddress> addressList = genericDAO.executeSimpleQuery("select obj from PermitAddress obj where obj.deleteFlag='1' and obj.permit.id=" +  permitId + " order by obj.id asc");
+		System.out.println("=======" + (addressList.get(addressList.size()-1)).getState());
 		model.addAttribute("permitAddressList", addressList);
 		
-		List<BaseModel> notesList = genericDAO.executeSimpleQuery("select obj from PermitNotes obj where obj.deleteFlag='1' and obj.permit.id=" +  permitId + " order by obj.id asc");
+		List<PermitNotes> notesList = genericDAO.executeSimpleQuery("select obj from PermitNotes obj where obj.deleteFlag='1' and obj.permit.id=" +  permitId + " order by obj.id asc");
 		model.addAttribute("notesList", notesList);
 		
 		PermitNotes emptyPermitNotes = new PermitNotes();
-		emptyPermitNotes.setPermit(permit);
+		emptyPermitNotes.setPermit(emptyPermit);
 		model.addAttribute("notesModelObject", emptyPermitNotes);
 		
 		model.addAttribute("msgCtx", "savePermitAddress");
