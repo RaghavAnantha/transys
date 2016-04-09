@@ -93,8 +93,8 @@ function processCustomerNotesForm() {
 
 <form:form name="customerNotesDatatable" id="customerNotesDatatable" class="tab-color">
 	<transys:datatable urlContext="customer" baseObjects="${notesList}"
-		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
-		pagingLink="search.do" searcheable="false" dataQualifier="manageCustomerNotes">
+		searchCriteria=null cellPadding="2"
+		searcheable="false" dataQualifier="manageCustomerNotes">
 		<transys:textcolumn headerText="Entered By" dataField="enteredBy" width="150px" />
 		<transys:textcolumn headerText="Date/Time" dataField="createdAt" dataFormat="MM/dd/yyy" width="75px"/>
 		<transys:textcolumn headerText="Notes/Comments" dataField="notes" />
