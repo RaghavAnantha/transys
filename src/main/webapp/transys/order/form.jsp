@@ -456,7 +456,6 @@ function populateTotalPermitFees() {
 		totalPermitFees += parseFloat(permitFee1);
 	}
 	var permitFee2Elem = $("#orderFees\\.permitFee" + 2);
-	alert(permitFee2Elem);
 	if (permitFee2Elem.length) {
 		var permitFee2 = permitFee2Elem.val();
 		if (permitFee2 != "") {
@@ -576,10 +575,10 @@ function validateOrderMissingData() {
 	if ($("[name='deliveryDate']").val() == "") {
 		missingData += "Delivery Date, "
 	}
-	if ($('#deliveryHourFrom').val() == "") {
+	if ($('#deliveryHourFrom').val() == "--") {
 		missingData += "Delivery Hour From, "
 	}
-	if ($('#deliveryHourTo').val() == "") {
+	if ($('#deliveryHourTo').val() == "--") {
 		missingData += "Delivery Hour To, "
 	}
 	if ($('#dumpsterLocationSelect').val() == "") {
@@ -594,9 +593,11 @@ function validateOrderMissingData() {
 	if ($('#materialType').val() == "") {
 		missingData += "Material Type, "
 	}
-	if ($('#permits\\[0\\]').val() == ""  && $('#permits\\[1\\]').val() == "" && $('#permits\\[2\\]').val() == "") {
+	
+	if (!validateMissingPermit()) {
 		missingData += "Permit, "
 	}
+	
 	if ($('#orderFees\\.dumpsterPrice').val() == "") {
 		missingData += "Dumpster Price, "
 	}
@@ -648,6 +649,28 @@ function validateAllOrderText() {
 	}
 	
 	return validationMsg;
+}
+
+function validateMissingPermit() {
+	if ($('#permits\\[0\\]').val() == "") {
+		return false;
+	}
+	
+	var permit1Elem = $('#permits\\[1\\]');
+	if (permit1Elem.length) {
+		if (permit1Elem.val() == "") {
+			return false;
+		}
+	}
+	
+	var permit2Elem = $('#permits\\[2\\]');
+	if (permit2Elem.length) {
+		if (permit2Elem.val() == "") {
+			return false;
+		}
+	}
+	
+	return true;
 }
 
 function validateMissingOrderPayment(index) {
@@ -812,11 +835,14 @@ function validatePaymentReferenceNum(index) {
 function validatePermitFees(index) {
 	var validationMsg = "";
 	
-	var permitFees = $('#orderFees\\.permitFee' + index).val();
-	if (permitFees != "") {
-		if (!validateAmount(permitFees, 500)) {
-			validationMsg += "Permit " + index + " Fee, "
-		}
+	var permitFeeElem = $('#orderFees\\.permitFee' + index);
+	if (!permitFeeElem.length) {
+		return validationMsg;
+	}
+	
+	var permitFee = permitFeeElem.val();
+	if (!validateAmount(permitFee, 500)) {
+		validationMsg += "Permit " + index + " Fee, "
 	}
 	
 	return validationMsg;
