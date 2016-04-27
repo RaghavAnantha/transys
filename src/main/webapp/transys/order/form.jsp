@@ -217,7 +217,7 @@ function populateMaterialTypes() {
 	});
 }
 
-function populateDusmpsterPrice() {
+function populateDumpsterPrice() {
 	var dumpsterPriceInput = $("#orderFees\\.dumpsterPrice");
 	dumpsterPriceInput.val("");
 	
@@ -506,7 +506,11 @@ function populateTotalFees() {
 	var totalAdditionalFees = $("#orderFees\\.totalAdditionalFees").val();
 	var discountAmount = $("#orderFees\\.discountAmount").val();
 	
-	var totalFees = parseFloat(dumpsterPrice);
+	var totalFees = parseFloat("0.00");
+	
+	if (dumpsterPrice != "") {
+		totalFees += parseFloat(dumpsterPrice);
+	}
 	if (overweightFee != "") {
 		totalFees += parseFloat(overweightFee);
 	}
@@ -594,9 +598,9 @@ function validateOrderMissingData() {
 		missingData += "Material Type, "
 	}
 	
-	if (!validateMissingPermit()) {
+	/*if (!validateMissingPermit()) {
 		missingData += "Permit, "
-	}
+	}*/
 	
 	if ($('#orderFees\\.dumpsterPrice').val() == "") {
 		missingData += "Dumpster Price, "
@@ -837,6 +841,12 @@ function validatePermitFees(index) {
 	
 	var permitFeeElem = $('#orderFees\\.permitFee' + index);
 	if (!permitFeeElem.length) {
+		return validationMsg;
+	}
+	
+	var permitNumbersSelect = $("#permits\\[" + (index-1) + "\\]");
+	var permitId = permitNumbersSelect.val();
+	if (permitId == "") {
 		return validationMsg;
 	}
 	
@@ -1137,7 +1147,7 @@ function updateTotalPaid() {
 			</td>
 			<td class="form-left">Material Type<span class="errorMessage">*</span></td>
 			<td>
-				<form:select id="materialType" cssClass="flat form-control input-sm" style="width:172px !important" path="materialType"  onChange="return populateDusmpsterPrice();"> 
+				<form:select id="materialType" cssClass="flat form-control input-sm" style="width:172px !important" path="materialType"  onChange="return populateDumpsterPrice();"> 
 					<form:option value="">-----Please Select-----</form:option>
 					<form:options items="${materialTypes}" itemValue="id" itemLabel="materialName" />
 				</form:select> 
@@ -1154,7 +1164,7 @@ function updateTotalPaid() {
 	</table>
 	<table id="form-table" class="table">
 		<tr>
-	    	<td class="form-left">Permit1 Class<span class="errorMessage">*</span></td>
+	    	<td class="form-left">Permit1 Class<span class="errorMessage"></span></td>
 	        <td>
 				<select class="flat form-control input-sm" id="permitClasses1" name="permitClasses1" style="width:172px !important" onChange="return handlePermitClassChange(1);">
 					<option value="">-----Please Select-----</option>
@@ -1201,7 +1211,7 @@ function updateTotalPaid() {
 			</c:if>
 	    </tr>
 	    <tr>
-	    	<td class="form-left">Permit1 Type<span class="errorMessage">*</span></td>
+	    	<td class="form-left">Permit1 Type<span class="errorMessage"></span></td>
 	        <td>
 				<select class="flat form-control input-sm" id="permitTypes1" name="permitTypes1" style="width:172px !important" onChange="return populatePermitNumbers(1);">
 					<option value="">-----Please Select-----</option>
@@ -1248,7 +1258,7 @@ function updateTotalPaid() {
 			</c:if>
 	    </tr>
 	    <tr>
-	    	<td class="form-left">Permit1 Number<span class="errorMessage">*</span></td>
+	    	<td class="form-left">Permit1 Number<span class="errorMessage"></span></td>
 	        <td>
 	        	<label style="display: inline-block; font-weight: normal">
 		        	<select class="flat form-control input-sm" id="permits[0]" name="permits[0]" style="width:172px !important" onChange="return retrievePermitDetails(1);">
@@ -1274,7 +1284,7 @@ function updateTotalPaid() {
 				</label>
 	        </td>
 	        <c:if test="${modelObject.permits != null and modelObject.permits[1] != null and modelObject.permits[1].number != null}">
-				<td class="form-left">Permit2 Number<span class="errorMessage">*</span></td>
+				<td class="form-left">Permit2 Number<span class="errorMessage"></span></td>
 		        <td>
 		        	<select class="flat form-control input-sm" id="permits[1]" name="permits[1]" style="width:172px !important" onChange="return retrievePermitDetails(2);">
 						<option value="">-----Please Select-----</option>
@@ -1291,7 +1301,7 @@ function updateTotalPaid() {
 		        </td>
 			</c:if>
 			<c:if test="${modelObject.permits != null and modelObject.permits[2] != null and modelObject.permits[2].number != null}">
-				<td class="form-left">Permit3 Number<span class="errorMessage">*</span></td>
+				<td class="form-left">Permit3 Number<span class="errorMessage"></span></td>
 		        <td>
 		        	<select class="flat form-control input-sm" id="permits[2]" name="permits[2]" style="width:172px !important" onChange="return retrievePermitDetails(3);">
 						<option value="">-----Please Select-----</option>

@@ -456,6 +456,9 @@ public class OrderController extends CRUDController<Order> {
 	
 	private List<List<Permit>> retrievePermitsOfChosenType(Order order) {
 		List<List<Permit>> allPermitsOfChosenTypesList = new ArrayList<List<Permit>>();
+		if (order.getPermits() == null || order.getPermits().isEmpty()) {
+			return allPermitsOfChosenTypesList;
+		}
 		
 		for(Permit aChosenPermit : order.getPermits()) {
 			if (aChosenPermit != null && aChosenPermit.getId() != null) {
@@ -1428,20 +1431,27 @@ public class OrderController extends CRUDController<Order> {
 			originallyAssignedPermits = genericDAO.executeSimpleQuery("select obj.permits from Order obj where obj.deleteFlag='1' and obj.id=" + entity.getId());
 		}
 		
-		StringBuffer permitIdsBuff = new StringBuffer();
-		for (Permit aPermit : entity.getPermits()) {
-			if (aPermit != null && aPermit.getId() != null) {
-				permitIdsBuff.append(aPermit.getId().toString() + ", ");
-			}
+		if (entity.getPermits() == null || entity.getPermits().isEmpty() || entity.getPermits().get(0) == null) {
+			entity.setPermits(new ArrayList<Permit>());
 		}
 		
-		// TODO: Why is permit/order permit updating even when not changed? Change to list of order permits instead?
-		// TODO: Create/modified date not updated
-		String permitIds = permitIdsBuff.substring(0, (permitIdsBuff.length() - 2));
-		List<Permit> permitList = genericDAO.executeSimpleQuery("select obj from Permit obj where obj.deleteFlag='1' and obj.id in (" 
-																					+ permitIds
-																					+ ")");
-		entity.setPermits(permitList);
+		List<Permit> permitList = null;
+		if (!entity.getPermits().isEmpty()) {
+			StringBuffer permitIdsBuff = new StringBuffer();
+			for (Permit aPermit : entity.getPermits()) {
+				if (aPermit != null && aPermit.getId() != null) {
+					permitIdsBuff.append(aPermit.getId().toString() + ", ");
+				}
+			}
+			
+			// TODO: Why is permit/order permit updating even when not changed? Change to list of order permits instead?
+			// TODO: Create/modified date not updated
+			String permitIds = permitIdsBuff.substring(0, (permitIdsBuff.length() - 2));
+			permitList = genericDAO.executeSimpleQuery("select obj from Permit obj where obj.deleteFlag='1' and obj.id in (" 
+																						+ permitIds
+																						+ ")");
+			entity.setPermits(permitList);
+		}
 		
 		// TODO: Why both created by and modified by and why set if not changed?
 		setupOrderFees(entity);
@@ -1467,7 +1477,9 @@ public class OrderController extends CRUDController<Order> {
 		
 		createAuditOrderNotes(entity, orderAuditMsg, modifiedBy);
 		
-		updatePermitStatus(permitList, "Assigned", modifiedBy);
+		if (permitList != null && !permitList.isEmpty()) {
+			updatePermitStatus(permitList, "Assigned", modifiedBy);
+		}
 		
 		updateIfPermitsChanged(originallyAssignedPermits, permitList, modifiedBy);
 		
