@@ -148,20 +148,22 @@ public class OrderController extends CRUDController<Order> {
 			materialCategoryId = order.getMaterialType().getMaterialCategory().getId();
 		}
 		
-		Long dumsterSizeId = order.getDumpsterSize().getId();
+		Long dumpsterSizeId = order.getDumpsterSize().getId();
 		
-		List<MaterialCategory> materialCategoryList = retrieveMaterialCategories(dumsterSizeId);
+		List<MaterialCategory> materialCategoryList = retrieveMaterialCategories(dumpsterSizeId);
 		model.addAttribute("materialCategories", materialCategoryList);
 		
-		List<MaterialType> materialTypeList = retrieveMaterialTypes(dumsterSizeId, materialCategoryId);
+		List<MaterialType> materialTypeList = retrieveMaterialTypes(dumpsterSizeId, materialCategoryId);
 		model.addAttribute("materialTypes", materialTypeList);
-		
+	
+		List<PermitClass> permitClassList = new ArrayList<PermitClass>();
 		List<Permit> permits = order.getPermits();
 		if (permits != null && !permits.isEmpty()) {
-			List<PermitClass> permitClassList = new ArrayList<PermitClass>();
 			permitClassList.add(permits.get(0).getPermitClass());
-			model.addAttribute("permitClasses", permitClassList);
+		} else {
+			permitClassList = retrievePermitClass(dumpsterSizeId);
 		}
+		model.addAttribute("permitClasses", permitClassList);
    }
 	
 	/*
@@ -173,7 +175,7 @@ public class OrderController extends CRUDController<Order> {
 		model.addAttribute("orderIds", genericDAO.executeSimpleQuery("select obj.id from Order obj where obj.deleteFlag='1' order by obj.id asc"));
 		
 		List<Order> orderList = genericDAO.executeSimpleQuery("select obj from Order obj where obj.deleteFlag='1' order by obj.id asc");
-//		model.addAttribute("order", orderList);
+		//model.addAttribute("order", orderList);
 		
 		SortedSet<String> contactNameSet = new TreeSet<String>();
 		SortedSet<String> phoneSet = new TreeSet<String>();
@@ -210,7 +212,7 @@ public class OrderController extends CRUDController<Order> {
       populateDeliveryTimeSettings(model);
       
       String driverRole = "DRIVER";
-      List<BaseModel> driversList = genericDAO.executeSimpleQuery("select obj from User obj where obj.deleteFlag='1' and obj.id!=0 and obj.accountStatus=1 and obj.role.name='" + driverRole + "' order by obj.employee.firstName asc");
+      List<User> driversList = genericDAO.executeSimpleQuery("select obj from User obj where obj.deleteFlag='1' and obj.id!=0 and obj.accountStatus=1 and obj.role.name='" + driverRole + "' order by obj.employee.firstName asc");
       model.addAttribute("drivers", driversList);
 	}
 	
@@ -1198,7 +1200,7 @@ public class OrderController extends CRUDController<Order> {
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/retrievePermitClass.do")
 	public @ResponseBody String retrievePermitClass(ModelMap model, HttpServletRequest request,
-														    @RequestParam(value = "dumpsterSizeId") String dumpsterSizeId) {
+														    @RequestParam(value = "dumpsterSizeId") Long dumpsterSizeId) {
 		List<PermitClass> permitClassList = retrievePermitClass(dumpsterSizeId);
 		
 		ObjectMapper objectMapper = new ObjectMapper();
@@ -1267,7 +1269,7 @@ public class OrderController extends CRUDController<Order> {
 		}
 	}
 	
-	private List<PermitClass> retrievePermitClass(String dumpsterSizeId) {
+	private List<PermitClass> retrievePermitClass(Long dumpsterSizeId) {
 		String permitClassQuery = "select obj from DumpsterSize obj where obj.deleteFlag='1' and ";
 		permitClassQuery += "obj.size.id=" + dumpsterSizeId;
 		
@@ -1648,12 +1650,6 @@ public class OrderController extends CRUDController<Order> {
 	}*/
 	
 	public String saveSuccess(ModelMap model, HttpServletRequest request, Order entity) {
-		if (entity.getModifiedBy() == null) {
-			setupCreate(model, request);
-		} else {
-			setupCreate(model, request, entity);
-		}
-		
 		model.addAttribute("msgCtx", "manageOrder");
 		model.addAttribute("msg", "Order saved successfully");
 		
@@ -1663,6 +1659,8 @@ public class OrderController extends CRUDController<Order> {
 		
 		//EMPTY_ORDER after save change
 		if (entity.getModifiedBy() == null) {
+			setupCreate(model, request);
+			
 			Order emptyOrder = new Order();
 			model.addAttribute("modelObject", emptyOrder);
 			
@@ -1670,6 +1668,8 @@ public class OrderController extends CRUDController<Order> {
 			notes.setOrder(emptyOrder);
 			model.addAttribute("notesModelObject", notes);
 		} else {
+			setupCreate(model, request, entity);
+			
 			model.addAttribute("modelObject", entity);
 			
 			Order emptyOrder = new Order();
