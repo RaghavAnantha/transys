@@ -213,8 +213,8 @@ function processPickupDriverForm() {
 	<table id="form-table" class="table">
 		<tr>
 			<td colspan="2">
-				<div id="processOrderErrorMessage" style="color:red; font-size:14px; vertical-align:center;"></div>
-   				<div id="processOrderSuccessMessage" style="color:green; font-size:14px; vertical-align:center;"></div>
+				<div id="processOrderErrorMessage" class="error" style="padding:0px;"></div>
+   				<div id="processOrderSuccessMessage" class="message" style="padding:0px;"></div>
 			</td>
 		</tr>
 		<tr>
