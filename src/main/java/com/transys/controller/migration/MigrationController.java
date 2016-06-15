@@ -194,7 +194,7 @@ public class MigrationController extends CRUDController<Order> {
 				saveDeliveryAddress(aNewCustomer, anOldCustomer, oldAddressMap, addressDataNotImportedBuff);
 				
 				String customerAuditMsg = "Customer and delivery address uploaded";
-				createAuditCustomerNotes(aNewCustomer, customerAuditMsg, aNewCustomer.getId());
+				createAuditCustomerNotes(aNewCustomer, customerAuditMsg, aNewCustomer.getCreatedBy());
 			} catch (PersistenceException e) {
 				String errorMsg = extractCustomerSaveErrorMsg(e);
 				customerDataNotImportedBuff.append(anOldCustomer.getId())
