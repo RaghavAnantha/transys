@@ -37,6 +37,8 @@ public class LoginUserController extends CRUDController<User> {
 	@Override
 	public void initBinder(WebDataBinder binder) {
 		binder.registerCustomEditor(EmployeeStatus.class, new AbstractModelEditor(EmployeeStatus.class));
+		binder.registerCustomEditor(Employee.class, new AbstractModelEditor(Employee.class));
+		binder.registerCustomEditor(Role.class, new AbstractModelEditor(Role.class));
 		super.initBinder(binder);
 	}
 	
@@ -56,7 +58,7 @@ public class LoginUserController extends CRUDController<User> {
 		// TODO:
 		criteria.getSearchMap().remove("_csrf");
 		criteria.setPageSize(25);
-		model.addAttribute("list",genericDAO.search(User.class, criteria));
+		model.addAttribute("list", genericDAO.search(User.class, criteria, "employee.firstName", null, null));
 		return urlContext + "/list";
 	}
 	
@@ -91,7 +93,7 @@ public class LoginUserController extends CRUDController<User> {
 		setupCreate(model, request);
 		model.addAttribute("msgCtx", "manageLoginUsers");
 		
-		// encode the password before storing in database
+		// Encode the password before storing in database
 		entity.setPassword(passwordEncoder.encode(entity.getPassword()));
 		try {
 			beforeSave(request, entity, model);

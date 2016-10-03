@@ -119,7 +119,7 @@ function validateUserLoginDataFormat() {
 	</jsp:include>
 	<table id="form-table" class="table">
 		<tr>
-		<td class="form-left"><transys:label code="Employee Name" /><span class="errorMessage">*</span></td>
+		<td class="form-left">Employee Name<span class="errorMessage">*</span></td>
 			<td>
 				<form:select cssClass="flat form-control input-sm" path="employee" style="width: 175px !important"> 
 					<form:option value="">-----Please Select-----</form:option>
@@ -129,22 +129,21 @@ function validateUserLoginDataFormat() {
 			</td>
 		</tr>
 		<tr>
-			<td class="form-left"><transys:label code="Username" /><span class="errorMessage">*</span></td>
+			<td class="form-left">Username<span class="errorMessage">*</span></td>
 			<td ><form:input id="username" path="username" cssClass="flat" style="width: 175px !important"/>
 			<td colspan=10></td>
 		</tr>
 		<tr>
-			<td class="form-left"><transys:label code="Password" /><span
-				class="errorMessage">*</span></td>
+			<td class="form-left">Password<span class="errorMessage">*</span></td>
 			<td><form:input id="passwordInput" type="password" path="password" cssClass="flat" style="width: 175px !important" /> <br>
 			<form:errors path="password" cssClass="errorMessage" /></td>
 		</tr>
 		<tr>
-			<td class="form-left"><transys:label code="Confirm Password" /><span class="errorMessage">*</span></td>
+			<td class="form-left">Confirm Password<span class="errorMessage">*</span></td>
 			<td><input id="changePassword" type="password" class="flat" style="width: 175px !important"/> <br>
 		</tr>
 		<tr>
-		<td class="form-left"><transys:label code="Role" /><span class="errorMessage">*</span></td>
+		<td class="form-left">Role<span class="errorMessage">*</span></td>
 			<td>
 				<form:select cssClass="flat form-control input-sm" path="role" style="width:175px !important">
 					<form:option value="">-----Please Select-----</form:option>
@@ -154,7 +153,7 @@ function validateUserLoginDataFormat() {
 			</td>
 		</tr>
 		<tr>
-		<td class="form-left"><transys:label code="Account Status" /></td>
+		<td class="form-left">Account Status</td>
 			<td>
 				<form:select cssClass="flat form-control input-sm" path="accountStatus" style="width:175px !important">
 					<form:option value="">-----Please Select-----</form:option>
