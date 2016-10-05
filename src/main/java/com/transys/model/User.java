@@ -34,6 +34,7 @@ public class User extends AbstractBaseModel implements Comparable, Auditable {
 	
 	@Column(name = "username")
 	@NotEmpty(message = "User name is required.")
+	@Size(min = 5, message = "User name should be of minimum 5 characters")
 	private String username;
 	
 	@Column(name = "password")

@@ -304,7 +304,7 @@ CREATE TABLE `employee` (
 
 LOCK TABLES `employee` WRITE;
 /*!40000 ALTER TABLE `employee` DISABLE KEYS */;
-INSERT INTO `employee` (`id`,`firstName`,`lastName`,`jobTitleId`,`address`,`city`,`state`,`zip`,`phone`,`email`,`hireDate`,`leaveDate`,`comments`, `created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`,`status`,`employeeId`) VALUES (1,'Raghav','Anantha',1,'123 Claude Freeman Dr','Chicago',1,'28262','773-987-2221','kasiaFigura@gmail.com','2015-09-02 00:00:00',NULL,NULL,'2015-09-24 12:21:31',1,'2015-09-24 14:39:45',1,1,1,'007');
+INSERT INTO `employee` (`id`,`firstName`,`lastName`,`jobTitleId`,`address`,`city`,`state`,`zip`,`phone`,`email`,`hireDate`,`leaveDate`,`comments`, `created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`,`status`,`employeeId`) VALUES (1,'admin','admin',6,'123 Claude Freeman Dr','Chicago',1,'28262','773-987-2221','kasiaFigura@gmail.com','2015-09-02 00:00:00',NULL,NULL,'2015-09-24 12:21:31',1,'2015-09-24 14:39:45',1,1,1,'007');
 INSERT INTO `employee` (`id`,`firstName`,`lastName`,`jobTitleId`,`address`,`city`,`state`,`zip`,`phone`,`email`,`hireDate`,`leaveDate`,`comments`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`,`status`,`employeeId`) VALUES (2,'Kasia','Figura',5,'5521 Milwaukee','Chicago',1,'60630','773-987-2221','kasiaFigura@gmail.com','2015-09-01 00:00:00',NULL,NULL,'2015-09-24 12:21:31',1,NULL,NULL,1,1,'123');
 INSERT INTO `employee` (`id`,`firstName`,`lastName`,`jobTitleId`,`address`,`city`,`state`,`zip`,`phone`,`email`,`hireDate`,`leaveDate`,`comments`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`,`status`,`employeeId`) VALUES (4,'Scott','Eaker',2,'5521 Milwaukee','Chicago',1,'60630','773-987-2221','kasiaFigura@gmail.com','2015-09-01 00:00:00',NULL,NULL,'2015-09-24 12:28:04',1,NULL,NULL,1,1,'234');
 INSERT INTO `employee` (`id`,`firstName`,`lastName`,`jobTitleId`,`address`,`city`,`state`,`zip`,`phone`,`email`,`hireDate`,`leaveDate`,`comments`,`created_at`,`created_by`,`modified_at`,`modified_by`,`delete_flag`,`status`,`employeeId`) VALUES (5,'Aldo','Valazquez',7,'5521 Milwaukee','Chicago',1,'60630','773-987-2221','kasiaFigura@gmail.com','2015-09-01 00:00:00',NULL,NULL,'2015-09-24 12:40:41',1,NULL,NULL,1,1,'345');
@@ -1067,10 +1067,10 @@ INSERT INTO `transys`.`userInfo`
 VALUES ('1', '2012-03-16 14:25:34',1, 1, 1, '2015-09-19 12:41:30', '$2a$10$9Jz3jhE0r8YDBGOrVficE.QyU277kdCCcOdyl4Smw4dzc2838hnku', 'admin', 1, '1');
 INSERT INTO `transys`.`userInfo` 
 (`id`, `created_at`, `created_by`, `employeeId`, `accountStatusId`, `lastLoginDate`, `password`, `username`, `roleId`, `delete_flag`) 
-VALUES ('2', '2012-03-16 14:25:34',1, 5, 1, '2015-09-19 12:41:30', '$2a$10$QLEcB0yKXegpSdlNrAGW7.rFRZm4tFkEDoGkG.Jg.k2hoTtCgBrYi', 'aldo', 6, '1');
+VALUES ('2', '2012-03-16 14:25:34',1, 5, 1, '2015-09-19 12:41:30', '$2a$10$QLEcB0yKXegpSdlNrAGW7.rFRZm4tFkEDoGkG.Jg.k2hoTtCgBrYi', 'aldoval', 6, '1');
 INSERT INTO `transys`.`userInfo` 
 (`id`, `created_at`, `created_by`, `employeeId`, `accountStatusId`,`lastLoginDate`, `password`, `username`, `roleId`, `delete_flag`) 
-VALUES ('3', '2012-03-16 14:25:34',1, 4, 1, '2015-09-19 12:41:30', '$2a$10$Did5mpz3ROVMNa9ZQemgwObia5AuGs8iNmMw0wxIFHb39/CCL2cki', 'thomas', 6, '1');
+VALUES ('3', '2012-03-16 14:25:34',1, 4, 1, '2015-09-19 12:41:30', '$2a$10$Did5mpz3ROVMNa9ZQemgwObia5AuGs8iNmMw0wxIFHb39/CCL2cki', 'scotteak', 6, '1');
 
 /*!40000 ALTER TABLE `userInfo` ENABLE KEYS */;
 UNLOCK TABLES;

@@ -217,6 +217,15 @@ function validateName(name, validLength) {
 	return namePattern.test(name);
 }
 
+function validateUserName(userName, validLength) {
+	if (userName.trim() == "") {
+		return false;
+	}
+	
+	var userNamePattern = new RegExp("^[a-zA-Z0-9]{5," + validLength + "}$");
+	return userNamePattern.test(userName);
+}
+
 function validatePassword(passwd, validLength) {
 	if (passwd.trim() == "") {
 		return false;

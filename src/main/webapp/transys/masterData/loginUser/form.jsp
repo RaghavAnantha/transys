@@ -75,7 +75,7 @@ function validateUserLoginDataFormat() {
 	
 	var userName = $('#username').val();
 	if (userName != "") {
-		if (!validateName(userName, 15)) {
+		if (!validateUserName(userName, 15)) {
 			validationMsg += "Username, "
 		}
 	}
