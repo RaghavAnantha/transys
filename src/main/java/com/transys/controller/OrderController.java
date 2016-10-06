@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -642,7 +643,7 @@ public class OrderController extends CRUDController<Order> {
 		Long materialCategoryId = entity.getMaterialType().getMaterialCategory().getId();
 		BigDecimal netWeightTonnage = entity.getNetWeightTonnage();
 		BigDecimal overweightFee = retrieveOverweightFee(dumpsterSizeId, materialCategoryId, netWeightTonnage);
-		overweightFee = overweightFee.setScale(2);
+		overweightFee = overweightFee.setScale(2, RoundingMode.UP);
 		
 		OrderFees orderFees = entity.getOrderFees();
 		orderFees.setOverweightFee(overweightFee);
