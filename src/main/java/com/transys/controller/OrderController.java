@@ -1066,8 +1066,8 @@ public class OrderController extends CRUDController<Order> {
 			Date deliveryDate = formatter.parse(deliveryDateStr);
 			Date requiredEndDate = DateUtils.addDays(deliveryDate, requestedPermitDays);
 			
-			//2015-10-03 00:00:00.0
-			formatter.applyPattern("yyyy-MM-dd 00:00:00.0");
+			//2015-10-03 00:00:00
+			formatter.applyPattern("yyyy-MM-dd 00:00:00");
 			requiredEndDateStr = formatter.format(requiredEndDate);
 		} catch (ParseException pe) {
 			//TODO: handle error
