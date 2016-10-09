@@ -1064,10 +1064,10 @@ public class OrderController extends CRUDController<Order> {
 		SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
 		try {
 			Date deliveryDate = formatter.parse(deliveryDateStr);
-			Date requiredEndDate = DateUtils.addDays(deliveryDate, requestedPermitDays);
+			Date requiredEndDate = DateUtils.addDays(deliveryDate, (requestedPermitDays - 1));
 			
-			//2015-10-03 00:00:00
-			formatter.applyPattern("yyyy-MM-dd 00:00:00");
+			//2015-10-03 00:00:00.0
+			formatter.applyPattern("yyyy-MM-dd 00:00:00.0");
 			requiredEndDateStr = formatter.format(requiredEndDate);
 		} catch (ParseException pe) {
 			//TODO: handle error
