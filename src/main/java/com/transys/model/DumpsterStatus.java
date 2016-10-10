@@ -10,6 +10,8 @@ import javax.persistence.Transient;
 public class DumpsterStatus extends AbstractBaseModel {
 	@Transient
 	public static final String DUMPSTER_STATUS_AVAILABLE = "Available";
+	@Transient
+	public static final String DUMPSTER_STATUS_DROPPED_OFF = "Dropped Off";
 	
 	@Column(name="status")
 	private String status;

@@ -496,7 +496,7 @@ public class OrderController extends CRUDController<Order> {
 			e.printStackTrace();
 			log.warn("Error in validation :" + e);
 		}
-		// return to form if we had errors
+		// Return to form if we had errors
 		if (bindingResult.hasErrors()) {
 			setupCreate(model, request, entity);
 			return urlContext + "/form";
@@ -507,14 +507,32 @@ public class OrderController extends CRUDController<Order> {
 		
 		//beforeSave(request, entity, model);
 		
-		OrderStatus orderStatus = retrieveOrderStatus(OrderStatus.ORDER_STATUS_DROPPED_OFF);
-		entity.setOrderStatus(orderStatus);
+		Long orderId = entity.getId();
+		List<Order> orderList = genericDAO.executeSimpleQuery("select obj from Order obj where obj.deleteFlag='1' and obj.id=" + orderId);
+		Order existingOrder = orderList.get(0);
 		
-		createAuditOrderNotes(entity, "Order status changed to Drop Off", entity.getModifiedBy());
+		String auditMsg = StringUtils.EMPTY;
+		if (OrderStatus.ORDER_STATUS_OPEN.equals(existingOrder.getOrderStatus().getStatus())) {
+			auditMsg = "Order status changed to Drop Off";
+			
+			OrderStatus orderStatus = retrieveOrderStatus(OrderStatus.ORDER_STATUS_DROPPED_OFF);
+			entity.setOrderStatus(orderStatus);
+			
+			updateDumpsterStatus(entity.getDumpster(), DumpsterStatus.DUMPSTER_STATUS_DROPPED_OFF, getUser(request).getId());
+		} else {
+			auditMsg = "Order Drop Off details updated";
+			
+			if (!existingOrder.getDumpster().getId().equals(entity.getDumpster().getId())) {
+				if (!OrderStatus.ORDER_STATUS_CLOSED.equals(existingOrder.getOrderStatus().getStatus())) {
+					updateDumpsterStatus(existingOrder.getDumpster(), DumpsterStatus.DUMPSTER_STATUS_AVAILABLE, getUser(request).getId());
+					updateDumpsterStatus(entity.getDumpster(), DumpsterStatus.DUMPSTER_STATUS_DROPPED_OFF, getUser(request).getId());
+				}
+			}
+		}
+		
+		createAuditOrderNotes(entity, auditMsg, entity.getModifiedBy());
 		
 		genericDAO.saveOrUpdate(entity);
-		
-		updateDumpsterStatus(entity.getDumpster(), "Dropped Off", getUser(request).getId());
 		
 		cleanUp(request);
 
@@ -528,8 +546,7 @@ public class OrderController extends CRUDController<Order> {
 		model.addAttribute("msgCtx", "manageDropOffDriver");
 		model.addAttribute("msg", "Drop off data saved successfully");
 		
-		Long orderId = entity.getId();
-		List<Order> orderList = genericDAO.executeSimpleQuery("select obj from Order obj where obj.deleteFlag='1' and obj.id=" + orderId);
+		orderList = genericDAO.executeSimpleQuery("select obj from Order obj where obj.deleteFlag='1' and obj.id=" + orderId);
 		model.addAttribute("modelObject", orderList.get(0));
 		
 		Order emptyOrder = new Order();
@@ -633,7 +650,7 @@ public class OrderController extends CRUDController<Order> {
 		entity.setModifiedAt(Calendar.getInstance().getTime());
 		entity.setModifiedBy(getUser(request).getId());
 		
-		//TODO: why is this reqd?
+		//TODO: Why is this reqd?
 		//setupOrderFees(entity);
 		
 		OrderStatus orderStatus = retrieveOrderStatus(OrderStatus.ORDER_STATUS_CLOSED);

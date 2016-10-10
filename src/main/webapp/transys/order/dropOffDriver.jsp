@@ -71,7 +71,8 @@ function processDropOffDriverForm() {
 			<td>&nbsp;</td>
 			<td colspan="2">
 				<c:set var="saveDisabled" value="" />
-				<c:if test="${modelObject.id == null || modelObject.orderStatus.status != 'Open'}">
+				<!--modelObject.orderStatus.status != 'Open'-->
+				<c:if test="${modelObject.id == null}">
 					<c:set var="saveDisabled" value="disabled" />
 				</c:if>
 				<input type="button" id="dropOffDriverCreate" ${saveDisabled} onclick="processDropOffDriverForm();" value="Save" class="flat btn btn-primary btn-sm btn-sm-ext" />
