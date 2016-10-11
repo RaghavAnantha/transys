@@ -41,6 +41,7 @@ function processDropOffDriverForm() {
 
 <form:form action="saveDropOffDriver.do" name="dropOffDriverAddEditForm" commandName="modelObject" method="post" id="dropOffDriverAddEditForm">
 	<form:hidden path="id" id="id" />
+	<input type="hidden" name="currentlyAssignedDumpsterId" id="currentlyAssignedDumpsterId" value="${currentlyAssignedDumpsterId}" />
 	<jsp:include page="/common/messages.jsp">
 		<jsp:param name="msgCtx" value="manageDropOffDriver" />
 	</jsp:include>

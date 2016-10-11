@@ -115,10 +115,13 @@ public class OrderController extends CRUDController<Order> {
 		
 		String dumpsterQuery = "select obj from Dumpster obj where obj.deleteFlag='1' and obj.status.status='Available'";
 		Dumpster assignedDumpster = null;
+		Long currentlyAssignedDumpsterId = -1l;
 		if (order != null) {
 			dumpsterQuery += " and obj.dumpsterSize.id=" + order.getDumpsterSize().getId();
 		
 			if (order.getDumpster() != null && order.getDumpster().getId() != null) {
+				currentlyAssignedDumpsterId = order.getDumpster().getId();
+				
 				List<Dumpster> assignedDumpsterList = genericDAO.executeSimpleQuery("select obj from Dumpster obj where obj.deleteFlag='1' and obj.id=" + order.getDumpster().getId());
 				assignedDumpster = assignedDumpsterList.get(0);
 			}
@@ -132,6 +135,8 @@ public class OrderController extends CRUDController<Order> {
 		}
 		
 		model.addAttribute("orderDumpsters", dumpsterInfoList);
+		
+		model.addAttribute("currentlyAssignedDumpsterId", currentlyAssignedDumpsterId);
 		
 		if (order == null) {
 			return;
@@ -255,7 +260,7 @@ public class OrderController extends CRUDController<Order> {
 			}
 	   }
 		
-		model.addAttribute("list",genericDAO.search(getEntityClass(), criteria,"id",null,null));
+		model.addAttribute("list", genericDAO.search(getEntityClass(), criteria, "modifiedAt, orderStatus.status", true, null));
 		model.addAttribute("activeTab", "manageOrders");
 		//model.addAttribute("activeSubTab", "orderDetails");
 		model.addAttribute("mode", "MANAGE");
@@ -488,6 +493,7 @@ public class OrderController extends CRUDController<Order> {
 	
 	@RequestMapping(method = RequestMethod.POST, value = "/saveDropOffDriver.do")
 	public String saveDropOffDriver(HttpServletRequest request,
+			@RequestParam(value = "currentlyAssignedDumpsterId") Long currentlyAssignedDumpsterId,
 			@ModelAttribute("modelObject") Order entity,
 			BindingResult bindingResult, ModelMap model) {
 		try {
@@ -507,25 +513,21 @@ public class OrderController extends CRUDController<Order> {
 		
 		//beforeSave(request, entity, model);
 		
-		Long orderId = entity.getId();
-		List<Order> orderList = genericDAO.executeSimpleQuery("select obj from Order obj where obj.deleteFlag='1' and obj.id=" + orderId);
-		Order existingOrder = orderList.get(0);
-		
 		String auditMsg = StringUtils.EMPTY;
-		if (OrderStatus.ORDER_STATUS_OPEN.equals(existingOrder.getOrderStatus().getStatus())) {
+		if (OrderStatus.ORDER_STATUS_OPEN.equals(entity.getOrderStatus().getStatus())) {
 			auditMsg = "Order status changed to Drop Off";
 			
 			OrderStatus orderStatus = retrieveOrderStatus(OrderStatus.ORDER_STATUS_DROPPED_OFF);
 			entity.setOrderStatus(orderStatus);
 			
-			updateDumpsterStatus(entity.getDumpster(), DumpsterStatus.DUMPSTER_STATUS_DROPPED_OFF, getUser(request).getId());
+			updateDumpsterStatus(entity.getDumpster().getId(), DumpsterStatus.DUMPSTER_STATUS_DROPPED_OFF, getUser(request).getId());
 		} else {
 			auditMsg = "Order Drop Off details updated";
 			
-			if (!existingOrder.getDumpster().getId().equals(entity.getDumpster().getId())) {
-				if (!OrderStatus.ORDER_STATUS_CLOSED.equals(existingOrder.getOrderStatus().getStatus())) {
-					updateDumpsterStatus(existingOrder.getDumpster(), DumpsterStatus.DUMPSTER_STATUS_AVAILABLE, getUser(request).getId());
-					updateDumpsterStatus(entity.getDumpster(), DumpsterStatus.DUMPSTER_STATUS_DROPPED_OFF, getUser(request).getId());
+			if (!currentlyAssignedDumpsterId.equals(entity.getDumpster().getId())) {
+				if (!OrderStatus.ORDER_STATUS_CLOSED.equals(entity.getOrderStatus().getStatus())) {
+					updateDumpsterStatus(currentlyAssignedDumpsterId, DumpsterStatus.DUMPSTER_STATUS_AVAILABLE, getUser(request).getId());
+					updateDumpsterStatus(entity.getDumpster().getId(), DumpsterStatus.DUMPSTER_STATUS_DROPPED_OFF, getUser(request).getId());
 				}
 			}
 		}
@@ -546,7 +548,8 @@ public class OrderController extends CRUDController<Order> {
 		model.addAttribute("msgCtx", "manageDropOffDriver");
 		model.addAttribute("msg", "Drop off data saved successfully");
 		
-		orderList = genericDAO.executeSimpleQuery("select obj from Order obj where obj.deleteFlag='1' and obj.id=" + orderId);
+		Long orderId = entity.getId();
+		List<Order> orderList = genericDAO.executeSimpleQuery("select obj from Order obj where obj.deleteFlag='1' and obj.id=" + orderId);
 		model.addAttribute("modelObject", orderList.get(0));
 		
 		Order emptyOrder = new Order();
@@ -609,11 +612,11 @@ public class OrderController extends CRUDController<Order> {
 		}
 	}
 	
-	private void updateDumpsterStatus(Dumpster dumpsterInfoPassed, String status, Long modifiedBy) {
+	private void updateDumpsterStatus(Long dumpsterId, String status, Long modifiedBy) {
 		String dumpsterStatusQuery = "select obj from DumpsterStatus obj where obj.deleteFlag='1' and obj.status='" + status + "'";
 		List<DumpsterStatus> dumpsterStatusList = genericDAO.executeSimpleQuery(dumpsterStatusQuery);
 		
-		String dumpsterQuery = "select obj from Dumpster obj where obj.deleteFlag='1' and obj.id=" + dumpsterInfoPassed.getId();
+		String dumpsterQuery = "select obj from Dumpster obj where obj.deleteFlag='1' and obj.id=" + dumpsterId;
 		List<Dumpster> dumpsterInfoList = genericDAO.executeSimpleQuery(dumpsterQuery);
 		Dumpster dumpsterInfo = dumpsterInfoList.get(0);
 		
@@ -674,7 +677,7 @@ public class OrderController extends CRUDController<Order> {
 		entity.getOrderNotes().add(auditOrderNotes);
 		
 		Long modifiedBy = entity.getModifiedBy();
-		updateDumpsterStatus(entity.getDumpster(), DumpsterStatus.DUMPSTER_STATUS_AVAILABLE, modifiedBy);
+		updateDumpsterStatus(entity.getDumpster().getId(), DumpsterStatus.DUMPSTER_STATUS_AVAILABLE, modifiedBy);
 		updatePermitStatus(entity.getPermits(), PermitStatus.PERMIT_STATUS_AVAILABLE, modifiedBy);
 		
 		return pickupSaveSuccess(request, entity, model);
@@ -791,12 +794,16 @@ public class OrderController extends CRUDController<Order> {
 	@RequestMapping(method = RequestMethod.GET, value = "/main.do")
 	public String displayMain(ModelMap model, HttpServletRequest request) {
 		request.getSession().removeAttribute("searchCriteria");
+		
 		setupList(model, request);
+		
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		//criteria.getSearchMap().put("id!",0l);
-		model.addAttribute("list", genericDAO.search(getEntityClass(), criteria, "id", null, null));
+		
+		model.addAttribute("list", genericDAO.search(getEntityClass(), criteria, "modifiedAt, orderStatus.status", null, null));
 		model.addAttribute("activeTab", "manageOrders");
 		model.addAttribute("mode", "MANAGE");
+		
 		return urlContext + "/order";
 	}
 	
@@ -813,7 +820,7 @@ public class OrderController extends CRUDController<Order> {
 			model.addAttribute("deliveryAddresses", genericDAO.executeSimpleQuery(deliveryAddressQuery));
 	   }*/
 		
-		String orderBy = "id"; 
+		String orderBy = "modifiedAt, orderStatus.status"; 
 		String deliveryDateFrom = (String)criteria.getSearchMap().get("deliveryDateFrom");
 		String deliveryDateTo = (String)criteria.getSearchMap().get("deliveryDateTo");
 		String pickupDateFrom = (String)criteria.getSearchMap().get("pickupDateFrom");
@@ -823,7 +830,7 @@ public class OrderController extends CRUDController<Order> {
 			orderBy = "deliveryAddress.line1";
 		}
 		
-		model.addAttribute("list", genericDAO.search(getEntityClass(), criteria, orderBy, null, null));
+		model.addAttribute("list", genericDAO.search(getEntityClass(), criteria, orderBy, true, null));
 		model.addAttribute("activeTab", "manageOrder");
 		return urlContext + "/order";
 	}
