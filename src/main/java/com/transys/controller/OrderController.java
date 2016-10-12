@@ -833,13 +833,13 @@ public class OrderController extends CRUDController<Order> {
 		
 		model.addAttribute("list", genericDAO.search(getEntityClass(), criteria, orderBy, null, null));
 		
-		model.addAttribute("activeTab", "manageOrder");
+		model.addAttribute("activeTab", "manageOrders");
 		//model.addAttribute("activeSubTab", "orderDetails");
 		model.addAttribute("mode", "MANAGE");
 		
+		//return urlContext + "/list";
 		return urlContext + "/order";
 	}
-	
 	
 	@RequestMapping(method = { RequestMethod.GET, RequestMethod.POST }, value = "/generateOrderReport.do")
 	public void generateOrderReport(ModelMap model, HttpServletRequest request,
