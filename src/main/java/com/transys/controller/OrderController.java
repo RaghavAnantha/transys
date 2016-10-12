@@ -252,13 +252,13 @@ public class OrderController extends CRUDController<Order> {
 		//TODO fix me
 		criteria.getSearchMap().remove("_csrf");
 		
-		if (criteria.getSearchMap().get("customer") != null) {
+		/*if (criteria.getSearchMap().get("customer") != null) {
 			String customerId = (String)criteria.getSearchMap().get("customer");
 			if (StringUtils.isNotEmpty(customerId)) {
 				String deliveryAddressQuery = "select obj from DeliveryAddress obj where obj.deleteFlag='1' and obj.customer.id=" + customerId  + " order by obj.line1 asc";
 				model.addAttribute("deliveryAddresses", genericDAO.executeSimpleQuery(deliveryAddressQuery));
 			}
-	   }
+	   }*/
 		
 		model.addAttribute("list", genericDAO.search(getEntityClass(), criteria, "modifiedAt desc, orderStatus.status desc", null, null));
 		
@@ -817,19 +817,21 @@ public class OrderController extends CRUDController<Order> {
 		
 		/*if (criteria.getSearchMap().get("customer") != null) {
 			String customerId = (String)criteria.getSearchMap().get("customer");
-			String deliveryAddressQuery = "select obj from DeliveryAddress obj where obj.customer.id=" + customerId  + " order by obj.line1 asc";
-			model.addAttribute("deliveryAddresses", genericDAO.executeSimpleQuery(deliveryAddressQuery));
+			if (StringUtils.isNotEmpty(customerId)) {
+				String deliveryAddressQuery = "select obj from DeliveryAddress obj where obj.deleteFlag='1' and obj.customer.id=" + customerId  + " order by obj.line1 asc";
+				model.addAttribute("deliveryAddresses", genericDAO.executeSimpleQuery(deliveryAddressQuery));
+			}
 	   }*/
 		
 		String orderBy = "modifiedAt desc, orderStatus.status desc"; 
-		String deliveryDateFrom = (String)criteria.getSearchMap().get("deliveryDateFrom");
+		/*String deliveryDateFrom = (String)criteria.getSearchMap().get("deliveryDateFrom");
 		String deliveryDateTo = (String)criteria.getSearchMap().get("deliveryDateTo");
 		String pickupDateFrom = (String)criteria.getSearchMap().get("pickupDateFrom");
 		String pickupDateTo = (String)criteria.getSearchMap().get("pickupDateTo");
 		if ( (StringUtils.isNotEmpty(deliveryDateFrom) && StringUtils.isNotEmpty(deliveryDateTo)) ||
 				(StringUtils.isNotEmpty(pickupDateFrom) && StringUtils.isNotEmpty(pickupDateTo)) ) {
 			orderBy = "deliveryAddress.line1";
-		}
+		}*/
 		
 		model.addAttribute("list", genericDAO.search(getEntityClass(), criteria, orderBy, null, null));
 		
@@ -1352,6 +1354,9 @@ public class OrderController extends CRUDController<Order> {
 	public void setupList(ModelMap model, HttpServletRequest request) {
 		populateSearchCriteria(request, request.getParameterMap());
 		setupCreate(model, request);
+		
+		String deliveryAddressQuery = "select obj from DeliveryAddress obj where obj.deleteFlag='1' order by obj.line1 asc";
+		model.addAttribute("deliveryAddresses", genericDAO.executeSimpleQuery(deliveryAddressQuery));
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/customerDeliveryAddress.do")
