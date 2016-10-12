@@ -260,7 +260,8 @@ public class OrderController extends CRUDController<Order> {
 			}
 	   }
 		
-		model.addAttribute("list", genericDAO.search(getEntityClass(), criteria, "modifiedAt, orderStatus.status", true, null));
+		model.addAttribute("list", genericDAO.search(getEntityClass(), criteria, "modifiedAt desc, orderStatus.status desc", null, null));
+		
 		model.addAttribute("activeTab", "manageOrders");
 		//model.addAttribute("activeSubTab", "orderDetails");
 		model.addAttribute("mode", "MANAGE");
@@ -800,7 +801,7 @@ public class OrderController extends CRUDController<Order> {
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		//criteria.getSearchMap().put("id!",0l);
 		
-		model.addAttribute("list", genericDAO.search(getEntityClass(), criteria, "modifiedAt, orderStatus.status", null, null));
+		model.addAttribute("list", genericDAO.search(getEntityClass(), criteria, "modifiedAt desc, orderStatus.status desc", null, null));
 		model.addAttribute("activeTab", "manageOrders");
 		model.addAttribute("mode", "MANAGE");
 		
@@ -820,7 +821,7 @@ public class OrderController extends CRUDController<Order> {
 			model.addAttribute("deliveryAddresses", genericDAO.executeSimpleQuery(deliveryAddressQuery));
 	   }*/
 		
-		String orderBy = "modifiedAt, orderStatus.status"; 
+		String orderBy = "modifiedAt desc, orderStatus.status desc"; 
 		String deliveryDateFrom = (String)criteria.getSearchMap().get("deliveryDateFrom");
 		String deliveryDateTo = (String)criteria.getSearchMap().get("deliveryDateTo");
 		String pickupDateFrom = (String)criteria.getSearchMap().get("pickupDateFrom");
@@ -830,8 +831,12 @@ public class OrderController extends CRUDController<Order> {
 			orderBy = "deliveryAddress.line1";
 		}
 		
-		model.addAttribute("list", genericDAO.search(getEntityClass(), criteria, orderBy, true, null));
+		model.addAttribute("list", genericDAO.search(getEntityClass(), criteria, orderBy, null, null));
+		
 		model.addAttribute("activeTab", "manageOrder");
+		//model.addAttribute("activeSubTab", "orderDetails");
+		model.addAttribute("mode", "MANAGE");
+		
 		return urlContext + "/order";
 	}
 	
@@ -1497,7 +1502,7 @@ public class OrderController extends CRUDController<Order> {
 			OrderStatus orderStatus = retrieveOrderStatus(OrderStatus.ORDER_STATUS_OPEN);
 			entity.setOrderStatus(orderStatus);
 		} else {
-			orderAuditMsg = "Order updated";
+			orderAuditMsg = "Order details updated";
 		}
 
 		genericDAO.saveOrUpdate(entity);
