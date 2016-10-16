@@ -121,7 +121,7 @@ public abstract class AbstractBaseModel implements BaseModel {
 	
 	@Transient
 	public String getFormattedCreatedAt() {
-		SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyy");
+		SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
 		if (this.createdAt != null) {
 			return dateFormat.format(this.createdAt);
 		} else {

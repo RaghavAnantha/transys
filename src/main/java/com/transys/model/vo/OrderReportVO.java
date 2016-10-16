@@ -46,6 +46,8 @@ public class OrderReportVO implements BaseVO {
 	
 	private String paymentMethod;
 	private String referenceNum;
+	private String checkNum;
+	private String paymentDate;
 	
 	private Long pickupOrderId;
 	private String pickupOrderDeliveryDate = StringUtils.EMPTY;
@@ -244,5 +246,17 @@ public class OrderReportVO implements BaseVO {
 	}
 	public void setPickupOrderDeliveryCity(String pickupOrderDeliveryCity) {
 		this.pickupOrderDeliveryCity = pickupOrderDeliveryCity;
+	}
+	public String getCheckNum() {
+		return checkNum;
+	}
+	public void setCheckNum(String checkNum) {
+		this.checkNum = checkNum;
+	}
+	public String getPaymentDate() {
+		return paymentDate;
+	}
+	public void setPaymentDate(String paymentDate) {
+		this.paymentDate = paymentDate;
 	}
 }

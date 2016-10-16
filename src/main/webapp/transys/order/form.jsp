@@ -684,20 +684,40 @@ function validateMissingOrderPayment(index) {
 	var amountPaid = $('#orderPayment'  + (index-1) + '\\.amountPaid').val();
 	var ccReferenceNum = $('#orderPayment'  + (index-1) +  '\\.ccReferenceNum').val();
 	var checkNum = $('#orderPayment' + (index-1) + '\\.checkNum').val();
+	var paymentDateId = 'orderPayment[' + (index-1) + '].paymentDate';
+	var paymentDate = $("[name='" + paymentDateId + "']").val();
 	if (paymentMethod != "") {
-		if (amountPaid == "") {
+		/*if (amountPaid == "") {
 			missingData += "Payment Amount " + index + ", ";
+		}*/
+		 
+		// Credit card
+		if (paymentMethod == "3" && checkNum != "") {
+			missingData += "Cc Reference # " + index + ", ";
+		// Not cash
+		} else if ((paymentMethod == "1" || paymentMethod == "4" || paymentMethod == "5") && ccReferenceNum != "") {
+			missingData += "Check # " + index + ", ";
 		}
 		
-		// Credit card
-		if (paymentMethod == "3" && ccReferenceNum == "") {
-			missingData += "Cc Refernece # " + index + ", ";
-		// Not cash
-		} else if ((paymentMethod == "1" || paymentMethod == "4" || paymentMethod == "5") && checkNum == "") {
-			missingData += "Check # " + index + ", ";
-		} 
+		if ((amountPaid != "" && amountPaid != "0.00") && paymentDate == "") {
+			missingData += "Payment Date " + index + ", ";
+		}
+		
+		if (paymentDate != "" && (amountPaid == "" || amountPaid == "0.00")) {
+			missingData += "Amount Paid " + index + ", ";
+		}
+		
+		if ((amountPaid != "" && amountPaid != "0.00") || paymentDate != "") {
+			// Credit card
+			if (paymentMethod == "3" && ccReferenceNum == "") {
+				missingData += "Cc Reference # " + index + ", ";
+			// Not cash
+			} else if ((paymentMethod == "1" || paymentMethod == "4" || paymentMethod == "5") && checkNum == "") {
+				missingData += "Check # " + index + ", ";
+			}
+		}
 	} else {
-		if (amountPaid != "" || ccReferenceNum != "" || checkNum != "") {
+		if (amountPaid != "" || ccReferenceNum != "" || checkNum != "" || paymentDate != "") {
 			missingData += "Payment method " + index + ", ";
 		}
 	}
@@ -745,6 +765,10 @@ function validateOrderFees() {
 	}
 	
 	for (i = 1; i < 4; i++) {
+		validationMsg += validatePaymentDate(i)
+	}
+	
+	for (i = 1; i < 4; i++) {
 		validationMsg += validatePermitFees(i)
 	}
 	
@@ -778,6 +802,20 @@ function validatePaymentAmount(index) {
 	if (orderPayment != "") {
 		if (!validateAmount(orderPayment, null)) {
 			validationMsg += "Order Payment " + index + " Amount, "
+		}
+	}
+	
+	return validationMsg;
+}
+
+function validatePaymentDate(index) {
+	var validationMsg = "";
+	
+	var paymentDateId = 'orderPayment[' + (index-1) + '].paymentDate';
+	var paymentDate = $("[name='" + paymentDateId + "']").val();
+	if (paymentDate != "") {
+		if (!validateDate(paymentDate)) {
+			validationMsg += "Order Payment " + index + " Date, "
 		}
 	}
 	
@@ -967,17 +1005,17 @@ function updateTotalPaid() {
 		amountPaid3Float = parseFloat(amountPaid3);
 	}
 	
-	var totaFeesFloat = parseFloat(0.00);
-	var totaFees = $('#orderFees\\.totalFees').val(); 
-	if (totaFees != "") {
-		totaFeesFloat = parseFloat(totaFees);
+	var totalFeesFloat = parseFloat(0.00);
+	var totalFees = $('#orderFees\\.totalFees').val(); 
+	if (totalFees != "") {
+		totalFeesFloat = parseFloat(totalFees);
 	}
 	
 	var totalPaidFloat = parseFloat(0.00);
 	var balanceDueFloat = parseFloat(0.00);
 	
 	totalPaidFloat = amountPaid1Float + amountPaid2Float + amountPaid3Float;
-	balanceDueFloat = totaFeesFloat - totalPaidFloat;
+	balanceDueFloat = totalFeesFloat - totalPaidFloat;
 	$('#totalPaid').html(totalPaidFloat.toFixed(2)); 
 	$('#balanceDue').html(balanceDueFloat.toFixed(2)); 
 }
@@ -1095,7 +1133,7 @@ function updateTotalPaid() {
 			<td class="form-left">Delivery Date<span class="errorMessage">*</span></td>
 			<td>
 				<form:input path="deliveryDate" cssClass="flat" style="width:172px !important" id="datepicker7" name="deliveryDate" maxlength="10" onChange="return handleDeliveryDateChange();"/>
-				 <form:errors path="deliveryDate" cssClass="errorMessage" />
+				<form:errors path="deliveryDate" cssClass="errorMessage" />
 			</td>
 			<td class="form-left">Delivery Time<span class="errorMessage">*</span></td>
 			<td>
@@ -1499,7 +1537,7 @@ function updateTotalPaid() {
 		<tr>
 			<td class="form-left">Payment Method<span class="errorMessage">*</span></td>
 			<td class="form-left">Payment Date</td>
-			<td class="form-left">Amount<span class="errorMessage">*</span></td>
+			<td class="form-left">Amount</td>
 			<td class="form-left">CC Reference #</td>
 			<td class="form-left">Check #</td>
 		</tr>
@@ -1512,11 +1550,8 @@ function updateTotalPaid() {
 				<form:errors path="orderPayment[0].paymentMethod" cssClass="errorMessage" />
 			</td>
 			<td class="td-static wide">
-				<c:set var="orderPayment1CreatedAt" value="" />
-				<c:if test="${modelObject.orderPayment[0] != null and modelObject.orderPayment[0].id != null}">
-					<c:set var="orderPayment1CreatedAt" value="${modelObject.orderPayment[0].formattedCreatedAt}" />
-				</c:if>
-				<input type="text" value="${orderPayment1CreatedAt}" class="form-control form-control-ext" readonly style="width:172px;height:22px !important">
+				<form:input path="orderPayment[0].paymentDate" cssClass="flat" style="width:172px !important" id="datepicker8" maxlength="10" />
+				<form:errors path="orderPayment[0].paymentDate" cssClass="errorMessage" />
 			</td>
 			<td class="wide">
 				<form:input path="orderPayment[0].amountPaid" maxlength="7" cssClass="flat" onChange="updateTotalPaid();"/>
@@ -1539,12 +1574,9 @@ function updateTotalPaid() {
 				</form:select>
 				<form:errors path="orderPayment[1].paymentMethod" cssClass="errorMessage" />
 			</td>
-			<td class="td-static">
-				<c:set var="orderPayment2CreatedAt" value="" />
-				<c:if test="${modelObject.orderPayment[1] != null and modelObject.orderPayment[1].id != null}">
-					<c:set var="orderPayment2CreatedAt" value="${modelObject.orderPayment[1].formattedCreatedAt}" />
-				</c:if>
-				<input type="text" value="${orderPayment2CreatedAt}" class="form-control form-control-ext" readonly style="width:172px;height:22px !important">
+			<td class="td-static wide">
+				<form:input path="orderPayment[1].paymentDate" cssClass="flat" style="width:172px !important" id="datepicker9" maxlength="10" />
+				<form:errors path="orderPayment[1].paymentDate" cssClass="errorMessage" />
 			</td>
 			<td>
 				<form:input path="orderPayment[1].amountPaid" maxlength="7" cssClass="flat" onChange="updateTotalPaid();"/>
@@ -1567,12 +1599,9 @@ function updateTotalPaid() {
 				</form:select>
 				<form:errors path="orderPayment[2].paymentMethod" cssClass="errorMessage" />
 			</td>
-			<td class="td-static">
-				<c:set var="orderPayment3CreatedAt" value="" />
-				<c:if test="${modelObject.orderPayment[2] != null and modelObject.orderPayment[2].id != null}">
-					<c:set var="orderPayment3CreatedAt" value="${modelObject.orderPayment[2].formattedCreatedAt}" />
-				</c:if>
-				<input type="text" value="${orderPayment3CreatedAt}" class="form-control form-control-ext" readonly style="width:172px;height:22px !important">
+			<td class="td-static wide">
+				<form:input path="orderPayment[2].paymentDate" cssClass="flat" style="width:172px !important" id="datepicker10" maxlength="10" />
+				<form:errors path="orderPayment[2].paymentDate" cssClass="errorMessage" />
 			</td>
 			<td class="wide">
 				<form:input path="orderPayment[2].amountPaid" maxlength="7" cssClass="flat" onChange="updateTotalPaid();"/>

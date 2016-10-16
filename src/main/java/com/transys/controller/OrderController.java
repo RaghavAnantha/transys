@@ -31,6 +31,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -260,7 +261,7 @@ public class OrderController extends CRUDController<Order> {
 			}
 	   }*/
 		
-		model.addAttribute("list", genericDAO.search(getEntityClass(), criteria, "modifiedAt desc, orderStatus.status desc", null, null));
+		model.addAttribute("list", genericDAO.search(getEntityClass(), criteria, "deliveryDate desc, orderStatus.status desc", null, null));
 		
 		model.addAttribute("activeTab", "manageOrders");
 		//model.addAttribute("activeSubTab", "orderDetails");
@@ -801,7 +802,7 @@ public class OrderController extends CRUDController<Order> {
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		//criteria.getSearchMap().put("id!",0l);
 		
-		model.addAttribute("list", genericDAO.search(getEntityClass(), criteria, "modifiedAt desc, orderStatus.status desc", null, null));
+		model.addAttribute("list", genericDAO.search(getEntityClass(), criteria, "deliveryDate desc, orderStatus.status desc", null, null));
 		model.addAttribute("activeTab", "manageOrders");
 		model.addAttribute("mode", "MANAGE");
 		
@@ -823,7 +824,7 @@ public class OrderController extends CRUDController<Order> {
 			}
 	   }*/
 		
-		String orderBy = "modifiedAt desc, orderStatus.status desc"; 
+		String orderBy = "deliveryDate desc, orderStatus.status desc"; 
 		/*String deliveryDateFrom = (String)criteria.getSearchMap().get("deliveryDateFrom");
 		String deliveryDateTo = (String)criteria.getSearchMap().get("deliveryDateTo");
 		String pickupDateFrom = (String)criteria.getSearchMap().get("pickupDateFrom");
@@ -960,8 +961,13 @@ public class OrderController extends CRUDController<Order> {
 		
 		List<OrderPayment> payments = anOrder.getOrderPayment();
 		if (payments != null && !payments.isEmpty()) {
-			anOrderReportVO.setPaymentMethod(payments.get(0).getPaymentMethod().getMethod());
-			anOrderReportVO.setReferenceNum(payments.get(0).getCcReferenceNum());
+			OrderPayment anOrderPayment = payments.get(0);
+			String paymentMethod = anOrderPayment.getPaymentMethod() == null ? StringUtils.EMPTY
+												: anOrderPayment.getPaymentMethod().getMethod();
+			anOrderReportVO.setPaymentMethod(paymentMethod);
+			anOrderReportVO.setReferenceNum(StringUtils.defaultIfEmpty(anOrderPayment.getCcReferenceNum(), StringUtils.EMPTY));
+			anOrderReportVO.setCheckNum(StringUtils.defaultIfEmpty(anOrderPayment.getCheckNum(), StringUtils.EMPTY));
+			anOrderReportVO.setPaymentDate(anOrderPayment.getFormattedPaymentDate());
 		} else {
 			anOrderReportVO.setPaymentMethod(StringUtils.EMPTY);
 			anOrderReportVO.setReferenceNum(StringUtils.EMPTY);
@@ -1498,7 +1504,7 @@ public class OrderController extends CRUDController<Order> {
 		// TODO: Why both created by and modified by and why set if not changed?
 		setupOrderNotes(entity, modifiedBy);
 		
-		setupOrderPayment(entity);
+		setupOrderPayment(entity, modifiedBy);
 		
 		String orderAuditMsg = StringUtils.EMPTY;
 		if (entity.getId() == null) {
@@ -1526,7 +1532,7 @@ public class OrderController extends CRUDController<Order> {
 		return saveSuccess(model, request, entity);
 	}
 	
-	private void setupOrderPayment(Order order) {
+	private void setupOrderPayment(Order order, Long modifiedBy) {
 		order.setTotalAmountPaid(new BigDecimal(0.00));
 		order.setBalanceAmountDue(new BigDecimal(0.00));
 		
@@ -1542,11 +1548,15 @@ public class OrderController extends CRUDController<Order> {
 				anOrderPayment.setOrder(order);
 				
 				if (anOrderPayment.getId() == null) {
-					anOrderPayment.setCreatedAt(order.getCreatedAt());
-					anOrderPayment.setCreatedBy(order.getCreatedBy());
+					anOrderPayment.setCreatedAt(Calendar.getInstance().getTime());
+					anOrderPayment.setCreatedBy(modifiedBy);
 				} else {
 					//anOrderPayment.setModifiedAt(order.getModifiedAt());
 					//anOrderPayment.setModifiedBy(order.getModifiedBy());
+				}
+				
+				if (anOrderPayment.getAmountPaid() == null) {
+					anOrderPayment.setAmountPaid(new BigDecimal(0.00));
 				}
 				
 				filteredOrderPaymentList.add(anOrderPayment);
