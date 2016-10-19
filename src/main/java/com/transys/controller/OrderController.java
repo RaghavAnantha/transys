@@ -28,6 +28,7 @@ import javax.validation.ValidationException;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -943,7 +944,14 @@ public class OrderController extends CRUDController<Order> {
 		anOrderReportVO.setDeliveryCity(anOrder.getDeliveryAddress().getCity());
 		
 		anOrderReportVO.setDumpsterLocation(anOrder.getDumpsterLocation().getLocationType());
-		anOrderReportVO.setDumpsterSize(anOrder.getDumpsterSize().getSize());
+		
+		String dumpsterSize = anOrder.getDumpsterSize().getSize();
+		BigDecimal tonLimit = retrieveTonLimit(anOrder.getDumpsterSize().getId(), 
+				anOrder.getMaterialType().getMaterialCategory().getId());
+		if (tonLimit != null) {
+			dumpsterSize += " " + tonLimit + " ton limit";
+		}
+		anOrderReportVO.setDumpsterSize(dumpsterSize);
 		
 		anOrderReportVO.setMaterialType(anOrder.getMaterialType().getMaterialName());
 		
@@ -971,10 +979,31 @@ public class OrderController extends CRUDController<Order> {
 		} else {
 			anOrderReportVO.setPaymentMethod(StringUtils.EMPTY);
 			anOrderReportVO.setReferenceNum(StringUtils.EMPTY);
+			anOrderReportVO.setCheckNum(StringUtils.EMPTY);
+			anOrderReportVO.setPaymentDate(StringUtils.EMPTY);
 		}
 		
 		anOrderReportVO.setTotalAmountPaid(anOrder.getTotalAmountPaid());
 		anOrderReportVO.setBalanceAmountDue(anOrder.getBalanceAmountDue());
+		
+		String userNotes = StringUtils.EMPTY;
+		List<OrderNotes> notesList = anOrder.getOrderNotes();
+		if (notesList != null && !notesList.isEmpty()) {
+			for (OrderNotes anOrderNotes : notesList) {
+				if (OrderNotes.NOTES_TYPE_USER.equals(anOrderNotes.getNotesType())) {
+					userNotes = anOrderNotes.getNotes();
+					break;
+				}
+			}
+		}
+		anOrderReportVO.setNotes(userNotes);
+		
+		String permitEndDate = StringUtils.EMPTY;
+		List<Permit> permitList = anOrder.getPermits();
+		if (permitList != null && !permitList.isEmpty()) {
+			permitEndDate = permitList.get(0).getFormattedEndDate();
+		}
+		anOrderReportVO.setPermitEndDate(permitEndDate);
 	}
 	
 	private void populateOrderReportData(SearchCriteria criteria, 
@@ -1307,6 +1336,24 @@ public class OrderController extends CRUDController<Order> {
 		}
 	}
 	
+	private BigDecimal retrieveTonLimit(Long dumpsterSizeId, Long materialCategoryId) {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd"); 
+		String todaysDateStr = dateFormat.format(new Date());
+		
+		String overweightFeeQuery = "select obj from OverweightFee obj where obj.deleteFlag='1' and ";
+		overweightFeeQuery += "obj.dumpsterSize.id=" + dumpsterSizeId
+								 +  " and obj.materialCategory.id=" + materialCategoryId
+								 +  " and '" + todaysDateStr + "' between obj.effectiveStartDate and obj.effectiveEndDate";
+		
+		List<OverweightFee> overweightFeeList = genericDAO.executeSimpleQuery(overweightFeeQuery);
+		if (overweightFeeList.isEmpty()) {
+			return null;
+		} else {
+			OverweightFee overweightFee = overweightFeeList.get(0);
+			return overweightFee.getTonLimit();
+		}
+	}
+	
 	private List<PermitClass> retrievePermitClass(Long dumpsterSizeId) {
 		String permitClassQuery = "select obj from DumpsterSize obj where obj.deleteFlag='1' and ";
 		permitClassQuery += "obj.size.id=" + dumpsterSizeId;
@@ -1316,7 +1363,23 @@ public class OrderController extends CRUDController<Order> {
 		List<PermitClass> permitClassList = new ArrayList<PermitClass>();
 		permitClassList.add(dumpsterSizeList.get(0).getPermitClass());
 		
+		PermitClass permitClassD = retrievePermitClass(PermitClass.PERMIT_CLASS_D);
+		if (permitClassD != null) {
+			permitClassList.add(permitClassD);
+		}
+		
 		return permitClassList;
+	}
+	
+	private PermitClass retrievePermitClass(String permitClass) {
+		String permitClassQuery = "select obj from PermitClass obj where obj.deleteFlag='1' and ";
+		permitClassQuery += "obj.permitClass='" + permitClass + "'";
+		
+		List<PermitClass> permitClassList = genericDAO.executeSimpleQuery(permitClassQuery);
+		if (permitClassList.isEmpty()) {
+			return null;
+		}
+		return permitClassList.get(0);
 	}
 	
 	public void setupUpdate(ModelMap model, HttpServletRequest request, Order order) {

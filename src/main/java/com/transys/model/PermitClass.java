@@ -3,10 +3,17 @@ package com.transys.model;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name="permitClass")
 public class PermitClass extends AbstractBaseModel {
+	@Transient
+	public static final String PERMIT_CLASS_A = "CLASS A";
+	@Transient
+	public static final String PERMIT_CLASS_B = "CLASS B";
+	@Transient
+	public static final String PERMIT_CLASS_D = "CLASS D";
 
 	@Column(name="permitClass")
 	private String permitClass;

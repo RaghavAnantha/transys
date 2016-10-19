@@ -49,11 +49,15 @@ public class OrderReportVO implements BaseVO {
 	private String checkNum;
 	private String paymentDate;
 	
+	private String notes;
+	
 	private Long pickupOrderId;
 	private String pickupOrderDeliveryDate = StringUtils.EMPTY;
 	private String pickupOrderDumpsterSize = StringUtils.EMPTY;
 	private String pickupOrderDeliveryAddress = StringUtils.EMPTY;
 	private String pickupOrderDeliveryCity = StringUtils.EMPTY;
+	
+	private String permitEndDate;
 	
 	public Long getId() {
 		return id;
@@ -258,5 +262,17 @@ public class OrderReportVO implements BaseVO {
 	}
 	public void setPaymentDate(String paymentDate) {
 		this.paymentDate = paymentDate;
+	}
+	public String getNotes() {
+		return notes;
+	}
+	public void setNotes(String notes) {
+		this.notes = notes;
+	}
+	public String getPermitEndDate() {
+		return permitEndDate;
+	}
+	public void setPermitEndDate(String permitEndDate) {
+		this.permitEndDate = permitEndDate;
 	}
 }
