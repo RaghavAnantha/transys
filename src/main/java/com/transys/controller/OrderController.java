@@ -1246,7 +1246,6 @@ public class OrderController extends CRUDController<Order> {
 				    		  	 +  " and obj.materialType.materialCategory.id=" + materialCategoryId
 				    		  	 +  " order by obj.materialType.materialName asc";
 		List<MaterialType> materialTypes = genericDAO.executeSimpleQuery(dumpsterPriceQuery);
-		//materialTypes = removeDuplicates(materialTypes);
 		return materialTypes;
 	}
 	
