@@ -298,6 +298,13 @@ function processPickupDriverForm() {
 				<br><form:errors path="netWeightTonnage" cssClass="errorMessage" />
 			</td>
 		</tr>
+		<tr>
+			<td class="form-left">Scale Ticket No.</td>
+			<td>
+				<form:input path="scaleTicketNumber" cssClass="flat" style="width:172px !important"/>
+				<br><form:errors path="scaleTicketNumber" cssClass="errorMessage" />
+			</td>
+		</tr>
 		<tr><td colspan="2"></td></tr>
 		<tr>
 			<td>&nbsp;</td>

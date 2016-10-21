@@ -1250,10 +1250,6 @@ public class OrderController extends CRUDController<Order> {
 		return materialTypes;
 	}
 	
-	public static <T> List<T> removeDuplicates(List<T> list) {
-	    return list.stream().collect(Collectors.toSet()).stream().collect(Collectors.toList());
-	}
-	
 	@RequestMapping(method = RequestMethod.GET, value = "/retrieveCityFee.do")
 	public @ResponseBody String retrieveCityFee(ModelMap model, HttpServletRequest request,
 														    @RequestParam(value = "cityFeeId") String cityFeeId) {

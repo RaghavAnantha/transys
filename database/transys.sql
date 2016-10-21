@@ -409,6 +409,7 @@ CREATE TABLE `transysOrder` (
   `netWeightLb` decimal(9,2) DEFAULT 0.00,
   `netWeightTonnage` decimal(9,2) DEFAULT 0.00,
   `tare` decimal(9,2) DEFAULT 0.00,
+  `scaleTicketNumber` varchar(50) DEFAULT NULL,
   `dumpsterId` bigint(20) DEFAULT NULL,
   `pickupDate` datetime DEFAULT NULL,
   `orderStatusId` bigint(20) NOT NULL,

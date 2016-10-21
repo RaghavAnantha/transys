@@ -210,6 +210,9 @@ public class Order extends AbstractBaseModel {
 	@Column(name="tare")
 	private BigDecimal tare;
 	
+	@Column(name="scaleTicketNumber")
+	private String scaleTicketNumber;
+	
 	/******** Driver Info ************/
 	/*@JoinColumn(name="driverInfo")
 	private OrderDriverInfo driverInfo;*/
@@ -450,6 +453,14 @@ public class Order extends AbstractBaseModel {
 
 	public void setDumpster(Dumpster dumpster) {
 		this.dumpster = dumpster;
+	}
+
+	public String getScaleTicketNumber() {
+		return scaleTicketNumber;
+	}
+
+	public void setScaleTicketNumber(String scaleTicketNumber) {
+		this.scaleTicketNumber = scaleTicketNumber;
 	}
 
 	/*public String getMaterialType() {
