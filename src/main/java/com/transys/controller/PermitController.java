@@ -127,7 +127,7 @@ public class PermitController extends CRUDController<Permit> {
 		//TODO: Fix me 
 		criteria.getSearchMap().remove("_csrf");
 		
-//		injectPendingPaymentPermitSearch(criteria);
+		//	injectPendingPaymentPermitSearch(criteria);
 		
 		if (!injectOrderSearchCriteria(criteria)) {
 			// search yielded no results
@@ -469,8 +469,6 @@ public class PermitController extends CRUDController<Permit> {
 		
 		model.addAttribute("phone", phoneSet);	
 		model.addAttribute("contactName", contactNameSet);
-		
-
 	}
 	
 	@Override

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
-<!-- 2016-10-19T17:53:13 -->
+<!-- 2016-10-21T13:46:36 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="orderPrint" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="f412ce57-68ae-45e8-90e9-b1c053e29ef7">
 	<parameter name="LOGO_FILE_PATH" class="java.lang.String">
 		<parameterDescription><![CDATA[]]></parameterDescription>
@@ -198,7 +198,7 @@
 	<columnHeader>
 		<band height="62" splitType="Stretch">
 			<rectangle>
-				<reportElement x="390" y="5" width="160" height="50" uuid="e0375434-a53c-4690-b7c8-e1902c4e6395">
+				<reportElement x="376" y="5" width="174" height="50" uuid="e0375434-a53c-4690-b7c8-e1902c4e6395">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
@@ -207,7 +207,7 @@
 				</graphicElement>
 			</rectangle>
 			<rectangle>
-				<reportElement x="274" y="5" width="107" height="50" uuid="525ba820-418c-4050-a96a-22ce67aeae10">
+				<reportElement x="271" y="5" width="98" height="50" uuid="525ba820-418c-4050-a96a-22ce67aeae10">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
@@ -216,7 +216,7 @@
 				</graphicElement>
 			</rectangle>
 			<rectangle>
-				<reportElement x="110" y="5" width="159" height="50" uuid="aaaff3a3-6ce2-42fd-96ee-c2f7cf1c24ea">
+				<reportElement x="106" y="5" width="159" height="50" uuid="aaaff3a3-6ce2-42fd-96ee-c2f7cf1c24ea">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
@@ -254,7 +254,7 @@
 				<text><![CDATA[CALLED]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="119" y="8" width="122" height="20" forecolor="#0D6BFE" uuid="09dbdc52-0af4-4277-a89a-863432e44754">
+				<reportElement x="115" y="8" width="122" height="20" forecolor="#0D6BFE" uuid="09dbdc52-0af4-4277-a89a-863432e44754">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
@@ -264,7 +264,7 @@
 				<text><![CDATA[DELIVERY PROMISED]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="119" y="32" width="145" height="20" uuid="61890636-c585-437c-891d-0571e5e37cb5">
+				<reportElement x="115" y="32" width="145" height="20" uuid="61890636-c585-437c-891d-0571e5e37cb5">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
@@ -274,7 +274,7 @@
 				<textFieldExpression><![CDATA[$F{deliveryDateTime}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="280" y="8" width="92" height="20" forecolor="#0D6BFE" uuid="a65a56fb-b9e1-4267-9bab-aa548349a736">
+				<reportElement x="276" y="8" width="92" height="20" forecolor="#0D6BFE" uuid="a65a56fb-b9e1-4267-9bab-aa548349a736">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
@@ -284,7 +284,7 @@
 				<text><![CDATA[TO BE PICKED UP]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="398" y="8" width="122" height="20" forecolor="#0D6BFE" uuid="9862c5de-6434-4519-be80-3c42ada82961">
+				<reportElement x="383" y="8" width="122" height="20" forecolor="#0D6BFE" uuid="9862c5de-6434-4519-be80-3c42ada82961">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
@@ -294,7 +294,7 @@
 				<text><![CDATA[TO BE USED FOR]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="280" y="32" width="92" height="20" uuid="2d28cdf1-eca2-4651-8b81-747b70e01b53">
+				<reportElement x="276" y="32" width="92" height="20" uuid="2d28cdf1-eca2-4651-8b81-747b70e01b53">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
@@ -304,7 +304,7 @@
 				<textFieldExpression><![CDATA[$F{pickupDate}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="398" y="32" width="144" height="20" uuid="f9762fd4-c964-4f32-9e28-4c5b7eb230ce"/>
+				<reportElement x="383" y="32" width="162" height="20" uuid="f9762fd4-c964-4f32-9e28-4c5b7eb230ce"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
@@ -719,7 +719,7 @@ On the 4th day box will automatically be moved unless office is notified and an 
 				<textFieldExpression><![CDATA[$F{pickupOrderDeliveryCity}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="250" y="30" width="300" height="40" forecolor="#0D6BFE" uuid="14534689-4c3a-4616-be39-6e82417ea91a">
+				<reportElement x="244" y="30" width="306" height="40" forecolor="#0D6BFE" uuid="14534689-4c3a-4616-be39-6e82417ea91a">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
@@ -735,7 +735,7 @@ On the 4th day box will automatically be moved unless office is notified and an 
 				<text><![CDATA[   NOTES]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="258" y="47" width="287" height="20" uuid="2d827c22-aa54-4e04-94ef-ba8e6e14ca92">
+				<reportElement x="253" y="47" width="292" height="20" uuid="2d827c22-aa54-4e04-94ef-ba8e6e14ca92">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
 				<textElement>
@@ -744,7 +744,7 @@ On the 4th day box will automatically be moved unless office is notified and an 
 				<textFieldExpression><![CDATA[$F{notes}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="138" y="30" width="103" height="40" forecolor="#0D6BFE" uuid="34ef3c36-29d6-44e8-882e-5898633e4459">
+				<reportElement x="136" y="30" width="103" height="40" forecolor="#0D6BFE" uuid="34ef3c36-29d6-44e8-882e-5898633e4459">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
@@ -760,7 +760,7 @@ On the 4th day box will automatically be moved unless office is notified and an 
 				<text><![CDATA[   PERMIT END DATE]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="147" y="48" width="85" height="20" uuid="11ed63ca-29d6-4b2d-9110-ddecb5ac2949">
+				<reportElement x="145" y="48" width="85" height="20" uuid="11ed63ca-29d6-4b2d-9110-ddecb5ac2949">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
 				<textElement>

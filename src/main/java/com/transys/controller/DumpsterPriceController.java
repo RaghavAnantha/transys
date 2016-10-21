@@ -125,7 +125,7 @@ public class DumpsterPriceController extends CRUDController<DumpsterPrice> {
 	@Override
 	public void setupCreate(ModelMap model, HttpServletRequest request) {
 		Map criterias = new HashMap();
-		model.addAttribute("customers", genericDAO.findByCriteria(Customer.class, criterias, "id", false));
+		model.addAttribute("customers", genericDAO.findByCriteria(Customer.class, criterias, "companyName", false));
 		model.addAttribute("dumpsterSizes", genericDAO.findUniqueByCriteria(DumpsterSize.class, criterias, "id", false));
 		//model.addAttribute("materialTypes", genericDAO.findByCriteria(MaterialType.class, criterias, "materialName", false));
 		model.addAttribute("dumpsterPrices", genericDAO.executeSimpleQuery("select DISTINCT(obj.price) from DumpsterPrice obj where obj.deleteFlag='1' order by obj.price asc"));

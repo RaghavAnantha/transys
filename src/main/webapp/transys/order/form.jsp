@@ -267,7 +267,7 @@ function populateOverweightFee() {
 	var overweightFeeInput = $("#orderFees\\.overweightFee");
 	
 	$.ajax({
-  		url: "retrieveOverweightFee.do?" + "dumpsterSizeId=" + dumpsterSizeId 
+  		url: "calculateOverweightFee.do?" + "dumpsterSizeId=" + dumpsterSizeId 
   								  		 + "&materialCategoryId=" + materialCategoryId
   								  		 + "&netWeightTonnage=" + netWeightTonnage,
   								  
@@ -286,7 +286,7 @@ function populateCityFee() {
 	
 	var cityFeeDescriptionSelect = $("#orderFees\\.cityFeeType");
 	var cityFeeId = cityFeeDescriptionSelect.val();
-	if (cityFeeDescriptionSelect == "") {
+	if (cityFeeId == "") {
 		return false;
 	}
 	

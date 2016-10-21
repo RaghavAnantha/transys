@@ -665,7 +665,7 @@ public class OrderController extends CRUDController<Order> {
 		Long dumpsterSizeId = entity.getDumpsterSize().getId();
 		Long materialCategoryId = entity.getMaterialType().getMaterialCategory().getId();
 		BigDecimal netWeightTonnage = entity.getNetWeightTonnage();
-		BigDecimal overweightFee = retrieveOverweightFee(dumpsterSizeId, materialCategoryId, netWeightTonnage);
+		BigDecimal overweightFee = calculateOverweightFee(entity.getCreatedAt(), dumpsterSizeId, materialCategoryId, netWeightTonnage);
 		overweightFee = overweightFee.setScale(2, RoundingMode.UP);
 		
 		OrderFees orderFees = entity.getOrderFees();
@@ -1216,6 +1216,7 @@ public class OrderController extends CRUDController<Order> {
 	private List<MaterialCategory> retrieveMaterialCategories(Long dumpsterSizeId) {
 		String dumpsterPriceQuery = "select distinct obj.materialType.materialCategory from DumpsterPrice obj where obj.deleteFlag='1' and";
 		dumpsterPriceQuery += " obj.dumpsterSize.id=" + dumpsterSizeId;
+		dumpsterPriceQuery += " order by obj.materialType.materialCategory.category asc";
 		List<MaterialCategory> materialCategories = genericDAO.executeSimpleQuery(dumpsterPriceQuery);
 		return materialCategories;
 	}
@@ -1240,11 +1241,17 @@ public class OrderController extends CRUDController<Order> {
 	}
 	
 	private List<MaterialType> retrieveMaterialTypes(Long dumpsterSizeId, Long materialCategoryId) {
-		String dumpsterPriceQuery = "select obj.materialType from DumpsterPrice obj where obj.deleteFlag='1' and";
+		String dumpsterPriceQuery = "select distinct obj.materialType from DumpsterPrice obj where obj.deleteFlag='1' and";
 		dumpsterPriceQuery += " obj.dumpsterSize.id=" + dumpsterSizeId
-				    		  	 +  " and obj.materialType.materialCategory.id=" + materialCategoryId;
+				    		  	 +  " and obj.materialType.materialCategory.id=" + materialCategoryId
+				    		  	 +  " order by obj.materialType.materialName asc";
 		List<MaterialType> materialTypes = genericDAO.executeSimpleQuery(dumpsterPriceQuery);
+		//materialTypes = removeDuplicates(materialTypes);
 		return materialTypes;
+	}
+	
+	public static <T> List<T> removeDuplicates(List<T> list) {
+	    return list.stream().collect(Collectors.toSet()).stream().collect(Collectors.toList());
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/retrieveCityFee.do")
@@ -1295,12 +1302,12 @@ public class OrderController extends CRUDController<Order> {
 		return cityFeeList.get(0).getFee();
 	}
 	
-	@RequestMapping(method = RequestMethod.GET, value = "/retrieveOverweightFee.do")
-	public @ResponseBody String retrieveOverweightFee(ModelMap model, HttpServletRequest request,
+	/*@RequestMapping(method = RequestMethod.GET, value = "/calculateOverweightFee.do")
+	public @ResponseBody String calculateOverweightFee(ModelMap model, HttpServletRequest request,
 			 													     @RequestParam(value = "dumpsterSizeId") Long dumpsterSizeId,
 			 													     @RequestParam(value = "materialCategoryId") Long materialCategoryId,
 			 													     @RequestParam(value = "netWeightTonnage") BigDecimal netWeightTonnage) {
-		BigDecimal overweightFee = retrieveOverweightFee(dumpsterSizeId, materialCategoryId, netWeightTonnage);
+		BigDecimal overweightFee = calculateOverweightFee(dumpsterSizeId, materialCategoryId, netWeightTonnage);
 		
 		ObjectMapper objectMapper = new ObjectMapper();
 		String json = StringUtils.EMPTY;
@@ -1313,17 +1320,19 @@ public class OrderController extends CRUDController<Order> {
 		return json;
 		//String json = (new Gson()).toJson(permitList);
 		//return json;
-	}
+	}*/
 	
-	private BigDecimal retrieveOverweightFee(Long dumpsterSizeId, Long materialCategoryId, BigDecimal netWeightTonnage) {
+	private BigDecimal calculateOverweightFee(Date requiredDate, Long dumpsterSizeId, Long materialCategoryId, BigDecimal netWeightTonnage) {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd"); 
-		String todaysDateStr = dateFormat.format(new Date());
+		
+		Date searchDate = requiredDate == null ? (new Date()) : requiredDate;
+		String searchDateStr = dateFormat.format(searchDate);
 		
 		String overweightFeeQuery = "select obj from OverweightFee obj where obj.deleteFlag='1' and ";
 		overweightFeeQuery += "obj.dumpsterSize.id=" + dumpsterSizeId
 								 +  " and obj.materialCategory.id=" + materialCategoryId
 								 +  " and obj.tonLimit<" + netWeightTonnage
-								 +  " and '" + todaysDateStr + "' between obj.effectiveStartDate and obj.effectiveEndDate";
+								 +  " and '" + searchDateStr + "' between obj.effectiveStartDate and obj.effectiveEndDate";
 		
 		List<OverweightFee> overweightFeeList = genericDAO.executeSimpleQuery(overweightFeeQuery);
 		if (overweightFeeList.isEmpty()) {
