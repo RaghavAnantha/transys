@@ -101,18 +101,18 @@ function validateRecycleLocationDataFormat() {
 
 <script type="text/javascript">
 function populateMaterialTypes() {
+	var materialTypeSelect = $("#materialTypeSelect");
+	materialTypeSelect.empty();
+	
+	var firstOption = $('<option value="">'+ "----Please Select----" +'</option>');
+	materialTypeSelect.append(firstOption);
+	
 	var materialCategorySelect = $("#materialCategory");
 	var materialCategoryId = materialCategorySelect.val();
 	
 	if (materialCategoryId == "") {
 		return false;
 	}
-	
-	var materialTypeSelect = $("#materialTypeSelect");
-	materialTypeSelect.empty();
-	
-	var firstOption = $('<option value="">'+ "----Please Select----" +'</option>');
-	materialTypeSelect.append(firstOption);
 	
 	$.ajax({
   		url: "retrieveMaterialTypes.do?" + "materialCategoryId=" + materialCategoryId,

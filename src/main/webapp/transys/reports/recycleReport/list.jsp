@@ -118,7 +118,7 @@ function validateDetailsMissingData() {
 		<td>
 			<!-- <input type="button" class="btn btn-primary btn-sm btn-sm-ext" onclick="document.forms['recycleReportForm'].submit();"
 				value="Preview" /> -->
-				<input type="button" class="btn btn-primary btn-sm btn-sm-ext" onclick="validateFormForDate();"
+			<input type="button" class="btn btn-primary btn-sm btn-sm-ext" onclick="validateFormForDate();"
 				value="Preview" />
 			<input type="reset" class="btn btn-primary btn-sm btn-sm-ext" value="Clear"/>
 		</td>

@@ -65,6 +65,7 @@ public class RecycleReportController extends CRUDController<Order> {
 		criteria.getSearchMap().remove("_csrf");
 		
 		List<?> reportData =  retrieveReportData(criteria);
+		criteria.setRecordCount(reportData.size());
 		model.addAttribute("list", reportData);
 		
 		String recycleDateFrom = criteria.getSearchMap().getOrDefault("recycleDateFrom", StringUtils.EMPTY).toString();

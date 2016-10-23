@@ -27,7 +27,6 @@ import com.transys.model.SearchCriteria;
 @Controller
 @RequestMapping("/reports/deliveryPickupReport")
 public class DeliveryPickupReportController extends CRUDController<Order> {
-
 	public DeliveryPickupReportController(){	
 		setUrlContext("reports/deliveryPickupReport");
 	}
@@ -53,8 +52,8 @@ public class DeliveryPickupReportController extends CRUDController<Order> {
 		//TODO fix me
 		criteria.getSearchMap().remove("_csrf");
 		
-		List<Order> orderList = genericDAO.search(getEntityClass(), criteria,"id",null,null);
-		model.addAttribute("ordersList",orderList);
+		List<Order> orderList = genericDAO.search(getEntityClass(), criteria, "id", null, null);
+		model.addAttribute("ordersList", orderList);
 		model.addAttribute("dumpsterSizeAggregation", setDumpsterSizeAggregation(model, orderList));
 		
 		String addrssQuery = "select obj from DeliveryAddress obj where obj.deleteFlag='1' order by obj.line1 asc";
