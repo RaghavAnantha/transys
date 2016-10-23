@@ -28,7 +28,6 @@ import com.transys.model.SearchCriteria;
 @Controller
 @RequestMapping("/reports/ordersRevenueReport")
 public class OrdersRevenueReportController extends CRUDController<Order> {
-
 	public OrdersRevenueReportController(){	
 		setUrlContext("reports/ordersRevenueReport");
 	}
@@ -50,12 +49,11 @@ public class OrdersRevenueReportController extends CRUDController<Order> {
 
 	@Override
 	public void setupCreate(ModelMap model, HttpServletRequest request) {
-		
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		//TODO fix me
 		criteria.getSearchMap().remove("_csrf");
 		
-		List<Order> orderList = genericDAO.search(getEntityClass(), criteria,"id",null,null);
+		List<Order> orderList = genericDAO.search(getEntityClass(), criteria, "id", null, null);
 		model.addAttribute("ordersList", orderList);
 		
 		if (orderList == null || orderList.isEmpty()) {
@@ -105,7 +103,6 @@ public class OrdersRevenueReportController extends CRUDController<Order> {
 	@RequestMapping(method = RequestMethod.GET, value = "/generateOrdersRevenueReport.do")
 	public void export(ModelMap model, HttpServletRequest request, HttpServletResponse response,
 			@RequestParam("type") String type, Object objectDAO, Class clazz) {
-
 		try {
 
 			List<Map<String,Object>> reportData = prepareReportData(request);
