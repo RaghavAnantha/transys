@@ -641,6 +641,7 @@ function validateAllOrderText() {
 			validationMsg += "Contact Name, "
 		}
 	}
+	
 	var notes = $('#orderNotes0\\.notes').val();
 	if (notes != "") {
 		if (!validateText(notes, 500)) {

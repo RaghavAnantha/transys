@@ -1477,7 +1477,8 @@ INSERT INTO `permitFee` VALUES
 (5,1,1,65.00,NULL,'2015-09-25 14:46:36','2025-09-25 14:46:36','2015-09-25 14:46:36',1,'2015-09-25 15:45:42',1,1),
 (6,1,2,115.00,NULL,'2015-09-25 14:46:36','2025-09-25 14:46:36','2015-09-25 15:45:56',1,NULL,NULL,1),
 (7,2,1,130.00,NULL,'2015-09-25 14:46:36','2025-09-25 14:46:36','2015-09-25 15:46:19',1,NULL,NULL,1),
-(8,2,2,230.00,NULL,'2015-09-25 14:46:36','2025-09-25 14:46:36','2015-09-25 15:46:37',1,NULL,NULL,1);
+(8,2,2,230.00,NULL,'2015-09-25 14:46:36','2025-09-25 14:46:36','2015-09-25 15:46:37',1,NULL,NULL,1),
+(9,3,2,115.00,NULL,'2016-10-01 00:00:00','2025-10-01 00:00:00','2016-10-22 06:57:26',1,NULL,NULL,1);
 /*!40000 ALTER TABLE `permitFee` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -1535,7 +1536,7 @@ CREATE TABLE `publicMaterialIntake` (
   `modified_at` datetime DEFAULT NULL,
   `modified_by` bigint(20) DEFAULT NULL,
   `delete_flag` int(11) NOT NULL DEFAULT '1',
-  `netWeightTonnage` decimal(6,2) NOT NULL,
+  `netWeightTonnage` decimal(9,2) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `UK_publicMaterialIntake` (`materialTypeId`, `intakeDate`),
   KEY `publicMaterialIntakeMaterialTypeRef_idx` (`materialTypeId`),

@@ -49,7 +49,7 @@ public class RecycleReportController extends CRUDController<Order> {
 		request.getSession().removeAttribute("searchCriteria");
 		setupList(model, request);
 		
-	/*	SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
+		/*SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		List<?> reportData =  retrieveReportData(criteria);
 		model.addAttribute("list", reportData);*/
 		
@@ -102,6 +102,7 @@ public class RecycleReportController extends CRUDController<Order> {
 	private List<MaterialType> retrieveMaterialTypes(Long materialCategoryId) {
 		String query = "select obj from MaterialType obj where obj.deleteFlag='1' and";
 		query	+= " obj.materialCategory.id=" + materialCategoryId;
+		query	+= " order by obj.materialName";
 		List<MaterialType> materialTypes = genericDAO.executeSimpleQuery(query);
 		return materialTypes;
 	}
@@ -110,15 +111,14 @@ public class RecycleReportController extends CRUDController<Order> {
 	public void setupCreate(ModelMap model, HttpServletRequest request) {
 		Map criterias = new HashMap();
 		
-		model.addAttribute("materialCategories", genericDAO.findByCriteria(MaterialCategory.class, criterias, "id", false));
+		model.addAttribute("materialCategories", genericDAO.findByCriteria(MaterialCategory.class, criterias, "category", false));
 		
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		Object materialCategoryObj = criteria.getSearchMap().get("materialCategory");
 		if (materialCategoryObj != null) {
 			String materialCategoryId = materialCategoryObj.toString();
 			if (StringUtils.isNotEmpty(materialCategoryId)) {
-				String query = "select obj from MaterialType obj where obj.deleteFlag='1' and obj.materialCategory.id=" + materialCategoryId;
-				List<MaterialType> materialTypeList = genericDAO.executeSimpleQuery(query);
+				List<MaterialType> materialTypeList = retrieveMaterialTypes(Long.valueOf(materialCategoryId));
 				model.addAttribute("materialTypes", materialTypeList);
 			}
 		}
@@ -138,9 +138,9 @@ public class RecycleReportController extends CRUDController<Order> {
 		/**
 		 * JPA Simple Query - UNION not supported
 		 */
-//		String rollOffAggregationQuery = "select obj.materialType.materialCategory.category as materialCategory, obj.materialType.materialName as materialName, SUM(obj.netWeightTonnage) as totalTonnage, r.location as recycleLocation from Order obj, RecycleLocation r where r.materialType.id = obj.materialType.id and r.status='Active' " + conditionClause + " group by obj.materialType.id, r.id";
-//		String publicAggregationQuery = "select public.materialType.materialCategory.category as materialCategory, public.materialType.materialName as materialName, SUM(public.netWeightTonnage) as totalTonnage, r.location as recycleLocation from PublicMaterialIntake public, RecycleLocation r where r.materialType.id = public.materialType.id and r.status='Active' " + conditionClause + " group by public.materialType.id, r.id";
-//		String aggregationQuery = "select materialCategory, materialName, SUM(totalTonnage),recycleLocation from (" + rollOffAggregationQuery + " UNION " + publicAggregationQuery + ") AS temp group by materialName, recycleLocation";
+		//	String rollOffAggregationQuery = "select obj.materialType.materialCategory.category as materialCategory, obj.materialType.materialName as materialName, SUM(obj.netWeightTonnage) as totalTonnage, r.location as recycleLocation from Order obj, RecycleLocation r where r.materialType.id = obj.materialType.id and r.status='Active' " + conditionClause + " group by obj.materialType.id, r.id";
+		//	String publicAggregationQuery = "select public.materialType.materialCategory.category as materialCategory, public.materialType.materialName as materialName, SUM(public.netWeightTonnage) as totalTonnage, r.location as recycleLocation from PublicMaterialIntake public, RecycleLocation r where r.materialType.id = public.materialType.id and r.status='Active' " + conditionClause + " group by public.materialType.id, r.id";
+		//	String aggregationQuery = "select materialCategory, materialName, SUM(totalTonnage),recycleLocation from (" + rollOffAggregationQuery + " UNION " + publicAggregationQuery + ") AS temp group by materialName, recycleLocation";
 	
 		List<?> aggregationQueryResults = genericDAO.executeNativeQuery(aggregationQuery);
 		return populateAggregationResults(aggregationQueryResults);

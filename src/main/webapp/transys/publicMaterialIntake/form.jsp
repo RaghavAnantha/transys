@@ -5,18 +5,18 @@
 
 <script type="text/javascript">
 function populateMaterialTypes() {
+	var materialTypeSelect = $("#materialTypeSelect");
+	materialTypeSelect.empty();
+	
+	var firstOption = $('<option value="">'+ "----Please Select----" +'</option>');
+	materialTypeSelect.append(firstOption);
+	
 	var materialCategorySelect = $("#materialCategory");
 	var materialCategoryId = materialCategorySelect.val();
 	
 	if (materialCategoryId == "") {
 		return false;
 	}
-	
-	var materialTypeSelect = $("#materialTypeSelect");
-	materialTypeSelect.empty();
-	
-	var firstOption = $('<option value="">'+ "----Please Select----" +'</option>');
-	materialTypeSelect.append(firstOption);
 	
 	$.ajax({
   		url: "retrieveMaterialTypes.do?" + "materialCategoryId=" + materialCategoryId,
@@ -32,7 +32,93 @@ function populateMaterialTypes() {
 		}
 	});
 }
+
+function validatePublicMaterialIntakeForm() {
+	var missingData = validatePublicMaterialIntakeMissingData();
+	if (missingData != "") {
+		var alertMsg = "<span style='color:red'><b>Please provide following required data:</b><br></span>"
+					 + missingData;
+		showAlertDialog("Data Validation", alertMsg);
+		
+		return false;
+	}
+	
+	var formatValidation = validatePublicMaterialIntakeDataFormat();
+	if (formatValidation != "") {
+		var alertMsg = "<span style='color:red'><b>Please correct following invalid data:</b><br></span>"
+					 + formatValidation;
+		showAlertDialog("Data Validation", alertMsg);
+		
+		return false;
+	}
+	
+	return true;
+}
+
+function validatePublicMaterialIntakeMissingData() {
+	var missingData = "";
+	
+	if ($('#materialCategory').val() == "") {
+		missingData += "Material Category, "
+	}
+	
+	if ($('#materialTypeSelect').val() == "") {
+		missingData += "Material Type, "
+	}
+	
+	var intakeDate = $("[name='intakeDate']").val();
+	if (intakeDate == "") {
+		missingData += "Intake Date, "
+	}
+	
+	if ($('#netWeightTonnage').val() == "") {
+		missingData += "Net Weight Tonnage, "
+	}
+	
+	if (missingData != "") {
+		missingData = missingData.substring(0, missingData.length - 2);
+	}
+	return missingData;
+}
+
+function validatePublicMaterialIntakeDataFormat() {
+	var validationMsg = "";
+	
+	var intakeDate = $("[name='intakeDate']").val();
+	if (intakeDate != "") {
+		if (!validateDate(intakeDate)) {
+			validationMsg += "Intake Date, "
+		}
+	}
+	
+	var netWeightTonnage = $('#netWeightTonnage').val();
+	if (netWeightTonnage != "") {
+		if (!validateWeight(netWeightTonnage, 700000)) {
+			validationMsg += "Net Weight Tonnage, "
+		}
+	}
+	
+	var notes = $('#publicMaterialIntakeComments').val();
+	if (notes != "") {
+		if (!validateText(notes, 500)) {
+			validationMsg += "Notes, "
+		}
+	}
+	
+	if (validationMsg != "") {
+		validationMsg = validationMsg.substring(0, validationMsg.length - 2);
+	}
+	return validationMsg;
+}
+
+function processPublicMaterialIntakeForm() {
+	if (validatePublicMaterialIntakeForm()) {
+		var publicMaterialIntakeForm = $("#publicMaterialIntakeForm");
+		publicMaterialIntakeForm.submit();
+	}
+}
 </script>
+
 <form:form action="save.do" name="publicMaterialIntakeForm" commandName="modelObject" method="post" id="publicMaterialIntakeForm">
 	<form:hidden path="id" id="id" />
 	<jsp:include page="/common/messages.jsp">
@@ -100,7 +186,7 @@ function populateMaterialTypes() {
 		<tr>
 			<td>&nbsp;</td>
 			<td colspan="2">
-				<input type="submit" id="publicMaterialIntakeCreate" onclick="return validate()" value="Save" class="flat btn btn-primary btn-sm btn-sm-ext" /> 
+				<input type="button" id="publicMaterialIntakeCreate" onclick="processPublicMaterialIntakeForm();" value="Save" class="flat btn btn-primary btn-sm btn-sm-ext" /> 
 				<input type="button" id="publicMaterialIntakeCancel" value="Back" class="flat btn btn-primary btn-sm btn-sm-ext" onClick="location.href='list.do'" />
 			</td>
 		</tr>

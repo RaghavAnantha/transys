@@ -34,7 +34,6 @@ import com.transys.model.SearchCriteria;
 @Controller
 @RequestMapping("/publicMaterialIntake")
 public class PublicMaterialIntakeController extends CRUDController<PublicMaterialIntake> {
-
 	public PublicMaterialIntakeController(){	
 		setUrlContext("publicMaterialIntake");
 	}
@@ -53,7 +52,8 @@ public class PublicMaterialIntakeController extends CRUDController<PublicMateria
 		setupList(model, request);
 		
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
-		model.addAttribute("list", genericDAO.search(PublicMaterialIntake.class, criteria, "id", null, null));
+		String orderBy = "materialType.materialCategory.category asc, materialType.materialName asc, intakeDate desc";
+		model.addAttribute("list", genericDAO.search(PublicMaterialIntake.class, criteria, orderBy, null, null));
 		
 		return urlContext + "/list";
 	}
@@ -68,7 +68,8 @@ public class PublicMaterialIntakeController extends CRUDController<PublicMateria
 		criteria.getSearchMap().remove("_csrf");
 		criteria.setPageSize(25);
 		
-		model.addAttribute("list", genericDAO.search(PublicMaterialIntake.class, criteria, "id", false));
+		String orderBy = "materialType.materialCategory.category asc, materialType.materialName asc, intakeDate desc";
+		model.addAttribute("list", genericDAO.search(PublicMaterialIntake.class, criteria, orderBy, null, null));
 		
 		return urlContext + "/list";
 	}
@@ -89,17 +90,15 @@ public class PublicMaterialIntakeController extends CRUDController<PublicMateria
 	public void setupCreate(ModelMap model, HttpServletRequest request) {
 		Map criterias = new HashMap();
 		
-		model.addAttribute("materialCategories", genericDAO.findByCriteria(MaterialCategory.class, criterias, "id", false));
-		
-		//model.addAttribute("materialTypes", genericDAO.findByCriteria(MaterialType.class, criterias, "id", false));
+		model.addAttribute("materialCategories", genericDAO.findByCriteria(MaterialCategory.class, criterias, "category", false));
+		//model.addAttribute("materialTypes", genericDAO.findByCriteria(MaterialType.class, criterias, "materialName", false));
 		
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		Object materialCategoryObj = criteria.getSearchMap().get("materialType.materialCategory");
 		if (materialCategoryObj != null) {
 			String materialCategoryId = materialCategoryObj.toString();
 			if (StringUtils.isNotEmpty(materialCategoryId)) {
-				String query = "select obj from MaterialType obj where obj.deleteFlag='1' and obj.materialCategory.id=" + materialCategoryId;
-				List<MaterialType> materialTypeList = genericDAO.executeSimpleQuery(query);
+				List<MaterialType> materialTypeList = retrieveMaterialTypes(Long.valueOf(materialCategoryId));
 				model.addAttribute("materialTypes", materialTypeList);
 			}
 		}
@@ -137,8 +136,7 @@ public class PublicMaterialIntakeController extends CRUDController<PublicMateria
 		List<MaterialType> materialTypeList = genericDAO.executeSimpleQuery(query);
 		entity.setMaterialType(materialTypeList.get(0));
 		
-		query = "select obj from MaterialType obj where obj.deleteFlag='1' and obj.materialCategory.id=" + entity.getMaterialType().getMaterialCategory().getId();
-		List<MaterialType> materialTypesForSelMatCat = genericDAO.executeSimpleQuery(query);
+		List<MaterialType> materialTypesForSelMatCat = retrieveMaterialTypes(entity.getMaterialType().getMaterialCategory().getId());
 		model.addAttribute("materialTypes", materialTypesForSelMatCat);
 		
 		model.addAttribute("msgCtx", "managePublicMaterialIntake");
@@ -153,8 +151,7 @@ public class PublicMaterialIntakeController extends CRUDController<PublicMateria
 		
 		PublicMaterialIntake publicMaterialIntakeToBeEdited = (PublicMaterialIntake)model.get("modelObject");
 		
-		String query = "select obj from MaterialType obj where obj.deleteFlag='1' and obj.materialCategory.id=" + publicMaterialIntakeToBeEdited.getMaterialType().getMaterialCategory().getId();
-		List<MaterialType> materialTypesForSelMatCat = genericDAO.executeSimpleQuery(query);
+		List<MaterialType> materialTypesForSelMatCat = retrieveMaterialTypes(publicMaterialIntakeToBeEdited.getMaterialType().getMaterialCategory().getId());
 		model.addAttribute("materialTypes", materialTypesForSelMatCat);
 		
 		return urlContext + "/form";
@@ -181,6 +178,7 @@ public class PublicMaterialIntakeController extends CRUDController<PublicMateria
 	private List<MaterialType> retrieveMaterialTypes(Long materialCategoryId) {
 		String query = "select obj from MaterialType obj where obj.deleteFlag='1' and";
 		query	+= " obj.materialCategory.id=" + materialCategoryId;
+		query	+= " order by obj.materialName";
 		List<MaterialType> materialTypes = genericDAO.executeSimpleQuery(query);
 		return materialTypes;
 	}

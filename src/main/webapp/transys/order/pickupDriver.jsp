@@ -118,6 +118,13 @@ function validatePickupDriverDataFormat() {
 		}
 	}
 	
+	var scaleTicketNumber = $('#scaleTicketNumber').val();
+	if (scaleTicketNumber != "") {
+		if (!validateText(scaleTicketNumber, 50)) {
+			validationMsg += "Scale Ticket Number, "
+		}
+	}
+	
 	if (validationMsg != "") {
 		validationMsg = validationMsg.substring(0, validationMsg.length - 2);
 	}

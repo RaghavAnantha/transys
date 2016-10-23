@@ -4,18 +4,18 @@
 
 <script type="text/javascript">
 function populateMaterialTypes() {
+	var materialTypeSelect = $("#materialType");
+	materialTypeSelect.empty();
+	
+	var firstOption = $('<option value="">'+ "----Please Select----" +'</option>');
+	materialTypeSelect.append(firstOption);
+	
 	var materialCategorySelect = $("#materialType\\.materialCategory");
 	var materialCategoryId = materialCategorySelect.val();
 	
 	if (materialCategoryId == "") {
 		return false;
 	}
-	
-	var materialTypeSelect = $("#materialType");
-	materialTypeSelect.empty();
-	
-	var firstOption = $('<option value="">'+ "----Please Select----" +'</option>');
-	materialTypeSelect.append(firstOption);
 	
 	$.ajax({
   		url: "retrieveMaterialTypes.do?" + "materialCategoryId=" + materialCategoryId,
