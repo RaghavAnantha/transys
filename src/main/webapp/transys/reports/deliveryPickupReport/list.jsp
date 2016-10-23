@@ -72,7 +72,7 @@
 <form:form name="deliveryPickupReport" id="deliveryPickupReport" class="tab-color">
 	<transys:datatable urlContext="reports/deliveryPickupReport"  baseObjects="${ordersList}"
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
-		pagingLink="search.do" dataQualifier="deliveryPickupReport">
+		pagingLink="list.do" dataQualifier="deliveryPickupReport">
 		<transys:textcolumn headerText="Order #" dataField="id" />
 		<transys:textcolumn headerText="Customer" dataField="customer.companyName" />
 		<transys:textcolumn headerText="Delivery Address" dataField="deliveryAddress.fullLine" />

@@ -141,7 +141,7 @@ function validateDetailsMissingData() {
 <form:form name="recycleReport" id="recycleReport" class="tab-color">
  	<transys:datatable urlContext="reports/recycleReport"  baseObjects="${list}"
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
-		pagingLink="search.do" dataQualifier="recycleReport">
+		pagingLink="list.do" dataQualifier="recycleReport">
 		<transys:textcolumn headerText="Material Category" dataField="materialCategory" />
 		<transys:textcolumn headerText="Material Type" dataField="materialName" />
 		<transys:textcolumn headerText="Tons" dataField="totalNetTonnage" />
