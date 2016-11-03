@@ -32,6 +32,7 @@ public class OrderReportVO implements BaseVO {
 	private String pickupDate;
 	
 	private String dumpsterSize;
+	private String dumpsterNum = StringUtils.EMPTY;;
 	
 	private String materialType;
 	
@@ -274,5 +275,11 @@ public class OrderReportVO implements BaseVO {
 	}
 	public void setPermitEndDate(String permitEndDate) {
 		this.permitEndDate = permitEndDate;
+	}
+	public String getDumpsterNum() {
+		return dumpsterNum;
+	}
+	public void setDumpsterNum(String dumpsterNum) {
+		this.dumpsterNum = dumpsterNum;
 	}
 }

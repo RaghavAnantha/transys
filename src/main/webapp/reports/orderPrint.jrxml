@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
-<!-- 2016-10-21T13:46:36 -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="orderPrint" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="f412ce57-68ae-45e8-90e9-b1c053e29ef7">
+<!-- 2016-11-02T22:10:39 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="orderPrint" pageWidth="595" pageHeight="842" columnWidth="575" leftMargin="10" rightMargin="10" topMargin="10" bottomMargin="10" uuid="f412ce57-68ae-45e8-90e9-b1c053e29ef7">
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
 	<parameter name="LOGO_FILE_PATH" class="java.lang.String">
 		<parameterDescription><![CDATA[]]></parameterDescription>
 	</parameter>
@@ -34,6 +43,7 @@
 	<field name="pickupOrderDeliveryCity" class="java.lang.String"/>
 	<field name="notes" class="java.lang.String"/>
 	<field name="permitEndDate" class="java.lang.String"/>
+	<field name="dumpsterNum" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -51,7 +61,7 @@
 				<text><![CDATA[Date]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="432" y="5" width="118" height="20" uuid="13605d15-f8c8-42f0-b3d5-cbf9b8e36ad7">
+				<reportElement x="432" y="5" width="138" height="20" uuid="13605d15-f8c8-42f0-b3d5-cbf9b8e36ad7">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
@@ -61,7 +71,7 @@
 				<textFieldExpression><![CDATA[$F{deliveryDate}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="432" y="25" width="118" height="20" uuid="bd34f291-fcff-4b3c-9d0d-28d1d9cd266c">
+				<reportElement x="432" y="25" width="138" height="20" uuid="bd34f291-fcff-4b3c-9d0d-28d1d9cd266c">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
@@ -71,7 +81,7 @@
 				<textFieldExpression><![CDATA[$F{deliveryContactName}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="432" y="46" width="118" height="20" uuid="f3403a8b-d7a5-45a3-add1-723fde9fd63c">
+				<reportElement x="432" y="46" width="138" height="20" uuid="f3403a8b-d7a5-45a3-add1-723fde9fd63c">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
@@ -101,7 +111,7 @@
 				<text><![CDATA[Contact Phone]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="432" y="66" width="118" height="20" uuid="4a3648f4-9f2e-4e98-8c5f-d2d33be35f7e">
+				<reportElement x="432" y="66" width="138" height="20" uuid="4a3648f4-9f2e-4e98-8c5f-d2d33be35f7e">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
@@ -149,7 +159,7 @@
 				<textFieldExpression><![CDATA[$F{billingAddress}]]></textFieldExpression>
 			</textField>
 			<rectangle>
-				<reportElement x="283" y="8" width="267" height="86" uuid="05fb9feb-531a-427e-b92d-b804d36c7afe">
+				<reportElement x="283" y="8" width="287" height="86" uuid="05fb9feb-531a-427e-b92d-b804d36c7afe">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
 				<graphicElement>
@@ -157,7 +167,7 @@
 				</graphicElement>
 			</rectangle>
 			<textField>
-				<reportElement x="306" y="11" width="223" height="30" uuid="b0f77de4-f8ff-407e-9a81-a8acb58934d8">
+				<reportElement x="306" y="11" width="254" height="30" uuid="b0f77de4-f8ff-407e-9a81-a8acb58934d8">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
@@ -167,7 +177,7 @@
 				<textFieldExpression><![CDATA[$F{deliveryAddress}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="306" y="44" width="223" height="20" uuid="356629b8-53e9-4833-b94d-724607b7adf6">
+				<reportElement x="306" y="44" width="254" height="20" uuid="356629b8-53e9-4833-b94d-724607b7adf6">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
@@ -177,7 +187,7 @@
 				<textFieldExpression><![CDATA[$F{dumpsterLocation}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="306" y="69" width="223" height="20" uuid="1727bb0b-8026-4d56-bb3d-293d0d667d0e">
+				<reportElement x="306" y="69" width="254" height="20" uuid="1727bb0b-8026-4d56-bb3d-293d0d667d0e">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
@@ -198,7 +208,7 @@
 	<columnHeader>
 		<band height="62" splitType="Stretch">
 			<rectangle>
-				<reportElement x="376" y="5" width="174" height="50" uuid="e0375434-a53c-4690-b7c8-e1902c4e6395">
+				<reportElement x="376" y="5" width="194" height="50" uuid="e0375434-a53c-4690-b7c8-e1902c4e6395">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
@@ -304,7 +314,7 @@
 				<textFieldExpression><![CDATA[$F{pickupDate}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="383" y="32" width="162" height="20" uuid="f9762fd4-c964-4f32-9e28-4c5b7eb230ce"/>
+				<reportElement x="383" y="32" width="177" height="20" uuid="f9762fd4-c964-4f32-9e28-4c5b7eb230ce"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
@@ -348,13 +358,13 @@
 				<text><![CDATA[  DUMPSTER RENTAL]]></text>
 			</staticText>
 			<rectangle>
-				<reportElement x="300" y="198" width="250" height="70" uuid="e66b075f-8583-4be2-a1f3-042ac66bc3be"/>
+				<reportElement x="300" y="198" width="270" height="70" uuid="e66b075f-8583-4be2-a1f3-042ac66bc3be"/>
 				<graphicElement>
 					<pen lineWidth="0.5" lineColor="#0D6BFE"/>
 				</graphicElement>
 			</rectangle>
 			<staticText>
-				<reportElement mode="Opaque" x="6" y="5" width="544" height="20" forecolor="#FCFCFC" backcolor="#F5100C" uuid="289f04fb-e993-4bc5-ab26-1642c402f609"/>
+				<reportElement mode="Opaque" x="6" y="5" width="564" height="20" forecolor="#FCFCFC" backcolor="#F5100C" uuid="289f04fb-e993-4bc5-ab26-1642c402f609"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font isBold="true"/>
 				</textElement>
@@ -386,7 +396,7 @@
 				<textFieldExpression><![CDATA[$F{dumpsterSize}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement mode="Opaque" x="6" y="75" width="544" height="20" forecolor="#FCFCFC" backcolor="#F5100C" uuid="8dd97162-2067-449a-841f-5d4ffed1855d"/>
+				<reportElement mode="Opaque" x="6" y="75" width="564" height="20" forecolor="#FCFCFC" backcolor="#F5100C" uuid="8dd97162-2067-449a-841f-5d4ffed1855d"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="14" isBold="true"/>
 				</textElement>
@@ -441,7 +451,7 @@
 				<text><![CDATA[  DELIVERY BOX #]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="416" y="100" width="134" height="40" forecolor="#0D6BFE" uuid="919d66f1-6ebf-46dc-9769-57b3e70c7fd4">
+				<reportElement x="416" y="100" width="154" height="40" forecolor="#0D6BFE" uuid="919d66f1-6ebf-46dc-9769-57b3e70c7fd4">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
@@ -457,7 +467,7 @@
 				<text><![CDATA[  BOX EXCHANGE #]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="416" y="149" width="134" height="40" forecolor="#0D6BFE" uuid="8d90468a-f03c-45d9-b60d-2ec8340531e4">
+				<reportElement x="416" y="149" width="154" height="40" forecolor="#0D6BFE" uuid="8d90468a-f03c-45d9-b60d-2ec8340531e4">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
@@ -473,7 +483,7 @@
 				<text><![CDATA[  TOTAL FEE]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="425" y="166" width="100" height="20" uuid="27779c62-f824-4b41-bfad-6939d55c7a7e">
+				<reportElement x="425" y="166" width="135" height="20" uuid="27779c62-f824-4b41-bfad-6939d55c7a7e">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
 				<textElement>
@@ -525,7 +535,7 @@
 				<textFieldExpression><![CDATA["$"+$F{dumpsterPrice}]]></textFieldExpression>
 			</textField>
 			<rectangle>
-				<reportElement x="6" y="198" width="284" height="322" uuid="eccdc412-3766-4699-973e-64ee2bda7869"/>
+				<reportElement x="6" y="198" width="284" height="333" uuid="eccdc412-3766-4699-973e-64ee2bda7869"/>
 				<graphicElement>
 					<pen lineWidth="0.5" lineColor="#0D6BFE"/>
 				</graphicElement>
@@ -566,7 +576,7 @@ On the 4th day box will automatically be moved unless office is notified and an 
 				</textElement>
 				<text><![CDATA[* Regular hazardous waste (as defined in 35 Illionis 
    Administrative code 721)
-* Potentially Infectious Medical Waste as defined in Section 56 of the Evironmental Protection Act )
+* Potentially Infectious Medical Waste as defined in Section 56 of the Environmental Protection Act )
 * Non - hazardous Special Waste
 * Lead Acid Batteries
 * Friable Asbestos Waste
@@ -592,7 +602,7 @@ On the 4th day box will automatically be moved unless office is notified and an 
 				<text><![CDATA[REFERENCE #]]></text>
 			</staticText>
 			<rectangle>
-				<reportElement x="300" y="283" width="250" height="70" uuid="ca5a9d77-27ee-4201-bfed-2e92f9b554f3"/>
+				<reportElement x="300" y="283" width="270" height="70" uuid="ca5a9d77-27ee-4201-bfed-2e92f9b554f3"/>
 				<graphicElement>
 					<pen lineWidth="0.5" lineColor="#0D6BFE"/>
 				</graphicElement>
@@ -619,7 +629,7 @@ On the 4th day box will automatically be moved unless office is notified and an 
 				<text><![CDATA[BOX #]]></text>
 			</staticText>
 			<rectangle>
-				<reportElement x="300" y="366" width="250" height="70" uuid="9b70cc7b-c2a7-465a-af0b-a1d2391dd2eb"/>
+				<reportElement x="300" y="366" width="270" height="70" uuid="9b70cc7b-c2a7-465a-af0b-a1d2391dd2eb"/>
 				<graphicElement>
 					<pen lineWidth="0.5" lineColor="#0D6BFE"/>
 				</graphicElement>
@@ -639,31 +649,31 @@ On the 4th day box will automatically be moved unless office is notified and an 
 				<text><![CDATA[CITY]]></text>
 			</staticText>
 			<rectangle>
-				<reportElement x="300" y="450" width="250" height="70" uuid="eced59da-565f-4094-a8e9-145caa0bc241"/>
+				<reportElement x="300" y="450" width="270" height="81" uuid="eced59da-565f-4094-a8e9-145caa0bc241"/>
 				<graphicElement>
 					<pen lineWidth="0.5" lineColor="#0D6BFE"/>
 				</graphicElement>
 			</rectangle>
 			<staticText>
-				<reportElement x="372" y="495" width="108" height="19" forecolor="#0D6BFE" uuid="81d4522f-a27a-4897-bf0d-846efc3c1fb4"/>
+				<reportElement x="372" y="510" width="108" height="19" forecolor="#0D6BFE" uuid="81d4522f-a27a-4897-bf0d-846efc3c1fb4"/>
 				<text><![CDATA[Authorized Signature]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="427" y="207" width="117" height="20" uuid="afa109d4-e1cf-4155-bdf3-3509d538ac8e"/>
+				<reportElement x="427" y="207" width="133" height="20" uuid="afa109d4-e1cf-4155-bdf3-3509d538ac8e"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{paymentMethod}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="427" y="239" width="117" height="20" uuid="e6d2fdf8-0c37-41b5-9686-6674c39ef12a"/>
+				<reportElement x="427" y="239" width="133" height="20" uuid="e6d2fdf8-0c37-41b5-9686-6674c39ef12a"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{referenceNum}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="16" y="492" width="263" height="25" forecolor="#F5100C" uuid="e782696a-17c1-4bcd-9cd3-e31c6567c5d2"/>
+				<reportElement x="16" y="492" width="263" height="39" forecolor="#F5100C" uuid="e782696a-17c1-4bcd-9cd3-e31c6567c5d2"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
@@ -671,7 +681,7 @@ On the 4th day box will automatically be moved unless office is notified and an 
     Accompanying Sub Surface **]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="427" y="288" width="115" height="20" uuid="b0867a51-e4be-466a-8a89-9068939cbc0d">
+				<reportElement x="427" y="288" width="133" height="20" uuid="b0867a51-e4be-466a-8a89-9068939cbc0d">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
@@ -695,7 +705,7 @@ On the 4th day box will automatically be moved unless office is notified and an 
 				<textFieldExpression><![CDATA[$F{pickupOrderDumpsterSize}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="414" y="374" width="128" height="20" uuid="9a41b238-7db1-46e9-9673-f5519fd45930">
+				<reportElement x="414" y="374" width="146" height="20" uuid="9a41b238-7db1-46e9-9673-f5519fd45930">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
@@ -707,7 +717,7 @@ On the 4th day box will automatically be moved unless office is notified and an 
 				<textFieldExpression><![CDATA[$F{pickupOrderDeliveryAddress}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="414" y="404" width="128" height="20" uuid="c7ac3c35-e476-4be1-a477-8b769f10f9c2">
+				<reportElement x="414" y="404" width="146" height="20" uuid="c7ac3c35-e476-4be1-a477-8b769f10f9c2">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
@@ -719,7 +729,7 @@ On the 4th day box will automatically be moved unless office is notified and an 
 				<textFieldExpression><![CDATA[$F{pickupOrderDeliveryCity}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="244" y="30" width="306" height="40" forecolor="#0D6BFE" uuid="14534689-4c3a-4616-be39-6e82417ea91a">
+				<reportElement x="244" y="30" width="326" height="40" forecolor="#0D6BFE" uuid="14534689-4c3a-4616-be39-6e82417ea91a">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
@@ -735,7 +745,7 @@ On the 4th day box will automatically be moved unless office is notified and an 
 				<text><![CDATA[   NOTES]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="253" y="47" width="292" height="20" uuid="2d827c22-aa54-4e04-94ef-ba8e6e14ca92">
+				<reportElement x="253" y="47" width="307" height="20" uuid="2d827c22-aa54-4e04-94ef-ba8e6e14ca92">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
 				<textElement>
@@ -767,6 +777,15 @@ On the 4th day box will automatically be moved unless office is notified and an 
 					<font isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{permitEndDate}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="281" y="119" width="126" height="20" uuid="d69d6114-ec32-4fc8-b691-f5af8e7f1073">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{dumpsterNum}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

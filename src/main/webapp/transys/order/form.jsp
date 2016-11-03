@@ -1686,6 +1686,16 @@ $("#confirmDialogYes").click(function (ev) {
 	orderAddEditForm.submit();
 });
 
+$("#confirmDialogNo").click(function (ev) {
+	var isExchangeIndicator = $('#isExchange');
+	isExchangeIndicator.val("false");
+	
+	$('#existingDroppedOffOrderId').val("");
+	
+	var orderAddEditForm = $("#orderAddEditForm");
+	orderAddEditForm.submit();
+});
+
 $("#addCustomerLink").click(function (ev) {
 	var orderId = $('#id').val();
 	if (orderId != "") {

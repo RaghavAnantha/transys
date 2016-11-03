@@ -953,6 +953,11 @@ public class OrderController extends CRUDController<Order> {
 		}
 		anOrderReportVO.setDumpsterSize(dumpsterSize);
 		
+		if (anOrder.getDumpster() != null) {
+			String dumpsterNum = StringUtils.defaultIfBlank(anOrder.getDumpster().getDumpsterNum(), StringUtils.EMPTY);
+			anOrderReportVO.setDumpsterNum(dumpsterNum);
+		}
+		
 		anOrderReportVO.setMaterialType(anOrder.getMaterialType().getMaterialName());
 		
 		anOrderReportVO.setDeliveryDate(anOrder.getFormattedDeliveryDate());

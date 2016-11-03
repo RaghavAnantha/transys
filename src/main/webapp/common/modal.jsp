@@ -84,8 +84,9 @@ function clearPopupDialogSuccessMessage() {
 			<div class="modal-body" id="confirmDialogBody"></div>
 			<div class="modal-footer" id="confirmDialogFooter">
 			   <button type="button" data-dismiss="modal" class="btn btn-primary" id="confirmDialogYes">Yes</button>
-			   <button type="button" data-dismiss="modal" class="btn" id="confirmDialogNo">No</button>
-			</div>
+			   <button type="button" data-dismiss="modal" class="btn btn-primary" id="confirmDialogNo">No</button>
+			   <button type="button" data-dismiss="modal" class="btn" id="confirmDialogCancel">Cancel</button>
+       		</div>
 		</div>
 	</div>
 </div>
