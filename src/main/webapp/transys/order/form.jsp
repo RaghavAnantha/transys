@@ -1536,7 +1536,7 @@ function updateTotalPaid() {
 	</table>
 	<table id="form-table" class="table">
 		<tr>
-			<td class="form-left">Payment Method<span class="errorMessage">*</span></td>
+			<td class="form-left">Payment Method</td>
 			<td class="form-left">Payment Date</td>
 			<td class="form-left">Amount</td>
 			<td class="form-left">CC Reference #</td>
