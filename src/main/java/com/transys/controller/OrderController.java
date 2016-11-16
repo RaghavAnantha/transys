@@ -1201,8 +1201,8 @@ public class OrderController extends CRUDController<Order> {
 			dumsterPriceList = genericDAO.executeSimpleQuery(baseDumpsterPriceQuery);
 		}
 		
-		
-		return dumsterPriceList.get(0).getPrice();
+		BigDecimal dumpsterPrice = dumsterPriceList.isEmpty() ? new BigDecimal(0.0) : dumsterPriceList.get(0).getPrice();
+		return dumpsterPrice;
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/retrieveMaterialCategories.do")
