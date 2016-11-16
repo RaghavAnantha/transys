@@ -535,10 +535,15 @@ public class OrderController extends CRUDController<Order> {
 			}
 		}
 		
-		createAuditOrderNotes(entity, auditMsg, entity.getModifiedBy());
-		
 		genericDAO.saveOrUpdate(entity);
 		
+		OrderNotes auditOrderNotes = createAuditOrderNotes(entity, auditMsg, entity.getModifiedBy());
+		entity.getOrderNotes().add(auditOrderNotes);
+		
+		return dropOffSaveSuccess(request, entity, model);
+	}
+	
+	private String dropOffSaveSuccess(HttpServletRequest request, Order entity, ModelMap model) {
 		cleanUp(request);
 
 		setupCreate(model, request, entity);
@@ -1774,7 +1779,7 @@ public class OrderController extends CRUDController<Order> {
 		model.addAttribute("activeSubTab", "orderDetails");
 		model.addAttribute("mode", "ADD");
 		
-		//EMPTY_ORDER after save change
+		// EMPTY_ORDER after save change
 		if (entity.getModifiedBy() == null) {
 			setupCreate(model, request);
 			
