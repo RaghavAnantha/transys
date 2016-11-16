@@ -162,8 +162,8 @@ public class GenericJpaDAO implements GenericDAO {
 			// writeEntityLog("ADD", entity, null);
 		} else {
 			entityManager.merge(entity);
-			Session session = ((Session) entityManager.getDelegate()).getSessionFactory().openSession();
-			T oldEntity = (T) session.get(entity.getClass(), entity.getId());
+			//Session session = ((Session) entityManager.getDelegate()).getSessionFactory().openSession();
+			//T oldEntity = (T) session.get(entity.getClass(), entity.getId());
 			// writeEntityLog("UPDATE", entity, oldEntity);
 		}
 	}

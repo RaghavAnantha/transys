@@ -448,7 +448,7 @@ public class DynamicReportServiceImpl implements DynamicReportService {
 					}
 				}
 			}
-			
+			session.close();
 			JasperPrint jp = getJasperPrint(reportName, obj,
 					columnPropertyList, orderedDisplayableFieldList, request,type,entityClass);
 			out = getStreamByType(type, jp, request);
