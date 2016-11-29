@@ -151,6 +151,12 @@ function confirmDelete(url) {
 	}	
 }
 
+function processCancel(url, id) {
+	if (confirm("Do you want to Cancel the selected record?")) {
+		document.location = url;
+	}	
+}
+
 function hideTr( objId ){
 	var obj =  document.getElementById( objId );
 	if( obj != null )

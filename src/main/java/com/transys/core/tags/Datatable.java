@@ -42,6 +42,7 @@ public final class Datatable extends BodyTagSupport {
 	private boolean insertable;
 	private boolean searcheable;
 	private boolean editable;
+	private boolean cancellable;
 	private boolean deletable;
 	private boolean multipleDelete;
 	private boolean exportPdf;
@@ -192,6 +193,14 @@ public final class Datatable extends BodyTagSupport {
 	}
 
 	
+	public boolean isCancellable() {
+		return cancellable;
+	}
+
+	public void setCancellable(boolean cancellable) {
+		this.cancellable = cancellable;
+	}
+
 	/**
 	 * @return the editable
 	 */
@@ -657,6 +666,7 @@ public final class Datatable extends BodyTagSupport {
 		JspWriter objOut = null;
 		Iterator iterCol = null;
 		ImageColumn editColumn = null;
+		ImageColumn cancelColumn = null;
 		ImageColumn deleteColumn = null;
 		TextColumn checkBoxColumn=null;
 		//User user = (User)pageContext.getSession().getAttribute("userInfo");
@@ -681,6 +691,18 @@ public final class Datatable extends BodyTagSupport {
 						editColumn.setPageContext(this.pageContext);
 						editColumn.cssClass = "centerImage";
 						this.columns.add(editColumn);
+					//}
+				}
+				if (cancellable) {
+					//String url = "/"+urlContext+"/cancel.do";
+					//if (authenticationService.hasUserPermission(user, url)) {
+						cancelColumn = new ImageColumn();
+						cancelColumn.setImageSrc(pageContext.getAttribute("resourceCtx")+"/images/cancel.png");
+						cancelColumn.setImageBorder(0);
+						cancelColumn.setWidth("30");
+						cancelColumn.setPageContext(this.pageContext);
+						cancelColumn.cssClass = "centerImage";
+						this.columns.add(cancelColumn);
 					//}
 				}
 				if (deletable) {
@@ -716,6 +738,13 @@ public final class Datatable extends BodyTagSupport {
 							
 						}
 					}
+					
+					Long id = (Long) PropertyUtils.getProperty(currItem, "id");
+					if (cancelColumn!=null) {
+						cancelColumn.setLinkUrl("javascript:processCancel('"+pageContext.getAttribute("ctx")+"/"+urlContext+"/cancel.do?id="+id+"',"+id+");");
+																								
+					}
+					
 						if (deleteColumn!=null)
 						deleteColumn.setLinkUrl("javascript:confirmDelete('"+pageContext.getAttribute("ctx")+"/"+urlContext+"/delete.do?id="+PropertyUtils.getProperty(currItem, "id")+"');");
 //						deleteColumn.setLinkUrl(pageContext.getAttribute("ctx")+"/"+urlContext+"/delete.do?id="+PropertyUtils.getProperty(currItem, "id"));
@@ -886,6 +915,14 @@ public final class Datatable extends BodyTagSupport {
 				//if (authenticationService.hasUserPermission(user, url)) {
 					//objOut.println("<th width=\"30\">"+CacheUtil.getText("messageResourceCache","label_Edit_"+locale)+"</th>");
 					objOut.println("<th width=\"30\">"+"EDIT"+"</th>");
+					additionalColumn++;
+				//}
+			}
+			if (cancellable) {
+				//String url = "/"+urlContext+"/cancel.do";
+				//if (authenticationService.hasUserPermission(user, url)) {
+					//objOut.println("<th width=\"30\">"+CacheUtil.getText("messageResourceCache","label_Cancel_"+locale)+"</th>");
+					objOut.println("<th width=\"30\">"+"CAN"+"</th>");
 					additionalColumn++;
 				//}
 			}

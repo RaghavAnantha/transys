@@ -31,6 +31,9 @@ public class DumpsterPrice extends AbstractFeeMasterData {
 	@Column(name="price")
 	private BigDecimal price;
 	
+	@Column(name="tonnageFee")
+	private BigDecimal tonnageFee;
+	
 	public Customer getCustomer() {
 		return customer;
 	}
@@ -61,5 +64,13 @@ public class DumpsterPrice extends AbstractFeeMasterData {
 
 	public void setMaterialType(MaterialType materialType) {
 		this.materialType = materialType;
+	}
+
+	public BigDecimal getTonnageFee() {
+		return tonnageFee;
+	}
+
+	public void setTonnageFee(BigDecimal tonnageFee) {
+		this.tonnageFee = tonnageFee;
 	}
 }

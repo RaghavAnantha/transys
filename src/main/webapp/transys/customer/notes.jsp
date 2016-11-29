@@ -69,6 +69,10 @@ function processCustomerNotesForm() {
 	</jsp:include>
 	<table id="form-table" class="table">
 		<tr><td colspan=10></td></tr>
+		<tr>
+			<td class="form-left">Customer ID</td>
+			<td class="td-static">${notesModelObject.customer.id}</td>
+		</tr>
 		<tr><td class="form-left">Notes<span class="errorMessage">*</span></td></tr>
 		<tr>
 			<td colspan=10>

@@ -599,6 +599,7 @@ CREATE TABLE `orderFees` (
   `additionalFee3Id` bigint(20) DEFAULT NULL,
   `additionalFee3` decimal(6,2) DEFAULT 0.00,
   `totalAdditionalFees` decimal(6,2) DEFAULT 0.00,
+  `tonnageFee` decimal(6,2) DEFAULT 0.00,
   `discountAmount` decimal(6,2) DEFAULT 0.00,
   `totalFees` decimal(6,2) DEFAULT 0.00,
   `created_at` datetime NOT NULL,
@@ -729,7 +730,8 @@ INSERT INTO `orderStatus` VALUES
 (1,'Open',NULL,'2015-09-10 21:22:45',1,NULL,NULL,1),
 (2,'Dropped Off',NULL,'2015-09-10 21:22:45',1,NULL,NULL,1),
 (3,'Closed',NULL,'2015-09-10 21:22:45',1,NULL,NULL,1),
-(4,'Pick Up',NULL,'2015-09-10 21:22:45',1,NULL,NULL,1);
+(4,'Pick Up',NULL,'2015-09-10 21:22:45',1,NULL,NULL,1),
+(5,'Canceled',NULL,'2015-09-10 21:22:45',1,NULL,NULL,1);
 
 /*!40000 ALTER TABLE `orderStatus` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -1275,6 +1277,7 @@ CREATE TABLE `dumpsterPrice` (
   `materialTypeId` bigint(20) NOT NULL,
   `customerId` bigint(20) DEFAULT NULL,
   `price` decimal(6,2) NOT NULL,
+  `tonnageFee` decimal(6,2) DEFAULT 0.00,
   `comments` varchar(500) DEFAULT NULL,
   `effectiveStartDate` datetime NOT NULL,
   `effectiveEndDate` datetime NOT NULL,

@@ -84,6 +84,10 @@ function validatePermitNotesText() {
 	</jsp:include>
 	<table id="form-table" width="100%">
 		<tr><td colspan=10></td></tr>
+		<tr>
+			<td class="form-left">Permit Number</td>
+			<td class="td-static">${notesModelObject.permit.number}</td>
+		</tr>
 	    <tr><td class="form-left">Notes<span class="errorMessage">*</span></td></tr>
 		<tr>
 			<td colspan=10>

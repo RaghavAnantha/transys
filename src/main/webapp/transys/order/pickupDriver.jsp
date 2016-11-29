@@ -225,6 +225,10 @@ function processPickupDriverForm() {
 			</td>
 		</tr>
 		<tr>
+			<td class="form-left">Order #</td>
+			<td class="td-static">${modelObject.id}</td>
+		</tr>
+		<tr>
 			<td class="form-left">Ready For Pickup<span class="errorMessage">*</span></td>
 			<td>
 				<c:set var="yesSelected" value="" />

@@ -46,7 +46,10 @@ function processDropOffDriverForm() {
 		<jsp:param name="msgCtx" value="manageDropOffDriver" />
 	</jsp:include>
 	<table id="form-table" class="table">
-		<tr><td colspan="10"></td></tr>
+		<tr>
+			<td class="form-left">Order #</td>
+			<td class="td-static">${modelObject.id}</td>
+		</tr>
 		<tr>
 			<td class="form-left">Drop-off Driver<span class="errorMessage">*</span></td>
 			<td>

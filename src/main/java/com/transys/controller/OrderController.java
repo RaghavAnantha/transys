@@ -183,7 +183,6 @@ public class OrderController extends CRUDController<Order> {
 		model.addAttribute("orderIds", genericDAO.executeSimpleQuery("select obj.id from Order obj where obj.deleteFlag='1' order by obj.id asc"));
 		
 		List<Order> orderList = genericDAO.executeSimpleQuery("select obj from Order obj where obj.deleteFlag='1' order by obj.id asc");
-		//model.addAttribute("order", orderList);
 		
 		SortedSet<String> contactNameSet = new TreeSet<String>();
 		SortedSet<String> phoneSet = new TreeSet<String>();
@@ -262,7 +261,7 @@ public class OrderController extends CRUDController<Order> {
 			}
 	   }*/
 		
-		model.addAttribute("list", genericDAO.search(getEntityClass(), criteria, "deliveryDate desc, orderStatus.status desc", null, null));
+		model.addAttribute("list", genericDAO.search(getEntityClass(), criteria, "deliveryDate desc, orderStatus.status desc, id desc", null, null));
 		
 		model.addAttribute("activeTab", "manageOrders");
 		//model.addAttribute("activeSubTab", "orderDetails");
@@ -308,8 +307,59 @@ public class OrderController extends CRUDController<Order> {
 		model.addAttribute("activeTab", "manageOrders");
 		model.addAttribute("mode", "ADD");
 		model.addAttribute("activeSubTab", "orderDetails");
-		//return urlContext + "/form";
 		
+		model.addAttribute("notesModelObject", new OrderNotes());
+		
+		return urlContext + "/order";
+	}
+	
+	@RequestMapping(method = RequestMethod.GET, value = "/createExchange.do")
+	public String createExchange(HttpServletRequest request, @ModelAttribute("modelObject") Order entity,
+			BindingResult bindingResult, ModelMap model) {
+		Order exchangeOrder = new Order();
+		exchangeOrder.setPickupOrderId(entity.getId());
+		exchangeOrder.setCustomer(entity.getCustomer());
+		exchangeOrder.setDeliveryAddress(entity.getDeliveryAddress());
+		exchangeOrder.setDeliveryContactName(entity.getDeliveryContactName());
+		exchangeOrder.setDeliveryContactPhone1(entity.getDeliveryContactPhone1());
+		exchangeOrder.setDeliveryContactPhone2(entity.getDeliveryContactPhone2());
+		exchangeOrder.setDumpsterLocation(entity.getDumpsterLocation());
+		exchangeOrder.setDumpsterSize(entity.getDumpsterSize());
+		exchangeOrder.setMaterialType(entity.getMaterialType());
+		
+		OrderFees entityOrderFees = entity.getOrderFees();
+		if (entityOrderFees != null) {
+			OrderFees exchangeOrderFees = new OrderFees();
+			BigDecimal exchangeTotalFees = new BigDecimal(0.00);
+			
+			if (entityOrderFees.getDumpsterPrice() != null) {
+				exchangeOrderFees.setDumpsterPrice(entityOrderFees.getDumpsterPrice());
+				exchangeTotalFees = exchangeTotalFees.add(entityOrderFees.getDumpsterPrice());
+			}
+			
+			if (entityOrderFees.getCityFee() != null) {
+				exchangeOrderFees.setCityFeeType(entityOrderFees.getCityFeeType());
+				exchangeOrderFees.setCityFee(entityOrderFees.getCityFee());
+				exchangeTotalFees = exchangeTotalFees.add(entityOrderFees.getCityFee());
+			}
+			
+			exchangeOrderFees.setTotalFees(exchangeTotalFees);
+			exchangeOrder.setOrderFees(exchangeOrderFees);
+			exchangeOrder.setTotalAmountPaid(new BigDecimal(0.00));
+			exchangeOrder.setBalanceAmountDue(exchangeTotalFees);
+		}
+		
+		model.addAttribute("modelObject", exchangeOrder);
+		
+		setupCreate(model, request, exchangeOrder);
+		
+		model.addAttribute("activeTab", "manageOrders");
+		model.addAttribute("mode", "ADD");
+		model.addAttribute("activeSubTab", "orderDetails");
+		
+		String query = "select obj from DeliveryAddress obj where obj.deleteFlag='1' and obj.customer.id=" +  exchangeOrder.getCustomer().getId() + " order by obj.line1 asc";
+		model.addAttribute("deliveryAddresses", genericDAO.executeSimpleQuery(query));
+    	
 		model.addAttribute("notesModelObject", new OrderNotes());
 		
 		return urlContext + "/order";
@@ -511,14 +561,13 @@ public class OrderController extends CRUDController<Order> {
 			return urlContext + "/form";
 		}
 		
-		entity.setModifiedAt(Calendar.getInstance().getTime());
-		entity.setModifiedBy(getUser(request).getId());
-		
-		//beforeSave(request, entity, model);
+		beforeSave(request, entity, model);
+		//entity.setModifiedAt(Calendar.getInstance().getTime());
+		//entity.setModifiedBy(getUser(request).getId());
 		
 		String auditMsg = StringUtils.EMPTY;
 		if (OrderStatus.ORDER_STATUS_OPEN.equals(entity.getOrderStatus().getStatus())) {
-			auditMsg = "Order status changed to Drop Off";
+			auditMsg = "Order status changed to " + OrderStatus.ORDER_STATUS_DROPPED_OFF;
 			
 			OrderStatus orderStatus = retrieveOrderStatus(OrderStatus.ORDER_STATUS_DROPPED_OFF);
 			entity.setOrderStatus(orderStatus);
@@ -657,31 +706,17 @@ public class OrderController extends CRUDController<Order> {
 			return urlContext + "/form";
 		}
 		
-		//beforeSave(request, entity, model);
-		entity.setModifiedAt(Calendar.getInstance().getTime());
-		entity.setModifiedBy(getUser(request).getId());
+		beforeSave(request, entity, model);
 		
-		//TODO: Why is this reqd?
-		//setupOrderFees(entity);
+		populateOrderFees(entity);
 		
 		OrderStatus orderStatus = retrieveOrderStatus(OrderStatus.ORDER_STATUS_CLOSED);
 		entity.setOrderStatus(orderStatus);
 		
-		Long dumpsterSizeId = entity.getDumpsterSize().getId();
-		Long materialCategoryId = entity.getMaterialType().getMaterialCategory().getId();
-		BigDecimal netWeightTonnage = entity.getNetWeightTonnage();
-		BigDecimal overweightFee = calculateOverweightFee(entity.getCreatedAt(), dumpsterSizeId, materialCategoryId, netWeightTonnage);
-		overweightFee = overweightFee.setScale(2, RoundingMode.UP);
-		
-		OrderFees orderFees = entity.getOrderFees();
-		orderFees.setOverweightFee(overweightFee);
-		
-		orderFees.setTotalFees(orderFees.getTotalFees().add(overweightFee));
-		entity.setBalanceAmountDue(orderFees.getTotalFees().subtract(entity.getTotalAmountPaid()));
-		
 		genericDAO.saveOrUpdate(entity);
 		
-		OrderNotes auditOrderNotes = createAuditOrderNotes(entity, "Order status changed to Closed", entity.getModifiedBy());  
+		OrderNotes auditOrderNotes = createAuditOrderNotes(entity, "Order status changed to " + OrderStatus.ORDER_STATUS_CLOSED,
+				entity.getModifiedBy());  
 		entity.getOrderNotes().add(auditOrderNotes);
 		
 		Long modifiedBy = entity.getModifiedBy();
@@ -689,6 +724,44 @@ public class OrderController extends CRUDController<Order> {
 		updatePermitStatus(entity.getPermits(), PermitStatus.PERMIT_STATUS_AVAILABLE, modifiedBy);
 		
 		return pickupSaveSuccess(request, entity, model);
+	}
+	
+	private void populateOrderFees(Order entity) {
+		OrderFees orderFees = entity.getOrderFees();
+		
+		if (orderFees.getOverweightFee() != null) {
+			orderFees.setTotalFees(orderFees.getTotalFees().subtract(orderFees.getOverweightFee()));
+		}
+		if (orderFees.getTonnageFee() != null) {
+			orderFees.setTotalFees(orderFees.getTotalFees().subtract(orderFees.getTonnageFee()));
+		}
+		
+		BigDecimal netWeightTonnage = entity.getNetWeightTonnage();
+		if (netWeightTonnage == null) {
+			orderFees.setOverweightFee(new BigDecimal(0.00));
+			orderFees.setTonnageFee(new BigDecimal(0.00));
+			entity.setBalanceAmountDue(orderFees.getTotalFees().subtract(entity.getTotalAmountPaid()));
+			return;
+		}
+		
+		Long customerId = entity.getCustomer().getId();
+		Long dumpsterSizeId = entity.getDumpsterSize().getId();
+		Long materialTypeId = entity.getMaterialType().getId();
+		Long materialCategoryId = entity.getMaterialType().getMaterialCategory().getId();
+		BigDecimal overweightFee = calculateOverweightFee(entity.getCreatedAt(), dumpsterSizeId, materialCategoryId, netWeightTonnage);
+		overweightFee = overweightFee.setScale(2, RoundingMode.UP);
+		
+		DumpsterPrice dumpsterPriceObj = retrieveDumpsterPrice(dumpsterSizeId, materialTypeId, customerId);
+		BigDecimal tonnageFee = (dumpsterPriceObj == null || dumpsterPriceObj.getTonnageFee() == null) 
+				? new BigDecimal(0.0) : dumpsterPriceObj.getTonnageFee();
+		BigDecimal totalTonnageFee = netWeightTonnage.multiply(tonnageFee);
+		totalTonnageFee = totalTonnageFee.setScale(2, RoundingMode.UP);
+		
+		orderFees.setOverweightFee(overweightFee);
+		orderFees.setTonnageFee(totalTonnageFee);
+		
+		orderFees.setTotalFees(orderFees.getTotalFees().add(overweightFee).add(totalTonnageFee));
+		entity.setBalanceAmountDue(orderFees.getTotalFees().subtract(entity.getTotalAmountPaid()));
 	}
 	
 	private String pickupSaveSuccess(HttpServletRequest request, Order entity, ModelMap model) {
@@ -751,10 +824,10 @@ public class OrderController extends CRUDController<Order> {
 		String pickUpOrderStatusAuditMsg = StringUtils.EMPTY;
 		if (readyForPickup) {
 			pickUpOrderStatusStr = OrderStatus.ORDER_STATUS_PICK_UP;
-			pickUpOrderStatusAuditMsg = "Order status changed to Pick Up";
+			pickUpOrderStatusAuditMsg = "Order status changed to " + OrderStatus.ORDER_STATUS_PICK_UP;
 		} else {
 			pickUpOrderStatusStr = OrderStatus.ORDER_STATUS_DROPPED_OFF;
-			pickUpOrderStatusAuditMsg = "Order status reverted to Dropped Off";
+			pickUpOrderStatusAuditMsg = "Order status reverted to " + OrderStatus.ORDER_STATUS_DROPPED_OFF;
 		}
 		
 		order.setModifiedAt(Calendar.getInstance().getTime());
@@ -808,7 +881,7 @@ public class OrderController extends CRUDController<Order> {
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		//criteria.getSearchMap().put("id!",0l);
 		
-		model.addAttribute("list", genericDAO.search(getEntityClass(), criteria, "deliveryDate desc, orderStatus.status desc", null, null));
+		model.addAttribute("list", genericDAO.search(getEntityClass(), criteria, "deliveryDate desc, orderStatus.status desc, id desc", null, null));
 		model.addAttribute("activeTab", "manageOrders");
 		model.addAttribute("mode", "MANAGE");
 		
@@ -830,7 +903,7 @@ public class OrderController extends CRUDController<Order> {
 			}
 	   }*/
 		
-		String orderBy = "deliveryDate desc, orderStatus.status desc"; 
+		String orderBy = "deliveryDate desc, orderStatus.status desc, id desc"; 
 		/*String deliveryDateFrom = (String)criteria.getSearchMap().get("deliveryDateFrom");
 		String deliveryDateTo = (String)criteria.getSearchMap().get("deliveryDateTo");
 		String pickupDateFrom = (String)criteria.getSearchMap().get("pickupDateFrom");
@@ -1165,10 +1238,11 @@ public class OrderController extends CRUDController<Order> {
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/retrieveDumpsterPrice.do")
 	public @ResponseBody String retrieveDumpsterPrice(ModelMap model, HttpServletRequest request,
-														    @RequestParam(value = "dumpsterSizeId") String dumpsterSizeId,
-															 @RequestParam(value = "materialTypeId") String materialTypeId,
-															 @RequestParam(value = "customerId") String customerId) {
-		BigDecimal dumpsterPrice = retrieveDumpsterPrice(dumpsterSizeId, materialTypeId, customerId);
+														    @RequestParam(value = "dumpsterSizeId") Long dumpsterSizeId,
+															 @RequestParam(value = "materialTypeId") Long materialTypeId,
+															 @RequestParam(value = "customerId") Long customerId) {
+		DumpsterPrice dumpsterPriceObj = retrieveDumpsterPrice(dumpsterSizeId, materialTypeId, customerId);
+		BigDecimal dumpsterPrice = dumpsterPriceObj == null ? new BigDecimal(0.0) : dumpsterPriceObj.getPrice();
 		
 		ObjectMapper objectMapper = new ObjectMapper();
 		String json = StringUtils.EMPTY;
@@ -1183,7 +1257,7 @@ public class OrderController extends CRUDController<Order> {
 		//return json;
 	}
 	
-	private BigDecimal retrieveDumpsterPrice(String dumpsterSizeId, String materialTypeId, String customerId) {
+	private DumpsterPrice retrieveDumpsterPrice(Long dumpsterSizeId, Long materialTypeId, Long customerId) {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd"); 
 		String todaysDateStr = dateFormat.format(new Date());
 		
@@ -1192,7 +1266,7 @@ public class OrderController extends CRUDController<Order> {
 				    		  	 	  +  " and obj.materialType.id=" + materialTypeId
 				    		  	 	  +  " and '" + todaysDateStr + "' between obj.effectiveStartDate and obj.effectiveEndDate";
 		String customerCondn = StringUtils.EMPTY;
-		if (StringUtils.isNotEmpty(customerId)) {
+		if (customerId != null) {
 			customerCondn = " and obj.customer.id=" + customerId; 
 		}
 		
@@ -1201,7 +1275,7 @@ public class OrderController extends CRUDController<Order> {
 			dumsterPriceList = genericDAO.executeSimpleQuery(baseDumpsterPriceQuery);
 		}
 		
-		BigDecimal dumpsterPrice = dumsterPriceList.isEmpty() ? new BigDecimal(0.0) : dumsterPriceList.get(0).getPrice();
+		DumpsterPrice dumpsterPrice = dumsterPriceList.isEmpty() ? null : dumsterPriceList.get(0);
 		return dumpsterPrice;
 	}
 	
@@ -1277,6 +1351,13 @@ public class OrderController extends CRUDController<Order> {
 		//return json;
 	}
 	
+	@RequestMapping(method = RequestMethod.GET, value = "/isOrderExchangable.do")
+	public @ResponseBody String isOrderExchangable(HttpServletRequest request, @ModelAttribute("modelObject") Order entity,
+			BindingResult bindingResult, ModelMap model) {
+		String errorMsg = String.format("No Dumpster assigned to Örder # %d to be exchanged", entity.getId());
+		return (entity.getDumpster() == null) ? errorMsg : "true";
+	}
+	
 	@RequestMapping(method = RequestMethod.GET, value = "/retrievePermitClass.do")
 	public @ResponseBody String retrievePermitClass(ModelMap model, HttpServletRequest request,
 														    @RequestParam(value = "dumpsterSizeId") Long dumpsterSizeId) {
@@ -1328,6 +1409,29 @@ public class OrderController extends CRUDController<Order> {
 	}*/
 	
 	private BigDecimal calculateOverweightFee(Date requiredDate, Long dumpsterSizeId, Long materialCategoryId, BigDecimal netWeightTonnage) {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd"); 
+		
+		Date searchDate = requiredDate == null ? (new Date()) : requiredDate;
+		String searchDateStr = dateFormat.format(searchDate);
+		
+		String overweightFeeQuery = "select obj from OverweightFee obj where obj.deleteFlag='1' and ";
+		overweightFeeQuery += "obj.dumpsterSize.id=" + dumpsterSizeId
+								 +  " and obj.materialCategory.id=" + materialCategoryId
+								 +  " and obj.tonLimit<" + netWeightTonnage
+								 +  " and '" + searchDateStr + "' between obj.effectiveStartDate and obj.effectiveEndDate";
+		
+		List<OverweightFee> overweightFeeList = genericDAO.executeSimpleQuery(overweightFeeQuery);
+		if (overweightFeeList.isEmpty()) {
+			return new BigDecimal(0.00);
+		} else {
+			OverweightFee overweightFee = overweightFeeList.get(0);
+			
+			BigDecimal differentialWeight = netWeightTonnage.subtract(overweightFee.getTonLimit());
+			return differentialWeight.multiply(overweightFee.getFee());
+		}
+	}
+	
+	private BigDecimal calculateTonnageFee(Date requiredDate, Long dumpsterSizeId, Long materialCategoryId, BigDecimal netWeightTonnage) {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd"); 
 		
 		Date searchDate = requiredDate == null ? (new Date()) : requiredDate;
@@ -1502,29 +1606,38 @@ public class OrderController extends CRUDController<Order> {
 		//return json;
 	}
 	
+	@RequestMapping(method = RequestMethod.GET, value = "/cancel.do")
+	public @ResponseBody String cancel(HttpServletRequest request, @ModelAttribute("modelObject") Order entity,
+				BindingResult bindingResult, ModelMap model) {
+		if (!StringUtils.equals(OrderStatus.ORDER_STATUS_OPEN, entity.getOrderStatus().getStatus())) {
+			return String.format("Order # %d cannot be Canceled as it is not in 'Open' status", entity.getId());
+		}
+		
+		beforeSave(request, entity, model);
+		
+		OrderStatus orderStatus = retrieveOrderStatus(OrderStatus.ORDER_STATUS_CANCELED);
+		entity.setOrderStatus(orderStatus);
+		
+		genericDAO.saveOrUpdate(entity);
+		
+		OrderNotes auditOrderNotes = createAuditOrderNotes(entity, 
+				"Order status changed to " + OrderStatus.ORDER_STATUS_CANCELED, entity.getModifiedBy());  
+		entity.getOrderNotes().add(auditOrderNotes);
+		
+		Long modifiedBy = entity.getModifiedBy();
+		if (entity.getDumpster() != null && entity.getDumpster().getId() != null) {
+			updateDumpsterStatus(entity.getDumpster().getId(), DumpsterStatus.DUMPSTER_STATUS_AVAILABLE, modifiedBy);
+		}
+		if (entity.getPermits() != null && !entity.getPermits().isEmpty()) {
+			updatePermitStatus(entity.getPermits(), PermitStatus.PERMIT_STATUS_AVAILABLE, modifiedBy);
+		}
+		
+		return String.format("Order # %d is canceled successfully", entity.getId());
+	}
+	
 	@Override
 	public String save(HttpServletRequest request, @ModelAttribute("modelObject") Order entity,
 			BindingResult bindingResult, ModelMap model) {
-      /*if(entity.getState() == null)
-			bindingResult.rejectValue("state", "error.select.option", null, null);*/
-		/*if(entity.getCity() == null)
-			bindingResult.rejectValue("city", "typeMismatch.java.lang.String", null, null);
-		//server side verification
-		if(entity.getZipcode() != null){
-			if(entity.getZipcode().toString().length() < 5)
-			bindingResult.rejectValue("zipcode", "typeMismatch.java.lang.Integer", null, null);
-		}
-		if(!StringUtils.isEmpty(entity.getPhone())){
-			if(entity.getPhone().length() < 12)
-				bindingResult.rejectValue("phone", "typeMismatch.java.lang.String", null, null);
-		}
-		if(!StringUtils.isEmpty(entity.getFax())){
-			if(entity.getFax().length() < 12)
-				bindingResult.rejectValue("fax", "typeMismatch.java.lang.String", null, null);
-		}*/
-
-		//return super.save(request, entity, bindingResult, model);
-	
 		String isExchange = request.getParameter("isExchange");
 		if (BooleanUtils.toBoolean(isExchange)) {
 			String existingDroppedOffOrderId = request.getParameter("existingDroppedOffOrderId");
@@ -1538,7 +1651,7 @@ public class OrderController extends CRUDController<Order> {
 			log.warn("Error in validation :" + e);
 		}
 		
-		// return to form if we had errors
+		// Return to form if we had errors
 		if (bindingResult.hasErrors()) {
 			setupCreate(model, request, entity);
 			return urlContext + "/order";
@@ -1683,6 +1796,9 @@ public class OrderController extends CRUDController<Order> {
 		}
 		if (orderFees.getOverweightFee() == null) {
 			orderFees.setOverweightFee(new BigDecimal(0.00));
+		}
+		if (orderFees.getTonnageFee() == null) {
+			orderFees.setTonnageFee(new BigDecimal(0.00));
 		}
 		/*if (orderFees.getPermitFee1() == null) {
 			orderFees.setPermitFee1(new BigDecimal(0.00));

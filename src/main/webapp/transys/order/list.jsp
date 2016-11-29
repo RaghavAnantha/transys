@@ -1,5 +1,44 @@
 <%@include file="/common/taglibs.jsp"%>
 <script>
+function processExchange(orderId) {
+	if (!confirm("Do you want to Exchange Order # " + orderId + "?")) {
+		return;
+	}
+	
+	$.ajax({
+        type: "GET",
+        url: "isOrderExchangable.do?" + "id=" + orderId,
+        success: function(responseData, textStatus, jqXHR) {
+        	if (responseData != "true") {
+        		showAlertDialog("Data Validation", responseData);
+        		return false;
+        	} 
+        	document.location = "${ctx}/order/createExchange.do?id=" + orderId;
+        }
+    });
+}
+
+function processCancel(url, orderId) {
+	if (!confirm("Do you want to Cancel Order # " + orderId + "?")) {
+		return;
+	}
+	
+	$.ajax({
+  		url: "cancel.do?id=" + orderId,
+       	type: "GET",
+       	success: function(responseData, textStatus, jqXHR) {
+       		if (responseData.indexOf("success") != -1) {
+        		var xpath = ".//form[@id='orderServiceForm']/table[@class='datagrid']/tbody/tr/td[text()='"
+                    + orderId + "']/following-sibling::td[text()='Open']";
+				var statusTd = document.evaluate(xpath, document, null, XPathResult.ANY_TYPE, null).iterateNext();
+				statusTd.textContent = "Canceled";
+        	}
+       		
+        	showAlertDialog("Order update", responseData);
+		}
+	});
+}
+
 function populateCustomerDeliveryAddress() {
 	var customerSelect =  $('#customer');
 	var deliveryAddressSelect = $('#deliveryAddress');
@@ -189,7 +228,7 @@ function populateCustomerDeliveryAddress() {
 
 <form:form name="orderServiceForm" id="orderServiceForm" class="tab-color">
 	<transys:datatable urlContext="order" deletable="false"
-		editable="true" insertable="true" baseObjects="${list}"
+		editable="true" cancellable="true" insertable="true" baseObjects="${list}"
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
 		pagingLink="search.do" multipleDelete="false" searcheable="false"
 		exportPdf="true" exportXls="true" dataQualifier="manageOrders">
@@ -205,6 +244,7 @@ function populateCustomerDeliveryAddress() {
 		<transys:textcolumn headerText="Del Dt" dataField="deliveryDate" dataFormat="MM/dd/yyyy"/>
 		<transys:textcolumn headerText="Pickup Dt" dataField="pickupDate" dataFormat="MM/dd/yyyy"/>
 		<transys:textcolumn headerText="Dmpstr Price" dataField="orderFees.dumpsterPrice" type="java.math.BigDecimal"/>
+		<transys:textcolumn headerText="Ton. Fee" dataField="orderFees.tonnageFee" type="java.math.BigDecimal"/>
 		<transys:textcolumn headerText="Permit Fee" dataField="orderFees.totalPermitFees" type="java.math.BigDecimal"/>
 		<transys:textcolumn headerText="City Fee" dataField="orderFees.cityFee" type="java.math.BigDecimal"/>
 		<transys:textcolumn headerText="OverWt Fee" dataField="orderFees.overweightFee" type="java.math.BigDecimal"/>
@@ -213,6 +253,7 @@ function populateCustomerDeliveryAddress() {
 		<transys:textcolumn headerText="Amt Paid" dataField="totalAmountPaid" type="java.math.BigDecimal" />
 		<transys:textcolumn headerText="Bal Due" dataField="balanceAmountDue" type="java.math.BigDecimal" />
 		<transys:textcolumn headerText="Status" dataField="orderStatus.status" />
+		<transys:imagecolumn headerText="EXCH" linkUrl="javascript:processExchange('{id}');" imageSrc="${ctx}/images/exchange.png" HAlign="center"/>
 	</transys:datatable>
 	<%session.setAttribute("manageOrdersColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
 </form:form>

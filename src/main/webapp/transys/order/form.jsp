@@ -500,6 +500,7 @@ function populateTotalAdditionalFees() {
 
 function populateTotalFees() {
 	var dumpsterPrice = $("#orderFees\\.dumpsterPrice").val();
+	var tonnageFee = $("#orderFees\\.tonnageFee").val();
 	var overweightFee = $("#orderFees\\.overweightFee").val();
 	var cityFee = $("#orderFees\\.cityFee").val();
 	var totalPermitFees = $("#orderFees\\.totalPermitFees").val();
@@ -510,6 +511,9 @@ function populateTotalFees() {
 	
 	if (dumpsterPrice != "") {
 		totalFees += parseFloat(dumpsterPrice);
+	}
+	if (tonnageFee != "") {
+		totalFees += parseFloat(tonnageFee);
 	}
 	if (overweightFee != "") {
 		totalFees += parseFloat(overweightFee);
@@ -761,6 +765,13 @@ function validateOrderFees() {
 		}
 	}
 	
+	var tonnageFee = $('#orderFees\\.tonnageFee').val();
+	if (tonnageFee != "") {
+		if (!validateAmount(tonnageFee, 3000)) {
+			validationMsg += "Tonnage Fee, "
+		}
+	}
+	
 	for (i = 1; i < 4; i++) {
 		validationMsg += validatePaymentAmount(i)
 	}
@@ -950,15 +961,24 @@ function processOrderForm() {
 }
 
 function verifyExchangeOrderAndSubmit() {
-	var isExchangeIndicator = $('#isExchange');
-	isExchangeIndicator.val("false");
+	var isExchangeIndicatorElem = $('#isExchange');
+	var existingDroppedOffOrderIdElem = $('#existingDroppedOffOrderId');
+	isExchangeIndicatorElem.val("false");
+	existingDroppedOffOrderIdElem.val("");
 	
-	var orderAddEditForm = $("#orderAddEditForm");
-	var id = orderAddEditForm.find("#id");
-	if (id.val() != "") {
+	var idElem = $('#id');
+	if (idElem.val() != "") {
 		orderAddEditForm.submit();
 		return false;
-	}
+	} 
+		
+	var pickUpOrderIdElem = $('#pickupOrderId');
+	if (pickUpOrderIdElem.val() != "") {
+		isExchangeIndicatorElem.val("true");
+		existingDroppedOffOrderIdElem.val(pickUpOrderIdElem.val());
+		orderAddEditForm.submit();
+		return false;
+	} 
 	
 	var selectedCustomerId = $('#customerSelect').val();
 	var selectedDeliveryAddressId = $('#deliveryAddressSelect').val();
@@ -969,7 +989,7 @@ function verifyExchangeOrderAndSubmit() {
         success: function(responseData, textStatus, jqXHR) {
         	var existingDroppedOffOrderId = responseData;
         	if (existingDroppedOffOrderId != "") {
-        		$('#existingDroppedOffOrderId').val(existingDroppedOffOrderId);
+        		existingDroppedOffOrderIdElem.val(existingDroppedOffOrderId);
         		
         		var exchMsg = "<p>There is already a Dumpster delivered to this address with the Order# "
       			  		   	  + existingDroppedOffOrderId
@@ -978,8 +998,8 @@ function verifyExchangeOrderAndSubmit() {
     			  	
         		showConfirmDialog("Confirm Exchange Order", exchMsg);
         	} else {
-        		isExchangeIndicator.val("false");
-        		$('#existingDroppedOffOrderId').val("");
+        		isExchangeIndicatorElem.val("false");
+        		existingDroppedOffOrderIdElem.val("");
         		orderAddEditForm.submit();
         	}
         }
@@ -1023,6 +1043,8 @@ function updateTotalPaid() {
 </script>
 <form:form action="save.do" name="orderAddEditForm" commandName="modelObject" method="post" id="orderAddEditForm">
 	<form:hidden path="id" id="id" />
+	<form:hidden path="pickupOrderId" id="pickupOrderId" />
+	
 	<input type="hidden" name="isExchange" id="isExchange" value="false" />
 	<input type="hidden" name="existingDroppedOffOrderId" id="existingDroppedOffOrderId" value="" />
 	<jsp:include page="/common/messages.jsp">
@@ -1033,6 +1055,8 @@ function updateTotalPaid() {
 		<tr>
 			<td class="form-left">Order #</td>
 			<td class="wide td-static" id="orderIdTd">${modelObject.id}</td>
+			<td class="form-left">Status</td>
+			<td class="td-static">${modelObject.orderStatus.status}</td>
 		</tr>
 		<tr>
 			<td class="form-left">Customer<span class="errorMessage">*</span></td>
@@ -1447,6 +1471,13 @@ function updateTotalPaid() {
 			<td>
 				<form:input path="orderFees.dumpsterPrice" cssClass="form-control form-control-ext" style="width:172px;height:22px !important" maxlength="7" onChange="return populateTotalFees();"/>
 				<form:errors path="orderFees.dumpsterPrice" cssClass="errorMessage" />
+			</td>
+		</tr>
+		<tr>
+			<td class="form-left">Tonnage Fee</td>
+			<td>
+				<form:input path="orderFees.tonnageFee" cssClass="form-control form-control-ext" style="width:172px;height:22px !important" maxlength="7" onChange="return populateTotalFees();"/>
+				<form:errors path="orderFees.tonnageFee" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>

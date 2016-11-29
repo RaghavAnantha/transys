@@ -879,7 +879,7 @@ public class PermitController extends CRUDController<Permit> {
 		
 		// unique permit number check
 		if(nonEmptyPermitNumber(entity)) {
-			if (!isPermitNumberUnique(entity.getNumber())) { // always new permit, so validation mandatory
+			if (!isPermitNumberUnique(entity.getNumber())) { // Always new permit, so validation mandatory
 				System.out.println("Permit Number " + entity.getNumber() + " already exists.");
 				return "ErrorMsg: Permit Number " + entity.getNumber() + " already exists.";
 			}
@@ -898,14 +898,14 @@ public class PermitController extends CRUDController<Permit> {
 		// TODO: Why both created by and modified by and why set if not changed?
 		setupPermitNotes(entity, modifiedBy);
 		
-		genericDAO.saveOrUpdate(entity);
-		
 		String permitAuditMsg = StringUtils.EMPTY;
 		if (entity.getId() == null) {
 			permitAuditMsg = "Permit created";
 		} else {
 			permitAuditMsg = "Permit updated";
 		}
+		
+		genericDAO.saveOrUpdate(entity);
 		
 		createAuditPermitNotes(entity, permitAuditMsg, modifiedBy);
 		

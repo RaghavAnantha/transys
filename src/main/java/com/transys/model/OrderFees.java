@@ -63,6 +63,9 @@ public class OrderFees extends AbstractBaseModel {
 		@Column(name="additionalFee3")
 		private BigDecimal additionalFee3;
 		
+		@Column(name="tonnageFee")
+		private BigDecimal tonnageFee;
+		
 		@Column(name="discountAmount")
 		private BigDecimal discountAmount;
 		
@@ -216,5 +219,13 @@ public class OrderFees extends AbstractBaseModel {
 
 		public void setTotalAdditionalFees(BigDecimal totalAdditionalFees) {
 			this.totalAdditionalFees = totalAdditionalFees;
+		}
+
+		public BigDecimal getTonnageFee() {
+			return tonnageFee;
+		}
+
+		public void setTonnageFee(BigDecimal tonnageFee) {
+			this.tonnageFee = tonnageFee;
 		}
 }

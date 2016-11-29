@@ -166,8 +166,8 @@ function processDeliveryAddressForm() {
 <form:form name="deliveryAddressServiceForm" id="deliveryAddressServiceForm" class="tab-color">
 	<transys:datatable urlContext="customer" deletable="true"
 		editable="true" editableInScreen="true" baseObjects="${deliveryAddressList}"
-		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
-		pagingLink="search.do" multipleDelete="false" searcheable="false" 
+		searchCriteria="<%=null%>" cellPadding="2"
+		multipleDelete="false" searcheable="false" 
 		dataQualifier="manageDeliveryAddress">
 		<transys:textcolumn headerText="Id" dataField="id" />
 		<transys:textcolumn headerText="Delivery Address Line1" dataField="line1"/>

@@ -106,6 +106,7 @@
 		<transys:textcolumn headerText="Material Type" dataField="materialType.materialName" />
 		<transys:textcolumn headerText="Dumpster Size" dataField="dumpsterSize.size" />
 		<transys:textcolumn headerText="Dumpster Price" dataField="price" />
+		<transys:textcolumn headerText="Tonnage Fee" dataField="tonnageFee" />
 		<transys:textcolumn headerText="Effective Date From" dataField="effectiveStartDate" dataFormat="MM/dd/yyyy" />
 		<transys:textcolumn headerText="Effective Date To" dataField="effectiveEndDate" dataFormat="MM/dd/yyyy" />
 		<transys:textcolumn headerText="Notes/Comments" dataField="comments" />

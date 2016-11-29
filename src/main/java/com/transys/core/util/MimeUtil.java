@@ -17,8 +17,11 @@ public class MimeUtil {
 	if ("doc".equalsIgnoreCase(ext) || "docx".equalsIgnoreCase(ext)) {
 	    return "application/vnd.ms-word";
 	}
-	if ("xls".equalsIgnoreCase(ext) || "xlsx".equalsIgnoreCase(ext)) {
+	if ("xls".equalsIgnoreCase(ext)) {
 	    return "application/vnd.ms-excel";
+	}
+	if ("xlsx".equalsIgnoreCase(ext)) {
+	    return "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 	}
 	if ("tiff".equalsIgnoreCase(ext) || "tif".equalsIgnoreCase(ext)) {
 	    return "image/tiff";

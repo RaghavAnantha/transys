@@ -94,6 +94,10 @@
 	<table id="form-table" class="table editPermitAddress">
 		<tr><td colspan=10></td></tr>
 		<tr>
+			<td class="form-left">Permit Number</td>
+			<td class="td-static">${permitAddressModelObject.permit.number}</td>
+		</tr>
+		<tr>
 			<td class="form-left">Permit Address #<span class="errorMessage">*</span></td>
 			<td>
 				<form:input id="permitAddressFormLine1" path="line1" cssClass="flat flat-ext" />
@@ -149,8 +153,8 @@
 <form:form name="permitAddressServiceForm" id="permitAddressServiceForm" class="tab-color">
 	<transys:datatable urlContext="permit" deletable="true"
 		editable="true" editableInScreen="true" baseObjects="${permitAddressList}"
-		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
-		pagingLink="search.do" searcheable="false" dataQualifier="manageNotes">
+		searchCriteria="<%=null%>" cellPadding="2"
+		searcheable="false" dataQualifier="managePermitAddress">
 		<transys:textcolumn headerText="Id" dataField="id" width="50px"/>
 		<transys:textcolumn headerText="Address #" dataField="line1" />
 		<transys:textcolumn headerText="Address Street" dataField="line2" />

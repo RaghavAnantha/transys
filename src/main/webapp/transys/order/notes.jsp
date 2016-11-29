@@ -64,7 +64,10 @@ function processOrderNotesForm() {
 	<form:hidden path="id" id="id" />
 	<form:hidden path="order.id" id="order.id" />
 	<table id="form-table" class="table">
-		<tr><td colspan=10></td></tr>
+		<tr>
+			<td class="form-left">Order #</td>
+			<td class="td-static">${notesModelObject.order.id}</td>
+		</tr>
 		<tr><td class="form-left">Notes<span class="errorMessage">*</span></td></tr>
 		<tr>
 			<td colspan=10>

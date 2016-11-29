@@ -75,6 +75,13 @@ function validateDumpsterPriceDataFormat() {
 		validationMsg += "Dumpster Price, ";
 	}
 	
+	var tonnageFee = $('#tonnageFee').val();
+	if (tonnageFee != "") {
+		if (!validateAmount(tonnageFee, 1000)) {
+			validationMsg += "Tonnage Fee, ";
+		}
+	}
+	
 	var effectiveStartDate = $("[name='effectiveStartDate']").val();
 	var effectiveEndDate = $("[name='effectiveEndDate']").val();
 	if (!validateDateRange(effectiveStartDate, effectiveEndDate)) {
@@ -186,6 +193,14 @@ function populateMaterialTypes() {
 				<form:input path="price" cssClass="flat" style="width:173px !important"/>
 				<br> 
 				<form:errors path="price" cssClass="errorMessage" />
+			</td>
+		</tr>
+		<tr>
+			<td class="form-left">Tonnage Fee</td>
+			<td>
+				<form:input path="tonnageFee" cssClass="flat" style="width:173px !important"/>
+				<br> 
+				<form:errors path="tonnageFee" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>

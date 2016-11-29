@@ -4,6 +4,10 @@
 	<form:hidden path="id" id="id" />
 	<form:hidden path="order.id" id="order.id" />
 	<table id="form-table" class="table">
+		<tr>
+			<td class="form-left">Order #</td>
+			<td class="td-static">${notesModelObject.order.id}</td>
+		</tr>
 		<tr><td class="form-left">Notes<span class="errorMessage">*</span></td></tr>
 		<tr>
 			<td colspan=10>
@@ -24,8 +28,8 @@
 
 <form:form name="orderNotesModalDatatable" id="orderNotesModalDatatable" class="tab-color">
 	<transys:datatable urlContext="order" baseObjects="${notesList}"
-		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
-		pagingLink="search.do" searcheable="false" dataQualifier="manageNotesModal">
+		searchCriteria="<%=null%>" cellPadding="2"
+		searcheable="false" dataQualifier="manageNotesModal">
 		<transys:textcolumn headerText="Entered By" dataField="enteredBy" width="150px"/>
 		<transys:textcolumn headerText="Date/Time" dataField="createdAt" width="75px" dataFormat="MM/dd/yyy"/>
 		<transys:textcolumn headerText="Notes/Comments" dataField="notes" />
