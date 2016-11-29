@@ -22,6 +22,7 @@ public final class ImageColumn extends AbstractColumnTag {
 	this.imageWidth = -1;
 	this.imageHeight = -1;
 	this.imageBorder = -1;
+	this.cssClass = "centerImage";
     }
 
     /*------------------------------------------------------------------------------

@@ -1119,7 +1119,7 @@ function updateTotalPaid() {
 				<form:errors path="deliveryAddress" cssClass="errorMessage" />
 			</td>
 			<td class="form-left"><span style="color:blue">Pickup Order #</span></td>
-			<td>
+			<td class="td-static">
 				<span style="color:blue;">${modelObject.pickupOrderId}</span>
 			</td>
 		</tr>
