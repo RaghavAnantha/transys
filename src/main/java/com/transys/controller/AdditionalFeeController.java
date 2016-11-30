@@ -32,7 +32,7 @@ public class AdditionalFeeController extends CRUDController<AdditionalFee> {
 		request.getSession().removeAttribute("searchCriteria");
 		setupList(model, request);
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
-		model.addAttribute("list", genericDAO.search(AdditionalFee.class, criteria, "description", null, null));
+		model.addAttribute("list", genericDAO.search(AdditionalFee.class, criteria, "description, effectiveStartDate desc", null, null));
 		return urlContext + "/list";
 	}
 
@@ -44,7 +44,7 @@ public class AdditionalFeeController extends CRUDController<AdditionalFee> {
 		criteria.getSearchMap().remove("_csrf");
 		criteria.setPageSize(25);
 		
-		model.addAttribute("list", genericDAO.search(AdditionalFee.class, criteria, "description", false));
+		model.addAttribute("list", genericDAO.search(AdditionalFee.class, criteria, "description, effectiveStartDate desc", false));
 		cleanUp(request);
 		
 		return urlContext + "/list";
@@ -54,7 +54,7 @@ public class AdditionalFeeController extends CRUDController<AdditionalFee> {
 	public String search2(ModelMap model, HttpServletRequest request) {
 		setupList(model, request);
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
-		model.addAttribute("list", genericDAO.search(AdditionalFee.class, criteria, "description", false));
+		model.addAttribute("list", genericDAO.search(AdditionalFee.class, criteria, "description, effectiveStartDate desc", false));
 		
 		return urlContext + "/list";
 	}

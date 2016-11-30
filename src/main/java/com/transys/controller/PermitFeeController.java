@@ -43,7 +43,7 @@ public class PermitFeeController extends CRUDController<PermitFee> {
 		request.getSession().removeAttribute("searchCriteria");
 		setupList(model, request);
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
-		model.addAttribute("list", genericDAO.search(PermitFee.class, criteria, "permitClass", null, null));
+		model.addAttribute("list", genericDAO.search(PermitFee.class, criteria, "permitClass, effectiveStartDate desc", null, null));
 		return urlContext + "/list";
 	}
 
@@ -55,7 +55,7 @@ public class PermitFeeController extends CRUDController<PermitFee> {
 		criteria.getSearchMap().remove("_csrf");
 		criteria.setPageSize(25);
 		
-		model.addAttribute("list", genericDAO.search(PermitFee.class, criteria, "permitClass", false));
+		model.addAttribute("list", genericDAO.search(PermitFee.class, criteria, "permitClass, effectiveStartDate desc", false));
 		cleanUp(request);
 		
 		return urlContext + "/list";
@@ -78,7 +78,7 @@ public class PermitFeeController extends CRUDController<PermitFee> {
 		setupList(model, request);
 		
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
-		model.addAttribute("list", genericDAO.search(PermitFee.class, criteria, "permitClass", false));
+		model.addAttribute("list", genericDAO.search(PermitFee.class, criteria, "permitClass, effectiveStartDate desc", false));
 		
 		return urlContext + "/list";
 	}

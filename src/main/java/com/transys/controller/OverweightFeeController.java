@@ -44,7 +44,7 @@ public class OverweightFeeController extends CRUDController<OverweightFee> {
 		setupList(model, request);
 		
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
-		model.addAttribute("list", genericDAO.search(OverweightFee.class, criteria, "materialCategory.category", null, null));
+		model.addAttribute("list", genericDAO.search(OverweightFee.class, criteria, "materialCategory.category, effectiveStartDate desc", null, null));
 		
 		return urlContext + "/list";
 	}
@@ -54,7 +54,7 @@ public class OverweightFeeController extends CRUDController<OverweightFee> {
 		setupList(model, request);
 		
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
-		model.addAttribute("list", genericDAO.search(OverweightFee.class, criteria,"materialCategory.category",null,null));
+		model.addAttribute("list", genericDAO.search(OverweightFee.class, criteria,"materialCategory.category, effectiveStartDate desc",null,null));
 		
 		return urlContext + "/list";
 	}
@@ -67,7 +67,7 @@ public class OverweightFeeController extends CRUDController<OverweightFee> {
 		criteria.getSearchMap().remove("_csrf");
 		criteria.setPageSize(25);
 		
-		model.addAttribute("list", genericDAO.search(OverweightFee.class, criteria, "materialCategory.category", false));
+		model.addAttribute("list", genericDAO.search(OverweightFee.class, criteria, "materialCategory.category, effectiveStartDate desc", false));
 		cleanUp(request);
 		
 		return urlContext + "/list";
