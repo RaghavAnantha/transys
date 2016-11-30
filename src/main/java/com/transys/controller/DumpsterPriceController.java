@@ -228,7 +228,7 @@ public class DumpsterPriceController extends CRUDController<DumpsterPrice> {
 	}
 	
 	private List<DumpsterPrice> retrieveDusmpsterPrice(SearchCriteria criteria) {
-		String orderBy = "materialType.materialCategory.category, materialType.materialName, dumpsterSize.id, effectiveStartDate";
+		String orderBy = "materialType.materialCategory.category, materialType.materialName, dumpsterSize.id, effectiveStartDate desc";
 		List<DumpsterPrice> dumpsterPriceList = genericDAO.search(DumpsterPrice.class, criteria, orderBy, null, null);
 		return dumpsterPriceList;
 	}
