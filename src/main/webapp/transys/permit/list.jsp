@@ -194,7 +194,7 @@
 				</td>
 			
 			<td class="form-left">Order Number</td>
-			<td><select id="orderNumber" name="exclude.order.id" class="flat form-control input-sm" style="width: 175px !important"">
+			<td><select id="orderNumber" name="exclude.order.id" class="flat form-control input-sm" style="width: 175px !important">
 				<option value="">------Please Select------</option>
 				<c:forEach items="${order}" var="order">
 					<c:set var="selected" value=""/>
@@ -222,7 +222,7 @@
 		editable="true" insertable="true" baseObjects="${list}"
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
 		pagingLink="search.do" multipleDelete="false" searcheable="false" 
-		exportPdf="false" exportXls="true" dataQualifier="managePermits">
+		exportPdf="false" exportXlsx="true" dataQualifier="managePermits">
 		<transys:textcolumn headerText="Delivery Address" dataField="deliveryAddress.fullLine"/>
 		<transys:textcolumn headerText="Permit Address1" dataField="fullLinePermitAddress1" />
 		<transys:textcolumn headerText="Permit Address2" dataField="fullLinePermitAddress2" />

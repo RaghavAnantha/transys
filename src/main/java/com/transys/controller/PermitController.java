@@ -1267,9 +1267,9 @@ public class PermitController extends CRUDController<Permit> {
 			
 			List<Permit> exportReportData =  retrieveReportData(criteria);
 			
-			/*if (!StringUtils.isEmpty(type) && type.equals("xls")) {
+			if (StringUtils.equals("xls", type)) {
 				type = "xlsx";
-			}*/
+			}
 			type = setRequestHeaders(response, type, "permitReport");
 			
 			Map<String, String> headers = new LinkedHashMap<>();

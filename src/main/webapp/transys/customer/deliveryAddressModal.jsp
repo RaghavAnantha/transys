@@ -4,7 +4,7 @@
 	<form:hidden path="customer.id" id="customerId" />
 	<table id="form-table" class="table">
 		<tr>
-			<td class="form-left">Customer ID</td>
+			<td class="form-left">Customer Id</td>
 			<td class="td-static">${deliveryAddressModelObject.customer.id}</td>
 		</tr>
 		<tr>
