@@ -16,14 +16,14 @@
 		<!--<security:intercept-url pattern="/resources/**" access="isAnonymous()" />-->
 		
 		<!-- Rest all pages currently are accessible by Role-Admin -->
-		<security:intercept-url pattern="/**/home.do" access="hasRole('ADMIN')" />
-		<security:intercept-url pattern="/**/order/*" access="hasRole('ADMIN')" />
-		<security:intercept-url pattern="/**/customer/*" access="hasRole('ADMIN')" />
-		<security:intercept-url pattern="/**/orderPermitAlert/*" access="hasRole('ADMIN')" />
-		<security:intercept-url pattern="/**/permit/*" access="hasRole('ADMIN')" />
-		<security:intercept-url pattern="/**/publicMaterialIntake/*" access="hasRole('ADMIN')" />
+		<security:intercept-url pattern="/**/home.do" access="hasAnyRole('ADMIN','DATA_ENTRY_BILLING')" />
+		<security:intercept-url pattern="/**/order/*" access="hasAnyRole('ADMIN','DATA_ENTRY_BILLING')" />
+		<security:intercept-url pattern="/**/permit/*" access="hasAnyRole('ADMIN','DATA_ENTRY_BILLING')" />
+		<security:intercept-url pattern="/**/customer/*" access="hasAnyRole('ADMIN','DATA_ENTRY_BILLING')" />
+		<security:intercept-url pattern="/**/orderPermitAlert/*" access="hasAnyRole('ADMIN','DATA_ENTRY_BILLING')" />
+		<security:intercept-url pattern="/**/publicMaterialIntake/*" access="hasAnyRole('ADMIN','DATA_ENTRY_BILLING')" />
+		<security:intercept-url pattern="/**/reports/**" access="hasAnyRole('ADMIN','DATA_ENTRY_BILLING')" />
 		<security:intercept-url pattern="/**/masterData/**" access="hasRole('ADMIN')" />
-		<security:intercept-url pattern="/**/reports/**" access="hasRole('ADMIN')" />
 		
 		<!-- Controls the login page authentication through Spring -->
  		<security:form-login login-page='/login.do' authentication-success-handler-ref="authenticationSuccessHandler"/>
