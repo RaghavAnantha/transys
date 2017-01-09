@@ -1243,7 +1243,7 @@ function updateTotalPaid() {
 				</select>
 		 	</td>
 		 	<c:if test="${modelObject.permits != null and modelObject.permits[1] != null and modelObject.permits[1].permitClass != null}">
-				<td class="form-left">Permit2 Class/></td>
+				<td class="form-left">Permit2 Class</td>
 		        <td>
 					<select class="flat form-control input-sm" id="permitClasses2" name="permitClasses2" style="width:172px !important" onChange="return handlePermitClassChange(2);">
 						<option value="">-----Please Select-----</option>
@@ -1444,7 +1444,7 @@ function updateTotalPaid() {
 				<td class="form-left">Permit2 Fee</td>
 	        	<td class="td-static"><form:input path="orderFees.permitFee2" style="width:172px !important" maxlength="7" cssClass="flat" onChange="return populateTotalPermitFees();"/></td>
 	        </c:if>
-	        <c:if test="${modelObject.permits != null and modelObject.permits[1] != null and modelObject.permits[1].number != null}">
+	        <c:if test="${modelObject.permits != null and modelObject.permits[2] != null and modelObject.permits[2].number != null}">
 				<td class="form-left">Permit3 Fee</td>
 	        	<td class="td-static"><form:input path="orderFees.permitFee3" style="width:172px !important" maxlength="7" cssClass="flat" onChange="return populateTotalPermitFees();"/></td>
 			</c:if>
