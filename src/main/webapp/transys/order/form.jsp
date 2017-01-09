@@ -1290,7 +1290,7 @@ function updateTotalPaid() {
 				</select>
 	        </td>
 	        <c:if test="${modelObject.permits != null and modelObject.permits[1] != null and modelObject.permits[1].permitType != null}">
-				<td class="form-left">Permit2 Type<span class="errorMessage">*</span></td>
+				<td class="form-left">Permit2 Type<span class="errorMessage"></span></td>
 		        <td>
 		        	<select class="flat form-control input-sm" id="permitTypes2" name="permitTypes2" style="width:172px !important" onChange="return populatePermitNumbers(2);">
 						<option value="">-----Please Select-----</option>
