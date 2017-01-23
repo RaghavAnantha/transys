@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
-<!-- 2017-01-23T17:29:15 -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="deliveryPickupReport" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="822" leftMargin="10" rightMargin="10" topMargin="10" bottomMargin="10" isSummaryWithPageHeaderAndFooter="true" isIgnorePagination="true" uuid="f465866e-f394-428d-b546-3108e4a018e2">
+<!-- 2017-01-23T21:36:07 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="deliveryPickupReport" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="822" leftMargin="10" rightMargin="10" topMargin="10" bottomMargin="10" isSummaryWithPageHeaderAndFooter="true" uuid="f465866e-f394-428d-b546-3108e4a018e2">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
@@ -38,6 +38,7 @@
 	</title>
 	<pageHeader>
 		<band height="91" splitType="Stretch">
+			<printWhenExpression><![CDATA[$V{PAGE_NUMBER} > 0]]></printWhenExpression>
 			<staticText>
 				<reportElement mode="Opaque" x="270" y="2" width="283" height="24" backcolor="#99CCFF" uuid="d41af175-c951-48fa-9614-95f75b2e7e5a"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
@@ -133,6 +134,7 @@
 	</pageHeader>
 	<columnHeader>
 		<band height="55" splitType="Stretch">
+			<printWhenExpression><![CDATA[$V{PAGE_NUMBER} > 0]]></printWhenExpression>
 			<staticText>
 				<reportElement mode="Opaque" x="60" y="25" width="160" height="30" forecolor="#FFFFFF" backcolor="#99CCFF" uuid="a594e6fb-441c-40bb-891d-381486be7926"/>
 				<box>
