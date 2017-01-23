@@ -62,7 +62,6 @@ import com.transys.model.User;
 public class PermitController extends CRUDController<Permit> {
 	
 	public static final int MAX_NUMBER_OF_ASSOCIATED_PERMITS = 3;
-	public static final String EMPTY_PERMIT_NUMBER = "To Be Assigned";
 	
 	public PermitController(){
 		setUrlContext("permit");
@@ -166,7 +165,7 @@ public class PermitController extends CRUDController<Permit> {
 			Object[] param = searchMap.keySet().toArray();
 			for (int i = 0; i < param.length; i++) {
 				String key = param[i].toString();
-				if(key.toUpperCase().contains("NUMBER") && searchMap.get(key).toString().equalsIgnoreCase(EMPTY_PERMIT_NUMBER) ) {
+				if(key.toUpperCase().contains("NUMBER") && searchMap.get(key).toString().equalsIgnoreCase(Permit.EMPTY_PERMIT_NUMBER) ) {
 					System.out.println("Key = " + key + " : " + searchMap.get(key).toString());
 					searchMap.put("number", "null");
 				}
@@ -489,7 +488,7 @@ public class PermitController extends CRUDController<Permit> {
 				}
 			} else {
 				System.out.println("Setting permit number to empty");
-				entity.setNumber(EMPTY_PERMIT_NUMBER);
+				entity.setNumber(Permit.EMPTY_PERMIT_NUMBER);
 			}
 
 			if (entity.getFee() == null) {
@@ -712,7 +711,7 @@ public class PermitController extends CRUDController<Permit> {
 					return "ErrorMsg: Permit Number " + entity.getNumber() + " already exists.";
 				}
 			} else {
-				entity.setNumber(EMPTY_PERMIT_NUMBER);
+				entity.setNumber(Permit.EMPTY_PERMIT_NUMBER);
 			}
 
 			PermitStatus permitStatus = (PermitStatus)genericDAO.executeSimpleQuery("select obj from PermitStatus obj where obj.deleteFlag='1' and obj.status='" + status + "'").get(0);
@@ -781,7 +780,7 @@ public class PermitController extends CRUDController<Permit> {
 	}
 
 	private boolean nonEmptyPermitNumber(Permit entity) {
-		return (entity.getNumber() != null && entity.getNumber().length() > 0 && !entity.getNumber().equals(EMPTY_PERMIT_NUMBER));
+		return (entity.getNumber() != null && entity.getNumber().length() > 0 && !entity.getNumber().equals(Permit.EMPTY_PERMIT_NUMBER));
 	}
 
 	private boolean validateParkingMeterFee(Permit entity) {
@@ -884,7 +883,7 @@ public class PermitController extends CRUDController<Permit> {
 				return "ErrorMsg: Permit Number " + entity.getNumber() + " already exists.";
 			}
 		} else {
-			entity.setNumber(EMPTY_PERMIT_NUMBER);
+			entity.setNumber(Permit.EMPTY_PERMIT_NUMBER);
 		}
 				
 		String status = "Pending";

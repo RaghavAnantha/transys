@@ -1039,8 +1039,8 @@ public class DynamicReportServiceImpl implements DynamicReportService {
 		configuration.setDetectCellType(true);
 		configuration.setIgnoreGraphics(true);
 		configuration.setWhitePageBackground(true);
-		configuration.setRemoveEmptySpaceBetweenColumns(true);
-		configuration.setRemoveEmptySpaceBetweenRows(true);
+		//configuration.setRemoveEmptySpaceBetweenColumns(true);
+		//configuration.setRemoveEmptySpaceBetweenRows(true);
 		exporter.setConfiguration(configuration); 
 		
 		/*exporter.setParameter(JRExporterParameter.JASPER_PRINT, jp);

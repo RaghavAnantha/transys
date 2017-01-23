@@ -22,6 +22,9 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 @Entity
 @Table(name="permit")
 public class Permit  extends AbstractBaseModel {
+	@Transient
+	public static final String EMPTY_PERMIT_NUMBER = "To Be Assigned";
+	
 	@ManyToOne
 	@JoinColumn(name="customerId")
 	private Customer customer;

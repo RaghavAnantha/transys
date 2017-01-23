@@ -1,6 +1,7 @@
 package com.transys.controller;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -22,6 +23,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.transys.core.util.MimeUtil;
 import com.transys.model.DeliveryAddress;
 import com.transys.model.Order;
+import com.transys.model.Permit;
 import com.transys.model.SearchCriteria;
 
 @Controller
@@ -85,7 +87,6 @@ public class DeliveryPickupReportController extends CRUDController<Order> {
 			String jsonResponse = StringUtils.EMPTY;
 			try {
 				jsonResponse = objectMapper.writeValueAsString(o);
-	
 			} catch (JsonProcessingException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -108,26 +109,35 @@ public class DeliveryPickupReportController extends CRUDController<Order> {
 	@RequestMapping(method = RequestMethod.GET, value = "/generateDeliveryPickupReport.do")
 	public void export(ModelMap model, HttpServletRequest request, HttpServletResponse response,
 			@RequestParam("type") String type, Object objectDAO, Class clazz) {
+		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
+		criteria.setPageSize(100000);
+		//criteria.setPage(0);
+		
+		Map<String, Object> params = new HashMap<String, Object>();
+		ByteArrayOutputStream out = null;
 		try {
 			List<Map<String,Object>> reportData = prepareReportData(model, request);
+			params.put("noOfOrders", reportData.size());
 
 			type = setRequestHeaders(response, type, "deliveryPickupReport");
-			
-			ByteArrayOutputStream out = new ByteArrayOutputStream();
-			Map<String, Object> params = new HashMap<String, Object>();
-
 			out = dynamicReportService.generateStaticReport("deliveryPickupReport", reportData, params, type, request);
-			/*} else {
-				out = dynamicReportService.generateStaticReport("ordersRevenueReport" + "print", reportData, params, type,
-						request);
-			}*/
-
 			out.writeTo(response.getOutputStream());
-			out.close();
+			
+			criteria.setPageSize(25);
 		} catch (Exception e) {
 			e.printStackTrace();
 			log.warn("Unable to create file :" + e);
 			request.getSession().setAttribute("errors", e.getMessage());
+		} finally {
+			if (out != null) {
+				try {
+					out.close();
+					out = null;
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 		}
 	}
 
@@ -135,7 +145,7 @@ public class DeliveryPickupReportController extends CRUDController<Order> {
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		criteria.getSearchMap().remove("_csrf");
 		
-		List<Order> orderList = genericDAO.search(getEntityClass(), criteria,"id",null,null);
+		List<Order> orderList = genericDAO.search(getEntityClass(), criteria, "id", null, null);
 		String dumpsterSizeAggregation = setDumpsterSizeAggregation(model, orderList);
 		
 		List<Map<String, Object>> reportData = new ArrayList<Map<String, Object>>();
@@ -152,6 +162,19 @@ public class DeliveryPickupReportController extends CRUDController<Order> {
 			map.put("deliveryDate", anOrder.getFormattedDeliveryDate());
 			map.put("pickupDate", anOrder.getFormattedPickupDate());
 			
+			List<Permit> permits = anOrder.getPermits();
+			String permitStr = StringUtils.EMPTY;
+			for (Permit aPermit : permits) {
+				if (StringUtils.isNotEmpty(aPermit.getNumber()) 
+						&& !StringUtils.equals(Permit.EMPTY_PERMIT_NUMBER, aPermit.getNumber())) {
+					permitStr += (aPermit.getNumber() + ", ");
+				}
+			}
+			if (StringUtils.isNotEmpty(permitStr)) {
+				permitStr = permitStr.substring(0, permitStr.length() - 2);
+			}
+			map.put("permit", permitStr);
+			
 			Object deliveryDateFrom = criteria.getSearchMap().get("deliveryDateFrom");
 			map.put("deliveryDateFrom", deliveryDateFrom == null ? StringUtils.EMPTY : deliveryDateFrom );
 			
@@ -166,7 +189,7 @@ public class DeliveryPickupReportController extends CRUDController<Order> {
 			
 			map.put("dumpsterSizeAggregation", dumpsterSizeAggregation);
 			
-			ObjectMapper objectMapper = new ObjectMapper();
+			/*ObjectMapper objectMapper = new ObjectMapper();
 			String jSonResponse = StringUtils.EMPTY;
 			try {
 				jSonResponse = objectMapper.writeValueAsString(map);
@@ -174,7 +197,7 @@ public class DeliveryPickupReportController extends CRUDController<Order> {
 			} catch (JsonProcessingException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}
+			}*/
 			
 			reportData.add(map);
 		}

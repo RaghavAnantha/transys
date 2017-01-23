@@ -124,7 +124,7 @@ public class OrderPermitAlertController extends CRUDController<OrderPermits> {
 			Object[] param = searchMap.keySet().toArray();
 			for (int i = 0; i < param.length; i++) {
 				String key = param[i].toString();
-				if(key.toUpperCase().contains("NUMBER") && searchMap.get(key).toString().equalsIgnoreCase(PermitController.EMPTY_PERMIT_NUMBER) ) {
+				if(key.toUpperCase().contains("NUMBER") && searchMap.get(key).toString().equalsIgnoreCase(Permit.EMPTY_PERMIT_NUMBER) ) {
 					searchMap.put("permit.number", "null");
 				}
 			}

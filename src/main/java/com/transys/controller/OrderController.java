@@ -32,6 +32,7 @@ import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.jpa.criteria.predicate.IsEmptyPredicate;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -318,13 +319,16 @@ public class OrderController extends CRUDController<Order> {
 			BindingResult bindingResult, ModelMap model) {
 		Order exchangeOrder = new Order();
 		exchangeOrder.setPickupOrderId(entity.getId());
+		
 		exchangeOrder.setCustomer(entity.getCustomer());
 		exchangeOrder.setDeliveryAddress(entity.getDeliveryAddress());
 		exchangeOrder.setDeliveryContactName(entity.getDeliveryContactName());
 		exchangeOrder.setDeliveryContactPhone1(entity.getDeliveryContactPhone1());
 		exchangeOrder.setDeliveryContactPhone2(entity.getDeliveryContactPhone2());
+		
 		exchangeOrder.setDumpsterLocation(entity.getDumpsterLocation());
 		exchangeOrder.setDumpsterSize(entity.getDumpsterSize());
+		
 		exchangeOrder.setMaterialType(entity.getMaterialType());
 		
 		OrderFees entityOrderFees = entity.getOrderFees();
@@ -349,6 +353,18 @@ public class OrderController extends CRUDController<Order> {
 			exchangeOrder.setBalanceAmountDue(exchangeTotalFees);
 		}
 		
+		String userNotes = extractUserNotes(entity);
+		if (StringUtils.isNotEmpty(userNotes)) {
+			OrderNotes notes = new OrderNotes();
+			notes.setNotes(userNotes);
+			notes.setNotesType(OrderNotes.NOTES_TYPE_USER);
+			
+			List<OrderNotes> exchangeNotesList = new ArrayList<OrderNotes>();
+			exchangeNotesList.add(notes);
+			
+			exchangeOrder.setOrderNotes(exchangeNotesList);
+		}
+		
 		model.addAttribute("modelObject", exchangeOrder);
 		
 		setupCreate(model, request, exchangeOrder);
@@ -363,6 +379,21 @@ public class OrderController extends CRUDController<Order> {
 		model.addAttribute("notesModelObject", new OrderNotes());
 		
 		return urlContext + "/order";
+	}
+	
+	private String extractUserNotes(Order entity) {
+		String userNotes = StringUtils.EMPTY;
+		List<OrderNotes> notesList = entity.getOrderNotes();
+		if (notesList != null && !notesList.isEmpty()) {
+			for (OrderNotes anOrderNotes : notesList) {
+				if (OrderNotes.NOTES_TYPE_USER.equals(anOrderNotes.getNotesType())) {
+					userNotes = anOrderNotes.getNotes();
+					break;
+				}
+			}
+		}
+		
+		return userNotes;
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/orderNotesCreateModal.do")
@@ -927,6 +958,7 @@ public class OrderController extends CRUDController<Order> {
 	public void generateOrderReport(ModelMap model, HttpServletRequest request,
 			HttpServletResponse response, @RequestParam("type") String type,
 			Object objectDAO, Class clazz) {
+		ByteArrayOutputStream out = null;
 		try {
 			if (StringUtils.isEmpty(type))
 				type = "xlsx";
@@ -937,23 +969,33 @@ public class OrderController extends CRUDController<Order> {
 			response.setContentType(MimeUtil.getContentType(type));
 			
 			SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
-			List<Order> orderList = genericDAO.search(getEntityClass(), criteria,"id",false,null);
+			criteria.setPageSize(100000);
+			//criteria.setPage(0);
+			List<Order> orderList = genericDAO.search(getEntityClass(), criteria, "id", false, null);
 			
 			Map<String, Object> reportParams = new HashMap<String,Object>();
 			List<Map<String, Object>> reportList = new ArrayList<Map<String, Object>>();
 			populateOrderReportData(criteria, orderList, reportList, reportParams);
 			
-			ByteArrayOutputStream out = new ByteArrayOutputStream();
 			out = dynamicReportService.generateStaticReport("ordersReport", reportList, reportParams, type, request);
 		
 			out.writeTo(response.getOutputStream());
-			out.close();
 			
+			criteria.setPageSize(25);
 		} catch (Exception e) {
 			e.printStackTrace();
 			log.warn("Unable to create file :" + e);
 			request.getSession().setAttribute("errors", e.getMessage());
-			
+		} finally {
+			if (out != null) {
+				try {
+					out.close();
+					out = null;
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 		}
 	}
 	
@@ -1069,15 +1111,9 @@ public class OrderController extends CRUDController<Order> {
 		anOrderReportVO.setTotalAmountPaid(anOrder.getTotalAmountPaid());
 		anOrderReportVO.setBalanceAmountDue(anOrder.getBalanceAmountDue());
 		
-		String userNotes = StringUtils.EMPTY;
-		List<OrderNotes> notesList = anOrder.getOrderNotes();
-		if (notesList != null && !notesList.isEmpty()) {
-			for (OrderNotes anOrderNotes : notesList) {
-				if (OrderNotes.NOTES_TYPE_USER.equals(anOrderNotes.getNotesType())) {
-					userNotes = anOrderNotes.getNotes();
-					break;
-				}
-			}
+		String userNotes = extractUserNotes(anOrder);
+		if (StringUtils.isNotEmpty(userNotes) && userNotes.length() > 130) {
+			userNotes = userNotes.substring(0, 135);
 		}
 		anOrderReportVO.setNotes(userNotes);
 		

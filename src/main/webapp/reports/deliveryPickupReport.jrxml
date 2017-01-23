@@ -1,10 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
-<!-- 2015-10-24T09:54:42 -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="DeliveryPickupReport" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="d3a0f573-b9d0-4bca-9a6f-1da0ab12e250">
-	<queryString>
-		<![CDATA[]]>
-	</queryString>
+<!-- 2017-01-23T17:29:15 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="deliveryPickupReport" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="822" leftMargin="10" rightMargin="10" topMargin="10" bottomMargin="10" isSummaryWithPageHeaderAndFooter="true" isIgnorePagination="true" uuid="f465866e-f394-428d-b546-3108e4a018e2">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<parameter name="noOfOrders" class="java.lang.Integer"/>
 	<field name="deliveryDateFrom" class="java.lang.String"/>
 	<field name="deliveryDateTo" class="java.lang.String"/>
 	<field name="pickupDateFrom" class="java.lang.String"/>
@@ -18,330 +29,391 @@
 	<field name="deliveryDate" class="java.lang.String"/>
 	<field name="pickupDate" class="java.lang.String"/>
 	<field name="dumpsterSizeAggregation" class="java.lang.String"/>
+	<field name="permit" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="65" splitType="Stretch">
-			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-			<staticText>
-				<reportElement x="139" y="22" width="290" height="40" uuid="cc962bc9-d4a0-4267-b08f-f7cd3ba02220"/>
-				<textElement textAlignment="Center">
-					<font fontName="Arial" size="14" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Delivery/ Pickup Report]]></text>
-			</staticText>
-		</band>
+		<band splitType="Stretch"/>
 	</title>
 	<pageHeader>
-		<band height="145" splitType="Stretch">
-			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+		<band height="91" splitType="Stretch">
 			<staticText>
-				<reportElement x="1" y="10" width="280" height="30" uuid="5187a10f-df04-4827-90bf-9a0d493a8aad"/>
-				<textElement>
-					<font fontName="Arial" size="10" isBold="true"/>
+				<reportElement mode="Opaque" x="270" y="2" width="283" height="24" backcolor="#99CCFF" uuid="d41af175-c951-48fa-9614-95f75b2e7e5a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="11" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Total Dumpsters/ Boxes Delivered (or Picked up) for:]]></text>
+				<text><![CDATA[DELIVERY PICKUP REPORT]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="1" y="50" width="130" height="30" uuid="e598756c-c25a-49e5-ae7a-dfdc9a9f1e69"/>
-				<textElement>
-					<font fontName="Arial" size="10" isBold="true"/>
+				<reportElement mode="Opaque" x="404" y="35" width="338" height="26" backcolor="#99CCFF" uuid="ce12c40a-2897-4969-a83e-76b4208b49c5"/>
+				<box>
+					<pen lineWidth="1.0" lineColor="#333333"/>
+					<topPen lineWidth="1.0" lineColor="#333333"/>
+					<leftPen lineWidth="1.0" lineColor="#333333"/>
+					<bottomPen lineWidth="1.0" lineColor="#333333"/>
+					<rightPen lineWidth="1.0" lineColor="#333333"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Delivery Date Range:]]></text>
+				<text><![CDATA[Total Dumpsters/Boxes Delivered (or Picked up)]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="201" y="50" width="18" height="30" uuid="7c7c4288-6d85-46c1-95b4-7f5d19f191d3"/>
-				<textElement>
-					<font fontName="Arial" size="10" isBold="true"/>
+				<reportElement mode="Opaque" x="99" y="35" width="153" height="26" backcolor="#99CCFF" uuid="6e2f73f5-454f-46e8-a6af-fdf25d495b99"/>
+				<box>
+					<pen lineWidth="1.0" lineColor="#333333"/>
+					<topPen lineWidth="1.0" lineColor="#333333"/>
+					<leftPen lineWidth="1.0" lineColor="#333333"/>
+					<bottomPen lineWidth="1.0" lineColor="#333333"/>
+					<rightPen lineWidth="1.0" lineColor="#333333"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
 				</textElement>
-				<text><![CDATA[to]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="321" y="50" width="100" height="30" uuid="bcb6c74c-95e6-4178-a023-b9beb5c96277"/>
-				<textElement>
-					<font fontName="Arial" size="10" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Pickup Date Range:]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="491" y="50" width="18" height="30" uuid="96b007ef-554b-4e09-bfc4-d5cf495e0b2a"/>
-				<textElement>
-					<font fontName="Arial" size="10"/>
-				</textElement>
-				<text><![CDATA[to]]></text>
+				<text><![CDATA[Delivery Dates]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="141" y="50" width="54" height="30" uuid="c88a7da5-cee9-4aa7-96ee-5d0bc782f962"/>
-				<textElement>
-					<font fontName="Arial" size="10"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{deliveryDateFrom}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="231" y="50" width="70" height="30" uuid="67f45896-8eae-4d13-b012-bd098e7415e6"/>
-				<textElement>
-					<font fontName="Arial" size="10"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{deliveryDateTo}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="430" y="50" width="53" height="30" uuid="7311f5f6-8d5c-4a76-ab25-c7e9020773de"/>
-				<textElement>
-					<font fontName="Arial" size="10"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{pickupDateFrom}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="521" y="50" width="55" height="30" uuid="0c55d46a-766c-49aa-847b-77ae6eb7b2b3"/>
-				<textElement>
-					<font fontName="Arial" size="10"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{pickupDateTo}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="1" y="95" width="100" height="30" uuid="79977c34-be47-4008-b8e2-c53e5f4f097b"/>
-				<textElement>
-					<font fontName="Arial" size="10"/>
+				<reportElement x="404" y="61" width="338" height="20" uuid="e8300c18-44ea-4f05-94a5-172fab75c83c"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{dumpsterSizeAggregation}]]></textFieldExpression>
+			</textField>
+			<textField pattern="">
+				<reportElement x="99" y="61" width="153" height="20" uuid="8ddc7a3b-b6fb-46bc-a154-799e22d181ae"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{deliveryDateFrom} + " - " + $F{deliveryDateTo}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Opaque" x="252" y="35" width="152" height="26" backcolor="#99CCFF" uuid="b7c835eb-2bb1-4fa3-92ab-0d633fd222d7"/>
+				<box>
+					<pen lineWidth="1.0" lineColor="#333333"/>
+					<topPen lineWidth="1.0" lineColor="#333333"/>
+					<leftPen lineWidth="1.0" lineColor="#333333"/>
+					<bottomPen lineWidth="1.0" lineColor="#333333"/>
+					<rightPen lineWidth="1.0" lineColor="#333333"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Pickup Dates]]></text>
+			</staticText>
+			<textField pattern="">
+				<reportElement x="252" y="61" width="152" height="20" uuid="9f184b36-f2bf-4adb-ada4-cd697928bd9f"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{pickupDateFrom} + " - " + $F{pickupDateTo}]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>
 	<columnHeader>
-		<band height="30" splitType="Stretch">
-			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.HorizontalRowLayout"/>
-			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+		<band height="55" splitType="Stretch">
 			<staticText>
-				<reportElement x="0" y="0" width="72" height="30" uuid="e4611684-74cb-44f0-bf86-ebb0a109fc5e">
-					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-				</reportElement>
+				<reportElement mode="Opaque" x="60" y="25" width="160" height="30" forecolor="#FFFFFF" backcolor="#99CCFF" uuid="a594e6fb-441c-40bb-891d-381486be7926"/>
 				<box>
-					<topPen lineWidth="0.5" lineStyle="Solid"/>
-					<leftPen lineWidth="0.5" lineStyle="Solid"/>
-					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
-					<rightPen lineWidth="0.5" lineStyle="Solid"/>
+					<pen lineWidth="1.0" lineColor="#333333"/>
+					<topPen lineWidth="1.0" lineColor="#333333"/>
+					<leftPen lineWidth="1.0" lineColor="#333333"/>
+					<bottomPen lineWidth="1.0" lineColor="#333333"/>
+					<rightPen lineWidth="1.0" lineColor="#333333"/>
 				</box>
-				<textElement>
-					<font fontName="Arial" size="10" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Order #]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="72" y="0" width="69" height="30" uuid="5642d135-3c91-4eda-a5b0-49d66b99eb2f"/>
-				<box>
-					<topPen lineWidth="0.5" lineStyle="Solid"/>
-					<leftPen lineWidth="0.5" lineStyle="Solid"/>
-					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
-					<rightPen lineWidth="0.5" lineStyle="Solid"/>
-				</box>
-				<textElement>
-					<font fontName="Arial" size="10" isBold="true"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Customer]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="141" y="0" width="69" height="30" uuid="2fac4328-19ae-46f0-bd6d-4d84844e1111">
-					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-				</reportElement>
+				<reportElement mode="Opaque" x="11" y="25" width="49" height="30" forecolor="#FFFFFF" backcolor="#99CCFF" uuid="aa3af099-f756-4d07-9083-8d67c8f30fca"/>
 				<box>
-					<topPen lineWidth="0.5" lineStyle="Solid"/>
-					<leftPen lineWidth="0.5" lineStyle="Solid"/>
-					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
-					<rightPen lineWidth="0.5" lineStyle="Solid"/>
+					<pen lineWidth="1.0" lineColor="#333333"/>
+					<topPen lineWidth="1.0" lineColor="#333333"/>
+					<leftPen lineWidth="1.0" lineColor="#333333"/>
+					<bottomPen lineWidth="1.0" lineColor="#333333"/>
+					<rightPen lineWidth="1.0" lineColor="#333333"/>
 				</box>
-				<textElement>
-					<font fontName="Arial" size="10" isBold="true"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Order #]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="220" y="25" width="181" height="30" forecolor="#FFFFFF" backcolor="#99CCFF" uuid="f9ac7168-f9e7-41a5-a6df-d79af4f51569"/>
+				<box>
+					<pen lineWidth="1.0" lineColor="#333333"/>
+					<topPen lineWidth="1.0" lineColor="#333333"/>
+					<leftPen lineWidth="1.0" lineColor="#333333"/>
+					<bottomPen lineWidth="1.0" lineColor="#333333"/>
+					<rightPen lineWidth="1.0" lineColor="#333333"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Delivery Address]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="210" y="0" width="69" height="30" uuid="60089bfa-db84-4998-adf6-2dba9b8cf71f"/>
+				<reportElement mode="Opaque" x="401" y="25" width="57" height="30" forecolor="#FFFFFF" backcolor="#99CCFF" uuid="dbde2f77-6727-4c18-8c47-64b3235b9b16"/>
 				<box>
-					<topPen lineWidth="0.5" lineStyle="Solid"/>
-					<leftPen lineWidth="0.5" lineStyle="Solid"/>
-					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
-					<rightPen lineWidth="0.5" lineStyle="Solid"/>
+					<pen lineWidth="1.0" lineColor="#333333"/>
+					<topPen lineWidth="1.0" lineColor="#333333"/>
+					<leftPen lineWidth="1.0" lineColor="#333333"/>
+					<bottomPen lineWidth="1.0" lineColor="#333333"/>
+					<rightPen lineWidth="1.0" lineColor="#333333"/>
 				</box>
-				<textElement>
-					<font fontName="Arial" size="10" isBold="true"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
 				</textElement>
 				<text><![CDATA[City]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="279" y="0" width="69" height="30" uuid="78f93d39-daeb-4d24-b5b6-573d0a367a41"/>
+				<reportElement mode="Opaque" x="458" y="25" width="42" height="30" forecolor="#FFFFFF" backcolor="#99CCFF" uuid="54e5fb73-e432-4ccf-bd93-78adf06b08d8"/>
 				<box>
-					<topPen lineWidth="0.5" lineStyle="Solid"/>
-					<leftPen lineWidth="0.5" lineStyle="Solid"/>
-					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
-					<rightPen lineWidth="0.5" lineStyle="Solid"/>
+					<pen lineWidth="1.0" lineColor="#333333"/>
+					<topPen lineWidth="1.0" lineColor="#333333"/>
+					<leftPen lineWidth="1.0" lineColor="#333333"/>
+					<bottomPen lineWidth="1.0" lineColor="#333333"/>
+					<rightPen lineWidth="1.0" lineColor="#333333"/>
 				</box>
-				<textElement>
-					<font fontName="Arial" size="10" isBold="true"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Dumpster Size]]></text>
+				<text><![CDATA[Dmpstr Size]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="348" y="0" width="69" height="30" uuid="e8eef395-b149-4ba7-acf7-034456ec08dd"/>
+				<reportElement mode="Opaque" x="500" y="25" width="84" height="30" forecolor="#FFFFFF" backcolor="#99CCFF" uuid="870d1023-e9e6-4fcc-b42c-faad2e74a5a7"/>
 				<box>
-					<topPen lineWidth="0.5" lineStyle="Solid"/>
-					<leftPen lineWidth="0.5" lineStyle="Solid"/>
-					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
-					<rightPen lineWidth="0.5" lineStyle="Solid"/>
+					<pen lineWidth="1.0" lineColor="#333333"/>
+					<topPen lineWidth="1.0" lineColor="#333333"/>
+					<leftPen lineWidth="1.0" lineColor="#333333"/>
+					<bottomPen lineWidth="1.0" lineColor="#333333"/>
+					<rightPen lineWidth="1.0" lineColor="#333333"/>
 				</box>
-				<textElement>
-					<font fontName="Arial" size="10" isBold="true"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Dumpster Number]]></text>
+				<text><![CDATA[Dumpster #]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="417" y="0" width="69" height="30" uuid="6b2d88ed-a8ae-4c4a-ae38-42af518c816c"/>
+				<reportElement mode="Opaque" x="584" y="25" width="70" height="30" forecolor="#FFFFFF" backcolor="#99CCFF" uuid="ddb0fa7b-9a64-412a-9a89-e87bd0c45dc9"/>
 				<box>
-					<topPen lineWidth="0.5" lineStyle="Solid"/>
-					<leftPen lineWidth="0.5" lineStyle="Solid"/>
-					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
-					<rightPen lineWidth="0.5" lineStyle="Solid"/>
+					<pen lineWidth="1.0" lineColor="#333333"/>
+					<topPen lineWidth="1.0" lineColor="#333333"/>
+					<leftPen lineWidth="1.0" lineColor="#333333"/>
+					<bottomPen lineWidth="1.0" lineColor="#333333"/>
+					<rightPen lineWidth="1.0" lineColor="#333333"/>
 				</box>
-				<textElement>
-					<font fontName="Arial" size="10" isBold="true"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Delivery Date]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="486" y="0" width="69" height="30" uuid="1caa4be8-0509-485d-a8e5-48525e22999f"/>
+				<reportElement mode="Opaque" x="654" y="25" width="70" height="30" forecolor="#FFFFFF" backcolor="#99CCFF" uuid="40c452be-83be-43f3-8ab1-a6ff63e07405"/>
 				<box>
-					<topPen lineWidth="0.5" lineStyle="Solid"/>
-					<leftPen lineWidth="0.5" lineStyle="Solid"/>
-					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
-					<rightPen lineWidth="0.5" lineStyle="Solid"/>
+					<pen lineWidth="1.0" lineColor="#333333"/>
+					<topPen lineWidth="1.0" lineColor="#333333"/>
+					<leftPen lineWidth="1.0" lineColor="#333333"/>
+					<bottomPen lineWidth="1.0" lineColor="#333333"/>
+					<rightPen lineWidth="1.0" lineColor="#333333"/>
 				</box>
-				<textElement>
-					<font fontName="Arial" size="10" isBold="true"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Pickup Date]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="724" y="25" width="90" height="30" forecolor="#FFFFFF" backcolor="#99CCFF" uuid="894c3326-5c77-49d1-94de-bad14c09b44a"/>
+				<box>
+					<pen lineWidth="1.0" lineColor="#333333"/>
+					<topPen lineWidth="1.0" lineColor="#333333"/>
+					<leftPen lineWidth="1.0" lineColor="#333333"/>
+					<bottomPen lineWidth="1.0" lineColor="#333333"/>
+					<rightPen lineWidth="1.0" lineColor="#333333"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Permit #]]></text>
 			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="27" splitType="Stretch">
-			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.HorizontalRowLayout"/>
-			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+		<band height="20" splitType="Stretch">
 			<textField>
-				<reportElement x="0" y="0" width="72" height="27" uuid="ff10fb41-b060-4fb4-89ee-40ce127ba193">
-					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-				</reportElement>
+				<reportElement x="220" y="0" width="181" height="20" uuid="d17cf412-9401-4d76-b44a-ddd16bbaa78b"/>
 				<box>
-					<topPen lineWidth="0.5" lineStyle="Solid"/>
-					<leftPen lineWidth="0.5" lineStyle="Solid"/>
-					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
-					<rightPen lineWidth="0.5" lineStyle="Solid"/>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
 				</box>
-				<textElement>
-					<font fontName="Arial" size="10"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{id}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="72" y="0" width="69" height="27" uuid="5ea7f648-d1e7-4c3c-b393-72a9e4915cc6"/>
-				<box>
-					<topPen lineWidth="0.5" lineStyle="Solid"/>
-					<leftPen lineWidth="0.5" lineStyle="Solid"/>
-					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
-					<rightPen lineWidth="0.5" lineStyle="Solid"/>
-				</box>
-				<textElement>
-					<font fontName="Arial" size="10"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{customer}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="141" y="0" width="69" height="27" uuid="1ce5f69c-069f-4724-b05e-c170d6a4523b"/>
-				<box>
-					<topPen lineWidth="0.5" lineStyle="Solid"/>
-					<leftPen lineWidth="0.5" lineStyle="Solid"/>
-					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
-					<rightPen lineWidth="0.5" lineStyle="Solid"/>
-				</box>
-				<textElement>
-					<font fontName="Arial" size="10"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{deliveryAddress}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="210" y="0" width="69" height="27" uuid="dd42d151-3c0a-4b02-9b67-359501688025"/>
+				<reportElement x="401" y="0" width="57" height="20" uuid="3d231619-6732-488c-b625-b95a876e07b7"/>
 				<box>
-					<topPen lineWidth="0.5" lineStyle="Solid"/>
-					<leftPen lineWidth="0.5" lineStyle="Solid"/>
-					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
-					<rightPen lineWidth="0.5" lineStyle="Solid"/>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
 				</box>
-				<textElement>
-					<font fontName="Arial" size="10"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{city}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="279" y="0" width="69" height="27" uuid="5d71fbc1-044a-4049-b3ac-4e615b895e15"/>
+				<reportElement x="458" y="0" width="42" height="20" uuid="374d8daf-2f92-4ce7-bc42-8b334a84108b"/>
 				<box>
-					<topPen lineWidth="0.5" lineStyle="Solid"/>
-					<leftPen lineWidth="0.5" lineStyle="Solid"/>
-					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
-					<rightPen lineWidth="0.5" lineStyle="Solid"/>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
 				</box>
-				<textElement>
-					<font fontName="Arial" size="10"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{dumpsterSize}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="348" y="0" width="69" height="27" uuid="b067fd13-c46b-4f61-8a47-4de7b536ffca"/>
+				<reportElement x="500" y="0" width="84" height="20" uuid="c6ba4363-2736-45b1-85d5-5822ba8ec1e8"/>
 				<box>
-					<topPen lineWidth="0.5" lineStyle="Solid"/>
-					<leftPen lineWidth="0.5" lineStyle="Solid"/>
-					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
-					<rightPen lineWidth="0.5" lineStyle="Solid"/>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
 				</box>
-				<textElement>
-					<font fontName="Arial" size="10"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{dumpsterNum}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="417" y="0" width="69" height="27" uuid="7f225b01-fb90-4699-8ef1-e75cff3eee84"/>
+				<reportElement x="654" y="0" width="70" height="20" uuid="28cb3cd9-4269-4545-bb05-2c67e417e2e2"/>
 				<box>
-					<topPen lineWidth="0.5" lineStyle="Solid"/>
-					<leftPen lineWidth="0.5" lineStyle="Solid"/>
-					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
-					<rightPen lineWidth="0.5" lineStyle="Solid"/>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
 				</box>
-				<textElement>
-					<font fontName="Arial" size="10"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{pickupDate}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="584" y="0" width="70" height="20" uuid="17a0ec57-d719-4d6e-aafa-e166a6f2f41f"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{deliveryDate}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="486" y="0" width="69" height="27" uuid="dbbc510b-7ff0-4fb7-84b8-4b0f03298547"/>
+				<reportElement x="11" y="0" width="49" height="20" uuid="65ef94e8-3445-444c-89e6-066b51e05162"/>
 				<box>
-					<topPen lineWidth="0.5" lineStyle="Solid"/>
-					<leftPen lineWidth="0.5" lineStyle="Solid"/>
-					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
-					<rightPen lineWidth="0.5" lineStyle="Solid"/>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
 				</box>
-				<textElement>
-					<font fontName="Arial" size="10"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{pickupDate}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{id}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="60" y="0" width="160" height="20" uuid="c6bfbc7f-6adf-4f54-9080-5f638c704f2e"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{customer}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="724" y="0" width="90" height="20" uuid="16f2fc2f-1c53-4e60-b819-1870f85f0816"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{permit}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
-	<columnFooter>
-		<band height="45" splitType="Stretch"/>
-	</columnFooter>
-	<pageFooter>
-		<band height="54" splitType="Stretch"/>
-	</pageFooter>
 	<summary>
-		<band height="42" splitType="Stretch"/>
+		<band height="24" splitType="Stretch">
+			<staticText>
+				<reportElement x="11" y="0" width="59" height="21" uuid="3269e17d-9588-4ff9-ab7c-50f6f94acd34"/>
+				<box>
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="70" y="0" width="73" height="21" uuid="af5cc185-0dba-441e-b222-1c6e66352658"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{noOfOrders}]]></textFieldExpression>
+			</textField>
+		</band>
 	</summary>
 </jasperReport>

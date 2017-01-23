@@ -315,14 +315,15 @@ public class Order extends AbstractBaseModel {
 			return StringUtils.EMPTY;
 		}
 		
-		if (!StringUtils.isEmpty(deliveryHourFrom)) {
+		if (!StringUtils.isEmpty(getDeliveryHourFrom())) {
 			deliveryDate += "  ";
-			deliveryDate += deliveryHourFrom;
+			deliveryDate += getDeliveryHourFrom();
 		}
 		
-		if (!StringUtils.isEmpty(deliveryHourTo)) {
+		if (!StringUtils.isEmpty(getDeliveryHourTo()) 
+				&& !StringUtils.equals(getDeliveryHourFrom(), getDeliveryHourTo())) {
 			deliveryDate += " - ";
-			deliveryDate += deliveryHourTo;
+			deliveryDate += getDeliveryHourTo();
 		}
 		
 		return deliveryDate;

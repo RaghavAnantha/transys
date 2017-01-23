@@ -23,6 +23,7 @@ import org.springframework.web.multipart.support.ByteArrayMultipartFileEditor;
 //import com.google.gson.Gson;
 import com.transys.core.dao.GenericDAO;
 import com.transys.core.util.MimeUtil;
+import com.transys.model.Permit;
 //import com.transys.model.Language;
 import com.transys.model.SearchCriteria;
 //import com.transys.model.StaticData;
@@ -229,7 +230,7 @@ public class BaseController {
 		Map<String, Object> searchMap = criteria.getSearchMap();
 		
 		if (searchMap.containsKey("number") && searchMap.get("number").toString().equalsIgnoreCase("null")) {
-			searchMap.put("number", "To Be Assigned");
+			searchMap.put("number", Permit.EMPTY_PERMIT_NUMBER);
 			System.out.println("Resetting Permit Number");
 		}
 		
