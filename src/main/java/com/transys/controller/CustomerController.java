@@ -1041,6 +1041,92 @@ public class CustomerController extends CRUDController<Customer> {
 		return urlContext + "/customer";
 	}
 	
+	@RequestMapping(method = RequestMethod.GET, value = "/deleteDeliveryAddress.do")
+	public String deleteDeliveryAddress(ModelMap model, HttpServletRequest request,
+			@RequestParam(value = "deliveryAddressId") Long deliveryAddressId) {
+		DeliveryAddress deliveryAddressEntity = genericDAO.getById(DeliveryAddress.class, deliveryAddressId);
+		
+		String orderQuery = "select obj from Order obj where obj.deliveryAddress.id=" 
+					+ deliveryAddressEntity.getId();
+		List<Order> orderList = genericDAO.executeSimpleQuery(orderQuery);
+		if (!orderList.isEmpty()) {
+			cleanUp(request);
+			
+			setupDeliveryAddress(model, request, deliveryAddressEntity);
+
+			Order associatedOrder = orderList.get(0);
+			model.addAttribute("errorCtx", "manageCustomerDeliveryAddress");
+			model.addAttribute("error", "Delivery address to be deleted is associated to Order: " + associatedOrder.getId());
+		
+			return urlContext + "/customer";
+		}
+		
+		Long customerId = deliveryAddressEntity.getCustomer().getId();
+		Customer customer = genericDAO.getById(Customer.class, customerId);
+		List<DeliveryAddress> deliveryAddressList = customer.getDeliveryAddress();
+		int i = 0;
+		for (DeliveryAddress aDeliveryAddress : deliveryAddressList) {
+			if (aDeliveryAddress.getId() == deliveryAddressEntity.getId()) {
+				break;
+			}
+			i++;
+		}
+		deliveryAddressList.remove(i);
+		
+		Long modifiedBy = getUser(request).getId();
+		customer.setModifiedBy(modifiedBy);
+		customer.setModifiedAt(Calendar.getInstance().getTime());
+		genericDAO.saveOrUpdate(customer);
+		
+		genericDAO.delete(deliveryAddressEntity);
+		
+		String customerAuditMsg = "Delivery address '" + deliveryAddressEntity.getFullLine() + "' deleted";
+		createAuditCustomerNotes(customer, customerAuditMsg, modifiedBy);
+		
+		cleanUp(request);
+		
+		setupDeliveryAddress(model, request, deliveryAddressEntity);
+
+		model.addAttribute("msgCtx", "manageCustomerDeliveryAddress");
+		model.addAttribute("msg", "Delivery address deleted successfully");
+		
+		return urlContext + "/customer";
+	}
+	
+	private void setupDeliveryAddress(ModelMap model, HttpServletRequest request,
+			DeliveryAddress deliveryAddressEntity) {
+		setupCreate(model, request);
+		
+		Long customerId = deliveryAddressEntity.getCustomer().getId();
+		
+		Customer emptyCustomer2 = new Customer();
+		emptyCustomer2.setId(customerId);
+		CustomerNotes notes = new CustomerNotes();
+		notes.setCustomer(emptyCustomer2);
+		model.addAttribute("notesModelObject", notes);
+	
+		List<CustomerNotes> notesList = genericDAO.executeSimpleQuery("select obj from CustomerNotes obj where obj.customer.id=" +  customerId + " and obj.deleteFlag='1' order by obj.id asc");
+		model.addAttribute("notesList", notesList);
+		
+		Customer customer = new Customer();
+		customer.setId(customerId);
+		DeliveryAddress address = new DeliveryAddress();
+		address.setCustomer(customer);
+		model.addAttribute("deliveryAddressModelObject", address);
+		
+		List<Customer> customerList = genericDAO.executeSimpleQuery("select obj from Customer obj where obj.id=" + customerId + " and obj.deleteFlag='1'");
+		model.addAttribute("modelObject", customerList.get(0));
+		
+		List<DeliveryAddress> addressList = genericDAO.executeSimpleQuery("select obj from DeliveryAddress obj where obj.customer.id=" +  customerId + " and obj.deleteFlag='1' order by obj.line1 asc");
+		model.addAttribute("deliveryAddressList", addressList);
+		
+		populateAggregartionValues(model, customerId);
+		
+		model.addAttribute("activeTab", "manageCustomer");
+		model.addAttribute("activeSubTab", "delivery");
+		model.addAttribute("mode", "ADD");
+	}
+	
 	@RequestMapping(method = RequestMethod.POST, value = "/saveDeliveryAddressModal.do")
 	public @ResponseBody String saveDeliveryAddressModal(HttpServletRequest request,
 			@ModelAttribute("deliveryAddressModelObject") DeliveryAddress entity,

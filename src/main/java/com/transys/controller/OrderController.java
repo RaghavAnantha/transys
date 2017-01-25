@@ -198,6 +198,13 @@ public class OrderController extends CRUDController<Order> {
 		model.addAttribute("deliveryContactPhones", phoneArr);
 		model.addAttribute("deliveryContactNames", contactNameArr);
 		
+		List<DeliveryAddress> deliveryAddressList = genericDAO.executeSimpleQuery("select obj from DeliveryAddress obj where obj.deleteFlag='1' and obj.line2 != '' order by obj.line2 asc");
+		List<String> deliveryAddressStreetList = new ArrayList<String>();
+		for (DeliveryAddress aDeliveryAddress : deliveryAddressList) {
+			deliveryAddressStreetList.add(aDeliveryAddress.getLine2());
+		}
+		model.addAttribute("deliveryAddressStreets", deliveryAddressStreetList);
+		
 		Map criterias = new HashMap();
 		
 		model.addAttribute("orderStatuses", genericDAO.findByCriteria(OrderStatus.class, criterias, "status", false));
@@ -593,9 +600,8 @@ public class OrderController extends CRUDController<Order> {
 		}
 		
 		beforeSave(request, entity, model);
-		//entity.setModifiedAt(Calendar.getInstance().getTime());
-		//entity.setModifiedBy(getUser(request).getId());
 		
+		Long modifiedBy = entity.getModifiedBy();
 		String auditMsg = StringUtils.EMPTY;
 		if (OrderStatus.ORDER_STATUS_OPEN.equals(entity.getOrderStatus().getStatus())) {
 			auditMsg = "Order status changed to " + OrderStatus.ORDER_STATUS_DROPPED_OFF;
@@ -603,22 +609,61 @@ public class OrderController extends CRUDController<Order> {
 			OrderStatus orderStatus = retrieveOrderStatus(OrderStatus.ORDER_STATUS_DROPPED_OFF);
 			entity.setOrderStatus(orderStatus);
 			
-			updateDumpsterStatus(entity.getDumpster().getId(), DumpsterStatus.DUMPSTER_STATUS_DROPPED_OFF, getUser(request).getId());
+			updateDumpsterStatus(entity.getDumpster().getId(), DumpsterStatus.DUMPSTER_STATUS_DROPPED_OFF, modifiedBy);
 		} else {
 			auditMsg = "Order Drop Off details updated";
 			
 			if (!currentlyAssignedDumpsterId.equals(entity.getDumpster().getId())) {
 				if (!OrderStatus.ORDER_STATUS_CLOSED.equals(entity.getOrderStatus().getStatus())) {
-					updateDumpsterStatus(currentlyAssignedDumpsterId, DumpsterStatus.DUMPSTER_STATUS_AVAILABLE, getUser(request).getId());
-					updateDumpsterStatus(entity.getDumpster().getId(), DumpsterStatus.DUMPSTER_STATUS_DROPPED_OFF, getUser(request).getId());
+					updateDumpsterStatus(currentlyAssignedDumpsterId, DumpsterStatus.DUMPSTER_STATUS_AVAILABLE, modifiedBy);
+					updateDumpsterStatus(entity.getDumpster().getId(), DumpsterStatus.DUMPSTER_STATUS_DROPPED_OFF, modifiedBy);
 				}
 			}
 		}
 		
 		genericDAO.saveOrUpdate(entity);
 		
-		OrderNotes auditOrderNotes = createAuditOrderNotes(entity, auditMsg, entity.getModifiedBy());
+		OrderNotes auditOrderNotes = createAuditOrderNotes(entity, auditMsg, modifiedBy);
 		entity.getOrderNotes().add(auditOrderNotes);
+		
+		return dropOffSaveSuccess(request, entity, model);
+	}
+	
+	@RequestMapping(method = RequestMethod.POST, value = "/revertDropOffToOpen.do")
+	public String revertDropOffToOpen(HttpServletRequest request,
+			@ModelAttribute("modelObject") Order entity,
+			BindingResult bindingResult, ModelMap model) {
+		try {
+			getValidator().validate(entity, bindingResult);
+		} catch (ValidationException e) {
+			e.printStackTrace();
+			log.warn("Error in validation :" + e);
+		}
+		
+		// Return to form if we had errors
+		if (bindingResult.hasErrors()) {
+			setupCreate(model, request, entity);
+			return urlContext + "/form";
+		}
+		
+		beforeSave(request, entity, model);
+		
+		Long associatedDumpsterId = entity.getDumpster().getId();
+		
+		entity.setDropOffDriver(null);
+		entity.setDumpster(null);
+		
+		OrderStatus orderStatus = retrieveOrderStatus(OrderStatus.ORDER_STATUS_OPEN);
+		entity.setOrderStatus(orderStatus);
+		
+		genericDAO.saveOrUpdate(entity);
+		
+		Long modifiedBy = entity.getModifiedBy();
+		String auditMsg = "Order status reverted to " + OrderStatus.ORDER_STATUS_OPEN;
+		OrderNotes auditOrderNotes = createAuditOrderNotes(entity, auditMsg, modifiedBy);
+		entity.getOrderNotes().add(auditOrderNotes);
+		
+		updateDumpsterStatus(associatedDumpsterId, DumpsterStatus.DUMPSTER_STATUS_AVAILABLE, modifiedBy);
 		
 		return dropOffSaveSuccess(request, entity, model);
 	}

@@ -115,6 +115,21 @@ function populateCustomerDeliveryAddress() {
 					</c:forEach>
 				</select>
 			</td>
+			<td class="form-left">Phone Number</td>
+			<td>
+				<select class="flat form-control input-sm" id=deliveryContactPhone1 name="deliveryContactPhone1" style="width: 175px !important">
+					<option value="">----Please Select----</option>
+					<c:forEach items="${deliveryContactPhones}" var="aDeliveryContactPhone">
+						<c:set var="selected" value="" />
+						<c:if test="${sessionScope.searchCriteria.searchMap['deliveryContactPhone1'] == aDeliveryContactPhone}">
+							<c:set var="selected" value="selected" />
+						</c:if>
+						<option value="${aDeliveryContactPhone}" ${selected}>${aDeliveryContactPhone}</option>
+					</c:forEach>
+				</select>
+			</td>
+		</tr>
+		<tr>
 			<td class="form-left"><transys:label code="Delivery Address" /></td>
 			<td>
 				<select class="flat form-control input-sm" id="deliveryAddress" name="deliveryAddress" style="width: 175px !important">
@@ -128,18 +143,16 @@ function populateCustomerDeliveryAddress() {
 					</c:forEach>
 				</select>
 			</td>
-		</tr>
-		<tr>
-			<td class="form-left">Phone Number</td>
+			<td class="form-left"><transys:label code="Delivery Street" /></td>
 			<td>
-				<select class="flat form-control input-sm" id=deliveryContactPhone1 name="deliveryContactPhone1" style="width: 175px !important">
+				<select class="flat form-control input-sm" id="deliveryAddress.line2" name="deliveryAddress.line2" style="width: 175px !important">
 					<option value="">----Please Select----</option>
-					<c:forEach items="${deliveryContactPhones}" var="aDeliveryContactPhone">
-						<c:set var="selected" value="" />
-						<c:if test="${sessionScope.searchCriteria.searchMap['deliveryContactPhone1'] == aDeliveryContactPhone}">
+					<c:forEach items="${deliveryAddressStreets}" var="aDeliveryAddressStreet">
+						<c:set var="selected" value=""/>
+						<c:if test="${sessionScope.searchCriteria.searchMap['deliveryAddress.line2'] == aDeliveryAddressStreet}">
 							<c:set var="selected" value="selected" />
 						</c:if>
-						<option value="${aDeliveryContactPhone}" ${selected}>${aDeliveryContactPhone}</option>
+						<option value="${aDeliveryAddressStreet}" ${selected}>${aDeliveryAddressStreet}</option>
 					</c:forEach>
 				</select>
 			</td>

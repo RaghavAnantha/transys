@@ -1,5 +1,7 @@
 <%@include file="/common/taglibs.jsp"%>
 
+<%@page import="com.transys.model.OrderStatus"%>
+
 <script type="text/javascript">
 function validateDropOffDriverForm() {
 	var missingData = validateDropOffDriverMissingData();
@@ -36,6 +38,12 @@ function processDropOffDriverForm() {
 		var dropOffDriverForm = $("#dropOffDriverAddEditForm");
 		dropOffDriverForm.submit();
 	}
+}
+
+function processRevertToOpen() {
+	var dropOffDriverForm = $("#dropOffDriverAddEditForm");
+	dropOffDriverForm.attr('action', 'revertDropOffToOpen.do');
+	dropOffDriverForm.submit();
 }
 </script>
 
@@ -78,8 +86,13 @@ function processDropOffDriverForm() {
 				<!--modelObject.orderStatus.status != 'Open'-->
 				<c:if test="${modelObject.id == null}">
 					<c:set var="saveDisabled" value="disabled" />
+				</c:if>'
+				<c:set var="revertToOpenDisabled" value="" />
+				<c:if test="${(modelObject.id == null) || (modelObject.orderStatus.status != 'Dropped Off')}">
+					<c:set var="revertToOpenDisabled" value="disabled" />
 				</c:if>
 				<input type="button" id="dropOffDriverCreate" ${saveDisabled} onclick="processDropOffDriverForm();" value="Save" class="flat btn btn-primary btn-sm btn-sm-ext" />
+				<input type="button" id="dropOffDriverRevert" ${revertToOpenDisabled} onclick="processRevertToOpen();" value="Revert To Open" class="flat btn btn-primary btn-sm btn-sm-ext" />
 				<input type="button" id="dropOffDriverBackBtn" value="Back" class="flat btn btn-primary btn-sm btn-sm-ext" onClick="location.href='list.do'" />
 			</td>
 		</tr>

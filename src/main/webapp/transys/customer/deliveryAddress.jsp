@@ -95,6 +95,14 @@ function processDeliveryAddressForm() {
 		deliveryAddressForm.submit();
 	}
 }
+
+function processDeliveryAddressDelete(deliveryAddressId) {
+	if (!confirm("Do you want to Delete Delivery Address # " + deliveryAddressId + "?")) {
+		return;
+	}
+	
+	document.location = "${ctx}/customer/deleteDeliveryAddress.do?deliveryAddressId=" + deliveryAddressId;
+}
 </script>
 
 <form:form id="deliveryAddressForm" action="saveDeliveryAddress.do" name="deliveryAddressForm" commandName="deliveryAddressModelObject" method="post" >
@@ -164,7 +172,7 @@ function processDeliveryAddressForm() {
 </form:form>
 
 <form:form name="deliveryAddressServiceForm" id="deliveryAddressServiceForm" class="tab-color">
-	<transys:datatable urlContext="customer" deletable="true"
+	<transys:datatable urlContext="customer" deletable="false"
 		editable="true" editableInScreen="true" baseObjects="${deliveryAddressList}"
 		searchCriteria="<%=null%>" cellPadding="2"
 		multipleDelete="false" searcheable="false" 
@@ -175,6 +183,7 @@ function processDeliveryAddressForm() {
 		<transys:textcolumn headerText="City" dataField="city" />
 		<transys:textcolumn headerText="State" dataField="state.name" />
 		<transys:textcolumn headerText="Zipcode" dataField="zipcode" />
+		<transys:imagecolumn headerText="DEL" linkUrl="javascript:processDeliveryAddressDelete('{id}');" imageSrc="${ctx}/images/delete.png" HAlign="center" width="35px"/>
 	</transys:datatable>
 	<%session.setAttribute("manageDeliveryAddressColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
 </form:form>

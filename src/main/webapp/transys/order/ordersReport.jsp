@@ -99,7 +99,7 @@
 <form:form name="orderReportForm" id="orderReportForm" class="tab-color">
 	<transys:datatable urlContext="order" baseObjects="${orderReportList}"
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
-		pagingLink="search.do" multipleDelete="false" searcheable="false" dataQualifier="orderReport">
+		pagingLink="orderReport.do" multipleDelete="false" searcheable="false" dataQualifier="orderReport">
 		<transys:textcolumn headerText="Order #" dataField="id" />
 		<transys:textcolumn headerText="Customer" dataField="customer.companyName" />
 		<transys:textcolumn headerText="Contact" dataField="deliveryContactName" />
