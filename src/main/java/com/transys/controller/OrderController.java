@@ -199,11 +199,13 @@ public class OrderController extends CRUDController<Order> {
 		model.addAttribute("deliveryContactNames", contactNameArr);
 		
 		List<DeliveryAddress> deliveryAddressList = genericDAO.executeSimpleQuery("select obj from DeliveryAddress obj where obj.deleteFlag='1' and obj.line2 != '' order by obj.line2 asc");
-		List<String> deliveryAddressStreetList = new ArrayList<String>();
+		SortedSet<String> deliveryAddressStreetSet = new TreeSet<String>();
 		for (DeliveryAddress aDeliveryAddress : deliveryAddressList) {
-			deliveryAddressStreetList.add(aDeliveryAddress.getLine2());
+			deliveryAddressStreetSet.add(aDeliveryAddress.getLine2());
 		}
-		model.addAttribute("deliveryAddressStreets", deliveryAddressStreetList);
+		
+		String[] deliveryAddressStreetArr = deliveryAddressStreetSet.toArray(new String[0]);
+		model.addAttribute("deliveryAddressStreets", deliveryAddressStreetArr);
 		
 		Map criterias = new HashMap();
 		
@@ -827,7 +829,8 @@ public class OrderController extends CRUDController<Order> {
 		BigDecimal overweightFee = calculateOverweightFee(entity.getCreatedAt(), dumpsterSizeId, materialCategoryId, netWeightTonnage);
 		overweightFee = overweightFee.setScale(2, RoundingMode.UP);
 		
-		DumpsterPrice dumpsterPriceObj = retrieveDumpsterPrice(dumpsterSizeId, materialTypeId, customerId);
+		DumpsterPrice dumpsterPriceObj = retrieveDumpsterPrice(dumpsterSizeId, materialCategoryId,
+								materialTypeId, customerId);
 		BigDecimal tonnageFee = (dumpsterPriceObj == null || dumpsterPriceObj.getTonnageFee() == null) 
 				? new BigDecimal(0.0) : dumpsterPriceObj.getTonnageFee();
 		BigDecimal totalTonnageFee = netWeightTonnage.multiply(tonnageFee);
@@ -1320,10 +1323,12 @@ public class OrderController extends CRUDController<Order> {
 	@RequestMapping(method = RequestMethod.GET, value = "/retrieveDumpsterPrice.do")
 	public @ResponseBody String retrieveDumpsterPrice(ModelMap model, HttpServletRequest request,
 														    @RequestParam(value = "dumpsterSizeId") Long dumpsterSizeId,
+														    @RequestParam(value = "materialCategoryId") Long materialCategoryId,
 															 @RequestParam(value = "materialTypeId") Long materialTypeId,
 															 @RequestParam(value = "customerId") Long customerId) {
-		DumpsterPrice dumpsterPriceObj = retrieveDumpsterPrice(dumpsterSizeId, materialTypeId, customerId);
-		BigDecimal dumpsterPrice = dumpsterPriceObj == null ? new BigDecimal(0.0) : dumpsterPriceObj.getPrice();
+		DumpsterPrice dumpsterPriceObj = retrieveDumpsterPrice(dumpsterSizeId, materialCategoryId, 
+							materialTypeId, customerId);
+		BigDecimal dumpsterPrice = (dumpsterPriceObj == null || dumpsterPriceObj.getPrice() == null) ? new BigDecimal(0.0) : dumpsterPriceObj.getPrice();
 		
 		ObjectMapper objectMapper = new ObjectMapper();
 		String json = StringUtils.EMPTY;
@@ -1338,26 +1343,72 @@ public class OrderController extends CRUDController<Order> {
 		//return json;
 	}
 	
-	private DumpsterPrice retrieveDumpsterPrice(Long dumpsterSizeId, Long materialTypeId, Long customerId) {
+	private DumpsterPrice retrieveDumpsterPrice(Long dumpsterSizeId, Long materialCategoryId,
+					Long materialTypeId, Long customerId) {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd"); 
 		String todaysDateStr = dateFormat.format(new Date());
 		
 		String baseDumpsterPriceQuery = "select obj from DumpsterPrice obj where obj.deleteFlag='1'";
 		baseDumpsterPriceQuery += " and obj.dumpsterSize.id=" + dumpsterSizeId
-				    		  	 	  +  " and obj.materialType.id=" + materialTypeId
 				    		  	 	  +  " and '" + todaysDateStr + "' between obj.effectiveStartDate and obj.effectiveEndDate";
+		String materialCategoryCondn = StringUtils.EMPTY;
+		if (materialCategoryId != null) {
+			materialCategoryCondn = " and obj.materialCategory.id=" + materialCategoryId; 
+		}
+		String materialTypeCondn = StringUtils.EMPTY;
+		if (materialTypeId != null) {
+			materialTypeCondn = " and obj.materialType.id=" + materialTypeId; 
+		}
 		String customerCondn = StringUtils.EMPTY;
 		if (customerId != null) {
 			customerCondn = " and obj.customer.id=" + customerId; 
 		}
 		
-		List<DumpsterPrice> dumsterPriceList = genericDAO.executeSimpleQuery(baseDumpsterPriceQuery + customerCondn);
-		if (dumsterPriceList.isEmpty()) { 
-			dumsterPriceList = genericDAO.executeSimpleQuery(baseDumpsterPriceQuery);
+		boolean considerCustomerGenericDiscount = false;
+		List<DumpsterPrice> dumsterPriceList = genericDAO.executeSimpleQuery(baseDumpsterPriceQuery
+					+ materialTypeCondn + customerCondn);
+		if (dumsterPriceList.isEmpty()) {
+			if (StringUtils.isNotEmpty(customerCondn)) {
+				dumsterPriceList = genericDAO.executeSimpleQuery(baseDumpsterPriceQuery + materialCategoryCondn + customerCondn);
+			}
+			
+			if (dumsterPriceList.isEmpty()) {
+				considerCustomerGenericDiscount = true;
+				if (StringUtils.isNotEmpty(materialTypeCondn)) {
+					dumsterPriceList = genericDAO.executeSimpleQuery(baseDumpsterPriceQuery + materialTypeCondn);
+				}
+				
+				if (dumsterPriceList.isEmpty()) {
+					dumsterPriceList = genericDAO.executeSimpleQuery(baseDumpsterPriceQuery + materialCategoryCondn);
+				}
+			}
 		}
 		
-		DumpsterPrice dumpsterPrice = dumsterPriceList.isEmpty() ? null : dumsterPriceList.get(0);
-		return dumpsterPrice;
+		if (dumsterPriceList.isEmpty()) {
+			return null;
+		} else {
+			DumpsterPrice retrievedDumpsterPriceObj = dumsterPriceList.get(0);
+			
+			DumpsterPrice returnDumpsterPriceObj = new DumpsterPrice();
+			returnDumpsterPriceObj.setTonnageFee(retrievedDumpsterPriceObj.getTonnageFee());
+			
+			returnDumpsterPriceObj.setPrice(retrievedDumpsterPriceObj.getPrice());
+			if (considerCustomerGenericDiscount) {
+				BigDecimal customerGenericDumpsterDiscount = retrieveCustomerGenericDiscount(customerId);
+				if (customerGenericDumpsterDiscount != null) {
+					returnDumpsterPriceObj.setPrice(returnDumpsterPriceObj.getPrice().subtract(customerGenericDumpsterDiscount));
+				}
+			}
+			
+			return returnDumpsterPriceObj;
+		}
+	}
+	
+	private BigDecimal retrieveCustomerGenericDiscount(Long customerId) {
+		String customerQuery = "select obj from Customer obj where obj.deleteFlag='1'"
+				+ " and obj.id=" + customerId;
+		List<Customer> customerList = genericDAO.executeSimpleQuery(customerQuery);
+		return customerList.get(0).getDumpsterDiscount();
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/retrieveMaterialCategories.do")
@@ -1379,9 +1430,9 @@ public class OrderController extends CRUDController<Order> {
 	}
 	
 	private List<MaterialCategory> retrieveMaterialCategories(Long dumpsterSizeId) {
-		String dumpsterPriceQuery = "select distinct obj.materialType.materialCategory from DumpsterPrice obj where obj.deleteFlag='1' and";
-		dumpsterPriceQuery += " obj.dumpsterSize.id=" + dumpsterSizeId;
-		dumpsterPriceQuery += " order by obj.materialType.materialCategory.category asc";
+		String dumpsterPriceQuery = "select distinct obj.materialCategory from DumpsterPrice obj where obj.deleteFlag='1'";
+		dumpsterPriceQuery += " and obj.dumpsterSize.id=" + dumpsterSizeId;
+		dumpsterPriceQuery += " order by obj.materialCategory.category asc";
 		List<MaterialCategory> materialCategories = genericDAO.executeSimpleQuery(dumpsterPriceQuery);
 		return materialCategories;
 	}
@@ -1406,10 +1457,12 @@ public class OrderController extends CRUDController<Order> {
 	}
 	
 	private List<MaterialType> retrieveMaterialTypes(Long dumpsterSizeId, Long materialCategoryId) {
-		String dumpsterPriceQuery = "select distinct obj.materialType from DumpsterPrice obj where obj.deleteFlag='1' and";
-		dumpsterPriceQuery += " obj.dumpsterSize.id=" + dumpsterSizeId
-				    		  	 +  " and obj.materialType.materialCategory.id=" + materialCategoryId
-				    		  	 +  " order by obj.materialType.materialName asc";
+		/*String dumpsterPriceQuery = "select distinct obj.materialType from DumpsterPrice obj where obj.deleteFlag='1'";
+		dumpsterPriceQuery += " and obj.dumpsterSize.id=" + dumpsterSizeId
+				    		  	 +  " and obj.materialCategory.id=" + materialCategoryId
+				    		  	 +  " order by obj.materialType.materialName asc";*/
+		String dumpsterPriceQuery = "select obj from MaterialType obj where obj.deleteFlag='1' and";
+		dumpsterPriceQuery	+= " obj.materialCategory.id=" + materialCategoryId + " order by obj.materialName asc";
 		List<MaterialType> materialTypes = genericDAO.executeSimpleQuery(dumpsterPriceQuery);
 		return materialTypes;
 	}

@@ -226,6 +226,9 @@ function populateDumpsterPrice() {
 	var dumpsterSizeSelect = $("#dumpsterSize");
 	var dumpsterSizeId = dumpsterSizeSelect.val();
 	
+	var materialCategorySelect = $("#materialCategory");
+	var materialCategoryId = materialCategorySelect.val();
+	
 	var materialTypeSelect = $("#materialType");
 	var materialTypeId = materialTypeSelect.val();
 	
@@ -238,6 +241,7 @@ function populateDumpsterPrice() {
 	
 	$.ajax({
   		url: "retrieveDumpsterPrice.do?" + "dumpsterSizeId=" + dumpsterSizeId 
+  										 + "&materialCategoryId=" + materialCategoryId
   								  		 + "&materialTypeId=" + materialTypeId
   								  		 + "&customerId=" + customerId,
   								  

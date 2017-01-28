@@ -183,6 +183,13 @@ function validateCustomerModalDataFormat() {
 		}
 	}
 	
+	var dumpsterDiscount = $('#dumpsterDiscount').val();
+	if (dumpsterDiscount != "") {
+		if (!validateAmount(dumpsterDiscount, 500)) {
+			validationMsg += "Dumpster Discount, "
+		}
+	}
+	
 	var deliveryAddressLine1 = $('#customerModalDeliveryAddressLine1').val();
 	if (deliveryAddressLine1 != "") {
 		if (!validateAddressLine(deliveryAddressLine1, 50)) {
@@ -295,6 +302,13 @@ $("#customerModalForm").submit(function (ev) {
 				</form:select> 
 				<form:errors path="customerStatus" cssClass="errorMessage" />
 			</td> 
+		</tr>
+		<tr>
+			<td class="form-left">Dumpster Discount</td>
+			<td>
+				<form:input path="dumpsterDiscount" cssClass="form-control form-control-ext" style="width:172px;height:22px !important" maxlength="7"/>
+				<form:errors path="dumpsterDiscount" cssClass="errorMessage" />
+			</td>
 		</tr>
 		<tr>
 			<td colspan=10></td>

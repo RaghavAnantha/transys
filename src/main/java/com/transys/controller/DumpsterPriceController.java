@@ -144,10 +144,10 @@ public class DumpsterPriceController extends CRUDController<DumpsterPrice> {
 		} catch (ValidationException e) {
 			e.printStackTrace();
 			System.out.println("Error in validation " + e);
-			log.warn("Error in validation :" + e);
+			log.warn("Error in validation: " + e);
 		}
 		
-		// return to form if we had errors
+		// Return to form if we had errors
 		if (bindingResult.hasErrors()) {
 			List<ObjectError> errors = bindingResult.getAllErrors();
 			for(ObjectError e : errors) {
@@ -173,14 +173,17 @@ public class DumpsterPriceController extends CRUDController<DumpsterPrice> {
 		if (entity.getModifiedBy() == null) {
 			model.addAttribute("modelObject", new DumpsterPrice());
 		} else {
-			String query = "select obj from MaterialType obj where obj.deleteFlag='1' and obj.id=" + entity.getMaterialType().getId();
-			List<MaterialType> materialTypeList = genericDAO.executeSimpleQuery(query);
-			entity.setMaterialType(materialTypeList.get(0));
+			String materialTypeQuery = StringUtils.EMPTY;
+			if (entity.getMaterialType() != null) {
+				materialTypeQuery = "select obj from MaterialType obj where obj.deleteFlag='1' and obj.id=" + entity.getMaterialType().getId();
+				List<MaterialType> materialTypeList = genericDAO.executeSimpleQuery(materialTypeQuery);
+				entity.setMaterialType(materialTypeList.get(0));
+			}
 			
-			query = "select obj from MaterialType obj where obj.deleteFlag='1' and obj.materialCategory.id=" 
-					+ entity.getMaterialType().getMaterialCategory().getId()
-					+ " order by obj.materialName asc";;
-			List<MaterialType> materialTypesForSelMatCat = genericDAO.executeSimpleQuery(query);
+			materialTypeQuery = "select obj from MaterialType obj where obj.deleteFlag='1' and obj.materialCategory.id=" 
+					+ entity.getMaterialCategory().getId()
+					+ " order by obj.materialName asc";
+			List<MaterialType> materialTypesForSelMatCat = genericDAO.executeSimpleQuery(materialTypeQuery);
 			model.addAttribute("materialTypes", materialTypesForSelMatCat);
 		}
 		
@@ -228,7 +231,7 @@ public class DumpsterPriceController extends CRUDController<DumpsterPrice> {
 	}
 	
 	private List<DumpsterPrice> retrieveDusmpsterPrice(SearchCriteria criteria) {
-		String orderBy = "materialType.materialCategory.category, materialType.materialName, dumpsterSize.id, effectiveStartDate desc";
+		String orderBy = "materialCategory.category, dumpsterSize.id, effectiveStartDate desc";
 		List<DumpsterPrice> dumpsterPriceList = genericDAO.search(DumpsterPrice.class, criteria, orderBy, null, null);
 		return dumpsterPriceList;
 	}

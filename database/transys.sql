@@ -167,6 +167,7 @@ CREATE TABLE `customer` (
   `altPhone1` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
   `altPhone2` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
   `chargeCompany` varchar(5) NOT NULL,
+  `dumpsterDiscount` decimal(6,2) DEFAULT 0.00,
   `delete_flag` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `UK_customerCompanyName` (`companyName`),
@@ -1274,7 +1275,8 @@ DROP TABLE IF EXISTS `dumpsterPrice`;
 CREATE TABLE `dumpsterPrice` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `dumpsterSizeId` bigint(20) NOT NULL,
-  `materialTypeId` bigint(20) NOT NULL,
+  `materialCategoryId` bigint(20) NOT NULL,
+  `materialTypeId` bigint(20) DEFAULT NULL,
   `customerId` bigint(20) DEFAULT NULL,
   `price` decimal(6,2) NOT NULL,
   `tonnageFee` decimal(6,2) DEFAULT 0.00,
@@ -1287,7 +1289,9 @@ CREATE TABLE `dumpsterPrice` (
   `modified_by` bigint(20) DEFAULT NULL,
   `delete_flag` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
+  KEY `dumpsterPriceMaterialCategoryRef_idx` (`materialCategoryId`),
   KEY `dumpsterPriceMaterialTypeRef_idx` (`materialTypeId`),
+  CONSTRAINT `dumpsterPriceMaterialCategoryRef` FOREIGN KEY (`materialCategoryId`) REFERENCES `materialCategory` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `dumpsterPriceMaterialTypeRef` FOREIGN KEY (`materialTypeId`) REFERENCES `materialType` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `dumpsterPriceDumpsterSizeRef` FOREIGN KEY (`dumpsterSizeId`) REFERENCES `dumpsterSize` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `dumpsterPriceCustomerRef` FOREIGN KEY (`customerId`) REFERENCES `customer` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION

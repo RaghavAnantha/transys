@@ -1,5 +1,6 @@
 package com.transys.model;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -92,6 +93,9 @@ public class Customer extends AbstractBaseModel {
 	@OneToMany(mappedBy="customer", cascade = CascadeType.ALL)
 	@JsonManagedReference
 	private List<DeliveryAddress> deliveryAddress;
+	
+	@Column(name="dumpsterDiscount")
+	private BigDecimal dumpsterDiscount;
 	
 	public List<DeliveryAddress> getDeliveryAddress() {
 		return deliveryAddress;
@@ -276,6 +280,14 @@ public class Customer extends AbstractBaseModel {
 		this.email = email;
 	}
 	
+	public BigDecimal getDumpsterDiscount() {
+		return dumpsterDiscount;
+	}
+
+	public void setDumpsterDiscount(BigDecimal dumpsterDiscount) {
+		this.dumpsterDiscount = dumpsterDiscount;
+	}
+
 	@Override
 	public String toString() {
 		return getCompanyName();

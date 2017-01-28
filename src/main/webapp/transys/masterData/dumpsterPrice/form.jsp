@@ -36,13 +36,13 @@ function validateDumpsterPriceForm() {
 function validateDumpsterPriceMissingData() {
 	var missingData = "";
 	
-	if ($('#materialCategory').val() == "") {
+	if ($('#materialCategorySelect').val() == "") {
 		missingData += "Material Category, "
 	}
 	
-	if ($('#materialName').val() == "") {
+	/*if ($('#materialTypeSelect').val() == "") {
 		missingData += "Material Type, "
-	}
+	}*/
 	
 	if ($('#dumpsterSize').val() == "") {
 		missingData += "Dumpster Size, "
@@ -103,18 +103,18 @@ function validateDumpsterPriceDataFormat() {
 }
 
 function populateMaterialTypes() {
-	var materialCategorySelect = $("#materialCategory");
-	var materialCategoryId = materialCategorySelect.val();
-	
-	if (materialCategoryId == "") {
-		return false;
-	}
-	
 	var materialTypeSelect = $("#materialTypeSelect");
 	materialTypeSelect.empty();
 	
 	var firstOption = $('<option value="">'+ "----Please Select----" +'</option>');
 	materialTypeSelect.append(firstOption);
+	
+	var materialCategorySelect = $("#materialCategorySelect");
+	var materialCategoryId = materialCategorySelect.val();
+	
+	if (materialCategoryId == "") {
+		return false;
+	}
 	
 	$.ajax({
   		url: "retrieveMaterialTypes.do?" + "materialCategoryId=" + materialCategoryId,
@@ -154,20 +154,16 @@ function populateMaterialTypes() {
 		<tr>
 			<td class="form-left">Material Category<span class="errorMessage">*</span></td>
 			<td>
-				<select class="flat form-control input-sm" id="materialCategory" name="materialCategory" style="width: 175px !important" onChange="return populateMaterialTypes();">
-					<option value="">----Please Select----</option>
-					<c:forEach items="${materialCategories}" var="aMaterialCategory">
-						<c:set var="selected" value="" />
-						<c:if test="${modelObject.materialType.materialCategory.id == aMaterialCategory.id}">
-							<c:set var="selected" value="selected" />
-						</c:if>
-						<option value="${aMaterialCategory.id}" ${selected}>${aMaterialCategory.category}</option>
-					</c:forEach>
-				</select>
+				<form:select id="materialCategorySelect" cssClass="flat form-control input-sm" path="materialCategory" style="width: 175px !important" 
+					onChange="return populateMaterialTypes();"> 
+					<form:option value="">----Please Select----</form:option>
+					<form:options items="${materialCategories}" itemValue="id" itemLabel="category" />
+				</form:select> 
+			 	<form:errors path="materialCategory" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>
-			<td class="form-left">Material Type<span class="errorMessage">*</span></td>
+			<td class="form-left">Material Type</td>
 			<td>
 				<form:select id="materialTypeSelect" cssClass="flat form-control input-sm" path="materialType" style="width: 175px !important" > 
 					<form:option value="">----Please Select----</form:option>

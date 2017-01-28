@@ -24,9 +24,9 @@ public class DumpsterPrice extends AbstractFeeMasterData {
 	@JoinColumn(name="materialTypeId")
 	private MaterialType materialType;
 	
-	/*@ManyToOne
+	@ManyToOne
 	@JoinColumn(name="materialCategoryId")
-	private MaterialCategory materialCategory;*/
+	private MaterialCategory materialCategory;
 	
 	@Column(name="price")
 	private BigDecimal price;
@@ -73,4 +73,13 @@ public class DumpsterPrice extends AbstractFeeMasterData {
 	public void setTonnageFee(BigDecimal tonnageFee) {
 		this.tonnageFee = tonnageFee;
 	}
+
+	public MaterialCategory getMaterialCategory() {
+		return materialCategory;
+	}
+
+	public void setMaterialCategory(MaterialCategory materialCategory) {
+		this.materialCategory = materialCategory;
+	}
+	
 }

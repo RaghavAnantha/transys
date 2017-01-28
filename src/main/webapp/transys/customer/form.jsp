@@ -142,6 +142,13 @@ function validateCustomerDataFormat() {
 		}
 	}
 	
+	var dumpsterDiscount = $('#dumpsterDiscount').val();
+	if (dumpsterDiscount != "") {
+		if (!validateAmount(dumpsterDiscount, 500)) {
+			validationMsg += "Dumpster Discount, "
+		}
+	}
+	
 	if (validationMsg != "") {
 		validationMsg = validationMsg.substring(0, validationMsg.length - 2);
 	}
@@ -217,6 +224,13 @@ function processCustomerForm() {
 				<c:if test="${formattedDeliveryDate != null}">
 					${formattedDeliveryDate}
 				</c:if>
+			</td>
+		</tr>
+		<tr>
+			<td class="form-left">Dumpster Discount</td>
+			<td>
+				<form:input path="dumpsterDiscount" cssClass="form-control form-control-ext" style="width:172px;height:22px !important" maxlength="7"/>
+				<form:errors path="dumpsterDiscount" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>

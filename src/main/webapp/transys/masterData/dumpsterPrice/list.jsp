@@ -24,11 +24,11 @@
 		<tr>
 			<td class="form-left">Material Category</td>
 			<td class="wide">
-				<select class="flat form-control input-sm" id="materialType.materialCategory" name="materialType.materialCategory" style="width: 175px !important">
+				<select class="flat form-control input-sm" id="materialCategory" name="materialCategory" style="width: 175px !important">
 					<option value="">----Please Select----</option>
 					<c:forEach items="${materialCategories}" var="aMaterialCategory">
 						<c:set var="selected" value="" />
-						<c:if test="${sessionScope.searchCriteria.searchMap['materialType.materialCategory'] == aMaterialCategory.id}">
+						<c:if test="${sessionScope.searchCriteria.searchMap['materialCategory'] == aMaterialCategory.id}">
 							<c:set var="selected" value="selected" />
 						</c:if>
 						<option value="${aMaterialCategory.id}" ${selected}>${aMaterialCategory.category}</option>
@@ -102,7 +102,7 @@
 		pagingLink="search.do" multipleDelete="false" searcheable="false"
 		exportPdf="true" exportXls="true" dataQualifier="dumpsterPrice">
 		<transys:textcolumn headerText="Customer" dataField="customer.companyName" />
-		<transys:textcolumn headerText="Material Category" dataField="materialType.materialCategory.category" />
+		<transys:textcolumn headerText="Material Category" dataField="materialCategory.category" />
 		<transys:textcolumn headerText="Material Type" dataField="materialType.materialName" />
 		<transys:textcolumn headerText="Dumpster Size" dataField="dumpsterSize.size" />
 		<transys:textcolumn headerText="Dumpster Price" dataField="price" />

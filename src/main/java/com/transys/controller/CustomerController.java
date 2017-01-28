@@ -1054,9 +1054,8 @@ public class CustomerController extends CRUDController<Customer> {
 			
 			setupDeliveryAddress(model, request, deliveryAddressEntity);
 
-			Order associatedOrder = orderList.get(0);
 			model.addAttribute("errorCtx", "manageCustomerDeliveryAddress");
-			model.addAttribute("error", "Delivery address to be deleted is associated to Order: " + associatedOrder.getId());
+			model.addAttribute("error", "Delivery address to be deleted is associated to Order(s)");
 		
 			return urlContext + "/customer";
 		}
