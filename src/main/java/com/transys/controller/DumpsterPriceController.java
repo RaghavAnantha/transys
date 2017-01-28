@@ -99,7 +99,7 @@ public class DumpsterPriceController extends CRUDController<DumpsterPrice> {
 		DumpsterPrice dumpsterPriceToBeEdited = (DumpsterPrice)model.get("modelObject");
 		
 		String query = "select obj from MaterialType obj where obj.deleteFlag='1' and obj.materialCategory.id=" 
-						 + dumpsterPriceToBeEdited.getMaterialType().getMaterialCategory().getId()
+						 + dumpsterPriceToBeEdited.getMaterialCategory().getId()
 						 + " order by obj.materialName asc";
 		List<MaterialType> materialTypesForSelMatCat = genericDAO.executeSimpleQuery(query);
 		model.addAttribute("materialTypes", materialTypesForSelMatCat);
