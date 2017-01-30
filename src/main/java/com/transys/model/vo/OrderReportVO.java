@@ -60,6 +60,8 @@ public class OrderReportVO implements BaseVO {
 	
 	private String permitEndDate;
 	
+	private String permitAddressFullLine = StringUtils.EMPTY;
+	
 	public Long getId() {
 		return id;
 	}
@@ -281,5 +283,11 @@ public class OrderReportVO implements BaseVO {
 	}
 	public void setDumpsterNum(String dumpsterNum) {
 		this.dumpsterNum = dumpsterNum;
+	}
+	public String getPermitAddressFullLine() {
+		return permitAddressFullLine;
+	}
+	public void setPermitAddressFullLine(String permitAddressFullLine) {
+		this.permitAddressFullLine = permitAddressFullLine;
 	}
 }

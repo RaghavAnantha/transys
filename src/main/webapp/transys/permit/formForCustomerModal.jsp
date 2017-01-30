@@ -1,29 +1,101 @@
 <%@include file="/common/taglibs.jsp"%>
 <script type="text/javascript">
-function populatePermitEndDate() {
-	var permitEndDateInput = $('#endDate');
-	permitEndDateInput.val("");
-	
-	var startDate = $("[name='startDate']").val();
-	var permitTypeId = $('#permitTypeSelect').val();
-	
-	if (startDate == '' || permitTypeId == '') {
+function validatePermitModalForCustomerForm() {
+	var missingData = validatePermitModalForCustomerMissingData();
+	if (missingData != "") {
+		var alertMsg = "<span><b>Please provide following required data:</b><br></span>"
+					 + missingData;
+		displayPopupDialogErrorMessage(alertMsg, true);
+		
 		return false;
 	}
 	
-	$.ajax({
-  		url: "${ctx}/permit/calculatePermitEndDate.do?startDate=" + startDate + "&permitTypeId=" + permitTypeId,
-       	type: "GET",
-       	success: function(responseData, textStatus, jqXHR) {
-       		permitEndDateInput.val(responseData);
+	var formatValidation = validatePermitModalForCustomerDataFormat();
+	if (formatValidation != "") {
+		var alertMsg = "<span><b>Please correct following invalid data:</b><br></span>"
+					 + formatValidation;
+		displayPopupDialogErrorMessage(alertMsg, true);
+		
+		return false;
+	}
+	
+	return true;
+}
+
+function validatePermitModalForCustomerMissingData() {
+	var missingData = "";
+	
+	if ($('#permitModalPermitAddressLine1').val() == "") {
+		missingData += "Permit Address #, "
+	}
+	
+	if ($('#permitModalPermitAddressLine2').val() == "") {
+		missingData += "Permit Street, "
+	}
+	
+	if ($('#permitModalPermitAddressCity').val() == "") {
+		missingData += "Permit City, "
+	}
+	
+	/*if ($('#permitModalPermitAddressZipcode').val() == "") {
+		missingData += "Permit Zipcode, "
+	}*/
+	
+	if ($('#permitModalPermitAddressStateSelect').val() == "") {
+		missingData += "Permit State, "
+	}
+	
+	if (missingData != "") {
+		missingData = missingData.substring(0, missingData.length - 2);
+	}
+	return missingData;
+}
+
+function validatePermitModalForCustomerDataFormat() {
+	var validationMsg = "";
+	
+	var permitAddressLine1 = $('#permitModalPermitAddressLine1').val();
+	if (permitAddressLine1 != "") {
+		if (!validateAddressLine(permitAddressLine1, 50)) {
+			validationMsg += "Permit Address #, "
 		}
-	});
+	}
+	
+	var permitAddressLine2 = $('#permitModalPermitAddressLine2').val();
+	if (permitAddressLine2 != "") {
+		if (!validateAddressLine(permitAddressLine2, 50)) {
+			validationMsg += "Permit Street, "
+		}
+	}
+	
+	var permitAddressZipcode = $('#permitModalPermitAddressZipcode').val();
+	if (permitAddressZipcode != "") {
+		if (!validateZipCode(permitAddressZipcode, 12)) {
+			validationMsg += "Permit Zipcode, "
+		}
+	}
+	
+	var permitAddressCity = $('#permitModalPermitAddressCity').val();
+	if (permitAddressCity != "") {
+		if (!validateName(permitAddressCity, 50)) {
+			validationMsg += "Permit City, "
+		}
+	}
+	
+	if (validationMsg != "") {
+		validationMsg = validationMsg.substring(0, validationMsg.length - 2);
+	}
+	return validationMsg;
 }
 
 $("#permitForCustomerModalForm").submit(function (ev) {
 	var $this = $(this);
 	
 	clearPopupDialogMessages();
+
+	if (!validatePermitModalForCustomerForm()) {
+		return false;
+	}
 	
     $.ajax({
         type: $this.attr('method'),
@@ -43,6 +115,26 @@ $("#permitForCustomerModalForm").submit(function (ev) {
     
     ev.preventDefault();
 });
+
+function populatePermitEndDate() {
+	var permitEndDateInput = $('#endDate');
+	permitEndDateInput.val("");
+	
+	var startDate = $("[name='startDate']").val();
+	var permitTypeId = $('#permitTypeSelect').val();
+	
+	if (startDate == '' || permitTypeId == '') {
+		return false;
+	}
+	
+	$.ajax({
+  		url: "${ctx}/permit/calculatePermitEndDate.do?startDate=" + startDate + "&permitTypeId=" + permitTypeId,
+       	type: "GET",
+       	success: function(responseData, textStatus, jqXHR) {
+       		permitEndDateInput.val(responseData);
+		}
+	});
+}
 </script>
 <form:form action="${ctx}/permit/saveForCustomerModal.do" name="permitForCustomerModalForm" id="permitForCustomerModalForm" commandName="modelObject" method="post" >
 	<table id="form-table" class="table">
@@ -62,15 +154,16 @@ $("#permitForCustomerModalForm").submit(function (ev) {
 				</form:select> 
 			 	<form:errors path="customer" cssClass="errorMessage" />
 			</td>
-		</tr>
-		<tr>
 			<td class="form-left"><transys:label code="Delivery Address" /><span class="errorMessage">*</span></td>
 			<td>
 				<form:select id="permitDeliveryAddressSelect" cssClass="flat form-control input-sm" path="deliveryAddress" style="width: 175px !important" >
 					<form:options items="${deliveryAddress}" itemValue="id" itemLabel="fullLine" />
 				</form:select> 
 			 	<form:errors path="deliveryAddress" cssClass="errorMessage" />
-			</td> 
+			</td>
+		</tr>
+		<tr>
+			<!--
 			<td class="form-left"><transys:label code="Permit Address" /><span class="errorMessage">*</span></td>
 			<td>
 				<select id="permitAddressFromOrderSelect" class="flat form-control input-sm" style="width: 175px !important" >
@@ -79,6 +172,7 @@ $("#permitForCustomerModalForm").submit(function (ev) {
 					</c:forEach>					
 			 	</select>
 			</td>
+			-->
 		</tr>
 		<tr>
 		<td class="form-left"><transys:label code="Location Type" /><span class="errorMessage">*</span></td>
@@ -134,6 +228,49 @@ $("#permitForCustomerModalForm").submit(function (ev) {
 				<form:input path="parkingMeterFee" cssClass="flat" style="width: 175px"  />
 			 	<br><form:errors path="parkingMeterFee" cssClass="errorMessage" />
 			 	<form:hidden path="fee" id="fee" />
+			</td>
+		</tr>
+		<tr>
+			<td colspan=10></td>
+		</tr>
+		<tr>
+			<td colspan=10 class="section-header" style="line-height: 0.7;font-size: 13px;font-weight: bold;color: white;">Permit Address</td>
+		</tr>
+		<tr>
+			<td colspan=10></td>
+		</tr>
+		<tr>
+			<td class="form-left">Permit Address #<span class="errorMessage">*</span></td>
+			<td>
+				<form:input path="permitAddress[0].line1" id="permitModalPermitAddressLine1" cssClass="flat flat-ext" maxlength="50"/>
+			 	<br><form:errors path="permitAddress[0].line1" cssClass="errorMessage" />
+			</td>
+			<td class="form-left">Permit Street<span class="errorMessage">*</span></td>
+			<td>
+				<form:input path="permitAddress[0].line2" id="permitModalPermitAddressLine2" cssClass="flat flat-ext" maxlength="50"/>
+			 	<br><form:errors path="permitAddress[0].line2" cssClass="errorMessage" />
+			</td>
+		</tr>
+		<tr>
+			<td class="form-left">City<span class="errorMessage">*</span></td>
+			<td>
+				<form:input path="permitAddress[0].city" id="permitModalPermitAddressCity" cssClass="flat flat-ext"/>
+			 	<br><form:errors path="permitAddress[0].city" cssClass="errorMessage" />
+			</td>
+			<td class="form-left">State<span class="errorMessage">*</span></td>
+			<td>
+				<form:select cssClass="flat form-control input-sm" style="width: 174px !important" path="permitAddress[0].state" id="permitModalPermitAddressStateSelect">
+					<form:option value="">----Please Select----</form:option>
+					<form:options items="${state}" itemValue="id" itemLabel="name" />
+				</form:select> 
+				<form:errors path="permitAddress[0].state" cssClass="errorMessage" />
+			</td>
+		</tr>
+		<tr>
+			<td class="form-left">Zipcode</td>
+			<td>
+				<form:input path="permitAddress[0].zipcode" id="permitModalPermitAddressZipcode" cssClass="flat flat-ext" maxlength="12"/>
+			 	<br><form:errors path="permitAddress[0].zipcode" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>

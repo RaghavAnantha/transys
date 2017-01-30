@@ -77,6 +77,7 @@ import com.transys.model.PermitClass;
 import com.transys.model.PermitNotes;
 import com.transys.model.PermitStatus;
 import com.transys.model.PermitType;
+import com.transys.model.Role;
 //import com.transys.model.FuelVendor;
 //import com.transys.model.Location;
 import com.transys.model.SearchCriteria;
@@ -228,7 +229,7 @@ public class OrderController extends CRUDController<Order> {
       		
       populateDeliveryTimeSettings(model);
       
-      String driverRole = "DRIVER";
+      String driverRole = Role.DRIVER_ROLE;
       List<User> driversList = genericDAO.executeSimpleQuery("select obj from User obj where obj.deleteFlag='1' and obj.id!=0 and obj.accountStatus=1 and obj.role.name='" + driverRole + "' order by obj.employee.firstName asc");
       model.addAttribute("drivers", driversList);
 	}
@@ -345,6 +346,11 @@ public class OrderController extends CRUDController<Order> {
 			OrderFees exchangeOrderFees = new OrderFees();
 			BigDecimal exchangeTotalFees = new BigDecimal(0.00);
 			
+			if (entityOrderFees.getPermitFee1() != null) {
+				exchangeOrderFees.setPermitFee1(entityOrderFees.getPermitFee1());
+				exchangeTotalFees = exchangeTotalFees.add(entityOrderFees.getPermitFee1());
+			}
+			
 			if (entityOrderFees.getDumpsterPrice() != null) {
 				exchangeOrderFees.setDumpsterPrice(entityOrderFees.getDumpsterPrice());
 				exchangeTotalFees = exchangeTotalFees.add(entityOrderFees.getDumpsterPrice());
@@ -372,6 +378,18 @@ public class OrderController extends CRUDController<Order> {
 			exchangeNotesList.add(notes);
 			
 			exchangeOrder.setOrderNotes(exchangeNotesList);
+		}
+		
+		List<Permit> entityPermitsList = entity.getPermits();
+		if (entityPermitsList != null && !entityPermitsList.isEmpty()) {
+			List<Permit> exchangePermitsList = new ArrayList<Permit>();
+			exchangePermitsList.add(entityPermitsList.get(0));
+			
+			exchangeOrder.setPermits(exchangePermitsList);
+			
+			List<List<Permit>> allPermitsOfChosenTypesList = new ArrayList<List<Permit>>();
+			allPermitsOfChosenTypesList.add(exchangePermitsList);
+			model.addAttribute("allPermitsOfChosenTypesList", allPermitsOfChosenTypesList);
 		}
 		
 		model.addAttribute("modelObject", exchangeOrder);
@@ -799,7 +817,14 @@ public class OrderController extends CRUDController<Order> {
 		
 		Long modifiedBy = entity.getModifiedBy();
 		updateDumpsterStatus(entity.getDumpster().getId(), DumpsterStatus.DUMPSTER_STATUS_AVAILABLE, modifiedBy);
-		updatePermitStatus(entity.getPermits(), PermitStatus.PERMIT_STATUS_AVAILABLE, modifiedBy);
+		
+		String exchangeQuery = "select obj from Order obj where obj.deleteFlag='1'"
+				+ " and obj.pickupOrderId=" + entity.getId()
+				+ " and obj.orderStatus.status != '" + OrderStatus.ORDER_STATUS_CLOSED + "'";
+		List<Order> exchangeOrderList = genericDAO.executeSimpleQuery(exchangeQuery);
+		if (exchangeOrderList.isEmpty()) {
+			updatePermitStatus(entity.getPermits(), PermitStatus.PERMIT_STATUS_AVAILABLE, modifiedBy);
+		}
 		
 		return pickupSaveSuccess(request, entity, model);
 	}
@@ -1166,11 +1191,18 @@ public class OrderController extends CRUDController<Order> {
 		anOrderReportVO.setNotes(userNotes);
 		
 		String permitEndDate = StringUtils.EMPTY;
+		String permitAddress = StringUtils.EMPTY;
 		List<Permit> permitList = anOrder.getPermits();
 		if (permitList != null && !permitList.isEmpty()) {
-			permitEndDate = permitList.get(0).getFormattedEndDate();
+			Permit aPermit = permitList.get(0);
+			permitEndDate = aPermit.getFormattedEndDate();
+			
+			if (!StringUtils.equals(anOrder.getDeliveryAddress().getFullLine(), aPermit.getFullLinePermitAddress1())) {
+				permitAddress = "Permit: " + aPermit.getFullLinePermitAddress1();
+			}
 		}
 		anOrderReportVO.setPermitEndDate(permitEndDate);
+		anOrderReportVO.setPermitAddressFullLine(permitAddress);
 	}
 	
 	private void populateOrderReportData(SearchCriteria criteria, 
@@ -1744,7 +1776,7 @@ public class OrderController extends CRUDController<Order> {
 	public @ResponseBody String cancel(HttpServletRequest request, @ModelAttribute("modelObject") Order entity,
 				BindingResult bindingResult, ModelMap model) {
 		if (!StringUtils.equals(OrderStatus.ORDER_STATUS_OPEN, entity.getOrderStatus().getStatus())) {
-			return String.format("Order # %d cannot be Canceled as it is not in 'Open' status", entity.getId());
+			return String.format("Order # %d cannot be Cancelled as it is not in 'Open' status", entity.getId());
 		}
 		
 		beforeSave(request, entity, model);
@@ -1766,7 +1798,7 @@ public class OrderController extends CRUDController<Order> {
 			updatePermitStatus(entity.getPermits(), PermitStatus.PERMIT_STATUS_AVAILABLE, modifiedBy);
 		}
 		
-		return String.format("Order # %d is canceled successfully", entity.getId());
+		return String.format("Order # %d is cancelled successfully", entity.getId());
 	}
 	
 	@Override

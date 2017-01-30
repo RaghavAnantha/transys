@@ -235,7 +235,7 @@ function populateDumpsterPrice() {
 	var customerSelect = $('#customerSelect');
 	var customerId = customerSelect.val();
 	
-	if (dumpsterSizeId == "" || materialTypeId == "" || customerId == "") {
+	if (dumpsterSizeId == "" || materialCategoryId == "" || materialTypeId == "" || customerId == "") {
 		return false;
 	}
 	
@@ -311,6 +311,12 @@ function handleDeliveryAddressChange() {
 }
 
 function handleDeliveryDateChange() {
+	var id = $('#id').val();
+	var pickUpOrderId = $('#pickupOrderId').val();
+	if (id == "" && pickUpOrderId != "") {
+		return false;
+	} 
+	
 	resetPermit(1);
 }
 

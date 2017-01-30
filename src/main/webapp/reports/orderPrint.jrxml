@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
-<!-- 2017-01-23T17:21:18 -->
+<!-- 2017-01-30T17:21:19 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="orderPrint" pageWidth="595" pageHeight="842" columnWidth="575" leftMargin="10" rightMargin="10" topMargin="10" bottomMargin="10" uuid="f412ce57-68ae-45e8-90e9-b1c053e29ef7">
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
@@ -46,6 +46,8 @@
 	<field name="permitEndDate" class="java.lang.String"/>
 	<field name="dumpsterNum" class="java.lang.String"/>
 	<field name="id" class="java.lang.Long"/>
+	<field name="pickupOrderId" class="java.lang.Long"/>
+	<field name="permitAddressFullLine" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -209,7 +211,7 @@
 				<textFieldExpression><![CDATA[$F{dumpsterLocation}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="306" y="69" width="254" height="20" uuid="1727bb0b-8026-4d56-bb3d-293d0d667d0e">
+				<reportElement x="306" y="69" width="97" height="20" uuid="1727bb0b-8026-4d56-bb3d-293d0d667d0e">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
@@ -224,6 +226,16 @@
 					<font isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{companyName}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="408" y="69" width="152" height="20" uuid="c684dce6-5744-40be-8dd5-a0b7beec14a9">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{permitAddressFullLine}]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>
@@ -809,15 +821,15 @@ On the 4th day box will automatically be moved unless office is notified and an 
 				</textElement>
 				<textFieldExpression><![CDATA[$F{dumpsterNum}]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="486" y="118" width="80" height="20" uuid="b0a14d2a-b8ee-4228-ae59-fa5aee737e0b">
+			<textField isBlankWhenNull="true">
+				<reportElement x="420" y="118" width="146" height="20" uuid="b0a14d2a-b8ee-4228-ae59-fa5aee737e0b">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
 				<textElement textAlignment="Left" verticalAlignment="Top">
 					<font isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{id}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{pickupOrderId}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

@@ -17,7 +17,7 @@ public class OrderStatus extends AbstractBaseModel {
 	@Transient
 	public static final String ORDER_STATUS_CLOSED = "Closed";
 	@Transient
-	public static final String ORDER_STATUS_CANCELED = "Canceled";
+	public static final String ORDER_STATUS_CANCELED = "Cancelled";
 
 	// TODO: Make an ENUM?
 	@Column(name="status")

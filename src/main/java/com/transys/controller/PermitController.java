@@ -254,7 +254,7 @@ public class PermitController extends CRUDController<Permit> {
 		model.addAttribute("deliveryAddress", deliveryAddressList);
 
 		// For new permit, first permit address will be the delivery address
-		model.addAttribute("permitAddress", deliveryAddressList);
+		//model.addAttribute("permitAddress", deliveryAddressList);
 		
 		String locationTypesQuery = "select obj from LocationType obj where obj.deleteFlag='1' and obj.id=" + locationTypeId + "order by locationType asc";
 		List<LocationType> locationTypeList = genericDAO.executeSimpleQuery(locationTypesQuery);
@@ -278,9 +278,29 @@ public class PermitController extends CRUDController<Permit> {
 			emptyPermit.setFee(new BigDecimal(permitFeeStr));
 		}
 		
+		DeliveryAddress aDeliveryAddress = deliveryAddressList.get(0);
+		PermitAddress aPermitAddress = new PermitAddress();
+		aPermitAddress.setPermit(emptyPermit);
+		map(aPermitAddress, aDeliveryAddress);
+		
+		List<PermitAddress> permitAddressList = new ArrayList<PermitAddress>();
+		permitAddressList.add(aPermitAddress);
+		emptyPermit.setPermitAddress(permitAddressList);
+		
 		model.put("modelObject", emptyPermit);
 		
+		Map criterias = new HashMap();
+		model.addAttribute("state", genericDAO.findByCriteria(State.class, criterias, "name", false));
+		
 		return urlContext + "/formForCustomerModal";
+	}
+	
+	private void map(PermitAddress aPermitAddress, DeliveryAddress aDeliveryAddress) {
+		aPermitAddress.setLine1(aDeliveryAddress.getLine1());
+		aPermitAddress.setLine2(aDeliveryAddress.getLine2());
+		aPermitAddress.setCity(aDeliveryAddress.getCity());
+		aPermitAddress.setState(aDeliveryAddress.getState());
+		aPermitAddress.setZipcode(aDeliveryAddress.getZipcode());
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/createModal.do")
@@ -851,7 +871,6 @@ public class PermitController extends CRUDController<Permit> {
 	public @ResponseBody String saveForCustomerModal(HttpServletRequest request,
 			@ModelAttribute("modelObject") Permit entity,
 			BindingResult bindingResult, ModelMap model) {
-		
 		try {
 			getValidator().validate(entity, bindingResult);
 		} catch (ValidationException e) {
@@ -892,6 +911,11 @@ public class PermitController extends CRUDController<Permit> {
 		
 		beforeSave(request, entity, model);
 		
+		PermitAddress aPermitAddress = entity.getPermitAddress().get(0);
+		aPermitAddress.setPermit(entity);
+		aPermitAddress.setCreatedBy(entity.getCreatedBy());
+		aPermitAddress.setCreatedAt(entity.getCreatedAt());
+		
 		Long modifiedBy = getUser(request).getId();
 		
 		// TODO: Why both created by and modified by and why set if not changed?
@@ -909,7 +933,7 @@ public class PermitController extends CRUDController<Permit> {
 		createAuditPermitNotes(entity, permitAuditMsg, modifiedBy);
 		
 		// The delivery address entered will automatically be stored as one of the Permit Addresses. Users can add more.
-		addDeliveryAddAsPermitAdd(request, entity);
+		//addDeliveryAddAsPermitAdd(request, entity);
 		
 		cleanUp(request);
 		
