@@ -216,7 +216,7 @@ public class CustomerController extends CRUDController<Customer> {
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		//criteria.getSearchMap().put("id!",0l);
 		criteria.getSearchMap().remove("_csrf");
-		criteria.setPageSize(20);
+		criteria.setPageSize(25);
 		model.addAttribute("list",genericDAO.search(getEntityClass(), criteria,"companyName",null,null));
 		model.addAttribute("activeTab", "manageCustomer");
 		//model.addAttribute("activeSubTab", "billing");
@@ -566,7 +566,7 @@ public class CustomerController extends CRUDController<Customer> {
 		notes.setCustomer(emptyCustomer);
 		model.addAttribute("notesModelObject", notes);
 	
-		List<BaseModel> notesList = genericDAO.executeSimpleQuery("select obj from CustomerNotes obj where obj.customer.id=" +  customerId + " and obj.deleteFlag='1' order by obj.id asc");
+		List<CustomerNotes> notesList = genericDAO.executeSimpleQuery("select obj from CustomerNotes obj where obj.customer.id=" +  customerId + " and obj.deleteFlag='1' order by obj.id asc");
 		model.addAttribute("notesList", notesList);
 		
 		emptyCustomer = new Customer();
@@ -575,7 +575,7 @@ public class CustomerController extends CRUDController<Customer> {
 		address.setCustomer(emptyCustomer);
 		model.addAttribute("deliveryAddressModelObject", address);
 		
-		List<BaseModel> addressList = genericDAO.executeSimpleQuery("select obj from DeliveryAddress obj where obj.customer.id=" +  customerId + " and obj.deleteFlag='1' order by obj.line1 asc");
+		List<DeliveryAddress> addressList = genericDAO.executeSimpleQuery("select obj from DeliveryAddress obj where obj.customer.id=" +  customerId + " and obj.deleteFlag='1' order by obj.line1 asc");
 		model.addAttribute("deliveryAddressList", addressList);
 		
 		populateAggregartionValues(model, customerId);
@@ -631,7 +631,7 @@ public class CustomerController extends CRUDController<Customer> {
 		setupList(model, request);
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		criteria.getSearchMap().put("id!",0l);
-		criteria.setPageSize(20);
+		criteria.setPageSize(25);
 		model.addAttribute("list", genericDAO.search(getEntityClass(), criteria, "companyName", null, null));
 		model.addAttribute("activeTab", "manageCustomer");
 		model.addAttribute("mode", "MANAGE");

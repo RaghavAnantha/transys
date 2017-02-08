@@ -1,6 +1,7 @@
 package com.transys.controller;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -83,24 +84,8 @@ public class PermitController extends CRUDController<Permit> {
 	@RequestMapping(method = RequestMethod.GET, value = "/main.do")
 	public String displayMain(ModelMap model, HttpServletRequest request) {
 		request.getSession().removeAttribute("searchCriteria");
-		setupList(model, request);
-		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
-
-		List<Permit> listOfPermits = genericDAO.search(Permit.class, criteria, "id", null, null);
 		
-		for (Permit p : listOfPermits) {
-			List<Order> orders = genericDAO.executeSimpleQuery("select obj.order from OrderPermits obj where obj.deleteFlag='1' and obj.permit.id=" +  p.getId() + " order by obj.id desc");
-			if (orders != null && orders.size() > 0) {
-				Order order = orders.get(0);
-				p.setOrderId(order.getId());
-			}
-		}
-		
-		model.addAttribute("list",listOfPermits);
-		
-		model.addAttribute("activeTab", "managePermits");
-		model.addAttribute("mode", "MANAGE");
-		return urlContext + "/permit";
+		return list(model, request);
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/notes.do")
@@ -126,8 +111,6 @@ public class PermitController extends CRUDController<Permit> {
 		//TODO: Fix me 
 		criteria.getSearchMap().remove("_csrf");
 		
-		//	injectPendingPaymentPermitSearch(criteria);
-		
 		if (!injectOrderSearchCriteria(criteria)) {
 			// search yielded no results
 			model.addAttribute("list", new ArrayList<Permit>());
@@ -138,7 +121,20 @@ public class PermitController extends CRUDController<Permit> {
 			return urlContext + "/permit";
 		}
 		
-		List<Permit> listOfPermits = genericDAO.search(getEntityClass(), criteria);
+		List<Permit> listOfPermits = performSearch(criteria);
+		
+		model.addAttribute("list", listOfPermits);
+		
+		model.addAttribute("activeTab", "managePermits");
+		model.addAttribute("mode", "MANAGE");
+		
+		cleanUp(request);
+		
+		return urlContext + "/permit";
+	}
+	
+	private List<Permit> performSearch(SearchCriteria criteria) {
+		List<Permit> listOfPermits = genericDAO.search(getEntityClass(), criteria, "id", true, null);
 		
 		for (Permit p : listOfPermits) {
 			List<Order> orders = genericDAO.executeSimpleQuery("select obj.order from OrderPermits obj where obj.deleteFlag='1' and obj.permit.id=" +  p.getId() + " order by obj.id desc");
@@ -148,14 +144,7 @@ public class PermitController extends CRUDController<Permit> {
 			}
 		}
 		
-		model.addAttribute("list",listOfPermits);
-		
-		model.addAttribute("activeTab", "managePermits");
-		model.addAttribute("mode", "MANAGE");
-		
-		cleanUp(request);
-		
-		return urlContext + "/permit";
+		return listOfPermits;
 	}
 
 	private void injectPendingPaymentPermitSearch(SearchCriteria criteria) {
@@ -306,15 +295,20 @@ public class PermitController extends CRUDController<Permit> {
 	@RequestMapping(method = RequestMethod.GET, value = "/createModal.do")
 	public String createModal(ModelMap model, HttpServletRequest request, 
 			@RequestParam(value = "id") Long orderPermitId)  {
-	
 		setupUpdate(model, request);
 		System.out.println("OrderPermit Id being edited = " + orderPermitId);
 		
 		Map<String, Object> criterias = new HashMap<String, Object>();
+		
 		criterias.put("id", orderPermitId);
 		OrderPermits orderPermitToBeEdited = genericDAO.findByCriteria(OrderPermits.class, criterias, "id", false).get(0);
 		
 		Permit permitToBeEdited = orderPermitToBeEdited.getPermit();
+		
+		criterias.clear();
+		criterias.put("permit", permitToBeEdited);
+		model.addAttribute("permitAddress", genericDAO.findByCriteria(PermitAddress.class, criterias, "id", false));
+		
 		permitToBeEdited.setNumber(StringUtils.EMPTY); // empty the permit number
 		permitToBeEdited.getPermitNotes().clear();
 		
@@ -345,10 +339,6 @@ public class PermitController extends CRUDController<Permit> {
 		permitType.add(permitToBeEdited.getPermitType());*/
 		List<PermitType> permitType = genericDAO.findAll(PermitType.class, true);
 		model.addAttribute("permitType", permitType);
-		
-		criterias = new HashMap<String, Object>();
-		criterias.put("permit", permitToBeEdited);
-		model.addAttribute("permitAddress", genericDAO.findByCriteria(PermitAddress.class, criterias, "id", false));
 		
 		model.addAttribute("associatedOrderID", orderPermitToBeEdited);
 		
@@ -1282,12 +1272,15 @@ public class PermitController extends CRUDController<Permit> {
 			HttpServletResponse response, @RequestParam("type") String type,
 			@RequestParam("dataQualifier") String dataQualifier,
 			Object objectDAO, Class clazz) {
-
+		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
+		
+		criteria.getSearchMap().remove("_csrf");
+		criteria.setPageSize(100000);
+		int page = criteria.getPage();
+		criteria.setPage(0);
+		
+		ByteArrayOutputStream out = null;
 		try {
-			SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
-			
-			criteria.getSearchMap().remove("_csrf");
-			
 			List<Permit> exportReportData =  retrieveReportData(criteria);
 			
 			if (StringUtils.equals("xls", type)) {
@@ -1313,41 +1306,36 @@ public class PermitController extends CRUDController<Permit> {
 			
 			ExcelReportGenerator reportGenerator = new ExcelReportGenerator();
 			reportGenerator.setTitleMergeCellRange("$A$1:$L$1");
-			ByteArrayOutputStream out = reportGenerator.exportReport("Permit Report", headers, exportReportData);
+			out = reportGenerator.exportReport("Permit Report", headers, exportReportData);
 			
 			out.writeTo(response.getOutputStream());
-			out.close();
-
+			
+			criteria.setPageSize(25);
+			criteria.setPage(page);
 		} catch (Exception e) {
 			e.printStackTrace();
 			log.warn("Unable to create file :" + e);
 			request.getSession().setAttribute("errors", e.getMessage());
+		} finally {
+			if (out != null) {
+				try {
+					out.close();
+					out = null;
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 		}
-	
 	}
 	
 	private List<Permit> retrieveReportData(SearchCriteria criteria) {
-		criteria.setPageSize(25);
-		//TODO: Fix me 
-		criteria.getSearchMap().remove("_csrf");
-		
-//		injectPendingPaymentPermitSearch(criteria);
-		
 		if (!injectOrderSearchCriteria(criteria)) {
 			// search yielded no results
 			return new ArrayList<Permit>();
 		}
 		
-		List<Permit> listOfPermits = genericDAO.search(getEntityClass(), criteria);
-		
-		for (Permit p : listOfPermits) {
-			List<Order> orders = genericDAO.executeSimpleQuery("select obj.order from OrderPermits obj where obj.deleteFlag='1' and obj.permit.id=" +  p.getId() + " order by obj.id desc");
-			if (orders != null && orders.size() > 0) {
-				Order anOrder = orders.get(0);
-				p.setOrderId(anOrder.getId());
-			}
-		}
-		
+		List<Permit> listOfPermits = performSearch(criteria);
 		return listOfPermits;
 	}
 }

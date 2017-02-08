@@ -1,7 +1,7 @@
 <%@include file="/common/taglibs.jsp"%>
 <br/>
 <h5 style="margin-top: -15px; !important">Order Permits Alert</h5>
-<form:form action="/orderPermitAlert/list.do" method="get" name="orderPermitsAlertSearchForm" id="orderPermitsAlertSearchForm">
+<form:form action="${ctx}/orderPermitAlert/list.do" method="get" name="orderPermitsAlertSearchForm" id="orderPermitsAlertSearchForm">
 	<table width="100%" id="form-table">
 		<tr>
 		  <td class="form-left">End Date From</td>
@@ -151,7 +151,7 @@
 	<transys:datatable urlContext="orderPermitAlert" deletable="false"
 		baseObjects="${orderPermitList}"
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
-		pagingLink="search.do" multipleDelete="false" searcheable="false" 
+		pagingLink="list.do" multipleDelete="false" searcheable="false" 
 		exportPdf="true" exportXls="true" dataQualifier="orderPermitAlert">
 		<transys:textcolumn headerText="Del. L1" dataField="permit.deliveryAddress.line1"/>
 		<transys:textcolumn headerText="Del. L2" dataField="permit.deliveryAddress.line2" />

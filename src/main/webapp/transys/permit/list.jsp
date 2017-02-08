@@ -221,7 +221,7 @@
 	<transys:datatable urlContext="permit" deletable="false"
 		editable="true" insertable="true" baseObjects="${list}"
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
-		pagingLink="search.do" multipleDelete="false" searcheable="false" 
+		pagingLink="list.do" multipleDelete="false" searcheable="false" 
 		exportPdf="false" exportXlsx="true" dataQualifier="managePermits">
 		<transys:textcolumn headerText="Delivery Address" dataField="deliveryAddress.fullLine"/>
 		<transys:textcolumn headerText="Permit Address1" dataField="fullLinePermitAddress1" />

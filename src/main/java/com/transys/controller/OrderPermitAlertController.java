@@ -105,6 +105,7 @@ public class OrderPermitAlertController extends CRUDController<OrderPermits> {
 		request.getSession().removeAttribute("searchCriteria");
 		setupList(model, request);
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
+		criteria.setPageSize(50);
 		
 //		injectPendingPaymentPermitSearch(criteria);
 		
