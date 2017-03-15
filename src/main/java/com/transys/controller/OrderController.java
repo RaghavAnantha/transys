@@ -1,42 +1,36 @@
 package com.transys.controller;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
+
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import javax.validation.ValidationException;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.math.NumberUtils;
-import org.apache.commons.lang3.time.DateUtils;
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.jpa.criteria.predicate.IsEmptyPredicate;
-import org.springframework.beans.propertyeditors.CustomDateEditor;
+
 import org.springframework.stereotype.Controller;
+
 import org.springframework.ui.ModelMap;
+
 import org.springframework.validation.BindingResult;
+
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -47,10 +41,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 //import com.google.gson.Gson;
+
 import com.transys.controller.editor.AbstractModelEditor;
-import com.transys.core.dao.GenericJpaDAO;
-import com.transys.core.tags.IColumnTag;
+
+import com.transys.core.util.DateUtil;
 import com.transys.core.util.MimeUtil;
+
 import com.transys.model.AbstractBaseModel;
 import com.transys.model.AdditionalFee;
 import com.transys.model.DeliveryAddress;
@@ -74,17 +70,12 @@ import com.transys.model.OverweightFee;
 import com.transys.model.PaymentMethodType;
 import com.transys.model.Permit;
 import com.transys.model.PermitClass;
-import com.transys.model.PermitNotes;
 import com.transys.model.PermitStatus;
 import com.transys.model.PermitType;
 import com.transys.model.Role;
-//import com.transys.model.FuelVendor;
-//import com.transys.model.Location;
 import com.transys.model.SearchCriteria;
-import com.transys.model.State;
 import com.transys.model.User;
 import com.transys.model.vo.OrderReportVO;
-import com.transys.service.DynamicReportServiceImpl;
 
 @Controller
 @RequestMapping("/order")
@@ -587,8 +578,7 @@ public class OrderController extends CRUDController<Order> {
 				String aChosenPermitDeliveryAddressId = aChosenPermit.getDeliveryAddress().getId().toString();
 				String aChosenPermitLocationTypeId = aChosenPermit.getLocationType().getId().toString();
 				
-				SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
-				String deliveryDateStr = formatter.format(order.getDeliveryDate());
+				String deliveryDateStr = DateUtil.formatInputDate(order.getDeliveryDate());
 				
 				List<Permit> aPermitOfChosenTypeList = retrievePermit(aChosenPermitCustomerId, 
 						aChosenPermitDeliveryAddressId, aChosenPermitClassId,  aChosenPermitTypeId, deliveryDateStr, aChosenPermitLocationTypeId);
@@ -724,6 +714,10 @@ public class OrderController extends CRUDController<Order> {
 	}
 	
 	private void updatePermitStatus(List<Permit> permitList, String status, Long modifiedBy) {
+		if (permitList == null || permitList.isEmpty()) {
+			return;
+		}
+		
 		String permitStatusQuery = "select obj from PermitStatus obj where obj.deleteFlag='1' and obj.status='" + status + "'";
 		List<PermitStatus> permitStatusList = genericDAO.executeSimpleQuery(permitStatusQuery);
 		
@@ -1076,8 +1070,8 @@ public class OrderController extends CRUDController<Order> {
 	public void printOrder(ModelMap model, HttpServletRequest request, HttpServletResponse response, 
 			@RequestParam("orderId") Long orderId) {
 		String query = "select obj from Order obj where obj.deleteFlag='1' and obj.id= ";
-		
 		List<Order> orderList = genericDAO.executeSimpleQuery(query + orderId);
+		
 		Order anOrder = orderList.get(0);
 		OrderReportVO anOrderReportVO = new OrderReportVO();
 		map(anOrder, anOrderReportVO);
@@ -1091,7 +1085,8 @@ public class OrderController extends CRUDController<Order> {
 		List<OrderReportVO> orderReportVOList = new ArrayList<OrderReportVO>();
 		orderReportVOList.add(anOrderReportVO);
 		try {
-			response.setHeader("Content-Disposition", "attachment;filename= orderPrint." + "pdf");
+			String fileName = "orderPrint_" + anOrder.getId() + ".pdf";
+			response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
 			response.setContentType(MimeUtil.getContentType("pdf"));
 			
 			String logoFilePath = request.getSession().getServletContext().getRealPath("/images/" + "rds_logo.png");
@@ -1104,12 +1099,10 @@ public class OrderController extends CRUDController<Order> {
 		
 			out.writeTo(response.getOutputStream());
 			out.close();
-			
 		} catch (Exception e) {
 			e.printStackTrace();
 			log.warn("Unable to create file :" + e);
 			request.getSession().setAttribute("errors", e.getMessage());
-			
 		}
 	}
 	
@@ -1118,6 +1111,7 @@ public class OrderController extends CRUDController<Order> {
 		anOrderReportVO.setPickupOrderDeliveryDate(pickupOrder.getFormattedDeliveryDate());
 		anOrderReportVO.setPickupOrderDeliveryAddress(pickupOrder.getDeliveryAddress().getFullDeliveryAddress("\n"));
 		anOrderReportVO.setPickupOrderDeliveryCity(pickupOrder.getDeliveryAddress().getCity());
+		anOrderReportVO.setPickupOrderDumpsterNum(pickupOrder.getDumpster().getDumpsterNum());
 		anOrderReportVO.setPickupOrderDumpsterSize(pickupOrder.getDumpsterSize().getSize());
 	}
 	
@@ -1138,13 +1132,16 @@ public class OrderController extends CRUDController<Order> {
 		
 		anOrderReportVO.setDumpsterLocation(anOrder.getDumpsterLocation().getLocationType());
 		
-		String dumpsterSize = anOrder.getDumpsterSize().getSize();
-		BigDecimal tonLimit = retrieveTonLimit(anOrder.getDumpsterSize().getId(), 
-				anOrder.getMaterialType().getMaterialCategory().getId());
-		if (tonLimit != null) {
-			dumpsterSize += " " + tonLimit + " ton limit";
+		DumpsterSize dumpsterSize = anOrder.getDumpsterSize();
+		MaterialCategory materialCategory = anOrder.getMaterialType().getMaterialCategory();
+		String tonLimitStr = StringUtils.EMPTY;
+		if (!StringUtils.equals(MaterialCategory.MATERIAL_CATEGORY_STREET_SWEEPINGS, materialCategory.getCategory())) {
+			BigDecimal tonLimit = retrieveTonLimit(dumpsterSize.getId(), materialCategory.getId());
+			if (tonLimit != null) {
+				tonLimitStr = " " + tonLimit + " ton limit";
+			}
 		}
-		anOrderReportVO.setDumpsterSize(dumpsterSize);
+		anOrderReportVO.setDumpsterSize(dumpsterSize.getSize() + tonLimitStr);
 		
 		if (anOrder.getDumpster() != null) {
 			String dumpsterNum = StringUtils.defaultIfBlank(anOrder.getDumpster().getDumpsterNum(), StringUtils.EMPTY);
@@ -1277,9 +1274,9 @@ public class OrderController extends CRUDController<Order> {
 															 @RequestParam(value = "permitClassId", required = false) String permitClassId,
 															 @RequestParam(value = "permitTypeId", required = false) String permitTypeId,
 															 @RequestParam(value = "deliveryDate", required = false) String deliveryDate,
-															 @RequestParam(value = "locationTypeId", required = false) String locationTypeId) {
+															 @RequestParam(value = "locationTypeId", required = false) String locationTypeId,
+															 @RequestParam(value = "orderId", required = false) String orderId) {
 		List<Permit> permitList = new ArrayList<Permit>();
-		
 		if (StringUtils.isNotEmpty(permitId)) {
 			permitList = retrievePermit(permitId); 
 		} else {
@@ -1287,12 +1284,22 @@ public class OrderController extends CRUDController<Order> {
 					deliveryDate, locationTypeId);
 		}
 		
+		if (StringUtils.isNotEmpty(orderId)) {
+			List<OrderPermits> orderPermitsList = retrieveOrderPermits(orderId, customerId, deliveryAddressId, permitClassId, permitTypeId, 
+					deliveryDate, locationTypeId);
+			if (orderPermitsList != null && !orderPermitsList.isEmpty()) {
+				Permit aPermit = orderPermitsList.get(0).getPermit();
+				//if (!PermitStatus.PERMIT_STATUS_AVAILABLE.equals(aPermit.getStatus().getStatus())) {
+					permitList.add(aPermit);
+				//}
+			}
+		}
+		
 		ObjectMapper objectMapper = new ObjectMapper();
 		String json = StringUtils.EMPTY;
 		try {
 			json = objectMapper.writeValueAsString(permitList);
 		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return json;
@@ -1306,7 +1313,7 @@ public class OrderController extends CRUDController<Order> {
 		
 		List<Permit> permits = genericDAO.executeSimpleQuery(permitsQuery);
 		Permit aPermit = permits.get(0);
-		if ("Available".equals(aPermit.getStatus().getStatus())) {
+		if (PermitStatus.PERMIT_STATUS_AVAILABLE.equals(aPermit.getStatus().getStatus())) {
 			String orderPermitsQuery = "select obj from OrderPermits obj where obj.deleteFlag='1' and obj.permit.id=" + permitId;
 			List<OrderPermits> orderPermitsList = genericDAO.executeSimpleQuery(orderPermitsQuery);
 			if (!orderPermitsList.isEmpty()) {
@@ -1319,23 +1326,12 @@ public class OrderController extends CRUDController<Order> {
 	
 	private List<Permit> retrievePermit(String customerId, String deliveryAddressId, String permitClassId, 
 			String permitTypeId, String deliveryDateStr, String locationTypeId) {
-		String permitTypeQuery = "select obj from PermitType obj where obj.deleteFlag='1' and obj.id="+ permitTypeId;
-		List<PermitType> requestedPermitTypes = genericDAO.executeSimpleQuery(permitTypeQuery);
-		
-		String requestedPermitDaysTokens[] = requestedPermitTypes.get(0).getPermitType().split("\\s");
-		int requestedPermitDays = new Integer(requestedPermitDaysTokens[0]);
+		int requestedPermitDays = retrievePermitTypeDays(permitTypeId);
 		
 		String requiredEndDateStr = StringUtils.EMPTY;
-		SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
 		try {
-			Date deliveryDate = formatter.parse(deliveryDateStr);
-			Date requiredEndDate = DateUtils.addDays(deliveryDate, (requestedPermitDays - 1));
-			
-			//2015-10-03 00:00:00.0
-			formatter.applyPattern("yyyy-MM-dd 00:00:00.0");
-			requiredEndDateStr = formatter.format(requiredEndDate);
+			requiredEndDateStr = DateUtil.addDaysAndFormatDbDate(deliveryDateStr, (requestedPermitDays - 1));
 		} catch (ParseException pe) {
-			//TODO: handle error
 			pe.printStackTrace();
 		}
 		
@@ -1346,10 +1342,51 @@ public class OrderController extends CRUDController<Order> {
 				    	 +  " and obj.permitType.id=" + permitTypeId
 				    	 +  " and obj.endDate >= '" + requiredEndDateStr + "'"
 				    	 +  " and obj.locationType.id=" + locationTypeId
-				    	 +  " and obj.status.status IN ('Available', 'Pending')";
+				    	 +  " and obj.status.status IN ('Available', 'Pending')"
+				    	 +  " order by obj.number asc";
 		
 		List<Permit> availablePermits = genericDAO.executeSimpleQuery(permitsQuery);
 		return availablePermits;
+	}
+	
+	private List<OrderPermits> retrieveOrderPermits(String orderId, String customerId, String deliveryAddressId, String permitClassId, 
+			String permitTypeId, String deliveryDateStr, String locationTypeId) {
+		//int requestedPermitDays = retrievePermitTypeDays(permitTypeId);
+		
+		String requiredEndDateStr = StringUtils.EMPTY;
+		try {
+			//requiredEndDateStr = DateUtil.addDaysAndFormatDbDate(deliveryDateStr, (requestedPermitDays - 1));
+			requiredEndDateStr =  DateUtil.formatDbDate(deliveryDateStr);
+		} catch (ParseException pe) {
+			pe.printStackTrace();
+		}
+		
+		String orderPermitsQuery = "select obj from OrderPermits obj where obj.deleteFlag='1' and";
+		orderPermitsQuery += " obj.permit.customer.id=" + customerId
+						 		+  " and obj.permit.deliveryAddress.id=" + deliveryAddressId
+						 		+  " and obj.permit.permitClass.id=" + permitClassId
+						 		+  " and obj.permit.permitType.id=" + permitTypeId
+						 		+  " and obj.permit.endDate >= '" + requiredEndDateStr + "'"
+						 		+  " and obj.permit.locationType.id=" + locationTypeId
+						 		+  " and obj.order.id=" + orderId
+						 		+  " order by obj.permit.id desc";;
+		
+		List<OrderPermits> orderPermitsLiat = genericDAO.executeSimpleQuery(orderPermitsQuery);
+		return orderPermitsLiat;
+	}
+	
+	private int retrievePermitTypeDays(String permitTypeId) {
+		PermitType permitType = retrievePermitType(permitTypeId);
+		
+		String requestedPermitDaysTokens[] = permitType.getPermitType().split("\\s");
+		int requestedPermitDays = new Integer(requestedPermitDaysTokens[0]);
+		return requestedPermitDays;
+	}
+	
+	private PermitType retrievePermitType(String permitTypeId) {
+		String permitTypeQuery = "select obj from PermitType obj where obj.deleteFlag='1' and obj.id="+ permitTypeId;
+		List<PermitType> requestedPermitTypes = genericDAO.executeSimpleQuery(permitTypeQuery);
+		return (requestedPermitTypes == null || requestedPermitTypes.isEmpty()) ? null : requestedPermitTypes.get(0);
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/retrieveDumpsterPrice.do")
@@ -1377,8 +1414,7 @@ public class OrderController extends CRUDController<Order> {
 	
 	private DumpsterPrice retrieveDumpsterPrice(Long dumpsterSizeId, Long materialCategoryId,
 					Long materialTypeId, Long customerId) {
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd"); 
-		String todaysDateStr = dateFormat.format(new Date());
+		String todaysDateStr = DateUtil.formatTodayDbDate2();
 		
 		String baseDumpsterPriceQuery = "select obj from DumpsterPrice obj where obj.deleteFlag='1'";
 		baseDumpsterPriceQuery += " and obj.dumpsterSize.id=" + dumpsterSizeId
@@ -1396,44 +1432,49 @@ public class OrderController extends CRUDController<Order> {
 			customerCondn = " and obj.customer.id=" + customerId; 
 		}
 		
-		boolean considerCustomerGenericDiscount = false;
+		boolean applyCustomerGenericDiscount = false;
 		List<DumpsterPrice> dumsterPriceList = genericDAO.executeSimpleQuery(baseDumpsterPriceQuery
 					+ materialTypeCondn + customerCondn);
 		if (dumsterPriceList.isEmpty()) {
 			if (StringUtils.isNotEmpty(customerCondn)) {
-				dumsterPriceList = genericDAO.executeSimpleQuery(baseDumpsterPriceQuery + materialCategoryCondn + customerCondn);
+				dumsterPriceList = genericDAO.executeSimpleQuery(baseDumpsterPriceQuery + materialCategoryCondn 
+						+ customerCondn);
 			}
 			
 			if (dumsterPriceList.isEmpty()) {
-				considerCustomerGenericDiscount = true;
+				String nonCustomerCondn = " and obj.customer.id is null";
+				applyCustomerGenericDiscount = true;
+				
 				if (StringUtils.isNotEmpty(materialTypeCondn)) {
-					dumsterPriceList = genericDAO.executeSimpleQuery(baseDumpsterPriceQuery + materialTypeCondn);
+					dumsterPriceList = genericDAO.executeSimpleQuery(baseDumpsterPriceQuery + materialTypeCondn 
+							+ nonCustomerCondn);
 				}
 				
 				if (dumsterPriceList.isEmpty()) {
-					dumsterPriceList = genericDAO.executeSimpleQuery(baseDumpsterPriceQuery + materialCategoryCondn);
+					dumsterPriceList = genericDAO.executeSimpleQuery(baseDumpsterPriceQuery + materialCategoryCondn
+							+ nonCustomerCondn);
 				}
 			}
 		}
 		
 		if (dumsterPriceList.isEmpty()) {
 			return null;
-		} else {
-			DumpsterPrice retrievedDumpsterPriceObj = dumsterPriceList.get(0);
+		} 
+		
+		DumpsterPrice retrievedDumpsterPriceObj = dumsterPriceList.get(0);
 			
-			DumpsterPrice returnDumpsterPriceObj = new DumpsterPrice();
-			returnDumpsterPriceObj.setTonnageFee(retrievedDumpsterPriceObj.getTonnageFee());
-			
-			returnDumpsterPriceObj.setPrice(retrievedDumpsterPriceObj.getPrice());
-			if (considerCustomerGenericDiscount) {
-				BigDecimal customerGenericDumpsterDiscount = retrieveCustomerGenericDiscount(customerId);
-				if (customerGenericDumpsterDiscount != null) {
-					returnDumpsterPriceObj.setPrice(returnDumpsterPriceObj.getPrice().subtract(customerGenericDumpsterDiscount));
-				}
+		DumpsterPrice returnDumpsterPriceObj = new DumpsterPrice();
+		returnDumpsterPriceObj.setTonnageFee(retrievedDumpsterPriceObj.getTonnageFee());
+		
+		returnDumpsterPriceObj.setPrice(retrievedDumpsterPriceObj.getPrice());
+		if (applyCustomerGenericDiscount) {
+			BigDecimal customerGenericDumpsterDiscount = retrieveCustomerGenericDiscount(customerId);
+			if (customerGenericDumpsterDiscount != null) {
+				returnDumpsterPriceObj.setPrice(returnDumpsterPriceObj.getPrice().subtract(customerGenericDumpsterDiscount));
 			}
-			
-			return returnDumpsterPriceObj;
 		}
+		
+		return returnDumpsterPriceObj;
 	}
 	
 	private BigDecimal retrieveCustomerGenericDiscount(Long customerId) {
@@ -1543,8 +1584,7 @@ public class OrderController extends CRUDController<Order> {
 	}
 	
 	private BigDecimal retrieveCityFee(String cityFeeId) {
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd"); 
-		String todaysDateStr = dateFormat.format(new Date());
+		String todaysDateStr = DateUtil.formatTodayDbDate2();
 		
 		String cityFeeQuery = "select obj from CityFee obj where obj.deleteFlag='1' and";
 		cityFeeQuery += " obj.id=" + cityFeeId
@@ -1575,10 +1615,8 @@ public class OrderController extends CRUDController<Order> {
 	}*/
 	
 	private BigDecimal calculateOverweightFee(Date requiredDate, Long dumpsterSizeId, Long materialCategoryId, BigDecimal netWeightTonnage) {
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd"); 
-		
 		Date searchDate = requiredDate == null ? (new Date()) : requiredDate;
-		String searchDateStr = dateFormat.format(searchDate);
+		String searchDateStr = DateUtil.formatDbDate2(searchDate); 
 		
 		String overweightFeeQuery = "select obj from OverweightFee obj where obj.deleteFlag='1' and ";
 		overweightFeeQuery += "obj.dumpsterSize.id=" + dumpsterSizeId
@@ -1598,10 +1636,8 @@ public class OrderController extends CRUDController<Order> {
 	}
 	
 	private BigDecimal calculateTonnageFee(Date requiredDate, Long dumpsterSizeId, Long materialCategoryId, BigDecimal netWeightTonnage) {
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd"); 
-		
 		Date searchDate = requiredDate == null ? (new Date()) : requiredDate;
-		String searchDateStr = dateFormat.format(searchDate);
+		String searchDateStr = DateUtil.formatDbDate2(searchDate); 
 		
 		String overweightFeeQuery = "select obj from OverweightFee obj where obj.deleteFlag='1' and ";
 		overweightFeeQuery += "obj.dumpsterSize.id=" + dumpsterSizeId
@@ -1621,11 +1657,10 @@ public class OrderController extends CRUDController<Order> {
 	}
 	
 	private BigDecimal retrieveTonLimit(Long dumpsterSizeId, Long materialCategoryId) {
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd"); 
-		String todaysDateStr = dateFormat.format(new Date());
+		String todaysDateStr = DateUtil.formatTodayDbDate2(); 
 		
-		String overweightFeeQuery = "select obj from OverweightFee obj where obj.deleteFlag='1' and ";
-		overweightFeeQuery += "obj.dumpsterSize.id=" + dumpsterSizeId
+		String overweightFeeQuery = "select obj from OverweightFee obj where obj.deleteFlag='1'";
+		overweightFeeQuery += " and obj.dumpsterSize.id=" + dumpsterSizeId
 								 +  " and obj.materialCategory.id=" + materialCategoryId
 								 +  " and '" + todaysDateStr + "' between obj.effectiveStartDate and obj.effectiveEndDate";
 		
@@ -1876,7 +1911,7 @@ public class OrderController extends CRUDController<Order> {
 		
 		createAuditOrderNotes(entity, orderAuditMsg, modifiedBy);
 		
-		if (permitList != null && !permitList.isEmpty()) {
+		if (!StringUtils.equals(OrderStatus.ORDER_STATUS_CLOSED, entity.getOrderStatus().getStatus())) {
 			updatePermitStatus(permitList, "Assigned", modifiedBy);
 		}
 		
@@ -2062,7 +2097,7 @@ public class OrderController extends CRUDController<Order> {
 		model.addAttribute("mode", "ADD");
 		
 		// EMPTY_ORDER after save change
-		if (entity.getModifiedBy() == null) {
+		/*if (entity.getModifiedBy() == null) {
 			setupCreate(model, request);
 			
 			Order emptyOrder = new Order();
@@ -2071,7 +2106,7 @@ public class OrderController extends CRUDController<Order> {
 			OrderNotes notes = new OrderNotes();
 			notes.setOrder(emptyOrder);
 			model.addAttribute("notesModelObject", notes);
-		} else {
+		} else {*/
 			setupCreate(model, request, entity);
 			
 			model.addAttribute("modelObject", entity);
@@ -2094,9 +2129,8 @@ public class OrderController extends CRUDController<Order> {
 			Long customerId = entity.getCustomer().getId();
 			List<Customer> customerList = genericDAO.executeSimpleQuery("select obj from Customer obj where obj.deleteFlag='1' and obj.id=" + customerId);
 			Customer orderCustomer = customerList.get(0);
-			
 			entity.setCustomer(orderCustomer);
-		}
+		//}
 		
 		//return urlContext + "/form";
 		return urlContext + "/order";

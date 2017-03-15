@@ -1,11 +1,8 @@
 package com.transys.model.vo;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
-
-import com.transys.model.Order;
 
 public class OrderReportVO implements BaseVO {
 	private Long id;
@@ -55,6 +52,7 @@ public class OrderReportVO implements BaseVO {
 	private Long pickupOrderId;
 	private String pickupOrderDeliveryDate = StringUtils.EMPTY;
 	private String pickupOrderDumpsterSize = StringUtils.EMPTY;
+	private String pickupOrderDumpsterNum = StringUtils.EMPTY;
 	private String pickupOrderDeliveryAddress = StringUtils.EMPTY;
 	private String pickupOrderDeliveryCity = StringUtils.EMPTY;
 	
@@ -289,5 +287,11 @@ public class OrderReportVO implements BaseVO {
 	}
 	public void setPermitAddressFullLine(String permitAddressFullLine) {
 		this.permitAddressFullLine = permitAddressFullLine;
+	}
+	public String getPickupOrderDumpsterNum() {
+		return pickupOrderDumpsterNum;
+	}
+	public void setPickupOrderDumpsterNum(String pickupOrderDumpsterNum) {
+		this.pickupOrderDumpsterNum = pickupOrderDumpsterNum;
 	}
 }

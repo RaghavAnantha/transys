@@ -138,9 +138,15 @@ public class PermitController extends CRUDController<Permit> {
 		
 		for (Permit p : listOfPermits) {
 			List<Order> orders = genericDAO.executeSimpleQuery("select obj.order from OrderPermits obj where obj.deleteFlag='1' and obj.permit.id=" +  p.getId() + " order by obj.id desc");
-			if (orders != null && orders.size() > 0) {
-				Order anOrder = orders.get(0);
-				p.setOrderId(anOrder.getId());
+			if (!orders.isEmpty()) {
+				p.setOrderId(orders.get(0).getId());
+				
+				String associatedOrderIds = StringUtils.EMPTY;
+				for (Order anOrder : orders) {
+					associatedOrderIds += (anOrder.getId() + ", ");
+				}
+				associatedOrderIds = associatedOrderIds.substring(0, associatedOrderIds.length()-2);
+				p.setAssociatedOrderIds(associatedOrderIds);
 			}
 		}
 		
@@ -148,7 +154,6 @@ public class PermitController extends CRUDController<Permit> {
 	}
 
 	private void injectPendingPaymentPermitSearch(SearchCriteria criteria) {
-		
 		if (criteria != null && criteria.getSearchMap() != null) {
 			Map<String, Object> searchMap = criteria.getSearchMap();
 			Object[] param = searchMap.keySet().toArray();
@@ -1301,7 +1306,7 @@ public class PermitController extends CRUDController<Permit> {
 			headers.put("Customer Name", "customer");
 			headers.put("Permit Number", "number");
 			headers.put("Permit Fee", "fee");
-			headers.put("Order #", "orderId");
+			headers.put("Order #", "associatedOrderIds");
 			headers.put("Status", "status");
 			
 			ExcelReportGenerator reportGenerator = new ExcelReportGenerator();

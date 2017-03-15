@@ -234,7 +234,7 @@
 		<transys:textcolumn headerText="Customer Name" dataField="customer.companyName" />
 		<transys:textcolumn headerText="Permit#" dataField="number" />
 		<transys:textcolumn headerText="Permit Fee" dataField="fee" />
-		<transys:textcolumn headerText="Order#" dataField="orderId" />
+		<transys:textcolumn headerText="Order#" dataField="associatedOrderIds" />
 		<transys:textcolumn headerText="Status" dataField="status.status" />
 	</transys:datatable>
 	<%session.setAttribute("managePermitsColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>

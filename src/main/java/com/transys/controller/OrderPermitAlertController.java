@@ -178,9 +178,9 @@ public class OrderPermitAlertController extends CRUDController<OrderPermits> {
 				SearchCriteria criteria = new SearchCriteria();
 				criteria.getSearchMap().put("order.id", orderId);
 				setupOrderPermitSearchCriteria(criteria);
-				List<OrderPermits> actualPermitsForIrder = genericDAO.search(OrderPermits.class, criteria, "id", null, null);
+				List<OrderPermits> actualPermitsForOrder = genericDAO.search(OrderPermits.class, criteria, "id", null, null);
 				
-				if (unExpiredPermitAvailable(orderId, actualPermitsForIrder)) {
+				if (unExpiredPermitAvailable(orderId, actualPermitsForOrder)) {
 					continue;
 				}
 				

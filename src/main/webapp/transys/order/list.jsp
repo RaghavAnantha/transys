@@ -1,5 +1,10 @@
 <%@include file="/common/taglibs.jsp"%>
 <script>
+function printOrder(orderId) {
+	var href = "printOrder.do?orderId=" + orderId;
+	document.location.href = href
+}
+
 function processExchange(orderId) {
 	if (!confirm("Do you want to Exchange Order # " + orderId + "?")) {
 		return;
@@ -267,6 +272,7 @@ function populateCustomerDeliveryAddress() {
 		<transys:textcolumn headerText="Bal Due" dataField="balanceAmountDue" type="java.math.BigDecimal" />
 		<transys:textcolumn headerText="Status" dataField="orderStatus.status" />
 		<transys:imagecolumn headerText="EXCH" linkUrl="javascript:processExchange('{id}');" imageSrc="${ctx}/images/exchange.png" HAlign="center"/>
+		<transys:imagecolumn headerText="PRINT" linkUrl="javascript:printOrder('{id}');" imageSrc="${ctx}/images/print.png" HAlign="center"/>
 	</transys:datatable>
 	<%session.setAttribute("manageOrdersColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
 </form:form>

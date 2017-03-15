@@ -78,6 +78,9 @@ public class Permit  extends AbstractBaseModel {
 	private List<PermitNotes> permitNotes;
 	
 	@Transient
+	private String associatedOrderIds = StringUtils.EMPTY;
+	
+	@Transient
 	private Long orderId;
 
 	@Transient
@@ -234,5 +237,14 @@ public class Permit  extends AbstractBaseModel {
 
 	public void setPermitNotes(List<PermitNotes> permitNotes) {
 		this.permitNotes = permitNotes;
+	}
+
+	@Transient
+	public String getAssociatedOrderIds() {
+		return associatedOrderIds;
+	}
+	@Transient
+	public void setAssociatedOrderIds(String associatedOrderIds) {
+		this.associatedOrderIds = associatedOrderIds;
 	}
 }

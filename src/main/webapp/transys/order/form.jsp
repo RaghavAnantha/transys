@@ -334,11 +334,15 @@ function resetPermit(index) {
 	
 	var permitNumbersSelect = $("#permits\\[" + (index-1) + "\\]");
 	emptySelect(permitNumbersSelect);
+	
+	emptyPermitDetails(index);
 }
 
 function populatePermitNumbers(index) {
 	var permitNumbersSelect = $("#permits\\[" + (index-1) + "\\]");
 	emptySelect(permitNumbersSelect);
+	
+	emptyPermitDetails(index);
 	
 	var customerSelect = $('#customerSelect');
 	var customerId = customerSelect.val();
@@ -365,19 +369,22 @@ function populatePermitNumbers(index) {
 		return false;
 	}
 	
+	var pickUpOrderId = $('#pickupOrderId').val();
+	
 	$.ajax({
   		url: "retrievePermit.do?" + "customerId=" + customerId
   								  + "&deliveryAddressId=" + deliveryAddressId
   								  + "&permitClassId=" + permitClassId
   								  + "&permitTypeId=" + permitTypeId
   								  + "&deliveryDate=" + deliveryDate
-  								  + "&locationTypeId=" + locationTypeId,
+  								  + "&locationTypeId=" + locationTypeId
+  								  + "&orderId=" + pickUpOrderId,
   								  
        	type: "GET",
        	success: function(responseData, textStatus, jqXHR) {
        		var permitList = jQuery.parseJSON(responseData);
 			if (jQuery.isEmptyObject(permitList)) {
-				var alertMsg = "<p>No permits available for seleted criteria.</p>";
+				var alertMsg = "<p>No permits available for selected criteria.</p>";
 				showAlertDialog("No permits", alertMsg);
 				
 				return false;
@@ -453,7 +460,7 @@ function emptyPermitDetails(index) {
 	permitValidFrom.html("");
 	permitValidTo.html("");
 	permitFee.val("");
-	emptySelect(permitAddressSelect);
+	permitAddressSelect.empty();
 	
 	populateTotalPermitFees();
 }
