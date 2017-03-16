@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
-<!-- 2017-03-14T20:26:35 -->
+<!-- 2017-03-16T15:31:49 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="orderPrint" pageWidth="595" pageHeight="802" columnWidth="575" leftMargin="10" rightMargin="10" topMargin="5" bottomMargin="5" uuid="f412ce57-68ae-45e8-90e9-b1c053e29ef7">
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
@@ -396,7 +396,7 @@
 				<text><![CDATA[[NO CONCRETE, BRICKS, ROOFING OR DIRT ALLOWED IN DUMPSTERS OVER 10 YARDS]]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="6" y="27" width="124" height="40" forecolor="#000000" uuid="9bfc4872-f795-4628-bc37-9d69b5e548bd">
+				<reportElement x="6" y="27" width="131" height="40" forecolor="#000000" uuid="9bfc4872-f795-4628-bc37-9d69b5e548bd">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
@@ -412,7 +412,7 @@
 				<text><![CDATA[   SIZE(S) ORDERED]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="14" y="44" width="107" height="20" uuid="880bcb7a-124d-496f-9a62-5a9c5ddc6ca0">
+				<reportElement x="9" y="44" width="126" height="20" uuid="880bcb7a-124d-496f-9a62-5a9c5ddc6ca0">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
 				<textElement>
@@ -682,6 +682,9 @@ On the 4th day box will automatically be moved unless office is notified and an 
 			</rectangle>
 			<staticText>
 				<reportElement x="382" y="506" width="108" height="19" forecolor="#000000" uuid="81d4522f-a27a-4897-bf0d-846efc3c1fb4"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
 				<text><![CDATA[Authorized Signature]]></text>
 			</staticText>
 			<textField>
@@ -704,10 +707,10 @@ On the 4th day box will automatically be moved unless office is notified and an 
 					<font isBold="true"/>
 				</textElement>
 				<text><![CDATA[** Not Responsible For Customer Pavement Or 
-   Accompanying Sub Surface **
+    Accompanying Sub Surface **
 ** Additional fees will be added in the event of 
-   cancellation on/ after delivery, and for dumpster 
-   overweights. **]]></text>
+    cancellation on/ after delivery, and for dumpster 
+    overweights. **]]></text>
 			</staticText>
 			<textField>
 				<reportElement x="365" y="273" width="75" height="20" uuid="b0867a51-e4be-466a-8a89-9068939cbc0d">
@@ -783,7 +786,7 @@ On the 4th day box will automatically be moved unless office is notified and an 
 				<textFieldExpression><![CDATA[$F{notes}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="136" y="27" width="103" height="40" forecolor="#000000" uuid="34ef3c36-29d6-44e8-882e-5898633e4459">
+				<reportElement x="147" y="27" width="87" height="40" forecolor="#000000" uuid="34ef3c36-29d6-44e8-882e-5898633e4459">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
@@ -793,14 +796,15 @@ On the 4th day box will automatically be moved unless office is notified and an 
 					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#0D6BFE"/>
 					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#0D6BFE"/>
 				</box>
-				<textElement>
+				<textElement textAlignment="Center">
 					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[   PERMIT END DATE]]></text>
+				<text><![CDATA[ PERMIT END DT]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="145" y="45" width="85" height="20" uuid="11ed63ca-29d6-4b2d-9110-ddecb5ac2949">
+				<reportElement x="152" y="45" width="75" height="20" uuid="11ed63ca-29d6-4b2d-9110-ddecb5ac2949">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
 				<textElement>
 					<font isBold="true"/>
