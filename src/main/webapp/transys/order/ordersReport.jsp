@@ -4,7 +4,7 @@
 <form:form action="orderReport.do" method="get" name="orderReportSearchForm" id="orderReportSearchForm">
 	<table id="form-table" class="table">
 		<tr>
-			<td class="form-left">Company Name</td>
+			<td class="form-left">Customer</td>
 			<td class="wide">
 				<select class="flat form-control input-sm" id="compName" name="customer" style="width: 175px !important">
 					<option value="">------Please Select------</option>
@@ -61,13 +61,13 @@
 			<td class="form-left">Phone Number</td>
 			<td>
 				<select class="flat form-control input-sm" id=deliveryContactPhone1 name="deliveryContactPhone1" style="width: 175px !important">
-					<option value="">------Please Select------</option>
-					<c:forEach items="${order}" var="anOrder">
+					<option value="">----Please Select----</option>
+					<c:forEach items="${deliveryContactPhones}" var="aDeliveryContactPhone">
 						<c:set var="selected" value="" />
-						<c:if test="${sessionScope.searchCriteria.searchMap['deliveryContactPhone1'] == anOrder.deliveryContactPhone1}">
+						<c:if test="${sessionScope.searchCriteria.searchMap['deliveryContactPhone1'] == aDeliveryContactPhone}">
 							<c:set var="selected" value="selected" />
 						</c:if>
-						<option value="${anOrder.deliveryContactPhone1}" ${selected}>${anOrder.deliveryContactPhone1}</option>
+						<option value="${aDeliveryContactPhone}" ${selected}>${aDeliveryContactPhone}</option>
 					</c:forEach>
 				</select>
 			</td>

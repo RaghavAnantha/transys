@@ -76,7 +76,10 @@ public class OrderPermitAlertController extends CRUDController<OrderPermits> {
 	   List<Customer> customerList = genericDAO.findByCriteria(Customer.class, criterias, "contactName", false);
 		model.addAttribute("customer", customerList);
 		model.addAttribute("locationType", genericDAO.findByCriteria(LocationType.class, criterias, "id", false));
-		model.addAttribute("order", genericDAO.findByCriteria(Order.class, criterias, "id", false));
+		
+		//model.addAttribute("order", genericDAO.findByCriteria(Order.class, criterias, "id", false));
+		model.addAttribute("order", genericDAO.executeSimpleQuery("select obj.id from Order obj where obj.deleteFlag='1' order by obj.id asc"));
+		
 		model.addAttribute("permitClass", genericDAO.findByCriteria(PermitClass.class, criterias, "permitClass", false));
 		model.addAttribute("permitType", genericDAO.findByCriteria(PermitType.class, criterias, "permitType", false));
 		model.addAttribute("permitStatus", genericDAO.findByCriteria(PermitStatus.class, criterias, "status", false));

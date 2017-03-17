@@ -198,10 +198,10 @@
 				<option value="">------Please Select------</option>
 				<c:forEach items="${order}" var="order">
 					<c:set var="selected" value=""/>
-					<c:if test="${sessionScope.searchCriteria.searchMap['exclude.order.id'] == order.id}">
+					<c:if test="${sessionScope.searchCriteria.searchMap['exclude.order.id'] == order}">
 						<c:set var="selected" value="selected"/>
 					</c:if>
-					<option value="${order.id}" ${selected}>${order.id}</option>
+					<option value="${order}" ${selected}>${order}</option>
 				</c:forEach>
 			</select>
 			</td>

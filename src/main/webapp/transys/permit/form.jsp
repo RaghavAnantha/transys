@@ -194,7 +194,7 @@ function validateAllDates() {
 			</td>
 		</tr>
 		<tr>
-			<td class="form-left"><transys:label code="Customer Name" /><span class="errorMessage">*</span></td>
+			<td class="form-left"><transys:label code="Customer" /><span class="errorMessage">*</span></td>
 			<td>
 				<form:select id="customerSelect" cssClass="flat form-control input-sm" path="customer" style="width: 175px !important" onChange="return populateDeliveryAddress();"> 
 					<form:option value="">----Please Select----</form:option>

@@ -175,13 +175,14 @@ public class OrderController extends CRUDController<Order> {
 	public void setupCreate(ModelMap model, HttpServletRequest request) {
 		model.addAttribute("orderIds", genericDAO.executeSimpleQuery("select obj.id from Order obj where obj.deleteFlag='1' order by obj.id asc"));
 		
-		List<Order> orderList = genericDAO.executeSimpleQuery("select obj from Order obj where obj.deleteFlag='1' order by obj.id asc");
+		List<?> objectList = genericDAO.executeSimpleQuery("select obj.deliveryContactPhone1, obj.deliveryContactName from Order obj where obj.deleteFlag='1' order by obj.id asc");
 		
 		SortedSet<String> contactNameSet = new TreeSet<String>();
 		SortedSet<String> phoneSet = new TreeSet<String>();
-		for (Order anOrder : orderList) {
-			phoneSet.add(anOrder.getDeliveryContactPhone1());
-			contactNameSet.add(anOrder.getDeliveryContactName());
+		for (int i = 0; i < objectList.size(); i++) {
+			Object anObject[] = (Object[])objectList.get(i);
+			phoneSet.add(anObject[0].toString());
+			contactNameSet.add(anObject[1].toString());
 		}
 		
 		String[] phoneArr = phoneSet.toArray(new String[0]);
@@ -190,21 +191,25 @@ public class OrderController extends CRUDController<Order> {
 		model.addAttribute("deliveryContactPhones", phoneArr);
 		model.addAttribute("deliveryContactNames", contactNameArr);
 		
-		List<DeliveryAddress> deliveryAddressList = genericDAO.executeSimpleQuery("select obj from DeliveryAddress obj where obj.deleteFlag='1' and obj.line2 != '' order by obj.line2 asc");
+		String deliveryAddresseQuery = "select distinct obj.line2 from DeliveryAddress obj where obj.deleteFlag='1' and obj.line2 != '' order by obj.line2 asc";
+		model.addAttribute("deliveryAddressStreets", genericDAO.executeSimpleQuery(deliveryAddresseQuery));
+		
+		/*objectList = genericDAO.executeSimpleQuery(deliveryAddresseQuery);
 		SortedSet<String> deliveryAddressStreetSet = new TreeSet<String>();
-		for (DeliveryAddress aDeliveryAddress : deliveryAddressList) {
-			deliveryAddressStreetSet.add(aDeliveryAddress.getLine2());
+		for (int i = 0; i < objectList.size(); i++) {
+			Object anObject[] = (Object[])objectList.get(i);
+			deliveryAddressStreetSet.add(anObject[0].toString());
 		}
 		
 		String[] deliveryAddressStreetArr = deliveryAddressStreetSet.toArray(new String[0]);
-		model.addAttribute("deliveryAddressStreets", deliveryAddressStreetArr);
+		model.addAttribute("deliveryAddressStreets", objectList);*/
 		
-		Map criterias = new HashMap();
+		Map<String, Object> criterias = new HashMap<String, Object>();
 		
 		model.addAttribute("orderStatuses", genericDAO.findByCriteria(OrderStatus.class, criterias, "status", false));
 		model.addAttribute("customers", genericDAO.findByCriteria(Customer.class, criterias, "companyName", false));
       
-		model.addAttribute("dumpsters", genericDAO.executeSimpleQuery("select obj from Dumpster obj where obj.deleteFlag='1' and obj.id!=0 order by obj.id asc"));
+		model.addAttribute("dumpsters", genericDAO.executeSimpleQuery("select obj from Dumpster obj where obj.deleteFlag='1' and obj.id!=0 order by obj.dumpsterNum asc"));
       model.addAttribute("dumpsterSizes", genericDAO.executeSimpleQuery("select obj from DumpsterSize obj where obj.deleteFlag='1' and obj.id!=0 order by obj.id asc"));
       
       model.addAttribute("dusmpsterLocationTypes", genericDAO.executeSimpleQuery("select obj from LocationType obj where obj.deleteFlag='1' and obj.id!=0 order by obj.locationType asc"));
