@@ -851,14 +851,14 @@ public class OrderController extends CRUDController<Order> {
 		Long materialTypeId = entity.getMaterialType().getId();
 		Long materialCategoryId = entity.getMaterialType().getMaterialCategory().getId();
 		BigDecimal overweightFee = calculateOverweightFee(entity.getCreatedAt(), dumpsterSizeId, materialCategoryId, netWeightTonnage);
-		overweightFee = overweightFee.setScale(2, RoundingMode.UP);
+		overweightFee = overweightFee.setScale(2, RoundingMode.HALF_UP);
 		
 		DumpsterPrice dumpsterPriceObj = retrieveDumpsterPrice(dumpsterSizeId, materialCategoryId,
 								materialTypeId, customerId);
 		BigDecimal tonnageFee = (dumpsterPriceObj == null || dumpsterPriceObj.getTonnageFee() == null) 
 				? new BigDecimal(0.0) : dumpsterPriceObj.getTonnageFee();
 		BigDecimal totalTonnageFee = netWeightTonnage.multiply(tonnageFee);
-		totalTonnageFee = totalTonnageFee.setScale(2, RoundingMode.UP);
+		totalTonnageFee = totalTonnageFee.setScale(2, RoundingMode.HALF_UP);
 		
 		orderFees.setOverweightFee(overweightFee);
 		orderFees.setTonnageFee(totalTonnageFee);
@@ -1640,7 +1640,7 @@ public class OrderController extends CRUDController<Order> {
 		}
 	}
 	
-	private BigDecimal calculateTonnageFee(Date requiredDate, Long dumpsterSizeId, Long materialCategoryId, BigDecimal netWeightTonnage) {
+	/*private BigDecimal calculateTonnageFee(Date requiredDate, Long dumpsterSizeId, Long materialCategoryId, BigDecimal netWeightTonnage) {
 		Date searchDate = requiredDate == null ? (new Date()) : requiredDate;
 		String searchDateStr = DateUtil.formatDbDate2(searchDate); 
 		
@@ -1659,7 +1659,7 @@ public class OrderController extends CRUDController<Order> {
 			BigDecimal differentialWeight = netWeightTonnage.subtract(overweightFee.getTonLimit());
 			return differentialWeight.multiply(overweightFee.getFee());
 		}
-	}
+	}*/
 	
 	private BigDecimal retrieveTonLimit(Long dumpsterSizeId, Long materialCategoryId) {
 		String todaysDateStr = DateUtil.formatTodayDbDate2(); 
