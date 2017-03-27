@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
-<!-- 2017-03-17T21:53:00 -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="orderPrint" pageWidth="595" pageHeight="802" columnWidth="575" leftMargin="10" rightMargin="10" topMargin="5" bottomMargin="5" uuid="f412ce57-68ae-45e8-90e9-b1c053e29ef7">
+<!-- 2017-03-27T20:56:18 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="orderPrint" pageWidth="595" pageHeight="806" columnWidth="575" leftMargin="10" rightMargin="10" topMargin="5" bottomMargin="5" uuid="f412ce57-68ae-45e8-90e9-b1c053e29ef7">
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
@@ -566,21 +566,23 @@
 				</graphicElement>
 			</rectangle>
 			<staticText>
-				<reportElement x="61" y="187" width="179" height="24" forecolor="#000000" uuid="0d38705c-d889-45a0-8e38-6057b35370c1"/>
-				<textElement>
-					<font size="14" isBold="true"/>
+				<reportElement x="59" y="187" width="179" height="20" forecolor="#000000" uuid="0d38705c-d889-45a0-8e38-6057b35370c1">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[SPECIAL INSTRUCTIONS]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="50" y="211" width="194" height="15" forecolor="#000000" uuid="fc79b880-0909-495d-9129-055ca59afccb"/>
-				<textElement>
+				<reportElement x="50" y="209" width="194" height="15" forecolor="#000000" uuid="fc79b880-0909-495d-9129-055ca59afccb"/>
+				<textElement textAlignment="Center">
 					<font isBold="true"/>
 				</textElement>
 				<text><![CDATA[*** Do Not Fill Box Over The Top ***]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="16" y="229" width="263" height="54" forecolor="#000000" uuid="f10d7f92-8388-4fe6-9fe1-f26e74ccb23f"/>
+				<reportElement mode="Opaque" x="16" y="227" width="263" height="54" forecolor="#000000" uuid="f10d7f92-8388-4fe6-9fe1-f26e74ccb23f"/>
 				<textElement textAlignment="Left">
 					<font isBold="true"/>
 				</textElement>
@@ -588,14 +590,14 @@
 On the 4th day box will automatically be moved unless office is notified and an additional $20.00 a day rental is paid]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="16" y="287" width="140" height="14" forecolor="#000000" uuid="44f81998-cc34-4d20-a205-7931ff11addd"/>
+				<reportElement x="16" y="284" width="140" height="14" forecolor="#000000" uuid="44f81998-cc34-4d20-a205-7931ff11addd"/>
 				<textElement>
 					<font size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Wastes Not Accepted]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="16" y="302" width="263" height="155" forecolor="#000000" uuid="1f7a310e-0aa2-469f-866e-3ed42250aeda"/>
+				<reportElement x="16" y="299" width="263" height="155" forecolor="#000000" uuid="1f7a310e-0aa2-469f-866e-3ed42250aeda"/>
 				<textElement textAlignment="Left">
 					<font isBold="true"/>
 				</textElement>
@@ -702,7 +704,7 @@ On the 4th day box will automatically be moved unless office is notified and an 
 				<textFieldExpression><![CDATA[$F{referenceNum}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="16" y="461" width="263" height="64" forecolor="#000000" uuid="e782696a-17c1-4bcd-9cd3-e31c6567c5d2"/>
+				<reportElement x="16" y="457" width="263" height="64" forecolor="#000000" uuid="e782696a-17c1-4bcd-9cd3-e31c6567c5d2"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
