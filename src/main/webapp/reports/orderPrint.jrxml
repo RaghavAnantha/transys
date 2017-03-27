@@ -1,16 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
-<!-- 2017-03-27T22:10:24 -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="orderPrint" pageWidth="595" pageHeight="806" columnWidth="575" leftMargin="10" rightMargin="10" topMargin="5" bottomMargin="5" uuid="f412ce57-68ae-45e8-90e9-b1c053e29ef7">
+<!-- 2017-03-27T22:27:45 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="orderPrint" pageWidth="595" pageHeight="809" columnWidth="575" leftMargin="10" rightMargin="10" topMargin="5" bottomMargin="5" uuid="f412ce57-68ae-45e8-90e9-b1c053e29ef7">
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
 	<parameter name="LOGO_FILE_PATH" class="java.lang.String">
 		<parameterDescription><![CDATA[]]></parameterDescription>
 	</parameter>
@@ -347,7 +339,7 @@
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="525" splitType="Stretch">
+		<band height="540" splitType="Stretch">
 			<staticText>
 				<reportElement x="274" y="140" width="134" height="40" forecolor="#000000" uuid="4bcc3116-f177-4798-bafb-ab62bc30ecc2">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
@@ -560,7 +552,7 @@
 				<textFieldExpression><![CDATA["$"+$F{dumpsterPrice}]]></textFieldExpression>
 			</textField>
 			<rectangle>
-				<reportElement x="6" y="186" width="284" height="339" uuid="eccdc412-3766-4699-973e-64ee2bda7869"/>
+				<reportElement x="6" y="186" width="284" height="344" uuid="eccdc412-3766-4699-973e-64ee2bda7869"/>
 				<graphicElement>
 					<pen lineWidth="0.5" lineColor="#0D6BFE"/>
 				</graphicElement>
@@ -582,7 +574,7 @@
 				<text><![CDATA[*** Do Not Fill Box Over The Top ***]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="16" y="228" width="263" height="54" forecolor="#000000" uuid="f10d7f92-8388-4fe6-9fe1-f26e74ccb23f"/>
+				<reportElement mode="Opaque" x="16" y="227" width="263" height="54" forecolor="#000000" uuid="f10d7f92-8388-4fe6-9fe1-f26e74ccb23f"/>
 				<textElement textAlignment="Left">
 					<font isBold="true"/>
 				</textElement>
@@ -590,7 +582,7 @@
 On the 4th day box will automatically be moved unless office is notified and an additional $20.00 a day rental is paid]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="16" y="285" width="263" height="240" forecolor="#000000" uuid="1f7a310e-0aa2-469f-866e-3ed42250aeda"/>
+				<reportElement x="16" y="284" width="263" height="246" forecolor="#000000" uuid="1f7a310e-0aa2-469f-866e-3ed42250aeda"/>
 				<textElement textAlignment="Left">
 					<font isBold="true"/>
 				</textElement>
@@ -676,7 +668,7 @@ On the 4th day box will automatically be moved unless office is notified and an 
 				<text><![CDATA[CITY]]></text>
 			</staticText>
 			<rectangle>
-				<reportElement x="300" y="432" width="270" height="93" uuid="eced59da-565f-4094-a8e9-145caa0bc241"/>
+				<reportElement x="300" y="432" width="270" height="98" uuid="eced59da-565f-4094-a8e9-145caa0bc241"/>
 				<graphicElement>
 					<pen lineWidth="0.5" lineColor="#0D6BFE"/>
 				</graphicElement>
