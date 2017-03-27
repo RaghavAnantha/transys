@@ -106,6 +106,7 @@ public class PermitController extends CRUDController<Permit> {
 	@RequestMapping(method = RequestMethod.GET, value = "/list.do")
 	public String list(ModelMap model, HttpServletRequest request) {
 		setupList(model, request);
+		
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		criteria.setPageSize(25);
 		//TODO: Fix me 
@@ -137,13 +138,14 @@ public class PermitController extends CRUDController<Permit> {
 		List<Permit> listOfPermits = genericDAO.search(getEntityClass(), criteria, "id", true, null);
 		
 		for (Permit p : listOfPermits) {
-			List<Order> orders = genericDAO.executeSimpleQuery("select obj.order from OrderPermits obj where obj.deleteFlag='1' and obj.permit.id=" +  p.getId() + " order by obj.id desc");
-			if (!orders.isEmpty()) {
-				p.setOrderId(orders.get(0).getId());
+			List<?> objectList = genericDAO.executeSimpleQuery("select obj.order.id from OrderPermits obj where obj.deleteFlag='1' and obj.permit.id=" +  p.getId() + " order by obj.id desc");
+			if (!objectList.isEmpty()) {
+				Long orderId = (Long)objectList.get(0);
+				p.setOrderId(orderId);
 				
 				String associatedOrderIds = StringUtils.EMPTY;
-				for (Order anOrder : orders) {
-					associatedOrderIds += (anOrder.getId() + ", ");
+				for (int i = 0; i < objectList.size(); i++) {
+					associatedOrderIds += ((Long)objectList.get(i) + ", ");
 				}
 				associatedOrderIds = associatedOrderIds.substring(0, associatedOrderIds.length()-2);
 				p.setAssociatedOrderIds(associatedOrderIds);
@@ -153,7 +155,7 @@ public class PermitController extends CRUDController<Permit> {
 		return listOfPermits;
 	}
 
-	private void injectPendingPaymentPermitSearch(SearchCriteria criteria) {
+	/*private void injectPendingPaymentPermitSearch(SearchCriteria criteria) {
 		if (criteria != null && criteria.getSearchMap() != null) {
 			Map<String, Object> searchMap = criteria.getSearchMap();
 			Object[] param = searchMap.keySet().toArray();
@@ -166,7 +168,7 @@ public class PermitController extends CRUDController<Permit> {
 			}
 			criteria.setSearchMap(searchMap);
 		}
-	}
+	}*/
 
 	private boolean injectOrderSearchCriteria(SearchCriteria criteria) {
 		if (criteria != null && criteria.getSearchMap() != null) {
@@ -311,7 +313,7 @@ public class PermitController extends CRUDController<Permit> {
 		Permit permitToBeEdited = orderPermitToBeEdited.getPermit();
 		
 		criterias.clear();
-		criterias.put("permit", permitToBeEdited);
+		criterias.put("permit", permitToBeEdited.getId());
 		model.addAttribute("permitAddress", genericDAO.findByCriteria(PermitAddress.class, criterias, "id", false));
 		
 		permitToBeEdited.setNumber(StringUtils.EMPTY); // empty the permit number
@@ -441,18 +443,24 @@ public class PermitController extends CRUDController<Permit> {
 	public void setupCreate(ModelMap model, HttpServletRequest request) {
 		Map<String, Object> criterias = new HashMap<String, Object>();
 		
-		List<DeliveryAddress> deliveryAddresses = genericDAO.findUniqueByCriteria(DeliveryAddress.class, criterias, "line1", false);
-	   model.addAttribute("allDeliveryAddresses", deliveryAddresses);
-	  
-	   List<PermitAddress> permitAddresses = genericDAO.findByCriteria(PermitAddress.class, criterias, "line1", false);
-	   SortedSet<String> permitAddressLine1Set = new TreeSet<String>();
+		String deliveryAddresseQuery = "select distinct obj.line1 from DeliveryAddress obj where obj.deleteFlag='1' and obj.line1 != '' order by obj.line1 asc";
+		model.addAttribute("deliveryAddressesLine1", genericDAO.executeSimpleQuery(deliveryAddresseQuery));
+		
+	   deliveryAddresseQuery = "select distinct obj.line2 from DeliveryAddress obj where obj.deleteFlag='1' and obj.line2 != '' order by obj.line2 asc";
+		model.addAttribute("deliveryAddressesLine2", genericDAO.executeSimpleQuery(deliveryAddresseQuery));
+		 
+	   List<?> objectList = genericDAO.executeSimpleQuery("select obj.line1, obj.line2 from PermitAddress obj where obj.deleteFlag='1' order by obj.line1 asc");
+		
+		SortedSet<String> permitAddressLine1Set = new TreeSet<String>();
 		SortedSet<String> permitAddressLine2Set = new TreeSet<String>();
-		for (PermitAddress aPermitAddress : permitAddresses) {
-			if (StringUtils.isNotEmpty(aPermitAddress.getLine1())) {
-				permitAddressLine1Set.add(aPermitAddress.getLine1());
+		for (int i = 0; i < objectList.size(); i++) {
+			Object anObject[] = (Object[])objectList.get(i);
+			
+			if (anObject[0] != null && StringUtils.isNotEmpty(anObject[0].toString())) {
+				permitAddressLine1Set.add(anObject[0].toString());
 			}
-			if (StringUtils.isNotEmpty(aPermitAddress.getLine2())) {
-				permitAddressLine2Set.add(aPermitAddress.getLine2());
+			if (anObject[1] != null && StringUtils.isNotEmpty(anObject[1].toString())) {
+				permitAddressLine2Set.add(anObject[1].toString());
 			}
 		}
 		

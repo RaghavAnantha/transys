@@ -147,7 +147,7 @@ function populatePermitEndDate() {
 			</td>
 		</tr>
 		<tr>
-			<td class="form-left"><transys:label code="Customer Name" /><span class="errorMessage">*</span></td>
+			<td class="form-left"><transys:label code="Customer" /><span class="errorMessage">*</span></td>
 			<td>
 				<form:select id="permitCustomerSelect" cssClass="flat form-control input-sm" path="customer" style="width: 175px !important"> 
 					<form:options items="${customer}" itemValue="id" itemLabel="companyName" />

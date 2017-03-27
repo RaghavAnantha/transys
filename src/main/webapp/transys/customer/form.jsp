@@ -221,8 +221,8 @@ function processCustomerForm() {
 			</td> 
 			<td class="form-left">Last Delivery</td>
 			<td class="td-static">
-				<c:if test="${formattedDeliveryDate != null}">
-					${formattedDeliveryDate}
+				<c:if test="${lastDeliveryDate != null}">
+					${lastDeliveryDate}
 				</c:if>
 			</td>
 		</tr>

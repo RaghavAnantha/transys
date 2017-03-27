@@ -2,8 +2,11 @@ package com.transys.controller;
 
 import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
+import java.sql.Timestamp;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -33,6 +36,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 //import com.google.gson.Gson;
 import com.transys.controller.CRUDController;
 import com.transys.controller.editor.AbstractModelEditor;
+import com.transys.core.util.DateUtil;
 import com.transys.core.util.MimeUtil;
 import com.transys.model.AbstractBaseModel;
 import com.transys.model.DeliveryAddress;
@@ -95,7 +99,7 @@ public class CustomerController extends CRUDController<Customer> {
 		model.addAttribute("phones", phoneArr);
 		model.addAttribute("contactNames", contactNameArr);
 		
-		Map criterias = new HashMap();
+		Map<String, Object> criterias = new HashMap<String, Object>();
 		
 		model.addAttribute("state", genericDAO.findByCriteria(State.class, criterias, "name", false));
 		model.addAttribute("customerTypes", genericDAO.findByCriteria(CustomerType.class, criterias, "customerType", false));
@@ -107,7 +111,7 @@ public class CustomerController extends CRUDController<Customer> {
 		
 		model.addAttribute("customerStatuses", genericDAO.findByCriteria(CustomerStatus.class, criterias, "status", false));
 		
-		//TODO:  Thisis for order report - think of moving the report to order
+		//TODO:  This is for order report - think of moving the report to order
 		model.addAttribute("orderStatuses", genericDAO.findByCriteria(OrderStatus.class, criterias, "status", false));
 	}
 	
@@ -117,12 +121,12 @@ public class CustomerController extends CRUDController<Customer> {
 		model.addAttribute("activeTab", "manageCustomer");
 		model.addAttribute("mode", "ADD");
 		model.addAttribute("activeSubTab", "billing");
-		//return urlContext + "/form";
 		
 		model.addAttribute("notesModelObject", new CustomerNotes());
 		
 		model.addAttribute("deliveryAddressModelObject", new DeliveryAddress());
-				
+			
+		//return urlContext + "/form";
 		return urlContext + "/customer";
 	}
 	
@@ -136,7 +140,7 @@ public class CustomerController extends CRUDController<Customer> {
 		
 		//model.addAttribute("deliveryAddressModelObject", new Address());
 		
-		Map criterias = new HashMap();
+		Map<String, Object> criterias = new HashMap<String, Object>();
 		model.addAttribute("state", genericDAO.findByCriteria(State.class, criterias, "name", false));
 		
 		model.addAttribute("customerTypes", genericDAO.findByCriteria(CustomerType.class, criterias, "customerType", false));
@@ -160,7 +164,7 @@ public class CustomerController extends CRUDController<Customer> {
 		//model.addAttribute("activeSubTab", "billing");
 		//return urlContext + "/form";
 		
-		Map criterias = new HashMap();
+		Map<String, Object> criterias = new HashMap<String, Object>();
 		model.addAttribute("state", genericDAO.findByCriteria(State.class, criterias, "name", false));
 		
 		Customer emptyCustomer = new Customer();
@@ -213,14 +217,18 @@ public class CustomerController extends CRUDController<Customer> {
 	@Override
 	public String list(ModelMap model, HttpServletRequest request) {
 		setupList(model, request);
+		
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		//criteria.getSearchMap().put("id!",0l);
 		criteria.getSearchMap().remove("_csrf");
 		criteria.setPageSize(25);
-		model.addAttribute("list",genericDAO.search(getEntityClass(), criteria,"companyName",null,null));
+		
+		model.addAttribute("list", genericDAO.search(getEntityClass(), criteria,"companyName",null,null));
 		model.addAttribute("activeTab", "manageCustomer");
+		
 		//model.addAttribute("activeSubTab", "billing");
 		model.addAttribute("mode", "MANAGE");
+		
 		//return urlContext + "/list";
 		return urlContext + "/customer";
 	}
@@ -585,7 +593,7 @@ public class CustomerController extends CRUDController<Customer> {
 	}
 	
 	private void populateAggregartionValues(ModelMap model, Long customerId) {
-		String orderQuery = "select obj from Order obj where"
+		/*String orderQuery = "select obj from Order obj where"
 								+ " obj.customer.id=" +  customerId + " and obj.deleteFlag='1' order by obj.id desc";
 		List<Order> orderList = genericDAO.executeSimpleQuery(orderQuery);
 		Integer totalOrders = orderList.size();
@@ -596,22 +604,37 @@ public class CustomerController extends CRUDController<Customer> {
 				lastDeliveryDate = anOrder.getFormattedDeliveryDate();
 				break;
 			}
+		}*/
+		
+		
+		String aggregationQuery = "select count(obj), max(obj.deliveryDate) from Order obj where"
+				+ " obj.customer.id=" +  customerId + " and obj.deleteFlag='1'";
+		Object aggregationObjects[] = (Object[]) genericDAO.executeSingleResultQuery(aggregationQuery);
+		Long totalOrders = (Long) aggregationObjects[0];
+		String lastDeliveryDateStr = StringUtils.EMPTY;
+		if (aggregationObjects[1] != null) {
+			Date lastDeliveryDate = (Date) aggregationObjects[1];
+			lastDeliveryDateStr = DateUtil.formatToInputDate(lastDeliveryDate);
 		}
 		
 		model.addAttribute("totalOrders", totalOrders);
-		model.addAttribute("lastDeliveryDate", lastDeliveryDate);
+		model.addAttribute("lastDeliveryDate", lastDeliveryDateStr);
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/main.do")
 	public String displayMain(ModelMap model, HttpServletRequest request) {
 		request.getSession().removeAttribute("searchCriteria");
+		
 		setupList(model, request);
 		
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		//criteria.getSearchMap().put("id!",0l);
+		//criteria.setPageSize(25);
+		
 		model.addAttribute("list", genericDAO.search(getEntityClass(), criteria, "companyName", null, null));
 		model.addAttribute("activeTab", "manageCustomer");
 		model.addAttribute("mode", "MANAGE");
+		
 		return urlContext + "/customer";
 	}
 	/*@RequestMapping(method = RequestMethod.GET, value = "/address.do")
@@ -630,11 +653,14 @@ public class CustomerController extends CRUDController<Customer> {
 	public String search2(ModelMap model, HttpServletRequest request) {
 		setupList(model, request);
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
-		criteria.getSearchMap().put("id!",0l);
+		
+		//criteria.getSearchMap().put("id!",0l);
 		criteria.setPageSize(25);
+		
 		model.addAttribute("list", genericDAO.search(getEntityClass(), criteria, "companyName", null, null));
 		model.addAttribute("activeTab", "manageCustomer");
 		model.addAttribute("mode", "MANAGE");
+		
 		return urlContext + "/customer";
 	}
 	

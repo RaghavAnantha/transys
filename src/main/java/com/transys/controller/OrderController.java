@@ -256,6 +256,7 @@ public class OrderController extends CRUDController<Order> {
 		setupList(model, request);
 		
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
+		criteria.setPageSize(25);
 		//criteria.getSearchMap().put("id!",0l);
 		//TODO fix me
 		criteria.getSearchMap().remove("_csrf");
@@ -583,7 +584,7 @@ public class OrderController extends CRUDController<Order> {
 				String aChosenPermitDeliveryAddressId = aChosenPermit.getDeliveryAddress().getId().toString();
 				String aChosenPermitLocationTypeId = aChosenPermit.getLocationType().getId().toString();
 				
-				String deliveryDateStr = DateUtil.formatInputDate(order.getDeliveryDate());
+				String deliveryDateStr = DateUtil.formatToInputDate(order.getDeliveryDate());
 				
 				List<Permit> aPermitOfChosenTypeList = retrievePermit(aChosenPermitCustomerId, 
 						aChosenPermitDeliveryAddressId, aChosenPermitClassId,  aChosenPermitTypeId, deliveryDateStr, aChosenPermitLocationTypeId);
@@ -996,6 +997,7 @@ public class OrderController extends CRUDController<Order> {
 		setupList(model, request);
 		
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
+		criteria.setPageSize(25);
 		//criteria.getSearchMap().put("id!",0l);
 		
 		/*if (criteria.getSearchMap().get("customer") != null) {
@@ -1335,7 +1337,7 @@ public class OrderController extends CRUDController<Order> {
 		
 		String requiredEndDateStr = StringUtils.EMPTY;
 		try {
-			requiredEndDateStr = DateUtil.addDaysAndFormatDbDate(deliveryDateStr, (requestedPermitDays - 1));
+			requiredEndDateStr = DateUtil.addDaysAndFormatToDbDate(deliveryDateStr, (requestedPermitDays - 1));
 		} catch (ParseException pe) {
 			pe.printStackTrace();
 		}
@@ -1360,8 +1362,8 @@ public class OrderController extends CRUDController<Order> {
 		
 		String requiredEndDateStr = StringUtils.EMPTY;
 		try {
-			//requiredEndDateStr = DateUtil.addDaysAndFormatDbDate(deliveryDateStr, (requestedPermitDays - 1));
-			requiredEndDateStr =  DateUtil.formatDbDate(deliveryDateStr);
+			//requiredEndDateStr = DateUtil.addDaysAndFormatToDbDate(deliveryDateStr, (requestedPermitDays - 1));
+			requiredEndDateStr =  DateUtil.formatInputDateToDbDate(deliveryDateStr);
 		} catch (ParseException pe) {
 			pe.printStackTrace();
 		}
@@ -1419,7 +1421,7 @@ public class OrderController extends CRUDController<Order> {
 	
 	private DumpsterPrice retrieveDumpsterPrice(Long dumpsterSizeId, Long materialCategoryId,
 					Long materialTypeId, Long customerId) {
-		String todaysDateStr = DateUtil.formatTodayDbDate2();
+		String todaysDateStr = DateUtil.formatTodayToDbDate2();
 		
 		String baseDumpsterPriceQuery = "select obj from DumpsterPrice obj where obj.deleteFlag='1'";
 		baseDumpsterPriceQuery += " and obj.dumpsterSize.id=" + dumpsterSizeId
@@ -1589,7 +1591,7 @@ public class OrderController extends CRUDController<Order> {
 	}
 	
 	private BigDecimal retrieveCityFee(String cityFeeId) {
-		String todaysDateStr = DateUtil.formatTodayDbDate2();
+		String todaysDateStr = DateUtil.formatTodayToDbDate2();
 		
 		String cityFeeQuery = "select obj from CityFee obj where obj.deleteFlag='1' and";
 		cityFeeQuery += " obj.id=" + cityFeeId
@@ -1621,7 +1623,7 @@ public class OrderController extends CRUDController<Order> {
 	
 	private BigDecimal calculateOverweightFee(Date requiredDate, Long dumpsterSizeId, Long materialCategoryId, BigDecimal netWeightTonnage) {
 		Date searchDate = requiredDate == null ? (new Date()) : requiredDate;
-		String searchDateStr = DateUtil.formatDbDate2(searchDate); 
+		String searchDateStr = DateUtil.formatToDbDate2(searchDate); 
 		
 		String overweightFeeQuery = "select obj from OverweightFee obj where obj.deleteFlag='1' and ";
 		overweightFeeQuery += "obj.dumpsterSize.id=" + dumpsterSizeId
@@ -1662,7 +1664,7 @@ public class OrderController extends CRUDController<Order> {
 	}*/
 	
 	private BigDecimal retrieveTonLimit(Long dumpsterSizeId, Long materialCategoryId) {
-		String todaysDateStr = DateUtil.formatTodayDbDate2(); 
+		String todaysDateStr = DateUtil.formatTodayToDbDate2(); 
 		
 		String overweightFeeQuery = "select obj from OverweightFee obj where obj.deleteFlag='1'";
 		overweightFeeQuery += " and obj.dumpsterSize.id=" + dumpsterSizeId

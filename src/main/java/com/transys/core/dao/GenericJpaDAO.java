@@ -71,6 +71,12 @@ public class GenericJpaDAO implements GenericDAO {
 		else
 			return null;
 	}
+	
+	@Override
+	public Object executeSingleResultQuery(String query) {
+		Query q = entityManager.createQuery(query);
+		return q.getSingleResult();
+	}
 
 	@Override
 	public <T extends BaseModel> List<T> executeSimpleQuery(String query) {

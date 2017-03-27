@@ -8,28 +8,24 @@
 			<td>
 				<select class="flat form-control input-sm" id="deliveryAddress" name="deliveryAddress.line1" style="width: 175px !important">
 					<option value="">------Please Select------</option>
-					<c:forEach items="${allDeliveryAddresses}" var="deliveryAddressVar1">
-						<c:if test="${not empty deliveryAddressVar1.line1}">
-							<c:set var="selected" value=""/>
-							<c:if test="${sessionScope.searchCriteria.searchMap['deliveryAddress.line1'] == deliveryAddressVar1.line1}">
-								<c:set var="selected" value="selected"/>
-							</c:if> 
-							<option value="${deliveryAddressVar1.line1}" ${selected}>${deliveryAddressVar1.line1}</option>
-						</c:if>
+					<c:forEach items="${deliveryAddressesLine1}" var="aDeliveryAddressLine1">
+						<c:set var="selected" value=""/>
+						<c:if test="${sessionScope.searchCriteria.searchMap['deliveryAddress.line1'] == aDeliveryAddressLine1}">
+							<c:set var="selected" value="selected"/>
+						</c:if> 
+						<option value="${aDeliveryAddressLine1}" ${selected}>${aDeliveryAddressLine1}</option>
 					</c:forEach>
 				</select>
 			</td>
 			<td class="form-left form-left-ext">Delivery Addrs Line2</td>
 			<td><select class="flat form-control input-sm" id="deliveryStreet" name="deliveryAddress.line2" style="width: 175px !important">
 				<option value="">------Please Select------</option>
-				<c:forEach items="${allDeliveryAddresses}" var="deliveryAddressVar2">
-					<c:if test="${not empty deliveryAddressVar2.line2}">
-						<c:set var="selected" value=""/>
-						<c:if test="${sessionScope.searchCriteria.searchMap['deliveryAddress.line2'] == deliveryAddressVar2.line2}">
-							<c:set var="selected" value="selected"/>
-						</c:if> 
-						<option value="${deliveryAddressVar2.line2}" ${selected}>${deliveryAddressVar2.line2}</option>
-					</c:if>
+				<c:forEach items="${deliveryAddressesLine2}" var="aDeliveryAddressLine2">
+					<c:set var="selected" value=""/>
+					<c:if test="${sessionScope.searchCriteria.searchMap['deliveryAddress.line2'] == aDeliveryAddressLine2}">
+						<c:set var="selected" value="selected"/>
+					</c:if> 
+					<option value="${aDeliveryAddressLine2}" ${selected}>${aDeliveryAddressLine2}</option>
 				</c:forEach>
 			</select>
 			</td>
@@ -178,7 +174,7 @@
 			</td>
 	 </tr>
 	 <tr>
-		  <td class="form-left">Customer Name</td>
+		  <td class="form-left">Customer</td>
 				<td><select class="flat form-control input-sm" id="customerName" name="customer.companyName" style="width: 175px !important">
 					<option value="">------Please Select------</option>
 					<c:forEach items="${customer}" var="customer">

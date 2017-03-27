@@ -14,14 +14,12 @@
 		  <td class="form-left form-left-ext">Delivery Addrs Line1</td>
 				<td><select class="flat form-control input-sm" id="deliveryAddress" name="order.deliveryAddress.line1" style="width: 175px !important">
 					<option value="">---Please Select---</option>
-					<c:forEach items="${allDeliveryAddresses}" var="deliveryAddressVar">
-						<c:if test="${not empty deliveryAddressVar.line1}">
-							<c:set var="selected" value=""/>
-							<c:if test="${sessionScope.searchCriteria.searchMap['order.deliveryAddress.line1'] == deliveryAddressVar.line1}">
-								<c:set var="selected" value="selected"/>
-							</c:if> 
-							<option value="${deliveryAddressVar.line1}" ${selected}>${deliveryAddressVar.line1}</option>
-						</c:if>
+					<c:forEach items="${deliveryAddressesLine1}" var="aDeliveryAddressLine1">
+						<c:set var="selected" value=""/>
+						<c:if test="${sessionScope.searchCriteria.searchMap['order.deliveryAddress.line1'] == aDeliveryAddressLine1}">
+							<c:set var="selected" value="selected"/>
+						</c:if> 
+						<option value="${aDeliveryAddressLine1}" ${selected}>${aDeliveryAddressLine1}</option>
 					</c:forEach>
 				</select>
 				</td>
@@ -29,14 +27,12 @@
 			<td class="form-left form-left-ext"><transys:label code="Delivery Addrs Line2"/></td>
 			<td><select class="flat form-control input-sm" id="deliveryStreet" name="order.deliveryAddress.line2" style="width: 175px !important">
 				<option value="">---Please Select---</option>
-				<c:forEach items="${allDeliveryAddresses}" var="deliveryAddress">
-					<c:if test="${not empty deliveryAddress.line2}">
-						<c:set var="selected" value=""/>
-						<c:if test="${sessionScope.searchCriteria.searchMap['order.deliveryAddress.line2'] == deliveryAddress.line2}">
-							<c:set var="selected" value="selected"/>
-						</c:if> 
-						<option value="${deliveryAddress.line2}" ${selected}>${deliveryAddress.line2}</option>
-					</c:if>
+				<c:forEach items="${deliveryAddressesLine2}" var="aDeliveryAddressLine2">
+					<c:set var="selected" value=""/>
+					<c:if test="${sessionScope.searchCriteria.searchMap['order.deliveryAddress.line2'] == aDeliveryAddressLine2}">
+						<c:set var="selected" value="selected"/>
+					</c:if> 
+					<option value="${aDeliveryAddressLine2}" ${selected}>${aDeliveryAddressLine2}</option>
 				</c:forEach>
 			</select>
 			</td> 

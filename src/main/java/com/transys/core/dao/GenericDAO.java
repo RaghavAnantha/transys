@@ -32,6 +32,7 @@ String groupField);
 <T extends BaseModel> List<T> searchByQuery(Class<T> clazz, SearchCriteria criteria, String query, String countQuery);
 <T extends BaseModel> List<T> executeSimpleQuery(String query);
 <T extends BaseModel> List<T> executeNativeQuery(String query);
+Object executeSingleResultQuery(String query);
 <T extends BaseModel> void executeSimpleUpdateQuery(String query);
 <T extends BaseModel> boolean isUnique(Class<T> clazz, T entity, Map properties);
 <T extends BaseModel> List<T> findByCommaSeparatedIds(Class<T> clazz, String ids);

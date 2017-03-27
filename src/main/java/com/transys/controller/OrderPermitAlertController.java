@@ -46,8 +46,11 @@ public class OrderPermitAlertController extends CRUDController<OrderPermits> {
 	@RequestMapping(method = RequestMethod.GET, value = "/main.do")
 	public String displayMain(ModelMap model, HttpServletRequest request) {
 		request.getSession().removeAttribute("searchCriteria");
+		
 		setupList(model, request);
+		
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
+		criteria.setPageSize(50);
 		
 		// Search for permits corresponding to open orders and status=expired or expiring in the next 7 days
 		List<OrderPermits> orderPermits = getToBeAlertedPermits(criteria);
@@ -69,12 +72,14 @@ public class OrderPermitAlertController extends CRUDController<OrderPermits> {
 	
 	@Override
 	public void setupCreate(ModelMap model, HttpServletRequest request) {
-		Map criterias = new HashMap();
+		Map<String, Object> criterias = new HashMap<String, Object>();
 		
-		List<DeliveryAddress> addresses = genericDAO.findUniqueByCriteria(DeliveryAddress.class, criterias, "line1", false);
-	   model.addAttribute("allDeliveryAddresses", addresses);
-	   List<Customer> customerList = genericDAO.findByCriteria(Customer.class, criterias, "contactName", false);
-		model.addAttribute("customer", customerList);
+		String deliveryAddresseQuery = "select distinct obj.line1 from DeliveryAddress obj where obj.deleteFlag='1' and obj.line1 != '' order by obj.line1 asc";
+		model.addAttribute("deliveryAddressesLine1", genericDAO.executeSimpleQuery(deliveryAddresseQuery));
+		
+	   deliveryAddresseQuery = "select distinct obj.line2 from DeliveryAddress obj where obj.deleteFlag='1' and obj.line2 != '' order by obj.line2 asc";
+		model.addAttribute("deliveryAddressesLine2", genericDAO.executeSimpleQuery(deliveryAddresseQuery));
+		 
 		model.addAttribute("locationType", genericDAO.findByCriteria(LocationType.class, criterias, "id", false));
 		
 		//model.addAttribute("order", genericDAO.findByCriteria(Order.class, criterias, "id", false));
@@ -88,6 +93,9 @@ public class OrderPermitAlertController extends CRUDController<OrderPermits> {
 //		model.addAttribute("orderStatuses", genericDAO.findByCriteria(OrderStatus.class, criterias, "status", false));
 		model.addAttribute("state", genericDAO.findAll(State.class, true));
 
+		List<Customer> customerList = genericDAO.findByCriteria(Customer.class, criterias, "contactName", false);
+		//model.addAttribute("customer", customerList);
+		
 		SortedSet<String> phoneSet = new TreeSet<String>();
 		SortedSet<String> contactNameSet = new TreeSet<String>();
 		for (Customer aCustomer : customerList) {
@@ -100,17 +108,18 @@ public class OrderPermitAlertController extends CRUDController<OrderPermits> {
 		
 		List<OrderPermits> orderPermits = getToBeAlertedPermits(new SearchCriteria());
 		model.addAttribute("orderPermitList", orderPermits);
-
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/list.do")
 	public String list(ModelMap model, HttpServletRequest request) {
 		request.getSession().removeAttribute("searchCriteria");
+		
 		setupList(model, request);
+		
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		criteria.setPageSize(50);
 		
-//		injectPendingPaymentPermitSearch(criteria);
+		//	injectPendingPaymentPermitSearch(criteria);
 		
 		// Search for permits corresponding to open orders and status=expired or expiring in the next 7 days
 		List<OrderPermits> orderPermits = getToBeAlertedPermits(criteria);
