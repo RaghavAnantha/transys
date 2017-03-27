@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
-<!-- 2017-03-27T21:20:30 -->
+<!-- 2017-03-27T21:30:02 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="orderPrint" pageWidth="595" pageHeight="806" columnWidth="575" leftMargin="10" rightMargin="10" topMargin="5" bottomMargin="5" uuid="f412ce57-68ae-45e8-90e9-b1c053e29ef7">
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
@@ -709,8 +709,8 @@ On the 4th day box will automatically be moved unless office is notified and an 
 				</textElement>
 				<text><![CDATA[** Not Responsible For Customer Pavement Or 
     Accompanying Sub Surface **
-** Additional fee will be added in the event of 
-    cancellation on/ after delivery, and for dumpster 
+** Additional fees will be added in the event of 
+    cancellation on/after delivery and for dumpster 
     overweights. **]]></text>
 			</staticText>
 			<textField>
