@@ -1202,7 +1202,7 @@ public class OrderController extends CRUDController<Order> {
 			permitEndDate = aPermit.getFormattedEndDate();
 			
 			if (!StringUtils.equals(anOrder.getDeliveryAddress().getFullLine(), aPermit.getFullLinePermitAddress1())) {
-				permitAddress = "Permit: " + aPermit.getFullLinePermitAddress1();
+				permitAddress = "Permit Address: " + aPermit.getFullLinePermitAddress1();
 			}
 		}
 		anOrderReportVO.setPermitEndDate(permitEndDate);
