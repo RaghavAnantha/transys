@@ -8,7 +8,6 @@ import javax.persistence.Table;
 @Entity
 @Table(name="orderPermits")
 public class OrderPermits extends AbstractBaseModel {
-
 	@ManyToOne
 	@JoinColumn(name="orderId")
 	private Order order;

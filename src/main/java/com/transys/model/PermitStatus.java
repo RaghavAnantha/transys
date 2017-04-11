@@ -9,7 +9,11 @@ import javax.persistence.Transient;
 @Table(name="permitStatus")
 public class PermitStatus  extends AbstractBaseModel {
 	@Transient
+	public static final String PERMIT_STATUS_PENDING = "Pending";
+	@Transient
 	public static final String PERMIT_STATUS_AVAILABLE = "Available";
+	@Transient
+	public static final String PERMIT_STATUS_ASSIGNED = "Assigned";
 	
 	@Column(name="status")
 	private String status;

@@ -137,6 +137,7 @@ function populatePermitEndDate() {
 }
 </script>
 <form:form action="${ctx}/permit/saveForCustomerModal.do" name="permitForCustomerModalForm" id="permitForCustomerModalForm" commandName="modelObject" method="post" >
+	<form:hidden path="id" id="id" />
 	<table id="form-table" class="table">
 		<tr><td colspan="10"></td></tr>
 		<tr>
@@ -284,15 +285,19 @@ function populatePermitEndDate() {
 		</tr>
 		<tr>
 			<td colspan=10>
-				<form:textarea row="5" path="permitNotes[0].notes" cssClass="form-control notes" style="width:695px;"/>
-				<form:errors path="permitNotes[0].notes" cssClass="errorMessage" />
+				<c:set var="notesIndex" value='0'/>
+			 	<c:if test="${not empty modelObject.permitNotes}">
+					<c:set var="notesIndex" value='${modelObject.permitNotes.size()}'/>
+				</c:if>
+				<form:textarea row="5" path="permitNotes[${notesIndex}].notes" cssClass="form-control notes" style="width:695px;"/>
+				<form:errors path="permitNotes[${notesIndex}].notes" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr><td colspan="2"></td></tr>
 		<tr>
 			<td>&nbsp;</td>
 			<td colspan="2">
-				<input type="submit" id="createPermitForCustomer" onclick="return true;" value="<transys:label code="Save"/>" class="flat btn btn-primary btn-sm btn-sm-ext" /> 
+				<input type="submit" id="createPermitForCustomer" onclick="return true;" value="Save" class="flat btn btn-primary btn-sm btn-sm-ext" /> 
 				<input type="button" id="closePermitForCustomer" value="Close" class="flat btn btn-primary btn-sm btn-sm-ext" data-dismiss="modal" />
 			</td>
 		</tr>

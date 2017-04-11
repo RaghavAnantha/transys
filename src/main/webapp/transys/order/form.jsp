@@ -154,6 +154,9 @@ function appendCustomer(customer) {
 
 function appendPermit(permit) {
 	var permitNumbersSelect = $("#permits\\[" + 0 + "\\]");
+	
+	permitNumbersSelect.find("option[value='" + permit.id + "']").remove();
+	
 	var newPermitOption = $('<option value=' + permit.id + ' selected>'+ permit.number +'</option>');
 	permitNumbersSelect.append(newPermitOption);
 	
@@ -1073,7 +1076,19 @@ function updateTotalPaid() {
 			<td class="form-left">Order #</td>
 			<td class="wide td-static" id="orderIdTd">${modelObject.id}</td>
 			<td class="form-left">Status</td>
-			<td class="td-static">${modelObject.orderStatus.status}</td>
+			<td class="td-static">
+				<label style="display: inline-block; font-weight: normal">
+					${modelObject.orderStatus.status}
+				</label>
+				<c:if test="${modelObject.orderStatus != null && modelObject.orderStatus.status == 'Cancelled'}">
+					<label style="display: inline-block; font-weight: normal">
+						&nbsp;
+						<a href="${ctx}/order/revertCancelToOpen.do?id=${modelObject.id}" id="revertCancelToOpenLink" >
+							<img src="${ctx}/images/undo3.png" border="0" style="float:bottom; vertical-align:top" class="toolbarButton">
+						</a>
+					</label>
+				</c:if>
+			</td>
 		</tr>
 		<tr>
 			<td class="form-left">Customer<span class="errorMessage">*</span></td>
@@ -1361,6 +1376,10 @@ function updateTotalPaid() {
 					<a href="${ctx}/permit/createForCustomerModal.do" id="addPermitLink" >
 						<img src="${ctx}/images/addnew.png" border="0" style="float:bottom" class="toolbarButton">
 					</a>
+					&nbsp;
+					<a href="${ctx}/permit/editForCustomerModal.do" id="editPermitLink" >
+						<img src="${ctx}/images/edit2.png" border="0" style="float:bottom" class="toolbarButton">
+					</a>
 				</label>
 	        </td>
 	        <c:if test="${modelObject.permits != null and modelObject.permits[1] != null and modelObject.permits[1].number != null}">
@@ -1425,7 +1444,7 @@ function updateTotalPaid() {
 	    <tr>
 	      <td class="form-left">Permit1 Address</td>
 	      <td>
-        	<select class="flat form-control input-sm" id="permitAddress1" name="permitAddress1" style="width:172px !important">
+      		<select class="flat form-control input-sm" id="permitAddress1" name="permitAddress1" style="width:172px !important">
 				<c:if test="${modelObject.permits != null and modelObject.permits[0] != null and modelObject.permits[0].number != null}">
 					<c:forEach items="${modelObject.permits[0].permitAddress}" var="aPermitAddress">
 						<option value="${aPermitAddress.id}" ${selected}>${aPermitAddress.fullLine}</option>
@@ -1816,6 +1835,25 @@ $("#addPermitLink").click(function (ev) {
     		showPopupDialog("Add Permit", newPermitUrl);
 		}
 	});
+	
+	ev.preventDefault();
+});
+
+$("#editPermitLink").click(function (ev) {
+	var permitNumbersSelect = $("#permits\\[" + 0 + "\\]");
+	var permitId = permitNumbersSelect.val();
+	
+	if (permitId == "") {
+		var alertMsg = "Please select a Permit to edit"
+		showAlertDialog("Data Validation", alertMsg);
+		
+		return false;
+	}
+	
+	var editPermitUrl = $(this).attr("href");
+	editPermitUrl += "?permitId=" + permitId;
+
+	showPopupDialog("Edit Permit", editPermitUrl);
 	
 	ev.preventDefault();
 });

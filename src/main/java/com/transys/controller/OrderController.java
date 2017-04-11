@@ -659,7 +659,7 @@ public class OrderController extends CRUDController<Order> {
 		// Return to form if we had errors
 		if (bindingResult.hasErrors()) {
 			setupCreate(model, request, entity);
-			return urlContext + "/form";
+			return urlContext + "/order";
 		}
 		
 		beforeSave(request, entity, model);
@@ -682,6 +682,43 @@ public class OrderController extends CRUDController<Order> {
 		updateDumpsterStatus(associatedDumpsterId, DumpsterStatus.DUMPSTER_STATUS_AVAILABLE, modifiedBy);
 		
 		return dropOffSaveSuccess(request, entity, model);
+	}
+	
+	@RequestMapping(method = RequestMethod.GET, value = "/revertCancelToOpen.do")
+	public String revertCancelToOpen(HttpServletRequest request,
+			@ModelAttribute("modelObject") Order entity,
+			BindingResult bindingResult, ModelMap model) {
+		try {
+			getValidator().validate(entity, bindingResult);
+		} catch (ValidationException e) {
+			e.printStackTrace();
+			log.warn("Error in validation :" + e);
+		}
+		
+		// Return to form if we had errors
+		if (bindingResult.hasErrors()) {
+			setupCreate(model, request, entity);
+			return urlContext + "/order";
+		}
+		
+		beforeSave(request, entity, model);
+		
+		OrderStatus orderStatus = retrieveOrderStatus(OrderStatus.ORDER_STATUS_OPEN);
+		entity.setOrderStatus(orderStatus);
+		
+		genericDAO.saveOrUpdate(entity);
+		
+		Long modifiedBy = entity.getModifiedBy();
+		
+		String auditMsg = "Order status reverted to " + OrderStatus.ORDER_STATUS_OPEN;
+		OrderNotes auditOrderNotes = createAuditOrderNotes(entity, auditMsg, modifiedBy);
+		entity.getOrderNotes().add(auditOrderNotes);
+		
+		if (entity.getPermits() != null && !entity.getPermits().isEmpty()) {
+			updatePermitStatus(entity.getPermits(), PermitStatus.PERMIT_STATUS_ASSIGNED, modifiedBy);
+		}
+		
+		return saveSuccess(model, request, entity);
 	}
 	
 	private String dropOffSaveSuccess(HttpServletRequest request, Order entity, ModelMap model) {
@@ -719,20 +756,24 @@ public class OrderController extends CRUDController<Order> {
 		return urlContext + "/order";
 	}
 	
+	private PermitStatus retrievePermitStatus(String status) {
+		PermitStatus permitStatus = (PermitStatus) genericDAO.executeSimpleQuery("select obj from PermitStatus obj where obj.deleteFlag='1' and obj.status='" + status + "'").get(0);
+		return permitStatus;
+	}
+	
 	private void updatePermitStatus(List<Permit> permitList, String status, Long modifiedBy) {
 		if (permitList == null || permitList.isEmpty()) {
 			return;
 		}
 		
-		String permitStatusQuery = "select obj from PermitStatus obj where obj.deleteFlag='1' and obj.status='" + status + "'";
-		List<PermitStatus> permitStatusList = genericDAO.executeSimpleQuery(permitStatusQuery);
+		PermitStatus permitStatus = retrievePermitStatus(status);
 		
 		for (Permit aPermit : permitList) {
 			if (status.equals(aPermit.getStatus().getStatus())) {
 				continue;
 			}
 			
-			aPermit.setStatus(permitStatusList.get(0));
+			aPermit.setStatus(permitStatus);
 			aPermit.setModifiedAt(Calendar.getInstance().getTime());
 			aPermit.setModifiedBy(modifiedBy);
 			
@@ -761,7 +802,7 @@ public class OrderController extends CRUDController<Order> {
 		}
 		
 		if (!changedPermits.isEmpty()) {
-			updatePermitStatus(changedPermits, "Available", modifiedBy);
+			updatePermitStatus(changedPermits, PermitStatus.PERMIT_STATUS_AVAILABLE, modifiedBy);
 		}
 	}
 	
@@ -1919,7 +1960,7 @@ public class OrderController extends CRUDController<Order> {
 		createAuditOrderNotes(entity, orderAuditMsg, modifiedBy);
 		
 		if (!StringUtils.equals(OrderStatus.ORDER_STATUS_CLOSED, entity.getOrderStatus().getStatus())) {
-			updatePermitStatus(permitList, "Assigned", modifiedBy);
+			updatePermitStatus(permitList, PermitStatus.PERMIT_STATUS_ASSIGNED, modifiedBy);
 		}
 		
 		updateIfPermitsChanged(originallyAssignedPermits, permitList, modifiedBy);

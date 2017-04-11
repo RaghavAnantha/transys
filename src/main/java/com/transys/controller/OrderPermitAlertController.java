@@ -22,11 +22,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.transys.model.Customer;
-import com.transys.model.DeliveryAddress;
 import com.transys.model.LocationType;
 import com.transys.model.Order;
 import com.transys.model.OrderPermits;
-import com.transys.model.OrderStatus;
 import com.transys.model.Permit;
 import com.transys.model.PermitClass;
 import com.transys.model.PermitStatus;
@@ -90,7 +88,7 @@ public class OrderPermitAlertController extends CRUDController<OrderPermits> {
 		model.addAttribute("permitStatus", genericDAO.findByCriteria(PermitStatus.class, criterias, "status", false));
 		model.addAttribute("permit", genericDAO.findByCriteria(Permit.class, criterias, "number", false));
 		model.addAttribute("orderStatuses", genericDAO.executeSimpleQuery("select obj from OrderStatus obj where obj.deleteFlag='1' and obj.status != 'Closed'"));
-//		model.addAttribute("orderStatuses", genericDAO.findByCriteria(OrderStatus.class, criterias, "status", false));
+		//model.addAttribute("orderStatuses", genericDAO.findByCriteria(OrderStatus.class, criterias, "status", false));
 		model.addAttribute("state", genericDAO.findAll(State.class, true));
 
 		List<Customer> customerList = genericDAO.findByCriteria(Customer.class, criterias, "contactName", false);

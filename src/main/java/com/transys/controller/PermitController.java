@@ -2,8 +2,11 @@ package com.transys.controller;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+
 import java.math.BigDecimal;
+
 import java.text.SimpleDateFormat;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -16,16 +19,19 @@ import java.util.TreeSet;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import javax.validation.ValidationException;
 
-import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
-import org.jfree.util.BooleanUtilities;
+
 import org.springframework.stereotype.Controller;
+
 import org.springframework.ui.ModelMap;
+
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,13 +42,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 //import com.google.gson.Gson;
+
 import com.transys.controller.editor.AbstractModelEditor;
+
 import com.transys.core.report.generator.ExcelReportGenerator;
+
 import com.transys.model.AbstractBaseModel;
 import com.transys.model.Customer;
 import com.transys.model.DeliveryAddress;
 import com.transys.model.LocationType;
-import com.transys.model.Order;
 import com.transys.model.OrderFees;
 import com.transys.model.OrderPermits;
 import com.transys.model.OrderStatus;
@@ -61,7 +69,6 @@ import com.transys.model.User;
 @Controller
 @RequestMapping("/permit")
 public class PermitController extends CRUDController<Permit> {
-	
 	public static final int MAX_NUMBER_OF_ASSOCIATED_PERMITS = 3;
 	
 	public PermitController(){
@@ -214,7 +221,7 @@ public class PermitController extends CRUDController<Permit> {
 
 	private List<OrderPermits> getOrderRelatedPermits(Map<String, Object> searchMap, Object[] param, int i) {
 		SearchCriteria innerSearch = new SearchCriteria();
-		Map innerSearchCriteria = new HashMap<String, Object>();
+		Map<String, Object> innerSearchCriteria = new HashMap<String, Object>();
 		innerSearchCriteria.put("order", searchMap.get(param[i].toString()));
 		innerSearch.setSearchMap(innerSearchCriteria);
 		List<OrderPermits> orderPermits = genericDAO.search(OrderPermits.class, innerSearch, "id", null, null);
@@ -285,7 +292,40 @@ public class PermitController extends CRUDController<Permit> {
 		
 		model.put("modelObject", emptyPermit);
 		
-		Map criterias = new HashMap();
+		Map<String, Object> criterias = new HashMap<String, Object>();
+		model.addAttribute("state", genericDAO.findByCriteria(State.class, criterias, "name", false));
+		
+		return urlContext + "/formForCustomerModal";
+	}
+	
+	@RequestMapping(method = RequestMethod.GET, value = "/editForCustomerModal.do")
+	public String editForCustomerModal(ModelMap model, HttpServletRequest request, 
+			@RequestParam(value = "permitId") Long permitId) {
+		Permit permit = genericDAO.getById(Permit.class, permitId);
+		
+		String customerQuery = "select obj from Customer obj where obj.deleteFlag='1' and obj.id=" + permit.getCustomer().getId();
+		List<Customer> customerList = genericDAO.executeSimpleQuery(customerQuery);
+		model.put("customer", customerList);
+		
+		String deliveryAddressQuery = "select obj from DeliveryAddress obj where obj.deleteFlag='1' and obj.id=" + permit.getDeliveryAddress().getId();
+		List<DeliveryAddress> deliveryAddressList = genericDAO.executeSimpleQuery(deliveryAddressQuery);
+		model.addAttribute("deliveryAddress", deliveryAddressList);
+
+		String locationTypesQuery = "select obj from LocationType obj where obj.deleteFlag='1' and obj.id=" + permit.getLocationType().getId();
+		List<LocationType> locationTypeList = genericDAO.executeSimpleQuery(locationTypesQuery);
+		model.addAttribute("locationType", locationTypeList);
+		
+		String permitClassQuery = "select obj from PermitClass obj where obj.deleteFlag='1' and obj.id=" + permit.getPermitClass().getId();
+		List<PermitClass> permitClassList = genericDAO.executeSimpleQuery(permitClassQuery);
+		model.addAttribute("permitClass", permitClassList);
+		
+		String permitTypeQuery = "select obj from PermitType obj where obj.deleteFlag='1' and obj.id=" + permit.getPermitType().getId();
+		List<PermitType> permitTypeList = genericDAO.executeSimpleQuery(permitTypeQuery);
+		model.addAttribute("permitType", permitTypeList);
+	
+		model.put("modelObject", permit);
+		
+		Map<String, Object> criterias = new HashMap<String, Object>();
 		model.addAttribute("state", genericDAO.findByCriteria(State.class, criterias, "name", false));
 		
 		return urlContext + "/formForCustomerModal";
@@ -316,7 +356,7 @@ public class PermitController extends CRUDController<Permit> {
 		criterias.put("permit", permitToBeEdited.getId());
 		model.addAttribute("permitAddress", genericDAO.findByCriteria(PermitAddress.class, criterias, "id", false));
 		
-		permitToBeEdited.setNumber(StringUtils.EMPTY); // empty the permit number
+		permitToBeEdited.setNumber(StringUtils.EMPTY); // Empty the permit number
 		permitToBeEdited.getPermitNotes().clear();
 		
 		model.put("modelObject", permitToBeEdited);
@@ -352,11 +392,11 @@ public class PermitController extends CRUDController<Permit> {
 		return urlContext + "/formModal";
 	}
 
-	private boolean validateMaxPermitsAllowable(OrderPermits orderPermitToBeEdited) {
-		// validate if this order has < 3 permits, else show alert
-		List<OrderPermits> orderPermitsForThisOrder = genericDAO.executeSimpleQuery("select obj from OrderPermits obj where obj.deleteFlag='1' and obj.order.id=" +  orderPermitToBeEdited.getOrder().getId());
+	private boolean validateMaxPermitsAllowable(OrderPermits orderPermit) {
+		// Validate if this order has < 3 permits, else show alert
+		List<OrderPermits> orderPermitsForThisOrder = genericDAO.executeSimpleQuery("select obj from OrderPermits obj where obj.deleteFlag='1' and obj.order.id=" +  orderPermit.getOrder().getId());
 		if (orderPermitsForThisOrder != null && orderPermitsForThisOrder.size() >= MAX_NUMBER_OF_ASSOCIATED_PERMITS) {
-			//do not create modal, show alert
+			// Do not create modal, show alert
 			return false;
 		}
 		
@@ -496,84 +536,85 @@ public class PermitController extends CRUDController<Permit> {
 		model.addAttribute("contactName", contactNameSet);
 	}
 	
+	private boolean shouldPermitStatusBeUpdated(Permit entity, String newStatus) {
+		if (entity.getId() == null || entity.getStatus() == null) {
+			return true;
+		}
+		
+		if (StringUtils.equals(newStatus, entity.getStatus().getStatus())) {
+			return false;
+		}
+		
+		return !StringUtils.equals(PermitStatus.PERMIT_STATUS_ASSIGNED, entity.getStatus().getStatus());
+	}
+	
 	@Override
 	@RequestMapping(method = RequestMethod.POST, value = "/save.do")
 	public String save(HttpServletRequest request,
 			@ModelAttribute("modelObject") Permit entity,
 			BindingResult bindingResult, ModelMap model) {
+		try {
+			getValidator().validate(entity, bindingResult);
+		} catch (ValidationException e) {
+			e.printStackTrace();
+			System.out.println("Error in validation " + e);
+			log.warn("Error in validation :" + e);
+		}
 		
-			String status = "Pending";
-			if (nonEmptyPermitNumber(entity)) {
-				// check for duplicate
-				if (entity.getId() == null) { // check for uniqueness only if its new permit, exclude for edit permits
-					if (isPermitNumberUnique(entity.getNumber())) {
-						status = "Available";
-					} else {
-						return showPermitCreatePageWithError(request, entity, model, "Permit Number " + entity.getNumber() + " already exists.");
-					}
-				}
-			} else {
-				System.out.println("Setting permit number to empty");
-				entity.setNumber(Permit.EMPTY_PERMIT_NUMBER);
+		// Return to form if we had errors
+		if (bindingResult.hasErrors()) {
+			List<ObjectError> errors = bindingResult.getAllErrors();
+			for(ObjectError e : errors) {
+				System.out.println("Error: " + e.getDefaultMessage());
 			}
-
-			if (entity.getFee() == null) {
-				return showPermitCreatePageWithError(request, entity, model, "Permit Fee for the required class/type for the given date range = " + entity.getFormattedStartDate() + " to " + entity.getFormattedEndDate() + " is not available.");
-			} 
 			
-			PermitStatus permitStatus = (PermitStatus)genericDAO.executeSimpleQuery("select obj from PermitStatus obj where obj.deleteFlag='1' and obj.status='" + status + "'").get(0);
+			setupCreate(model, request);
+			return urlContext + "/permit";
+		}
+			
+		if (entity.getFee() == null) {
+			return showPermitCreatePageWithError(request, entity, model, "Permit Fee for the required class/type for the given date range = " + entity.getFormattedStartDate() + " to " + entity.getFormattedEndDate() + " is not available.");
+		} 
+		
+		String status = PermitStatus.PERMIT_STATUS_PENDING;
+		if (isEmptyPermitNumber(entity)) {
+			entity.setNumber(Permit.EMPTY_PERMIT_NUMBER);
+		} else {
+			if (!isPermitNumberUnique(entity.getId(), entity.getNumber())) { 
+				return showPermitCreatePageWithError(request, entity, model, "Permit Number " + entity.getNumber() + " already exists.");
+			}
+			status = PermitStatus.PERMIT_STATUS_AVAILABLE;
+		}
+		
+		if (shouldPermitStatusBeUpdated(entity, status)) {
+			PermitStatus permitStatus = retrievePermitStatus(status);
 			entity.setStatus(permitStatus);
-			
-			try {
-				getValidator().validate(entity, bindingResult);
-			} catch (ValidationException e) {
-				e.printStackTrace();
-				System.out.println("Error in validation " + e);
-				log.warn("Error in validation :" + e);
-			}
-			
-			SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
-			if(criteria != null && criteria.getSearchMap() != null) {
-				criteria.getSearchMap().put("id!",0l);
-				//TODO: Fix me 
-				criteria.getSearchMap().remove("_csrf");
-			}
-			
-			// return to form if we had errors
-			if (bindingResult.hasErrors()) {
-				List<ObjectError> errors = bindingResult.getAllErrors();
-				for(ObjectError e : errors) {
-					System.out.println("Error: " + e.getDefaultMessage());
-				}
-				
-				setupCreate(model, request);
-				return urlContext + "/form";
-			}
-			
-			beforeSave(request, entity, model);
-			
-			Long modifiedBy = getUser(request).getId();
-			
-			// TODO: Why both created by and modified by and why set if not changed?
-			setupPermitNotes(entity, modifiedBy);
-			
-			String permitAuditMsg = StringUtils.EMPTY;
-			if (entity.getId() == null) {
-				permitAuditMsg = "Permit created";
-			} else {
-				permitAuditMsg = "Permit updated";
-			}
-			
-			genericDAO.saveOrUpdate(entity);
-			
-			createAuditPermitNotes(entity, permitAuditMsg, modifiedBy);
-			
-			// The delivery address entered will automatically be stored as one of the Permit Addresses. Users can add more.
-			addDeliveryAddAsPermitAdd(request, entity);
-			
-			cleanUp(request);
-			
-			return saveSuccess(model, request, entity);
+		}
+		
+		beforeSave(request, entity, model);
+		
+		Long modifiedBy = getUser(request).getId();
+		
+		// TODO: Why both created by and modified by and why set if not changed?
+		setupPermitNotes(entity, modifiedBy);
+		
+		String permitAuditMsg = StringUtils.EMPTY;
+		if (entity.getId() == null) {
+			permitAuditMsg = "Permit created";
+		} else {
+			permitAuditMsg = "Permit updated";
+		}
+		
+		genericDAO.saveOrUpdate(entity);
+		
+		createAuditPermitNotes(entity, permitAuditMsg, modifiedBy);
+		
+		// The delivery address entered will automatically be stored as one of the Permit Addresses. Users can add more.
+		addDeliveryAddAsPermitAdd(request, entity);
+		
+		cleanUp(request);
+		
+		return saveSuccess(model, request, entity);
 	}
 	
 	private PermitNotes createAuditPermitNotes(Permit permit, String permitAuditMsg, Long createdBy) {
@@ -587,7 +628,7 @@ public class PermitController extends CRUDController<Permit> {
 		
 		auditPermitNotes.setCreatedAt(Calendar.getInstance().getTime());
 		auditPermitNotes.setCreatedBy(createdBy);
-		updateEnteredBy(auditPermitNotes);
+		setEnteredBy(auditPermitNotes);
 		
 		genericDAO.save(auditPermitNotes);
 		
@@ -631,16 +672,14 @@ public class PermitController extends CRUDController<Permit> {
 		return urlContext + "/permit";
 	}
 
-	private boolean isPermitNumberUnique(String number) {
-		
-		Map<String, String> filterCriteria = new HashMap<>();
-		filterCriteria.put("number", number);
- 		List<Permit> listOfPermits = genericDAO.findByCriteria(Permit.class, filterCriteria, "id", false);
- 		if (listOfPermits.isEmpty()) {
- 			return true;
- 		} else {
- 			return false;
- 		}
+	private boolean isPermitNumberUnique(Long id, String number) {
+		String query = "select obj from Permit obj where "
+				+ " obj.number='" + number + "'";
+		if (id != null) {
+			query += " and obj.id !=" + id;
+		}
+ 		List<Permit> listOfPermits = genericDAO.executeSimpleQuery(query);
+ 		return listOfPermits.isEmpty();
 	}
 
 	/*private void setupPermitNotes(Permit permit) {
@@ -690,12 +729,12 @@ public class PermitController extends CRUDController<Permit> {
 				lastNotes.setPermit(permit);
 				lastNotes.setCreatedAt(Calendar.getInstance().getTime());
 				lastNotes.setCreatedBy(modifiedBy);
-				updateEnteredBy(lastNotes);
+				setEnteredBy(lastNotes);
 			}
 		}
 	}
 	
-	private void updateEnteredBy(PermitNotes entity) {
+	private void setEnteredBy(PermitNotes entity) {
 		User user = genericDAO.getById(User.class, entity.getCreatedBy());
 		entity.setEnteredBy(user.getEmployee().getFullName());
 	}
@@ -704,109 +743,84 @@ public class PermitController extends CRUDController<Permit> {
 	public @ResponseBody String savePermitFromAlert(HttpServletRequest request,
 			@ModelAttribute("modelObject") Permit entity,
 			BindingResult bindingResult, ModelMap model) {
+		if (!validateParkingMeterFee(entity)) {
+			System.out.println("Please correct following invalid data: Parking Meter Fee");
+			return "ErrorMsg: Please correct following invalid data: Parking Meter Fee";
+		}
+			
+		OrderPermits associatedOrderPermitEntry = null;
 		
-			String status = "Assigned";
-			OrderPermits associatedOrderPermitEntry = null;
-			
-			if (!validateParkingMeterFee(entity)) {
-				System.out.println("Please correct following invalid data: Parking Meter Fee");
-				return "ErrorMsg: Please correct following invalid data: Parking Meter Fee";
+		/*try {
+			associatedOrderPermitEntry = validatePermitEndDate(entity);
+		} catch (Exception ex) {
+			System.out.println("Exception while validating permit end date = " + ex.getMessage());
+			return ex.getMessage();
+		}*/
+		
+		List<OrderPermits> orderPermits = genericDAO.executeSimpleQuery("select obj from OrderPermits obj where obj.deleteFlag='1' and obj.id=" +  entity.getOrderId()+ " order by obj.id desc");
+		if (orderPermits != null && orderPermits.size() > 0) {
+			associatedOrderPermitEntry = (OrderPermits) orderPermits.get(0);
+		}
+		
+		if (!validateMaxPermitsAllowable(associatedOrderPermitEntry)) {
+			System.out.println("There are already " + MAX_NUMBER_OF_ASSOCIATED_PERMITS + " permits for this order.");
+			return "ErrorMsg: There are already " + MAX_NUMBER_OF_ASSOCIATED_PERMITS + " permits for this order.";
+		}
+		
+		// Unique permit number check
+		if(isEmptyPermitNumber(entity)) {
+			entity.setNumber(Permit.EMPTY_PERMIT_NUMBER);
+		} else {
+			if (!isPermitNumberUnique(entity.getId(), entity.getNumber())) {  // Always a new permit, so this validation mandatory
+				return "ErrorMsg: Permit Number " + entity.getNumber() + " already exists.";
 			}
-			
-			/*try {
-				associatedOrderPermitEntry = validatePermitEndDate(entity);
-			} catch (Exception ex) {
-				System.out.println("Exception while validating permit end date = " + ex.getMessage());
-				return ex.getMessage();
-			}*/
-			
-			List<OrderPermits> orderPermits = genericDAO.executeSimpleQuery("select obj from OrderPermits obj where obj.deleteFlag='1' and obj.id=" +  entity.getOrderId()+ " order by obj.id desc");
-			if (orderPermits != null && orderPermits.size() > 0) {
-				associatedOrderPermitEntry = (OrderPermits) orderPermits.get(0);
-			}
-			
-			if (!validateMaxPermitsAllowable(associatedOrderPermitEntry)) {
-				System.out.println("There are already " + MAX_NUMBER_OF_ASSOCIATED_PERMITS + " permits for this order.");
-				return "ErrorMsg: There are already " + MAX_NUMBER_OF_ASSOCIATED_PERMITS + " permits for this order.";
-			}
-			
-			// unique permit number check
-			if(nonEmptyPermitNumber(entity)) {
-				if (!isPermitNumberUnique(entity.getNumber())) {  // always a new permit, so this validation mandatory
-					System.out.println("Permit Number " + entity.getNumber() + " already exists.");
-					return "ErrorMsg: Permit Number " + entity.getNumber() + " already exists.";
-				}
-			} else {
-				entity.setNumber(Permit.EMPTY_PERMIT_NUMBER);
-			}
+		}
 
-			PermitStatus permitStatus = (PermitStatus)genericDAO.executeSimpleQuery("select obj from PermitStatus obj where obj.deleteFlag='1' and obj.status='" + status + "'").get(0);
-			entity.setStatus(permitStatus);
-			
-			try {
-				getValidator().validate(entity, bindingResult);
-			} catch (ValidationException e) {
-				e.printStackTrace();
-				System.out.println("Error in validation " + e);
-				log.warn("Error in validation :" + e);
-			}
-			
-			SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
-			criteria.getSearchMap().put("id!",0l);
-			//TODO: Fix me 
-			criteria.getSearchMap().remove("_csrf");
-			
-			// return to form if we had errors
-			if (bindingResult.hasErrors()) {
-				List<ObjectError> errors = bindingResult.getAllErrors();
-				for(ObjectError e : errors) {
-					System.out.println("Error: " + e.getDefaultMessage());
-				}
-				
-				setupCreate(model, request);
-				return urlContext + "/form";
-			}
-			
-			System.out.println("Permits parking meter = " + entity.getParkingMeter());
-			//TODO: REMOVE THIS HACK
-			if (entity.getParkingMeter().startsWith("Yes")) {
-				entity.setParkingMeter("Yes");
-			} else {
-				entity.setParkingMeter("No");
-			}
-			
-			beforeSave(request, entity, model);
-			
-			Long modifiedBy = getUser(request).getId();
-			
-			// TODO: Why both created by and modified by and why set if not changed?
-			setupPermitNotes(entity, modifiedBy);
-			
-			String permitAuditMsg = StringUtils.EMPTY;
-			if (entity.getId() == null) {
-				permitAuditMsg = "Permit created";
-			} else {
-				permitAuditMsg = "Permit updated";
-			}
-			
-			genericDAO.saveOrUpdate(entity);
-			
-			createAuditPermitNotes(entity, permitAuditMsg, modifiedBy);
-			
-			// The delivery address entered will automatically be stored as one of the Permit Addresses. Users can add more.
-			addDeliveryAddAsPermitAdd(request, entity);
-			
-			// If new permit initiated from OrderPermitAlert screen, the permit should be associated with the corresponding orderID
-			associateToOrder(entity, associatedOrderPermitEntry, request);
-			updatePermitAndTotalFeesInOrder(request, entity, associatedOrderPermitEntry);
-			
-			cleanUp(request);
-			
-			return "Permit saved successfully";
+		String status = PermitStatus.PERMIT_STATUS_ASSIGNED;
+		PermitStatus permitStatus = retrievePermitStatus(status);
+		entity.setStatus(permitStatus);
+		
+		System.out.println("Permits parking meter = " + entity.getParkingMeter());
+		//TODO: REMOVE THIS HACK
+		if (entity.getParkingMeter().startsWith("Yes")) {
+			entity.setParkingMeter("Yes");
+		} else {
+			entity.setParkingMeter("No");
+		}
+		
+		beforeSave(request, entity, model);
+		
+		Long modifiedBy = getUser(request).getId();
+		
+		// TODO: Why both created by and modified by and why set if not changed?
+		setupPermitNotes(entity, modifiedBy);
+		
+		String permitAuditMsg = StringUtils.EMPTY;
+		if (entity.getId() == null) {
+			permitAuditMsg = "Permit created";
+		} else {
+			permitAuditMsg = "Permit updated";
+		}
+		
+		genericDAO.saveOrUpdate(entity);
+		
+		createAuditPermitNotes(entity, permitAuditMsg, modifiedBy);
+		
+		// The delivery address entered will automatically be stored as one of the Permit Addresses. Users can add more.
+		addDeliveryAddAsPermitAdd(request, entity);
+		
+		// If new permit initiated from OrderPermitAlert screen, the permit should be associated with the corresponding orderID
+		associateToOrder(entity, associatedOrderPermitEntry, request);
+		updatePermitAndTotalFeesInOrder(request, entity, associatedOrderPermitEntry);
+		
+		cleanUp(request);
+		
+		return "Permit saved successfully";
 	}
 
-	private boolean nonEmptyPermitNumber(Permit entity) {
-		return (entity.getNumber() != null && entity.getNumber().length() > 0 && !entity.getNumber().equals(Permit.EMPTY_PERMIT_NUMBER));
+	private boolean isEmptyPermitNumber(Permit entity) {
+		return (StringUtils.isEmpty(entity.getNumber()) 
+				|| StringUtils.equals(Permit.EMPTY_PERMIT_NUMBER, entity.getNumber()));
 	}
 
 	private boolean validateParkingMeterFee(Permit entity) {
@@ -855,13 +869,13 @@ public class PermitController extends CRUDController<Permit> {
 		System.out.println("Permit Fees updated for Order with Id = " + associatedOrderPermitEntry.getOrder().getId());
 	}
 
-	private OrderPermits validatePermitEndDate(Permit entity) throws Exception {
+	/*private OrderPermits validatePermitEndDate(Permit entity) throws Exception {
 		OrderPermits associatedOrderPermitEntry = null;
 		List<OrderPermits> orderPermits = genericDAO.executeSimpleQuery("select obj from OrderPermits obj where obj.deleteFlag='1' and obj.id=" +  entity.getOrderId()+ " order by obj.id desc");
 		if (orderPermits != null && orderPermits.size() > 0) {
 			associatedOrderPermitEntry = (OrderPermits) orderPermits.get(0);
 			if (entity.getEndDate().before(associatedOrderPermitEntry.getOrder().getDeliveryDate())) {
-				// validation error must be thrown
+				// Validation error must be thrown
 				System.out.println("Permit End Date does not match the Order's Delivery Date, please check.");
 				if (!validateMaxPermitsAllowable(associatedOrderPermitEntry)) {
 					throw new Exception("ErrorMsg: There are already " + MAX_NUMBER_OF_ASSOCIATED_PERMITS + " permits for this order.");
@@ -871,58 +885,50 @@ public class PermitController extends CRUDController<Permit> {
 			}
 		}
 		return associatedOrderPermitEntry;
+	}*/
+	
+	private PermitStatus retrievePermitStatus(String status) {
+		PermitStatus permitStatus = (PermitStatus) genericDAO.executeSimpleQuery("select obj from PermitStatus obj where obj.deleteFlag='1' and obj.status='" + status + "'").get(0);
+		return permitStatus;
 	}
 
 	@RequestMapping(method = RequestMethod.POST, value = "/saveForCustomerModal.do")
 	public @ResponseBody String saveForCustomerModal(HttpServletRequest request,
 			@ModelAttribute("modelObject") Permit entity,
 			BindingResult bindingResult, ModelMap model) {
-		try {
-			getValidator().validate(entity, bindingResult);
-		} catch (ValidationException e) {
-			e.printStackTrace();
-			System.out.println("Error in validation " + e);
-			log.warn("Error in validation :" + e);
-		}
-		
-		// Return to form if we had errors
-		/*if (bindingResult.hasErrors()) {
-			List<ObjectError> errors = bindingResult.getAllErrors();
-			for(ObjectError e : errors) {
-				System.out.println("Error: " + e.getDefaultMessage());
-			}
-			
-			setupCreate(model, request);
-			return urlContext + "/form";
-		}*/
-		
 		if (!validateParkingMeterFee(entity)) {
 			System.out.println("Please correct following invalid data: Parking Meter Fee");
 			return "ErrorMsg: Please correct following invalid data: Parking Meter Fee";
-		}
+		}	
 		
-		// unique permit number check
-		if(nonEmptyPermitNumber(entity)) {
-			if (!isPermitNumberUnique(entity.getNumber())) { // Always new permit, so validation mandatory
-				System.out.println("Permit Number " + entity.getNumber() + " already exists.");
+		String status = PermitStatus.PERMIT_STATUS_PENDING;
+		if (isEmptyPermitNumber(entity)) {
+			entity.setNumber(Permit.EMPTY_PERMIT_NUMBER);
+		} else {
+			if (!isPermitNumberUnique(entity.getId(), entity.getNumber())) { 
 				return "ErrorMsg: Permit Number " + entity.getNumber() + " already exists.";
 			}
-		} else {
-			entity.setNumber(Permit.EMPTY_PERMIT_NUMBER);
+			status = PermitStatus.PERMIT_STATUS_AVAILABLE;
 		}
 				
-		String status = "Pending";
-		PermitStatus permitStatus = (PermitStatus)genericDAO.executeSimpleQuery("select obj from PermitStatus obj where obj.deleteFlag='1' and obj.status='" + status + "'").get(0);
-		entity.setStatus(permitStatus);
+		if (shouldPermitStatusBeUpdated(entity, status)) {
+			PermitStatus permitStatus = retrievePermitStatus(status);
+			entity.setStatus(permitStatus);
+		}
 		
 		beforeSave(request, entity, model);
 		
+		Long modifiedBy = getUser(request).getId();
+		
 		PermitAddress aPermitAddress = entity.getPermitAddress().get(0);
 		aPermitAddress.setPermit(entity);
-		aPermitAddress.setCreatedBy(entity.getCreatedBy());
-		aPermitAddress.setCreatedAt(entity.getCreatedAt());
-		
-		Long modifiedBy = getUser(request).getId();
+		if (aPermitAddress.getId() == null) {
+			aPermitAddress.setCreatedBy(modifiedBy);
+			aPermitAddress.setCreatedAt(entity.getCreatedAt());
+		} else {
+			aPermitAddress.setModifiedBy(modifiedBy);
+			aPermitAddress.setModifiedAt(entity.getModifiedAt());
+		}
 		
 		// TODO: Why both created by and modified by and why set if not changed?
 		setupPermitNotes(entity, modifiedBy);
@@ -978,7 +984,7 @@ public class PermitController extends CRUDController<Permit> {
 	}
 
 	private void associateToOrder(Permit entity, OrderPermits associatedOrderPermit, HttpServletRequest request) {
-		// existing permit details, chk order association
+		// Existing permit details, checkk order association
 		if (associatedOrderPermit != null) {
 			System.out.println("Associated Permit number = " + entity.getId());
 			OrderPermits newOrderPermits = new OrderPermits();
@@ -986,7 +992,6 @@ public class PermitController extends CRUDController<Permit> {
 			newOrderPermits.setOrder(associatedOrderPermit.getOrder());
 			newOrderPermits.setPermit(entity);
 			if (newOrderPermits instanceof AbstractBaseModel) {
-				AbstractBaseModel baseModel = (AbstractBaseModel) entity;
 				if (newOrderPermits.getId() == null) {
 					newOrderPermits.setCreatedAt(Calendar.getInstance().getTime());
 					if (newOrderPermits.getCreatedBy()==null) {
@@ -1151,7 +1156,7 @@ public class PermitController extends CRUDController<Permit> {
 		updateBaseProperties(request, entity);
 		
 		entity.setNotesType(PermitNotes.NOTES_TYPE_USER);
-		updateEnteredBy(entity);
+		setEnteredBy(entity);
 		
 		genericDAO.saveOrUpdate(entity);
 		cleanUp(request);
