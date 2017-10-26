@@ -54,7 +54,7 @@ public class DeliveryPickupReportController extends CRUDController<Order> {
 		//TODO fix me
 		criteria.getSearchMap().remove("_csrf");
 		
-		List<Order> orderList = genericDAO.search(getEntityClass(), criteria, "id", null, null);
+		List<Order> orderList = performSearch(criteria);
 		model.addAttribute("ordersList", orderList);
 		model.addAttribute("dumpsterSizeAggregation", setDumpsterSizeAggregation(model, orderList));
 		
@@ -119,7 +119,7 @@ public class DeliveryPickupReportController extends CRUDController<Order> {
 			List<Map<String,Object>> reportData = prepareReportData(model, request);
 			params.put("noOfOrders", reportData.size());
 
-			type = setRequestHeaders(response, type, "deliveryPickupReport");
+			type = setRequestHeaders(response, type, "DeliveryPickupReport");
 			out = dynamicReportService.generateStaticReport("deliveryPickupReport", reportData, params, type, request);
 			out.writeTo(response.getOutputStream());
 			
@@ -141,11 +141,28 @@ public class DeliveryPickupReportController extends CRUDController<Order> {
 		}
 	}
 
+	private List<Order> performSearch(SearchCriteria criteria) {
+		criteria.getSearchMap().put("orderStatus.id", "!=5");
+		List<Order> orderList = genericDAO.search(getEntityClass(), criteria, "id", null, null);
+		criteria.getSearchMap().remove("orderStatus.id");
+		
+		return orderList;
+	}
+	
+	private String extractPermitAddress(Order anOrder) {
+		List<Permit> permitList = anOrder.getPermits();
+		if (permitList == null || permitList.isEmpty()) {
+			return StringUtils.EMPTY;
+		}
+		
+		return permitList.get(0).getFullLinePermitAddress1();
+	}
+	
 	private List<Map<String, Object>> prepareReportData(ModelMap model, HttpServletRequest request) {
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		criteria.getSearchMap().remove("_csrf");
 		
-		List<Order> orderList = genericDAO.search(getEntityClass(), criteria, "id", null, null);
+		List<Order> orderList = performSearch(criteria);
 		String dumpsterSizeAggregation = setDumpsterSizeAggregation(model, orderList);
 		
 		List<Map<String, Object>> reportData = new ArrayList<Map<String, Object>>();
@@ -157,10 +174,12 @@ public class DeliveryPickupReportController extends CRUDController<Order> {
 			map.put("customer", StringUtils.EMPTY + anOrder.getCustomer().getCompanyName());
 			map.put("deliveryAddress", StringUtils.EMPTY + deliveryAddress.getFullLine());
 			map.put("city", StringUtils.EMPTY + deliveryAddress.getCity());
+			map.put("permitAddress", extractPermitAddress(anOrder));
 			map.put("dumpsterSize", StringUtils.EMPTY + anOrder.getDumpsterSize().getSize());
 			map.put("dumpsterNum", (anOrder.getDumpster() == null ? StringUtils.EMPTY : anOrder.getDumpster().getDumpsterNum()));
 			map.put("deliveryDate", anOrder.getFormattedDeliveryDate());
 			map.put("pickupDate", anOrder.getFormattedPickupDate());
+			map.put("isExchange", (anOrder.isExchangeOrder() ? "Exch" : StringUtils.EMPTY));
 			
 			List<Permit> permits = anOrder.getPermits();
 			String permitStr = StringUtils.EMPTY;

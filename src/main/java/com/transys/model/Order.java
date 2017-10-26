@@ -299,6 +299,15 @@ public class Order extends AbstractBaseModel {
 	}
 	
 	@Transient
+	public boolean isExchangeOrder() {
+		if (getPickupOrderId() != null) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	@Transient
 	public String getFormattedDeliveryDate() {
 		if (deliveryDate == null) {
 			return StringUtils.EMPTY;
