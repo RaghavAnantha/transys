@@ -321,6 +321,26 @@ public class OrderController extends CRUDController<Order> {
 		return urlContext + "/order";
 	}
 	
+	private void updateOrderOnExchange(HttpServletRequest request, Long orderId) {
+		Order order = genericDAO.getById(Order.class, orderId);
+		if (!StringUtils.equals(OrderStatus.ORDER_STATUS_DROPPED_OFF, order.getOrderStatus().getStatus())) {
+			return;
+		}
+		
+		String pickUpOrderStatusStr = OrderStatus.ORDER_STATUS_PICK_UP;;
+		String pickUpOrderStatusAuditMsg = "Order being exchanged, so status changed to " + OrderStatus.ORDER_STATUS_PICK_UP;
+		
+		OrderStatus pickUpOrderStatus = retrieveOrderStatus(pickUpOrderStatusStr);
+		order.setOrderStatus(pickUpOrderStatus);
+		
+		order.setModifiedAt(Calendar.getInstance().getTime());
+		order.setModifiedBy(getUser(request).getId());
+		
+		genericDAO.saveOrUpdate(order);
+		
+		createAuditOrderNotes(order, pickUpOrderStatusAuditMsg, order.getModifiedBy()); 
+	}
+	
 	@RequestMapping(method = RequestMethod.GET, value = "/createExchange.do")
 	public String createExchange(HttpServletRequest request, @ModelAttribute("modelObject") Order entity,
 			BindingResult bindingResult, ModelMap model) {
@@ -1609,8 +1629,9 @@ public class OrderController extends CRUDController<Order> {
 	@RequestMapping(method = RequestMethod.GET, value = "/isOrderExchangable.do")
 	public @ResponseBody String isOrderExchangable(HttpServletRequest request, @ModelAttribute("modelObject") Order entity,
 			BindingResult bindingResult, ModelMap model) {
-		String errorMsg = String.format("No Dumpster assigned to Örder # %d to be exchanged", entity.getId());
-		return (entity.getDumpster() == null) ? errorMsg : "true";
+		/*String errorMsg = String.format("No Dumpster assigned to Örder # %d to be exchanged", entity.getId());
+		return (entity.getDumpster() == null) ? errorMsg : "true";*/
+		return "true";
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/retrievePermitClass.do")
@@ -1887,12 +1908,6 @@ public class OrderController extends CRUDController<Order> {
 	@Override
 	public String save(HttpServletRequest request, @ModelAttribute("modelObject") Order entity,
 			BindingResult bindingResult, ModelMap model) {
-		String isExchange = request.getParameter("isExchange");
-		if (BooleanUtils.toBoolean(isExchange)) {
-			String existingDroppedOffOrderId = request.getParameter("existingDroppedOffOrderId");
-			entity.setPickupOrderId(new Long(existingDroppedOffOrderId));
-		}
-		
 		try {
 			getValidator().validate(entity, bindingResult);
 		} catch (ValidationException e) {
@@ -1904,6 +1919,15 @@ public class OrderController extends CRUDController<Order> {
 		if (bindingResult.hasErrors()) {
 			setupCreate(model, request, entity);
 			return urlContext + "/order";
+		}
+		
+		String isExchange = request.getParameter("isExchange");
+		if (BooleanUtils.toBoolean(isExchange)) {
+			String existingDroppedOffOrderIdStr = request.getParameter("existingDroppedOffOrderId");
+			Long existingDroppedOffOrderId = new Long(existingDroppedOffOrderIdStr);
+			entity.setPickupOrderId(existingDroppedOffOrderId);
+			
+			updateOrderOnExchange(request, existingDroppedOffOrderId);
 		}
 		
 		beforeSave(request, entity, model);
