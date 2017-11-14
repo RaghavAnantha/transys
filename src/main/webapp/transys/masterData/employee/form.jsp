@@ -225,19 +225,19 @@ function validateEmployeeDataFormat() {
 		</tr>
 		
 		<tr>
-			<td class="form-left"><transys:label code="Address" /><span class="errorMessage">*</span></td>
+			<td class="form-left"><transys:label code="Address" /><span class="errorMessage"></span></td>
 			<td><form:input path="address" cssClass="flat" style="width: 175px !important"/>
 				<br>
 			<form:errors path="address" cssClass="errorMessage" /></td>
 			
-			<td class="form-left"><transys:label code="City" /><span class="errorMessage">*</span></td>
+			<td class="form-left"><transys:label code="City" /><span class="errorMessage"></span></td>
 			<td><form:input path="city" cssClass="flat" style="width: 175px !important"/>
 				<br>
 			<form:errors path="city" cssClass="errorMessage" /></td>
 		</tr>
 		
 		<tr>
-			<td class="form-left"><transys:label code="State" /><span class="errorMessage">*</span></td>
+			<td class="form-left"><transys:label code="State" /><span class="errorMessage"></span></td>
 			<td>
 				<form:select cssClass="flat form-control input-sm" path="state" style="width:172px !important">
 					<form:option value="">-----Please Select-----</form:option>
@@ -246,19 +246,19 @@ function validateEmployeeDataFormat() {
 				<form:errors path="state" cssClass="errorMessage" />
 			</td>
 			
-			<td class="form-left"><transys:label code="Zipcode" /><span class="errorMessage">*</span></td>
+			<td class="form-left"><transys:label code="Zipcode" /><span class="errorMessage"></span></td>
 			<td><form:input path="zipcode" cssClass="flat" style="width: 175px !important"/>
 				<br>
 			<form:errors path="zipcode" cssClass="errorMessage" /></td>
 		</tr>
 		
 		<tr>
-			<td class="form-left">Phone<span class="errorMessage">*</span></td>
+			<td class="form-left">Phone<span class="errorMessage"></span></td>
 			<td><form:input path="phone" cssClass="flat" style="width: 175px !important" maxlength="12" onblur="return validateAndFormatPhone('phone');"/>
 				<br>
 			<form:errors path="phone" cssClass="errorMessage" /></td>
 			
-			<td class="form-left"><transys:label code="E-mail" /><span class="errorMessage">*</span></td>
+			<td class="form-left"><transys:label code="E-mail" /><span class="errorMessage"></span></td>
 			<td><form:input path="email" cssClass="flat" style="width: 175px !important"/>
 				<br>
 			<form:errors path="email" cssClass="errorMessage" /></td>
