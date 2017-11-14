@@ -53,7 +53,7 @@ function validateEmployeeMissingData() {
 		missingData += "Job Title, "
 	}
 	
-	if ($('#address').val() == "") {
+	/*if ($('#address').val() == "") {
 		missingData += "Address, "
 	}
 	
@@ -75,7 +75,7 @@ function validateEmployeeMissingData() {
 	
 	if ($('#email').val() == "") {
 		missingData += "Email, "
-	}
+	}*/
 	
 	if ($("[name='hireDate']").val() == "") {
 		missingData += "Hire Date, "

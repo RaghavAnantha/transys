@@ -174,6 +174,18 @@ public class Permit  extends AbstractBaseModel {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyy");
 		return dateFormat.format(this.endDate);
 	}
+	
+	@Transient
+	public String getFormattedPermitDetail() {
+		if (StringUtils.isEmpty(getNumber())) {
+			return StringUtils.EMPTY;
+		} 
+		
+		String permitDetail = getNumber();
+		permitDetail += " - " + getFormattedStartDate() 
+						 +  " - " + getFormattedEndDate();
+		return permitDetail;
+	}
 
 	public List<PermitAddress> getPermitAddress() {
 		return permitAddress;

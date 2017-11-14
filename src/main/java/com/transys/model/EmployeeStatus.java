@@ -3,10 +3,15 @@ package com.transys.model;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name="employeeStatus")
 public class EmployeeStatus extends AbstractBaseModel {
+	@Transient
+	public static final String ACTIVE_STATUS = "Active";
+	@Transient
+	public static final String INACTIVE_STATUS = "Inactive";
 	
 	@Column(name="status")
 	private String status;

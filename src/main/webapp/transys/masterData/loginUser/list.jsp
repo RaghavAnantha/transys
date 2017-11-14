@@ -92,6 +92,10 @@
 		<transys:textcolumn headerText="Last Login Date" dataField="formattedLastLoginDate" />
 		<transys:textcolumn headerText="Status" dataField="employee.status.status" />
 		<transys:textcolumn headerText="Notes/Comments" dataField="comments" />
+		<%-- 
+		<transys:textcolumn headerText="Job Title" dataField="employee.jobTitle.jobTitle" />
+		<transys:textcolumn headerText="Job Title Id" dataField="employee.jobTitle.id" />
+		 --%>
 	</transys:datatable>
 	<%session.setAttribute("loginUserColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
 </form:form>

@@ -42,12 +42,20 @@ public class LoginUserController extends CRUDController<User> {
 		super.initBinder(binder);
 	}
 	
+	@RequestMapping(method = { RequestMethod.GET, RequestMethod.POST }, value = "/search.do")
+	public String search2(ModelMap model, HttpServletRequest request) {
+		setupList(model, request);
+		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
+		model.addAttribute("list", genericDAO.search(User.class, criteria, "employee.firstName asc, employee.lastName asc", null, null));
+		return urlContext + "/list";
+	}
+	
 	@RequestMapping(method = RequestMethod.GET, value = "/main.do")
 	public String displayMain(ModelMap model, HttpServletRequest request) {
 		request.getSession().removeAttribute("searchCriteria");
 		setupList(model, request);
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
-		model.addAttribute("list", genericDAO.search(User.class, criteria, "employee.firstName", null, null));
+		model.addAttribute("list", genericDAO.search(User.class, criteria, "employee.firstName asc, employee.lastName asc", null, null));
 		return urlContext + "/list";
 	}
 	
@@ -58,7 +66,7 @@ public class LoginUserController extends CRUDController<User> {
 		// TODO:
 		criteria.getSearchMap().remove("_csrf");
 		criteria.setPageSize(25);
-		model.addAttribute("list", genericDAO.search(User.class, criteria, "employee.firstName", null, null));
+		model.addAttribute("list", genericDAO.search(User.class, criteria, "employee.firstName asc, employee.lastName asc", null, null));
 		return urlContext + "/list";
 	}
 	
@@ -82,9 +90,11 @@ public class LoginUserController extends CRUDController<User> {
 	@Override
 	public void setupCreate(ModelMap model, HttpServletRequest request) {
 		Map criterias = new HashMap();
-		model.addAttribute("employees", genericDAO.findByCriteria(Employee.class, criterias, "firstName", false));
 		model.addAttribute("employeeStatus", genericDAO.findByCriteria(EmployeeStatus.class, criterias, "status", false));
 		model.addAttribute("roles", genericDAO.findByCriteria(Role.class, criterias, "name", false));
+		
+		SearchCriteria searchCriteria = new SearchCriteria();
+		model.addAttribute("employees", genericDAO.search(Employee.class, searchCriteria, "firstName asc, lastName asc", null));
 	}
 	
 	@Override

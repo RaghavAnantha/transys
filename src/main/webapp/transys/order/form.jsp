@@ -1366,7 +1366,7 @@ function updateTotalPaid() {
 								<c:if test="${aPermitOfChosenType.id == chosenPermit.id}">
 									<c:set var="selected" value="selected" />
 								</c:if>
-								<option value="${aPermitOfChosenType.id}" ${selected}>${aPermitOfChosenType.number}</option>
+								<option value="${aPermitOfChosenType.id}" ${selected}>${aPermitOfChosenType.formattedPermitDetail}</option>
 							</c:forEach>
 						</c:if>
 					</select>

@@ -62,7 +62,7 @@
 								<b><transys:label code="Guest!" /></b>
 							</c:if> 
 							<c:if test="${userInfo!=null}">
-								<b>${userInfo.username}!</b>
+								<b>${userInfo.name}!</b>
 								<br />
 								<span style="font-size: 10px">
 									<transys:label code="Last Login" /> : 
