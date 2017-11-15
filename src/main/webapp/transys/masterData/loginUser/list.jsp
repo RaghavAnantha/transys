@@ -84,15 +84,15 @@
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
 		pagingLink="search.do" multipleDelete="false" searcheable="false"
 		exportPdf="true" exportXls="true" dataQualifier="loginUser">
-		<%-- <transys:textcolumn headerText="Employee Id" dataField="employee.id" width="80px"/> --%>
+		<transys:textcolumn headerText="Employee Id" dataField="employee.id" width="80px"/>
 		<transys:textcolumn headerText="First Name" dataField="employee.firstName"/>
 		<transys:textcolumn headerText="Last Name" dataField="employee.lastName"/>
 		<transys:textcolumn headerText="Username" dataField="username" />
 		<transys:textcolumn headerText="Role" dataField="role.name" />
 		<transys:textcolumn headerText="Last Login Date" dataField="formattedLastLoginDate" />
 		<transys:textcolumn headerText="Status" dataField="employee.status.status" />
+		<%--
 		<transys:textcolumn headerText="Notes/Comments" dataField="comments" />
-		<%-- 
 		<transys:textcolumn headerText="Job Title" dataField="employee.jobTitle.jobTitle" />
 		<transys:textcolumn headerText="Job Title Id" dataField="employee.jobTitle.id" />
 		 --%>
