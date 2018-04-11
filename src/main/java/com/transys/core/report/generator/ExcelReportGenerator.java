@@ -3,6 +3,8 @@ package com.transys.core.report.generator;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -36,8 +38,39 @@ public class ExcelReportGenerator {
 		
 	}
 	
+	public Object getValue(Object everyDataObject, String memberName) {
+			Object value = null;
+			try {
+				Field field = everyDataObject.getClass().getDeclaredField(memberName);
+				field.setAccessible(true);
+				value = field.get(everyDataObject);
+			} catch (NoSuchFieldException | SecurityException e) {
+				try {
+					Method methods = everyDataObject.getClass().getMethod(memberName, null);
+					try {
+						value = methods.invoke(everyDataObject, null);
+					} catch (InvocationTargetException ite) {
+						ite.printStackTrace();
+					} catch (IllegalAccessException iae) {
+						iae.printStackTrace();
+					} catch (IllegalArgumentException iarge) {
+						iarge.printStackTrace();
+					}
+				} catch (NoSuchMethodException nsme) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			} catch (IllegalArgumentException e) {
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			}
+			
+			return value;
+	}
 	
-	public ByteArrayOutputStream exportReport(String title, Map<String, String> headers, List<?> data) {
+	public ByteArrayOutputStream exportReport(String title, Map<String, String> headers, List<?> data, 
+			boolean fitToPage) {
 		
 		XSSFWorkbook wb = new XSSFWorkbook();
 		Map<String, CellStyle> styles = createStyles(wb);
@@ -47,7 +80,7 @@ public class ExcelReportGenerator {
 		//turn off gridlines
       sheet.setDisplayGridlines(true);
       sheet.setPrintGridlines(true);
-      sheet.setFitToPage(true);
+      sheet.setFitToPage(fitToPage);
       sheet.setHorizontallyCenter(true);
       PrintSetup printSetup = sheet.getPrintSetup();
       printSetup.setLandscape(true);
@@ -93,10 +126,11 @@ public class ExcelReportGenerator {
             	 
          	 while(fieldSet.hasNext()) {
             	 try {
-						Field field = everyDataObject.getClass().getDeclaredField(fieldSet.next());
+						/*Field field = everyDataObject.getClass().getDeclaredField(fieldSet.next());
 						 field.setAccessible(true);
+						 Object value = field.get(everyDataObject);*/
 						 
-						 Object value = field.get(everyDataObject);
+						 Object value = getValue(everyDataObject, fieldSet.next());
 						 
 						 cell = row.createCell(columnIndex);
 						 cell.setCellStyle(styles.get("cell_normal_centered"));
@@ -133,19 +167,19 @@ public class ExcelReportGenerator {
 							 }
 						 }
 						 columnIndex++;
-					} catch (NoSuchFieldException e) {
+					} /*catch (NoSuchFieldException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
-					} catch (SecurityException e) {
+					} */catch (SecurityException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					} catch (IllegalArgumentException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
-					} catch (IllegalAccessException e) {
+					} /*catch (IllegalAccessException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
-					} 
+					}*/ 
           }
       }
 

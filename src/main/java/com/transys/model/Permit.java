@@ -115,6 +115,17 @@ public class Permit  extends AbstractBaseModel {
 		return permitAddressList.get(1).getFullLine();
 	}
 	
+	@Transient
+	//TODO: Move to utils?
+	public String getFullPermitAddress1() {
+		List<PermitAddress> permitAddressList = getPermitAddress();
+		if (permitAddressList.isEmpty()) {
+			return StringUtils.EMPTY;
+		}
+		
+		return permitAddressList.get(0).getFullPermitAddress();
+	}
+	
 	public Customer getCustomer() {
 		return customer;
 	}

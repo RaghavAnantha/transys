@@ -91,7 +91,7 @@ public class DumpsterOnsiteReportController extends CRUDController<Dumpster> {
 				
 				ExcelReportGenerator reportGenerator = new ExcelReportGenerator();
 				reportGenerator.setTitleMergeCellRange("$A$1:$D$1");
-				out = reportGenerator.exportReport("Dumpster On-site Report", headers, reportData);
+				out = reportGenerator.exportReport("Dumpster On-site Report", headers, reportData, true);
 			} else if (type.equals("pdf")) {
 				List<Map<String, Object>> reportDataCollection = getReportDataAsCollection(reportData);
 				

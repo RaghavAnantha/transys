@@ -453,6 +453,22 @@ function populatePermitDetails(index, permit) {
    	populateTotalPermitFees();
 }
 
+function formatCCNumber(ccNumberIndex) {
+	var ccNumberElem = $('#orderPayment' + ccNumberIndex + '\\.ccNumber');
+	var ccNumberVal = ccNumberElem.val();
+	if (ccNumberVal.length < 16) {
+		var alertMsg = "Credit card number should be 16 digits in length";
+		showAlertDialog("Data Validation", alertMsg);
+		
+		ccNumberElem.val("");
+		//ccNumberElem.focus();
+		return false;
+	}
+	
+	ccNumberVal = ccNumberVal.substring(0,4) + "-xxxx-xxxx-" + ccNumberVal.substring(12);
+	ccNumberElem.val(ccNumberVal);
+}
+
 function emptyPermitDetails(index) {
 	var permitValidFrom = $("#permitValidFrom" + index);
 	var permitValidTo = $("#permitValidTo" + index);
@@ -709,8 +725,15 @@ function validateMissingOrderPayment(index) {
 	var amountPaid = $('#orderPayment'  + (index-1) + '\\.amountPaid').val();
 	var ccReferenceNum = $('#orderPayment'  + (index-1) +  '\\.ccReferenceNum').val();
 	var checkNum = $('#orderPayment' + (index-1) + '\\.checkNum').val();
+	
 	var paymentDateId = 'orderPayment[' + (index-1) + '].paymentDate';
 	var paymentDate = $("[name='" + paymentDateId + "']").val();
+	
+	var ccName = $('#orderPayment' + (index-1) + '\\.ccName').val();
+	var ccNumber = $('#orderPayment' + (index-1) + '\\.ccNumber').val();
+	var ccExpDateId = 'orderPayment[' + (index-1) + '].ccExpDate';
+	var ccExpDate = $("[name='" + ccExpDateId + "']").val();
+	
 	if (paymentMethod != "") {
 		/*if (amountPaid == "") {
 			missingData += "Payment Amount " + index + ", ";
@@ -742,7 +765,8 @@ function validateMissingOrderPayment(index) {
 			}
 		}
 	} else {
-		if (amountPaid != "" || ccReferenceNum != "" || checkNum != "" || paymentDate != "") {
+		if (amountPaid != "" || ccReferenceNum != "" || checkNum != "" || paymentDate != "" 
+				|| ccName != "" || ccNumber != "" || ccExpDate != "") {
 			missingData += "Payment method " + index + ", ";
 		}
 	}
@@ -875,7 +899,7 @@ function validateOrderTotalAmountPaid() {
 	if (totalFeesStr != "" && validateAmount(totalFeesStr, null)) {
 		var totalFees = parseFloat(totalFeesStr);
 		if (totalPaid > totalFees) {
-			validationMsg += "Total amount paid > Total fees, ";
+			//validationMsg += "Total amount paid > Total fees, ";
 		}
 	}
 	
@@ -1606,8 +1630,12 @@ function updateTotalPaid() {
 			<td class="form-left">Payment Method</td>
 			<td class="form-left">Payment Date</td>
 			<td class="form-left">Amount</td>
-			<td class="form-left">CC Reference #</td>
 			<td class="form-left">Check #</td>
+			<td class="form-left">CC Reference #</td>
+			<td class="form-left">CC Name</td>
+			<td class="form-left">CC #</td>
+			<td class="form-left">CC Expiry Date</td>
+			
 		</tr>
 		<tr>
 			<td class="wide">
@@ -1626,12 +1654,24 @@ function updateTotalPaid() {
 				<br><form:errors path="orderPayment[0].amountPaid" cssClass="errorMessage" />
 			</td>
 			<td class="wide">
+				<form:input path="orderPayment[0].checkNum" maxlength="50" cssClass="flat" />
+				<br><form:errors path="orderPayment[0].checkNum" cssClass="errorMessage" />
+			</td>
+			<td class="wide">
 				<form:input path="orderPayment[0].ccReferenceNum" maxlength="50" cssClass="flat" />
 				<br><form:errors path="orderPayment[0].ccReferenceNum" cssClass="errorMessage" />
 			</td>
-			<td class="wide">
-				<form:input path="orderPayment[0].checkNum" maxlength="50" cssClass="flat" />
-				<br><form:errors path="orderPayment[0].checkNum" cssClass="errorMessage" />
+			<td>
+				<form:input path="orderPayment[0].ccName" maxlength="50" cssClass="flat" />
+				<br><form:errors path="orderPayment[0].ccName" cssClass="errorMessage" />
+			</td>
+			<td>
+				<form:input path="orderPayment[0].ccNumber" maxlength="19" cssClass="flat" onChange="return formatCCNumber(0);" />
+				<br><form:errors path="orderPayment[0].ccNumber" cssClass="errorMessage" />
+			</td>
+			<td>
+				<form:input path="orderPayment[0].ccExpDate" cssClass="flat" style="width:172px !important" id="datepicker11" maxlength="10" />
+				<br><form:errors path="orderPayment[0].ccExpDate" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>
@@ -1650,13 +1690,25 @@ function updateTotalPaid() {
 				<form:input path="orderPayment[1].amountPaid" maxlength="7" cssClass="flat" onChange="updateTotalPaid();"/>
 				<br><form:errors path="orderPayment[1].amountPaid" cssClass="errorMessage" />
 			</td>
+			<td>
+				<form:input path="orderPayment[1].checkNum" maxlength="50" cssClass="flat" />
+				<br><form:errors path="orderPayment[1].checkNum" cssClass="errorMessage" />
+			</td>
 			<td class="wide">
 				<form:input path="orderPayment[1].ccReferenceNum" maxlength="50" cssClass="flat" />
 				<br><form:errors path="orderPayment[1].ccReferenceNum" cssClass="errorMessage" />
 			</td>
 			<td>
-				<form:input path="orderPayment[1].checkNum" maxlength="50" cssClass="flat" />
-				<br><form:errors path="orderPayment[1].checkNum" cssClass="errorMessage" />
+				<form:input path="orderPayment[1].ccName" maxlength="50" cssClass="flat" />
+				<br><form:errors path="orderPayment[1].ccName" cssClass="errorMessage" />
+			</td>
+			<td>
+				<form:input path="orderPayment[1].ccNumber" maxlength="19" cssClass="flat" onChange="return formatCCNumber(1);" />
+				<br><form:errors path="orderPayment[1].ccNumber" cssClass="errorMessage" />
+			</td>
+			<td>
+				<form:input path="orderPayment[1].ccExpDate" cssClass="flat" style="width:172px !important" id="datepicker12" maxlength="10" />
+				<br><form:errors path="orderPayment[1].ccExpDate" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>
@@ -1675,13 +1727,25 @@ function updateTotalPaid() {
 				<form:input path="orderPayment[2].amountPaid" maxlength="7" cssClass="flat" onChange="updateTotalPaid();"/>
 				<br><form:errors path="orderPayment[2].amountPaid" cssClass="errorMessage" />
 			</td>
+			<td class="wide">
+				<form:input path="orderPayment[2].checkNum" maxlength="50" cssClass="flat" />
+				<br><form:errors path="orderPayment[2].checkNum" cssClass="errorMessage" />
+			</td>
 			<td>
 				<form:input path="orderPayment[2].ccReferenceNum" maxlength="50" cssClass="flat" />
 				<br><form:errors path="orderPayment[2].ccReferenceNum" cssClass="errorMessage" />
 			</td>
-			<td class="wide">
-				<form:input path="orderPayment[2].checkNum" maxlength="50" cssClass="flat" />
-				<br><form:errors path="orderPayment[2].checkNum" cssClass="errorMessage" />
+			<td>
+				<form:input path="orderPayment[2].ccName" maxlength="50" cssClass="flat" />
+				<br><form:errors path="orderPayment[2].ccName" cssClass="errorMessage" />
+			</td>
+			<td>
+				<form:input path="orderPayment[2].ccNumber" maxlength="19" cssClass="flat" onChange="return formatCCNumber(2);" />
+				<br><form:errors path="orderPayment[2].ccNumber" cssClass="errorMessage" />
+			</td>
+			<td>
+				<form:input path="orderPayment[2].ccExpDate" cssClass="flat" style="width:172px !important" id="datepicker13" maxlength="10" />
+				<br><form:errors path="orderPayment[2].ccExpDate" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>
@@ -1697,6 +1761,9 @@ function updateTotalPaid() {
 			<td class="td-static">
 				<span class="${balanceDueAlertClass}" id="balanceDue" style="font-weight: bold;font-size: 13px; padding: 0 10px;">${modelObject.balanceAmountDue}</span>
 			</td>
+			<td></td>
+			<td></td>
+			<td></td>
 			<td></td>
 			<td></td>
 		</tr>

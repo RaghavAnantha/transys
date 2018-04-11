@@ -122,7 +122,7 @@ public class DumpsterRentedReportController extends CRUDController<Dumpster> {
 				
 				ExcelReportGenerator reportGenerator = new ExcelReportGenerator();
 				reportGenerator.setTitleMergeCellRange("$A$1:$F$1");
-				out = reportGenerator.exportReport("Dumpster Rented Report", headers, reportData);
+				out = reportGenerator.exportReport("Dumpster Rented Report", headers, reportData, true);
 				
 			} else if (type.equals("pdf")) {
 				List<Map<String, Object>> reportDataCollection = getReportDataAsCollection(reportData);

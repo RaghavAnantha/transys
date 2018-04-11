@@ -35,12 +35,14 @@ import com.transys.model.vo.RollOffBoxesPerYardVO;
 public class TransferStationIntakeReportGenerator extends ExcelReportGenerator {
 
 	@Override
-	public ByteArrayOutputStream exportReport(String title, Map<String, String> headers, List<?> data) {
+	public ByteArrayOutputStream exportReport(String title, Map<String, String> headers, List<?> data,
+			boolean fitToPage) {
 
-		return generateSimpleTable(title, headers, data);
+		return generateSimpleTable(title, headers, data, fitToPage);
 	}
 
-	private ByteArrayOutputStream generateSimpleTable(String title, Map<String, String> headers, List<?> genericData) {
+	private ByteArrayOutputStream generateSimpleTable(String title, Map<String, String> headers, List<?> genericData,
+			boolean fitToPage) {
 		
 		List<MonthlyIntakeReportVO> data = (List<MonthlyIntakeReportVO>)genericData;
 		
@@ -52,7 +54,7 @@ public class TransferStationIntakeReportGenerator extends ExcelReportGenerator {
 		// turn off gridlines
 		sheet.setDisplayGridlines(true);
 		sheet.setPrintGridlines(true);
-		sheet.setFitToPage(true);
+		sheet.setFitToPage(fitToPage);
 		sheet.setHorizontallyCenter(true);
 		PrintSetup printSetup = sheet.getPrintSetup();
 		printSetup.setLandscape(true);

@@ -177,7 +177,7 @@ function validateEmail(email) {
 		return false;
 	}
 	
-	return /^[a-zA-Z0-9-_]+@[a-zA-Z0-9-_]+\.[a-zA-Z0-9-_]+$/.test(email);
+	return /^[a-zA-Z0-9-_.]+@[a-zA-Z0-9-_]+\.[a-zA-Z0-9-_]+$/.test(email);
 	//return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
@@ -186,7 +186,7 @@ function validateText(text, validLength) {
 		return false;
 	}
 	
-	var textPattern = new RegExp("^[a-zA-Z0-9-_():;.\"',?/*&%$#@!`\\s\\\\]{1," + validLength + "}$");
+	var textPattern = new RegExp("^[a-zA-Z0-9-_():;.\"',?/*&%$#@!`\\s\\\\=]{1," + validLength + "}$");
 	return textPattern.test(text);
 }
 

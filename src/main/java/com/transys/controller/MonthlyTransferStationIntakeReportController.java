@@ -315,7 +315,8 @@ public class MonthlyTransferStationIntakeReportController extends CRUDController
 		headerMap.put("Public Intake Totals", "publicIntakeTotals");
 		headerMap.put("Waste Totals", "wasteTotals");
 		
-		ByteArrayOutputStream out = excelReportGenerator.exportReport("Monthly Transfer Station Intake Report", headerMap, reportDataList);
+		ByteArrayOutputStream out = excelReportGenerator.exportReport("Monthly Transfer Station Intake Report", headerMap, reportDataList,
+				true);
 		
 		setRequestHeaders(response, "xlsx", "monthlyTransferStationIntakeReport");
 		

@@ -367,10 +367,10 @@ public class OrderController extends CRUDController<Order> {
 			OrderFees exchangeOrderFees = new OrderFees();
 			BigDecimal exchangeTotalFees = new BigDecimal(0.00);
 			
-			if (entityOrderFees.getPermitFee1() != null) {
+			/*if (entityOrderFees.getPermitFee1() != null) {
 				exchangeOrderFees.setPermitFee1(entityOrderFees.getPermitFee1());
 				exchangeTotalFees = exchangeTotalFees.add(entityOrderFees.getPermitFee1());
-			}
+			}*/
 			
 			if (entityOrderFees.getDumpsterPrice() != null) {
 				exchangeOrderFees.setDumpsterPrice(entityOrderFees.getDumpsterPrice());

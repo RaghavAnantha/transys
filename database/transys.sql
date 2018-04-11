@@ -647,6 +647,9 @@ CREATE TABLE `orderPayment` (
   `modified_by` bigint(20) DEFAULT NULL,
   `delete_flag` int(11) NOT NULL DEFAULT '1',
   `paymentDate` DATETIME DEFAULT NULL,
+  `ccName` VARCHAR(100) DEFAULT NULL,
+  `ccNumber` VARCHAR(45) DEFAULT NULL,
+  `ccExpDate` DATETIME DEFAULT NULL,
   PRIMARY KEY (`id`),
   CONSTRAINT `orderPaymentPaymentMethodRef` FOREIGN KEY (`paymentMethodId`) REFERENCES `paymentMethodType` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `orderPaymentOrderRef` FOREIGN KEY (`orderId`) REFERENCES `transysOrder` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION

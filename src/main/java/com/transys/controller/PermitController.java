@@ -1311,6 +1311,7 @@ public class PermitController extends CRUDController<Permit> {
 			
 			Map<String, String> headers = new LinkedHashMap<>();
 			headers.put("Delivery Address", "deliveryAddress");
+			headers.put("Permit Address", "getFullPermitAddress1");
 			/*headers.put("Delivery Address", "deliveryAddress.fullLine");
 			headers.put("Permit Address1", "fullLinePermitAddress1");
 			headers.put("Permit Address2", "fullLinePermitAddress2");*/
@@ -1327,7 +1328,7 @@ public class PermitController extends CRUDController<Permit> {
 			
 			ExcelReportGenerator reportGenerator = new ExcelReportGenerator();
 			reportGenerator.setTitleMergeCellRange("$A$1:$L$1");
-			out = reportGenerator.exportReport("Permit Report", headers, exportReportData);
+			out = reportGenerator.exportReport("Permit Report", headers, exportReportData, false);
 			
 			out.writeTo(response.getOutputStream());
 			

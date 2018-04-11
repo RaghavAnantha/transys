@@ -28,6 +28,15 @@ public class OrderPayment extends AbstractBaseModel {
 		@Column(name="ccReferenceNum")
 		private String ccReferenceNum;
 		
+		@Column(name="ccName")
+		private String ccName;
+		
+		@Column(name="ccNumber")
+		private String ccNumber;
+		
+		@Column(name="ccExpDate")
+		private Date ccExpDate;
+		
 		@Column(name="checkNum")
 		private String checkNum;
 		
@@ -85,11 +94,45 @@ public class OrderPayment extends AbstractBaseModel {
 			this.paymentDate = paymentDate;
 		}
 		
+		public String getCcName() {
+			return ccName;
+		}
+
+		public void setCcName(String ccName) {
+			this.ccName = ccName;
+		}
+
+		public String getCcNumber() {
+			return ccNumber;
+		}
+
+		public void setCcNumber(String ccNumber) {
+			this.ccNumber = ccNumber;
+		}
+
+		public Date getCcExpDate() {
+			return ccExpDate;
+		}
+
+		public void setCcExpDate(Date ccExpDate) {
+			this.ccExpDate = ccExpDate;
+		}
+
 		@Transient
 		public String getFormattedPaymentDate() {
 			SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
 			if (this.paymentDate != null) {
 				return dateFormat.format(this.paymentDate);
+			} else {
+				return StringUtils.EMPTY;
+			}
+		}
+		
+		@Transient
+		public String getFormattedCCExpDate() {
+			SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+			if (this.ccExpDate != null) {
+				return dateFormat.format(this.ccExpDate);
 			} else {
 				return StringUtils.EMPTY;
 			}

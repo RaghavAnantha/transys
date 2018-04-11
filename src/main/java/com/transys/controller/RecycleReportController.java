@@ -257,7 +257,7 @@ public class RecycleReportController extends CRUDController<Order> {
 			
 			RecycleReportGenerator reportGenerator = new RecycleReportGenerator();
 			reportGenerator.setAggregationHeader("Date Range:	" + recycleDateFrom	+ "  To  " + recycleDateTo);
-			ByteArrayOutputStream out = reportGenerator.exportReport("Recycle Report", headers, exportReportData1);
+			ByteArrayOutputStream out = reportGenerator.exportReport("Recycle Report", headers, exportReportData1, true);
 			
 			out.writeTo(response.getOutputStream());
 			out.close();

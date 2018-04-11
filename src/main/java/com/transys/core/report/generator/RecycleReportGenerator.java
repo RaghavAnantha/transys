@@ -26,7 +26,8 @@ public class RecycleReportGenerator extends ExcelReportGenerator {
 	String aggregationHeader = null;
 	
 	@Override
-	public ByteArrayOutputStream exportReport(String title, Map<String, String> headers, List<?> data) {
+	public ByteArrayOutputStream exportReport(String title, Map<String, String> headers, List<?> data,
+			boolean fitToPage) {
 			
 			XSSFWorkbook wb = new XSSFWorkbook();
 			Map<String, CellStyle> styles = createStyles(wb);
@@ -36,7 +37,7 @@ public class RecycleReportGenerator extends ExcelReportGenerator {
 			//turn off gridlines
 	      sheet.setDisplayGridlines(true);
 	      sheet.setPrintGridlines(true);
-	      sheet.setFitToPage(true);
+	      sheet.setFitToPage(fitToPage);
 	      sheet.setHorizontallyCenter(true);
 	      PrintSetup printSetup = sheet.getPrintSetup();
 	      printSetup.setLandscape(true);
