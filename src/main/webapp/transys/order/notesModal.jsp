@@ -29,12 +29,12 @@
 <form:form name="orderNotesModalDatatable" id="orderNotesModalDatatable" class="tab-color">
 	<transys:datatable urlContext="order" baseObjects="${notesList}"
 		searchCriteria="<%=null%>" cellPadding="2"
-		searcheable="false" dataQualifier="manageNotesModal">
+		searcheable="false" dataQualifier="manageOrderNotesModal">
 		<transys:textcolumn headerText="Entered By" dataField="enteredBy" width="150px"/>
 		<transys:textcolumn headerText="Date/Time" dataField="createdAt" width="75px" dataFormat="MM/dd/yyy"/>
 		<transys:textcolumn headerText="Notes/Comments" dataField="notes" />
 	</transys:datatable>
-	<%session.setAttribute("manageNotesModalColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
+	<%session.setAttribute("manageOrderNotesModalColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
 </form:form>
 
 <script type="text/javascript">

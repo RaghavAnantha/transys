@@ -1,4 +1,36 @@
 <%@include file="/common/taglibs.jsp"%>
+
+<script type="text/javascript">
+function processGoToOrder(orderIds) {
+	if (orderIds.indexOf(",") != -1) {
+		orderIds = orderIds.substring(0, orderIds.indexOf(","));
+	}
+	window.location = "${ctx}/order/edit.do?id="+orderIds;
+}
+
+function processCancel(url, permitId) {
+	if (!confirm("Do you want to Cancel Permit Id " + permitId + "?")) {
+		return;
+	}
+	
+	$.ajax({
+  		url: "cancel.do?id=" + permitId,
+       	type: "GET",
+       	success: function(responseData, textStatus, jqXHR) {
+       		if (responseData.indexOf("success") != -1) {
+        		var xpath = ".//form[@id='permitServiceForm']/table[@class='datagrid']/tbody/tr/td[text()='"
+                    + permitId + "']/following-sibling::td[text()!='Assigned']";
+				var statusTd = document.evaluate(xpath, document, null, XPathResult.ANY_TYPE, null).iterateNext();
+				alert(statusTd);
+				statusTd.textContent = "Canceled";
+        	}
+       		
+        	showAlertDialog("Permit update", responseData);
+		}
+	});
+}
+</script>
+
 <br/>
 <h5 style="margin-top: -15px; !important">Manage Permits</h5>
 <form:form action="list.do" method="get" name="permitSearchForm" id="permitSearchForm">
@@ -213,12 +245,14 @@
 	</table>
 </form:form>
 
-<form:form name="delete.do" id="serviceForm" class="tab-color">
+<form:form name="delete.do" id="permitServiceForm" class="tab-color">
 	<transys:datatable urlContext="permit" deletable="false"
-		editable="true" insertable="true" baseObjects="${list}"
+		editable="true" insertable="true" cancellable="true" baseObjects="${list}"
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
 		pagingLink="list.do" multipleDelete="false" searcheable="false" 
 		exportPdf="false" exportXlsx="true" dataQualifier="managePermits">
+		<transys:textcolumn headerText="Id" dataField="id" />
+		<transys:textcolumn headerText="Status" dataField="status.status" />
 		<transys:textcolumn headerText="Delivery Address" dataField="deliveryAddress.fullLine"/>
 		<transys:textcolumn headerText="Permit Address1" dataField="fullLinePermitAddress1" />
 		<transys:textcolumn headerText="Permit Address2" dataField="fullLinePermitAddress2" />
@@ -230,8 +264,7 @@
 		<transys:textcolumn headerText="Customer Name" dataField="customer.companyName" />
 		<transys:textcolumn headerText="Permit#" dataField="number" />
 		<transys:textcolumn headerText="Permit Fee" dataField="fee" />
-		<transys:textcolumn headerText="Order#" dataField="associatedOrderIds" />
-		<transys:textcolumn headerText="Status" dataField="status.status" />
+		<transys:anchorcolumn headerText="Order#" linkUrl="javascript:processGoToOrder('{associatedOrderIds}');" linkText="{associatedOrderIds}"/>
 	</transys:datatable>
 	<%session.setAttribute("managePermitsColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
 </form:form>

@@ -949,7 +949,8 @@ public class CustomerController extends CRUDController<Customer> {
 			e.printStackTrace();
 			log.warn("Error in validation :" + e);
 		}
-		// return to form if we had errors
+		
+		// Return to form if we had errors
 		if (bindingResult.hasErrors()) {
 			setupCreate(model, request);
 			return urlContext + "/form";
@@ -968,8 +969,19 @@ public class CustomerController extends CRUDController<Customer> {
 			return urlContext + "/customer";
 		}
 		
-		//beforeSave(request, entity, model);
+		Long customerId = entity.getCustomer().getId();
 		
+		if (isDuplicate(entity)) {
+			model.addAttribute("errorCtx", "manageCustomerDeliveryAddress");
+			model.addAttribute("error", "Duplicate Delivery address.");
+			
+			saveDeliveryAddressSuccess(model, request, customerId);
+			model.addAttribute("deliveryAddressModelObject", entity);
+			
+			return urlContext + "/customer";
+		}
+		
+		//beforeSave(request, entity, model);
 		if (entity instanceof AbstractBaseModel) {
 			AbstractBaseModel baseModel = (AbstractBaseModel) entity;
 			if (baseModel.getId() == null) {
@@ -1002,36 +1014,23 @@ public class CustomerController extends CRUDController<Customer> {
 		genericDAO.saveOrUpdate(entity);
 		
 		Long modifiedBy = getUser(request).getId();
-		Long customerId = entity.getCustomer().getId();
 		
 		Customer emptyCustomer = new Customer();
 		emptyCustomer.setId(customerId);
 		createAuditCustomerNotes(emptyCustomer, customerAuditMsg, modifiedBy);
 		
+		model.addAttribute("msgCtx", "manageCustomerDeliveryAddress");
+		model.addAttribute("msg", "Delivery address saved successfully");
+		
+		saveDeliveryAddressSuccess(model, request, customerId);
+		
+		return urlContext + "/customer";
+	}
+	
+	private void saveDeliveryAddressSuccess(ModelMap model, HttpServletRequest request, Long customerId) {
 		cleanUp(request);
 		
-		//return "redirect:/" + urlContext + "/list.do";
-		//model.addAttribute("activeTab", "manageCustomer");
-		//return urlContext + "/list";
-		
-		/*SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
-		//criteria.getSearchMap().put("id!",0l);
-		//TODO: Fix me 
-		criteria.getSearchMap().remove("_csrf");*/
-		
-		/*setupList(model, request);
-		
-		model.addAttribute("list",genericDAO.search(getEntityClass(), criteria,"companyName",null,null));
-		model.addAttribute("activeTab", "manageCustomer");
-		//return urlContext + "/list";
-		return urlContext + "/customer";*/
-		//request.getSession().removeAttribute("searchCriteria");
-		//request.getParameterMap().remove("_csrf");
-		
-		//return list(model, request);
-		//return saveSuccess(model, request, entity);
 		setupCreate(model, request);
-		//model.addAttribute("modelObject", entity);
 		
 		Customer emptyCustomer2 = new Customer();
 		emptyCustomer2.setId(customerId);
@@ -1059,12 +1058,27 @@ public class CustomerController extends CRUDController<Customer> {
 		model.addAttribute("activeTab", "manageCustomer");
 		model.addAttribute("activeSubTab", "delivery");
 		model.addAttribute("mode", "ADD");
+	}
+	
+	private boolean isDuplicate(DeliveryAddress deliveryAddressToBeChecked) {
+		String deliveryAddressToBeCheckedStr = deliveryAddressToBeChecked.getFullDeliveryAddress();
 		
-		model.addAttribute("msgCtx", "manageCustomerDeliveryAddress");
-		model.addAttribute("msg", "Delivery address saved successfully");
+		Long customerId = deliveryAddressToBeChecked.getCustomer().getId();
+		Customer customer = genericDAO.getById(Customer.class, customerId);
+		List<DeliveryAddress> deliveryAddressList = customer.getDeliveryAddress();
 		
-		//return urlContext + "/form";
-		return urlContext + "/customer";
+		boolean dup = false;
+		for (DeliveryAddress anExistingDeliveryAddress : deliveryAddressList) {
+			if (StringUtils.contains(anExistingDeliveryAddress.getFullDeliveryAddress(), deliveryAddressToBeCheckedStr)) {
+				if (deliveryAddressToBeChecked.getId() == null 
+						|| deliveryAddressToBeChecked.getId().longValue() != anExistingDeliveryAddress.getId().longValue()) {
+					dup = true;
+					break;
+				} 
+			}
+		}
+		
+		return dup;
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/deleteDeliveryAddress.do")
@@ -1163,10 +1177,14 @@ public class CustomerController extends CRUDController<Customer> {
 			log.warn("Error in validation :" + e);
 		}
 		
-		// return to form if we had errors
+		// Return to form if we had errors
 		if (bindingResult.hasErrors()) {
 			setupCreate(model, request);
 			return urlContext + "/form";
+		}
+		
+		if (isDuplicate(entity)) {
+			return "ErrorMsg: Duplicate Delivery address";
 		}
 		
 		//beforeSave(request, entity, model);
@@ -1203,42 +1221,15 @@ public class CustomerController extends CRUDController<Customer> {
 		
 		cleanUp(request);
 		
-		//return "redirect:/" + urlContext + "/list.do";
-		//model.addAttribute("activeTab", "manageCustomer");
-		//return urlContext + "/list";
-		
-		/*SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
-		//criteria.getSearchMap().put("id!",0l);
-		//TODO: Fix me 
-		criteria.getSearchMap().remove("_csrf");*/
-		
-		/*setupList(model, request);
-		
-		model.addAttribute("list",genericDAO.search(getEntityClass(), criteria,"companyName",null,null));
-		model.addAttribute("activeTab", "manageCustomer");
-		//return urlContext + "/list";
-		return urlContext + "/customer";*/
-		//request.getSession().removeAttribute("searchCriteria");
-		//request.getParameterMap().remove("_csrf");
-		
-		//return list(model, request);
-		//return saveSuccess(model, request, entity);
-		//setupCreate(model, request);
-		//model.addAttribute("modelObject", entity);
-		
 		ObjectMapper objectMapper = new ObjectMapper();
 		String json = StringUtils.EMPTY;
 		try {
 			json = objectMapper.writeValueAsString(entity);
 		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
 		return json;
-		
-		//String json = (new Gson()).toJson(entity);
-		//return json;
 	}
 	
 	@RequestMapping(method = RequestMethod.POST, value = "/saveModal.do")

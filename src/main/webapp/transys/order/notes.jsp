@@ -58,11 +58,23 @@ function processOrderNotesForm() {
 		orderNotesForm.submit();
 	}
 }
+
+function processOrderNotesDelete(orderNotesId) {
+	if (!confirm("Do you want to Delete Order Notes # " + orderNotesId + "?")) {
+		return;
+	}
+	
+	document.location = "${ctx}/order/deleteOrderNotes.do?orderNotesId=" + orderNotesId;
+}
 </script>
 
 <form:form action="saveOrderNotes.do" name="orderNotesForm" id="orderNotesForm" commandName="notesModelObject" method="post">
 	<form:hidden path="id" id="id" />
 	<form:hidden path="order.id" id="order.id" />
+	<jsp:include page="/common/messages.jsp">
+		<jsp:param name="msgCtx" value="manageOrderNotes" />
+		<jsp:param name="errorCtx" value="manageOrderNotes" />
+	</jsp:include>
 	<table id="form-table" class="table">
 		<tr>
 			<td class="form-left">Order #</td>
@@ -92,10 +104,30 @@ function processOrderNotesForm() {
 
 <form:form name="orderNotesDatatable" id="orderNotesDatatable" class="tab-color">
 	<transys:datatable urlContext="order" baseObjects="${notesList}"
-		searchCriteria="<%=null%>" cellPadding="2" searcheable="false" dataQualifier="manageNotes">
+		searchCriteria="<%=null%>" cellPadding="2" searcheable="false" editable="true" editableInScreen="true"
+		dataQualifier="manageOrderNotes">
+		<transys:textcolumn headerText="Id" dataField="id" />
 		<transys:textcolumn headerText="Entered By" dataField="enteredBy" width="150px" />
 		<transys:textcolumn headerText="Date/Time" dataField="createdAt" dataFormat="MM/dd/yyy" width="75px"/>
 		<transys:textcolumn headerText="Notes/Comments" dataField="notes" />
+		<transys:imagecolumn headerText="DEL" linkUrl="javascript:processOrderNotesDelete('{id}');" imageSrc="${ctx}/images/delete.png" HAlign="center" width="35px"/>
 	</transys:datatable>
-	<%session.setAttribute("manageNotesColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
+	<%session.setAttribute("manageOrderNotesColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
 </form:form>
+
+<script type="text/javascript">
+$("#orderNotesDatatable").find("tr a").click(function() {
+    var tableData = $(this).parent().parent().children("td").map(function() {
+        return $(this).text();
+    }).get();
+    
+    var notesText = $.trim(tableData[3]);
+    if (notesText.indexOf("AUDIT") != -1) {
+    	showAlertDialog("Data Validation", "Audit notes cannot be edited");
+    	return;
+    }
+    
+    $("#orderNotesForm").find('#id').val($.trim(tableData[0]));
+    $("#orderNotesForm").find('#orderNotesTabNotes').val(notesText);
+});
+</script>

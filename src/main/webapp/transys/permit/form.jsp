@@ -264,6 +264,8 @@ function validateAllDates() {
 			<td class="form-left"><transys:label code="Permit Fee" /><span class="errorMessage">*</span></td>
 			<td class="td-static" id="permitFeeInput">${modelObject.fee}</td>
 			<form:hidden path="fee" id="fee" />
+			<td class="form-left"><transys:label code="Status" /></td>
+			<td class="td-static" id="permitStatusTd">${modelObject.status.status}</td>
 		<tr>
 		<td class="form-left"><transys:label code="Parking Meter" /></td>
 			<td>

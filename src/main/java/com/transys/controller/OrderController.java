@@ -108,6 +108,8 @@ public class OrderController extends CRUDController<Order> {
 	public void setupCreate(ModelMap model, HttpServletRequest request, Order order) {
 		setupCreate(model, request);
 		
+		setupCreateForCustomer(model, request);
+		
 		String dumpsterQuery = "select obj from Dumpster obj where obj.deleteFlag='1' and obj.status.status='Available'";
 		Dumpster assignedDumpster = null;
 		Long currentlyAssignedDumpsterId = -1l;
@@ -166,6 +168,66 @@ public class OrderController extends CRUDController<Order> {
 		}
 		model.addAttribute("permitClasses", permitClassList);
    }
+	
+	@RequestMapping(method = RequestMethod.GET, value = "/deleteOrderNotes.do")
+	public String deleteOrderNotes(ModelMap model, HttpServletRequest request,
+			@RequestParam(value = "orderNotesId") Long orderNotesId) {
+		OrderNotes orderNotesEntity = genericDAO.getById(OrderNotes.class, orderNotesId);
+		
+		String notes = orderNotesEntity.getNotes();
+		if (StringUtils.contains(notes, OrderNotes.NOTES_TYPE_AUDIT)) {
+			model.addAttribute("errorCtx", "manageOrderNotes");
+			model.addAttribute("error", "Audit notes cannot be deleted");
+		
+			return orderNotesSaveSuccess(request, orderNotesEntity, model);
+		}
+		
+		Long orderId = orderNotesEntity.getOrder().getId();
+		Order order = genericDAO.getById(Order.class, orderId);
+		List<OrderNotes> orderNotesList = order.getOrderNotes();
+		int i = 0;
+		for (OrderNotes anOrderNotes : orderNotesList) {
+			if (anOrderNotes.getId() == orderNotesEntity.getId()) {
+				break;
+			}
+			i++;
+		}
+		orderNotesList.remove(i);
+		
+		Long modifiedBy = getUser(request).getId();
+		order.setModifiedBy(modifiedBy);
+		order.setModifiedAt(Calendar.getInstance().getTime());
+		genericDAO.saveOrUpdate(order);
+		
+		genericDAO.delete(orderNotesEntity);
+		
+		String orderNotesAuditMsg = "Order Notes deleted";
+		createAuditOrderNotes(order, orderNotesAuditMsg, modifiedBy);
+		
+		cleanUp(request);
+		
+		model.addAttribute("msgCtx", "manageOrderNotes");
+		model.addAttribute("msg", "Order Notes deleted successfully");
+		
+		return orderNotesSaveSuccess(request, orderNotesEntity, model);
+	}
+	
+	private void setupCreateForCustomer(ModelMap model, HttpServletRequest request) {
+		Object customerIdObj = request.getParameter("customerId");
+		if (customerIdObj == null) {
+			return;
+		}
+		
+		String customerIdStr = (String) customerIdObj;
+		Customer customer = genericDAO.getById(Customer.class, Long.valueOf(customerIdStr));
+			
+		Order modelOrder = (Order) model.get("modelObject");
+		modelOrder.setCustomer(customer);
+		
+		String query = "select obj from DeliveryAddress obj where obj.deleteFlag='1' and obj.customer.id=" 
+				+  customer.getId() + " order by obj.line1 asc";
+		model.addAttribute("deliveryAddresses", genericDAO.executeSimpleQuery(query));
+	}
 	
 	/*
 	 * (non-Javadoc)
@@ -557,6 +619,10 @@ public class OrderController extends CRUDController<Order> {
 		
 		genericDAO.saveOrUpdate(entity);
 		
+		return orderNotesSaveSuccess(request, entity, model);
+	}
+	
+	private String orderNotesSaveSuccess(HttpServletRequest request, OrderNotes entity, ModelMap model) {
 		cleanUp(request);
 		
 		Long orderId = entity.getOrder().getId();
@@ -566,7 +632,6 @@ public class OrderController extends CRUDController<Order> {
 
 		setupCreate(model, request, savedOrder);
 		
-		//model.addAttribute("modelObject", entity);
 		model.addAttribute("activeTab", "manageOrders");
 		model.addAttribute("mode", "ADD");
 		model.addAttribute("activeSubTab", "orderNotesTab");
@@ -588,9 +653,11 @@ public class OrderController extends CRUDController<Order> {
 		
 		return urlContext + "/order";
 	}
+	
 
 	private void updateEnteredBy(OrderNotes entity) {
-		User user = genericDAO.getById(User.class, entity.getCreatedBy());
+		Long userId = entity.getCreatedBy() != null ? entity.getCreatedBy() : entity.getModifiedBy();
+		User user = genericDAO.getById(User.class, userId);
 		entity.setEnteredBy(user.getEmployee().getFullName());
 	}
 	

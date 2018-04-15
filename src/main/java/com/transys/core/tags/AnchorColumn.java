@@ -176,7 +176,10 @@ public final class AnchorColumn extends AbstractColumnTag
         objBuf.append(">");
         if (this.linkText != null) {
 //            objBuf.append(CacheUtil.getText("messageResourceCache","label_"+this.linkText+"_"+locale));
-      	  objBuf.append(this.linkText);
+      	 
+      	  //objBuf.append(this.linkText);
+      	  String newLinkText = resolveFields(this.linkText);
+      	  objBuf.append(newLinkText);
         } else
             objBuf.append(formatField(value, this.dataFormat));
 

@@ -152,7 +152,7 @@
 		<transys:textcolumn headerText="Del. L1" dataField="permit.deliveryAddress.line1"/>
 		<transys:textcolumn headerText="Del. L2" dataField="permit.deliveryAddress.line2" />
 		<transys:textcolumn headerText="Customer Name" dataField="order.customer.companyName" />
-		<transys:textcolumn headerText="Order#" dataField="order.id" type="java.lang.Long" />
+		<transys:anchorcolumn headerText="Order#" linkUrl="javascript:processGoToOrder('{order.id}');" linkText="{order.id}" dataField="order.id" type="java.lang.Long"/>
 		<transys:textcolumn headerText="Contact" dataField="order.customer.contactName" />
 		<transys:textcolumn headerText="Phone#" dataField="order.customer.phone" />
 		<transys:textcolumn headerText="Order Status" dataField="order.orderStatus.status" />
@@ -161,8 +161,8 @@
 		<transys:textcolumn headerText="Permit Status" dataField="permit.status.status" />
 		<transys:textcolumn headerText="Start Date" dataField="permit.startDate" type="java.sql.Timestamp" dataFormat="MM/dd/yyyy"/>
 		<transys:textcolumn headerText="End Date" dataField="permit.endDate" type="java.sql.Timestamp" dataFormat="MM/dd/yyyy"/>
-		<transys:anchorcolumn headerText="New Permit" linkText="Add New Permit" linkUrl="/permit/createModal.do" target="#addNewPermitModal" />
-		<transys:anchorcolumn headerText="Add Order Notes" linkText="Add Order Notes" linkUrl="/order/orderNotesCreateModal.do" target="#addOrderNotesModal" />
+		<transys:anchorcolumn headerText="New Permit" linkText="Add New Permit" linkUrl="/permit/createModal.do?id={id}" target="#addNewPermitModal" />
+		<transys:anchorcolumn headerText="Add Order Notes" linkText="Add Order Notes" linkUrl="/order/orderNotesCreateModal.do?id={id}" target="#addOrderNotesModal" />
 	</transys:datatable>
 	<%session.setAttribute("orderPermitAlertColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
 </form:form>

@@ -151,7 +151,7 @@
 </form:form>
 
 <form:form name="permitAddressServiceForm" id="permitAddressServiceForm" class="tab-color">
-	<transys:datatable urlContext="permit" deletable="true"
+	<transys:datatable urlContext="permit"
 		editable="true" editableInScreen="true" baseObjects="${permitAddressList}"
 		searchCriteria="<%=null%>" cellPadding="2"
 		searcheable="false" dataQualifier="managePermitAddress">

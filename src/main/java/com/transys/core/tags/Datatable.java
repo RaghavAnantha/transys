@@ -12,7 +12,7 @@ import javax.servlet.jsp.tagext.BodyTagSupport;
 
 import org.apache.commons.beanutils.NestedNullException;
 import org.apache.commons.beanutils.PropertyUtils;
-
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
@@ -756,7 +756,7 @@ public final class Datatable extends BodyTagSupport {
 						objCol = (IColumnTag) iterCol.next();
 						if (objCol instanceof RowNumColumn)
 							objCol.renderDetail(new Integer(i + 1));
-						else if (objCol instanceof AnchorColumn) {
+						/*else if (objCol instanceof AnchorColumn) {
 							// set the link url with the id
 							String linkUrl = ((AnchorColumn)objCol).getLinkUrl();
 							if (linkUrl.contains("?id=")) {
@@ -772,7 +772,7 @@ public final class Datatable extends BodyTagSupport {
 								objCol.renderDetail(value);
 							else
 								objCol.renderDetail(objCol.getBodyContent());
-						} else {
+						} */else {
 							strFld = objCol.getDataField();
 							Object value = getColumnValue(strFld);
 							if (value !=null)
@@ -901,7 +901,9 @@ public final class Datatable extends BodyTagSupport {
 				
 				//populating columnPropertyList with IColumnTag to be exported to jasper report
 				if ((objCol instanceof ImageColumn) || (objCol instanceof AnchorColumn)) {
-					continue;
+					if (StringUtils.isEmpty(objCol.getDataField())) {
+						continue;
+					}
 				}
 				
 				columnPropertyList.add(objCol);

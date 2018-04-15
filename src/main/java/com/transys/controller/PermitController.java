@@ -50,8 +50,11 @@ import com.transys.core.report.generator.ExcelReportGenerator;
 import com.transys.model.AbstractBaseModel;
 import com.transys.model.Customer;
 import com.transys.model.DeliveryAddress;
+import com.transys.model.DumpsterStatus;
 import com.transys.model.LocationType;
+import com.transys.model.Order;
 import com.transys.model.OrderFees;
+import com.transys.model.OrderNotes;
 import com.transys.model.OrderPermits;
 import com.transys.model.OrderStatus;
 import com.transys.model.Permit;
@@ -1285,6 +1288,31 @@ public class PermitController extends CRUDController<Permit> {
 				}
 			}
 		}
+	}
+	
+	@RequestMapping(method = RequestMethod.GET, value = "/cancel.do")
+	public @ResponseBody String cancel(HttpServletRequest request, @ModelAttribute("modelObject") Permit entity,
+				BindingResult bindingResult, ModelMap model) {
+		if (StringUtils.equals(PermitStatus.PERMIT_STATUS_CANCELLED, entity.getStatus().getStatus())) {
+			return String.format("Permit Id %d is already in 'Canceled' status", entity.getId());
+		}
+		
+		if (StringUtils.equals(PermitStatus.PERMIT_STATUS_ASSIGNED, entity.getStatus().getStatus())) {
+			return String.format("Permit Id %d cannot be Cancelled as it is in 'Assigned' status", entity.getId());
+		}
+		
+		beforeSave(request, entity, model);
+		
+		PermitStatus permitStatus = retrievePermitStatus(PermitStatus.PERMIT_STATUS_CANCELLED);
+		entity.setStatus(permitStatus);
+		
+		genericDAO.saveOrUpdate(entity);
+		
+		PermitNotes auditPermitNotes = createAuditPermitNotes(entity, 
+				"Permit status changed to " + PermitStatus.PERMIT_STATUS_CANCELLED, entity.getModifiedBy());  
+		entity.getPermitNotes().add(auditPermitNotes);
+		
+		return String.format("Permit # %d is cancelled successfully", entity.getId());
 	}
 	
 	@Override

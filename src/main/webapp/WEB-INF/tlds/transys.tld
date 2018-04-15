@@ -510,6 +510,11 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
+            <name>type</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+		<attribute>
 			<name>dataFormat</name>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>

@@ -1,4 +1,14 @@
 <%@include file="/common/taglibs.jsp"%>
+
+<script type="text/javascript">
+function processGoToOrder(orderIds) {
+	if (orderIds.indexOf(",") != -1) {
+		orderIds = orderIds.substring(0, orderIds.indexOf(","));
+	}
+	window.location = "${ctx}/order/edit.do?id="+orderIds;
+}
+</script>
+
 <br />
 <h5 style="margin-top: -15px; !important">Manage Customers</h5>
 <form:form action="list.do" method="get" name="customerSearchForm">
@@ -111,7 +121,8 @@
 		<transys:textcolumn headerText="Dumpster Discount" dataField="dumpsterDiscount" type="java.math.BigDecimal" width="150px" />
 		<transys:textcolumn headerText="Created Date" dataField="createdAt" dataFormat="MM/dd/yyyy"/>
 		<transys:textcolumn headerText="Status" dataField="customerStatus.status" />
-	</transys:datatable>
+		<transys:imagecolumn headerText="Create Order" linkUrl="${ctx}/order/create.do?customerId={id}" imageSrc="${ctx}/images/addnew.png" HAlign="center" width="35px"/>
+</transys:datatable>
 	<%session.setAttribute("manageCustomerColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
 </form:form>
 

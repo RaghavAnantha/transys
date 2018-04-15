@@ -14,6 +14,8 @@ public class PermitStatus  extends AbstractBaseModel {
 	public static final String PERMIT_STATUS_AVAILABLE = "Available";
 	@Transient
 	public static final String PERMIT_STATUS_ASSIGNED = "Assigned";
+	@Transient
+	public static final String PERMIT_STATUS_CANCELLED = "Cancelled";
 	
 	@Column(name="status")
 	private String status;
