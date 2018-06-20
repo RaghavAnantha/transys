@@ -81,6 +81,9 @@
 		<transys:textcolumn headerText="Dumpster #" dataField="dumpster.dumpsterNum" />
 		<transys:textcolumn headerText="Delivery Date" dataField="deliveryDate" dataFormat="MM/dd/yyyy"/>
 		<transys:textcolumn headerText="Pickup Date" dataField="pickupDate" dataFormat="MM/dd/yyyy"/>
+		<transys:textcolumn headerText="Tonnage" dataField="netWeightTonnage" />
+		<transys:textcolumn headerText="Driver Name" dataField="dropOffDriver.name" />
+		<transys:textcolumn headerText="Location" dataField="dumpsterLocation" />
 	</transys:datatable>
 	<%session.setAttribute("deliveryPickupReportColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
 </form:form>

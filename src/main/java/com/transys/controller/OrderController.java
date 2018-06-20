@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 import java.text.ParseException;
-
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -24,7 +24,7 @@ import javax.validation.ValidationException;
 
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
-
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 
 import org.springframework.ui.ModelMap;
@@ -101,6 +101,10 @@ public class OrderController extends CRUDController<Order> {
 		binder.registerCustomEditor(CityFee.class, new AbstractModelEditor(CityFee.class));
 		binder.registerCustomEditor(PaymentMethodType.class, new AbstractModelEditor(PaymentMethodType.class));
 		binder.registerCustomEditor(OrderFees.class, new AbstractModelEditor(OrderFees.class));
+		
+		SimpleDateFormat ccExpDateFormat = new SimpleDateFormat("MM/yyyy");
+		ccExpDateFormat.setLenient(false);
+		binder.registerCustomEditor(Date.class, "orderPayment[0].ccExpDate", new CustomDateEditor(ccExpDateFormat, true));
 		
 		super.initBinder(binder);
 	}

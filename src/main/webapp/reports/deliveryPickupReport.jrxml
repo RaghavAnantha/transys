@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
-<!-- 2017-10-26T21:32:51 -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="deliveryPickupReport" pageWidth="955" pageHeight="595" orientation="Landscape" columnWidth="935" leftMargin="10" rightMargin="10" topMargin="10" bottomMargin="10" isSummaryWithPageHeaderAndFooter="true" uuid="f465866e-f394-428d-b546-3108e4a018e2">
+<!-- 2018-06-11T16:11:59 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="deliveryPickupReport" pageWidth="1300" pageHeight="595" orientation="Landscape" columnWidth="1280" leftMargin="10" rightMargin="10" topMargin="10" bottomMargin="10" isSummaryWithPageHeaderAndFooter="true" uuid="f465866e-f394-428d-b546-3108e4a018e2">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
@@ -36,6 +36,9 @@
 	<field name="isExchange" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
+	<field name="tonnage" class="java.lang.String"/>
+	<field name="dropOffDriverName" class="java.lang.String"/>
+	<field name="dumpsterLocation" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -46,14 +49,14 @@
 		<band height="91" splitType="Stretch">
 			<printWhenExpression><![CDATA[$V{PAGE_NUMBER} > 0]]></printWhenExpression>
 			<staticText>
-				<reportElement mode="Opaque" x="326" y="2" width="283" height="24" backcolor="#99CCFF" uuid="d41af175-c951-48fa-9614-95f75b2e7e5a"/>
+				<reportElement mode="Opaque" x="499" y="2" width="283" height="24" backcolor="#99CCFF" uuid="d41af175-c951-48fa-9614-95f75b2e7e5a"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="11" isBold="true"/>
 				</textElement>
 				<text><![CDATA[DELIVERY PICKUP REPORT]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="445" y="35" width="338" height="26" backcolor="#99CCFF" uuid="ce12c40a-2897-4969-a83e-76b4208b49c5"/>
+				<reportElement mode="Opaque" x="562" y="35" width="383" height="26" backcolor="#99CCFF" uuid="ce12c40a-2897-4969-a83e-76b4208b49c5"/>
 				<box>
 					<pen lineWidth="1.0" lineColor="#333333"/>
 					<topPen lineWidth="1.0" lineColor="#333333"/>
@@ -67,7 +70,7 @@
 				<text><![CDATA[Total Dumpsters/Boxes Delivered (or Picked up)]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="140" y="35" width="153" height="26" backcolor="#99CCFF" uuid="6e2f73f5-454f-46e8-a6af-fdf25d495b99"/>
+				<reportElement mode="Opaque" x="257" y="35" width="153" height="26" backcolor="#99CCFF" uuid="6e2f73f5-454f-46e8-a6af-fdf25d495b99"/>
 				<box>
 					<pen lineWidth="1.0" lineColor="#333333"/>
 					<topPen lineWidth="1.0" lineColor="#333333"/>
@@ -81,7 +84,7 @@
 				<text><![CDATA[Delivery Dates]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="445" y="61" width="338" height="20" uuid="e8300c18-44ea-4f05-94a5-172fab75c83c"/>
+				<reportElement x="562" y="61" width="383" height="20" uuid="e8300c18-44ea-4f05-94a5-172fab75c83c"/>
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -95,7 +98,7 @@
 				<textFieldExpression><![CDATA[$F{dumpsterSizeAggregation}]]></textFieldExpression>
 			</textField>
 			<textField pattern="">
-				<reportElement x="140" y="61" width="153" height="20" uuid="8ddc7a3b-b6fb-46bc-a154-799e22d181ae"/>
+				<reportElement x="257" y="61" width="153" height="20" uuid="8ddc7a3b-b6fb-46bc-a154-799e22d181ae"/>
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -109,7 +112,7 @@
 				<textFieldExpression><![CDATA[$F{deliveryDateFrom} + " - " + $F{deliveryDateTo}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement mode="Opaque" x="293" y="35" width="152" height="26" backcolor="#99CCFF" uuid="b7c835eb-2bb1-4fa3-92ab-0d633fd222d7"/>
+				<reportElement mode="Opaque" x="410" y="35" width="152" height="26" backcolor="#99CCFF" uuid="b7c835eb-2bb1-4fa3-92ab-0d633fd222d7"/>
 				<box>
 					<pen lineWidth="1.0" lineColor="#333333"/>
 					<topPen lineWidth="1.0" lineColor="#333333"/>
@@ -123,7 +126,7 @@
 				<text><![CDATA[Pickup Dates]]></text>
 			</staticText>
 			<textField pattern="">
-				<reportElement x="293" y="61" width="152" height="20" uuid="9f184b36-f2bf-4adb-ada4-cd697928bd9f"/>
+				<reportElement x="410" y="61" width="152" height="20" uuid="9f184b36-f2bf-4adb-ada4-cd697928bd9f"/>
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -267,6 +270,48 @@
 				</textElement>
 				<text><![CDATA[Exch]]></text>
 			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="930" y="25" width="62" height="30" forecolor="#FFFFFF" backcolor="#99CCFF" uuid="48323695-2169-489b-9586-980a51e7fa56"/>
+				<box>
+					<pen lineWidth="1.0" lineColor="#333333"/>
+					<topPen lineWidth="1.0" lineColor="#333333"/>
+					<leftPen lineWidth="1.0" lineColor="#333333"/>
+					<bottomPen lineWidth="1.0" lineColor="#333333"/>
+					<rightPen lineWidth="1.0" lineColor="#333333"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tonnage]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="992" y="25" width="137" height="30" forecolor="#FFFFFF" backcolor="#99CCFF" uuid="ff05a406-b0a8-4abf-95e3-6a9431cc4e50"/>
+				<box>
+					<pen lineWidth="1.0" lineColor="#333333"/>
+					<topPen lineWidth="1.0" lineColor="#333333"/>
+					<leftPen lineWidth="1.0" lineColor="#333333"/>
+					<bottomPen lineWidth="1.0" lineColor="#333333"/>
+					<rightPen lineWidth="1.0" lineColor="#333333"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Driver]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="1129" y="25" width="131" height="30" forecolor="#FFFFFF" backcolor="#99CCFF" uuid="bcf5b58a-5be1-4aa5-8506-3112012c5a4b"/>
+				<box>
+					<pen lineWidth="1.0" lineColor="#333333"/>
+					<topPen lineWidth="1.0" lineColor="#333333"/>
+					<leftPen lineWidth="1.0" lineColor="#333333"/>
+					<bottomPen lineWidth="1.0" lineColor="#333333"/>
+					<rightPen lineWidth="1.0" lineColor="#333333"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Location]]></text>
+			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
@@ -396,6 +441,48 @@
 					<font size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{isExchange}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="930" y="0" width="62" height="20" uuid="b7bc8dfa-2e10-4a41-9d27-e9a81ffe18b5"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{tonnage}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1129" y="0" width="131" height="20" uuid="1a545db4-f126-429d-9a57-13684ba8cac2"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{dumpsterLocation}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="992" y="0" width="137" height="20" uuid="bbf44c05-ac77-49ef-a8c6-a27ccda1357c"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{dropOffDriverName}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

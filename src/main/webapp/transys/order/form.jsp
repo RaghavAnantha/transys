@@ -456,8 +456,9 @@ function populatePermitDetails(index, permit) {
 function formatCCNumber(ccNumberIndex) {
 	var ccNumberElem = $('#orderPayment' + ccNumberIndex + '\\.ccNumber');
 	var ccNumberVal = ccNumberElem.val();
-	if (ccNumberVal.length < 16) {
-		var alertMsg = "Credit card number should be 16 digits in length";
+	if (ccNumberVal.length < 15 
+			|| ccNumberVal.length > 16) {
+		var alertMsg = "Credit card number should be 15 or 16 digits in length";
 		showAlertDialog("Data Validation", alertMsg);
 		
 		ccNumberElem.val("");
@@ -465,8 +466,13 @@ function formatCCNumber(ccNumberIndex) {
 		return false;
 	}
 	
-	ccNumberVal = ccNumberVal.substring(0,4) + "-xxxx-xxxx-" + ccNumberVal.substring(12);
-	ccNumberElem.val(ccNumberVal);
+	var maskedCcNumberVal = ccNumberVal.substring(0, 4);
+	if (ccNumberVal.length == 16) {
+		maskedCcNumberVal += ("-xxxx-xxxx-" + ccNumberVal.substring(12));
+	} else {
+		maskedCcNumberVal += ("-xxxx-xxx-" + ccNumberVal.substring(11));
+	}
+	ccNumberElem.val(maskedCcNumberVal);
 }
 
 function emptyPermitDetails(index) {
@@ -1084,7 +1090,41 @@ function updateTotalPaid() {
 	$('#totalPaid').html(totalPaidFloat.toFixed(2)); 
 	$('#balanceDue').html(balanceDueFloat.toFixed(2)); 
 }
+
+$(function() {
+	$("[name='orderPayment[0].ccExpDate']").datepicker( {
+        changeMonth: true,
+        changeYear: true,
+        showButtonPanel: true,
+        dateFormat: 'mm/yy',
+        onClose: function(dateText, inst) { 
+        	var iMonth = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
+            var iYear = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
+            $(this).datepicker('setDate', new Date(iYear, iMonth, 1));
+            
+            $('#ui-datepicker-div').removeClass('hide-calendar');
+        },
+        beforeShow : function(input, inst) {
+        	$('#ui-datepicker-div').addClass('hide-calendar');
+        	
+        	if ((selDate = $(this).val()).length > 0) {
+               iYear = selDate.substring(selDate.length - 4, selDate.length);
+               iMonth = jQuery.inArray(selDate.substring(0, selDate.length - 5), $(this).datepicker('option', 'monthNames'));
+               $(this).datepicker('option', 'defaultDate', new Date(iYear, iMonth, 1));
+               $(this).datepicker('setDate', new Date(iYear, iMonth, 1));
+            }
+        }
+    });
+});
+
 </script>
+
+<style>
+.hide-calendar .ui-datepicker-calendar {
+    display: none;
+}
+</style>
+
 <form:form action="save.do" name="orderAddEditForm" commandName="modelObject" method="post" id="orderAddEditForm">
 	<form:hidden path="id" id="id" />
 	<form:hidden path="pickupOrderId" id="pickupOrderId" />
@@ -1670,7 +1710,7 @@ function updateTotalPaid() {
 				<br><form:errors path="orderPayment[0].ccNumber" cssClass="errorMessage" />
 			</td>
 			<td>
-				<form:input path="orderPayment[0].ccExpDate" cssClass="flat" style="width:172px !important" id="datepicker11" maxlength="10" />
+				<form:input path="orderPayment[0].ccExpDate" cssClass="flat" style="width:172px !important" maxlength="10" />
 				<br><form:errors path="orderPayment[0].ccExpDate" cssClass="errorMessage" />
 			</td>
 		</tr>

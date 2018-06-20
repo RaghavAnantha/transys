@@ -180,6 +180,12 @@ public class DeliveryPickupReportController extends CRUDController<Order> {
 			map.put("deliveryDate", anOrder.getFormattedDeliveryDate());
 			map.put("pickupDate", anOrder.getFormattedPickupDate());
 			map.put("isExchange", (anOrder.isExchangeOrder() ? "Exch" : StringUtils.EMPTY));
+			map.put("tonnage", (anOrder.getNetWeightTonnage() != null ? anOrder.getNetWeightTonnage().toPlainString() 
+					: StringUtils.EMPTY));
+			map.put("dropOffDriverName", (anOrder.getDropOffDriver() != null ? anOrder.getDropOffDriver().getName() 
+					: StringUtils.EMPTY));
+			map.put("dumpsterLocation", (anOrder.getDumpsterLocation() != null ? anOrder.getDumpsterLocation().getLocationType() 
+					: StringUtils.EMPTY));
 			
 			List<Permit> permits = anOrder.getPermits();
 			String permitStr = StringUtils.EMPTY;
