@@ -108,15 +108,12 @@ public class BaseController {
 		}
 	}*/
 
-	protected void populateSearchCriteria(HttpServletRequest request,
-			Map<String, String[]> params) {
-		
+	protected void populateSearchCriteria(HttpServletRequest request, Map<String, String[]> params) {
 		populateSearchCriteria(request, params, "searchCriteria");
 	}
 	
 	protected void populateSearchCriteria(HttpServletRequest request,
 			Map<String, String[]> params, String searchCriteriaName) {
-
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute(searchCriteriaName);
 		if (criteria == null) {
 			criteria = new SearchCriteria();
@@ -238,6 +235,15 @@ public class BaseController {
 		
 	}
 
+	protected void setErrorMsg(HttpServletRequest request, HttpServletResponse response, String msg) {
+		response.setContentType(MimeUtil.getContentType("html"));
+		request.getSession().setAttribute("error", msg);
+	}
+	
+	protected void setSuccessMsg(HttpServletRequest request, String msg) {
+		request.getSession().setAttribute("msg", msg);
+	}
+	
 	/*public void writeActivityLog(String activityType, String details) {
 		auditService.writeActivityLog(urlContext, activityType, details);
 	}

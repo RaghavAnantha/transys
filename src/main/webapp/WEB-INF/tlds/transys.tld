@@ -111,6 +111,11 @@
 			<type>java.lang.Boolean</type>
 		</attribute>
 		<attribute>
+			<name>multipleSelect</name>
+			<rtexprvalue>true</rtexprvalue>
+			<type>java.lang.Boolean</type>
+		</attribute>
+		<attribute>
 			<name>exportPdf</name>
 			<rtexprvalue>true</rtexprvalue>
 			<type>java.lang.Boolean</type>

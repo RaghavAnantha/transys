@@ -111,7 +111,9 @@ $("#permitModalFromAlertForm").submit(function (ev) {
 		
 		<tr>
 			<td class="form-left wide">Start Date</td>
-			<td><form:input path="startDate" cssClass="flat flat-ext form-control form-control-ext" id="datepicker8" name="startDate" style="width: 175px" onChange="return populateEndDate();" /> <%-- readonly="true" /> --%>
+			<td>
+				<form:input path="startDate" cssClass="flat flat-ext form-control form-control-ext" id="datepicker8" name="startDate" style="width: 175px" 
+					onChange="return populateEndDate();" /> <%-- readonly="true" /> --%>
 			<td class="form-left"><transys:label code="End Date" /></td>
 			<td>
 				<form:input id="endDateInputPopUp" path="endDate" cssClass="flat flat-ext form-control form-control-ext" style="width:175px !important;height:22px" readonly="true" />

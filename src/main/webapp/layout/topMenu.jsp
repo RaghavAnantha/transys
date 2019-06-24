@@ -16,6 +16,7 @@
 					<li id="orderPage"><a href="${ctx}/order/main.do">Orders</a></li>
 					<li id="permitPage"><a href="${ctx}/permit/main.do">Permits</a></li>
 					<li id="customerPage"><a href="${ctx}/customer/main.do">Customers</a></li>
+					<li id="invoicePage"><a href="${ctx}/invoice/createInvoiceMain.do">Invoices</a></li>
 					<li id="materialIntake"><a href="${ctx}/publicMaterialIntake/main.do">Public Material Intake</a></li>
 					<li id="reportPage">
 						<a href="#" data-toggle="dropdown" class="dropdown-toggle">Reports<b class="caret"></b></a>
@@ -84,19 +85,23 @@
 <script type="text/javascript">
 	$(function() {
 		var loc = window.location.href;
+		var activePage = "";
 		if (loc.match('/order/')) {
-			$('#orderPage').addClass("active");
+			activePage = "orderPage";
 		} else if (loc.match('/permit/')) {
-			$('#permitPage').addClass("active");
+			activePage = "permitPage";
 		} else if (loc.match('/customer/')) {
-			$('#customerPage').addClass("active");
+			activePage = "customerPage";
+		} else if (loc.match('/invoice/')) {
+			activePage = "invoicePage";
 		} else if (loc.match('/reports/')) {
-			$('#reportPage').addClass("active");
+			activePage = "reportPage";
 		} else if (loc.match('/masterData/')) {
-			$('#masterDataPage').addClass("active");
+			activePage = "masterDataPage";
 		} /*else if (loc.match('/migration/')) {
-			$('#migrationPage').addClass("active");
+			activePage = "migrationPage";
 		} */
+		$('#' + activePage).addClass("active");
 	});
 </script>
 </html>

@@ -4,23 +4,44 @@
 function showAlertDialog(title, msg) {
 	$('#alertDialogTitle').html(title);
 	$('#alertDialogBody').html(msg);
+	
 	$("#alertDialog").modal('show');
 }
 
 function showConfirmDialog(title, msg) {
 	$('#confirmDialogTitle').html(title);
 	$('#confirmDialogBody').html(msg);
+	
 	$("#confirmDialog").modal('show');
 }
 
-function showPopupDialog(title, url) {
-	$("#popupDialog").modal('show');
+function showConfirmDialogWithPurpose(title, msg, purpose) {
+	$('#confirmDialogPurpose').val(purpose);
+	showConfirmDialog(title, msg);
+}
+
+function getConfirmDialogPurpose() {
+	return $('#confirmDialogPurpose').val();
+}
+
+function openPopupDialog(title) {
 	$("#popupDialogTitle").html(title);
-	
 	clearPopupDialogMessages();
-	
 	$("#popupDialogBody").html("");
+	
+	$("#popupDialog").modal('show');
+}
+
+function showPopupDialog(title, url) {
+	openPopupDialog(title);
 	$("#popupDialogBody").load(url);
+}
+
+function showPopupDialogWithHtml(title, elementId) {
+	openPopupDialog(title);
+	
+	var htmlToLoad = $('#' + elementId).html();
+	$("#popupDialogBody").html(htmlToLoad);
 }
 
 function displayPopupDialogErrorMessage(message, displayAlsoInFooter) {
@@ -79,6 +100,7 @@ function clearPopupDialogSuccessMessage() {
 	<div class="modal-dialog" style="width:50% !important">
 		<div class="modal-content">
 		 	<div class="modal-header" id="confirmDialogHeader">
+		 		<input type=hidden id="confirmDialogPurpose" name="confirmDialogPurpose" value=""/>
 		 		<h4 class="modal-title" id="confirmDialogTitle">Confirm</h4>
 		 	</div>	
 			<div class="modal-body" id="confirmDialogBody"></div>
@@ -118,6 +140,7 @@ $("#alertDialog").on("hidden.bs.modal", function(e) {
 });
 
 $("#confirmDialog").on("hidden.bs.modal", function(e) {
+	$("#confirmDialogPurpose").val("");
 	$("#confirmDialogTitle").html("");
 	$("#confirmDialogBody").html("");
 });	

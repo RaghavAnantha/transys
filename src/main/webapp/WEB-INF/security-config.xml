@@ -20,10 +20,12 @@
 		<security:intercept-url pattern="/**/order/*" access="hasAnyRole('ADMIN','DATA_ENTRY_BILLING')" />
 		<security:intercept-url pattern="/**/permit/*" access="hasAnyRole('ADMIN','DATA_ENTRY_BILLING')" />
 		<security:intercept-url pattern="/**/customer/*" access="hasAnyRole('ADMIN','DATA_ENTRY_BILLING')" />
+		<security:intercept-url pattern="/**/invoice/*" access="hasAnyRole('ADMIN','DATA_ENTRY_BILLING')" />
 		<security:intercept-url pattern="/**/orderPermitAlert/*" access="hasAnyRole('ADMIN','DATA_ENTRY_BILLING')" />
 		<security:intercept-url pattern="/**/publicMaterialIntake/*" access="hasAnyRole('ADMIN','DATA_ENTRY_BILLING')" />
 		<security:intercept-url pattern="/**/reports/**" access="hasAnyRole('ADMIN','DATA_ENTRY_BILLING')" />
 		<security:intercept-url pattern="/**/masterData/**" access="hasRole('ADMIN')" />
+		<security:intercept-url pattern="/**/image/**" access="hasAnyRole('ADMIN','DATA_ENTRY_BILLING')" />
 		
 		<!-- Controls the login page authentication through Spring -->
  		<security:form-login login-page='/login.do' authentication-success-handler-ref="authenticationSuccessHandler"/>

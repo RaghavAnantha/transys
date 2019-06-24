@@ -45,6 +45,7 @@ public final class Datatable extends BodyTagSupport {
 	private boolean cancellable;
 	private boolean deletable;
 	private boolean multipleDelete;
+	private boolean multipleSelect;
 	private boolean exportPdf;
 	private boolean exportXls;
 	private boolean exportXlsx;
@@ -232,6 +233,14 @@ public final class Datatable extends BodyTagSupport {
 		this.deletable = deletable;
 	}
 
+
+	public boolean isMultipleSelect() {
+		return multipleSelect;
+	}
+
+	public void setMultipleSelect(boolean multipleSelect) {
+		this.multipleSelect = multipleSelect;
+	}
 
 	/**
 	 * @return the multipleDelete
@@ -717,7 +726,7 @@ public final class Datatable extends BodyTagSupport {
 						this.columns.add(deleteColumn);
 					//}
 				}
-				if (multipleDelete) {
+				if (multipleDelete || multipleSelect) {
 					checkBoxColumn = new TextColumn();
 					checkBoxColumn.setPageContext(this.pageContext);
 					this.columns.add(0, checkBoxColumn);
@@ -748,7 +757,7 @@ public final class Datatable extends BodyTagSupport {
 						if (deleteColumn!=null)
 						deleteColumn.setLinkUrl("javascript:confirmDelete('"+pageContext.getAttribute("ctx")+"/"+urlContext+"/delete.do?id="+PropertyUtils.getProperty(currItem, "id")+"');");
 //						deleteColumn.setLinkUrl(pageContext.getAttribute("ctx")+"/"+urlContext+"/delete.do?id="+PropertyUtils.getProperty(currItem, "id"));
-					if (multipleDelete) {
+					if (multipleDelete || multipleSelect) {
 						checkBoxColumn.setBodyContent("<input type=\"checkbox\" id=\"objId\" name=\"id\"	value=\""+PropertyUtils.getProperty(currItem, "id")+"\" />");
 					}
 					for (iterCol = this.columns.iterator(); iterCol.hasNext();) {
@@ -888,7 +897,7 @@ public final class Datatable extends BodyTagSupport {
 		try {
 			objOut = this.pageContext.getOut();
 			objOut.println("<tr>");
-			if (multipleDelete) {
+			if (multipleDelete || multipleSelect) {
 				objOut.println("<th width=\"30\"><input type=\"checkbox\" id=\"checkId\" onclick=\"javascript:checkUncheck(this,'id');\" /></th>");
 				additionalColumn++;
 			}

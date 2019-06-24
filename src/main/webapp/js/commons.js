@@ -1,15 +1,17 @@
-function ValidateFileType(fileId)
- {
-	var image =document.getElementById(fileId).value;
-		if(image!=''){
-	    var checkimg = image.toLowerCase();
-	    	if (!checkimg.match(/(\.jpg|\.png|\.JPG|\.PNG|\.jpeg|\.JPEG|\.GIF|\.gif|\.html|\.HTML)$/)){
-		  		document.getElementById("image").value = null;
-				alert("Only JPG,PNG,JPEG,GIF,HTML  files are allowed !");
-				document.getElementById("image");
-				return false;
-				   }		
-				 }
+function showTab(tab) {
+	$('.nav-tabs a[href="#' + tab + '"]').tab('show');
+}
+
+function ValidateFileType(fileId) {
+	var image = document.getElementById(fileId).value;
+	if (image != '') {
+		var checkimg = image.toLowerCase();
+    	if (!checkimg.match(/(\.jpg|\.png|\.JPG|\.PNG|\.jpeg|\.JPEG|\.GIF|\.gif|\.html|\.HTML)$/)) {
+	  		document.getElementById("image").value = null;
+			alert("Only JPG,PNG,JPEG,GIF,HTML  files are allowed !");
+			return false;
+		}		
+	}
 	return true;
  }
 
@@ -224,7 +226,6 @@ function popup(url) {
 }
 
 GB_AdShow = function(caption, url,height, width, callback_fn) {
-	
     var options = {
         caption: caption,
         height: height || 500,
@@ -310,7 +311,6 @@ function formatReportDate(d1){
 		}
 	}
 }
-
 
 function formatDate(datepicker){
 	var date=document.getElementById(datepicker).value;

@@ -15,6 +15,9 @@
     <decorator name="permit" page="singleColumnLayout.jsp">
         <pattern>/transys/permit/**</pattern>
     </decorator>
+    <decorator name="invoice" page="singleColumnLayout.jsp">
+        <pattern>/transys/invoice/**</pattern>
+    </decorator>
     <decorator name="publicMaterialIntake" page="singleColumnLayout.jsp">
         <pattern>/transys/publicMaterialIntake/**</pattern>
     </decorator>
@@ -35,6 +38,8 @@
         <pattern>/transys/permit/formForCustomerModal.jsp</pattern>
         
         <pattern>/transys/orderPermitAlert/**</pattern>
+        
         <pattern>/transys/customer/customerListReport.jsp</pattern>
+        <pattern>/transys/invoice/manageInvoiceList.jsp</pattern>
     </decorator> 
 </decorators> 
