@@ -8,8 +8,10 @@ import org.apache.commons.lang3.StringUtils;
 import com.transys.model.vo.BaseVO;
 
 public class InvoiceVO implements BaseVO {
+	public static String INV_SAVE_SUCCESS_MSG = "Invoice saved successfully";
+	
 	private Long id;
-	private String orderDate;
+	private Date orderDate;
 	
 	private String companyName;
 	
@@ -44,6 +46,7 @@ public class InvoiceVO implements BaseVO {
 	private BigDecimal additionalFees;
 	private BigDecimal totalFees;
 	private BigDecimal totalAmountPaid;
+	private BigDecimal discount;
 	private BigDecimal balanceAmountDue;
 	
 	private String paymentMethod;
@@ -65,15 +68,27 @@ public class InvoiceVO implements BaseVO {
 	private String permitAddressFullLine = StringUtils.EMPTY;
 	
 	private String customerId;
+	private String orderId;
 	private String orderDateFrom;
 	private String orderDateTo;
 	
 	private String[] ids;
-	private String invoiceNo;
 	private Date invoiceDate;
 	
 	private int historyCount = -1;
 	
+	public String getOrderId() {
+		return orderId;
+	}
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
+	}
+	public Date getOrderDate() {
+		return orderDate;
+	}
+	public void setOrderDate(Date orderDate) {
+		this.orderDate = orderDate;
+	}
 	public String[] getIds() {
 		return ids;
 	}
@@ -182,12 +197,7 @@ public class InvoiceVO implements BaseVO {
 	public void setBalanceAmountDue(BigDecimal balanceAmountDue) {
 		this.balanceAmountDue = balanceAmountDue;
 	}
-	public String getOrderDate() {
-		return orderDate;
-	}
-	public void setOrderDate(String orderDate) {
-		this.orderDate = orderDate;
-	}
+	
 	public String getBillingAddress() {
 		return billingAddress;
 	}
@@ -332,12 +342,6 @@ public class InvoiceVO implements BaseVO {
 	public void setOrderDateTo(String orderDateTo) {
 		this.orderDateTo = orderDateTo;
 	}
-	public String getInvoiceNo() {
-		return invoiceNo;
-	}
-	public void setInvoiceNo(String invoiceNo) {
-		this.invoiceNo = invoiceNo;
-	}
 	public Date getInvoiceDate() {
 		return invoiceDate;
 	}
@@ -355,5 +359,11 @@ public class InvoiceVO implements BaseVO {
 	}
 	public void setTonnageFees(BigDecimal tonnageFees) {
 		this.tonnageFees = tonnageFees;
+	}
+	public BigDecimal getDiscount() {
+		return discount;
+	}
+	public void setDiscount(BigDecimal discount) {
+		this.discount = discount;
 	}
 }

@@ -2187,7 +2187,7 @@ public class OrderController extends CRUDController<Order> {
 	private OrderNotes createAuditOrderNotes(Order order, String orderAuditMsg, Long createdBy) {
 		OrderNotes auditOrderNotes = new OrderNotes();
 		auditOrderNotes.setNotesType(OrderNotes.NOTES_TYPE_AUDIT);
-		auditOrderNotes.setNotes("***AUDIT: " + orderAuditMsg + "***");
+		auditOrderNotes.setNotes(OrderNotes.AUDIT_MSG_PREFIX + orderAuditMsg + OrderNotes.AUDIT_MSG_SUFFIX);
 		
 		Order emptyOrder = new Order();
 		emptyOrder.setId(order.getId());

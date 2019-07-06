@@ -36,18 +36,22 @@ function validateCreateInvoiceSearchMissingData() {
 	
 	var createInvoiceSearchForm = getCreateInvoiceSearchForm();
 	
+	if (createInvoiceSearchForm.find('#orderId').val() != "") {
+		return missingData;
+	}
+	
 	if (createInvoiceSearchForm.find('#customerId').val() == "") {
-		missingData += "Company Name, "
+		missingData += "Company Name, ";
 	}
 	
 	var orderDateFrom = createInvoiceSearchForm.find("input[name='orderDateFrom']").val();
 	if (orderDateFrom == "") {
-		missingData += "Order Date From, "
+		missingData += "Order Date From, ";
 	}
 	
 	var orderDateTo = createInvoiceSearchForm.find("input[name='orderDateTo']").val();
 	if (orderDateTo == "") {
-		missingData += "Order Date To, "
+		missingData += "Order Date To, ";
 	}
 	
 	if (missingData != "") {
@@ -57,16 +61,16 @@ function validateCreateInvoiceSearchMissingData() {
 }
 
 function processCreateInvoiceParamsDialogSubmit() {
-	var invoiceParamsDialogInvoiceNo = document.getElementById("createInvoiceParamsDialogInvoiceNo").value;
+	//var invoiceParamsDialogInvoiceNo = document.getElementById("createInvoiceParamsDialogInvoiceNo").value;
 	var invoiceParamsDialogInvoiceDate = document.getElementById("createInvoiceParamsDialogInvoiceDate").value;
-	if (invoiceParamsDialogInvoiceNo == '' || invoiceParamsDialogInvoiceDate == '') {
-		var alertMsg = "<span><b>Please enter invoice no. and date</b><br></span>";
+	if (invoiceParamsDialogInvoiceDate == '') {
+		var alertMsg = "<span><b>Please specify invoice date</b><br></span>";
 		displayPopupDialogErrorMessage(alertMsg, false);
 
 		return false;
 	}
 	
-	setCreateInvoiceServiceFormValues(invoiceParamsDialogInvoiceNo, invoiceParamsDialogInvoiceDate);
+	setCreateInvoiceServiceFormValues(invoiceParamsDialogInvoiceDate);
 	
 	$('#createInvoiceParamsDialogCancelBtn').click();
 	
@@ -75,11 +79,11 @@ function processCreateInvoiceParamsDialogSubmit() {
 	form.submit();
 }
 
-function setCreateInvoiceServiceFormValues(invoiceNo, invoiceDate) {
+function setCreateInvoiceServiceFormValues(invoiceDate) {
 	var createInvoiceServiceForm = getCreateInvoiceServiceForm();
 	
-	var serviceFormInvoiceNoElem = createInvoiceServiceForm.find('#invoiceNo');
-	serviceFormInvoiceNoElem.val(invoiceNo);
+	/*var serviceFormInvoiceNoElem = createInvoiceServiceForm.find('#invoiceNo');
+	serviceFormInvoiceNoElem.val(invoiceNo);*/
 	
 	var serviceFormInvoiceDateElem = createInvoiceServiceForm.find('#invoiceDate');
 	serviceFormInvoiceDateElem.val(invoiceDate);
@@ -108,6 +112,40 @@ function openCreateInvoiceParamsDialog() {
 	var invoiceParamsDialogId = "createInvoiceParamsDialog";
 	showPopupDialogWithHtml("Invoice params", invoiceParamsDialogId); 
 }
+
+function handleCustomerChange() {
+	var deliveryAddressSelect = $('#deliveryAddress');
+	emptySelect(deliveryAddressSelect);
+	
+	var customerSelect =  $('#customerId');
+	var customerId = customerSelect.val();
+	if (customerId == "") {
+		return false;
+	}
+	
+	retrieveAndPopulateDeliveryAddress(customerId);
+}
+
+function retrieveAndPopulateDeliveryAddress(customerId) {
+	$.ajax({
+  		url: "deliveryAddressSearch.do?id=" + customerId,
+       	type: "GET",
+       	success: function(responseData, textStatus, jqXHR) {
+    	   	var addressList = jQuery.parseJSON(responseData);
+    	   	populateDeliveryAddress(addressList);
+		}
+	});
+}
+
+function populateDeliveryAddress(addressList) {
+	var deliveryAddressSelect = $('#deliveryAddress');
+	$.each(addressList, function () {
+   		$("<option />", {
+   	        val: this.id,
+   	        text: this.fullLine
+   	    }).appendTo(deliveryAddressSelect);
+   	});
+}
 </script>
 
 <br />
@@ -121,11 +159,30 @@ function openCreateInvoiceParamsDialog() {
 		<tr>
 			<td class="form-left">Customer<span class="errorMessage">*</span></td>
 			<td class="wide">
-				<form:select cssClass="flat form-control input-sm" style="width:172px !important" id="customerId" path="customerId" >
+				<form:select cssClass="flat form-control input-sm" style="width:172px !important" id="customerId" path="customerId" 
+					onChange="return handleCustomerChange();">
 					<form:option value="">----Please Select----</form:option>
 					<form:options items="${customers}" itemValue="id" itemLabel="companyName"/>
 				</form:select> 
 				<form:errors path="customerId" cssClass="errorMessage" />
+			</td>
+			<td class="form-left">Delivery Address<span class="errorMessage"></span></td>
+			<td class="wide">
+				<form:select cssClass="flat form-control input-sm" style="width:172px !important" id="deliveryAddress" path="deliveryAddress" >
+					<form:option value="">----Please Select----</form:option>
+					<form:options items="${deliveryAddresses}" itemValue="id" itemLabel="fullLine"/>
+				</form:select> 
+				<form:errors path="deliveryAddress" cssClass="errorMessage" />
+			</td>
+		</tr>
+		<tr>
+			<td class="form-left">Order<span class="errorMessage"></span></td>
+			<td class="wide">
+				<form:select cssClass="flat form-control input-sm" style="width:172px !important" id="orderId" path="orderId">
+					<form:option value="">----Please Select----</form:option>
+					<form:options items="${orderIds}"/>
+				</form:select> 
+				<form:errors path="orderId" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>
@@ -139,6 +196,7 @@ function openCreateInvoiceParamsDialog() {
 				<form:input path="orderDateTo" cssClass="flat" style="width:172px !important" id="datepicker1" maxlength="10"/>
 				<br/><form:errors path="orderDateTo" cssClass="errorMessage" />
 			</td>
+			<td colspan=10></td>
 		</tr>
 		<tr>
 			<td></td>
@@ -156,7 +214,7 @@ function openCreateInvoiceParamsDialog() {
 			<td>
 				<a href="javascript:;" onclick="createInvoice()">
 					<img src="/transys/images/edit.png" title="Create Invoice" class="toolbarButton" border="0">
-					Create Invoice
+					Preview Invoice
 				</a>
 			</td>
 			<td width="90">
@@ -171,7 +229,6 @@ function openCreateInvoiceParamsDialog() {
 	</tbody>
 </table>
 <form:form name="createInvoiceServiceForm" id="createInvoiceServiceForm" class="tab-color">
-	<input type=hidden id="invoiceNo" name="invoiceNo" value=""/>
 	<input type=hidden id="invoiceDate" name="invoiceDate" value=""/>
 	
 	<!-- To make datepicker work in modal dialog -->
@@ -200,10 +257,14 @@ function openCreateInvoiceParamsDialog() {
 		<transys:textcolumn headerText="City Fee" dataField="orderFees.cityFee" type="java.math.BigDecimal"/>
 		<transys:textcolumn headerText="OverWt Fee" dataField="orderFees.overweightFee" type="java.math.BigDecimal"/>
 		<transys:textcolumn headerText="Addnl Fee" dataField="orderFees.totalAdditionalFees" type="java.math.BigDecimal"/>
+		<transys:textcolumn headerText="Disc." dataField="orderFees.discountAmount" type="java.math.BigDecimal"/>
 		<transys:textcolumn headerText="Total Amt" dataField="orderFees.totalFees" type="java.math.BigDecimal" />
 		<transys:textcolumn headerText="Amt Paid" dataField="totalAmountPaid" type="java.math.BigDecimal" />
 		<transys:textcolumn headerText="Bal Due" dataField="balanceAmountDue" type="java.math.BigDecimal" />
 		<transys:textcolumn headerText="Status" dataField="orderStatus.status" />
+		<transys:textcolumn headerText="Inv." dataField="invoiced"/>
+		<transys:textcolumn headerText="Inv. #" dataField="invoiceId"/>
+		<transys:textcolumn headerText="Inv. Dt" dataField="invoiceDate" dataFormat="MM/dd/yyyy"/>
 	</transys:datatable>
 	<%session.setAttribute("createInvoiceColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
 </form:form>
@@ -212,11 +273,12 @@ function openCreateInvoiceParamsDialog() {
 	<div id="createInvoiceParamsDialogBody">
 		<table id="form-table" class="table">
 			<tr>
+				<!--
 				<td class="form-left">Invoice #<span class="errorMessage">*</span></td>
 				<td>
 					<input type="text" id="createInvoiceParamsDialogInvoiceNo" style="min-width:175px; max-width:175px" 
 						maxlength="50" class="flat flat-ext">
-				</td>
+				</td> -->
 			</tr>
 			<tr>
 				<td class="form-left">Invoice Date<span class="errorMessage">*</span></td>
@@ -237,7 +299,7 @@ function openCreateInvoiceParamsDialog() {
 			<tr>
 				<td>&nbsp;</td>
 				<td colspan="2">
-					<input type="button" id="createInvoiceParamsDialogSubmitBtn" value="Create Invoice" class="flat btn btn-primary btn-sm btn-sm-ext" 
+					<input type="button" id="createInvoiceParamsDialogSubmitBtn" value="Preview Invoice" class="flat btn btn-primary btn-sm btn-sm-ext" 
 						onclick="javascript:processCreateInvoiceParamsDialogSubmit();"/>
 					<input type="button" id="createInvoiceParamsDialogCancelBtn" value="Cancel" class="flat btn btn-primary btn-sm btn-sm-ext" data-dismiss="modal" />
 				</td>

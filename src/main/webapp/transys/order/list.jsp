@@ -267,10 +267,14 @@ function populateCustomerDeliveryAddress() {
 		<transys:textcolumn headerText="City Fee" dataField="orderFees.cityFee" type="java.math.BigDecimal"/>
 		<transys:textcolumn headerText="OverWt Fee" dataField="orderFees.overweightFee" type="java.math.BigDecimal"/>
 		<transys:textcolumn headerText="Addnl Fee" dataField="orderFees.totalAdditionalFees" type="java.math.BigDecimal"/>
+		<transys:textcolumn headerText="Disc." dataField="orderFees.discountAmount" type="java.math.BigDecimal"/>
 		<transys:textcolumn headerText="Total Amt" dataField="orderFees.totalFees" type="java.math.BigDecimal" />
 		<transys:textcolumn headerText="Amt Paid" dataField="totalAmountPaid" type="java.math.BigDecimal" />
 		<transys:textcolumn headerText="Bal Due" dataField="balanceAmountDue" type="java.math.BigDecimal" />
-		<transys:textcolumn headerText="Status" dataField="orderStatus.status" />
+		<transys:textcolumn headerText="Status" dataField="orderStatus.status"/>
+		<transys:textcolumn headerText="Inv." dataField="invoiced"/>
+		<transys:textcolumn headerText="Inv. #" dataField="invoiceId"/>
+		<transys:textcolumn headerText="Inv. Dt" dataField="invoiceDate" dataFormat="MM/dd/yyyy"/>
 		<transys:imagecolumn headerText="EXCH" linkUrl="javascript:processExchange('{id}');" imageSrc="${ctx}/images/exchange.png" HAlign="center"/>
 		<transys:imagecolumn headerText="PRINT" linkUrl="javascript:printOrder('{id}');" imageSrc="${ctx}/images/print.png" HAlign="center"/>
 	</transys:datatable>

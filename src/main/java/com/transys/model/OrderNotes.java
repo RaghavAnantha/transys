@@ -16,6 +16,11 @@ public class OrderNotes extends AbstractBaseModel {
 	@Transient
 	public static final String NOTES_TYPE_AUDIT = "AUDIT";
 	
+	@Transient
+	public static final String AUDIT_MSG_PREFIX = "***AUDIT: ";
+	@Transient
+	public static final String AUDIT_MSG_SUFFIX = "***";
+	
 	@ManyToOne
 	@JoinColumn(name="orderId") 
 	private Order order;

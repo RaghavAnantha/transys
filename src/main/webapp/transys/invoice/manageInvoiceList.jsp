@@ -31,18 +31,22 @@ function validateManageInvoiceSearchMissingData() {
 	
 	var manageInvoiceSearchForm = getManageInvoiceSearchForm();
 	
+	if (manageInvoiceSearchForm.find('#manageInvoiceInvoiceNo').val() != ""
+			|| manageInvoiceSearchForm.find('#manageInvoiceOrderId').val() != "") {
+		return missingData;
+	}
+	
 	if (manageInvoiceSearchForm.find('#manageInvoiceCustomerId').val() == "") {
-		missingData += "Company Name, "
+		missingData += "Company Name, ";
 	}
 	
 	var orderDateFrom = manageInvoiceSearchForm.find("input[name='manageInvoiceOrderDateFrom']").val();
-	if (orderDateFrom == "") {
-		missingData += "Order Date From, "
-	}
-	
 	var orderDateTo = manageInvoiceSearchForm.find("input[name='manageInvoiceOrderDateTo']").val();
-	if (orderDateTo == "") {
-		missingData += "Order Date To, "
+	var invoiceDateFrom = manageInvoiceSearchForm.find("input[name='manageInvoiceInvoiceDateFrom']").val();
+	var invoiceDateTo = manageInvoiceSearchForm.find("input[name='manageInvoiceInvoiceDateTo']").val();
+	if ((orderDateFrom == "" || orderDateTo == "")
+			&& (invoiceDateFrom == "" || invoiceDateTo == "")) {
+		missingData += "Invoice/Orders, ";
 	}
 	
 	if (missingData != "") {
@@ -52,7 +56,7 @@ function validateManageInvoiceSearchMissingData() {
 }
 
 function confirmDeleteInvoice(invoiceId) {
-	showConfirmDialogWithPurpose("Confirm Invoice Delete", "Do you want to Delete Invoice id: " + invoiceId + "?",
+	showConfirmDialogWithPurpose("Confirm Invoice Delete", "Do you want to Delete Invoice #: " + invoiceId + "?",
 			"DEL_INVOICE:"+invoiceId);
 }
 
@@ -67,6 +71,40 @@ function processDeleteInvoice(invoiceId) {
 function loadManageInvoice(data) {
 	$("#manageInvoice").html(data);
 }
+
+function handleCustomerChange() {
+	var deliveryAddressSelect = $('#manageInvoiceDeliveryAddress');
+	emptySelect(deliveryAddressSelect);
+	
+	var customerSelect =  $('#manageInvoiceCustomerId');
+	var customerId = customerSelect.val();
+	if (customerId == "") {
+		return false;
+	}
+	
+	retrieveAndPopulateDeliveryAddress(customerId);
+}
+
+function retrieveAndPopulateDeliveryAddress(customerId) {
+	$.ajax({
+  		url: "deliveryAddressSearch.do?id=" + customerId,
+       	type: "GET",
+       	success: function(responseData, textStatus, jqXHR) {
+    	   	var addressList = jQuery.parseJSON(responseData);
+    	   	populateDeliveryAddress(addressList);
+		}
+	});
+}
+
+function populateDeliveryAddress(addressList) {
+	var deliveryAddressSelect = $('#manageInvoiceDeliveryAddress');
+	$.each(addressList, function () {
+   		$("<option />", {
+   	        val: this.id,
+   	        text: this.fullLine
+   	    }).appendTo(deliveryAddressSelect);
+   	});
+}
 </script>
 
 <br />
@@ -80,7 +118,8 @@ function loadManageInvoice(data) {
 		<tr>
 			<td class="form-left">Customer<span class="errorMessage">*</span></td>
 			<td class="wide">
-				<select class="flat form-control input-sm" id="manageInvoiceCustomerId" name="manageInvoiceCustomerId" style="width:175px !important">
+				<select class="flat form-control input-sm" id="manageInvoiceCustomerId" name="manageInvoiceCustomerId" style="width:175px !important"
+					onChange="return handleCustomerChange();">
 					<option value="">----Please Select----</option>
 					<c:forEach items="${customers}" var="aCustomer">
 						<c:set var="selected" value="" />
@@ -91,29 +130,57 @@ function loadManageInvoice(data) {
 					</c:forEach>
 				</select>
 			</td>
-			<td class="form-left">Invoice #<span class="errorMessage"></span></td>
+			<td class="form-left">Delivery Address<span class="errorMessage"></span></td>
 			<td class="wide">
-				<select class="flat form-control input-sm" id="invoiceNo" name="invoiceNo" style="width:175px !important">
+				<select class="flat form-control input-sm" id="manageInvoiceDeliveryAddress" name="manageInvoiceDeliveryAddress" style="width:175px !important">
 					<option value="">----Please Select----</option>
-					<c:forEach items="${invoiceNos}" var="anInvoiceNo">
+					<c:forEach items="${deliveryAddresses}" var="aDeliveryAddress">
 						<c:set var="selected" value="" />
-						<c:if test="${sessionScope.searchCriteria.searchMap['invoiceNo'] == anInvoiceNo}">
+						<c:if test="${sessionScope.searchCriteria.searchMap['manageInvoiceDeliveryAddress'] == aDeliveryAddress.id}">
 							<c:set var="selected" value="selected" />
 						</c:if>
-						<option value="${anInvoiceNo}" ${selected}>${anInvoiceNo}</option>
+						<option value="${aDeliveryAddress.id}" ${selected}>${aDeliveryAddress.fullLine}</option>
 					</c:forEach>
 				</select>
 			</td>
 			<td colspan=10></td>
 		</tr>
 		<tr>
+			<td class="form-left">Invoice #<span class="errorMessage"></span></td>
+			<td class="wide">
+				<select class="flat form-control input-sm" id="manageInvoiceInvoiceNo" name="manageInvoiceInvoiceNo" style="width:175px !important">
+					<option value="">----Please Select----</option>
+					<c:forEach items="${invoiceNos}" var="anInvoiceNo">
+						<c:set var="selected" value="" />
+						<c:if test="${sessionScope.searchCriteria.searchMap['manageInvoiceInvoiceNo'] == anInvoiceNo}">
+							<c:set var="selected" value="selected" />
+						</c:if>
+						<option value="${anInvoiceNo}" ${selected}>${anInvoiceNo}</option>
+					</c:forEach>
+				</select>
+			</td>
+			<td class="form-left">Order #<span class="errorMessage"></span></td>
+			<td class="wide">
+				<select class="flat form-control input-sm" id="manageInvoiceOrderId" name="manageInvoiceOrderId" style="width:175px !important">
+					<option value="">----Please Select----</option>
+					<c:forEach items="${ordrIds}" var="anOrderId">
+						<c:set var="selected" value="" />
+						<c:if test="${sessionScope.searchCriteria.searchMap['manageInvoiceOrderId'] == anOrderId}">
+							<c:set var="selected" value="selected" />
+						</c:if>
+						<option value="${anOrderId}" ${selected}>${anOrderId}</option>
+					</c:forEach>
+				</select>
+			</td>
+		</tr>
+		<tr>
 			<td class="form-left">Invoice Date From<span class="errorMessage">*</span></td>
 			<td>
-				<input class="flat" id="datepicker5" name="invoiceDateFrom" value="${sessionScope.searchCriteria.searchMap['invoiceDateFrom']}" style="width: 175px" />
+				<input class="flat" id="datepicker5" name="manageInvoiceInvoiceDateFrom" value="${sessionScope.searchCriteria.searchMap['manageInvoiceInvoiceDateFrom']}" style="width: 175px" />
 			</td>
 			<td class="form-left">Invoice Date To<span class="errorMessage">*</span></td>
 			<td>
-				<input class="flat" id="datepicker6" name="invoiceDateTo" value="${sessionScope.searchCriteria.searchMap['invoiceDateTo']}" style="width: 175px" />
+				<input class="flat" id="datepicker6" name="manageInvoiceInvoiceDateTo" value="${sessionScope.searchCriteria.searchMap['manageInvoiceInvoiceDateTo']}" style="width: 175px" />
 			</td>
 		</tr>
 		<tr>
@@ -157,14 +224,18 @@ function loadManageInvoice(data) {
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
 		pagingLink="manageInvoiceSearch.do" multipleSelect="false" searcheable="false"
 		exportPdf="false" exportXls="false" dataQualifier="manageInvoice">
-		<transys:textcolumn headerText="Id" dataField="id" />
-		<transys:textcolumn headerText="Invoice #" dataField="invoiceNo" />
+		<transys:textcolumn headerText="Invoice #" dataField="id" />
 		<transys:textcolumn headerText="Invoice Date" dataField="invoiceDate" dataFormat="MM/dd/yyyy"/>
-		<transys:textcolumn headerText="Customer" dataField="companyName" />
-		<transys:textcolumn headerText="Total Amt" dataField="totalFees" type="java.math.BigDecimal" dataFormat="#####0.00"/>
-		<transys:textcolumn headerText="Amt Paid" dataField="totalAmountPaid" type="java.math.BigDecimal" dataFormat="#####0.00"/>
-		<transys:textcolumn headerText="Bal Due" dataField="balanceAmountDue" type="java.math.BigDecimal" dataFormat="#####0.00"/>
+		<transys:textcolumn headerText="Order Date From" dataField="orderDateFrom" dataFormat="MM/dd/yyyy"/>
+		<transys:textcolumn headerText="Order Date To" dataField="orderDateTo" dataFormat="MM/dd/yyyy"/>
+		<transys:textcolumn headerText="Order Count" dataField="orderCount" />
+		<transys:textcolumn headerText="Total Fees" dataField="totalFees" type="java.math.BigDecimal" dataFormat="#####0.00"/>
+		<transys:textcolumn headerText="Total Discount" dataField="totalDiscount" type="java.math.BigDecimal"/>
+		<transys:textcolumn headerText="Total Amt Paid" dataField="totalAmountPaid" type="java.math.BigDecimal" dataFormat="#####0.00"/>
+		<transys:textcolumn headerText="Bal Due" dataField="totalBalanceAmountDue" type="java.math.BigDecimal" dataFormat="#####0.00"/>
 		<transys:imagecolumn headerText="Download As PDF" linkUrl="${ctx}/invoice/downloadInvoice.do?id={id}&type=pdf" imageSrc="${ctx}/images/pdf.png" HAlign="center"/>
+		<transys:imagecolumn headerText="Download As CSV" linkUrl="${ctx}/invoice/downloadInvoice.do?id={id}&type=csv" imageSrc="${ctx}/images/csv.png" HAlign="center"/>
+		<transys:imagecolumn headerText="Download As XLS" linkUrl="${ctx}/invoice/downloadInvoice.do?id={id}&type=xls" imageSrc="${ctx}/images/excel.png" HAlign="center"/>
 		<transys:imagecolumn headerText="DEL" linkUrl="javascript:confirmDeleteInvoice('{id}');" imageSrc="${ctx}/images/delete.png" HAlign="center"/>
 	</transys:datatable>
 	<%session.setAttribute("manageInvoiceColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>

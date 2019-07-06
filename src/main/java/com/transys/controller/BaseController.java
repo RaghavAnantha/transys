@@ -120,6 +120,10 @@ public class BaseController {
 			criteria.setPageSize(25);
 		}
 		
+		if (StringUtils.isNotEmpty(request.getParameter("rst"))) {
+			criteria.getSearchMap().clear();
+		}
+		
 		criteria.setRequestParams(params);
 		if (params != null && params.size()>0) {
 			Map parameters = new HashMap();

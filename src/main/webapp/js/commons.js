@@ -2,6 +2,13 @@ function showTab(tab) {
 	$('.nav-tabs a[href="#' + tab + '"]').tab('show');
 }
 
+function emptySelect(selectElem) {
+	selectElem.empty();
+	
+	var firstOption = $('<option value="">'+ "-----Please Select-----" +'</option>');
+	selectElem.append(firstOption);
+}
+
 function ValidateFileType(fileId) {
 	var image = document.getElementById(fileId).value;
 	if (image != '') {

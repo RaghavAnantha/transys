@@ -230,6 +230,15 @@ public class Order extends AbstractBaseModel {
 	/*@JoinColumn(name="notes")
 	private OrderNotes notes;*/
 	
+	@Column(name="invoiced")
+	private String invoiced;
+	
+	@Column(name="invoiceId")
+	private Long invoiceId;
+	
+	@Column(name="invoiceDate")
+	private Date invoiceDate;
+	
 	public BigDecimal getGrossWeight() {
 		return grossWeight;
 	}
@@ -473,6 +482,30 @@ public class Order extends AbstractBaseModel {
 		this.scaleTicketNumber = scaleTicketNumber;
 	}
 
+	public String getInvoiced() {
+		return invoiced;
+	}
+
+	public void setInvoiced(String invoiced) {
+		this.invoiced = invoiced;
+	}
+
+	public Long getInvoiceId() {
+		return invoiceId;
+	}
+
+	public void setInvoiceId(Long invoiceId) {
+		this.invoiceId = invoiceId;
+	}
+
+	public Date getInvoiceDate() {
+		return invoiceDate;
+	}
+
+	public void setInvoiceDate(Date invoiceDate) {
+		this.invoiceDate = invoiceDate;
+	}
+	
 	/*public String getMaterialType() {
 		return materialType;
 	}

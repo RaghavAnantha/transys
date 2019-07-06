@@ -90,11 +90,11 @@ public class GenericJpaDAO implements GenericDAO {
 		return q.getResultList();
 	}
 
-	@Override
+	/*@Override
 	public <T extends BaseModel> void executeSimpleUpdateQuery(String query) {
 		Query q = entityManager.createQuery(query);
 		q.executeUpdate();
-	}
+	}*/
 
 	@Override
 	public <T extends BaseModel> List<T> findAll(Class<T> clazz) {
@@ -649,4 +649,11 @@ public class GenericJpaDAO implements GenericDAO {
 		List<T> resultSetWithDuplicates = findByCriteria(clazz, criterias, orderField, desc);
 		return resultSetWithDuplicates.parallelStream().distinct().collect(Collectors.toList());
 	}
+	
+	@Override
+	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+	public int executeUpdate(String query) {
+		return getEntityManager().createQuery(query).executeUpdate();
+	}
+	
 }

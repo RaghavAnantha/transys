@@ -9,6 +9,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -22,33 +24,51 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Controller;
+
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
 import org.springframework.ui.ModelMap;
+
 import org.springframework.validation.BindingResult;
 
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.j2ee.servlets.ImageServlet;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import com.transys.service.DynamicReportService;
 
 import com.transys.controller.BaseController;
 
 import com.transys.core.util.CoreUtil;
+import com.transys.core.util.FormatUtil;
 import com.transys.core.util.MimeUtil;
+import com.transys.core.util.ModelUtil;
 
 import com.transys.model.Customer;
+import com.transys.model.DeliveryAddress;
 import com.transys.model.Order;
 import com.transys.model.OrderFees;
+import com.transys.model.OrderPayment;
+import com.transys.model.Permit;
 import com.transys.model.SearchCriteria;
+import com.transys.model.User;
+import com.transys.model.invoice.OrderInvoiceDetails;
+import com.transys.model.invoice.OrderInvoiceHeader;
 
 import com.transys.model.vo.invoice.InvoiceVO;
 
 @Controller
 @RequestMapping("/invoice")
+@Transactional(readOnly = false)
 public class InvoiceController extends BaseController {
 	@Autowired
 	private DynamicReportService dynamicReportService;
@@ -91,6 +111,9 @@ public class InvoiceController extends BaseController {
 		
 		String returnUrl = getUrlContext() + "/invoice";
 		
+		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
+		processSaveInvoiceReferrer(request, model, criteria, input);
+		
 		validateSearch(input, bindingResult);
 		if(bindingResult.hasErrors()) {
         	return returnUrl;
@@ -98,11 +121,32 @@ public class InvoiceController extends BaseController {
 		
 		request.getSession().setAttribute("input", input);
 		
-		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		List<Order> orderList = performCreateInvoiceSearch(criteria, input);
 		model.addAttribute("list", orderList);
 		
 		return returnUrl;
+	}
+	
+	private void processSaveInvoiceReferrer(HttpServletRequest request, ModelMap model,
+			SearchCriteria criteria, InvoiceVO input) {
+		String saveSuccessMsg = (String) request.getSession().getAttribute("msg");
+		String referrer = request.getHeader("Referer");
+		if (!StringUtils.contains(referrer, "previewInvoice.do")
+				|| !StringUtils.equals(InvoiceVO.INV_SAVE_SUCCESS_MSG, saveSuccessMsg)) {
+			return;
+		}
+		
+		String customerId = (String) criteria.getSearchMap().get("customerId");
+		String deliveryAddress = (String) criteria.getSearchMap().get("deliveryAddress");
+		String orderId = (String) criteria.getSearchMap().get("orderId");
+		String orderDateFrom = (String) criteria.getSearchMap().get("orderDateFrom");
+		String orderDateTo = (String) criteria.getSearchMap().get("orderDateTo");
+		
+		input.setCustomerId(customerId);
+		input.setDeliveryAddress(deliveryAddress);
+		input.setOrderId(orderId);
+		input.setOrderDateFrom(orderDateFrom);
+		input.setOrderDateTo(orderDateTo);
 	}
 	
 	@RequestMapping(method = {RequestMethod.GET, RequestMethod.POST }, value = "/manageInvoiceSearch.do")
@@ -110,8 +154,8 @@ public class InvoiceController extends BaseController {
 		setupManageInvoiceList(model, request);
 		
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
-		List<InvoiceVO> invoiceVOList = performManageInvoiceSearch(criteria);
-		model.addAttribute("list", invoiceVOList);
+		List<OrderInvoiceHeader> orderInvoiceHeaderList = performManageInvoiceSearch(criteria);
+		model.addAttribute("list", orderInvoiceHeaderList);
 		
 		return getUrlContext() + "/manageInvoiceList";
 	}
@@ -128,6 +172,16 @@ public class InvoiceController extends BaseController {
 
 		List<Customer> customerList = genericDAO.executeSimpleQuery("select obj from Customer obj where obj.deleteFlag='1' order by obj.companyName asc");
 		model.addAttribute("customers", customerList);
+		
+		String customerId = (String) searchCriteria.getSearchMap().get("customerId");
+		if (StringUtils.isNotEmpty(customerId)) {
+			String query = "select obj from DeliveryAddress obj where obj.deleteFlag='1' and obj.customer.id=" 
+					+  customerId + " order by obj.line1 asc";
+			model.addAttribute("deliveryAddresses", genericDAO.executeSimpleQuery(query));
+		}
+		
+		List<String> orderIdList = retrieveOrderIds("N");
+		model.addAttribute("orderIds", orderIdList);
 	}
 	
 	private void setupManageInvoiceList(ModelMap model, HttpServletRequest request) {
@@ -143,13 +197,45 @@ public class InvoiceController extends BaseController {
 		List<Customer> customerList = genericDAO.executeSimpleQuery("select obj from Customer obj where obj.deleteFlag='1' order by obj.companyName asc");
 		model.addAttribute("customers", customerList);
 		
+		String customerId = (String) searchCriteria.getSearchMap().get("manageInvoiceCustomerId");
+		if (StringUtils.isNotEmpty(customerId)) {
+			String query = "select obj from DeliveryAddress obj where obj.deleteFlag='1' and obj.customer.id=" 
+					+  customerId + " order by obj.line1 asc";
+			model.addAttribute("deliveryAddresses", genericDAO.executeSimpleQuery(query));
+		}
+		
+		List<String> orderIdList = retrieveOrderIds("Y");
+		model.addAttribute("orderIds", orderIdList);
+		
+		String query = "Select obj.id from OrderInvoiceHeader obj where obj.deleteFlag=1 order by obj.id asc";
+		List<OrderInvoiceHeader> orderInvoiceHeaderList = genericDAO.executeSimpleQuery(query);
 		List<String> invoiceNoList = new ArrayList<String>();
-		invoiceNoList.add("1234");
+		for (Object obj : orderInvoiceHeaderList) {
+			invoiceNoList.add(obj.toString());
+		}
 		model.addAttribute("invoiceNos", invoiceNoList);
+	}
+	
+	private List<String> retrieveOrderIds(String invoiced) {
+		String query = "Select obj.id from Order obj where obj.deleteFlag=1 "
+				+ " and obj.invoiced='" + invoiced + "'";
+		if (StringUtils.equals(invoiced, "N")) {
+			query	+= " and obj.balanceAmountDue > 0.0";
+		}
+		query	+= " order by obj.id asc";
+		
+		List<Order> orderList = genericDAO.executeSimpleQuery(query);
+		List<String> orderIdList = new ArrayList<String>();
+		for (Object obj : orderList) {
+			orderIdList.add(obj.toString());
+		}
+		return orderIdList;
 	}
 	
 	private List<Order> performCreateInvoiceSearch(SearchCriteria criteria, InvoiceVO input) {
 		String customerId = input.getCustomerId();
+		String deliveryAddress = input.getDeliveryAddress();
+		String orderId = input.getOrderId();
 		String orderDateFrom = input.getOrderDateFrom();
 		String orderDateTo = input.getOrderDateTo();
 		
@@ -158,9 +244,16 @@ public class InvoiceController extends BaseController {
 		StringBuffer whereClause = new StringBuffer(" and obj.deleteFlag=1");
 		
 		whereClause.append(" and obj.balanceAmountDue > " + 0.0);
+		whereClause.append(" and obj.invoiced='N'");
 		
 		if (StringUtils.isNotEmpty(customerId)) {
 			whereClause.append(" and obj.customer.id=" + customerId);
+		}
+		if (StringUtils.isNotEmpty(deliveryAddress)) {
+			whereClause.append(" and obj.deliveryAddress.id=" + deliveryAddress);
+		}
+		if (StringUtils.isNotEmpty(orderId)) {
+			whereClause.append(" and obj.id=" + orderId);
 		}
 		if (StringUtils.isNotEmpty(orderDateFrom)){
         	try {
@@ -194,28 +287,83 @@ public class InvoiceController extends BaseController {
 		return orderList;
 	}
 	
-	private List<InvoiceVO> performManageInvoiceSearch(SearchCriteria criteria) {
+	private List<OrderInvoiceHeader> performManageInvoiceSearch(SearchCriteria criteria) {
+		String invoiceId = (String) criteria.getSearchMap().get("manageInvoiceInvoiceNo");
 		String customerId = (String) criteria.getSearchMap().get("manageInvoiceCustomerId");
+		String orderId = (String) criteria.getSearchMap().get("manageInvoiceOrderId");
+		String deliveryAddress = (String) criteria.getSearchMap().get("manageInvoiceDeliveryAddress");
 		String orderDateFrom = (String) criteria.getSearchMap().get("manageInvoiceOrderDateFrom");
 		String orderDateTo = (String) criteria.getSearchMap().get("manageInvoiceOrderDateTo");
+		String invoiceDateFrom = (String) criteria.getSearchMap().get("invoiceDateFrom");
+		String invoiceDateTo = (String) criteria.getSearchMap().get("invoiceDateTo");
 		
-		List<InvoiceVO> invoiceVOList = new ArrayList<InvoiceVO>();
+		StringBuffer query = new StringBuffer("select distinct obj from OrderInvoiceHeader obj join obj.orderInvoiceDetails oidet where 1=1");
+		StringBuffer countQuery = new StringBuffer("select count(distinct obj.id) from OrderInvoiceHeader obj join obj.orderInvoiceDetails oidet where 1=1");
+		StringBuffer whereClause = new StringBuffer(" and obj.deleteFlag=1");
 		
-		InvoiceVO invoiceVO = new InvoiceVO();
-		invoiceVO.setId(1l);
-		invoiceVO.setInvoiceNo("12345");
-		invoiceVO.setInvoiceDate(new Date());
-		invoiceVO.setCompanyName("City Of Chicago DSS");
-		invoiceVO.setTotalFees(new BigDecimal(200.00));
-		invoiceVO.setTotalAmountPaid(new BigDecimal(100.00));
-		invoiceVO.setBalanceAmountDue(new BigDecimal(100.00));
-		invoiceVOList.add(invoiceVO);
+		if (StringUtils.isNotEmpty(invoiceId)) {
+			whereClause.append(" and obj.id=" + invoiceId);
+		}
+		if (StringUtils.isNotEmpty(customerId)) {
+			whereClause.append(" and obj.customerId=" + customerId);
+		}
+		if (StringUtils.isNotEmpty(deliveryAddress)) {
+			whereClause.append(" and oidet.deliveryAddressId=" + deliveryAddress);
+		}
+		if (StringUtils.isNotEmpty(orderId)) {
+			whereClause.append(" and oidet.orderId=" + orderId);
+		}
+		if (StringUtils.isNotEmpty(orderDateFrom)){
+        	try {
+        		whereClause.append(" and obj.orderDateFrom >='"+sdf.format(dateFormat.parse(orderDateFrom))+"'");
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+		}
+      if (StringUtils.isNotEmpty(orderDateTo)){
+	     	try {
+	     		whereClause.append(" and obj.orderDateTo <='"+sdf.format(dateFormat.parse(orderDateTo))+"'");
+	     	} catch (ParseException e) {
+				e.printStackTrace();
+			}
+		}
+      if (StringUtils.isNotEmpty(invoiceDateFrom)){
+        	try {
+        		whereClause.append(" and obj.invoiceDate >='"+sdf.format(dateFormat.parse(invoiceDateFrom))+"'");
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+		}
+      if (StringUtils.isNotEmpty(invoiceDateTo)){
+	     	try {
+	     		whereClause.append(" and obj.invoiceDate <='"+sdf.format(dateFormat.parse(invoiceDateTo))+"'");
+	     	} catch (ParseException e) {
+				e.printStackTrace();
+			}
+		}
+      
+      query.append(whereClause);
+      countQuery.append(whereClause);
+      
+      query.append(" order by obj.id desc");
+      
+      Long recordCount = (Long) genericDAO.getEntityManager().createQuery(countQuery.toString()).getSingleResult();        
+		criteria.setRecordCount(recordCount.intValue());	
 		
-		criteria.setRecordCount(1);
-		return invoiceVOList;
+		List<OrderInvoiceHeader> orderInvoiceHeaderList = 
+				genericDAO.getEntityManager().createQuery(query.toString())
+						.setMaxResults(criteria.getPageSize())
+						.setFirstResult(criteria.getPage() * criteria.getPageSize())
+						.getResultList();
+		
+		return orderInvoiceHeaderList;
 	}
 	
 	private void validateSearch(InvoiceVO input, BindingResult bindingResult) {
+		if (StringUtils.isNotEmpty(input.getOrderId())) {
+			return;
+		}
+		
 		if (StringUtils.isEmpty(input.getCustomerId())) {
 			bindingResult.rejectValue("customerId", "NotNull.java.lang.String", null, null);
 		}
@@ -233,6 +381,14 @@ public class InvoiceController extends BaseController {
 			return new ArrayList<InvoiceVO>();
 		}
 		
+		List<Order> orderList = retrieveOrder(orderIdsArr) ;
+		List<InvoiceVO> invoiceVOList = new ArrayList<InvoiceVO>();
+		map(orderList, invoiceVOList);
+		
+		return invoiceVOList;
+	}
+	
+	private List<Order> retrieveOrder(String[] orderIdsArr) {
 		StringBuffer query = new StringBuffer("select obj from Order obj where 1=1");
 		StringBuffer whereClause = new StringBuffer(" and obj.deleteFlag=1");
 		
@@ -244,27 +400,52 @@ public class InvoiceController extends BaseController {
       query.append(" order by obj.createdAt desc");
       
       List<Order> orderList = genericDAO.executeSimpleQuery(query.toString());
-		List<InvoiceVO> invoiceReportVOList = new ArrayList<InvoiceVO>();
-		map(orderList, invoiceReportVOList);
-		
-		return invoiceReportVOList;
+      return orderList;
 	}
 	
-	private void map(List<Order> orderList, List<InvoiceVO> invoiceReportVOList) {
+	private void map(List<Order> orderList, List<InvoiceVO> invoiceVOList) {
 		if (orderList == null || orderList.isEmpty()) {
 			return;
 		}
 		
 		for (Order anOrder : orderList) {
-			InvoiceVO anInvoiceReportVO = new InvoiceVO();
-			map(anOrder, anInvoiceReportVO);
-			invoiceReportVOList.add(anInvoiceReportVO);
+			InvoiceVO anInvoiceVO = new InvoiceVO();
+			map(anOrder, anInvoiceVO);
+			invoiceVOList.add(anInvoiceVO);
 		}
+	}
+	
+	private void map(OrderInvoiceDetails orderInvoiceDetails, InvoiceVO anInvoiceVO) {
+		anInvoiceVO.setId(orderInvoiceDetails.getId());
+		anInvoiceVO.setOrderDate(orderInvoiceDetails.getOrderDate());
+		anInvoiceVO.setStatus(orderInvoiceDetails.getOrderStatus());
+		
+		anInvoiceVO.setDeliveryContactName(orderInvoiceDetails.getDeliveryContactName());
+		anInvoiceVO.setDeliveryContactPhone1(orderInvoiceDetails.getDeliveryContactPhone1());
+		anInvoiceVO.setDeliveryAddressFullLine(orderInvoiceDetails.getDeliveryAddressFullLine());
+		anInvoiceVO.setDeliveryCity(orderInvoiceDetails.getDeliveryAddressCity());
+		
+		anInvoiceVO.setDeliveryDate(orderInvoiceDetails.getFormattedDeliveryDate());
+		anInvoiceVO.setPickupDate(orderInvoiceDetails.getFormattedPickupDate());
+		
+		anInvoiceVO.setDumpsterPrice(orderInvoiceDetails.getDumpsterPrice());
+		
+		anInvoiceVO.setCityFee(orderInvoiceDetails.getCityFee() == null ? (new BigDecimal("0.00")) : orderInvoiceDetails.getCityFee());
+		
+		anInvoiceVO.setPermitFees(orderInvoiceDetails.getTotalPermitFees());
+		anInvoiceVO.setOverweightFee(orderInvoiceDetails.getOverweightFee());
+		anInvoiceVO.setAdditionalFees(orderInvoiceDetails.getTotalAdditionalFees());
+		anInvoiceVO.setTonnageFees(orderInvoiceDetails.getTonnageFees());
+		anInvoiceVO.setTotalFees(orderInvoiceDetails.getTotalFees());
+		
+		anInvoiceVO.setTotalAmountPaid(orderInvoiceDetails.getTotalAmountPaid());
+		anInvoiceVO.setDiscount(orderInvoiceDetails.getDiscountAmount());
+		anInvoiceVO.setBalanceAmountDue(orderInvoiceDetails.getBalanceAmountDue());
 	}
 	
 	private void map(Order anOrder, InvoiceVO anInvoiceVO) {
 		anInvoiceVO.setId(anOrder.getId());
-		anInvoiceVO.setOrderDate(anOrder.getFormattedCreatedAt());
+		anInvoiceVO.setOrderDate(anOrder.getCreatedAt());
 		anInvoiceVO.setStatus(anOrder.getOrderStatus().getStatus());
 		
 		anInvoiceVO.setDeliveryContactName(anOrder.getDeliveryContactName());
@@ -285,43 +466,381 @@ public class InvoiceController extends BaseController {
 		anInvoiceVO.setAdditionalFees(anOrderFees.getTotalAdditionalFees());
 		anInvoiceVO.setTonnageFees(anOrderFees.getTonnageFee());
 		anInvoiceVO.setTotalFees(anOrderFees.getTotalFees());
+		anInvoiceVO.setDiscount(anOrderFees.getDiscountAmount());
 		
 		anInvoiceVO.setTotalAmountPaid(anOrder.getTotalAmountPaid());
 		anInvoiceVO.setBalanceAmountDue(anOrder.getBalanceAmountDue());
 	}
 	
+	private void map(List<Order> orderList, OrderInvoiceHeader orderInvoiceHeader, List<OrderInvoiceDetails> orderInvoiceDetailsList) {
+		if (orderList == null || orderList.isEmpty()) {
+			return;
+		}
+		
+		BigDecimal totalFees = new BigDecimal(0.00);
+		BigDecimal totalDiscount = new BigDecimal(0.00);
+		BigDecimal totalAmountPaid = new BigDecimal(0.00);
+		BigDecimal totalBalanceAmountDue = new BigDecimal(0.00);
+		List<Date> orderDateList = new ArrayList<Date>();
+		for (Order anOrder : orderList) {
+			orderDateList.add(anOrder.getCreatedAt());
+			
+			OrderInvoiceDetails anOrderInvoiceDetails = new OrderInvoiceDetails();
+			anOrderInvoiceDetails.setInvoiceHeader(orderInvoiceHeader);
+			
+			map(anOrder, anOrderInvoiceDetails);
+			orderInvoiceDetailsList.add(anOrderInvoiceDetails);
+			
+			if (anOrderInvoiceDetails.getTotalFees() != null) {
+				totalFees = totalFees.add(anOrderInvoiceDetails.getTotalFees());
+			}
+			if (anOrderInvoiceDetails.getTotalAmountPaid() != null) {
+				totalAmountPaid = totalAmountPaid.add(anOrderInvoiceDetails.getTotalAmountPaid());
+			}
+			if (anOrderInvoiceDetails.getDiscountAmount() != null) {
+				totalDiscount = totalDiscount.add(anOrderInvoiceDetails.getDiscountAmount());
+			}
+			if (anOrderInvoiceDetails.getBalanceAmountDue() != null) {
+				totalBalanceAmountDue = totalBalanceAmountDue.add(anOrderInvoiceDetails.getBalanceAmountDue());
+			}
+		}
+		
+		Collections.sort(orderDateList);
+		orderInvoiceHeader.setOrderDateFrom(orderDateList.get(0));
+		orderInvoiceHeader.setOrderDateTo(orderDateList.get(orderDateList.size()-1));
+		
+		orderInvoiceHeader.setTotalFees(totalFees);
+		orderInvoiceHeader.setTotalDiscount(totalDiscount);
+		orderInvoiceHeader.setTotalAmountPaid(totalAmountPaid);
+		orderInvoiceHeader.setTotalBalanceAmountDue(totalBalanceAmountDue);
+	}
+	
+	private void map(InvoiceVO input, OrderInvoiceHeader orderInvoiceHeader) {
+		orderInvoiceHeader.setInvoiceDate(input.getInvoiceDate());
+	}
+	
+	private void mapToInvoiceVOList(List<OrderInvoiceDetails> orderInvoiceDetailsList, List<InvoiceVO> invoiceVOList) {
+		if (orderInvoiceDetailsList == null || orderInvoiceDetailsList.isEmpty()) {
+			return;
+		}
+		
+		for (OrderInvoiceDetails orderInvoiceDetails : orderInvoiceDetailsList) {
+			InvoiceVO anInvoiceVO = new InvoiceVO();
+			map(orderInvoiceDetails, anInvoiceVO);
+			invoiceVOList.add(anInvoiceVO);
+		}
+	}
+	
+	private void map(OrderInvoiceHeader orderInvoiceHeader, Map<String, Object> params) {
+		params.put("invoiceNo", orderInvoiceHeader.getId().toString());
+		params.put("invoiceDate", orderInvoiceHeader.getInvoiceDate());
+		params.put("customer", orderInvoiceHeader.getCompanyName());
+		params.put("billingAddress", orderInvoiceHeader.getBillingAddress("\n"));
+		
+		String orderDateRange = FormatUtil.formatDateRange(orderInvoiceHeader.getOrderDateFrom(), orderInvoiceHeader.getOrderDateTo());
+		params.put("orderDateRange", orderDateRange);
+	}
+	
+	private void map(Order anOrder, OrderInvoiceHeader orderInvoiceHeader) {
+		Customer customer = anOrder.getCustomer();
+		orderInvoiceHeader.setCustomerId(customer.getId());
+		orderInvoiceHeader.setCompanyName(customer.getCompanyName());
+		orderInvoiceHeader.setBillingAddressLine1(customer.getBillingAddressLine1());
+		orderInvoiceHeader.setBillingAddressLine2(customer.getBillingAddressLine2());
+		orderInvoiceHeader.setCity(customer.getCity());
+		orderInvoiceHeader.setState(customer.getState().getName());
+		orderInvoiceHeader.setZip(customer.getZipcode());
+		orderInvoiceHeader.setContactName(customer.getContactName());
+		orderInvoiceHeader.setPhone1(customer.getPhone());
+		orderInvoiceHeader.setPhone2(customer.getAltPhone1());
+		orderInvoiceHeader.setFax(customer.getFax());
+		orderInvoiceHeader.setEmail(customer.getEmail());
+	}
+	
+	private void map(Order anOrder, OrderInvoiceDetails orderInvoiceDetails) {
+		orderInvoiceDetails.setOrderId(anOrder.getId());
+		orderInvoiceDetails.setOrderDate(anOrder.getCreatedAt());
+		orderInvoiceDetails.setOrderStatus(anOrder.getOrderStatus().getStatus());
+		orderInvoiceDetails.setPickupOrderId(anOrder.getPickupOrderId());
+		
+		orderInvoiceDetails.setDeliveryContactName(anOrder.getDeliveryContactName());
+		orderInvoiceDetails.setDeliveryContactPhone1(anOrder.getDeliveryContactPhone1());
+		orderInvoiceDetails.setDeliveryContactPhone2(anOrder.getDeliveryContactPhone2());
+		
+		DeliveryAddress aDeliveryAddress = anOrder.getDeliveryAddress();
+		orderInvoiceDetails.setDeliveryAddressId(aDeliveryAddress.getId());
+		orderInvoiceDetails.setDeliveryAddressLine1(aDeliveryAddress.getLine1());
+		orderInvoiceDetails.setDeliveryAddressLine2(aDeliveryAddress.getLine2());
+		orderInvoiceDetails.setDeliveryAddressCity(aDeliveryAddress.getCity());
+		orderInvoiceDetails.setDeliveryAddressState(aDeliveryAddress.getState().getCode());
+		orderInvoiceDetails.setDeliveryAddressZip(aDeliveryAddress.getZipcode());
+		
+		orderInvoiceDetails.setDumpsterSize(anOrder.getDumpsterSize().getSize());
+		if (anOrder.getDumpsterLocation() != null) {
+			orderInvoiceDetails.setLocationType(anOrder.getDumpsterLocation().getLocationType());
+		}
+		
+		orderInvoiceDetails.setMaterialCategory(anOrder.getMaterialType().getMaterialCategory().getCategory());
+		orderInvoiceDetails.setMaterialType(anOrder.getMaterialType().getMaterialName());
+		
+		orderInvoiceDetails.setGrossWeight(anOrder.getGrossWeight());
+		orderInvoiceDetails.setNetWeightLb(anOrder.getNetWeightLb());
+		orderInvoiceDetails.setNetWeightTonnage(anOrder.getNetWeightTonnage());
+		orderInvoiceDetails.setTare(anOrder.getTare());
+		orderInvoiceDetails.setScaleTicketNumber(anOrder.getScaleTicketNumber());
+		
+		if (anOrder.getDropOffDriver() != null) {
+			orderInvoiceDetails.setDropOffDriver(anOrder.getDropOffDriver().getEmployee().getFullName());
+		}
+		if (anOrder.getPickupDriver() != null) {
+			orderInvoiceDetails.setPickupDriver(anOrder.getPickupDriver().getEmployee().getFullName());
+		}
+		
+		orderInvoiceDetails.setGrossWeight(anOrder.getGrossWeight());
+		orderInvoiceDetails.setNetWeightLb(anOrder.getNetWeightLb());
+		orderInvoiceDetails.setNetWeightTonnage(anOrder.getNetWeightTonnage());
+		orderInvoiceDetails.setTare(anOrder.getTare());
+		orderInvoiceDetails.setScaleTicketNumber(anOrder.getScaleTicketNumber());
+		
+		orderInvoiceDetails.setDeliveryHourFrom(anOrder.getDeliveryHourFrom());
+		orderInvoiceDetails.setDeliveryHourTo(anOrder.getDeliveryHourTo());
+		orderInvoiceDetails.setDeliveryMinutesFrom(anOrder.getDeliveryMinutesFrom());
+		orderInvoiceDetails.setDeliveryMinutesTo(anOrder.getDeliveryMinutesTo());
+		
+		orderInvoiceDetails.setDeliveryDate(anOrder.getDeliveryDate());
+		orderInvoiceDetails.setPickupDate(anOrder.getPickupDate());
+		
+		OrderFees anOrderFees = anOrder.getOrderFees();
+		orderInvoiceDetails.setDumpsterPrice(anOrderFees.getDumpsterPrice());
+		
+		orderInvoiceDetails.setCityFee(anOrderFees.getCityFee() == null ? (new BigDecimal("0.00"))
+				: anOrderFees.getCityFee());
+		orderInvoiceDetails.setCityFeeSuburbName(anOrderFees.getCityFeeType() == null ? 
+					StringUtils.EMPTY : anOrderFees.getCityFeeType().getSuburbName());
+		
+		List<Permit> permitList = anOrder.getPermits();
+		if (permitList != null && !permitList.isEmpty()) {
+			Permit aPermit = permitList.get(0);
+			orderInvoiceDetails.setPermitNum1(aPermit.getNumber());
+			orderInvoiceDetails.setPermitFee1(aPermit.getFee());
+			orderInvoiceDetails.setPermitType1(aPermit.getPermitType().getPermitType());
+			orderInvoiceDetails.setPermitClass1(aPermit.getPermitClass().getPermitClass());
+		
+			if (permitList.size() > 1) {
+				aPermit = permitList.get(1);
+				orderInvoiceDetails.setPermitNum2(aPermit.getNumber());
+				orderInvoiceDetails.setPermitFee2(aPermit.getFee());
+				orderInvoiceDetails.setPermitType2(aPermit.getPermitType().getPermitType());
+				orderInvoiceDetails.setPermitClass2(aPermit.getPermitClass().getPermitClass());
+			}
+			
+			if (permitList.size() > 2) {
+				aPermit = permitList.get(2);
+				orderInvoiceDetails.setPermitNum3(aPermit.getNumber());
+				orderInvoiceDetails.setPermitFee3(aPermit.getFee());
+				orderInvoiceDetails.setPermitType3(aPermit.getPermitType().getPermitType());
+				orderInvoiceDetails.setPermitClass3(aPermit.getPermitClass().getPermitClass());
+			}
+		}
+		orderInvoiceDetails.setTotalPermitFees(anOrderFees.getTotalPermitFees());
+		
+		orderInvoiceDetails.setAdditionalFee1(anOrderFees.getAdditionalFee1());
+		if (anOrderFees.getAdditionalFee1Type() != null) {
+			orderInvoiceDetails.setAdditionalFee1Desc(anOrderFees.getAdditionalFee1Type().getDescription());
+		}
+		
+		orderInvoiceDetails.setAdditionalFee2(anOrderFees.getAdditionalFee2());
+		if (anOrderFees.getAdditionalFee2Type() != null) {
+			orderInvoiceDetails.setAdditionalFee2Desc(anOrderFees.getAdditionalFee2Type().getDescription());
+		}
+		
+		orderInvoiceDetails.setAdditionalFee3(anOrderFees.getAdditionalFee3());
+		if (anOrderFees.getAdditionalFee3Type() != null) {
+			orderInvoiceDetails.setAdditionalFee3Desc(anOrderFees.getAdditionalFee3Type().getDescription());
+		}
+		
+		orderInvoiceDetails.setTotalAdditionalFees(anOrderFees.getTotalAdditionalFees());
+		
+		orderInvoiceDetails.setOverweightFee(anOrderFees.getOverweightFee());
+		orderInvoiceDetails.setTonnageFees(anOrderFees.getTonnageFee());
+		
+		orderInvoiceDetails.setTotalFees(anOrderFees.getTotalFees());
+		orderInvoiceDetails.setDiscountAmount(anOrderFees.getDiscountAmount());
+		orderInvoiceDetails.setTotalAmountPaid(anOrder.getTotalAmountPaid());
+		orderInvoiceDetails.setBalanceAmountDue(anOrder.getBalanceAmountDue());
+		
+		List<OrderPayment> orderPaymentList = anOrder.getOrderPayment();
+	   if (orderPaymentList != null && !orderPaymentList.isEmpty()) {
+	   	OrderPayment orderPayment = orderPaymentList.get(0);
+	   	orderInvoiceDetails.setPaymentAmount1(orderPayment.getAmountPaid());
+   		if (orderPayment.getPaymentMethod() != null) {
+   			orderInvoiceDetails.setPaymentMethod1(orderPayment.getPaymentMethod().getMethod());
+   		}
+   		orderInvoiceDetails.setPaymentCCRefNum1(orderPayment.getCcReferenceNum());
+   		orderInvoiceDetails.setPaymentCheckNum1(orderPayment.getCheckNum());
+   		orderInvoiceDetails.setPaymentDate1(orderPayment.getPaymentDate());
+	  
+	   	if (orderPaymentList.size() > 1) {
+	   		orderPayment = orderPaymentList.get(1);
+	   		orderInvoiceDetails.setPaymentAmount2(orderPayment.getAmountPaid());
+	   		if (orderPayment.getPaymentMethod() != null) {
+	   			orderInvoiceDetails.setPaymentMethod2(orderPayment.getPaymentMethod().getMethod());
+	   		}
+	   		orderInvoiceDetails.setPaymentCCRefNum2(orderPayment.getCcReferenceNum());
+	   		orderInvoiceDetails.setPaymentCheckNum2(orderPayment.getCheckNum());
+	   		orderInvoiceDetails.setPaymentDate2(orderPayment.getPaymentDate());
+	   	}
+	   	
+	   	if (orderPaymentList.size() > 2) {
+	   		orderPayment = orderPaymentList.get(2);
+	   		orderInvoiceDetails.setPaymentAmount3(orderPayment.getAmountPaid());
+	   		if (orderPayment.getPaymentMethod() != null) {
+	   			orderInvoiceDetails.setPaymentMethod3(orderPayment.getPaymentMethod().getMethod());
+	   		}
+	   		orderInvoiceDetails.setPaymentCCRefNum3(orderPayment.getCcReferenceNum());
+	   		orderInvoiceDetails.setPaymentCheckNum3(orderPayment.getCheckNum());
+	   		orderInvoiceDetails.setPaymentDate3(orderPayment.getPaymentDate());
+	   	}
+	   }
+	}
+	
+	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
 	@RequestMapping(method = { RequestMethod.GET, RequestMethod.POST }, value = "/deleteInvoice.do")
 	public String deleteInvoice(ModelMap model, HttpServletRequest request, HttpServletResponse response,
-			@RequestParam("id") Long id) {
-		//genericDAO.deleteById(Invoice.class, id);
+			@RequestParam("id") Long invoiceId) {
+		User createdByUser = getUser(request);
+		Long createdBy = createdByUser.getId();
+		
+		//String query = "Select obj.id, obj.orderId from OrderInvoiceDetails obj where obj.invoiceHeader=" + invoiceId;
+		String query = "Select obj.orderId from OrderInvoiceDetails obj where obj.invoiceHeader=" + invoiceId;
+		List<OrderInvoiceDetails> orderInvoiceDetailsList = genericDAO.executeSimpleQuery(query);
+		
+		//Long[] invoiceDetailsIdArr = new Long[orderInvoiceDetailsList.size()];
+		String[] orderIdsArr = new String[orderInvoiceDetailsList.size()];
+		int i = 0;
+		for (Object obj : orderInvoiceDetailsList) {
+			//Object[] resultObjArr = (Object[]) obj;
+			//invoiceDetailsIdArr[i] = (Long) resultObjArr[0];
+			//orderIdsArr[i] = resultObjArr[1].toString();
+			orderIdsArr[i] = obj.toString();
+			i++;
+		}
+		
+		//String orderIds = CoreUtil.toString(orderIdsArr);
+		//List<Order> orderList = genericDAO.findByCommaSeparatedIds(Order.class, orderIds);
+		
+		String deleteQuery = "delete OrderInvoiceDetails oid where oid.invoiceHeader = " + invoiceId;
+		int noRowsDel = genericDAO.executeUpdate(deleteQuery);
+		/*for (Long invoiceDetailsId : invoiceDetailsIdArr) {
+			genericDAO.deleteById(OrderInvoiceDetails.class, invoiceDetailsId);
+		}*/
+		
+		genericDAO.deleteById(OrderInvoiceHeader.class, invoiceId);
+		
+		updateOrder(orderIdsArr, null, null, "N", createdBy);
+		  
+		String orderAuditMsg = "Order invoice deleted";
+		ModelUtil.createAuditOrderNotes(genericDAO, orderIdsArr, orderAuditMsg, createdByUser);
 		
 		setSuccessMsg(request, "Invoice deleted sucessfully");
 		return "redirect:/" + getUrlContext() + "/manageInvoiceSearch.do";
 		//return getUrlContext() + "/manageInvoiceList";
 	}
 	
+	@RequestMapping(method = RequestMethod.GET, value = "/deliveryAddressSearch.do")
+	public @ResponseBody String deliveryAddressSearch(ModelMap model, HttpServletRequest request,
+					@RequestParam("id") Long customerId) {
+		String query = "select obj from DeliveryAddress obj where obj.deleteFlag='1' and obj.customer.id="
+							+ customerId + " order by obj.line1 asc";
+		List<DeliveryAddress> addressList  = genericDAO.executeSimpleQuery(query);
+		
+		ObjectMapper objectMapper = new ObjectMapper();
+		String json = StringUtils.EMPTY;
+		try {
+			json = objectMapper.writeValueAsString(addressList);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+		return json;
+		
+		//String json = (new Gson()).toJson(addressList);
+		//return json;
+	}
+	
+	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
 	@RequestMapping(method = { RequestMethod.GET, RequestMethod.POST }, value = "/saveInvoice.do")
 	public String saveInvoice(ModelMap model, HttpServletRequest request, HttpServletResponse response) {
-		setupPreviewInvoice(request, model);
-		
 		InvoiceVO input = (InvoiceVO) request.getSession().getAttribute("input");
-		input.setHistoryCount(-2);
 		
-		setSuccessMsg(request, "Invoice saved sucessfully");
+		String[] orderIdsArr = input.getIds();
+		if (orderIdsArr == null || orderIdsArr.length <= 0) {
+			//setupPreviewInvoice(request, model);
+			//input.setHistoryCount(-2);
+			
+			setErrorMsg(request, response, "Please select at least one order");
+			return "redirect:/" + getUrlContext() + "/createInvoiceMain.do";
+			//return getUrlContext() + "/previewInvoice";
+		}
 		
-		return processPreviewInvoiceCommon(request, response, input);
-	}	
+		User createdByUser = getUser(request);
+		Long createdBy = createdByUser.getId();
+		
+		List<Order> orderList = retrieveOrder(orderIdsArr);
+		
+		OrderInvoiceHeader orderInvoiceHeader = new OrderInvoiceHeader();
+		orderInvoiceHeader.setCreatedAt(Calendar.getInstance().getTime());
+		orderInvoiceHeader.setCreatedBy(createdBy);
+		orderInvoiceHeader.setOrderCount(orderList.size());
+		
+		map(input, orderInvoiceHeader);
+		map(orderList.get(0), orderInvoiceHeader);
+		
+		List<OrderInvoiceDetails> orderInvoiceDetailsList = new ArrayList<OrderInvoiceDetails>();
+		map(orderList, orderInvoiceHeader, orderInvoiceDetailsList);
+		
+		genericDAO.save(orderInvoiceHeader);
+		
+		for (OrderInvoiceDetails anOrderInvoiceDetails : orderInvoiceDetailsList) {
+			anOrderInvoiceDetails.setCreatedAt(Calendar.getInstance().getTime());
+			anOrderInvoiceDetails.setCreatedBy(createdBy);
+			genericDAO.save(anOrderInvoiceDetails);
+		}
+		
+		updateOrder(orderIdsArr, orderInvoiceHeader.getId(), orderInvoiceHeader.getInvoiceDate(), "Y", createdBy);
+		
+		String orderAuditMsg = "Order invoiced";
+		ModelUtil.createAuditOrderNotes(genericDAO, orderIdsArr, orderAuditMsg, createdByUser);
+		
+		setSuccessMsg(request, InvoiceVO.INV_SAVE_SUCCESS_MSG);
+		return "redirect:/" + getUrlContext() + "/createInvoiceSearch.do";
+		//return processPreviewInvoiceCommon(request, response, input);
+	}
+	
+	private int updateOrder(String[] orderIdsArr, Long invoiceId, Date invoiceDate, String invoiced, Long createdBy) {
+		Date currentTime = Calendar.getInstance().getTime();
+		String orderIds = CoreUtil.toString(orderIdsArr);
+		
+		String invoiceIdStr = (invoiceId == null) ? "null" : invoiceId.toString();
+		String invoiceDateStr = (invoiceDate == null) ? "null" : 
+			"'" + ModelUtil.mysqlDf.format(invoiceDate) + "'";
+		
+		String orderUpdateQuery = "update Order o set o.invoiced = '" + invoiced + "',"
+			+ " o.invoiceId = " + invoiceIdStr + ","
+			+ " o.invoiceDate = " + invoiceDateStr + ","
+			+ " o.modifiedBy = " + createdBy + ","
+			+ " o.modifiedAt = '" + ModelUtil.mysqlDf.format(currentTime) + "'"
+			+ " where o.id in (" + orderIds + ")";
+		return genericDAO.executeUpdate(orderUpdateQuery);
+	}
 	
 	@RequestMapping(method = {RequestMethod.POST }, value = "/previewInvoice.do")
 	public String previewInvoice(ModelMap model, HttpServletRequest request, HttpServletResponse response,
 					@RequestParam("id") String[] ids,
-					@RequestParam("invoiceNo") String invoiceNo,
 					@RequestParam("invoiceDate") Date invoiceDate) {
 		setupPreviewInvoice(request, model);
 		
 		InvoiceVO input = (InvoiceVO) request.getSession().getAttribute("input");
 		input.setIds(ids);
-		input.setInvoiceNo(invoiceNo);
 		input.setInvoiceDate(invoiceDate);
 		input.setHistoryCount(-1);
 		
@@ -331,7 +850,7 @@ public class InvoiceController extends BaseController {
 	private String processPreviewInvoiceCommon(HttpServletRequest request, HttpServletResponse response,
 			InvoiceVO input) {
 		Map<String, Object> datas = generateInvoiceData(request, input);
-		List<InvoiceVO> invoiceReportVOList = (List<InvoiceVO>) datas.get("data");
+		List<InvoiceVO> invoiceVOList = (List<InvoiceVO>) datas.get("data");
 		Map<String, Object> params = (Map<String, Object>) datas.get("params");
 		
 		String type = "html";
@@ -340,7 +859,7 @@ public class InvoiceController extends BaseController {
 		String reportName = "previewInvoice";
 		try {
 			JasperPrint jasperPrint = dynamicReportService.getJasperPrintFromFile(reportName,
-					invoiceReportVOList, params, request);
+						invoiceVOList, params, request);
 			if (jasperPrint == null) {
 				setErrorMsg(request, response, "Error occured while processing invoice preview");
 			} else {
@@ -363,7 +882,7 @@ public class InvoiceController extends BaseController {
 		
 		InvoiceVO input = (InvoiceVO) request.getSession().getAttribute("input");
 		Map<String, Object> datas = generateInvoiceData(request, input);
-		List<InvoiceVO> invoiceReportVOList = (List<InvoiceVO>) datas.get("data");
+		List<InvoiceVO> invoiceVOList = (List<InvoiceVO>) datas.get("data");
 		Map<String, Object> params = (Map<String, Object>) datas.get("params");
 		
 		String reportName = "previewInvoice";
@@ -375,7 +894,7 @@ public class InvoiceController extends BaseController {
 		ByteArrayOutputStream out = null;
 		try {
 			out = dynamicReportService.generateStaticReport(reportName,
-						invoiceReportVOList, params, type, request);
+						invoiceVOList, params, type, request);
 			out.writeTo(response.getOutputStream());
 			
 			return null;
@@ -456,13 +975,13 @@ public class InvoiceController extends BaseController {
 		}
 		
 		SearchCriteria searchCriteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
-		List<InvoiceVO> invoiceList = performManageInvoiceSearch(searchCriteria);
-		Map<String, Object> params = new HashMap<String, Object>();
+		List<OrderInvoiceHeader> orderInvoiceHeaderList = performManageInvoiceSearch(searchCriteria);
+		//Map<String, Object> params = new HashMap<String, Object>();
 		
 		List columnPropertyList = (List) request.getSession().getAttribute(dataQualifier + "ColumnPropertyList");
 		ByteArrayOutputStream out = null;
 		try {
-			out = dynamicReportService.exportReport(reportName, type, InvoiceVO.class, invoiceList,
+			out = dynamicReportService.exportReport(reportName, type, OrderInvoiceHeader.class, orderInvoiceHeaderList,
 						columnPropertyList, request);
 			/*out = dynamicReportService.generateStaticReport(reportName,
 					invoiceList, params, type, request);*/
@@ -491,19 +1010,12 @@ public class InvoiceController extends BaseController {
 	@RequestMapping(method = { RequestMethod.GET, RequestMethod.POST }, value = "/downloadInvoice.do")
 	public String downloadInvoice(ModelMap model, HttpServletRequest request,
 			HttpServletResponse response,
+			@RequestParam(required = true, value = "id") Long invoiceId,
 			@RequestParam(required = true, value = "type") String type) {
 		setupManageInvoiceList(model, request);
 		
-		//InvoiceVO input = (InvoiceVO) request.getSession().getAttribute("input");
-		InvoiceVO input = new InvoiceVO();
-		input.setCustomerId("997");
-		input.setOrderDateFrom("01/14/2019");
-		input.setOrderDateTo("06/13/2019");
-		input.setIds(new String[]{"17558", "17513", "17512", "17411"});
-		input.setInvoiceNo("1234");
-		input.setInvoiceDate(new Date());
-		Map<String, Object> datas = generateInvoiceData(request, input);
-		List<InvoiceVO> invoiceReportVOList = (List<InvoiceVO>) datas.get("data");
+		Map<String, Object> datas = generateInvoiceData(request, invoiceId);
+		List<InvoiceVO> invoiceVOList = (List<InvoiceVO>) datas.get("data");
 		Map<String, Object> params = (Map<String, Object>) datas.get("params");
 		
 		String reportName = "previewInvoice";
@@ -515,7 +1027,7 @@ public class InvoiceController extends BaseController {
 		ByteArrayOutputStream out = null;
 		try {
 			out = dynamicReportService.generateStaticReport(reportName,
-						invoiceReportVOList, params, type, request);
+						invoiceVOList, params, type, request);
 			out.writeTo(response.getOutputStream());
 			
 			return null;
@@ -537,6 +1049,18 @@ public class InvoiceController extends BaseController {
 		}
 	}
 	
+	private OrderInvoiceHeader retrieveOrderInvoiceHeader(Long invoiceId) {
+		OrderInvoiceHeader orderInvoiceHeader = genericDAO.getById(OrderInvoiceHeader.class, invoiceId);
+		return orderInvoiceHeader;
+	}
+	
+	private List<OrderInvoiceDetails> retrieveOrderInvoiceDetails(Long invoiceId) {
+		String query = "select obj from OrderInvoiceDetails obj where obj.invoiceHeader.id=" + invoiceId
+					+ " order by obj.orderId asc";
+		List<OrderInvoiceDetails> orderInvoiceDetailsList = genericDAO.executeSimpleQuery(query);
+		return orderInvoiceDetailsList;
+	}
+	
 	private void setupPreviewInvoice(HttpServletRequest request, ModelMap model) {
 		Map<String, Object> imagesMap = new HashMap<String, Object>();
 		request.getSession().setAttribute("IMAGES_MAP", imagesMap);
@@ -546,38 +1070,76 @@ public class InvoiceController extends BaseController {
 		model.addAttribute("activeTab", "createInvoice");
 	}
 	
-	private Map<String,Object> generateInvoiceData(HttpServletRequest request, InvoiceVO input) {
-		List<InvoiceVO> invoiceReportVOList = performPreviewInvoiceSearch(input);
+	private Map<String, Object> generateInvoiceData(HttpServletRequest request, InvoiceVO input) {
+		List<InvoiceVO> invoiceVOList = performPreviewInvoiceSearch(input);
 		
 		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("invoiceNo", input.getInvoiceNo());
-		params.put("invoiceDate", input.getInvoiceDate());
+		map(input, invoiceVOList, params);
 		
-		Customer customer = retrieveCustomer(input.getCustomerId());
+		addLogoFilePath(request, params);
+		
+		Map<String,Object> datas = new HashMap<String,Object>();
+		addData(invoiceVOList, params, datas);
+		     
+		return datas;
+	}
+	
+	private void addData(List<InvoiceVO> invoiceVOList, Map<String, Object> params, Map<String,Object> datas) {
+		datas.put("data", invoiceVOList);
+		datas.put("params", params);
+	}
+	
+	private void addLogoFilePath(HttpServletRequest request, Map<String, Object> params) {
+		String logoFilePath = CoreUtil.getLogoFilePath(request);
+		params.put("LOGO_FILE_PATH", logoFilePath);
+	}
+	
+	private Map<String, Object> generateInvoiceData(HttpServletRequest request, Long invoiceId) {
+		OrderInvoiceHeader orderInvoiceHeader = retrieveOrderInvoiceHeader(invoiceId);
+		Map<String, Object> params = new HashMap<String, Object>();
+		map(orderInvoiceHeader, params);
+		
+		List<OrderInvoiceDetails> orderInvoiceDetailsList = retrieveOrderInvoiceDetails(invoiceId);
+		List<InvoiceVO> invoiceVOList = new ArrayList<InvoiceVO>();
+		mapToInvoiceVOList(orderInvoiceDetailsList, invoiceVOList);
+		
+		addLogoFilePath(request, params);
+		
+		Map<String,Object> datas = new HashMap<String,Object>();
+		addData(invoiceVOList, params, datas);
+		     
+		return datas;
+	}
+	
+	private void map(InvoiceVO invoiceVO, List<InvoiceVO> invoiceVOList, Map<String, Object> params) {
+		params.put("invoiceNo", "TBD");
+		params.put("invoiceDate", invoiceVO.getInvoiceDate());
+		
+		Customer customer = retrieveCustomer(invoiceVO.getCustomerId(), invoiceVO.getOrderId());
 		params.put("customer", customer.getCompanyName());
 		params.put("billingAddress", customer.getBillingAddress("\n"));
 		
-		String orderDateRange = StringUtils.isEmpty(input.getOrderDateFrom()) ? StringUtils.EMPTY : input.getOrderDateFrom();
-		orderDateRange += " - ";
-		orderDateRange += StringUtils.isEmpty(input.getOrderDateTo()) ? StringUtils.EMPTY : input.getOrderDateTo();
+		List<Date> orderDateList = new ArrayList<Date>();
+		for (InvoiceVO anInvoiceVO : invoiceVOList) {
+			orderDateList.add(anInvoiceVO.getOrderDate());
+		}
+		Collections.sort(orderDateList);
+		
+		String orderDateRange = FormatUtil.formatDateRange(orderDateList.get(0), orderDateList.get(orderDateList.size()-1));
 		params.put("orderDateRange", orderDateRange);
-		
-		String logoFilePath = CoreUtil.getLogoFilePath(request);
-		params.put("LOGO_FILE_PATH", logoFilePath);
-		
-		Map<String,Object> data = new HashMap<String,Object>();
-		data.put("data", invoiceReportVOList);
-		data.put("params",params);
-		     
-		return data;
 	}
 	
-	private Customer retrieveCustomer(String id) {
-		if (StringUtils.isEmpty(id)) {
-			return null;
+	private Customer retrieveCustomer(String customerId, String orderId) {
+		Customer customer = null;
+		if (StringUtils.isNotEmpty(customerId)) {
+			customer = genericDAO.getById(Customer.class, Long.valueOf(customerId));
+		} else if (StringUtils.isNotEmpty(orderId)) {
+			String query = "Select obj.customer from Order obj where obj.id=" + orderId;
+			List<Customer> customerList = genericDAO.executeSimpleQuery(query);
+			customer = customerList.get(0);
 		}
 		
-		return genericDAO.getById(Customer.class, Long.valueOf(id));
+		return customer;
 	}
 	
 	@ModelAttribute("modelObject")
