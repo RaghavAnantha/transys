@@ -116,22 +116,22 @@ CREATE TABLE `transys`.`orderInvoiceDetails` (
   CONSTRAINT `orderInvoiceDetailsInvoiceHeaderRef` FOREIGN KEY (`invoiceId`) REFERENCES `orderInvoiceHeader` (`id`) 
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
 
-ALTER TABLE `transys`.`orderinvoiceheader` 
+ALTER TABLE `transys`.`orderInvoiceHeader` 
 ADD INDEX `ordInvHdrCustomer_IDX` (`customerId` ASC)  COMMENT '',
 ADD INDEX `ordInvHdrInvoiceDate_IDX` (`invoiceDate` ASC)  COMMENT '';
 
 ALTER TABLE `transys`.`orderInvoiceDetails` 
 ADD UNIQUE INDEX `ordInvDets_invoiceIdOrderId_UNIQ` (`invoiceId` ASC, `orderId` ASC)  COMMENT '';
 
-ALTER TABLE `transys`.`orderinvoicedetails` 
+ALTER TABLE `transys`.`orderInvoiceDetails` 
 ADD INDEX `orderInvoiceDetailsOrderId_idx` (`orderId` ASC)  COMMENT '',
 ADD INDEX `orderInvoiceDetailsOrderDate_idx` (`orderDate` ASC)  COMMENT '',
 ADD INDEX `orderInvoiceDetailsDelAddsId_idx` (`deliveryAddressId` ASC)  COMMENT '';
 
-ALTER TABLE `transys`.`transysorder` 
+ALTER TABLE `transys`.`transysOrder` 
 ADD COLUMN `invoiced` VARCHAR(10) NULL DEFAULT 'N' COMMENT '' AFTER `balanceAmountDue`;
 
-ALTER TABLE `transys`.`transysorder` 
+ALTER TABLE `transys`.`transysOrder` 
 ADD COLUMN `invoiceDate` DATETIME NULL DEFAULT NULL COMMENT '' AFTER `invoiced`,
 ADD COLUMN `invoiceId` BIGINT(20) NULL DEFAULT NULL COMMENT '' AFTER `invoiceDate`;
 
