@@ -163,7 +163,7 @@ function populateDeliveryAddress(addressList) {
 			<td class="wide">
 				<select class="flat form-control input-sm" id="manageInvoiceOrderId" name="manageInvoiceOrderId" style="width:175px !important">
 					<option value="">----Please Select----</option>
-					<c:forEach items="${ordrIds}" var="anOrderId">
+					<c:forEach items="${orderIds}" var="anOrderId">
 						<c:set var="selected" value="" />
 						<c:if test="${sessionScope.searchCriteria.searchMap['manageInvoiceOrderId'] == anOrderId}">
 							<c:set var="selected" value="selected" />
