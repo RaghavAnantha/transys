@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
-<!-- 2019-07-04T22:52:16 -->
+<!-- 2019-07-06T12:11:08 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="previewInvoice" pageWidth="1390" pageHeight="595" orientation="Landscape" columnWidth="1350" leftMargin="20" rightMargin="20" topMargin="10" bottomMargin="10" uuid="53a6c0df-7db3-4567-a441-f90a0edf36dc">
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<parameter name="invoiceNo" class="java.lang.String"/>
@@ -198,7 +198,7 @@
 				<textFieldExpression><![CDATA[$P{billingAddress}]]></textFieldExpression>
 			</textField>
 			<image hAlign="Center" vAlign="Middle">
-				<reportElement x="11" y="0" width="349" height="110" uuid="52aeb398-2338-44f6-be95-8a1dd18ba957"/>
+				<reportElement x="11" y="4" width="349" height="110" uuid="52aeb398-2338-44f6-be95-8a1dd18ba957"/>
 				<graphicElement fill="Solid"/>
 				<imageExpression><![CDATA[$P{LOGO_FILE_PATH}]]></imageExpression>
 			</image>
@@ -874,8 +874,7 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["$" + (new java.text.DecimalFormat("#,##0.00").format($V{totalDiscount}.doubleValue()))
-]]></textFieldExpression>
+				<textFieldExpression><![CDATA["$" + (new java.text.DecimalFormat("#,##0.00").format($V{totalDiscount}.doubleValue()))]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="1220" y="-1" width="60" height="18" uuid="a1977532-09d7-4aec-8567-def5e78644f7">
