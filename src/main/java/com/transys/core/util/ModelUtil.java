@@ -8,6 +8,7 @@ import com.transys.core.dao.GenericDAO;
 
 import com.transys.model.Order;
 import com.transys.model.OrderNotes;
+import com.transys.model.OrderStatus;
 import com.transys.model.User;
 
 public class ModelUtil {
@@ -45,5 +46,10 @@ public class ModelUtil {
 		genericDAO.save(auditOrderNotes);
 		
 		return auditOrderNotes;
+	}
+	
+	public static OrderStatus retrieveOrderStatus(GenericDAO genericDAO, String status) {
+		OrderStatus orderStatus = (OrderStatus)genericDAO.executeSimpleQuery("select obj from OrderStatus obj where obj.deleteFlag='1' and obj.status='" + status + "'").get(0);
+		return orderStatus;
 	}
 }

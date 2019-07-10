@@ -58,6 +58,7 @@ import com.transys.model.DeliveryAddress;
 import com.transys.model.Order;
 import com.transys.model.OrderFees;
 import com.transys.model.OrderPayment;
+import com.transys.model.OrderStatus;
 import com.transys.model.Permit;
 import com.transys.model.SearchCriteria;
 import com.transys.model.User;
@@ -74,6 +75,9 @@ public class InvoiceController extends BaseController {
 	private DynamicReportService dynamicReportService;
 	
 	private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+	
+	private static String ORDER_INVOICE_MASTER = "orderInvoiceMaster";
+	private static String ORDER_INVOICE_SUB = "orderInvoiceSub";
 	
 	public InvoiceController() {
 		setUrlContext("invoice");
@@ -220,6 +224,8 @@ public class InvoiceController extends BaseController {
 		String query = "Select obj.id from Order obj where obj.deleteFlag=1 "
 				+ " and obj.invoiced='" + invoiced + "'";
 		if (StringUtils.equals(invoiced, "N")) {
+			OrderStatus orderStatus = ModelUtil.retrieveOrderStatus(genericDAO, OrderStatus.ORDER_STATUS_CANCELED);
+			query	+= " and obj.orderStatus.id !=" + orderStatus.getId().longValue();
 			query	+= " and obj.balanceAmountDue > 0.0";
 		}
 		query	+= " order by obj.id asc";
@@ -273,7 +279,7 @@ public class InvoiceController extends BaseController {
       query.append(whereClause);
       countQuery.append(whereClause);
       
-      query.append(" order by obj.createdAt desc");
+      query.append(" order by obj.id desc");
       
       Long recordCount = (Long) genericDAO.getEntityManager().createQuery(countQuery.toString()).getSingleResult();        
 		criteria.setRecordCount(recordCount.intValue());	
@@ -375,17 +381,14 @@ public class InvoiceController extends BaseController {
 		}
 	}
 	
-	private List<InvoiceVO> performPreviewInvoiceSearch(InvoiceVO input) {
+	private List<Order> performPreviewInvoiceSearch(InvoiceVO input) {
 		String[] orderIdsArr = input.getIds();
 		if (orderIdsArr == null || orderIdsArr.length <= 0) {
-			return new ArrayList<InvoiceVO>();
+			return null;
 		}
 		
 		List<Order> orderList = retrieveOrder(orderIdsArr) ;
-		List<InvoiceVO> invoiceVOList = new ArrayList<InvoiceVO>();
-		map(orderList, invoiceVOList);
-		
-		return invoiceVOList;
+		return orderList;
 	}
 	
 	private List<Order> retrieveOrder(String[] orderIdsArr) {
@@ -397,26 +400,29 @@ public class InvoiceController extends BaseController {
       
       query.append(whereClause);
       
-      query.append(" order by obj.createdAt desc");
+      query.append(" order by obj.id desc");
       
       List<Order> orderList = genericDAO.executeSimpleQuery(query.toString());
       return orderList;
 	}
 	
-	private void map(List<Order> orderList, List<InvoiceVO> invoiceVOList) {
+	private void map(List<Order> orderList, List<InvoiceVO> invoiceVOList,
+			List<InvoiceVO> invoicePaymentVOList) {
 		if (orderList == null || orderList.isEmpty()) {
 			return;
 		}
 		
 		for (Order anOrder : orderList) {
 			InvoiceVO anInvoiceVO = new InvoiceVO();
-			map(anOrder, anInvoiceVO);
+			map(anOrder, anInvoiceVO, invoicePaymentVOList);
 			invoiceVOList.add(anInvoiceVO);
 		}
 	}
 	
-	private void map(OrderInvoiceDetails orderInvoiceDetails, InvoiceVO anInvoiceVO) {
+	private void map(OrderInvoiceDetails orderInvoiceDetails, InvoiceVO anInvoiceVO,
+				List<InvoiceVO> invoicePaymentVOList) {
 		anInvoiceVO.setId(orderInvoiceDetails.getId());
+		anInvoiceVO.setOrderId(orderInvoiceDetails.getOrderId().toString());
 		anInvoiceVO.setOrderDate(orderInvoiceDetails.getOrderDate());
 		anInvoiceVO.setStatus(orderInvoiceDetails.getOrderStatus());
 		
@@ -441,10 +447,43 @@ public class InvoiceController extends BaseController {
 		anInvoiceVO.setTotalAmountPaid(orderInvoiceDetails.getTotalAmountPaid());
 		anInvoiceVO.setDiscount(orderInvoiceDetails.getDiscountAmount());
 		anInvoiceVO.setBalanceAmountDue(orderInvoiceDetails.getBalanceAmountDue());
+		
+		InvoiceVO anInvoicePaymentVO = null;
+		if (StringUtils.isNotEmpty(orderInvoiceDetails.getPaymentMethod1())) {
+			anInvoicePaymentVO = new InvoiceVO();
+			anInvoicePaymentVO.setOrderId(orderInvoiceDetails.getOrderId().toString());
+			anInvoicePaymentVO.setPaymentMethod(orderInvoiceDetails.getPaymentMethod1());
+			anInvoicePaymentVO.setPaymentDate(orderInvoiceDetails.getPaymentDate1());
+			anInvoicePaymentVO.setPaymentAmount(orderInvoiceDetails.getPaymentAmount1());
+			anInvoicePaymentVO.setCheckNum(orderInvoiceDetails.getPaymentCheckNum1());
+			anInvoicePaymentVO.setReferenceNum(orderInvoiceDetails.getPaymentCCRefNum1());
+			invoicePaymentVOList.add(anInvoicePaymentVO);
+		}
+		if (StringUtils.isNotEmpty(orderInvoiceDetails.getPaymentMethod2())) {
+			anInvoicePaymentVO = new InvoiceVO();
+			anInvoicePaymentVO.setOrderId(orderInvoiceDetails.getOrderId().toString());
+			anInvoicePaymentVO.setPaymentMethod(orderInvoiceDetails.getPaymentMethod2());
+			anInvoicePaymentVO.setPaymentDate(orderInvoiceDetails.getPaymentDate2());
+			anInvoicePaymentVO.setPaymentAmount(orderInvoiceDetails.getPaymentAmount2());
+			anInvoicePaymentVO.setCheckNum(orderInvoiceDetails.getPaymentCheckNum2());
+			anInvoicePaymentVO.setReferenceNum(orderInvoiceDetails.getPaymentCCRefNum2());
+			invoicePaymentVOList.add(anInvoicePaymentVO);
+		}
+		if (StringUtils.isNotEmpty(orderInvoiceDetails.getPaymentMethod3())) {
+			anInvoicePaymentVO = new InvoiceVO();
+			anInvoicePaymentVO.setOrderId(orderInvoiceDetails.getOrderId().toString());
+			anInvoicePaymentVO.setPaymentMethod(orderInvoiceDetails.getPaymentMethod3());
+			anInvoicePaymentVO.setPaymentDate(orderInvoiceDetails.getPaymentDate3());
+			anInvoicePaymentVO.setPaymentAmount(orderInvoiceDetails.getPaymentAmount3());
+			anInvoicePaymentVO.setCheckNum(orderInvoiceDetails.getPaymentCheckNum3());
+			anInvoicePaymentVO.setReferenceNum(orderInvoiceDetails.getPaymentCCRefNum3());
+			invoicePaymentVOList.add(anInvoicePaymentVO);
+		}
 	}
 	
-	private void map(Order anOrder, InvoiceVO anInvoiceVO) {
-		anInvoiceVO.setId(anOrder.getId());
+	private void map(Order anOrder, InvoiceVO anInvoiceVO,
+			List<InvoiceVO> invoicePaymentVOList) {
+		anInvoiceVO.setOrderId(anOrder.getId().toString());
 		anInvoiceVO.setOrderDate(anOrder.getCreatedAt());
 		anInvoiceVO.setStatus(anOrder.getOrderStatus().getStatus());
 		
@@ -470,6 +509,47 @@ public class InvoiceController extends BaseController {
 		
 		anInvoiceVO.setTotalAmountPaid(anOrder.getTotalAmountPaid());
 		anInvoiceVO.setBalanceAmountDue(anOrder.getBalanceAmountDue());
+		
+		List<OrderPayment> orderPaymentList = anOrder.getOrderPayment();
+		if (orderPaymentList == null || orderPaymentList.isEmpty()) {
+			return;
+		}
+		
+		InvoiceVO anInvoicePaymentVO = null;
+		OrderPayment anOrderPayment = null;
+		if (orderPaymentList.size() > 0) {
+			anOrderPayment = orderPaymentList.get(0);
+			anInvoicePaymentVO = new InvoiceVO();
+			anInvoicePaymentVO.setOrderId(anOrder.getId().toString());
+			anInvoicePaymentVO.setPaymentMethod(anOrderPayment.getPaymentMethod().getMethod());
+			anInvoicePaymentVO.setPaymentDate(anOrderPayment.getPaymentDate());
+			anInvoicePaymentVO.setPaymentAmount(anOrderPayment.getAmountPaid());
+			anInvoicePaymentVO.setCheckNum(anOrderPayment.getCheckNum());
+			anInvoicePaymentVO.setReferenceNum(anOrderPayment.getCcReferenceNum());
+			invoicePaymentVOList.add(anInvoicePaymentVO);
+		}
+		if (orderPaymentList.size() > 1) {
+			anOrderPayment = orderPaymentList.get(1);
+			anInvoicePaymentVO = new InvoiceVO();
+			anInvoicePaymentVO.setOrderId(anOrder.getId().toString());
+			anInvoicePaymentVO.setPaymentMethod(anOrderPayment.getPaymentMethod().getMethod());
+			anInvoicePaymentVO.setPaymentDate(anOrderPayment.getPaymentDate());
+			anInvoicePaymentVO.setPaymentAmount(anOrderPayment.getAmountPaid());
+			anInvoicePaymentVO.setCheckNum(anOrderPayment.getCheckNum());
+			anInvoicePaymentVO.setReferenceNum(anOrderPayment.getCcReferenceNum());
+			invoicePaymentVOList.add(anInvoicePaymentVO);
+		}
+		if (orderPaymentList.size() > 2) {
+			anOrderPayment = orderPaymentList.get(2);
+			anInvoicePaymentVO = new InvoiceVO();
+			anInvoicePaymentVO.setOrderId(anOrder.getId().toString());
+			anInvoicePaymentVO.setPaymentMethod(anOrderPayment.getPaymentMethod().getMethod());
+			anInvoicePaymentVO.setPaymentDate(anOrderPayment.getPaymentDate());
+			anInvoicePaymentVO.setPaymentAmount(anOrderPayment.getAmountPaid());
+			anInvoicePaymentVO.setCheckNum(anOrderPayment.getCheckNum());
+			anInvoicePaymentVO.setReferenceNum(anOrderPayment.getCcReferenceNum());
+			invoicePaymentVOList.add(anInvoicePaymentVO);
+		}
 	}
 	
 	private void map(List<Order> orderList, OrderInvoiceHeader orderInvoiceHeader, List<OrderInvoiceDetails> orderInvoiceDetailsList) {
@@ -519,14 +599,15 @@ public class InvoiceController extends BaseController {
 		orderInvoiceHeader.setInvoiceDate(input.getInvoiceDate());
 	}
 	
-	private void mapToInvoiceVOList(List<OrderInvoiceDetails> orderInvoiceDetailsList, List<InvoiceVO> invoiceVOList) {
+	private void mapToInvoiceVOList(List<OrderInvoiceDetails> orderInvoiceDetailsList, 
+			List<InvoiceVO> invoiceVOList, List<InvoiceVO> invoiceVOPaymentList) {
 		if (orderInvoiceDetailsList == null || orderInvoiceDetailsList.isEmpty()) {
 			return;
 		}
 		
 		for (OrderInvoiceDetails orderInvoiceDetails : orderInvoiceDetailsList) {
 			InvoiceVO anInvoiceVO = new InvoiceVO();
-			map(orderInvoiceDetails, anInvoiceVO);
+			map(orderInvoiceDetails, anInvoiceVO, invoiceVOPaymentList);
 			invoiceVOList.add(anInvoiceVO);
 		}
 	}
@@ -856,10 +937,11 @@ public class InvoiceController extends BaseController {
 		String type = "html";
 		response.setContentType(MimeUtil.getContentType(type));
 		
-		String reportName = "previewInvoice";
 		try {
-			JasperPrint jasperPrint = dynamicReportService.getJasperPrintFromFile(reportName,
-						invoiceVOList, params, request);
+			/*JasperPrint jasperPrint = dynamicReportService.getJasperPrintFromFile(reportName,
+						invoiceVOList, params, request);*/
+			JasperPrint jasperPrint = dynamicReportService.getJasperPrintFromFile(ORDER_INVOICE_MASTER, 
+					ORDER_INVOICE_SUB, invoiceVOList, params, request);
 			if (jasperPrint == null) {
 				setErrorMsg(request, response, "Error occured while processing invoice preview");
 			} else {
@@ -885,16 +967,17 @@ public class InvoiceController extends BaseController {
 		List<InvoiceVO> invoiceVOList = (List<InvoiceVO>) datas.get("data");
 		Map<String, Object> params = (Map<String, Object>) datas.get("params");
 		
-		String reportName = "previewInvoice";
 		if (!StringUtils.equals("html", type) && !StringUtils.equals("print", type)) {
-			response.setHeader("Content-Disposition", "attachment;filename="+reportName+"." + type);
+			response.setHeader("Content-Disposition", "attachment;filename="+ORDER_INVOICE_MASTER+"." + type);
 		}
 		response.setContentType(MimeUtil.getContentType(type));
 		
 		ByteArrayOutputStream out = null;
 		try {
-			out = dynamicReportService.generateStaticReport(reportName,
-						invoiceVOList, params, type, request);
+			/*out = dynamicReportService.generateStaticReport(reportName,
+						invoiceVOList, params, type, request);*/
+			out = dynamicReportService.generateStaticMasterSubReport(ORDER_INVOICE_MASTER, ORDER_INVOICE_SUB,
+					invoiceVOList, params, type, request);
 			out.writeTo(response.getOutputStream());
 			
 			return null;
@@ -1018,16 +1101,17 @@ public class InvoiceController extends BaseController {
 		List<InvoiceVO> invoiceVOList = (List<InvoiceVO>) datas.get("data");
 		Map<String, Object> params = (Map<String, Object>) datas.get("params");
 		
-		String reportName = "previewInvoice";
 		if (!StringUtils.equals("html", type) && !StringUtils.equals("print", type)) {
-			response.setHeader("Content-Disposition", "attachment;filename="+reportName+"." + type);
+			response.setHeader("Content-Disposition", "attachment;filename="+ORDER_INVOICE_MASTER+"." + type);
 		}
 		response.setContentType(MimeUtil.getContentType(type));
 		
 		ByteArrayOutputStream out = null;
 		try {
-			out = dynamicReportService.generateStaticReport(reportName,
-						invoiceVOList, params, type, request);
+			/*out = dynamicReportService.generateStaticReport(reportName,
+						invoiceVOList, params, type, request);*/
+			out = dynamicReportService.generateStaticMasterSubReport(ORDER_INVOICE_MASTER, ORDER_INVOICE_SUB,
+					invoiceVOList, params, type, request);
 			out.writeTo(response.getOutputStream());
 			
 			return null;
@@ -1071,10 +1155,14 @@ public class InvoiceController extends BaseController {
 	}
 	
 	private Map<String, Object> generateInvoiceData(HttpServletRequest request, InvoiceVO input) {
-		List<InvoiceVO> invoiceVOList = performPreviewInvoiceSearch(input);
+		List<Order> orderList = performPreviewInvoiceSearch(input);
+		
+		List<InvoiceVO> invoiceVOList = new ArrayList<InvoiceVO>();
+		List<InvoiceVO> invoicePaymentVOList = new ArrayList<InvoiceVO>();
+		map(orderList, invoiceVOList, invoicePaymentVOList);
 		
 		Map<String, Object> params = new HashMap<String, Object>();
-		map(input, invoiceVOList, params);
+		map(input, invoiceVOList, invoicePaymentVOList, params);
 		
 		addLogoFilePath(request, params);
 		
@@ -1101,7 +1189,9 @@ public class InvoiceController extends BaseController {
 		
 		List<OrderInvoiceDetails> orderInvoiceDetailsList = retrieveOrderInvoiceDetails(invoiceId);
 		List<InvoiceVO> invoiceVOList = new ArrayList<InvoiceVO>();
-		mapToInvoiceVOList(orderInvoiceDetailsList, invoiceVOList);
+		List<InvoiceVO> invoiceVOPaymentList = new ArrayList<InvoiceVO>();
+		mapToInvoiceVOList(orderInvoiceDetailsList, invoiceVOList, invoiceVOPaymentList);
+		params.put("orderPaymentList", invoiceVOPaymentList);
 		
 		addLogoFilePath(request, params);
 		
@@ -1111,7 +1201,7 @@ public class InvoiceController extends BaseController {
 		return datas;
 	}
 	
-	private void map(InvoiceVO invoiceVO, List<InvoiceVO> invoiceVOList, Map<String, Object> params) {
+	private void map(InvoiceVO invoiceVO, List<InvoiceVO> invoiceVOList, List<InvoiceVO> invoicePaymentVOList, Map<String, Object> params) {
 		params.put("invoiceNo", "TBD");
 		params.put("invoiceDate", invoiceVO.getInvoiceDate());
 		
@@ -1127,6 +1217,8 @@ public class InvoiceController extends BaseController {
 		
 		String orderDateRange = FormatUtil.formatDateRange(orderDateList.get(0), orderDateList.get(orderDateList.size()-1));
 		params.put("orderDateRange", orderDateRange);
+		
+		params.put("orderPaymentList", invoicePaymentVOList);
 	}
 	
 	private Customer retrieveCustomer(String customerId, String orderId) {

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
-<!-- 2019-07-06T12:11:08 -->
+<!-- 2019-07-10T10:48:22 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="previewInvoice" pageWidth="1390" pageHeight="595" orientation="Landscape" columnWidth="1350" leftMargin="20" rightMargin="20" topMargin="10" bottomMargin="10" uuid="53a6c0df-7db3-4567-a441-f90a0edf36dc">
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<parameter name="invoiceNo" class="java.lang.String"/>
@@ -11,10 +11,12 @@
 	<parameter name="LOGO_FILE_PATH" class="java.lang.String">
 		<parameterDescription><![CDATA[]]></parameterDescription>
 	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String"/>
+	<parameter name="orderPaymentList" class="java.util.List"/>
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
-	<field name="id" class="java.lang.Long"/>
+	<field name="orderId" class="java.lang.String"/>
 	<field name="deliveryContactName" class="java.lang.String"/>
 	<field name="deliveryContactPhone1" class="java.lang.String"/>
 	<field name="deliveryAddressFullLine" class="java.lang.String"/>
@@ -34,7 +36,7 @@
 	<field name="tonnageFees" class="java.math.BigDecimal"/>
 	<field name="discount" class="java.math.BigDecimal"/>
 	<variable name="orderCount" class="java.lang.Long" calculation="Count">
-		<variableExpression><![CDATA[$F{id}]]></variableExpression>
+		<variableExpression><![CDATA[$F{orderId}]]></variableExpression>
 	</variable>
 	<variable name="totalDumpsterPrice" class="java.math.BigDecimal" calculation="Sum">
 		<variableExpression><![CDATA[$F{dumpsterPrice}]]></variableExpression>
@@ -84,7 +86,7 @@
 				<text><![CDATA[Invoice]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="746" y="50" width="152" height="18" backcolor="#99CCFF" uuid="fc49961f-a9a6-40c3-8b79-826df9305869"/>
+				<reportElement mode="Opaque" x="747" y="50" width="152" height="18" backcolor="#99CCFF" uuid="fc49961f-a9a6-40c3-8b79-826df9305869"/>
 				<box>
 					<pen lineWidth="1.0" lineColor="#333333"/>
 					<topPen lineWidth="1.0" lineColor="#333333"/>
@@ -98,7 +100,7 @@
 				<text><![CDATA[Order Date Range]]></text>
 			</staticText>
 			<textField pattern="" isBlankWhenNull="true">
-				<reportElement x="746" y="68" width="152" height="18" uuid="4ab28f10-d699-420a-b189-8668785a4a93"/>
+				<reportElement x="747" y="68" width="152" height="18" uuid="4ab28f10-d699-420a-b189-8668785a4a93"/>
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -112,7 +114,7 @@
 				<textFieldExpression><![CDATA[$P{orderDateRange}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement mode="Opaque" x="440" y="50" width="153" height="18" backcolor="#99CCFF" uuid="f803820b-62d7-4179-8fc2-6dff1cdee47f">
+				<reportElement mode="Opaque" x="441" y="50" width="153" height="18" backcolor="#99CCFF" uuid="f803820b-62d7-4179-8fc2-6dff1cdee47f">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
 				<box>
@@ -128,7 +130,7 @@
 				<text><![CDATA[Invoice No]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="593" y="50" width="153" height="18" backcolor="#99CCFF" uuid="10dedeb4-4e21-4897-a1f3-c13eec96e36a"/>
+				<reportElement mode="Opaque" x="594" y="50" width="153" height="18" backcolor="#99CCFF" uuid="10dedeb4-4e21-4897-a1f3-c13eec96e36a"/>
 				<box>
 					<pen lineWidth="1.0" lineColor="#333333"/>
 					<topPen lineWidth="1.0" lineColor="#333333"/>
@@ -142,7 +144,7 @@
 				<text><![CDATA[Invoice Date]]></text>
 			</staticText>
 			<textField pattern="" isBlankWhenNull="true">
-				<reportElement x="593" y="68" width="153" height="18" uuid="a2ae89bd-de3d-4534-8ab9-508967559826"/>
+				<reportElement x="594" y="68" width="153" height="18" uuid="a2ae89bd-de3d-4534-8ab9-508967559826"/>
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -156,7 +158,7 @@
 				<textFieldExpression><![CDATA[$P{invoiceDate} == null ? "" : (new java.text.SimpleDateFormat("MM/dd/yyyy").format($P{invoiceDate}))]]></textFieldExpression>
 			</textField>
 			<textField pattern="" isBlankWhenNull="true">
-				<reportElement x="440" y="68" width="153" height="18" uuid="7aa2cc69-e978-426f-bb65-9b4c356ea699"/>
+				<reportElement x="441" y="68" width="153" height="18" uuid="7aa2cc69-e978-426f-bb65-9b4c356ea699"/>
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -205,9 +207,10 @@
 		</band>
 	</pageHeader>
 	<columnHeader>
-		<band height="24" splitType="Stretch">
+		<band height="50" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 			<staticText>
-				<reportElement mode="Opaque" x="11" y="5" width="49" height="18" forecolor="#FFFFFF" backcolor="#99CCFF" uuid="3b7e170d-d95c-4c98-a770-e027a574868d">
+				<reportElement mode="Opaque" x="11" y="31" width="49" height="18" forecolor="#FFFFFF" backcolor="#99CCFF" uuid="3b7e170d-d95c-4c98-a770-e027a574868d">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
 				<box>
@@ -223,7 +226,7 @@
 				<text><![CDATA[Order #]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="130" y="5" width="110" height="18" forecolor="#FFFFFF" backcolor="#99CCFF" uuid="da39f4ec-1487-4e36-8add-3dd1db610ad7"/>
+				<reportElement mode="Opaque" x="130" y="31" width="110" height="18" forecolor="#FFFFFF" backcolor="#99CCFF" uuid="da39f4ec-1487-4e36-8add-3dd1db610ad7"/>
 				<box>
 					<pen lineWidth="1.0" lineColor="#333333"/>
 					<topPen lineWidth="1.0" lineColor="#333333"/>
@@ -237,7 +240,7 @@
 				<text><![CDATA[Contact Name]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="240" y="5" width="80" height="18" forecolor="#FFFFFF" backcolor="#99CCFF" uuid="c12b101c-cd7e-42c6-b7cb-ebfbf3a6911b"/>
+				<reportElement mode="Opaque" x="240" y="31" width="80" height="18" forecolor="#FFFFFF" backcolor="#99CCFF" uuid="c12b101c-cd7e-42c6-b7cb-ebfbf3a6911b"/>
 				<box>
 					<pen lineWidth="1.0" lineColor="#333333"/>
 					<topPen lineWidth="1.0" lineColor="#333333"/>
@@ -251,7 +254,7 @@
 				<text><![CDATA[Phone]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="320" y="5" width="130" height="18" forecolor="#FFFFFF" backcolor="#99CCFF" uuid="aeb2d618-8d57-4bcd-97b1-0b620bb9d577"/>
+				<reportElement mode="Opaque" x="320" y="31" width="130" height="18" forecolor="#FFFFFF" backcolor="#99CCFF" uuid="aeb2d618-8d57-4bcd-97b1-0b620bb9d577"/>
 				<box>
 					<pen lineWidth="1.0" lineColor="#333333"/>
 					<topPen lineWidth="1.0" lineColor="#333333"/>
@@ -265,7 +268,7 @@
 				<text><![CDATA[Del. Adds.]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="450" y="5" width="80" height="18" forecolor="#FFFFFF" backcolor="#99CCFF" uuid="17dfccff-4ae7-40d8-b02d-7b3624d86a65"/>
+				<reportElement mode="Opaque" x="450" y="31" width="80" height="18" forecolor="#FFFFFF" backcolor="#99CCFF" uuid="17dfccff-4ae7-40d8-b02d-7b3624d86a65"/>
 				<box>
 					<pen lineWidth="1.0" lineColor="#333333"/>
 					<topPen lineWidth="1.0" lineColor="#333333"/>
@@ -279,7 +282,7 @@
 				<text><![CDATA[City]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="530" y="5" width="70" height="18" forecolor="#FFFFFF" backcolor="#99CCFF" uuid="696175f5-496e-457e-b480-e2c78b1f9862"/>
+				<reportElement mode="Opaque" x="530" y="31" width="70" height="18" forecolor="#FFFFFF" backcolor="#99CCFF" uuid="696175f5-496e-457e-b480-e2c78b1f9862"/>
 				<box>
 					<pen lineWidth="1.0" lineColor="#333333"/>
 					<topPen lineWidth="1.0" lineColor="#333333"/>
@@ -293,7 +296,7 @@
 				<text><![CDATA[Status]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="600" y="5" width="70" height="18" forecolor="#FFFFFF" backcolor="#99CCFF" uuid="bcd9bda5-f103-4f26-85e9-c2e29bfe1774"/>
+				<reportElement mode="Opaque" x="600" y="31" width="70" height="18" forecolor="#FFFFFF" backcolor="#99CCFF" uuid="bcd9bda5-f103-4f26-85e9-c2e29bfe1774"/>
 				<box>
 					<pen lineWidth="1.0" lineColor="#333333"/>
 					<topPen lineWidth="1.0" lineColor="#333333"/>
@@ -307,7 +310,7 @@
 				<text><![CDATA[Del. Dt.]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="670" y="5" width="70" height="18" forecolor="#FFFFFF" backcolor="#99CCFF" uuid="faeaf233-a816-46b9-b9dd-2973da0f0cc6"/>
+				<reportElement mode="Opaque" x="670" y="31" width="70" height="18" forecolor="#FFFFFF" backcolor="#99CCFF" uuid="faeaf233-a816-46b9-b9dd-2973da0f0cc6"/>
 				<box>
 					<pen lineWidth="1.0" lineColor="#333333"/>
 					<topPen lineWidth="1.0" lineColor="#333333"/>
@@ -321,7 +324,7 @@
 				<text><![CDATA[Pickup. Dt.]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="740" y="5" width="60" height="18" forecolor="#FFFFFF" backcolor="#99CCFF" uuid="237407eb-dc90-4b80-af84-72e73b3e021d"/>
+				<reportElement mode="Opaque" x="740" y="31" width="60" height="18" forecolor="#FFFFFF" backcolor="#99CCFF" uuid="237407eb-dc90-4b80-af84-72e73b3e021d"/>
 				<box>
 					<pen lineWidth="1.0" lineColor="#333333"/>
 					<topPen lineWidth="1.0" lineColor="#333333"/>
@@ -335,7 +338,7 @@
 				<text><![CDATA[Dump. Price]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="800" y="5" width="60" height="18" forecolor="#FFFFFF" backcolor="#99CCFF" uuid="69ee2425-241f-4c3b-9506-04e93d301215"/>
+				<reportElement mode="Opaque" x="800" y="31" width="60" height="18" forecolor="#FFFFFF" backcolor="#99CCFF" uuid="69ee2425-241f-4c3b-9506-04e93d301215"/>
 				<box>
 					<pen lineWidth="1.0" lineColor="#333333"/>
 					<topPen lineWidth="1.0" lineColor="#333333"/>
@@ -349,7 +352,7 @@
 				<text><![CDATA[Addnl. Fees]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="860" y="5" width="60" height="18" forecolor="#FFFFFF" backcolor="#99CCFF" uuid="bb1b9e66-1e95-4935-b459-00bfa0a2c2b4"/>
+				<reportElement mode="Opaque" x="860" y="31" width="60" height="18" forecolor="#FFFFFF" backcolor="#99CCFF" uuid="bb1b9e66-1e95-4935-b459-00bfa0a2c2b4"/>
 				<box>
 					<pen lineWidth="1.0" lineColor="#333333"/>
 					<topPen lineWidth="1.0" lineColor="#333333"/>
@@ -363,7 +366,7 @@
 				<text><![CDATA[City Fees]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="920" y="5" width="60" height="18" forecolor="#FFFFFF" backcolor="#99CCFF" uuid="01673809-73e7-49a2-87d4-09fa3e0053de"/>
+				<reportElement mode="Opaque" x="920" y="31" width="60" height="18" forecolor="#FFFFFF" backcolor="#99CCFF" uuid="01673809-73e7-49a2-87d4-09fa3e0053de"/>
 				<box>
 					<pen lineWidth="1.0" lineColor="#333333"/>
 					<topPen lineWidth="1.0" lineColor="#333333"/>
@@ -377,7 +380,7 @@
 				<text><![CDATA[Permit Fees]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="1040" y="5" width="60" height="18" forecolor="#FFFFFF" backcolor="#99CCFF" uuid="51fc2380-635c-40c0-b42e-84e385021d08"/>
+				<reportElement mode="Opaque" x="1040" y="31" width="60" height="18" forecolor="#FFFFFF" backcolor="#99CCFF" uuid="51fc2380-635c-40c0-b42e-84e385021d08"/>
 				<box>
 					<pen lineWidth="1.0" lineColor="#333333"/>
 					<topPen lineWidth="1.0" lineColor="#333333"/>
@@ -391,7 +394,7 @@
 				<text><![CDATA[Overwt.Fees]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="1100" y="5" width="60" height="18" forecolor="#FFFFFF" backcolor="#99CCFF" uuid="ba09b661-ddb1-4c7c-8da1-473bdb62ab31"/>
+				<reportElement mode="Opaque" x="1100" y="31" width="60" height="18" forecolor="#FFFFFF" backcolor="#99CCFF" uuid="ba09b661-ddb1-4c7c-8da1-473bdb62ab31"/>
 				<box>
 					<pen lineWidth="1.0" lineColor="#333333"/>
 					<topPen lineWidth="1.0" lineColor="#333333"/>
@@ -405,7 +408,7 @@
 				<text><![CDATA[Discount]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="1220" y="5" width="60" height="18" forecolor="#FFFFFF" backcolor="#99CCFF" uuid="f4109177-0dc6-40f0-aa67-201a29ab0542"/>
+				<reportElement mode="Opaque" x="1220" y="31" width="60" height="18" forecolor="#FFFFFF" backcolor="#99CCFF" uuid="f4109177-0dc6-40f0-aa67-201a29ab0542"/>
 				<box>
 					<pen lineWidth="1.0" lineColor="#333333"/>
 					<topPen lineWidth="1.0" lineColor="#333333"/>
@@ -419,7 +422,7 @@
 				<text><![CDATA[Paid]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="1280" y="5" width="60" height="18" forecolor="#FFFFFF" backcolor="#99CCFF" uuid="ba163a4b-bc7d-4783-a357-21557454c4cc"/>
+				<reportElement mode="Opaque" x="1280" y="31" width="60" height="18" forecolor="#FFFFFF" backcolor="#99CCFF" uuid="ba163a4b-bc7d-4783-a357-21557454c4cc"/>
 				<box>
 					<pen lineWidth="1.0" lineColor="#333333"/>
 					<topPen lineWidth="1.0" lineColor="#333333"/>
@@ -433,7 +436,7 @@
 				<text><![CDATA[Balance]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="60" y="5" width="70" height="18" forecolor="#FFFFFF" backcolor="#99CCFF" uuid="e8af2ff6-1adf-47d6-9e8d-01b48a1db382"/>
+				<reportElement mode="Opaque" x="60" y="31" width="70" height="18" forecolor="#FFFFFF" backcolor="#99CCFF" uuid="e8af2ff6-1adf-47d6-9e8d-01b48a1db382"/>
 				<box>
 					<pen lineWidth="1.0" lineColor="#333333"/>
 					<topPen lineWidth="1.0" lineColor="#333333"/>
@@ -447,7 +450,7 @@
 				<text><![CDATA[Order Dt.]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="980" y="5" width="60" height="18" forecolor="#FFFFFF" backcolor="#99CCFF" uuid="7ead0ee0-f18f-45ee-a489-df6b7fb11bb8"/>
+				<reportElement mode="Opaque" x="980" y="31" width="60" height="18" forecolor="#FFFFFF" backcolor="#99CCFF" uuid="7ead0ee0-f18f-45ee-a489-df6b7fb11bb8"/>
 				<box>
 					<pen lineWidth="1.0" lineColor="#333333"/>
 					<topPen lineWidth="1.0" lineColor="#333333"/>
@@ -461,7 +464,7 @@
 				<text><![CDATA[Tonnage Fees]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="1160" y="5" width="60" height="18" forecolor="#FFFFFF" backcolor="#99CCFF" uuid="45e00261-608a-40a5-a03b-70b85e9c8478"/>
+				<reportElement mode="Opaque" x="1160" y="31" width="60" height="18" forecolor="#FFFFFF" backcolor="#99CCFF" uuid="45e00261-608a-40a5-a03b-70b85e9c8478"/>
 				<box>
 					<pen lineWidth="1.0" lineColor="#333333"/>
 					<topPen lineWidth="1.0" lineColor="#333333"/>
@@ -473,6 +476,22 @@
 					<font size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Total Fees]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="11" y="13" width="119" height="18" forecolor="#000000" backcolor="#99CCFF" uuid="a05bc661-c7d5-4f43-be2f-78bce3346761">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="1.0" lineColor="#333333"/>
+					<topPen lineWidth="1.0" lineColor="#333333"/>
+					<leftPen lineWidth="1.0" lineColor="#333333"/>
+					<bottomPen lineWidth="1.0" lineColor="#333333"/>
+					<rightPen lineWidth="1.0" lineColor="#333333"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Order Details]]></text>
 			</staticText>
 		</band>
 	</columnHeader>
@@ -491,7 +510,7 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="10"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{id}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{orderId}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="130" y="-1" width="110" height="18" uuid="1d8f0e91-31e4-4324-8efd-6a3f5c7beb25"/>
@@ -758,7 +777,7 @@
 		</band>
 	</pageFooter>
 	<summary>
-		<band height="20" splitType="Stretch">
+		<band height="65" splitType="Stretch">
 			<staticText>
 				<reportElement x="11" y="0" width="49" height="18" uuid="0226784c-f16f-43b3-9d34-f6aafedc9f2c">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
@@ -936,6 +955,14 @@
 				</textElement>
 				<textFieldExpression><![CDATA["$" + (new java.text.DecimalFormat("#,##0.00").format($V{totalTotalFees}.doubleValue()))]]></textFieldExpression>
 			</textField>
+			<subreport>
+				<reportElement x="11" y="44" width="600" height="18" isRemoveLineWhenBlank="true" uuid="98ec2510-83db-455e-abdd-a9293c7981e4">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource
+            ($P{orderPaymentList})]]></dataSourceExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/previewInvoiceSub.jasper"]]></subreportExpression>
+			</subreport>
 		</band>
 	</summary>
 </jasperReport>

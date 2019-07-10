@@ -52,7 +52,8 @@ public class InvoiceVO implements BaseVO {
 	private String paymentMethod;
 	private String referenceNum;
 	private String checkNum;
-	private String paymentDate;
+	private Date paymentDate;
+	private BigDecimal paymentAmount;
 	
 	private String notes;
 	
@@ -288,11 +289,17 @@ public class InvoiceVO implements BaseVO {
 	public void setCheckNum(String checkNum) {
 		this.checkNum = checkNum;
 	}
-	public String getPaymentDate() {
+	public Date getPaymentDate() {
 		return paymentDate;
 	}
-	public void setPaymentDate(String paymentDate) {
+	public void setPaymentDate(Date paymentDate) {
 		this.paymentDate = paymentDate;
+	}
+	public BigDecimal getPaymentAmount() {
+		return paymentAmount;
+	}
+	public void setPaymentAmount(BigDecimal paymentAmount) {
+		this.paymentAmount = paymentAmount;
 	}
 	public String getNotes() {
 		return notes;
