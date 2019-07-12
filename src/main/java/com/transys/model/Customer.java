@@ -287,6 +287,15 @@ public class Customer extends AbstractBaseModel {
 	public void setDumpsterDiscount(BigDecimal dumpsterDiscount) {
 		this.dumpsterDiscount = dumpsterDiscount;
 	}
+	
+	@Transient
+	public String getContactDetails() {
+		String contactDetails = StringUtils.isEmpty(getContactName()) ? StringUtils.EMPTY : getContactName();
+		if (StringUtils.isNotEmpty(getPhone())) {
+			contactDetails += " " + getFormattedPhone();
+		}
+		return contactDetails;
+	}
 
 	@Override
 	public String toString() {

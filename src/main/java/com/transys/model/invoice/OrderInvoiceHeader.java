@@ -281,6 +281,15 @@ public class OrderInvoiceHeader extends AbstractBaseModel {
 	}
 	
 	@Transient
+	public String getContactDetails() {
+		String contactDetails = StringUtils.isEmpty(getContactName()) ? StringUtils.EMPTY : getContactName();
+		if (StringUtils.isNotEmpty(getPhone1())) {
+			contactDetails += " " + getFormattedPhone1();
+		}
+		return contactDetails;
+	}
+	
+	@Transient
 	public String getFormattedPhone1() {
 		return FormatUtil.formatPhone(getPhone1());
 	}

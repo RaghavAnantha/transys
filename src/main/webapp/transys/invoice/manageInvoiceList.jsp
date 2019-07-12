@@ -229,6 +229,9 @@ function populateManageInvoiceDeliveryAddress(addressList) {
 		exportPdf="false" exportXls="false" dataQualifier="manageInvoice">
 		<transys:textcolumn headerText="Invoice #" dataField="id" />
 		<transys:textcolumn headerText="Invoice Date" dataField="invoiceDate" dataFormat="MM/dd/yyyy"/>
+		<transys:textcolumn headerText="Customer" dataField="companyName" />
+		<transys:textcolumn headerText="Contact" dataField="contactName" />
+		<transys:textcolumn headerText="Phone" dataField="formattedPhone1" />
 		<transys:textcolumn headerText="Order Date From" dataField="orderDateFrom" dataFormat="MM/dd/yyyy"/>
 		<transys:textcolumn headerText="Order Date To" dataField="orderDateTo" dataFormat="MM/dd/yyyy"/>
 		<transys:textcolumn headerText="Order Count" dataField="orderCount" />

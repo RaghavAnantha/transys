@@ -620,6 +620,7 @@ public class InvoiceController extends BaseController {
 		params.put("invoiceDate", orderInvoiceHeader.getInvoiceDate());
 		params.put("customer", orderInvoiceHeader.getCompanyName());
 		params.put("billingAddress", orderInvoiceHeader.getBillingAddress("\n"));
+		params.put("contact", orderInvoiceHeader.getContactDetails());
 		
 		String orderDateRange = FormatUtil.formatDateRange(orderInvoiceHeader.getOrderDateFrom(), orderInvoiceHeader.getOrderDateTo());
 		params.put("orderDateRange", orderDateRange);
@@ -1211,6 +1212,7 @@ public class InvoiceController extends BaseController {
 		Customer customer = retrieveCustomer(invoiceVO.getCustomerId(), invoiceVO.getOrderId());
 		params.put("customer", customer.getCompanyName());
 		params.put("billingAddress", customer.getBillingAddress("\n"));
+		params.put("contact", customer.getContactDetails());
 		
 		List<Date> orderDateList = new ArrayList<Date>();
 		for (InvoiceVO anInvoiceVO : invoiceVOList) {
