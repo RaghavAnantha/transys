@@ -8,7 +8,8 @@ import org.apache.commons.lang3.StringUtils;
 import com.transys.model.vo.BaseVO;
 
 public class InvoiceVO implements BaseVO {
-	public static String INV_SAVE_SUCCESS_MSG = "Invoice saved successfully";
+	public static String INV_SAVE_SUCCESS_MSG = "Invoice saved successfully.";
+	public static String INV_DEL_SUCCESS_MSG = "Invoice deleted successfully.";
 	
 	private Long id;
 	private Date orderDate;

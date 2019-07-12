@@ -31,8 +31,10 @@ function validateManageInvoiceSearchMissingData() {
 	
 	var manageInvoiceSearchForm = getManageInvoiceSearchForm();
 	
+	var deliveryAddress = manageInvoiceSearchForm.find('#manageInvoiceDeliveryAddress').val()
 	if (manageInvoiceSearchForm.find('#manageInvoiceInvoiceNo').val() != ""
-			|| manageInvoiceSearchForm.find('#manageInvoiceOrderId').val() != "") {
+			|| manageInvoiceSearchForm.find('#manageInvoiceOrderId').val() != ""
+			|| deliveryAddress != "") {
 		return missingData;
 	}
 	
@@ -45,8 +47,9 @@ function validateManageInvoiceSearchMissingData() {
 	var invoiceDateFrom = manageInvoiceSearchForm.find("input[name='manageInvoiceInvoiceDateFrom']").val();
 	var invoiceDateTo = manageInvoiceSearchForm.find("input[name='manageInvoiceInvoiceDateTo']").val();
 	if ((orderDateFrom == "" || orderDateTo == "")
-			&& (invoiceDateFrom == "" || invoiceDateTo == "")) {
-		missingData += "Invoice/Orders, ";
+			&& (invoiceDateFrom == "" || invoiceDateTo == "")
+			&& (deliveryAddress == "")) {
+		missingData += "Invoice #/Order #/Delivery Address/Invoice or Order Dates, ";
 	}
 	
 	if (missingData != "") {
@@ -72,7 +75,7 @@ function loadManageInvoice(data) {
 	$("#manageInvoice").html(data);
 }
 
-function handleCustomerChange() {
+function handleManageInvoiceCustomerChange() {
 	var deliveryAddressSelect = $('#manageInvoiceDeliveryAddress');
 	emptySelect(deliveryAddressSelect);
 	
@@ -82,21 +85,21 @@ function handleCustomerChange() {
 		return false;
 	}
 	
-	retrieveAndPopulateDeliveryAddress(customerId);
+	retrieveAndPopulateManageInvoiceDeliveryAddress(customerId);
 }
 
-function retrieveAndPopulateDeliveryAddress(customerId) {
+function retrieveAndPopulateManageInvoiceDeliveryAddress(customerId) {
 	$.ajax({
   		url: "deliveryAddressSearch.do?id=" + customerId,
        	type: "GET",
        	success: function(responseData, textStatus, jqXHR) {
     	   	var addressList = jQuery.parseJSON(responseData);
-    	   	populateDeliveryAddress(addressList);
+    	   	populateManageInvoiceDeliveryAddress(addressList);
 		}
 	});
 }
 
-function populateDeliveryAddress(addressList) {
+function populateManageInvoiceDeliveryAddress(addressList) {
 	var deliveryAddressSelect = $('#manageInvoiceDeliveryAddress');
 	$.each(addressList, function () {
    		$("<option />", {
@@ -119,7 +122,7 @@ function populateDeliveryAddress(addressList) {
 			<td class="form-left">Customer<span class="errorMessage">*</span></td>
 			<td class="wide">
 				<select class="flat form-control input-sm" id="manageInvoiceCustomerId" name="manageInvoiceCustomerId" style="width:175px !important"
-					onChange="return handleCustomerChange();">
+					onChange="return handleManageInvoiceCustomerChange();">
 					<option value="">----Please Select----</option>
 					<c:forEach items="${customers}" var="aCustomer">
 						<c:set var="selected" value="" />
@@ -234,8 +237,8 @@ function populateDeliveryAddress(addressList) {
 		<transys:textcolumn headerText="Total Amt Paid" dataField="totalAmountPaid" type="java.math.BigDecimal" dataFormat="#####0.00"/>
 		<transys:textcolumn headerText="Bal Due" dataField="totalBalanceAmountDue" type="java.math.BigDecimal" dataFormat="#####0.00"/>
 		<transys:imagecolumn headerText="Download As PDF" linkUrl="${ctx}/invoice/downloadInvoice.do?id={id}&type=pdf" imageSrc="${ctx}/images/pdf.png" HAlign="center"/>
-		<transys:imagecolumn headerText="Download As CSV" linkUrl="${ctx}/invoice/downloadInvoice.do?id={id}&type=csv" imageSrc="${ctx}/images/csv.png" HAlign="center"/>
 		<transys:imagecolumn headerText="Download As XLS" linkUrl="${ctx}/invoice/downloadInvoice.do?id={id}&type=xls" imageSrc="${ctx}/images/excel.png" HAlign="center"/>
+		<transys:imagecolumn headerText="Download As CSV" linkUrl="${ctx}/invoice/downloadInvoice.do?id={id}&type=csv" imageSrc="${ctx}/images/csv.png" HAlign="center"/>
 		<transys:imagecolumn headerText="DEL" linkUrl="javascript:confirmDeleteInvoice('{id}');" imageSrc="${ctx}/images/delete.png" HAlign="center"/>
 	</transys:datatable>
 	<%session.setAttribute("manageInvoiceColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>

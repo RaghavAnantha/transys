@@ -113,7 +113,7 @@ function openCreateInvoiceParamsDialog() {
 	showPopupDialogWithHtml("Invoice params", invoiceParamsDialogId); 
 }
 
-function handleCustomerChange() {
+function handleCreateInvoiceCustomerChange() {
 	var deliveryAddressSelect = $('#deliveryAddress');
 	emptySelect(deliveryAddressSelect);
 	
@@ -123,21 +123,21 @@ function handleCustomerChange() {
 		return false;
 	}
 	
-	retrieveAndPopulateDeliveryAddress(customerId);
+	retrieveAndPopulateCreateInvoiceDeliveryAddress(customerId);
 }
 
-function retrieveAndPopulateDeliveryAddress(customerId) {
+function retrieveAndPopulateCreateInvoiceDeliveryAddress(customerId) {
 	$.ajax({
   		url: "deliveryAddressSearch.do?id=" + customerId,
        	type: "GET",
        	success: function(responseData, textStatus, jqXHR) {
     	   	var addressList = jQuery.parseJSON(responseData);
-    	   	populateDeliveryAddress(addressList);
+    	   	populateCreateInvoiceDeliveryAddress(addressList);
 		}
 	});
 }
 
-function populateDeliveryAddress(addressList) {
+function populateCreateInvoiceDeliveryAddress(addressList) {
 	var deliveryAddressSelect = $('#deliveryAddress');
 	$.each(addressList, function () {
    		$("<option />", {
@@ -160,7 +160,7 @@ function populateDeliveryAddress(addressList) {
 			<td class="form-left">Customer<span class="errorMessage">*</span></td>
 			<td class="wide">
 				<form:select cssClass="flat form-control input-sm" style="width:172px !important" id="customerId" path="customerId" 
-					onChange="return handleCustomerChange();">
+					onChange="return handleCreateInvoiceCustomerChange();">
 					<form:option value="">----Please Select----</form:option>
 					<form:options items="${customers}" itemValue="id" itemLabel="companyName"/>
 				</form:select> 

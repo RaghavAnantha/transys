@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
-<!-- 2019-07-10T10:48:22 -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="previewInvoice" pageWidth="1390" pageHeight="595" orientation="Landscape" columnWidth="1350" leftMargin="20" rightMargin="20" topMargin="10" bottomMargin="10" uuid="53a6c0df-7db3-4567-a441-f90a0edf36dc">
+<!-- 2019-07-11T18:00:27 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="orderInvoice" pageWidth="1390" pageHeight="595" orientation="Landscape" columnWidth="1350" leftMargin="20" rightMargin="20" topMargin="10" bottomMargin="10" isSummaryWithPageHeaderAndFooter="true" uuid="53a6c0df-7db3-4567-a441-f90a0edf36dc">
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<parameter name="invoiceNo" class="java.lang.String"/>
 	<parameter name="invoiceDate" class="java.util.Date"/>
@@ -86,7 +86,7 @@
 				<text><![CDATA[Invoice]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="747" y="50" width="152" height="18" backcolor="#99CCFF" uuid="fc49961f-a9a6-40c3-8b79-826df9305869"/>
+				<reportElement mode="Opaque" x="754" y="50" width="152" height="18" backcolor="#99CCFF" uuid="fc49961f-a9a6-40c3-8b79-826df9305869"/>
 				<box>
 					<pen lineWidth="1.0" lineColor="#333333"/>
 					<topPen lineWidth="1.0" lineColor="#333333"/>
@@ -100,7 +100,7 @@
 				<text><![CDATA[Order Date Range]]></text>
 			</staticText>
 			<textField pattern="" isBlankWhenNull="true">
-				<reportElement x="747" y="68" width="152" height="18" uuid="4ab28f10-d699-420a-b189-8668785a4a93"/>
+				<reportElement x="754" y="68" width="152" height="18" uuid="4ab28f10-d699-420a-b189-8668785a4a93"/>
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -114,7 +114,7 @@
 				<textFieldExpression><![CDATA[$P{orderDateRange}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement mode="Opaque" x="441" y="50" width="153" height="18" backcolor="#99CCFF" uuid="f803820b-62d7-4179-8fc2-6dff1cdee47f">
+				<reportElement mode="Opaque" x="448" y="50" width="153" height="18" backcolor="#99CCFF" uuid="f803820b-62d7-4179-8fc2-6dff1cdee47f">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
 				<box>
@@ -130,7 +130,7 @@
 				<text><![CDATA[Invoice No]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="594" y="50" width="153" height="18" backcolor="#99CCFF" uuid="10dedeb4-4e21-4897-a1f3-c13eec96e36a"/>
+				<reportElement mode="Opaque" x="601" y="50" width="153" height="18" backcolor="#99CCFF" uuid="10dedeb4-4e21-4897-a1f3-c13eec96e36a"/>
 				<box>
 					<pen lineWidth="1.0" lineColor="#333333"/>
 					<topPen lineWidth="1.0" lineColor="#333333"/>
@@ -144,7 +144,7 @@
 				<text><![CDATA[Invoice Date]]></text>
 			</staticText>
 			<textField pattern="" isBlankWhenNull="true">
-				<reportElement x="594" y="68" width="153" height="18" uuid="a2ae89bd-de3d-4534-8ab9-508967559826"/>
+				<reportElement x="601" y="68" width="153" height="18" uuid="a2ae89bd-de3d-4534-8ab9-508967559826"/>
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -158,7 +158,7 @@
 				<textFieldExpression><![CDATA[$P{invoiceDate} == null ? "" : (new java.text.SimpleDateFormat("MM/dd/yyyy").format($P{invoiceDate}))]]></textFieldExpression>
 			</textField>
 			<textField pattern="" isBlankWhenNull="true">
-				<reportElement x="441" y="68" width="153" height="18" uuid="7aa2cc69-e978-426f-bb65-9b4c356ea699"/>
+				<reportElement x="448" y="68" width="153" height="18" uuid="7aa2cc69-e978-426f-bb65-9b4c356ea699"/>
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -772,8 +772,26 @@
 		</band>
 	</columnFooter>
 	<pageFooter>
-		<band splitType="Stretch">
+		<band height="28" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<textField>
+				<reportElement x="611" y="5" width="76" height="18" uuid="c16a809c-7c8e-4c1d-bd91-0363b6fb295e">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Page " + $V{PAGE_NUMBER} + " of "]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report" isBlankWhenNull="true">
+				<reportElement x="687" y="5" width="40" height="18" uuid="0f44923f-90b5-4a74-845d-9f965d3d61b4">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
 		</band>
 	</pageFooter>
 	<summary>
@@ -961,7 +979,7 @@
 				</reportElement>
 				<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource
             ($P{orderPaymentList})]]></dataSourceExpression>
-				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/previewInvoiceSub.jasper"]]></subreportExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/orderInvoiceSub.jasper"]]></subreportExpression>
 			</subreport>
 		</band>
 	</summary>

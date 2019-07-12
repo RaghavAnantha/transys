@@ -26,13 +26,20 @@
 		
 		$('#manageInvoiceTab').click(function(e) {
 			var $this = $(this),
-		        loadurl = $this.attr('href'),
-		        targ = $this.attr('data-target');
+		        loadUrl = $this.attr('href'),
+		        dataTarget = $this.attr('data-target'),
+		        dataToggle = $this.attr('data-toggle');
+			
+			if (dataToggle == 'tab') {
+				$this.tab('show');
+				return false;
+			}
 		   
-		    $.get(loadurl, function(data) {
-		        $(targ).html(data);
+		    $.get(loadUrl, function(data) {
+		        $(dataTarget).html(data);
 		    });
 		
+		    $this.attr('data-toggle', 'tab')
 		    $this.tab('show');
 		    return false;
 		});

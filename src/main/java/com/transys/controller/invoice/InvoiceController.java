@@ -136,7 +136,7 @@ public class InvoiceController extends BaseController {
 		String saveSuccessMsg = (String) request.getSession().getAttribute("msg");
 		String referrer = request.getHeader("Referer");
 		if (!StringUtils.contains(referrer, "previewInvoice.do")
-				|| !StringUtils.equals(InvoiceVO.INV_SAVE_SUCCESS_MSG, saveSuccessMsg)) {
+				|| !StringUtils.contains(saveSuccessMsg, InvoiceVO.INV_SAVE_SUCCESS_MSG)) {
 			return;
 		}
 		
@@ -252,6 +252,9 @@ public class InvoiceController extends BaseController {
 		whereClause.append(" and obj.balanceAmountDue > " + 0.0);
 		whereClause.append(" and obj.invoiced='N'");
 		
+		OrderStatus orderStatus = ModelUtil.retrieveOrderStatus(genericDAO, OrderStatus.ORDER_STATUS_CANCELED);
+		whereClause.append(" and obj.orderStatus.id !=" + orderStatus.getId().longValue());
+		
 		if (StringUtils.isNotEmpty(customerId)) {
 			whereClause.append(" and obj.customer.id=" + customerId);
 		}
@@ -300,8 +303,8 @@ public class InvoiceController extends BaseController {
 		String deliveryAddress = (String) criteria.getSearchMap().get("manageInvoiceDeliveryAddress");
 		String orderDateFrom = (String) criteria.getSearchMap().get("manageInvoiceOrderDateFrom");
 		String orderDateTo = (String) criteria.getSearchMap().get("manageInvoiceOrderDateTo");
-		String invoiceDateFrom = (String) criteria.getSearchMap().get("invoiceDateFrom");
-		String invoiceDateTo = (String) criteria.getSearchMap().get("invoiceDateTo");
+		String invoiceDateFrom = (String) criteria.getSearchMap().get("manageInvoiceInvoiceDateFrom");
+		String invoiceDateTo = (String) criteria.getSearchMap().get("manageInvoiceInvoiceDateTo");
 		
 		StringBuffer query = new StringBuffer("select distinct obj from OrderInvoiceHeader obj join obj.orderInvoiceDetails oidet where 1=1");
 		StringBuffer countQuery = new StringBuffer("select count(distinct obj.id) from OrderInvoiceHeader obj join obj.orderInvoiceDetails oidet where 1=1");
@@ -820,10 +823,10 @@ public class InvoiceController extends BaseController {
 		
 		updateOrder(orderIdsArr, null, null, "N", createdBy);
 		  
-		String orderAuditMsg = "Order invoice deleted";
-		ModelUtil.createAuditOrderNotes(genericDAO, orderIdsArr, orderAuditMsg, createdByUser);
+		String successMsg = InvoiceVO.INV_DEL_SUCCESS_MSG + "  Invoice #: " + invoiceId;
+		ModelUtil.createAuditOrderNotes(genericDAO, orderIdsArr, successMsg, createdByUser);
 		
-		setSuccessMsg(request, "Invoice deleted sucessfully");
+		setSuccessMsg(request, successMsg);
 		return "redirect:/" + getUrlContext() + "/manageInvoiceSearch.do";
 		//return getUrlContext() + "/manageInvoiceList";
 	}
@@ -889,10 +892,10 @@ public class InvoiceController extends BaseController {
 		
 		updateOrder(orderIdsArr, orderInvoiceHeader.getId(), orderInvoiceHeader.getInvoiceDate(), "Y", createdBy);
 		
-		String orderAuditMsg = "Order invoiced";
-		ModelUtil.createAuditOrderNotes(genericDAO, orderIdsArr, orderAuditMsg, createdByUser);
+		String successMsg = InvoiceVO.INV_SAVE_SUCCESS_MSG + "  Invoice #: " + orderInvoiceHeader.getId();
+		ModelUtil.createAuditOrderNotes(genericDAO, orderIdsArr, successMsg, createdByUser);
 		
-		setSuccessMsg(request, InvoiceVO.INV_SAVE_SUCCESS_MSG);
+		setSuccessMsg(request, successMsg);
 		return "redirect:/" + getUrlContext() + "/createInvoiceSearch.do";
 		//return processPreviewInvoiceCommon(request, response, input);
 	}
