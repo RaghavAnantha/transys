@@ -80,6 +80,7 @@ function populateCustomerDeliveryAddress() {
 		<tr>
 			<td class="form-left">Order #</td>
 			<td>
+				<!--
 				<select class="flat form-control input-sm" id="id" name="id" style="width: 175px !important">
 					<option value="">----Please Select----</option>
 					<c:forEach items="${orderIds}" var="anOrderId">
@@ -90,6 +91,8 @@ function populateCustomerDeliveryAddress() {
 						<option value="${anOrderId}" ${selected}>${anOrderId}</option>
 					</c:forEach>
 				</select>
+				-->
+				<input class="flat" id="id" name="id" value="${sessionScope.searchCriteria.searchMap['id']}" style="width: 175px !important" />
 			</td>
 			<td class="form-left">Order Status</td>
 			<td>

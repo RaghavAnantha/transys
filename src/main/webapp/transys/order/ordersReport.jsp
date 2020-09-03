@@ -61,7 +61,7 @@
 			<td class="form-left">Phone Number</td>
 			<td>
 				<select class="flat form-control input-sm" id=deliveryContactPhone1 name="deliveryContactPhone1" style="width: 175px !important">
-					<option value="">----Please Select----</option>
+					<option value="">------Please Select------</option>
 					<c:forEach items="${deliveryContactPhones}" var="aDeliveryContactPhone">
 						<c:set var="selected" value="" />
 						<c:if test="${sessionScope.searchCriteria.searchMap['deliveryContactPhone1'] == aDeliveryContactPhone}">

@@ -123,7 +123,7 @@ function populateManageInvoiceDeliveryAddress(addressList) {
 			<td class="wide">
 				<select class="flat form-control input-sm" id="manageInvoiceCustomerId" name="manageInvoiceCustomerId" style="width:175px !important"
 					onChange="return handleManageInvoiceCustomerChange();">
-					<option value="">----Please Select----</option>
+					<option value="">-----Please Select-----</option>
 					<c:forEach items="${customers}" var="aCustomer">
 						<c:set var="selected" value="" />
 						<c:if test="${sessionScope.searchCriteria.searchMap['manageInvoiceCustomerId'] == aCustomer.id}">
@@ -136,7 +136,7 @@ function populateManageInvoiceDeliveryAddress(addressList) {
 			<td class="form-left">Delivery Address<span class="errorMessage"></span></td>
 			<td class="wide">
 				<select class="flat form-control input-sm" id="manageInvoiceDeliveryAddress" name="manageInvoiceDeliveryAddress" style="width:175px !important">
-					<option value="">----Please Select----</option>
+					<option value="">-----Please Select-----</option>
 					<c:forEach items="${deliveryAddresses}" var="aDeliveryAddress">
 						<c:set var="selected" value="" />
 						<c:if test="${sessionScope.searchCriteria.searchMap['manageInvoiceDeliveryAddress'] == aDeliveryAddress.id}">
@@ -152,7 +152,7 @@ function populateManageInvoiceDeliveryAddress(addressList) {
 			<td class="form-left">Invoice #<span class="errorMessage"></span></td>
 			<td class="wide">
 				<select class="flat form-control input-sm" id="manageInvoiceInvoiceNo" name="manageInvoiceInvoiceNo" style="width:175px !important">
-					<option value="">----Please Select----</option>
+					<option value="">-----Please Select-----</option>
 					<c:forEach items="${invoiceNos}" var="anInvoiceNo">
 						<c:set var="selected" value="" />
 						<c:if test="${sessionScope.searchCriteria.searchMap['manageInvoiceInvoiceNo'] == anInvoiceNo}">
@@ -165,7 +165,7 @@ function populateManageInvoiceDeliveryAddress(addressList) {
 			<td class="form-left">Order #<span class="errorMessage"></span></td>
 			<td class="wide">
 				<select class="flat form-control input-sm" id="manageInvoiceOrderId" name="manageInvoiceOrderId" style="width:175px !important">
-					<option value="">----Please Select----</option>
+					<option value="">-----Please Select-----</option>
 					<c:forEach items="${orderIds}" var="anOrderId">
 						<c:set var="selected" value="" />
 						<c:if test="${sessionScope.searchCriteria.searchMap['manageInvoiceOrderId'] == anOrderId}">
