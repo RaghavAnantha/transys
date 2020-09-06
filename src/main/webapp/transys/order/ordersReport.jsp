@@ -29,6 +29,7 @@
 			</td>
 		</tr>
 		<tr>
+			<!--  
 			<td class="form-left">Contact Name</td>
 			<td>
 				<select class="flat form-control input-sm" id=deliveryContactName name="deliveryContactName" style="width: 175px !important">
@@ -42,7 +43,7 @@
 					</c:forEach>
 				</select>
 			</td>
-			
+			-->
 			<td class="form-left">Order Status</td>
 			<td>
 				<select class="flat form-control input-sm" id="orderStatus" name="orderStatus" style="width: 175px !important">
