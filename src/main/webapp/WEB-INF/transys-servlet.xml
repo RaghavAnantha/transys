@@ -37,6 +37,7 @@
       	<param-name>cacheControl</param-name>
       	<param-value>public, max-age=704800, immutable</param-value>
       </init-param>
+      Also etags is set to true in etc/webdefault.xml
      -->
     <mvc:default-servlet-handler default-servlet-name="default"/>
 
