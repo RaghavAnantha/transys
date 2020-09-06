@@ -31,6 +31,10 @@
  		<security:form-login login-page='/login.do' authentication-success-handler-ref="authenticationSuccessHandler"/>
  		
  		<security:logout logout-url="/logout.do" logout-success-url="/login.do" invalidate-session="true"/>
+	
+		<security:headers>
+			<security:cache-control disabled="true"/>
+		</security:headers>
 	</security:http>
 	
 	<security:authentication-manager>
@@ -42,4 +46,5 @@
 	<bean id="bcryptEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
  
 	<bean id="userDetailService" class="com.transys.core.spring.DatabaseUserDetailService"/>
+	
 </beans>

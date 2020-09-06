@@ -17,13 +17,29 @@
 	
 	<!--<bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping">-->
 	<!--<bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping">
-		<property name = "alwaysUseFullPath" value = "true" />
-	</bean>-->
+			<property name = "alwaysUseFullPath" value = "true" />
+		</bean>-->
+	
 	<!-- Scans for application @Components to deploy -->
 	<context:component-scan base-package="com.transys" />
 	
 	<mvc:annotation-driven validator="validator" />	
 	
+	<!-- If this is used, then resources need to be placed in corresponding folder and accessed this way:
+		<img src="<spring:url value="/resources/addnew.png"/>" border="0" style="float:bottom" class="toolbarButton">
+	<mvc:resources mapping="/resources/**"
+               location="/resources/"
+               cache-period="504800" />
+    -->
+    <!-- Static content will be served by Jetty default servlet which can be configured in etc/webdefault.xml
+      as 
+      <init-param>
+      	<param-name>cacheControl</param-name>
+      	<param-value>public, max-age=704800, immutable</param-value>
+      </init-param>
+     -->
+    <mvc:default-servlet-handler default-servlet-name="default"/>
+
 	<!--  
 	<bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<property name="requestContextAttribute" value="rc" />

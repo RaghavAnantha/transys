@@ -61,6 +61,13 @@
 			<version>1.2.5</version>
 			<scope>provided</scope>
 		</dependency>
+		<!-- Only in local dev env while launching using jetty plugin - Not required for production or running with maven
+		<dependency>
+		    <groupId>javax.servlet</groupId>
+		    <artifactId>jstl</artifactId>
+		    <version>1.2</version>
+		</dependency>
+		-->
 		<!-- TODO: Might need to remove this when Spring ORM/Hibernate is included -->
 		<dependency>
 			<groupId>javax.persistence</groupId>
@@ -196,6 +203,12 @@
 			<artifactId>commons-digester3</artifactId>
 			<version>3.2</version>
 		</dependency>
+		<!-- For Jetty Header servlet -->
+		<dependency>
+             <groupId>org.eclipse.jetty</groupId>
+             <artifactId>jetty-servlets</artifactId>
+             <version>9.4.15.v20190215</version>
+        </dependency>
 	</dependencies>
 	<repositories>
 		<repository>
