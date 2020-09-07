@@ -1,8 +1,11 @@
 package com.transys.core.util;
 
 import java.text.SimpleDateFormat;
-
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
 
 import com.transys.core.dao.GenericDAO;
 
@@ -10,6 +13,8 @@ import com.transys.model.Order;
 import com.transys.model.OrderNotes;
 import com.transys.model.OrderStatus;
 import com.transys.model.User;
+import com.transys.model.vo.CustomerVO;
+import com.transys.model.vo.DeliveryAddressVO;
 
 public class ModelUtil {
 	public static SimpleDateFormat mysqlDf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -51,5 +56,44 @@ public class ModelUtil {
 	public static OrderStatus retrieveOrderStatus(GenericDAO genericDAO, String status) {
 		OrderStatus orderStatus = (OrderStatus)genericDAO.executeSimpleQuery("select obj from OrderStatus obj where obj.deleteFlag='1' and obj.status='" + status + "'").get(0);
 		return orderStatus;
+	}
+	
+	public static List<DeliveryAddressVO> mapToDeliveryAddressVO(List<?> objectList) {
+		List<DeliveryAddressVO> deliveryAddressVOList = new ArrayList<DeliveryAddressVO>();
+		if (objectList == null || objectList.isEmpty()) {
+			return deliveryAddressVOList;
+		}
+		
+		for (int i = 0; i < objectList.size(); i++) {
+			Object anObject[] = (Object[])objectList.get(i);
+			DeliveryAddressVO aDeliveryAddressVO = new DeliveryAddressVO();
+			aDeliveryAddressVO.setId((Long)anObject[0]);
+			if (anObject[1] != null && StringUtils.isNotEmpty(anObject[1].toString())) {
+				aDeliveryAddressVO.setLine1(anObject[1].toString());
+			}
+			if (anObject[2] != null && StringUtils.isNotEmpty(anObject[2].toString())) {
+				aDeliveryAddressVO.setLine2(anObject[2].toString());
+			}
+			deliveryAddressVOList.add(aDeliveryAddressVO);
+		}
+		return deliveryAddressVOList;
+	}
+	
+	public static List<CustomerVO> mapToCustomerVO(List<?> objectList) {
+		List<CustomerVO> customerVOList = new ArrayList<CustomerVO>();
+		if (objectList == null || objectList.isEmpty()) {
+			return customerVOList;
+		}
+		
+		for (int i = 0; i < objectList.size(); i++) {
+			Object anObject[] = (Object[])objectList.get(i);
+			CustomerVO aCustomerVO = new CustomerVO();
+			aCustomerVO.setId((Long)anObject[0]);
+			if (anObject[1] != null && StringUtils.isNotEmpty(anObject[1].toString())) {
+				aCustomerVO.setCompanyName(anObject[1].toString());
+			}
+			customerVOList.add(aCustomerVO);
+		}
+		return customerVOList;
 	}
 }

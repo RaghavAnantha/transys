@@ -241,7 +241,8 @@ function populateCustomerDeliveryAddress() {
 		<tr>
 			<td></td>
 			<td>
-				<input type="button" class="btn btn-primary btn-sm btn-sm-ext" onclick="document.forms['orderSearchForm'].submit();"
+				<input type="button" class="btn btn-primary btn-sm btn-sm-ext" 
+					onclick="document.forms['orderSearchForm'].submit();"
 					value="Search" />
 				<input type="reset" class="btn btn-primary btn-sm btn-sm-ext" value="Clear"/>
 			</td>

@@ -27,6 +27,23 @@ public class CoreUtil {
 		return toString(strList.toArray(stringArr));
 	}
 	
+	public static String concatenate(String str1, String str2, String sep) {
+		StringBuffer concStrBuff = new StringBuffer();
+		if (StringUtils.isNotEmpty(str1)) {
+			concStrBuff.append(str1);
+		}
+		if (StringUtils.isNotEmpty(str2)) {
+			concStrBuff.append(sep)
+						  .append(str2);
+		}
+		
+		return concStrBuff.toString();
+	}
+	
+	public static String concatenate(String str1, String str2) {
+		return concatenate(str1, str2, " ");
+	}
+	
 	public static String getLogoFilePath(HttpServletRequest request) {
 		return request.getSession().getServletContext().getRealPath("/images/" + "rds_logo.png");
 	}

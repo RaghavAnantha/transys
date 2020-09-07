@@ -46,7 +46,7 @@ import com.transys.controller.editor.AbstractModelEditor;
 
 import com.transys.core.util.DateUtil;
 import com.transys.core.util.MimeUtil;
-
+import com.transys.core.util.ModelUtil;
 import com.transys.model.AbstractBaseModel;
 import com.transys.model.AdditionalFee;
 import com.transys.model.DeliveryAddress;
@@ -235,7 +235,7 @@ public class OrderController extends CRUDController<Order> {
 		model.addAttribute("deliveryAddresses", genericDAO.executeSimpleQuery(query));
 	}
 	
-	public void setupCommon(ModelMap model, HttpServletRequest request) {
+	private void setupCommon(ModelMap model, HttpServletRequest request) {
 		Map<String, Object> criterias = new HashMap<String, Object>();
 		model.addAttribute("orderStatuses", genericDAO.findByCriteria(OrderStatus.class, criterias, "status", false));
 		
@@ -1876,7 +1876,7 @@ public class OrderController extends CRUDController<Order> {
 		}
 		
 		String[] phoneArr = phoneSet.toArray(new String[0]);
-		String[] contactNameArr = contactNameSet.toArray(new String[0]);
+		//String[] contactNameArr = contactNameSet.toArray(new String[0]);
 		
 		model.addAttribute("deliveryContactPhones", phoneArr);
 		//model.addAttribute("deliveryContactNames", contactNameArr);
@@ -1886,28 +1886,13 @@ public class OrderController extends CRUDController<Order> {
 		
 		String customerQuery = "select distinct obj.customer.id, obj.customer.companyName from Order obj where obj.deleteFlag='1' order by obj.customer.companyName asc";
 		objectList = genericDAO.executeSimpleQuery(customerQuery);
-		List<CustomerVO> customerVOList = new ArrayList<CustomerVO>();
-		for (int i = 0; i < objectList.size(); i++) {
-			Object anObject[] = (Object[])objectList.get(i);
-			CustomerVO aCustomerVO = new CustomerVO();
-			aCustomerVO.setId((Long)anObject[0]);
-			aCustomerVO.setCompanyName(anObject[1].toString());
-			customerVOList.add(aCustomerVO);
-		}
+		List<CustomerVO> customerVOList = ModelUtil.mapToCustomerVO(objectList);
 		model.addAttribute("customers", customerVOList);
 		
 		String deliveryAddressQuery = "select distinct obj.deliveryAddress.id, obj.deliveryAddress.line1, obj.deliveryAddress.line2"
 					+ " from Order obj where obj.deleteFlag='1' order by obj.deliveryAddress.line1 asc";
 		objectList = genericDAO.executeSimpleQuery(deliveryAddressQuery);
-		List<DeliveryAddressVO> deliveryAddressVOList = new ArrayList<DeliveryAddressVO>();
-		for (int i = 0; i < objectList.size(); i++) {
-			Object anObject[] = (Object[])objectList.get(i);
-			DeliveryAddressVO aDeliveryAddressVO = new DeliveryAddressVO();
-			aDeliveryAddressVO.setId((Long)anObject[0]);
-			aDeliveryAddressVO.setLine1(anObject[1].toString());
-			aDeliveryAddressVO.setLine2(anObject[2].toString());
-			deliveryAddressVOList.add(aDeliveryAddressVO);
-		}
+		List<DeliveryAddressVO> deliveryAddressVOList = ModelUtil.mapToDeliveryAddressVO(objectList);
 		model.addAttribute("deliveryAddresses", deliveryAddressVOList);
 	}
 	

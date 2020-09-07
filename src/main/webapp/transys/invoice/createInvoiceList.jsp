@@ -181,8 +181,11 @@ function populateCreateInvoiceDeliveryAddress(addressList) {
 				<form:select cssClass="flat form-control input-sm" style="width:172px !important" id="orderId" path="orderId">
 					<form:option value="">----Please Select----</form:option>
 					<form:options items="${orderIds}"/>
-				</form:select> 
+				</form:select>
 				<form:errors path="orderId" cssClass="errorMessage" />
+				<!--  
+				<form:input path="orderId" id="orderId" cssClass="flat" style="width:172px !important" maxlength="10"/>
+				-->
 			</td>
 		</tr>
 		<tr>
@@ -213,16 +216,16 @@ function populateCreateInvoiceDeliveryAddress(addressList) {
 		<tr>
 			<td>
 				<a href="javascript:;" onclick="createInvoice()">
-					<img src="/transys/images/edit.png" title="Create Invoice" class="toolbarButton" border="0">
+					<img src="${editImage}" title="Create Invoice" class="toolbarButton" border="0">
 					Preview Invoice
 				</a>
 			</td>
 			<td width="90">
-				<a href="/transys/invoice/createInvoiceExport.do?dataQualifier=createInvoice&amp;type=pdf">
-					<img src="/transys/images/pdf.png" style="float:right;" class="toolbarButton" border="0">
+				<a href="${ctx}/invoice/createInvoiceExport.do?dataQualifier=createInvoice&amp;type=pdf">
+					<img src="${pdfImage}" style="float:right;" class="toolbarButton" border="0">
 				</a>&nbsp;
-				<a href="/transys/invoice/createInvoiceExport.do?dataQualifier=createInvoice&amp;type=csv">
-					<img src="/transys/images/excel.png" style="float:right;" class="toolbarButton" border="0">
+				<a href="${ctx}/invoice/createInvoiceExport.do?dataQualifier=createInvoice&amp;type=csv">
+					<img src="${excelImage}" style="float:right;" class="toolbarButton" border="0">
 				</a>
 			</td>
 		</tr>

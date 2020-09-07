@@ -9,3 +9,11 @@
 <%@ taglib uri="http://www.opensymphony.com/sitemesh/decorator" prefix="decorator" %> 
 <c:set var="ctx" value="${pageContext.request.contextPath}"/>
 <c:set var="resourceCtx" value="${pageContext.request.contextPath}"/>
+<c:set var="imageCtx" value="${ctx}/images"/>
+<c:set var="addImage" value="${imageCtx}/add.png"/>
+<c:set var="editImage" value="${imageCtx}/edit.png"/>
+<c:set var="deleteImage" value="${imageCtx}/delete.png"/>
+<c:set var="csvImage" value="${imageCtx}/csv.png"/>
+<c:set var="pdfImage" value="${imageCtx}/pdf.png"/>
+<c:set var="excelImage" value="${imageCtx}/excel.png"/>
+

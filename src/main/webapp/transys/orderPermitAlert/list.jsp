@@ -4,15 +4,29 @@
 <form:form action="${ctx}/orderPermitAlert/list.do" method="get" name="orderPermitsAlertSearchForm" id="orderPermitsAlertSearchForm">
 	<table width="100%" id="form-table">
 		<tr>
-		  <td class="form-left">End Date From</td>
-		  <td class="wide"><input class="flat" id="datepicker6" name="permit.endDateFrom" value="${sessionScope.searchCriteria.searchMap['permit.endDateFrom']}" style="width: 175px" /></td>
-				
-		  <td class="form-left">End Date To</td>
-	      <td class="wide"><input class="flat" id="datepicker7" name="permit.endDateTo" value="${sessionScope.searchCriteria.searchMap['permit.endDateTo']}" style="width: 175px" /></td>
+		  	<td class="form-left">End Date From</td>
+			<td class="wide"><input class="flat" id="datepicker6" name="permit.endDateFrom" value="${sessionScope.searchCriteria.searchMap['permit.endDateFrom']}" style="width: 175px" /></td>
+			<td class="form-left">End Date To</td>
+		    <td class="wide"><input class="flat" id="datepicker7" name="permit.endDateTo" value="${sessionScope.searchCriteria.searchMap['permit.endDateTo']}" style="width: 175px" /></td>
 	 	</tr>
 		<tr>
-		  <td class="form-left form-left-ext">Delivery Addrs Line1</td>
-				<td><select class="flat form-control input-sm" id="deliveryAddress" name="order.deliveryAddress.line1" style="width: 175px !important">
+			<td class="form-left">Delivery Address</td>
+			<td>
+				<select class="flat form-control input-sm" id="deliveryAddress" name="order.deliveryAddress.id" style="width: 175px !important">
+					<option value="">---Please Select---</option>
+					<c:forEach items="${deliveryAddresses}" var="aDeliveryAddress">
+						<c:set var="selected" value=""/>
+						<c:if test="${sessionScope.searchCriteria.searchMap['order.deliveryAddress.id'] == aDeliveryAddress.id}">
+							<c:set var="selected" value="selected" />
+						</c:if>
+						<option value="${aDeliveryAddress.id}" ${selected}>${aDeliveryAddress.fullLine}</option>
+					</c:forEach>
+				</select>
+			</td>
+			<!-- 
+		  	<td class="form-left form-left-ext">Delivery Addrs Line1</td>
+			<td>
+				<select class="flat form-control input-sm" id="deliveryAddress" name="order.deliveryAddress.line1" style="width: 175px !important">
 					<option value="">---Please Select---</option>
 					<c:forEach items="${deliveryAddressesLine1}" var="aDeliveryAddressLine1">
 						<c:set var="selected" value=""/>
@@ -22,26 +36,28 @@
 						<option value="${aDeliveryAddressLine1}" ${selected}>${aDeliveryAddressLine1}</option>
 					</c:forEach>
 				</select>
-				</td>
-			
+			</td>
 			<td class="form-left form-left-ext"><transys:label code="Delivery Addrs Line2"/></td>
-			<td><select class="flat form-control input-sm" id="deliveryStreet" name="order.deliveryAddress.line2" style="width: 175px !important">
-				<option value="">---Please Select---</option>
-				<c:forEach items="${deliveryAddressesLine2}" var="aDeliveryAddressLine2">
-					<c:set var="selected" value=""/>
-					<c:if test="${sessionScope.searchCriteria.searchMap['order.deliveryAddress.line2'] == aDeliveryAddressLine2}">
-						<c:set var="selected" value="selected"/>
-					</c:if> 
-					<option value="${aDeliveryAddressLine2}" ${selected}>${aDeliveryAddressLine2}</option>
-				</c:forEach>
-			</select>
+			<td>
+				<select class="flat form-control input-sm" id="deliveryStreet" name="order.deliveryAddress.line2" style="width: 175px !important">
+					<option value="">---Please Select---</option>
+					<c:forEach items="${deliveryAddressesLine2}" var="aDeliveryAddressLine2">
+						<c:set var="selected" value=""/>
+						<c:if test="${sessionScope.searchCriteria.searchMap['order.deliveryAddress.line2'] == aDeliveryAddressLine2}">
+							<c:set var="selected" value="selected"/>
+						</c:if> 
+						<option value="${aDeliveryAddressLine2}" ${selected}>${aDeliveryAddressLine2}</option>
+					</c:forEach>
+				</select>
 			</td> 
+			 -->
 			<td colspan=10></td>
-	 </tr>
-	 
- 	 <tr>
-		  <td class="form-left"><transys:label code="Contact Name"/></td>
-				<td><select class="flat form-control input-sm" id="contactName" name="order.customer.contactName" style="width: 175px !important">
+		 </tr>
+		 <!--  
+	 	 <tr>
+		 	<td class="form-left"><transys:label code="Contact Name"/></td>
+			<td>
+				<select class="flat form-control input-sm" id="contactName" name="order.customer.contactName" style="width: 175px !important">
 					<option value="">---Please Select---</option>
 					<c:forEach items="${contactName}" var="contactNameVar">
 						<c:if test="${not empty contactNameVar}">
@@ -53,90 +69,94 @@
 						</c:if>
 					</c:forEach>
 				</select>
-				</td>
-			
+			</td>
 			<td class="form-left"><transys:label code="Phone Number"/></td>
-			<td><select class="flat form-control input-sm" id="phone" name="order.customer.phone" style="width: 175px !important">
-				<option value="">---Please Select---</option>
-				<c:forEach items="${phone}" var="phoneVar">
-					<c:if test="${not empty phoneVar}">
-						<c:set var="selected" value=""/>
-						<c:if test="${sessionScope.searchCriteria.searchMap['order.customer.phone'] == phoneVar}">
-							<c:set var="selected" value="selected"/>
-						</c:if>
-						<option value="${phoneVar}" ${selected}>${phoneVar}</option>
-					</c:if>
-				</c:forEach>
-			</select>
-			</td>
-	 </tr>
-	 <tr>
-	 <tr>
-		  <td class="form-left"><transys:label code="Permit Number"/></td>
-				<td>
-					<select class="flat form-control input-sm" id="permitNumber" name="permit.number" style="width: 175px !important">
-						<option value="">---Please Select---</option>
-						
-						<c:if test="${sessionScope.searchCriteria.searchMap['number'] == 'To Be Assigned'}">
-							<c:set var="selected" value="selected"/>
-						</c:if>
-						<option value="To Be Assigned" ${selected}>To Be Assigned</option>
-					
-						<c:forEach items="${permit}" var="permit">
-							<c:if test="${permit.number != 'To Be Assigned'}">
-								<c:set var="selected" value=""/>
-								<c:if test="${sessionScope.searchCriteria.searchMap['permit.number'] == permit.number}">
-									<c:set var="selected" value="selected"/>
-								</c:if>
-									<option value="${permit.number}" ${selected}>${permit.number}</option>
+			<td>
+				<select class="flat form-control input-sm" id="phone" name="order.customer.phone" style="width: 175px !important">
+					<option value="">---Please Select---</option>
+					<c:forEach items="${phone}" var="phoneVar">
+						<c:if test="${not empty phoneVar}">
+							<c:set var="selected" value=""/>
+							<c:if test="${sessionScope.searchCriteria.searchMap['order.customer.phone'] == phoneVar}">
+								<c:set var="selected" value="selected"/>
 							</c:if>
-						</c:forEach>
-					</select>
-				</td>
-			
-			<td class="form-left"><transys:label code="Permit Status"/></td>
-			<td><select class="flat form-control input-sm" id="permitStatus" name="permit.status.status" style="width: 175px !important">
-				<option value="">---Please Select---</option>
-				<c:forEach items="${permitStatus}" var="permitStatus">
-					<c:set var="selected" value=""/>
-					<c:if test="${sessionScope.searchCriteria.searchMap['permit.status.status'] == permitStatus.status}">
-						<c:set var="selected" value="selected"/>
-					</c:if>
-						<option value="${permitStatus.status}" ${selected}>${permitStatus.status}</option>
-				</c:forEach>
-			</select>
+							<option value="${phoneVar}" ${selected}>${phoneVar}</option>
+						</c:if>
+					</c:forEach>
+				</select>
 			</td>
-	 </tr>
-	 <tr>
-		<td class="form-left"><transys:label code="Order Number"/></td>
-			<td><select id="orderNumber" name="order.id" class="flat form-control input-sm" style="width: 175px !important">
-				<option value="">---Please Select---</option>
-				<c:forEach items="${order}" var="order">
-					<c:set var="selected" value=""/>
-					<c:if test="${sessionScope.searchCriteria.searchMap['order.id'] == order}">
+		 </tr>
+		 -->
+		 <tr>
+		  	<td class="form-left">Permit Number</td>
+			<td>
+				<select class="flat form-control input-sm" id="permitNumber" name="permit.number" style="width: 175px !important">
+					<option value="">---Please Select---</option>
+					<c:if test="${sessionScope.searchCriteria.searchMap['permit.number'] == 'To Be Assigned'}">
 						<c:set var="selected" value="selected"/>
 					</c:if>
-					<option value="${order}" ${selected}>${order}</option>
-				</c:forEach>
-			</select>
-		</td>
-		<td class="form-left"><transys:label code="Order Status"/></td>
-		<td><select id="orderStatus" name="order.orderStatus" class="flat form-control input-sm" style="width: 175px !important">
-				<option value="">---Please Select---</option>
-				<c:forEach items="${orderStatuses}" var="anOrderStatus">
-					<c:set var="selected" value=""/>
-					<c:if test="${sessionScope.searchCriteria.searchMap['order.orderStatus'] == anOrderStatus.id}">
-						<c:set var="selected" value="selected" />
-					</c:if>
-					<option value="${anOrderStatus.id}" ${selected}>${anOrderStatus.status}</option>
-				</c:forEach>
-			</select>
-		</td>
-	 </tr>
+					<option value="To Be Assigned" ${selected}>To Be Assigned</option>
+					<c:forEach items="${permit}" var="permitNumber">
+						<c:if test="${permitNumber != 'To Be Assigned'}">
+							<c:set var="selected" value=""/>
+							<c:if test="${sessionScope.searchCriteria.searchMap['permit.number'] == permitNumber}">
+								<c:set var="selected" value="selected"/>
+							</c:if>
+							<option value="${permitNumber}" ${selected}>${permitNumber}</option>
+						</c:if>
+					</c:forEach>
+				</select>
+			</td>
+			<td class="form-left">Permit Status</td>
+			<td>
+				<select class="flat form-control input-sm" id="permitStatus" name="permit.status.status" style="width: 175px !important">
+					<option value="">---Please Select---</option>
+					<c:forEach items="${permitStatus}" var="permitStatus">
+						<c:set var="selected" value=""/>
+						<c:if test="${sessionScope.searchCriteria.searchMap['permit.status.status'] == permitStatus.status}">
+							<c:set var="selected" value="selected"/>
+						</c:if>
+							<option value="${permitStatus.status}" ${selected}>${permitStatus.status}</option>
+					</c:forEach>
+				</select>
+			</td>
+			<td colspan=10></td>
+		 </tr>
+		 <tr>
+			<td class="form-left">Order Number</td>
+			<td>
+				<!--
+				<select id="orderNumber" name="order.id" class="flat form-control input-sm" style="width: 175px !important">
+					<option value="">---Please Select---</option>
+					<c:forEach items="${order}" var="order">
+						<c:set var="selected" value=""/>
+						<c:if test="${sessionScope.searchCriteria.searchMap['order.id'] == order}">
+							<c:set var="selected" value="selected"/>
+						</c:if>
+						<option value="${order}" ${selected}>${order}</option>
+					</c:forEach>
+				</select>
+				-->
+				<input class="flat" id="orderNumber" name="order.id" value="${sessionScope.searchCriteria.searchMap['order.id']}" style="width: 175px !important" />
+			</td>
+			<td class="form-left">Order Status</td>
+			<td>
+				<select id="orderStatus" name="order.orderStatus" class="flat form-control input-sm" style="width: 175px !important">
+					<option value="">---Please Select---</option>
+					<c:forEach items="${orderStatuses}" var="anOrderStatus">
+						<c:set var="selected" value=""/>
+						<c:if test="${sessionScope.searchCriteria.searchMap['order.orderStatus'] == anOrderStatus.id}">
+							<c:set var="selected" value="selected" />
+						</c:if>
+						<option value="${anOrderStatus.id}" ${selected}>${anOrderStatus.status}</option>
+					</c:forEach>
+				</select>
+			</td>
+		 </tr>
 		<tr>
 			<td></td>
 			<td>
-				<input type="submit" id="submitOrderPermitsAlertSearch" onclick="return validateForm()" value="Search" class="btn btn-primary btn-sm btn-sm-ext" />
+				<input type="submit" id="submitOrderPermitsAlertSearch" value="Search" class="btn btn-primary btn-sm btn-sm-ext" />
 				<input type="reset" class="btn btn-primary btn-sm btn-sm-ext" value="Clear"/> 
 			</td>
 		</tr>
@@ -200,10 +220,6 @@
 </div>
 
 <script type="text/javascript">
-function validateForm() {
-	return true;
-}
-
 $("#orderPermitsAlertSearchForm").submit(function (ev) {
 	var $this = $(this);
 	

@@ -46,7 +46,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.transys.controller.editor.AbstractModelEditor;
 
 import com.transys.core.report.generator.ExcelReportGenerator;
-
+import com.transys.core.util.ModelUtil;
 import com.transys.model.AbstractBaseModel;
 import com.transys.model.Customer;
 import com.transys.model.DeliveryAddress;
@@ -67,6 +67,8 @@ import com.transys.model.PermitType;
 import com.transys.model.SearchCriteria;
 import com.transys.model.State;
 import com.transys.model.User;
+import com.transys.model.vo.CustomerVO;
+import com.transys.model.vo.DeliveryAddressVO;
 
 @SuppressWarnings("unchecked")
 @Controller
@@ -110,7 +112,69 @@ public class PermitController extends CRUDController<Permit> {
 	@Override
 	public void setupList(ModelMap model, HttpServletRequest request) {
 		populateSearchCriteria(request, request.getParameterMap());
-		setupCreate(model, request);
+		setupCommon(model, request);
+		
+		//model.addAttribute("order", genericDAO.executeSimpleQuery("select obj.id from Order obj where obj.deleteFlag='1' order by obj.id asc"));
+		
+		/*
+		String deliveryAddresseQuery = "select distinct obj.line1 from DeliveryAddress obj where obj.deleteFlag='1' and obj.line1 != '' order by obj.line1 asc";
+		model.addAttribute("deliveryAddressesLine1", genericDAO.executeSimpleQuery(deliveryAddresseQuery));
+		
+	   deliveryAddresseQuery = "select distinct obj.line2 from DeliveryAddress obj where obj.deleteFlag='1' and obj.line2 != '' order by obj.line2 asc";
+		model.addAttribute("deliveryAddressesLine2", genericDAO.executeSimpleQuery(deliveryAddresseQuery));
+		*/
+		
+		String deliveryAddressQuery = "select distinct obj.deliveryAddress.id, obj.deliveryAddress.line1, obj.deliveryAddress.line2"
+					+ " from Permit obj where obj.deleteFlag='1' order by obj.deliveryAddress.line1 asc";
+		List<?> objectList = genericDAO.executeSimpleQuery(deliveryAddressQuery);
+		List<DeliveryAddressVO> deliveryAddressVOList = ModelUtil.mapToDeliveryAddressVO(objectList);
+		model.addAttribute("deliveryAddresses", deliveryAddressVOList);
+	
+		//String permitAddressQuery = "select obj.permitAddress.line1, obj.permitAddress.line2"
+		//		+ " from Permit obj where obj.deleteFlag='1' order by obj.permitAddress.line1 asc";
+		String permitAddressQuery = "select obj.line1, obj.line2 from PermitAddress obj where obj.deleteFlag='1' order by obj.line1 asc";
+	   objectList = genericDAO.executeSimpleQuery(permitAddressQuery);
+		
+		SortedSet<String> permitAddressLine1Set = new TreeSet<String>();
+		SortedSet<String> permitAddressLine2Set = new TreeSet<String>();
+		for (int i = 0; i < objectList.size(); i++) {
+			Object anObject[] = (Object[])objectList.get(i);
+			
+			if (anObject[0] != null && StringUtils.isNotEmpty(anObject[0].toString())) {
+				permitAddressLine1Set.add(anObject[0].toString());
+			}
+			if (anObject[1] != null && StringUtils.isNotEmpty(anObject[1].toString())) {
+				permitAddressLine2Set.add(anObject[1].toString());
+			}
+		}
+		
+		String[] permitAddressLine1Arr = permitAddressLine1Set.toArray(new String[0]);
+		String[] permitAddressLine2Arr = permitAddressLine2Set.toArray(new String[0]);
+		
+		model.addAttribute("allPermitAddressesLine1", permitAddressLine1Arr);
+		model.addAttribute("allPermitAddressesLine2", permitAddressLine2Arr);
+	   
+		String customerQuery = "select distinct obj.customer.id, obj.customer.companyName from Permit obj"
+					+ " where obj.deleteFlag='1' order by obj.customer.companyName asc";
+		objectList = genericDAO.executeSimpleQuery(customerQuery);
+		List<CustomerVO> customerVOList = ModelUtil.mapToCustomerVO(objectList);
+		model.addAttribute("customer", customerVOList);
+		
+		/*SortedSet<String> phoneSet = new TreeSet<String>();
+		SortedSet<String> contactNameSet = new TreeSet<String>();
+		for (Customer aCustomer : customerList) {
+			phoneSet.add(aCustomer.getPhone());
+			contactNameSet.add(aCustomer.getContactName());
+		}
+		
+		model.addAttribute("phone", phoneSet);	
+		model.addAttribute("contactName", contactNameSet);*/
+		
+		String permitQuery = "select obj.number from Permit obj where obj.deleteFlag='1' order by obj.number asc";
+		model.addAttribute("permit", genericDAO.executeSimpleQuery(permitQuery));
+		
+		Map<String, Object> criterias = new HashMap<String, Object>();
+		model.addAttribute("permitStatus", genericDAO.findByCriteria(PermitStatus.class, criterias, "status", false));
 	}	
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/list.do")
@@ -482,61 +546,22 @@ public class PermitController extends CRUDController<Permit> {
 		}
 	}
 	
-	@Override
-	public void setupCreate(ModelMap model, HttpServletRequest request) {
+	private void setupCommon(ModelMap model, HttpServletRequest request) {
 		Map<String, Object> criterias = new HashMap<String, Object>();
-		
-		String deliveryAddresseQuery = "select distinct obj.line1 from DeliveryAddress obj where obj.deleteFlag='1' and obj.line1 != '' order by obj.line1 asc";
-		model.addAttribute("deliveryAddressesLine1", genericDAO.executeSimpleQuery(deliveryAddresseQuery));
-		
-	   deliveryAddresseQuery = "select distinct obj.line2 from DeliveryAddress obj where obj.deleteFlag='1' and obj.line2 != '' order by obj.line2 asc";
-		model.addAttribute("deliveryAddressesLine2", genericDAO.executeSimpleQuery(deliveryAddresseQuery));
-		 
-	   List<?> objectList = genericDAO.executeSimpleQuery("select obj.line1, obj.line2 from PermitAddress obj where obj.deleteFlag='1' order by obj.line1 asc");
-		
-		SortedSet<String> permitAddressLine1Set = new TreeSet<String>();
-		SortedSet<String> permitAddressLine2Set = new TreeSet<String>();
-		for (int i = 0; i < objectList.size(); i++) {
-			Object anObject[] = (Object[])objectList.get(i);
-			
-			if (anObject[0] != null && StringUtils.isNotEmpty(anObject[0].toString())) {
-				permitAddressLine1Set.add(anObject[0].toString());
-			}
-			if (anObject[1] != null && StringUtils.isNotEmpty(anObject[1].toString())) {
-				permitAddressLine2Set.add(anObject[1].toString());
-			}
-		}
-		
-		String[] permitAddressLine1Arr = permitAddressLine1Set.toArray(new String[0]);
-		String[] permitAddressLine2Arr = permitAddressLine2Set.toArray(new String[0]);
-		
-		model.addAttribute("allPermitAddressesLine1", permitAddressLine1Arr);
-		model.addAttribute("allPermitAddressesLine2", permitAddressLine2Arr);
-	   
-	   List<Customer> customerList = genericDAO.findByCriteria(Customer.class, criterias, "companyName", false);
-		model.addAttribute("customer", customerList);
-		
-		model.addAttribute("locationType", genericDAO.findByCriteria(LocationType.class, criterias, "locationType", false));
-		
-		//model.addAttribute("order", genericDAO.findByCriteria(Order.class, criterias, "id", false));
-		model.addAttribute("order", genericDAO.executeSimpleQuery("select obj.id from Order obj where obj.deleteFlag='1' order by obj.id asc"));
-		
 		model.addAttribute("permitClass", genericDAO.findByCriteria(PermitClass.class, criterias, "permitClass", false));
 		model.addAttribute("permitType", genericDAO.findByCriteria(PermitType.class, criterias, "permitType", false));
-		model.addAttribute("permitStatus", genericDAO.findByCriteria(PermitStatus.class, criterias, "status", false));
-		model.addAttribute("permit", genericDAO.findByCriteria(Permit.class, criterias, "number", false));
-		model.addAttribute("orderStatuses", genericDAO.findByCriteria(OrderStatus.class, criterias, "status", false));
+	}
+	
+	@Override
+	public void setupCreate(ModelMap model, HttpServletRequest request) {
+		setupCommon(model, request);
+		
+		Map<String, Object> criterias = new HashMap<String, Object>();
+		
+	   List<Customer> customerList = genericDAO.findByCriteria(Customer.class, criterias, "companyName", false);
+		model.addAttribute("customer", customerList);
+		model.addAttribute("locationType", genericDAO.findByCriteria(LocationType.class, criterias, "locationType", false));
 		model.addAttribute("state", genericDAO.findByCriteria(State.class, criterias, "name", false));
-		
-		SortedSet<String> phoneSet = new TreeSet<String>();
-		SortedSet<String> contactNameSet = new TreeSet<String>();
-		for (Customer aCustomer : customerList) {
-			phoneSet.add(aCustomer.getPhone());
-			contactNameSet.add(aCustomer.getContactName());
-		}
-		
-		model.addAttribute("phone", phoneSet);	
-		model.addAttribute("contactName", contactNameSet);
 	}
 	
 	private boolean shouldPermitStatusBeUpdated(Permit entity, String newStatus) {

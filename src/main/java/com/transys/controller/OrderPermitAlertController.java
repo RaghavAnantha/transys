@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.transys.core.util.ModelUtil;
 import com.transys.model.Customer;
 import com.transys.model.LocationType;
 import com.transys.model.Order;
@@ -31,12 +32,12 @@ import com.transys.model.PermitStatus;
 import com.transys.model.PermitType;
 import com.transys.model.SearchCriteria;
 import com.transys.model.State;
+import com.transys.model.vo.DeliveryAddressVO;
 
 @SuppressWarnings("unchecked")
 @Controller
 @RequestMapping("/orderPermitAlert")
 public class OrderPermitAlertController extends CRUDController<OrderPermits> {
-	
 	public OrderPermitAlertController(){
 		setUrlContext("orderPermitAlert");
 	}
@@ -65,36 +66,42 @@ public class OrderPermitAlertController extends CRUDController<OrderPermits> {
 	@Override
 	public void setupList(ModelMap model, HttpServletRequest request) {
 		populateSearchCriteria(request, request.getParameterMap());
-		setupCreate(model, request);
-	}	
-	
-	@Override
-	public void setupCreate(ModelMap model, HttpServletRequest request) {
+		
 		Map<String, Object> criterias = new HashMap<String, Object>();
 		
-		String deliveryAddresseQuery = "select distinct obj.line1 from DeliveryAddress obj where obj.deleteFlag='1' and obj.line1 != '' order by obj.line1 asc";
+		/*
+		String deliveryAddressQuery = "select distinct obj.line1 from DeliveryAddress obj where obj.deleteFlag='1' and obj.line1 != '' order by obj.line1 asc";
 		model.addAttribute("deliveryAddressesLine1", genericDAO.executeSimpleQuery(deliveryAddresseQuery));
 		
-	   deliveryAddresseQuery = "select distinct obj.line2 from DeliveryAddress obj where obj.deleteFlag='1' and obj.line2 != '' order by obj.line2 asc";
+	   deliveryAddressQuery = "select distinct obj.line2 from DeliveryAddress obj where obj.deleteFlag='1' and obj.line2 != '' order by obj.line2 asc";
 		model.addAttribute("deliveryAddressesLine2", genericDAO.executeSimpleQuery(deliveryAddresseQuery));
-		 
-		model.addAttribute("locationType", genericDAO.findByCriteria(LocationType.class, criterias, "id", false));
+		*/
 		
-		//model.addAttribute("order", genericDAO.findByCriteria(Order.class, criterias, "id", false));
-		model.addAttribute("order", genericDAO.executeSimpleQuery("select obj.id from Order obj where obj.deleteFlag='1' order by obj.id asc"));
+		String deliveryAddressQuery = "select distinct obj.deliveryAddress.id, obj.deliveryAddress.line1, obj.deliveryAddress.line2"
+				+ " from Order obj where obj.deleteFlag='1' order by obj.deliveryAddress.line1 asc";
+		List<?> objectList = genericDAO.executeSimpleQuery(deliveryAddressQuery);
+		List<DeliveryAddressVO> deliveryAddressVOList = ModelUtil.mapToDeliveryAddressVO(objectList);
+		model.addAttribute("deliveryAddresses", deliveryAddressVOList);
+	
+		//model.addAttribute("order", genericDAO.executeSimpleQuery("select obj.id from Order obj where obj.deleteFlag='1' order by obj.id asc"));
 		
-		model.addAttribute("permitClass", genericDAO.findByCriteria(PermitClass.class, criterias, "permitClass", false));
-		model.addAttribute("permitType", genericDAO.findByCriteria(PermitType.class, criterias, "permitType", false));
-		model.addAttribute("permitStatus", genericDAO.findByCriteria(PermitStatus.class, criterias, "status", false));
-		model.addAttribute("permit", genericDAO.findByCriteria(Permit.class, criterias, "number", false));
 		model.addAttribute("orderStatuses", genericDAO.executeSimpleQuery("select obj from OrderStatus obj where obj.deleteFlag='1' and obj.status != 'Closed'"));
 		//model.addAttribute("orderStatuses", genericDAO.findByCriteria(OrderStatus.class, criterias, "status", false));
-		model.addAttribute("state", genericDAO.findAll(State.class, true));
-
-		List<Customer> customerList = genericDAO.findByCriteria(Customer.class, criterias, "contactName", false);
+		
+		//model.addAttribute("locationType", genericDAO.findByCriteria(LocationType.class, criterias, "id", false));
+		//model.addAttribute("permitClass", genericDAO.findByCriteria(PermitClass.class, criterias, "permitClass", false));
+		//model.addAttribute("permitType", genericDAO.findByCriteria(PermitType.class, criterias, "permitType", false));
+		//model.addAttribute("state", genericDAO.findAll(State.class, true));
+		
+		model.addAttribute("permitStatus", genericDAO.findByCriteria(PermitStatus.class, criterias, "status", false));
+		
+		String permitQuery = "select obj.number from Permit obj where obj.deleteFlag='1' order by obj.number asc";
+		model.addAttribute("permit", genericDAO.executeSimpleQuery(permitQuery));
+		
+		//List<Customer> customerList = genericDAO.findByCriteria(Customer.class, criterias, "companyName", false);
 		//model.addAttribute("customer", customerList);
 		
-		SortedSet<String> phoneSet = new TreeSet<String>();
+		/*SortedSet<String> phoneSet = new TreeSet<String>();
 		SortedSet<String> contactNameSet = new TreeSet<String>();
 		for (Customer aCustomer : customerList) {
 			phoneSet.add(aCustomer.getPhone());
@@ -102,11 +109,11 @@ public class OrderPermitAlertController extends CRUDController<OrderPermits> {
 		}
 		
 		model.addAttribute("phone", phoneSet);	
-		model.addAttribute("contactName", contactNameSet);
+		model.addAttribute("contactName", contactNameSet);*/
 		
-		List<OrderPermits> orderPermits = getToBeAlertedPermits(new SearchCriteria());
-		model.addAttribute("orderPermitList", orderPermits);
-	}
+		//List<OrderPermits> orderPermits = getToBeAlertedPermits(new SearchCriteria());
+		//model.addAttribute("orderPermitList", orderPermits);
+	}	
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/list.do")
 	public String list(ModelMap model, HttpServletRequest request) {
@@ -117,7 +124,7 @@ public class OrderPermitAlertController extends CRUDController<OrderPermits> {
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		criteria.setPageSize(50);
 		
-		//	injectPendingPaymentPermitSearch(criteria);
+		//injectPendingPaymentPermitSearch(criteria);
 		
 		// Search for permits corresponding to open orders and status=expired or expiring in the next 7 days
 		List<OrderPermits> orderPermits = getToBeAlertedPermits(criteria);
@@ -129,7 +136,6 @@ public class OrderPermitAlertController extends CRUDController<OrderPermits> {
 	}
 	
 	private void injectPendingPaymentPermitSearch(SearchCriteria criteria) {
-		
 		if (criteria != null && criteria.getSearchMap() != null) {
 			Map<String, Object> searchMap = criteria.getSearchMap();
 			Object[] param = searchMap.keySet().toArray();
@@ -159,20 +165,16 @@ public class OrderPermitAlertController extends CRUDController<OrderPermits> {
 			 *  for each orderPermit,
 			 *  a) get orderID
 			 *  b) get # of permits associated with this orderID, if count == 3, AlertFlag
-			 *  c) for each of the permits associated, if atleast 1 valid permit available, do not add to list
+			 *  c) for each of the permits associated, if at least 1 valid permit available, do not add to list
 			 */
 			
-			List<OrderPermits> expiredOrderPermits = new ArrayList<>();
 			Map<Long, List<OrderPermits>> orderPermitsSortedOnOrderId = new HashMap<>();
-			
 			List<OrderPermits> expiredOrderPermitEntriesForOrder = null;
-			
 			for (OrderPermits op : orderPermits) {
 				System.out.println("Order ID = " + op.getOrder().getId());
 				if (!orderPermitsSortedOnOrderId.containsKey(op.getOrder().getId())) {
 					expiredOrderPermitEntriesForOrder = new ArrayList<>();
 					expiredOrderPermitEntriesForOrder.add(op);
-					
 				} else {
 					expiredOrderPermitEntriesForOrder = orderPermitsSortedOnOrderId.get(op.getOrder().getId());
 					expiredOrderPermitEntriesForOrder.add(op);
@@ -181,6 +183,7 @@ public class OrderPermitAlertController extends CRUDController<OrderPermits> {
 				orderPermitsSortedOnOrderId.put(op.getOrder().getId(), expiredOrderPermitEntriesForOrder);
 			}
 			
+			List<OrderPermits> expiredOrderPermits = new ArrayList<>();
 			// for each orderPermitsSortedOnOrderId, ensure that the corresponding permits for this order has atleast 1 unexpired permit
 			for (Long orderId : orderPermitsSortedOnOrderId.keySet()) {
 				List<OrderPermits> orderPermitsForThisOrder = orderPermitsSortedOnOrderId.get(orderId);
@@ -204,7 +207,6 @@ public class OrderPermitAlertController extends CRUDController<OrderPermits> {
 	}
 	
 	private boolean unExpiredPermitAvailable(Long orderId, List<OrderPermits> orderPermits) {
-		
 		if (orderPermits.size() == 1) {
 			// this is the only permit available for this order and it is expired
 			return false;
@@ -237,10 +239,8 @@ public class OrderPermitAlertController extends CRUDController<OrderPermits> {
 	}
 
 	private Object setupOrderPermitSearchCriteria(SearchCriteria searchCriteria) {
-		
 		Object existingSearchValue = null;
 		Map searchMap = searchCriteria.getSearchMap();
-		
 		
 		if (searchMap.containsKey("order.orderStatus.status") && !StringUtils.isEmpty(searchMap.get("order.orderStatus.status").toString())) {
 			existingSearchValue = searchMap.get("order.orderStatus.status");

@@ -174,6 +174,10 @@ function populateManageInvoiceDeliveryAddress(addressList) {
 						<option value="${anOrderId}" ${selected}>${anOrderId}</option>
 					</c:forEach>
 				</select>
+				<!-- 
+				<input class="flat" id="manageInvoiceOrderId" name="manageInvoiceOrderId" 
+					value="${sessionScope.searchCriteria.searchMap['manageInvoiceOrderId']}" style="width: 175px !important" />
+				-->
 			</td>
 		</tr>
 		<tr>
@@ -211,11 +215,11 @@ function populateManageInvoiceDeliveryAddress(addressList) {
 		<tr>
 			<td></td>
 			<td width="90">
-				<a href="/transys/invoice/manageInvoiceExport.do?dataQualifier=manageInvoice&amp;type=pdf">
-					<img src="/transys/images/pdf.png" style="float:right;" class="toolbarButton" border="0">
+				<a href="${ctx}/invoice/manageInvoiceExport.do?dataQualifier=manageInvoice&amp;type=pdf">
+					<img src="${pdfImage}" style="float:right;" class="toolbarButton" border="0">
 				</a>&nbsp;
-				<a href="/transys/invoice/manageInvoiceExport.do?dataQualifier=manageInvoice&amp;type=csv">
-					<img src="/transys/images/excel.png" style="float:right;" class="toolbarButton" border="0">
+				<a href="${ctx}/invoice/manageInvoiceExport.do?dataQualifier=manageInvoice&amp;type=csv">
+					<img src="${excelImage}" style="float:right;" class="toolbarButton" border="0">
 				</a>
 			</td>
 		</tr>
@@ -239,10 +243,10 @@ function populateManageInvoiceDeliveryAddress(addressList) {
 		<transys:textcolumn headerText="Total Discount" dataField="totalDiscount" type="java.math.BigDecimal"/>
 		<transys:textcolumn headerText="Total Amt Paid" dataField="totalAmountPaid" type="java.math.BigDecimal" dataFormat="#####0.00"/>
 		<transys:textcolumn headerText="Bal Due" dataField="totalBalanceAmountDue" type="java.math.BigDecimal" dataFormat="#####0.00"/>
-		<transys:imagecolumn headerText="Download As PDF" linkUrl="${ctx}/invoice/downloadInvoice.do?id={id}&type=pdf" imageSrc="${ctx}/images/pdf.png" HAlign="center"/>
-		<transys:imagecolumn headerText="Download As XLS" linkUrl="${ctx}/invoice/downloadInvoice.do?id={id}&type=xls" imageSrc="${ctx}/images/excel.png" HAlign="center"/>
-		<transys:imagecolumn headerText="Download As CSV" linkUrl="${ctx}/invoice/downloadInvoice.do?id={id}&type=csv" imageSrc="${ctx}/images/csv.png" HAlign="center"/>
-		<transys:imagecolumn headerText="DEL" linkUrl="javascript:confirmDeleteInvoice('{id}');" imageSrc="${ctx}/images/delete.png" HAlign="center"/>
+		<transys:imagecolumn headerText="Download As PDF" linkUrl="${ctx}/invoice/downloadInvoice.do?id={id}&type=pdf" imageSrc="${pdfImage}" HAlign="center"/>
+		<transys:imagecolumn headerText="Download As XLS" linkUrl="${ctx}/invoice/downloadInvoice.do?id={id}&type=xls" imageSrc="${excelImage}" HAlign="center"/>
+		<transys:imagecolumn headerText="Download As CSV" linkUrl="${ctx}/invoice/downloadInvoice.do?id={id}&type=csv" imageSrc="${csvImage}" HAlign="center"/>
+		<transys:imagecolumn headerText="DEL" linkUrl="javascript:confirmDeleteInvoice('{id}');" imageSrc="${delImage}" HAlign="center"/>
 	</transys:datatable>
 	<%session.setAttribute("manageInvoiceColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
 </form:form>

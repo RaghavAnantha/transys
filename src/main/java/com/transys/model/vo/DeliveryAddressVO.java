@@ -2,10 +2,12 @@ package com.transys.model.vo;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.transys.core.util.CoreUtil;
+
 public class DeliveryAddressVO implements BaseVO {
 	private Long id;
-	private String line1;
-	private String line2;
+	private String line1 = StringUtils.EMPTY;
+	private String line2 = StringUtils.EMPTY;
 	
 	public Long getId() {
 		return id;
@@ -26,14 +28,6 @@ public class DeliveryAddressVO implements BaseVO {
 		this.line2 = line2;
 	}
 	public String getFullLine() {
-		StringBuffer fullLineBuff = new StringBuffer();
-		if (StringUtils.isNotEmpty(getLine1())) {
-			fullLineBuff.append(getLine1());
-		}
-		if (StringUtils.isNotEmpty(getLine2())) {
-			fullLineBuff.append(" " + getLine2());
-		}
-		
-		return fullLineBuff.toString();
+		return CoreUtil.concatenate(getLine1(), getLine2());
 	}
 }

@@ -21,7 +21,9 @@
 				<%@include file="addEdit.jsp"%>
 			</c:if>
 		</div>
-		<div id="orderPermitsAlert" class="tab-pane"></div>	
+		<div id="orderPermitsAlert" class="tab-pane">
+			Loading...<img src="${ctx}/images/preloader.gif" id="loadingImage"/>
+		</div>
 		<div id="permitsReport" class="tab-pane">
 			<p>Placeholder for permit reports</p>
 		</div>
