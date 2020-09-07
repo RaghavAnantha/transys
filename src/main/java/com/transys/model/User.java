@@ -188,7 +188,7 @@ public class User extends AbstractBaseModel implements Comparable, Auditable {
 			return StringUtils.EMPTY;
 		}
 		
-		SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+		SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss");
 		return dateFormat.format(lastLoginDate);
 	}
 }
