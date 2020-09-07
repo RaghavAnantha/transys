@@ -21,13 +21,13 @@
 					<li id="reportPage">
 						<a href="#" data-toggle="dropdown" class="dropdown-toggle">Reports<b class="caret"></b></a>
 						<ul class="dropdown-menu">
-							<li><a href="${ctx}/reports/ordersRevenueReport/main.do">Revenue Report</a></li>
-							<li><a href="${ctx}/reports/deliveryPickupReport/main.do">Delivery/Pickup Report</a></li>
-							<li><a href="${ctx}/reports/dumpsterOnsiteReport/main.do">Dumpsters On-site Report</a></li>
-							<li><a href="${ctx}/reports/dumpsterRentedReport/main.do">Dumpsters Rented Report</a></li>
-							<li><a href="${ctx}/reports/recycleReport/main.do">Recycle Report</a></li>
-							<li><a href="${ctx}/reports/materialIntakeDailyReport/main.do">Material Intake Daily Report</a></li>
-							<li><a href="${ctx}/reports/monthlyTransferStationIntakeReport/main.do">Monthly Transfer Station Intake Report</a></li>
+							<li><a href="${reportsMenuCtx}/ordersRevenueReport/main.do">Revenue Report</a></li>
+							<li><a href="${reportsMenuCtx}/deliveryPickupReport/main.do">Delivery/Pickup Report</a></li>
+							<li><a href="${reportsMenuCtx}/dumpsterOnsiteReport/main.do">Dumpsters On-site Report</a></li>
+							<li><a href="${reportsMenuCtx}/dumpsterRentedReport/main.do">Dumpsters Rented Report</a></li>
+							<li><a href="${reportsMenuCtx}/recycleReport/main.do">Recycle Report</a></li>
+							<li><a href="${reportsMenuCtx}/materialIntakeDailyReport/main.do">Material Intake Daily Report</a></li>
+							<li><a href="${reportsMenuCtx}/monthlyTransferStationIntakeReport/main.do">Monthly Transfer Station Intake Report</a></li>
 						</ul>
 					</li>
 					<li id="masterDataPage">
@@ -39,18 +39,18 @@
 									<li><a href="${ctx}/masterData/loginUser/main.do">Manage User Logins</a></li>
 								</ul>
 							</li>
-							<li><a href="${ctx}/masterData/materialType/main.do">Material Type</a></li>
-							<li><a href="${ctx}/masterData/materialCategory/main.do">Material Category</a></li>
-							<li><a href="${ctx}/masterData/locationType/main.do">Location Type</a></li>
-							<li><a href="${ctx}/masterData/recycleLocation/main.do">Recycle Location</a></li>
-							<li><a href="${ctx}/masterData/paymentMethod/main.do">Payment Method</a></li>
-							<li><a href="${ctx}/masterData/dumpsters/main.do">Dumpsters</a></li>
-							<li><a href="${ctx}/masterData/dumpsterPrice/main.do">Dumpster Price</a></li>
-							<!--<li><a href="${ctx}/masterData/customerDumpsterPrice/main.do">Customer Dumpster Price</a></li>-->
-							<li><a href="${ctx}/masterData/additionalFee/main.do">Additional Fee</a></li>
-							<li><a href="${ctx}/masterData/cityFee/main.do">City Fee</a></li>
-							<li><a href="${ctx}/masterData/overweightFee/main.do">Overweight Fee</a></li>
-							<li><a href="${ctx}/masterData/permitFee/main.do">Permit Fee</a></li>
+							<li><a href="${masterDataMenuCtx}/materialType/main.do">Material Type</a></li>
+							<li><a href="${masterDataMenuCtx}/materialCategory/main.do">Material Category</a></li>
+							<li><a href="${masterDataMenuCtx}/locationType/main.do">Location Type</a></li>
+							<li><a href="${masterDataMenuCtx}/recycleLocation/main.do">Recycle Location</a></li>
+							<li><a href="${masterDataMenuCtx}/paymentMethod/main.do">Payment Method</a></li>
+							<li><a href="${masterDataMenuCtx}/dumpsters/main.do">Dumpsters</a></li>
+							<li><a href="${masterDataMenuCtx}/dumpsterPrice/main.do">Dumpster Price</a></li>
+							<!--<li><a href="${masterDataMenuCtx}/customerDumpsterPrice/main.do">Customer Dumpster Price</a></li>-->
+							<li><a href="${masterDataMenuCtx}/additionalFee/main.do">Additional Fee</a></li>
+							<li><a href="${masterDataMenuCtx}/cityFee/main.do">City Fee</a></li>
+							<li><a href="${masterDataMenuCtx}/overweightFee/main.do">Overweight Fee</a></li>
+							<li><a href="${masterDataMenuCtx}/permitFee/main.do">Permit Fee</a></li>
 						</ul>
 					</li>
 					<!-- <li id="migrationPage"><a href="${ctx}/migration/main.do">Migration</a></li> -->

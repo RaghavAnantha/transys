@@ -24,7 +24,7 @@
 	               "add Cache-Control: public, max-age=604800, immutable",
 	                setDate Expires: 31540000000,
 	               -->
-	                addDate Date: 0
+	               addDate Date: 0
 	       </param-value>
 	       </init-param>
     </filter>

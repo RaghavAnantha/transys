@@ -15,7 +15,7 @@
 			<%@include file="createInvoiceList.jsp"%>
 		</div>
 		<div id="manageInvoice" class="tab-pane">
-			Loading...<img src="${ctx}/images/preloader.gif" id="loadingImage"/>
+			Loading...<img src="${preLoaderImage}" id="loadingImage"/>
 		</div>	
 	</div>
 	
