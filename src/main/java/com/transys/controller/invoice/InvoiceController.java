@@ -5,9 +5,6 @@ import java.io.IOException;
 
 import java.math.BigDecimal;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -44,14 +41,15 @@ import net.sf.jasperreports.j2ee.servlets.ImageServlet;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import com.transys.service.DynamicReportService;
-
 import com.transys.controller.BaseController;
+
+import com.transys.service.DynamicReportService;
 
 import com.transys.core.util.CoreUtil;
 import com.transys.core.util.FormatUtil;
 import com.transys.core.util.MimeUtil;
 import com.transys.core.util.ModelUtil;
+import com.transys.core.util.ServletUtil;
 
 import com.transys.model.Customer;
 import com.transys.model.DeliveryAddress;
@@ -73,8 +71,6 @@ import com.transys.model.vo.invoice.InvoiceVO;
 public class InvoiceController extends BaseController {
 	@Autowired
 	private DynamicReportService dynamicReportService;
-	
-	private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	
 	private static String ORDER_INVOICE_MASTER = "orderInvoiceMaster";
 	private static String ORDER_INVOICE_SUB = "orderInvoiceSub";
@@ -265,19 +261,11 @@ public class InvoiceController extends BaseController {
 			whereClause.append(" and obj.id=" + orderId);
 		}
 		if (StringUtils.isNotEmpty(orderDateFrom)){
-        	try {
-        		whereClause.append(" and obj.createdAt >='"+sdf.format(dateFormat.parse(orderDateFrom))+"'");
-			} catch (ParseException e) {
-				e.printStackTrace();
-			}
+        	whereClause.append(" and obj.createdAt >='"+FormatUtil.convertInputDateToDbDate(orderDateFrom)+"'");
 		}
       if (StringUtils.isNotEmpty(orderDateTo)){
-	     	try {
-	     		whereClause.append(" and obj.createdAt <='"+sdf.format(dateFormat.parse(orderDateTo))+"'");
-	     	} catch (ParseException e) {
-				e.printStackTrace();
-			}
-		}
+	     	whereClause.append(" and obj.createdAt <='"+FormatUtil.convertInputDateToDbDate(orderDateTo)+"'");
+	   }
       
       query.append(whereClause);
       countQuery.append(whereClause);
@@ -323,33 +311,17 @@ public class InvoiceController extends BaseController {
 			whereClause.append(" and oidet.orderId=" + orderId);
 		}
 		if (StringUtils.isNotEmpty(orderDateFrom)){
-        	try {
-        		whereClause.append(" and obj.orderDateFrom >='"+sdf.format(dateFormat.parse(orderDateFrom))+"'");
-			} catch (ParseException e) {
-				e.printStackTrace();
-			}
+        	whereClause.append(" and obj.orderDateFrom >='"+FormatUtil.convertInputDateToDbDate(orderDateFrom)+"'");
 		}
       if (StringUtils.isNotEmpty(orderDateTo)){
-	     	try {
-	     		whereClause.append(" and obj.orderDateTo <='"+sdf.format(dateFormat.parse(orderDateTo))+"'");
-	     	} catch (ParseException e) {
-				e.printStackTrace();
-			}
-		}
+	     	whereClause.append(" and obj.orderDateTo <='"+FormatUtil.convertInputDateToDbDate(orderDateTo)+"'");
+	   }
       if (StringUtils.isNotEmpty(invoiceDateFrom)){
-        	try {
-        		whereClause.append(" and obj.invoiceDate >='"+sdf.format(dateFormat.parse(invoiceDateFrom))+"'");
-			} catch (ParseException e) {
-				e.printStackTrace();
-			}
+        	whereClause.append(" and obj.invoiceDate >='"+FormatUtil.convertInputDateToDbDate(invoiceDateFrom)+"'");
 		}
       if (StringUtils.isNotEmpty(invoiceDateTo)){
-	     	try {
-	     		whereClause.append(" and obj.invoiceDate <='"+sdf.format(dateFormat.parse(invoiceDateTo))+"'");
-	     	} catch (ParseException e) {
-				e.printStackTrace();
-			}
-		}
+	     	whereClause.append(" and obj.invoiceDate <='"+FormatUtil.convertInputDateToDbDate(invoiceDateTo)+"'");
+	   }
       
       query.append(whereClause);
       countQuery.append(whereClause);
@@ -927,7 +899,7 @@ public class InvoiceController extends BaseController {
 		InvoiceVO input = (InvoiceVO) request.getSession().getAttribute("input");
 		input.setIds(ids);
 		input.setInvoiceDate(invoiceDate);
-		input.setHistoryCount(-1);
+		//input.setHistoryCount(-1);
 		
 		return processPreviewInvoiceCommon(request, response, input);
 	}
@@ -937,6 +909,8 @@ public class InvoiceController extends BaseController {
 		Map<String, Object> datas = generateInvoiceData(request, input);
 		List<InvoiceVO> invoiceVOList = (List<InvoiceVO>) datas.get("data");
 		Map<String, Object> params = (Map<String, Object>) datas.get("params");
+		
+		addWaterMarkRendererReportParam(params, true, "Preview");
 		
 		String type = "html";
 		response.setContentType(MimeUtil.getContentType(type));
@@ -964,12 +938,15 @@ public class InvoiceController extends BaseController {
 	public String previewInvoiceExport(ModelMap model, HttpServletRequest request,
 			HttpServletResponse response,
 			@RequestParam(required = true, value = "type") String type) {
-		setupPreviewInvoice(request, model);
+		//setupPreviewInvoice(request, model);
 		
 		InvoiceVO input = (InvoiceVO) request.getSession().getAttribute("input");
 		Map<String, Object> datas = generateInvoiceData(request, input);
+		
 		List<InvoiceVO> invoiceVOList = (List<InvoiceVO>) datas.get("data");
 		Map<String, Object> params = (Map<String, Object>) datas.get("params");
+		
+		addWaterMarkRendererReportParam(params, true, "Preview");
 		
 		if (!StringUtils.equals("html", type) && !StringUtils.equals("print", type)) {
 			response.setHeader("Content-Disposition", "attachment;filename="+ORDER_INVOICE_MASTER+"." + type);
@@ -1150,8 +1127,8 @@ public class InvoiceController extends BaseController {
 	}
 	
 	private void setupPreviewInvoice(HttpServletRequest request, ModelMap model) {
-		Map<String, Object> imagesMap = new HashMap<String, Object>();
-		request.getSession().setAttribute("IMAGES_MAP", imagesMap);
+		/*Map<String, Object> imagesMap = new HashMap<String, Object>();
+		request.getSession().setAttribute("IMAGES_MAP", imagesMap);*/
 		
 		model.addAttribute("msgCtx", "invoicePreview");
 		model.addAttribute("errorCtx", "invoicePreview");
@@ -1182,7 +1159,7 @@ public class InvoiceController extends BaseController {
 	}
 	
 	private void addLogoFilePath(HttpServletRequest request, Map<String, Object> params) {
-		String logoFilePath = CoreUtil.getLogoFilePath(request);
+		String logoFilePath = ServletUtil.getLogoFilePath(request);
 		params.put("LOGO_FILE_PATH", logoFilePath);
 	}
 	
@@ -1206,7 +1183,7 @@ public class InvoiceController extends BaseController {
 	}
 	
 	private void map(InvoiceVO invoiceVO, List<InvoiceVO> invoiceVOList, List<InvoiceVO> invoicePaymentVOList, Map<String, Object> params) {
-		params.put("invoiceNo", "TBD");
+		params.put("invoiceNo", "TBD - Preview");
 		params.put("invoiceDate", invoiceVO.getInvoiceDate());
 		
 		Customer customer = retrieveCustomer(invoiceVO.getCustomerId(), invoiceVO.getOrderId());

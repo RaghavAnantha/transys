@@ -22,4 +22,6 @@
 <c:set var="csvImage" value="${imageCtx}/csv.png"/>
 <c:set var="pdfImage" value="${imageCtx}/pdf.png"/>
 <c:set var="excelImage" value="${imageCtx}/excel.png"/>
+<c:set var="iconWarningImage" value="${imageCtx}/iconWarning.gif"/>
+<c:set var="iconInformationlImage" value="${imageCtx}/iconInformation.gif"/>
 

@@ -5,7 +5,7 @@ import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-public class MaterialIntakeReportVO implements BaseVO {
+public class MaterialIntakeReportVO extends BaseVO {
 	private String reportDate;
 	
 	private String materialName;

@@ -2,8 +2,6 @@ package com.transys.core.util;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -42,9 +40,5 @@ public class CoreUtil {
 	
 	public static String concatenate(String str1, String str2) {
 		return concatenate(str1, str2, " ");
-	}
-	
-	public static String getLogoFilePath(HttpServletRequest request) {
-		return request.getSession().getServletContext().getRealPath("/images/" + "rds_logo.png");
 	}
 }

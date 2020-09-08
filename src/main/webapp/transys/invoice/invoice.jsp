@@ -12,17 +12,17 @@
 	</ul>
 	<div class="tab-content" style="background-color: white;">
 		<div id="createInvoice" class="tab-pane">
+			<div id="createInvoiceLoadingImgDiv">Loading....<img src="${preLoaderImage}" id="createInvoiceLoadingImage"/></div>
 			<%@include file="createInvoiceList.jsp"%>
 		</div>
 		<div id="manageInvoice" class="tab-pane">
-			Loading...<img src="${preLoaderImage}" id="loadingImage"/>
+			Loading...<img src="${preLoaderImage}" id="manageInvoiceLoadingImage"/>
 		</div>	
 	</div>
 	
 	<script type="text/javascript">
 		showTab('${activeTab}');
 		showTab('${activeSubTab}');
-		
 		
 		$('#manageInvoiceTab').click(function(e) {
 			var $this = $(this),
@@ -42,6 +42,10 @@
 		    $this.attr('data-toggle', 'tab')
 		    $this.tab('show');
 		    return false;
+		});
+		
+		$(window).load(function() {
+			$("#createInvoiceLoadingImgDiv").hide();
 		});
 	</script>
 </body>

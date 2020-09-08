@@ -18,6 +18,7 @@ import org.hibernate.Session;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import com.transys.controller.BaseController;
+import com.transys.core.util.FormatUtil;
 import com.transys.model.BaseModel;
 import com.transys.model.SearchCriteria;
 
@@ -572,7 +573,7 @@ public class GenericJpaDAO implements GenericDAO {
 		
 		try {
 			String toAppend = "p." + criteriaKey + operator + " '"
-					+ new Timestamp(((Date) BaseController.dateFormat
+					+ new Timestamp(((Date) FormatUtil.inputDateFormat
 							.parse(operand)).getTime())
 					+ "'";
 			if (!orQuery) {
@@ -596,13 +597,13 @@ public class GenericJpaDAO implements GenericDAO {
 		if (fieldName.endsWith("From")) {
 			try {
 				Timestamp fromDate = new Timestamp(
-						((Date) BaseController.dateFormat.parse(criterias.get(fieldName).toString())).getTime());
+						((Date) FormatUtil.inputDateFormat.parse(criterias.get(fieldName).toString())).getTime());
 				String fieldType = fieldName.substring(0, fieldName.indexOf("From")); // ex.,
 				searchString.append(" and (p." + fieldType + ") >= '" + fromDate + "'");																								// startDate
 				
 				if (criterias.containsKey(fieldType + "To") && !StringUtils.isEmpty(criterias.get(fieldType + "To").toString())) {
 					Timestamp toDate = new Timestamp(
-							((Date) BaseController.dateFormat.parse(criterias.get(fieldType + "To").toString())).getTime());
+							((Date) FormatUtil.inputDateFormat.parse(criterias.get(fieldType + "To").toString())).getTime());
 					searchString.append(" AND (p." + fieldType + ") <= '" + toDate + "'");
 				}
 				//searchString.append(" and UPPER(p." + fieldType + ") Between '" + fromDate + "' AND '" + toDate + "'");
@@ -613,7 +614,7 @@ public class GenericJpaDAO implements GenericDAO {
 			// a date equals check
 			try {
 				Timestamp dateVal = new Timestamp(
-						((Date) BaseController.dateFormat.parse(criterias.get(fieldName).toString())).getTime());
+						((Date) FormatUtil.inputDateFormat.parse(criterias.get(fieldName).toString())).getTime());
 				searchString.append(" and p." + fieldName + " = '" + dateVal + "'");
 			} catch (ParseException e) {
 				// TODO Auto-generated catch block

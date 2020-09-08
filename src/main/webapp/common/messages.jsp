@@ -5,7 +5,7 @@
 	    <div class="error">
 	    	<div style="margin-top: 5px"></div>
 	        <c:forEach var="error" items="${error}">
-				<img src="${ctx}/images/iconWarning.gif" alt="Warning" class="icon" />
+				<img src="${iconWarningImage}" alt="Warning" class="icon" />
 				<c:out value="${error}" escapeXml="false"/><br />
 	        </c:forEach>
 	    </div>
@@ -19,7 +19,7 @@
 	    <div class="message">
 	    	<div style="margin-top: 5px"></div>
 	        <c:forEach var="message" items="${msg}">
-	            <img src="${ctx}/images/iconInformation.gif" alt="Information" class="icon" />
+	            <img src="${iconInformationlImage}" alt="Information" class="icon" />
 	            <c:out value="${message}" escapeXml="false"/><br />
 	        </c:forEach>
 	    </div>

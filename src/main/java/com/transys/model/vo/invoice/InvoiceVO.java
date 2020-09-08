@@ -7,7 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.transys.model.vo.BaseVO;
 
-public class InvoiceVO implements BaseVO {
+public class InvoiceVO extends BaseVO {
 	public static String INV_SAVE_SUCCESS_MSG = "Invoice saved successfully.";
 	public static String INV_DEL_SUCCESS_MSG = "Invoice deleted successfully.";
 	
@@ -76,8 +76,6 @@ public class InvoiceVO implements BaseVO {
 	
 	private String[] ids;
 	private Date invoiceDate;
-	
-	private int historyCount = -1;
 	
 	public String getOrderId() {
 		return orderId;
@@ -355,12 +353,6 @@ public class InvoiceVO implements BaseVO {
 	}
 	public void setInvoiceDate(Date invoiceDate) {
 		this.invoiceDate = invoiceDate;
-	}
-	public int getHistoryCount() {
-		return historyCount;
-	}
-	public void setHistoryCount(int historyCount) {
-		this.historyCount = historyCount;
 	}
 	public BigDecimal getTonnageFees() {
 		return tonnageFees;

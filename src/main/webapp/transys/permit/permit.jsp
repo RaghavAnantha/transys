@@ -14,6 +14,7 @@
 
 	<div class="tab-content" style="background-color: white;">
 		<div id="managePermits" class="tab-pane">
+			<div id="permitLoadingImgDiv">Loading....<img src="${preLoaderImage}" id="permitLoadingImage"/></div>
 			<c:if test="${mode == 'MANAGE'}">
 				<%@include file="list.jsp"%>
 			</c:if>
@@ -22,7 +23,7 @@
 			</c:if>
 		</div>
 		<div id="orderPermitsAlert" class="tab-pane">
-			Loading...<img src="${ctx}/images/preloader.gif" id="loadingImage"/>
+			Loading...<img src="${preLoaderImage}" id="orderPermitAlertLoadingImage"/>
 		</div>
 		<div id="permitsReport" class="tab-pane">
 			<p>Placeholder for permit reports</p>
@@ -48,6 +49,10 @@
 	
 	    $this.tab('show');
 	    return false;
+	});
+	
+	$(window).load(function() {
+		$("#permitLoadingImgDiv").hide();
 	});
 </script>
 

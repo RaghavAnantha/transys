@@ -2,7 +2,7 @@ package com.transys.model.vo;
 
 import org.apache.commons.lang3.StringUtils;
 
-public class CustomerVO implements BaseVO {
+public class CustomerVO extends BaseVO {
 	private Long id;
 	private String companyName = StringUtils.EMPTY;
 	

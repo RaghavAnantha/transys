@@ -2,7 +2,7 @@ package com.transys.model.vo;
 
 import java.math.BigDecimal;
 
-public class RecycleReportVO implements BaseVO {
+public class RecycleReportVO extends BaseVO {
 	
 	private String reportDate;
 	private String materialCategory;

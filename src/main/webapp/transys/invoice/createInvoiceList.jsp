@@ -266,8 +266,6 @@ function populateCreateInvoiceDeliveryAddress(addressList) {
 		<transys:textcolumn headerText="Bal Due" dataField="balanceAmountDue" type="java.math.BigDecimal" />
 		<transys:textcolumn headerText="Status" dataField="orderStatus.status" />
 		<transys:textcolumn headerText="Inv." dataField="invoiced"/>
-		<transys:textcolumn headerText="Inv. #" dataField="invoiceId"/>
-		<transys:textcolumn headerText="Inv. Dt" dataField="invoiceDate" dataFormat="MM/dd/yyyy"/>
 	</transys:datatable>
 	<%session.setAttribute("createInvoiceColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
 </form:form>

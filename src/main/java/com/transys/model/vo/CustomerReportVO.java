@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.transys.model.Order;
 
-public class CustomerReportVO implements BaseVO {
+public class CustomerReportVO extends BaseVO {
 	private Long id;
 	
 	private String companyName;

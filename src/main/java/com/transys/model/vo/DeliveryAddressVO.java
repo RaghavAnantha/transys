@@ -4,7 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.transys.core.util.CoreUtil;
 
-public class DeliveryAddressVO implements BaseVO {
+public class DeliveryAddressVO extends BaseVO {
 	private Long id;
 	private String line1 = StringUtils.EMPTY;
 	private String line2 = StringUtils.EMPTY;

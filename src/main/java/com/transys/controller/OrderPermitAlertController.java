@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.transys.core.util.FormatUtil;
 import com.transys.core.util.ModelUtil;
 import com.transys.model.Customer;
 import com.transys.model.LocationType;
@@ -256,7 +257,7 @@ public class OrderPermitAlertController extends CRUDController<OrderPermits> {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(new Date());
 		cal.add(Calendar.DATE, 7);
-		searchMap.put("permit.endDate", "<=" + BaseController.dateFormat.format(cal.getTime()));
+		searchMap.put("permit.endDate", "<=" + FormatUtil.inputDateFormat.format(cal.getTime()));
 		
 		searchCriteria.setSearchMap(searchMap);
 		return existingSearchValue;

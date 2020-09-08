@@ -2,6 +2,7 @@ package com.transys.controller;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -11,30 +12,47 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
+
+import org.springframework.ui.Model;
+
 import org.springframework.validation.Validator;
+
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
 import org.springframework.web.multipart.support.ByteArrayMultipartFileEditor;
 
 //import com.google.gson.Gson;
+
 import com.transys.core.dao.GenericDAO;
+import com.transys.core.report.WaterMarkRenderer;
+import com.transys.core.util.FormatUtil;
 import com.transys.core.util.MimeUtil;
+
 import com.transys.model.Permit;
 //import com.transys.model.Language;
 import com.transys.model.SearchCriteria;
 //import com.transys.model.StaticData;
 import com.transys.model.User;
+
+import net.sf.jasperreports.j2ee.servlets.ImageServlet;
+
 //import com.transys.service.AuditService;
 
 @SuppressWarnings("unchecked")
 public class BaseController {
-	protected static DecimalFormat decimalFormat = new DecimalFormat(
-			"######.000");
-	public static SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+	//protected static DecimalFormat decimalFormat = new DecimalFormat("######.000");
+	//public static SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
 
 	protected static Logger log = LogManager.getLogger("com.transys.controller");
 	
@@ -54,8 +72,8 @@ public class BaseController {
 	// Set up any custom editors, adds a custom one for java.sql.date by default
 	@InitBinder
 	public void initBinder(WebDataBinder binder) {
-		dateFormat.setLenient(false);
-		binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, false));
+		//dateFormat.setLenient(false);
+		binder.registerCustomEditor(Date.class, new CustomDateEditor(FormatUtil.inputDateFormat, false));
 		binder.registerCustomEditor(byte[].class, new ByteArrayMultipartFileEditor());
 	}
 
@@ -236,7 +254,6 @@ public class BaseController {
 		}
 		
 		criteria.setSearchMap(searchMap);
-		
 	}
 
 	protected void setErrorMsg(HttpServletRequest request, HttpServletResponse response, String msg) {
@@ -250,19 +267,33 @@ public class BaseController {
 	
 	/*public void writeActivityLog(String activityType, String details) {
 		auditService.writeActivityLog(urlContext, activityType, details);
-	}
+	}*/
 	
-	@RequestMapping(method = { RequestMethod.GET, RequestMethod.POST }, value = "/ajax.do")
-	public @ResponseBody
-	String ajaxRequest(HttpServletRequest request,
-			@RequestParam(value = "action", required = true) String action,
-			Model model) {
+	@RequestMapping(method = {RequestMethod.GET, RequestMethod.POST}, value = "/ajax.do")
+	public @ResponseBody String ajaxRequest(HttpServletRequest request,
+			@RequestParam(value = "action", required = true) String action, Model model) {
 		return processAjaxRequest(request, action, model);
 	}
 
-	protected String processAjaxRequest(HttpServletRequest request,
-			String action, Model model) {
-		Gson gson = new Gson();
-		return gson.toJson("");
-	}*/
+	protected String processAjaxRequest(HttpServletRequest request,String action, Model model) {
+		if ("removeJasperPrint".equalsIgnoreCase(action)) {
+			return removeJasperPrint(request);
+		}
+		
+		return StringUtils.EMPTY;
+	}
+	
+	protected String removeJasperPrint(HttpServletRequest request) {
+		request.getSession().removeAttribute(ImageServlet.DEFAULT_JASPER_PRINT_SESSION_ATTRIBUTE);
+		System.out.println(getClass().getName() + "->Removed Jasper Print");
+		return "Success";
+	}
+	
+	protected void addWaterMarkRendererReportParam(Map<String, Object> params, boolean display, String displayText) {
+		WaterMarkRenderer waterMarkRenderer = new WaterMarkRenderer(display);
+		waterMarkRenderer.setPageOrientaion(WaterMarkRenderer.PAGE_ORIENTATION_LANDSCAPE);
+		waterMarkRenderer.setDisplayText(displayText);
+		waterMarkRenderer.setDebug(false);
+		params.put("watermark", waterMarkRenderer); 
+	}
 }

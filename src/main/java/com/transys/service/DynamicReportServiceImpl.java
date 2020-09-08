@@ -74,6 +74,7 @@ import com.transys.core.tags.IColumnTag;
 import com.transys.core.tags.StaticDataColumn;
 import com.transys.core.tags.StaticDataUtil;
 import com.transys.core.util.LabelUtil;
+import com.transys.core.util.ServletUtil;
 import com.transys.model.BaseModel;
 import com.transys.model.Order;
 import com.transys.model.SearchCriteria;
@@ -83,6 +84,9 @@ import com.transys.model.SearchCriteria;
  */
 @SuppressWarnings({ "unchecked", "deprecation" })
 public class DynamicReportServiceImpl implements DynamicReportService {
+	public static String reportsCtx = "/reports";
+	
+	public static String SUBREPORT_DIR_KEY = "SUBREPORT_DIR";
 
 	@Autowired
 	private GenericDAO genericDAO;
@@ -679,12 +683,14 @@ public class DynamicReportServiceImpl implements DynamicReportService {
 	@Override
 	public JasperPrint getJasperPrintFromFile(String masterReportName, String subReportName, List datas,
 			Map params, HttpServletRequest request) {
-		try {// @@@@@@@@@@@@@@@@@ 2a
-			File masterReportFile = new File(request.getSession().getServletContext().getRealPath("/reports/" + masterReportName + ".jasper"));
+		// @@@@@@@@@@@@@@@@@ 2a
+		try {
+			String masterReportFilePath = ServletUtil.getRealPath(request, reportsCtx + "/" + masterReportName + ".jasper");
+			File masterReportFile = new File(masterReportFilePath);
 			JasperReport masterJasperReport = (JasperReport) JRLoader.loadObject(masterReportFile);
 			
-			String subReportPathname = request.getSession().getServletContext().getRealPath("/reports");
-			/*File subReportFile = new File(request.getSession().getServletContext().getRealPath("/reports/" + subReportName + ".jasper"));
+			String subReportPathName = ServletUtil.getRealPath(request, reportsCtx);
+			/*File subReportFile = new File(request.getSession().getServletContext().getRealPath(reportsCtx + "/"  + subReportName + ".jasper"));
 			JasperReport subJasperReport = (JasperReport) JRLoader.loadObject(subReportFile);*/
 			
 			// ***********
@@ -693,13 +699,11 @@ public class DynamicReportServiceImpl implements DynamicReportService {
 			JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(datas, false);
 			//JRMapCollectionDataSource dataSource = new JRMapCollectionDataSource(datas);
 				
-			//params.put("subreportParameter", subJasperReport);
-			params.put("SUBREPORT_DIR", subReportPathname);
+			//params.put("subreport", subJasperReport);
+			params.put(SUBREPORT_DIR_KEY, subReportPathName);
 				
-			jp = JasperFillManager.fillReport(masterJasperReport, params,
-						dataSource);
-			/*JasperFillManager.fillReportToFile(jasperMasterReport,
-	            destFileName, parameters, beanColDataSource);*/
+			jp = JasperFillManager.fillReport(masterJasperReport, params, dataSource);
+			/*JasperFillManager.fillReportToFile(jasperMasterReport, destFileName, parameters, beanColDataSource);*/
 			
 			return jp;
 		} catch (Exception ex) {
@@ -711,7 +715,7 @@ public class DynamicReportServiceImpl implements DynamicReportService {
 	public JasperPrint getJasperPrintFromFile(String reportName, List datas,
 			Map params, HttpServletRequest request) {
 		try {// @@@@@@@@@@@@@@@@@ 2
-			File reportFile = new File(request.getSession().getServletContext().getRealPath("/reports/" + reportName + ".jasper"));
+			File reportFile = new File(request.getSession().getServletContext().getRealPath(reportsCtx + "/"  + reportName + ".jasper"));
 			JasperReport jasperReport = (JasperReport) JRLoader.loadObject(reportFile);
 			//JasperReport jasperReport = (JasperReport) JRLoader.loadObject(reportFile.getPath());
 			
@@ -720,9 +724,8 @@ public class DynamicReportServiceImpl implements DynamicReportService {
 			if (datas != null) {
 				 //JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(datas);
 				JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(datas, false);
-				//JRMapCollectionDataSource dataSource =new JRMapCollectionDataSource(datas);
-				jp = JasperFillManager.fillReport(jasperReport, params,
-						dataSource);
+				//JRMapCollectionDataSource dataSource = new JRMapCollectionDataSource(datas);
+				jp = JasperFillManager.fillReport(jasperReport, params, dataSource);
 			} else
 				jp = JasperFillManager.fillReport(jasperReport, params);
 			return jp;

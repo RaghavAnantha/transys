@@ -1,6 +1,5 @@
 package com.transys.model;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -14,13 +13,16 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+
 import javax.validation.constraints.Size;
 
-import org.apache.commons.lang3.StringUtils;
-import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import org.hibernate.validator.constraints.NotEmpty;
+
+import com.transys.core.util.FormatUtil;
 
 @Entity
 @Table(name = "userInfo")
@@ -150,7 +152,7 @@ public class User extends AbstractBaseModel implements Comparable, Auditable {
 
 	//@Override
 	public List getAuditableFields() {
-		List props = new ArrayList();
+		List<String> props = new ArrayList<String>();
 		props.add("username");
 		props.add("lastLoginDate");
 		props.add("accountStatus");
@@ -172,23 +174,16 @@ public class User extends AbstractBaseModel implements Comparable, Auditable {
 	
 	//@Override
 	public String getPrimaryField() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	//@Override
 	public boolean skipAudit() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 	
 	@Transient
 	public String getFormattedLastLoginDate() {
-		if (lastLoginDate == null) {
-			return StringUtils.EMPTY;
-		}
-		
-		SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss");
-		return dateFormat.format(lastLoginDate);
+		return FormatUtil.formatAuditDate(lastLoginDate);
 	}
 }

@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
-<!-- 2019-07-12T14:16:38 -->
+<!-- 2020-09-08T21:19:18 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="orderInvoice" pageWidth="1390" pageHeight="595" orientation="Landscape" columnWidth="1350" leftMargin="20" rightMargin="20" topMargin="10" bottomMargin="10" isSummaryWithPageHeaderAndFooter="true" uuid="53a6c0df-7db3-4567-a441-f90a0edf36dc">
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
 	<parameter name="invoiceNo" class="java.lang.String"/>
 	<parameter name="invoiceDate" class="java.util.Date"/>
 	<parameter name="customer" class="java.lang.String"/>
@@ -14,6 +15,7 @@
 	<parameter name="SUBREPORT_DIR" class="java.lang.String"/>
 	<parameter name="orderPaymentList" class="java.util.List"/>
 	<parameter name="contact" class="java.lang.String"/>
+	<parameter name="watermark" class="com.transys.core.report.WaterMarkRenderer"/>
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
@@ -70,7 +72,15 @@
 		<variableExpression><![CDATA[$F{discount}]]></variableExpression>
 	</variable>
 	<background>
-		<band splitType="Stretch"/>
+		<band height="574" splitType="Stretch">
+			<image scaleImage="RealSize" evaluationTime="Report">
+				<reportElement positionType="Float" x="30" y="25" width="1100" height="490" uuid="69d70926-fce0-4217-8e5c-004cc15cc89a">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<imageExpression><![CDATA[$P{watermark}]]></imageExpression>
+			</image>
+		</band>
 	</background>
 	<title>
 		<band splitType="Stretch">
@@ -173,7 +183,7 @@
 				<textFieldExpression><![CDATA[$P{invoiceNo}]]></textFieldExpression>
 			</textField>
 			<rectangle>
-				<reportElement x="1072" y="10" width="267" height="99" uuid="e0309317-38b3-4963-8cfc-a8eed53be0f5">
+				<reportElement x="1073" y="11" width="267" height="99" uuid="e0309317-38b3-4963-8cfc-a8eed53be0f5">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
@@ -182,7 +192,7 @@
 				</graphicElement>
 			</rectangle>
 			<textField isBlankWhenNull="true">
-				<reportElement x="1101" y="19" width="202" height="18" uuid="841c7255-636b-4e33-a240-f7435deb6eaa">
+				<reportElement x="1100" y="19" width="202" height="18" uuid="841c7255-636b-4e33-a240-f7435deb6eaa">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
@@ -195,7 +205,7 @@
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
-				<textElement textAlignment="Left" verticalAlignment="Top">
+				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{billingAddress}]]></textFieldExpression>
@@ -791,7 +801,7 @@
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Page " + $V{PAGE_NUMBER} + " of "]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Page " + $V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 			<textField evaluationTime="Report" isBlankWhenNull="true">
 				<reportElement x="687" y="5" width="40" height="18" uuid="0f44923f-90b5-4a74-845d-9f965d3d61b4">
@@ -799,8 +809,9 @@
 				</reportElement>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font isBold="true"/>
+					<paragraph leftIndent="0"/>
 				</textElement>
-				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[" of " + $V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageFooter>

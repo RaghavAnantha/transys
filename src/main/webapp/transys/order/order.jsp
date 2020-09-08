@@ -12,6 +12,7 @@
 	</ul>
 	<div class="tab-content" style="background-color: white;">
 		<div id="manageOrders" class="tab-pane">
+			<div id="manageOrderLoadingImgDiv">Loading....<img src="${preLoaderImage}" id="manageOrderLoadingImage"/></div>
 			<c:if test="${mode == 'MANAGE'}">
 				<%@include file="list.jsp"%>
 			</c:if>
@@ -25,12 +26,16 @@
 	</div>
 	
 <script type="text/javascript">
-function showTab(tab){
-	$('.nav-tabs a[href="#' + tab + '"]').tab('show');
-};
-
-showTab('${activeTab}');
-showTab('${activeSubTab}');
+	function showTab(tab){
+		$('.nav-tabs a[href="#' + tab + '"]').tab('show');
+	};
+	
+	showTab('${activeTab}');
+	showTab('${activeSubTab}');
+	
+	$(window).load(function() {
+		$("#manageOrderLoadingImgDiv").hide();
+	});
 </script>
 </body>
 </html>

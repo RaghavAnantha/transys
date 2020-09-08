@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.support.ByteArrayMultipartFileEditor;
 
+import com.transys.core.util.FormatUtil;
 import com.transys.core.util.MimeUtil;
 import com.transys.model.AbstractBaseModel;
 import com.transys.model.BaseModel;
@@ -278,9 +279,8 @@ public abstract class CRUDController<T extends BaseModel> extends BaseController
 	@Override
 	@InitBinder
 	public void initBinder(WebDataBinder binder) {
-		//SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
-		dateFormat.setLenient(false);
-		binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
+		//dateFormat.setLenient(false);
+		binder.registerCustomEditor(Date.class, new CustomDateEditor(FormatUtil.inputDateFormat, true));
 		binder.registerCustomEditor(byte[].class, new ByteArrayMultipartFileEditor());
 	}
 

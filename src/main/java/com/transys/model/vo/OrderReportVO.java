@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 
 import org.apache.commons.lang3.StringUtils;
 
-public class OrderReportVO implements BaseVO {
+public class OrderReportVO extends BaseVO {
 	private Long id;
 	private String orderDate;
 	
