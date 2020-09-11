@@ -1,6 +1,7 @@
 package com.transys.model;
 
 import java.math.BigDecimal;
+
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -11,13 +12,15 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import com.transys.core.util.FormatUtil;
 
 @Entity
 @Table(name="customer")
@@ -202,60 +205,26 @@ public class Customer extends AbstractBaseModel {
 	}
 	
 	@Transient
-	//TODO: Move to utils
 	public String getBillingAddress() {
 		return getBillingAddress("<br>");
 	}
 	
 	@Transient
-	//TODO: Move to utils
 	public String getBillingAddress(String lineSeparator) {
-		StringBuffer addressBuff = new StringBuffer();
-		if (StringUtils.isNotEmpty(getBillingAddressLine1())) {
-			addressBuff.append(getBillingAddressLine1());
-		}
-		if (StringUtils.isNotEmpty(getBillingAddressLine2())) {
-			addressBuff.append(" " + getBillingAddressLine2());
-		}
-		if (StringUtils.isNotEmpty(getCity())) {
-			addressBuff.append(lineSeparator + getCity());
-		}
-		if (getState() != null) {
-			if (StringUtils.isNotEmpty(getState().getName())) {
-				addressBuff.append(" " + getState().getName());
-			}
-		}
-		if (StringUtils.isNotEmpty(getZipcode())) {
-			addressBuff.append(" " + getZipcode());
-		}
-		
-		return addressBuff.toString();
+		return FormatUtil.formatAddress(getBillingAddressLine1(), getBillingAddressLine2(), getCity(), getState(), getZipcode(),
+				lineSeparator);
 	}
 	
 	@Transient
-	//TODO: Move to utils
 	public String getFormattedPhone() {
-		return formatPhone(getPhone());
+		return FormatUtil.formatPhone(phone);
 	}
 	
 	@Transient
-	//TODO: Move to utils
 	public String getFormattedFax() {
-		return formatPhone(getFax());
+		return FormatUtil.formatPhone(phone);
 	}
 	
-	@Transient
-	//TODO: Move to utils
-	public String formatPhone(String phone) {
-		if (StringUtils.isEmpty(phone) || phone.length() < 10 || StringUtils.contains(phone, "-")) {
-			return phone;
-		}
-		
-		return String.format("%s-%s-%s", phone.substring(0, 3), 
-												   phone.substring(3, 6), 
-												   phone.substring(6, 10));
-	}
-
 	public String getPhone() {
 		return phone;
 	}
@@ -290,11 +259,7 @@ public class Customer extends AbstractBaseModel {
 	
 	@Transient
 	public String getContactDetails() {
-		String contactDetails = StringUtils.isEmpty(getContactName()) ? StringUtils.EMPTY : getContactName();
-		if (StringUtils.isNotEmpty(getPhone())) {
-			contactDetails += " " + getFormattedPhone();
-		}
-		return contactDetails;
+		return FormatUtil.formatContactDetails(getContactName(), getPhone());
 	}
 
 	@Override

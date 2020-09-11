@@ -11,8 +11,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import org.apache.commons.lang3.StringUtils;
-
 import com.transys.core.util.FormatUtil;
 
 import com.transys.model.AbstractBaseModel;
@@ -859,46 +857,21 @@ public class OrderInvoiceDetails extends AbstractBaseModel {
 
 	@Transient
 	public String getFormattedDeliveryDate() {
-		return FormatUtil.formatDate(deliveryDate);
+		return FormatUtil.formatDate(getDeliveryDate());
 	}
 	
 	@Transient
 	public String getDeliveryDateTime() {
-		String deliveryDate = getFormattedDeliveryDate();
-		if (StringUtils.isEmpty(deliveryDate)) {
-			return StringUtils.EMPTY;
-		}
-		
-		if (!StringUtils.isEmpty(getDeliveryHourFrom())) {
-			deliveryDate += "  ";
-			deliveryDate += getDeliveryHourFrom();
-		}
-		
-		if (!StringUtils.isEmpty(getDeliveryHourTo()) 
-				&& !StringUtils.equals(getDeliveryHourFrom(), getDeliveryHourTo())) {
-			deliveryDate += " - ";
-			deliveryDate += getDeliveryHourTo();
-		}
-		
-		return deliveryDate;
+		return FormatUtil.formatDateTimeRange(getDeliveryDate(), getDeliveryHourFrom(), getDeliveryHourTo());
 	}
 	
 	@Transient
 	public String getFormattedPickupDate() {
-		return FormatUtil.formatDate(pickupDate);
+		return FormatUtil.formatDate(getPickupDate());
 	}
 	
 	@Transient
-	//TODO: Move to utils?
 	public String getDeliveryAddressFullLine() {
-		StringBuffer fullLineBuff = new StringBuffer();
-		if (StringUtils.isNotEmpty(getDeliveryAddressLine1())) {
-			fullLineBuff.append(getDeliveryAddressLine1());
-		}
-		if (StringUtils.isNotEmpty(getDeliveryAddressLine2())) {
-			fullLineBuff.append(" " + getDeliveryAddressLine2());
-		}
-		
-		return fullLineBuff.toString();
+		return FormatUtil.formatAddress(getDeliveryAddressLine1(), getDeliveryAddressLine2());
 	}
 }

@@ -7,6 +7,8 @@ import java.util.Date;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.transys.model.State;
+
 public class FormatUtil {
 	public static SimpleDateFormat inputDateFormat = new SimpleDateFormat("MM/dd/yyyy");
 	public static SimpleDateFormat dbDateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -36,6 +38,10 @@ public class FormatUtil {
 	
 	public static String formatAuditDate(Date date) {
 		return formatDate(date, auditDateFormat);
+	}
+	
+	public static String formatDateTime(Date date) {
+		return formatAuditDate(date);
 	}
 	
 	public static String convertInputDateToDbDate(String inputDateStr) {
@@ -79,5 +85,77 @@ public class FormatUtil {
 		String dateFromStr = (dateFrom ==  null) ? StringUtils.EMPTY : formatDate(dateFrom);
 		String dateToStr = (dateTo ==  null) ? StringUtils.EMPTY : formatDate(dateTo);
 		return formatDateRange(dateFromStr, dateToStr);
+	}
+	
+	public static String formatDateTimeRange(Date date, String time1, String time2) {
+		String dateStr = formatDate(date);
+		if (StringUtils.isEmpty(dateStr)) {
+			return StringUtils.EMPTY;
+		}
+		
+		if (StringUtils.isNotEmpty(time1)) {
+			dateStr += "  ";
+			dateStr += time1;
+		}
+		
+		if (StringUtils.isNotEmpty(time2) 
+				&& !StringUtils.equals(time1, time2)) {
+			dateStr += " - ";
+			dateStr += time2;
+		}
+		
+		return dateStr;
+	}
+	
+	public static String formatAddress(String line1, String line2) {
+		return CoreUtil.concatenate(line1, line2);
+	}
+	
+	public static String formatAddress(String line1, String line2, String sep) {
+		return CoreUtil.concatenate(line1, line2, sep);
+	}
+	
+	public static String formatAddress(String line1, String line2, String city, State state, String zip) {
+		return FormatUtil.formatAddress(line1, line2, city, state, zip, ", ");
+	}
+	
+	public static String formatAddress(String line1, String line2, String city, String state, String zip,
+			String lineSeparator) {
+		StringBuffer addressBuff = new StringBuffer();
+		if (StringUtils.isNotEmpty(line1)) {
+			addressBuff.append(line1);
+		}
+		if (StringUtils.isNotEmpty(line2)) {
+			addressBuff.append(" " + line2);
+		}
+		if (StringUtils.isNotEmpty(city)) {
+			addressBuff.append(lineSeparator + city);
+		}
+		if (StringUtils.isNotEmpty(state)) {
+				addressBuff.append(" " + state);
+		}
+		if (StringUtils.isNotEmpty(zip)) {
+			addressBuff.append(" " + zip);
+		}
+		
+		return addressBuff.toString();
+	}
+	
+	public static String formatAddress(String line1, String line2, String city, State state, String zip,
+			String lineSeparator) {
+		String stateStr = state == null ? StringUtils.EMPTY : state.getName();
+		return formatAddress(line1, line2, city, stateStr, zip, lineSeparator);
+	}
+	
+	public static String formatContactDetails(String name, String phone) {
+		return formatContactDetails(name, phone, " ");
+	}
+	
+	public static String formatContactDetails(String name, String phone, String sep) {
+		String contactDetails = StringUtils.isEmpty(name) ? StringUtils.EMPTY : name;
+		if (StringUtils.isNotEmpty(phone)) {
+			contactDetails += (sep + formatPhone(phone));
+		}
+		return contactDetails;
 	}
 }

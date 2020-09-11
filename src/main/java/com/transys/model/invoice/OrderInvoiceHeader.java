@@ -1,6 +1,7 @@
 package com.transys.model.invoice;
 
 import java.math.BigDecimal;
+
 import java.util.Date;
 import java.util.List;
 
@@ -11,11 +12,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import org.apache.commons.lang3.StringUtils;
-
 import com.transys.core.util.FormatUtil;
 import com.transys.model.AbstractBaseModel;
-import com.transys.model.OrderNotes;
 
 @Entity
 @Table(name="orderInvoiceHeader")
@@ -252,41 +250,19 @@ public class OrderInvoiceHeader extends AbstractBaseModel {
 	}
 
 	@Transient
-	// TODO: Move to utils?
 	public String getBillingAddress() {
 		return getBillingAddress("<br>");
 	}
 	
 	@Transient
-	// TODO: Move to utils?
 	public String getBillingAddress(String lineSeparator) {
-		StringBuffer addressBuff = new StringBuffer();
-		if (StringUtils.isNotEmpty(getBillingAddressLine1())) {
-			addressBuff.append(getBillingAddressLine1());
-		}
-		if (StringUtils.isNotEmpty(getBillingAddressLine2())) {
-			addressBuff.append(" " + getBillingAddressLine2());
-		}
-		if (StringUtils.isNotEmpty(getCity())) {
-			addressBuff.append(lineSeparator + getCity());
-		}
-		if (StringUtils.isNotEmpty(getState())) {
-			addressBuff.append(" " + getState());
-		}
-		if (StringUtils.isNotEmpty(getZip())) {
-			addressBuff.append(" " + getZip());
-		}
-		
-		return addressBuff.toString();
+		return FormatUtil.formatAddress(getBillingAddressLine1(), getBillingAddressLine2(), getCity(), getState(), getZip(),
+				lineSeparator);
 	}
 	
 	@Transient
 	public String getContactDetails() {
-		String contactDetails = StringUtils.isEmpty(getContactName()) ? StringUtils.EMPTY : getContactName();
-		if (StringUtils.isNotEmpty(getPhone1())) {
-			contactDetails += " " + getFormattedPhone1();
-		}
-		return contactDetails;
+		return FormatUtil.formatContactDetails(getContactName(), getPhone1());
 	}
 	
 	@Transient

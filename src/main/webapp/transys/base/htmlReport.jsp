@@ -71,15 +71,19 @@
 	htmlExporterConfig.setBetweenPagesHtml(StringUtils.EMPTY);
 	//exporter.setParameter(JRHtmlExporterParameter.IS_USING_IMAGES_TO_ALIGN, false);*/
 	
+	//String header = "<html><head><style> @page {size: landscape; margin-left: 0.00in;margin-right: 0.00in;margin-top: 0.00in;margin-bottom: 0.00in;}</style></head><body>";
 	String headerFooterStr = headerFooterBuffer.toString();
 	htmlExporterConfig.setHtmlHeader(headerFooterStr);
 	htmlExporterConfig.setHtmlFooter(headerFooterStr);
+	String betweenPagesHtml = "<div style=\"display:block;page-break-before:always;\"></div>";
+	htmlExporterConfig.setBetweenPagesHtml(betweenPagesHtml);
 	htmlExporter.setConfiguration(htmlExporterConfig);
-
+	
 	SimpleHtmlReportConfiguration reportConfig = new SimpleHtmlReportConfiguration();
 	reportConfig.setRemoveEmptySpaceBetweenRows(true);
 	reportConfig.setBorderCollapse("separate");
 	reportConfig.setZoomRatio(new Float(0.97));
+	reportConfig.setIgnorePageMargins(true);
 	htmlExporter.setConfiguration(reportConfig);
 	
 	try {

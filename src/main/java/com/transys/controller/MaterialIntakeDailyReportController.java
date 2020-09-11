@@ -230,7 +230,7 @@ public class MaterialIntakeDailyReportController extends CRUDController<Order> {
 		try {
 			List<Map<String,Object>> exportReportData = generateExportReportData(model, request);
 			
-			type = setRequestHeaders(response, type, "materialIntakeDailyReport");
+			type = setReportRequestHeaders(response, type, "materialIntakeDailyReport");
 			Map<String, Object> params = new HashMap<String, Object>();
 
 			ByteArrayOutputStream out = dynamicReportService.generateStaticReport("materialIntakeDailyReport", exportReportData, params, type, request);

@@ -1,7 +1,7 @@
 package com.transys.model;
 
 import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
+
 import java.util.Date;
 import java.util.List;
 
@@ -17,7 +17,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import org.apache.commons.lang3.StringUtils;
+import com.transys.core.util.FormatUtil;
 
 @Entity
 @Table(name="transysOrder")
@@ -318,33 +318,12 @@ public class Order extends AbstractBaseModel {
 	
 	@Transient
 	public String getFormattedDeliveryDate() {
-		if (deliveryDate == null) {
-			return StringUtils.EMPTY;
-		}
-		
-		SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
-		return dateFormat.format(deliveryDate);
+		return FormatUtil.formatDate(getDeliveryDate());
 	}
 	
 	@Transient
 	public String getDeliveryDateTime() {
-		String deliveryDate = getFormattedDeliveryDate();
-		if (StringUtils.isEmpty(deliveryDate)) {
-			return StringUtils.EMPTY;
-		}
-		
-		if (!StringUtils.isEmpty(getDeliveryHourFrom())) {
-			deliveryDate += "  ";
-			deliveryDate += getDeliveryHourFrom();
-		}
-		
-		if (!StringUtils.isEmpty(getDeliveryHourTo()) 
-				&& !StringUtils.equals(getDeliveryHourFrom(), getDeliveryHourTo())) {
-			deliveryDate += " - ";
-			deliveryDate += getDeliveryHourTo();
-		}
-		
-		return deliveryDate;
+		return FormatUtil.formatDateTimeRange(getDeliveryDate(), getDeliveryHourFrom(), getDeliveryHourTo());
 	}
 
 	public void setDeliveryDate(Date deliveryDate) {
@@ -401,12 +380,7 @@ public class Order extends AbstractBaseModel {
 	
 	@Transient
 	public String getFormattedPickupDate() {
-		if (pickupDate == null) {
-			return StringUtils.EMPTY;
-		}
-		
-		SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
-		return dateFormat.format(pickupDate);
+		return FormatUtil.formatDate(getPickupDate());
 	}
 
 	/*public OrderPermits getPermits() {

@@ -1,12 +1,17 @@
 package com.transys.service;
 
 import java.awt.Color;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+
 import java.math.BigDecimal;
+
 import java.sql.Timestamp;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -16,43 +21,60 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import net.sf.jasperreports.engine.JRException;
-import net.sf.jasperreports.engine.JRExporterParameter;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
+
 import net.sf.jasperreports.engine.data.JRBeanArrayDataSource;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.data.JRMapArrayDataSource;
-import net.sf.jasperreports.engine.data.JRMapCollectionDataSource;
+
+import net.sf.jasperreports.engine.export.HtmlExporter;
 import net.sf.jasperreports.engine.export.JRCsvExporter;
-import net.sf.jasperreports.engine.export.JRCsvExporterParameter;
-import net.sf.jasperreports.engine.export.JRHtmlExporter;
-import net.sf.jasperreports.engine.export.JRHtmlExporterParameter;
 import net.sf.jasperreports.engine.export.JRPdfExporter;
 import net.sf.jasperreports.engine.export.JRRtfExporter;
 import net.sf.jasperreports.engine.export.JRTextExporter;
-import net.sf.jasperreports.engine.export.JRTextExporterParameter;
 import net.sf.jasperreports.engine.export.JRXlsExporter;
-import net.sf.jasperreports.engine.export.JRXlsExporterParameter;
 import net.sf.jasperreports.engine.export.ooxml.JRXlsxExporter;
+
 import net.sf.jasperreports.engine.util.JRLoader;
-import net.sf.jasperreports.export.ExporterInput;
+
+import net.sf.jasperreports.export.SimpleCsvExporterConfiguration;
+import net.sf.jasperreports.export.SimpleCsvReportConfiguration;
 import net.sf.jasperreports.export.SimpleExporterInput;
+import net.sf.jasperreports.export.SimpleHtmlExporterConfiguration;
+import net.sf.jasperreports.export.SimpleHtmlExporterOutput;
+import net.sf.jasperreports.export.SimpleHtmlReportConfiguration;
 import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
 import net.sf.jasperreports.export.SimplePdfExporterConfiguration;
+import net.sf.jasperreports.export.SimplePdfReportConfiguration;
+import net.sf.jasperreports.export.SimpleRtfExporterConfiguration;
+import net.sf.jasperreports.export.SimpleRtfReportConfiguration;
+import net.sf.jasperreports.export.SimpleTextExporterConfiguration;
+import net.sf.jasperreports.export.SimpleTextReportConfiguration;
+import net.sf.jasperreports.export.SimpleWriterExporterOutput;
+import net.sf.jasperreports.export.SimpleXlsExporterConfiguration;
 import net.sf.jasperreports.export.SimpleXlsReportConfiguration;
+import net.sf.jasperreports.export.SimpleXlsxExporterConfiguration;
 import net.sf.jasperreports.export.SimpleXlsxReportConfiguration;
+
+import net.sf.jasperreports.web.util.WebHtmlResourceHandler;
+
 import net.sf.jasperreports.j2ee.servlets.ImageServlet;
 
 import org.apache.commons.lang.StringUtils;
+
 import org.hibernate.Query;
 import org.hibernate.Session;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.ClassUtils;
 
 import ar.com.fdvs.dj.core.DynamicJasperHelper;
+
 import ar.com.fdvs.dj.core.layout.ClassicLayoutManager;
 import ar.com.fdvs.dj.core.layout.HorizontalBandAlignment;
+
 import ar.com.fdvs.dj.domain.AutoText;
 import ar.com.fdvs.dj.domain.DynamicReport;
 import ar.com.fdvs.dj.domain.Style;
@@ -69,14 +91,14 @@ import ar.com.fdvs.dj.domain.constants.VerticalAlign;
 import ar.com.fdvs.dj.domain.entities.columns.AbstractColumn;
 
 import com.transys.core.dao.GenericDAO;
-import com.transys.core.dao.GenericJpaDAO;
+
 import com.transys.core.tags.IColumnTag;
 import com.transys.core.tags.StaticDataColumn;
 import com.transys.core.tags.StaticDataUtil;
 import com.transys.core.util.LabelUtil;
 import com.transys.core.util.ServletUtil;
+
 import com.transys.model.BaseModel;
-import com.transys.model.Order;
 import com.transys.model.SearchCriteria;
 
 /**
@@ -87,6 +109,8 @@ public class DynamicReportServiceImpl implements DynamicReportService {
 	public static String reportsCtx = "/reports";
 	
 	public static String SUBREPORT_DIR_KEY = "SUBREPORT_DIR";
+	
+	private static String JASPER_PRINT_SESSION_ATTRIBUTE_KEY = ImageServlet.DEFAULT_JASPER_PRINT_SESSION_ATTRIBUTE;
 
 	@Autowired
 	private GenericDAO genericDAO;
@@ -517,7 +541,6 @@ public class DynamicReportServiceImpl implements DynamicReportService {
 			JasperPrint jp = getJasperPrintFromBean(reportName, type, list.toArray(),
 					columnPropertyList, displayableFieldMap, request);
 			out = getStreamByType(type, jp, request);
-
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -595,7 +618,7 @@ public class DynamicReportServiceImpl implements DynamicReportService {
 			List<Field> displayableFieldList, HttpServletRequest request,String type,Class entityClass) {
 		Style headerStyle = getHeaderStyle();
 		Style detailStyle = new Style();
-		//detailStyle.setBorder(Border.THIN);
+		detailStyle.setBorder(Border.THIN());
 		JasperPrint jp = null;
 		try {
 			DynamicReportBuilder jasperReport = getReport(reportName,
@@ -615,7 +638,7 @@ public class DynamicReportServiceImpl implements DynamicReportService {
 			Map<String, Field> displayableFieldMap, HttpServletRequest request) {
 		Style headerStyle = getHeaderStyle();
 		Style detailStyle = new Style();
-		//detailStyle.setBorder(Border.THIN);
+		//detailStyle.setBorder(Border.THIN());
 		JasperPrint jp = null;
 		try {
 			DynamicReportBuilder jasperReport = getReportFromMap(reportName, type,
@@ -970,7 +993,7 @@ public class DynamicReportServiceImpl implements DynamicReportService {
 			Style bigDecimalStyle = new Style();
 			//doubleStyle.setBorder(Border.THIN);
 			bigDecimalStyle.setHorizontalAlign(HorizontalAlign.LEFT);
-			bigDecimalStyle.setPattern("######.00");
+			bigDecimalStyle.setPattern("#####0.00");
 			//bigDecimalStyle.setTextColor(Color.RED);
 			AbstractColumn bigDecimalColumn = getColumn(columnTag.getDataField(), BigDecimal.class,
 					LabelUtil.getText(columnTag.getHeaderText(), locale),
@@ -988,7 +1011,7 @@ public class DynamicReportServiceImpl implements DynamicReportService {
 				fieldType = BigDecimal.class;
 				Style bigDecimalStyle = new Style();
 				bigDecimalStyle.setHorizontalAlign(HorizontalAlign.LEFT);
-				bigDecimalStyle.setPattern("######.00");
+				bigDecimalStyle.setPattern("#####0.00");
 				defaultStyle = bigDecimalStyle;
 			} else if ("java.sql.Timestamp".equalsIgnoreCase(type)){
 				fieldType = Timestamp.class;
@@ -1039,22 +1062,19 @@ public class DynamicReportServiceImpl implements DynamicReportService {
 		exporter.setExporterInput(new SimpleExporterInput(jp));
 		exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(out));
 		
-		SimpleXlsReportConfiguration configuration = new SimpleXlsReportConfiguration();
-		configuration.setDetectCellType(true);
-		configuration.setIgnoreGraphics(true);
-		configuration.setWhitePageBackground(true);
-		//configuration.setRemoveEmptySpaceBetweenColumns(true);
-		//configuration.setRemoveEmptySpaceBetweenRows(true);
-		exporter.setConfiguration(configuration); 
+		SimpleXlsExporterConfiguration xlsExporterConfig = new SimpleXlsExporterConfiguration();
+		exporter.setConfiguration(xlsExporterConfig);
 		
-		/*exporter.setParameter(JRExporterParameter.JASPER_PRINT, jp);
-		exporter.setParameter(JRExporterParameter.OUTPUT_STREAM, out);
-		exporter.setParameter(JRXlsExporterParameter.IS_DETECT_CELL_TYPE,
-				Boolean.TRUE);
-		exporter.setParameter(JRXlsExporterParameter.IS_WHITE_PAGE_BACKGROUND,
-				Boolean.FALSE);
-		exporter.setParameter(JRXlsExporterParameter.IS_IGNORE_GRAPHICS,
-				Boolean.FALSE); */
+		SimpleXlsReportConfiguration reportConfig = new SimpleXlsReportConfiguration();
+		reportConfig.setDetectCellType(true);
+		reportConfig.setIgnoreGraphics(true);
+		reportConfig.setWhitePageBackground(true);
+		reportConfig.setRemoveEmptySpaceBetweenColumns(true);
+		reportConfig.setRemoveEmptySpaceBetweenRows(true);
+		reportConfig.setIgnorePageMargins(true);
+		reportConfig.setShowGridLines(true);
+		exporter.setConfiguration(reportConfig); 
+		
 		exporter.exportReport();  
 
 		return out;
@@ -1068,15 +1088,19 @@ public class DynamicReportServiceImpl implements DynamicReportService {
 		exporter.setExporterInput(new SimpleExporterInput(jp));
 		exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(out));
 		
-		SimpleXlsxReportConfiguration configuration = new SimpleXlsxReportConfiguration();
-		configuration.setDetectCellType(true);
-		configuration.setIgnoreGraphics(true);
-		configuration.setWhitePageBackground(true);
-		configuration.setRemoveEmptySpaceBetweenColumns(true);
-		configuration.setRemoveEmptySpaceBetweenRows(true);
-		exporter.setConfiguration(configuration);
+		SimpleXlsxExporterConfiguration xlsxExporterConfig = new SimpleXlsxExporterConfiguration();
+		exporter.setConfiguration(xlsxExporterConfig);
 		
-		//exporter.setParameter(JRXls)
+		SimpleXlsxReportConfiguration xlsxReportConfig = new SimpleXlsxReportConfiguration();
+		xlsxReportConfig.setDetectCellType(true);
+		xlsxReportConfig.setIgnoreGraphics(true);
+		xlsxReportConfig.setWhitePageBackground(true);
+		xlsxReportConfig.setRemoveEmptySpaceBetweenColumns(true);
+		xlsxReportConfig.setRemoveEmptySpaceBetweenRows(true);
+		xlsxReportConfig.setIgnorePageMargins(true);
+		xlsxReportConfig.setShowGridLines(true);
+		exporter.setConfiguration(xlsxReportConfig);
+		
 		exporter.exportReport();
 
 		return out;
@@ -1090,8 +1114,11 @@ public class DynamicReportServiceImpl implements DynamicReportService {
 		exporter.setExporterInput(new SimpleExporterInput(jp));
 		exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(out));
 		
-		/*exporter.setParameter(JRExporterParameter.JASPER_PRINT, jp);
-		exporter.setParameter(JRExporterParameter.OUTPUT_STREAM, out); */
+		SimplePdfExporterConfiguration pdfExporterConfig = new SimplePdfExporterConfiguration();
+		exporter.setConfiguration(pdfExporterConfig);
+
+		SimplePdfReportConfiguration reportConfig = new SimplePdfReportConfiguration();
+		exporter.setConfiguration(reportConfig);
 		
 		exporter.exportReport();
 		return out;
@@ -1100,9 +1127,18 @@ public class DynamicReportServiceImpl implements DynamicReportService {
 	private ByteArrayOutputStream exportReportRtf(JasperPrint jp)
 			throws JRException {
 		JRRtfExporter exporter = new JRRtfExporter();
+		exporter.setExporterInput(new SimpleExporterInput(jp));
+		
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		exporter.setParameter(JRExporterParameter.JASPER_PRINT, jp);
-		exporter.setParameter(JRExporterParameter.OUTPUT_STREAM, out);
+		SimpleWriterExporterOutput output = new SimpleWriterExporterOutput(out);
+		exporter.setExporterOutput(output);
+		
+		SimpleRtfExporterConfiguration exporterConfig = new SimpleRtfExporterConfiguration();
+		exporter.setConfiguration(exporterConfig);
+		
+		SimpleRtfReportConfiguration reportConfig = new SimpleRtfReportConfiguration();
+		exporter.setConfiguration(reportConfig);
+		
 		exporter.exportReport();
 
 		return out;
@@ -1111,62 +1147,94 @@ public class DynamicReportServiceImpl implements DynamicReportService {
 	private ByteArrayOutputStream exportReportText(JasperPrint jp)
 			throws JRException {
 		JRTextExporter exporter = new JRTextExporter();
+		exporter.setExporterInput(new SimpleExporterInput(jp));
+		
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		exporter.setParameter(JRExporterParameter.JASPER_PRINT, jp);
-		exporter.setParameter(JRExporterParameter.OUTPUT_STREAM, out);
-		exporter.setParameter(JRTextExporterParameter.CHARACTER_WIDTH, 10F);
-		exporter.setParameter(JRTextExporterParameter.CHARACTER_HEIGHT, 10F);
+		SimpleWriterExporterOutput output = new SimpleWriterExporterOutput(out);
+		exporter.setExporterOutput(output);
+		
+		SimpleTextExporterConfiguration exporterConfig = new SimpleTextExporterConfiguration();
+		exporter.setConfiguration(exporterConfig);
+		
+		SimpleTextReportConfiguration reportConfig = new SimpleTextReportConfiguration();
+		reportConfig.setCharHeight(10F);
+		reportConfig.setCharWidth(10F);
+		exporter.setConfiguration(reportConfig);
+		
 		exporter.exportReport();
 		return out;
 	}
+	
+	private void configureForHtml(HtmlExporter htmlExporter, ByteArrayOutputStream out, JasperPrint jp,
+			HttpServletRequest request, String footer) {
+		request.getSession().setAttribute(JASPER_PRINT_SESSION_ATTRIBUTE_KEY, jp);
+		htmlExporter.setExporterInput(new SimpleExporterInput(jp));
+		
+		SimpleHtmlExporterOutput output = new SimpleHtmlExporterOutput(out);
+		output.setImageHandler(new WebHtmlResourceHandler(request.getContextPath() + "/image?image={0}"));
+		htmlExporter.setExporterOutput(output);
+		
+		SimpleHtmlExporterConfiguration htmlExporterConfig = new SimpleHtmlExporterConfiguration();
+		//exporter.setParameter(JRHtmlExporterParameter.IS_USING_IMAGES_TO_ALIGN, false);*/
+		
+		String header = "<html><head><style> @page {size: landscape; margin-left: 0.00in;margin-right: 0.00in;margin-top: 0.00in;margin-bottom: 0.00in;}</style></head><body>";
+		htmlExporterConfig.setHtmlHeader(header);
+		
+		htmlExporterConfig.setHtmlFooter(footer);
+		
+		String betweenPagesHtml = "<div style=\"display:block;page-break-before:always;\"></div>";
+		htmlExporterConfig.setBetweenPagesHtml(betweenPagesHtml);
+				
+		htmlExporter.setConfiguration(htmlExporterConfig);
 
+		SimpleHtmlReportConfiguration reportConfig = new SimpleHtmlReportConfiguration();
+		reportConfig.setIgnorePageMargins(true);
+		reportConfig.setRemoveEmptySpaceBetweenRows(true);
+		//reportConfig.setBorderCollapse("separate");
+		reportConfig.setZoomRatio(new Float(0.97));
+		htmlExporter.setConfiguration(reportConfig);
+	}
+	
 	private ByteArrayOutputStream exportReportHtml(JasperPrint jp,
 			HttpServletRequest request) throws JRException {
-		JRHtmlExporter exporter = new JRHtmlExporter();
+		HtmlExporter htmlExporter = new HtmlExporter();
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		request.getSession().setAttribute(
-				ImageServlet.DEFAULT_JASPER_PRINT_SESSION_ATTRIBUTE, jp);
-		exporter.setParameter(JRExporterParameter.JASPER_PRINT, jp);
-		exporter.setParameter(JRExporterParameter.OUTPUT_STREAM, out);
-		exporter.setParameter(JRHtmlExporterParameter.IMAGES_URI,
-				request.getContextPath() + "/image?image=");
-		exporter.setParameter(JRHtmlExporterParameter.IGNORE_PAGE_MARGINS,
-				Boolean.TRUE);
-		exporter.exportReport();
-
+		configureForHtml(htmlExporter, out, jp, request, StringUtils.EMPTY);
+		
+		htmlExporter.exportReport();
+		
+		request.getSession().removeAttribute(JASPER_PRINT_SESSION_ATTRIBUTE_KEY);
 		return out;
 	}
 
 	private ByteArrayOutputStream exportReportPrint(JasperPrint jp,
 			HttpServletRequest request) throws JRException {
-		JRHtmlExporter exporter = new JRHtmlExporter();
+		HtmlExporter htmlExporter = new HtmlExporter();
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		request.getSession().setAttribute(
-				ImageServlet.DEFAULT_JASPER_PRINT_SESSION_ATTRIBUTE, jp);
-		exporter.setParameter(JRExporterParameter.JASPER_PRINT, jp);
-		exporter.setParameter(JRExporterParameter.OUTPUT_STREAM, out);
-		exporter.setParameter(JRHtmlExporterParameter.HTML_HEADER,
-		"<html><head><style> @page {size: landscape; margin-left: 0.00in;margin-right: 0.00in;margin-top: 0.00in;margin-bottom: 0.00in;}</style></head><body>");
-		exporter.setParameter(JRHtmlExporterParameter.HTML_FOOTER,
-		"<script language=\"javascript\">  try  { document.execCommand('print', false, null); } catch(e) { window.print(); }</script></body></html>");
-		exporter.setParameter(JRHtmlExporterParameter.IMAGES_URI,
-				request.getContextPath() + "/image?image=");
-		exporter.setParameter(JRHtmlExporterParameter.IGNORE_PAGE_MARGINS,
-				Boolean.TRUE);
-		exporter.setParameter(JRHtmlExporterParameter.BETWEEN_PAGES_HTML,"<div style=\"display:block;page-break-before:always;\"></div>");
-		exporter.exportReport();
-
+		
+		String footer = "<script language=\"javascript\">  try  { document.execCommand('print', false, null); } catch(e) { window.print(); }</script></body></html>";
+		configureForHtml(htmlExporter, out, jp, request, footer);
+				
+		htmlExporter.exportReport();
+		
+		request.getSession().removeAttribute(JASPER_PRINT_SESSION_ATTRIBUTE_KEY);
 		return out;
 	}
 
-	private ByteArrayOutputStream exportReportCsv(JasperPrint jp)
-			throws JRException {
+	private ByteArrayOutputStream exportReportCsv(JasperPrint jp)throws JRException {
 		JRCsvExporter exporter = new JRCsvExporter();
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		exporter.setParameter(JRExporterParameter.JASPER_PRINT, jp);
-		exporter.setParameter(JRExporterParameter.OUTPUT_STREAM, out);
-		exporter.setParameter(JRCsvExporterParameter.IGNORE_PAGE_MARGINS,
-				Boolean.TRUE);
+		exporter.setExporterInput(new SimpleExporterInput(jp));
+		
+		SimpleWriterExporterOutput output = new SimpleWriterExporterOutput(out);
+		exporter.setExporterOutput(output);
+		
+		SimpleCsvExporterConfiguration csvExporterConfig = new SimpleCsvExporterConfiguration();
+		exporter.setConfiguration(csvExporterConfig);
+
+		SimpleCsvReportConfiguration reportConfig = new SimpleCsvReportConfiguration();
+		exporter.setConfiguration(reportConfig);
+		
 		exporter.exportReport();
 
 		return out;

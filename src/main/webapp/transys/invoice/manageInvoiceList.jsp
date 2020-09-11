@@ -246,7 +246,7 @@ function populateManageInvoiceDeliveryAddress(addressList) {
 		<transys:imagecolumn headerText="Download As PDF" linkUrl="${ctx}/invoice/downloadInvoice.do?id={id}&type=pdf" imageSrc="${pdfImage}" HAlign="center"/>
 		<transys:imagecolumn headerText="Download As XLS" linkUrl="${ctx}/invoice/downloadInvoice.do?id={id}&type=xls" imageSrc="${excelImage}" HAlign="center"/>
 		<transys:imagecolumn headerText="Download As CSV" linkUrl="${ctx}/invoice/downloadInvoice.do?id={id}&type=csv" imageSrc="${csvImage}" HAlign="center"/>
-		<transys:imagecolumn headerText="DEL" linkUrl="javascript:confirmDeleteInvoice('{id}');" imageSrc="${delImage}" HAlign="center"/>
+		<transys:imagecolumn headerText="DEL" linkUrl="javascript:confirmDeleteInvoice('{id}');" imageSrc="${deleteImage}" HAlign="center"/>
 	</transys:datatable>
 	<%session.setAttribute("manageInvoiceColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
 </form:form>

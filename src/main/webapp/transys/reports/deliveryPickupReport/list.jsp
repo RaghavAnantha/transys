@@ -1,8 +1,44 @@
 <%@include file="/common/taglibs.jsp"%>
 
+<script language="javascript">
+function validateExport() {
+	var reportData = $('#deliveryPickupReportData').html();
+	if (reportData == "") {
+		showAlertDialog("Data Validation", "No data retrieved to export");
+		return false;
+	}
+	
+	return true;
+}
+
+function validateSubmit() {
+	var deliveryDateFrom = $("[name='deliveryDateFrom']").val();
+	var deliveryDateTo = $("[name='deliveryDateTo']").val();
+	var pickupDateFrom = $("[name='pickupDateFrom']").val();
+	var pickupDateTo = $("[name='pickupDateTo']").val();
+	var deliveryAddress = $('#deliveryAddress').val();
+	
+	var missingData = false;
+	if (deliveryDateFrom == "" && deliveryDateTo == ""
+			&& pickupDateFrom == "" && pickupDateTo == ""
+			&& deliveryAddress == "") {
+		missingData = true;
+	}
+		
+	
+	if (missingData) {
+		var alertMsg = "<span style='color:red'><b>Please select any search criteria</b><br></span>"
+		showAlertDialog("Data Validation", alertMsg);
+		
+		return false;
+	}
+	
+	return true;
+}
+</script>
 <br/>
 <h4 style="margin-top: -15px; !important">Delivery/Pickup Report</h4>
-<form:form action="list.do" method="get" name="searchForm" id="deliveryPickUpReportSearchForm" >
+<form:form action="search.do" method="get" name="deliveryPickUpReportSearchForm" id="deliveryPickUpReportSearchForm" >
 	<table id="form-table" class="table">
 	 	<tr><td colspan="10"></td><td colspan="10"></td></tr>
 	 <tr>
@@ -39,7 +75,7 @@
 		<tr>
 			<td align="${left}"></td>
 			<td align="${left}">
-				<input type="button" class="btn btn-primary btn-sm btn-sm-ext" onclick="document.forms['deliveryPickUpReportSearchForm'].submit();"
+				<input type="submit" class="btn btn-primary btn-sm btn-sm-ext"
 					value="<transys:label code="Preview"/>" />
 				<input type="reset" class="btn btn-primary btn-sm btn-sm-ext" value="Clear"/>
 			</td>
@@ -47,6 +83,61 @@
 		<tr><td></td></tr>
 	</table>
 </form:form>
+<table width="100%">
+	<tr>
+		<td align="${left}" width="100%" align="right">
+			<!--  
+			<a href="export.do?type=print" target="_blank" onclick="return validateExport();">
+				<img src="${printImage}" border="0" class="toolbarButton"/>
+			</a>
+			-->
+			<a href="export.do?type=pdf" onclick="return validateExport();">
+				<img src="${pdfImage}" border="0" class="toolbarButton"/>
+			</a>
+			<a href="export.do?type=xls">
+				<img src="${excelImage}" border="0" class="toolbarButton" onclick="return validateExport();"/>
+			</a>
+			<a href="export.do?type=csv">
+				<img src="${csvImage}" border="0" class="toolbarButton" onclick="return validateExport();"/>
+			</a>
+		</td>
+		</tr>
+		<tr>
+			<td align="${left}" width="100%" valign="top">
+				<div id="deliveryPickupReportData"></div>
+			</td>
+		</tr>
+</table>
+
+<script language="javascript">
+$("#deliveryPickUpReportSearchForm").submit(function (ev) {
+	if (!validateSubmit()) {
+		return false;
+	}
+	
+	var reportData = $('#deliveryPickupReportData');
+	reportData.html("${reportLoadingMsg}");
+	
+	var $this = $(this);
+    $.ajax({
+        type: $this.attr('method'),
+        url: $this.attr('action'),
+        data: $this.serialize(),
+        success: function(responseData, textStatus, jqXHR) {
+        	reportData.html("");
+        	if (responseData.indexOf("ErrorMsg") >= 0 ) {
+        		showAlertDialog("Exception", "Error while processing request");
+        	} else {
+        		reportData.html(responseData);
+        	}
+        }
+    });
+    
+    ev.preventDefault();
+});
+</script>
+
+<!-- 
 <hr class="hr-ext">
 <table class="table" id="form-table"> 
 	<tr><td></td></tr>
@@ -85,6 +176,6 @@
 		<transys:textcolumn headerText="Driver Name" dataField="dropOffDriver.name" />
 		<transys:textcolumn headerText="Location" dataField="dumpsterLocation" />
 	</transys:datatable>
-	<%session.setAttribute("deliveryPickupReportColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
+	<session.setAttribute("deliveryPickupReportColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
 </form:form>
-
+-->

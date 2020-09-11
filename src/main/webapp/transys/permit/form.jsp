@@ -2,7 +2,6 @@
 
 <script type="text/javascript">
 function populateDeliveryAddress() {
-	
 	var deliveryAddressSelect = $('#deliveryAddressSelect');
 	deliveryAddressSelect.empty();
 	

@@ -62,7 +62,8 @@ import com.transys.model.SearchCriteria;
 import com.transys.model.User;
 import com.transys.model.invoice.OrderInvoiceDetails;
 import com.transys.model.invoice.OrderInvoiceHeader;
-
+import com.transys.model.vo.CustomerVO;
+import com.transys.model.vo.DeliveryAddressVO;
 import com.transys.model.vo.invoice.InvoiceVO;
 
 @Controller
@@ -160,64 +161,58 @@ public class InvoiceController extends BaseController {
 		return getUrlContext() + "/manageInvoiceList";
 	}
 	
-	private void setupCreateInvoiceList(ModelMap model, HttpServletRequest request) {
+	private void setupCommon(ModelMap model, HttpServletRequest request,
+					String customerIdKey, String orderInvoiced) {
 		populateSearchCriteria(request, request.getParameterMap());
+		SearchCriteria searchCriteria = (SearchCriteria)request.getSession().getAttribute("searchCriteria");
+		
+		List<CustomerVO> customerVOList = ModelUtil.retrieveOrderCustomers(genericDAO);
+		model.addAttribute("customers", customerVOList);
+		
+		String customerId = (String)searchCriteria.getSearchMap().get(customerIdKey);
+		if (StringUtils.isNotEmpty(customerId)) {
+			List<DeliveryAddressVO> deliveryAddressVOList = ModelUtil.retrieveOrderDeliveryAddresses(genericDAO);
+			model.addAttribute("deliveryAddresses", deliveryAddressVOList);
+		}
+		
+		model.addAttribute("orderIds", retrieveOrderIds(orderInvoiced));
+	}
+	
+	private void setupCreateInvoiceList(ModelMap model, HttpServletRequest request) {
+		setupCommon(model, request, "customerId", "N");
 		
 		SearchCriteria searchCriteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
+		searchCriteria.setPage(0);
 		searchCriteria.setPageSize(150);
-		
+
 		model.addAttribute("msgCtx", "createInvoice");
 		model.addAttribute("errorCtx", "createInvoice");
 		model.addAttribute("activeTab", "createInvoice");
-
-		List<Customer> customerList = genericDAO.executeSimpleQuery("select obj from Customer obj where obj.deleteFlag='1' order by obj.companyName asc");
-		model.addAttribute("customers", customerList);
-		
-		String customerId = (String) searchCriteria.getSearchMap().get("customerId");
-		if (StringUtils.isNotEmpty(customerId)) {
-			String query = "select obj from DeliveryAddress obj where obj.deleteFlag='1' and obj.customer.id=" 
-					+  customerId + " order by obj.line1 asc";
-			model.addAttribute("deliveryAddresses", genericDAO.executeSimpleQuery(query));
-		}
-		
-		List<String> orderIdList = retrieveOrderIds("N");
-		model.addAttribute("orderIds", orderIdList);
 	}
 	
 	private void setupManageInvoiceList(ModelMap model, HttpServletRequest request) {
-		populateSearchCriteria(request, request.getParameterMap());
+		setupCommon(model, request, "manageInvoiceCustomerId", "Y");
 		
 		SearchCriteria searchCriteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
+		searchCriteria.setPage(0);
 		searchCriteria.setPageSize(100);
 		
-		model.addAttribute("msgCtx", "manageInvoice");
-		model.addAttribute("errorCtx", "manageInvoice");
-		model.addAttribute("activeTab", "manageInvoice");
-
-		List<Customer> customerList = genericDAO.executeSimpleQuery("select obj from Customer obj where obj.deleteFlag='1' order by obj.companyName asc");
-		model.addAttribute("customers", customerList);
-		
-		String customerId = (String) searchCriteria.getSearchMap().get("manageInvoiceCustomerId");
-		if (StringUtils.isNotEmpty(customerId)) {
-			String query = "select obj from DeliveryAddress obj where obj.deleteFlag='1' and obj.customer.id=" 
-					+  customerId + " order by obj.line1 asc";
-			model.addAttribute("deliveryAddresses", genericDAO.executeSimpleQuery(query));
-		}
-		
-		List<String> orderIdList = retrieveOrderIds("Y");
-		model.addAttribute("orderIds", orderIdList);
-		
-		String query = "Select obj.id from OrderInvoiceHeader obj where obj.deleteFlag=1 order by obj.id asc";
-		List<OrderInvoiceHeader> orderInvoiceHeaderList = genericDAO.executeSimpleQuery(query);
+		String query = "select obj.id from OrderInvoiceHeader obj where obj.deleteFlag=1 order by obj.id asc";
+		/*List<OrderInvoiceHeader> orderInvoiceHeaderList = genericDAO.executeSimpleQuery(query);
 		List<String> invoiceNoList = new ArrayList<String>();
 		for (Object obj : orderInvoiceHeaderList) {
 			invoiceNoList.add(obj.toString());
 		}
-		model.addAttribute("invoiceNos", invoiceNoList);
+		model.addAttribute("invoiceNos", invoiceNoList);*/
+		model.addAttribute("invoiceNos", genericDAO.executeSimpleQuery(query));
+		
+		model.addAttribute("msgCtx", "manageInvoice");
+		model.addAttribute("errorCtx", "manageInvoice");
+		model.addAttribute("activeTab", "manageInvoice");
 	}
 	
-	private List<String> retrieveOrderIds(String invoiced) {
-		String query = "Select obj.id from Order obj where obj.deleteFlag=1 "
+	private List<Order> retrieveOrderIds(String invoiced) {
+		String query = "select obj.id from Order obj where obj.deleteFlag=1 "
 				+ " and obj.invoiced='" + invoiced + "'";
 		if (StringUtils.equals(invoiced, "N")) {
 			OrderStatus orderStatus = ModelUtil.retrieveOrderStatus(genericDAO, OrderStatus.ORDER_STATUS_CANCELED);
@@ -226,12 +221,14 @@ public class InvoiceController extends BaseController {
 		}
 		query	+= " order by obj.id asc";
 		
-		List<Order> orderList = genericDAO.executeSimpleQuery(query);
+		return genericDAO.executeSimpleQuery(query);
+		
+		/*List<Order> orderList = genericDAO.executeSimpleQuery(query);
 		List<String> orderIdList = new ArrayList<String>();
 		for (Object obj : orderList) {
 			orderIdList.add(obj.toString());
 		}
-		return orderIdList;
+		return orderIdList;*/
 	}
 	
 	private List<Order> performCreateInvoiceSearch(SearchCriteria criteria, InvoiceVO input) {

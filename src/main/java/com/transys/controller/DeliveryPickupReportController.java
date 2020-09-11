@@ -2,6 +2,7 @@ package com.transys.controller;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,60 +12,115 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.ss.formula.functions.Address;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.transys.core.util.MimeUtil;
+
+import com.transys.core.util.FormatUtil;
+import com.transys.core.util.ModelUtil;
+
 import com.transys.model.DeliveryAddress;
 import com.transys.model.Order;
+import com.transys.model.OrderStatus;
 import com.transys.model.Permit;
 import com.transys.model.SearchCriteria;
 
+import com.transys.model.vo.DeliveryAddressVO;
+import com.transys.model.vo.DeliveryPickupReportVO;
+
+import com.transys.service.DynamicReportService;
+
 @Controller
 @RequestMapping("/reports/deliveryPickupReport")
-public class DeliveryPickupReportController extends CRUDController<Order> {
+public class DeliveryPickupReportController extends BaseController {
+	@Autowired
+	private DynamicReportService dynamicReportService;
+	
 	public DeliveryPickupReportController(){	
 		setUrlContext("reports/deliveryPickupReport");
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/main.do")
 	public String displayMain(ModelMap model, HttpServletRequest request) {
-		request.getSession().removeAttribute("searchCriteria");
+		SearchCriteria searchCriteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
+		if (searchCriteria != null && searchCriteria.getSearchMap() != null) {
+			searchCriteria.getSearchMap().clear();
+		}
+		
 		setupList(model, request);
-		setupCreate(model, request);
+		
 		return urlContext + "/list";
 	}
 	
-	@Override
-	public String list(ModelMap model, HttpServletRequest request) {
-		setupList(model, request);
-		setupCreate(model, request);
-		return urlContext + "/list";
+	public void setupList(ModelMap model, HttpServletRequest request) {
+		populateSearchCriteria(request, request.getParameterMap());
+		
+		List<DeliveryAddressVO> deliveryAddressVOList = ModelUtil.retrieveOrderDeliveryAddresses(genericDAO);
+		model.addAttribute("deliveryAddresses", deliveryAddressVOList);
 	}
 	
-	@Override
-	public void setupCreate(ModelMap model, HttpServletRequest request) {
+	@RequestMapping(method = {RequestMethod.GET, RequestMethod.POST}, value = "/search.do")
+	public String search(ModelMap model, HttpServletRequest request, HttpServletResponse response,
+			@ModelAttribute("modelObject") DeliveryPickupReportVO input) {
+		populateSearchCriteria(request, request.getParameterMap());
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
-		//TODO fix me
-		criteria.getSearchMap().remove("_csrf");
 		
-		List<Order> orderList = performSearch(criteria);
-		model.addAttribute("ordersList", orderList);
-		model.addAttribute("dumpsterSizeAggregation", setDumpsterSizeAggregation(model, orderList));
+		int originalPage = criteria.getPage();
+		int originalPageSize = criteria.getPageSize();
+		criteria.setPage(0);
+		criteria.setPageSize(250);
 		
-		String addrssQuery = "select obj from DeliveryAddress obj where obj.deleteFlag='1' order by obj.line1 asc";
-		List<DeliveryAddress> addresses = genericDAO.executeSimpleQuery(addrssQuery);
-		model.addAttribute("deliveryAddresses", addresses);
-		model.addAttribute("deliveryDateFrom", criteria.getSearchMap().get("deliveryDateFrom"));
-		model.addAttribute("deliveryDateTo", criteria.getSearchMap().get("deliveryDateTo"));
-		model.addAttribute("pickupDateFrom", criteria.getSearchMap().get("pickDateFrom"));
-		model.addAttribute("pickDateTo", criteria.getSearchMap().get("pickDateTo"));	
+		DeliveryPickupReportVO inputToBeUsed = input;
+		
+		// Paging related
+		String p = request.getParameter("p");
+		if (StringUtils.isEmpty(p)) {
+			request.getSession().setAttribute("input", input);
+		} else {
+			inputToBeUsed = (DeliveryPickupReportVO)request.getSession().getAttribute("input");
+		}
+		
+		Map<String, Object> params = new HashMap<String, Object>();
+		ByteArrayOutputStream out = null;
+		try {
+			List<Map<String,Object>> reportData = generateReportData(model, criteria, inputToBeUsed, params);
+			
+			String type = "html";
+			setReportRequestHeaders(response, type, "DeliveryPickupReport");
+			out = dynamicReportService.generateStaticReport("deliveryPickupReport", reportData, 
+								params, type, request);
+			out.writeTo(response.getOutputStream());
+			
+			return null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.warn("Unable to create file: " + e);
+			
+			request.getSession().setAttribute("error", e.getMessage());
+			return "report.error";
+		} finally {
+			criteria.setPage(originalPage);
+			criteria.setPageSize(originalPageSize);
+			
+			if (out != null) {
+				try {
+					out.close();
+					out = null;
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
 	}
 	
 	private String setDumpsterSizeAggregation(ModelMap model, List<Order> orderList) {
@@ -88,7 +144,6 @@ public class DeliveryPickupReportController extends CRUDController<Order> {
 			try {
 				jsonResponse = objectMapper.writeValueAsString(o);
 			} catch (JsonProcessingException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			jsonResponse = jsonResponse.substring(1, jsonResponse.length()-1);
@@ -106,46 +161,87 @@ public class DeliveryPickupReportController extends CRUDController<Order> {
 		return aggregationResult.toString();
 	}
 	
-	@RequestMapping(method = RequestMethod.GET, value = "/generateDeliveryPickupReport.do")
+	@RequestMapping(method = RequestMethod.GET, value = "/export.do")
 	public void export(ModelMap model, HttpServletRequest request, HttpServletResponse response,
-			@RequestParam("type") String type, Object objectDAO, Class clazz) {
+			@RequestParam("type") String type) {
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
-		criteria.setPageSize(100000);
-		//criteria.setPage(0);
+		int originalPage = criteria.getPage();
+		int originalPageSize = criteria.getPageSize();
+		criteria.setPage(0);
+		criteria.setPageSize(750);
+		
+		DeliveryPickupReportVO input = (DeliveryPickupReportVO)request.getSession().getAttribute("input");
 		
 		Map<String, Object> params = new HashMap<String, Object>();
 		ByteArrayOutputStream out = null;
 		try {
-			List<Map<String,Object>> reportData = prepareReportData(model, request);
-			params.put("noOfOrders", reportData.size());
-
-			type = setRequestHeaders(response, type, "DeliveryPickupReport");
+			List<Map<String,Object>> reportData = generateReportData(model, criteria, input, params);
+			
+			type = setReportRequestHeaders(response, type, "DeliveryPickupReport");
 			out = dynamicReportService.generateStaticReport("deliveryPickupReport", reportData, params, type, request);
 			out.writeTo(response.getOutputStream());
-			
-			criteria.setPageSize(25);
 		} catch (Exception e) {
 			e.printStackTrace();
-			log.warn("Unable to create file :" + e);
-			request.getSession().setAttribute("errors", e.getMessage());
+			log.warn("Unable to create file: " + e);
+			//request.getSession().setAttribute("error", e.getMessage());
 		} finally {
+			criteria.setPage(originalPage);
+			criteria.setPageSize(originalPageSize);
+			
 			if (out != null) {
 				try {
 					out.close();
 					out = null;
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
 		}
 	}
 
-	private List<Order> performSearch(SearchCriteria criteria) {
-		criteria.getSearchMap().put("orderStatus.id", "!=5");
-		List<Order> orderList = genericDAO.search(getEntityClass(), criteria, "id", null, null);
-		criteria.getSearchMap().remove("orderStatus.id");
+	private List<Order> performSearch(SearchCriteria criteria, DeliveryPickupReportVO input) {
+		String deliveryAddressId = input.getDeliveryAddress();
+		String deliveryDateFrom = input.getDeliveryDateFrom();
+		String deliveryDateTo = input.getDeliveryDateTo();
+		String pickupDateFrom = input.getPickupDateFrom();
+		String pickupDateTo = input.getPickupDateTo();
 		
+		StringBuffer query = new StringBuffer("select obj from Order obj where 1=1");
+		StringBuffer countQuery = new StringBuffer("select count(obj) from Order obj where 1=1");
+		StringBuffer whereClause = new StringBuffer(" and obj.deleteFlag=1");
+		
+		OrderStatus orderStatus = ModelUtil.retrieveOrderStatus(genericDAO, OrderStatus.ORDER_STATUS_CANCELED);
+		whereClause.append(" and obj.orderStatus.id !=" + orderStatus.getId().longValue());
+		
+		if (StringUtils.isNotEmpty(deliveryAddressId)) {
+			whereClause.append(" and obj.deliveryAddress.id=" + deliveryAddressId);
+		}
+		if (StringUtils.isNotEmpty(deliveryDateFrom)){
+        	whereClause.append(" and obj.deliveryDate >='"+FormatUtil.convertInputDateToDbDate(deliveryDateFrom)+"'");
+		}
+      if (StringUtils.isNotEmpty(deliveryDateTo)){
+	     	whereClause.append(" and obj.deliveryDate <='"+FormatUtil.convertInputDateToDbDate(deliveryDateTo)+"'");
+	   }
+      if (StringUtils.isNotEmpty(pickupDateFrom)){
+        	whereClause.append(" and obj.pickupDate >='"+FormatUtil.convertInputDateToDbDate(pickupDateFrom)+"'");
+		}
+      if (StringUtils.isNotEmpty(pickupDateTo)){
+	     	whereClause.append(" and obj.pickupDate <='"+FormatUtil.convertInputDateToDbDate(pickupDateTo)+"'");
+	   }
+      
+      query.append(whereClause);
+      countQuery.append(whereClause);
+      
+      query.append(" order by obj.id desc");
+      
+      Long recordCount = (Long) genericDAO.getEntityManager().createQuery(countQuery.toString()).getSingleResult();        
+		criteria.setRecordCount(recordCount.intValue());	
+		
+		List<Order> orderList = 
+				genericDAO.getEntityManager().createQuery(query.toString())
+						.setMaxResults(criteria.getPageSize())
+						.setFirstResult(criteria.getPage() * criteria.getPageSize())
+						.getResultList();
 		return orderList;
 	}
 	
@@ -158,11 +254,9 @@ public class DeliveryPickupReportController extends CRUDController<Order> {
 		return permitList.get(0).getFullLinePermitAddress1();
 	}
 	
-	private List<Map<String, Object>> prepareReportData(ModelMap model, HttpServletRequest request) {
-		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
-		criteria.getSearchMap().remove("_csrf");
-		
-		List<Order> orderList = performSearch(criteria);
+	private List<Map<String, Object>> generateReportData(ModelMap model, SearchCriteria criteria, 
+			DeliveryPickupReportVO input, Map<String, Object> params) {
+		List<Order> orderList = performSearch(criteria, input);
 		String dumpsterSizeAggregation = setDumpsterSizeAggregation(model, orderList);
 		
 		List<Map<String, Object>> reportData = new ArrayList<Map<String, Object>>();
@@ -200,20 +294,6 @@ public class DeliveryPickupReportController extends CRUDController<Order> {
 			}
 			map.put("permit", permitStr);
 			
-			Object deliveryDateFrom = criteria.getSearchMap().get("deliveryDateFrom");
-			map.put("deliveryDateFrom", deliveryDateFrom == null ? StringUtils.EMPTY : deliveryDateFrom );
-			
-			Object deliveryDateTo = criteria.getSearchMap().get("deliveryDateTo");
-			map.put("deliveryDateTo", deliveryDateTo == null ? StringUtils.EMPTY : deliveryDateTo );
-			
-			Object pickupDateFrom = criteria.getSearchMap().get("pickupDateFrom");
-			map.put("pickupDateFrom", pickupDateFrom == null ? StringUtils.EMPTY : pickupDateFrom );
-			
-			Object pickupDateTo = criteria.getSearchMap().get("pickupDateTo");
-			map.put("pickupDateTo", pickupDateTo == null ? StringUtils.EMPTY : pickupDateTo );
-			
-			map.put("dumpsterSizeAggregation", dumpsterSizeAggregation);
-			
 			/*ObjectMapper objectMapper = new ObjectMapper();
 			String jSonResponse = StringUtils.EMPTY;
 			try {
@@ -227,7 +307,26 @@ public class DeliveryPickupReportController extends CRUDController<Order> {
 			reportData.add(map);
 		}
 		
+		String deliveryDateFrom = input.getDeliveryDateFrom();
+		params.put("deliveryDateFrom", StringUtils.isEmpty(deliveryDateFrom) ? StringUtils.EMPTY : deliveryDateFrom );
+		
+		String deliveryDateTo = input.getDeliveryDateTo();
+		params.put("deliveryDateTo", StringUtils.isEmpty(deliveryDateTo) ? StringUtils.EMPTY : deliveryDateTo );
+		
+		String pickupDateFrom = input.getPickupDateFrom();
+		params.put("pickupDateFrom", StringUtils.isEmpty(pickupDateFrom) ? StringUtils.EMPTY : pickupDateFrom );
+		
+		String pickupDateTo = input.getPickupDateTo();
+		params.put("pickupDateTo", StringUtils.isEmpty(pickupDateTo) ? StringUtils.EMPTY : pickupDateTo );
+		
+		params.put("dumpsterSizeAggregation", dumpsterSizeAggregation);
+		//params.put("noOfOrders", reportData.size());
+		
 		return reportData;
 	}
 	
+	@ModelAttribute("modelObject")
+	public DeliveryPickupReportVO setupModel(HttpServletRequest request) {
+		return new DeliveryPickupReportVO();
+	}
 }

@@ -80,7 +80,7 @@ public class DumpsterOnsiteReportController extends CRUDController<Dumpster> {
 			Object objectDAO, Class clazz) {
 		try {
 			List<Dumpster> reportData = prepareReportData(model, request);
-			type = setRequestHeaders(response, type, "dumpsterOnsiteReport");
+			type = setReportRequestHeaders(response, type, "dumpsterOnsiteReport");
 			
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
 			if (type.equals("xls")) {

@@ -12,12 +12,10 @@
 	</ul>
 	<div class="tab-content" style="background-color: white;">
 		<div id="createInvoice" class="tab-pane">
-			<div id="createInvoiceLoadingImgDiv">Loading....<img src="${preLoaderImage}" id="createInvoiceLoadingImage"/></div>
+			<div id="createInvoiceLoadingImgDiv">${loadingMsg}</div>
 			<%@include file="createInvoiceList.jsp"%>
 		</div>
-		<div id="manageInvoice" class="tab-pane">
-			Loading...<img src="${preLoaderImage}" id="manageInvoiceLoadingImage"/>
-		</div>	
+		<div id="manageInvoice" class="tab-pane">${loadingMsg}</div>	
 	</div>
 	
 	<script type="text/javascript">

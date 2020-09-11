@@ -239,7 +239,7 @@ public class RecycleReportController extends CRUDController<Order> {
 			/*if (!StringUtils.isEmpty(type) && type.equals("xls")) {
 				type = "xlsx";
 			}*/
-			type = setRequestHeaders(response, type, "recycleReport");
+			type = setReportRequestHeaders(response, type, "recycleReport");
 			
 			String recycleDateFrom = criteria.getSearchMap().getOrDefault("recycleDateFrom", StringUtils.EMPTY).toString();
 			String recycleDateTo = criteria.getSearchMap().getOrDefault("recycleDateTo", StringUtils.EMPTY).toString();

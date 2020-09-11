@@ -41,5 +41,8 @@
         
         <pattern>/transys/customer/customerListReport.jsp</pattern>
         <pattern>/transys/invoice/manageInvoiceList.jsp</pattern>
-    </decorator> 
+    </decorator>
+    <decorator name="blank" page="blankLayout.jsp">
+    	<pattern>/transys/blank/**</pattern>
+    </decorator>
 </decorators> 

@@ -109,7 +109,7 @@ public class DumpsterRentedReportController extends CRUDController<Dumpster> {
 		try {
 //			List<Map<String,Object>> reportData = prepareReportData(model, request);
 			List<Dumpster> reportData = prepareReportData(model, request);
-			type = setRequestHeaders(response, type, "dumpsterRentedReport");
+			type = setReportRequestHeaders(response, type, "dumpsterRentedReport");
 			
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
 			if (type.equals("xls")) {

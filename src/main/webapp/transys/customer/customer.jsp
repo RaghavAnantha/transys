@@ -13,6 +13,7 @@
 	</ul>
 	<div class="tab-content" style="background-color: white;padding-top: 5px;">
 		<div id="manageCustomer" class="tab-pane">
+			<div id="manageCustomerLoadingImgDiv">${loadingMsg}</div>
 			<c:if test="${mode == 'MANAGE'}">
 				<%@include file="list.jsp"%>
 			</c:if>
@@ -43,22 +44,21 @@
 	showTab('${activeSubTab}');
 	
 	function validate() {
+		var error = false;
 		var ids = ["companyName", "billingAddressLine1", "city"];
-		var bool = false
-		
-		for (var i= 0; i<ids.length; i++) {	
-			if ($("#typeForm").find('input[id="'+ids[i] +'"]').val().length == 0 ) {	
-				
+		for (var i= 0; i < ids.length; i++) {	
+			if ($("#typeForm").find('input[id="'+ids[i] +'"]').val().length == 0 ) {
 				$("#typeForm").find('input[id="'+ids[i] +'"]').addClass("border");
-				bool = true;
+				error = true;
 			}		
 		} 
-		//$("#validations").html("Please fill out the required fields Name, Address Line 1 and City");	
-		if (bool){
-			return false;
-		}
 		
-		return true;
+		if (error) {
+			//$("#validations").html("Please fill out the required fields Name, Address Line 1 and City");	
+			return false;
+		} else {
+			return true;
+		}
 	};
 	
 	$('#customerListReportTab').click(function(e) {
@@ -72,6 +72,10 @@
 	
 	    $this.tab('show');
 	    return false;
+	});
+	
+	$(window).load(function() {
+		$("#manageCustomerLoadingImgDiv").hide();
 	});
 </script>
 </body>

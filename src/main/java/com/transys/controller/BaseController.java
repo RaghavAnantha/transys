@@ -196,12 +196,15 @@ public class BaseController {
 		return buffer.toString();
 	}
 	
-	protected String setRequestHeaders(HttpServletResponse response, String type, String reportName) {
-		if (StringUtils.isEmpty(type))
+	protected String setReportRequestHeaders(HttpServletResponse response, String type, String reportName) {
+		if (StringUtils.isEmpty(type)) {
 			type = "xlsx";
-		if (!type.equals("html") && !(type.equals("print"))) {
+		}
+		
+		if (!StringUtils.equals("html", type) && !StringUtils.equals("print", type)) {
 			response.setHeader("Content-Disposition", "attachment;filename= " + reportName + "." + type);
 		}
+		
 		response.setContentType(MimeUtil.getContentType(type));
 		return type;
 	}

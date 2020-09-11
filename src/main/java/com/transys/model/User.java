@@ -184,6 +184,6 @@ public class User extends AbstractBaseModel implements Comparable, Auditable {
 	
 	@Transient
 	public String getFormattedLastLoginDate() {
-		return FormatUtil.formatAuditDate(lastLoginDate);
+		return FormatUtil.formatAuditDate(getLastLoginDate());
 	}
 }

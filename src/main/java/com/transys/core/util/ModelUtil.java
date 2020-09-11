@@ -1,6 +1,7 @@
 package com.transys.core.util;
 
 import java.text.SimpleDateFormat;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -77,6 +78,31 @@ public class ModelUtil {
 			deliveryAddressVOList.add(aDeliveryAddressVO);
 		}
 		return deliveryAddressVOList;
+	}
+	
+	public static List<CustomerVO> retrieveOrderCustomers(GenericDAO genericDAO) {
+		String customerQuery = "select distinct obj.customer.id, obj.customer.companyName from Order obj" 
+				+ " where obj.deleteFlag='1' order by obj.customer.companyName asc";
+		List<?> objectList = genericDAO.executeSimpleQuery(customerQuery);
+		List<CustomerVO> customerVOList = mapToCustomerVO(objectList);
+		return customerVOList;
+	}
+	
+	public static List<DeliveryAddressVO> retrieveOrderDeliveryAddresses(GenericDAO genericDAO, String customerId) {
+		String deliveryAddressQuery = "select distinct obj.deliveryAddress.id, obj.deliveryAddress.line1, obj.deliveryAddress.line2"
+				+ " from Order obj where obj.deleteFlag='1'";
+		if (!StringUtils.isEmpty(customerId)) {
+			deliveryAddressQuery += (" and obj.customer.id=" + customerId);
+		}
+		deliveryAddressQuery	+= " order by obj.deliveryAddress.line1 asc";
+		
+		List<?> objectList = genericDAO.executeSimpleQuery(deliveryAddressQuery);
+		List<DeliveryAddressVO> deliveryAddressVOList = mapToDeliveryAddressVO(objectList);
+		return deliveryAddressVOList;
+	}
+	
+	public static List<DeliveryAddressVO> retrieveOrderDeliveryAddresses(GenericDAO genericDAO) {
+		return retrieveOrderDeliveryAddresses(genericDAO, StringUtils.EMPTY);
 	}
 	
 	public static List<CustomerVO> mapToCustomerVO(List<?> objectList) {

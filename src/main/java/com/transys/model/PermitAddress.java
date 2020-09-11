@@ -7,9 +7,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import org.apache.commons.lang3.StringUtils;
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
+
+import com.transys.core.util.FormatUtil;
 
 @Entity
 @Table(name="permitAddress")
@@ -60,42 +60,19 @@ public class PermitAddress extends AbstractBaseModel {
 	}
 	
 	@Transient
-	//TODO: Move to utils?
 	public String getFullLine() {
-		StringBuffer fullLineBuff = new StringBuffer();
-		if (StringUtils.isNotEmpty(getLine1())) {
-			fullLineBuff.append(getLine1());
-		}
-		if (StringUtils.isNotEmpty(getLine2())) {
-			fullLineBuff.append(" " + getLine2());
-		}
-		
-		return fullLineBuff.toString();
+		return FormatUtil.formatAddress(getLine1(), getLine2());
 	}
 	
 	@Transient
-	//TODO: Move to utils?
 	public String getFullPermitAddress() {
-		StringBuffer addressBuff = new StringBuffer();
-		if (StringUtils.isNotEmpty(getLine1())) {
-			addressBuff.append(getLine1());
-		}
-		if (StringUtils.isNotEmpty(getLine2())) {
-			addressBuff.append(" " + getLine2());
-		}
-		if (StringUtils.isNotEmpty(getCity())) {
-			addressBuff.append(", " + getCity());
-		}
-		if (getState() != null) {
-			if (StringUtils.isNotEmpty(getState().getName())) {
-				addressBuff.append(" " + getState().getName());
-			}
-		}
-		if (StringUtils.isNotEmpty(getZipcode())) {
-			addressBuff.append(" " + getZipcode());
-		}
-		
-		return addressBuff.toString();
+		return getFullPermitAddress(", ");
+	}
+	
+	@Transient
+	public String getFullPermitAddress(String lineSeparator) {
+		return FormatUtil.formatAddress(getLine1(), getLine2(), getCity(), getState(), getZipcode(),
+				lineSeparator);
 	}
 	
 	public String getCity() {
@@ -120,5 +97,10 @@ public class PermitAddress extends AbstractBaseModel {
 
 	public void setZipcode(String zipcode) {
 		this.zipcode = zipcode;
+	}
+	
+	@Override
+	public String toString() {
+		return getFullPermitAddress();
 	}
 }

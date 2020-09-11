@@ -1884,15 +1884,10 @@ public class OrderController extends CRUDController<Order> {
 		//String deliveryAddresseQuery = "select distinct obj.line2 from DeliveryAddress obj where obj.deleteFlag='1' and obj.line2 != '' order by obj.line2 asc";
 		//model.addAttribute("deliveryAddressStreets", genericDAO.executeSimpleQuery(deliveryAddresseQuery));
 		
-		String customerQuery = "select distinct obj.customer.id, obj.customer.companyName from Order obj where obj.deleteFlag='1' order by obj.customer.companyName asc";
-		objectList = genericDAO.executeSimpleQuery(customerQuery);
-		List<CustomerVO> customerVOList = ModelUtil.mapToCustomerVO(objectList);
+		List<CustomerVO> customerVOList = ModelUtil.retrieveOrderCustomers(genericDAO);
 		model.addAttribute("customers", customerVOList);
 		
-		String deliveryAddressQuery = "select distinct obj.deliveryAddress.id, obj.deliveryAddress.line1, obj.deliveryAddress.line2"
-					+ " from Order obj where obj.deleteFlag='1' order by obj.deliveryAddress.line1 asc";
-		objectList = genericDAO.executeSimpleQuery(deliveryAddressQuery);
-		List<DeliveryAddressVO> deliveryAddressVOList = ModelUtil.mapToDeliveryAddressVO(objectList);
+		List<DeliveryAddressVO> deliveryAddressVOList = ModelUtil.retrieveOrderDeliveryAddresses(genericDAO);
 		model.addAttribute("deliveryAddresses", deliveryAddressVOList);
 	}
 	

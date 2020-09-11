@@ -12,7 +12,7 @@
 	</ul>
 	<div class="tab-content" style="background-color: white;">
 		<div id="manageOrders" class="tab-pane">
-			<div id="manageOrderLoadingImgDiv">Loading....<img src="${preLoaderImage}" id="manageOrderLoadingImage"/></div>
+			<div id="manageOrderLoadingImgDiv">${loadingMsg}</div>
 			<c:if test="${mode == 'MANAGE'}">
 				<%@include file="list.jsp"%>
 			</c:if>

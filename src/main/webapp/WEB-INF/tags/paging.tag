@@ -35,7 +35,7 @@
     	...
     </c:if>
     <c:if test="${!(searchCriteria.page==searchCriteria.pageCount-1)}">
-        <a href="<%=pagedLink%>?<%=(redirect == null?"":"redirect="+redirect+"&")%>p=${searchCriteria.page+1}">&nbsp;Next</a>
+        <a href="<%=pagedLink%>?<%=(redirect == null?"":"redirect="+redirect+"&")%>p=${searchCriteria.page+1}">&nbsp;Next1</a>
     </c:if>
     <c:if test="${page + 20 < searchCriteria.pageCount}">
         <a href="<%=pagedLink%>?<%=(redirect == null?"":"redirect="+redirect+"&")%>p=${searchCriteria.pageCount-1}">&nbsp;Last</a>

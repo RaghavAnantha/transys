@@ -107,7 +107,7 @@ public class OrdersRevenueReportController extends CRUDController<Order> {
 
 			List<Map<String,Object>> reportData = prepareReportData(request);
 
-			type = setRequestHeaders(response, type, "ordersRevenueReport");
+			type = setReportRequestHeaders(response, type, "ordersRevenueReport");
 			
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
 			Map<String, Object> params = new HashMap<String, Object>();

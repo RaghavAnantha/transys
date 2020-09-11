@@ -1360,7 +1360,7 @@ public class PermitController extends CRUDController<Permit> {
 			if (StringUtils.equals("xls", type)) {
 				type = "xlsx";
 			}
-			type = setRequestHeaders(response, type, "permitReport");
+			type = setReportRequestHeaders(response, type, "permitReport");
 			
 			Map<String, String> headers = new LinkedHashMap<>();
 			headers.put("Delivery Address", "deliveryAddress");
