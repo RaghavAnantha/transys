@@ -33,11 +33,12 @@
 
 <%@ page import="org.apache.commons.lang3.StringUtils"%>
 
+<%@page import="com.transys.core.util.ReportUtil"%>
+
 <%@ page import="com.transys.model.vo.BaseVO"%>
 
 <%
-	JasperPrint jasperPrint = (JasperPrint)request.getSession().getAttribute(ImageServlet.DEFAULT_JASPER_PRINT_SESSION_ATTRIBUTE);
-	
+	JasperPrint jasperPrint = ReportUtil.getJasperPrint(request);
 	HtmlExporter htmlExporter = new HtmlExporter();
 	htmlExporter.setExporterInput(new SimpleExporterInput(jasperPrint));
 	

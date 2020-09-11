@@ -1,8 +1,5 @@
 package com.transys.controller;
 
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
-
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -35,9 +32,10 @@ import org.springframework.web.multipart.support.ByteArrayMultipartFileEditor;
 //import com.google.gson.Gson;
 
 import com.transys.core.dao.GenericDAO;
-import com.transys.core.report.WaterMarkRenderer;
+
 import com.transys.core.util.FormatUtil;
 import com.transys.core.util.MimeUtil;
+import com.transys.core.util.ReportUtil;
 
 import com.transys.model.Permit;
 //import com.transys.model.Language;
@@ -45,7 +43,7 @@ import com.transys.model.SearchCriteria;
 //import com.transys.model.StaticData;
 import com.transys.model.User;
 
-import net.sf.jasperreports.j2ee.servlets.ImageServlet;
+import net.sf.jasperreports.engine.JasperPrint;
 
 //import com.transys.service.AuditService;
 
@@ -287,16 +285,14 @@ public class BaseController {
 	}
 	
 	protected String removeJasperPrint(HttpServletRequest request) {
-		request.getSession().removeAttribute(ImageServlet.DEFAULT_JASPER_PRINT_SESSION_ATTRIBUTE);
-		System.out.println(getClass().getName() + "->Removed Jasper Print");
-		return "Success";
+		return ReportUtil.removeJasperPrint(request, getClass().getName());
+	}
+	
+	protected void addJasperPrint(HttpServletRequest request, JasperPrint jp) {
+		ReportUtil.addJasperPrint(request, jp, getClass().getName());
 	}
 	
 	protected void addWaterMarkRendererReportParam(Map<String, Object> params, boolean display, String displayText) {
-		WaterMarkRenderer waterMarkRenderer = new WaterMarkRenderer(display);
-		waterMarkRenderer.setPageOrientaion(WaterMarkRenderer.PAGE_ORIENTATION_LANDSCAPE);
-		waterMarkRenderer.setDisplayText(displayText);
-		waterMarkRenderer.setDebug(false);
-		params.put("watermark", waterMarkRenderer); 
+		ReportUtil.addWaterMarkRendererReportParam(params, display, displayText);
 	}
 }

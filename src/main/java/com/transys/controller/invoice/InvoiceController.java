@@ -921,7 +921,7 @@ public class InvoiceController extends BaseController {
 				setErrorMsg(request, response, "Error occured while processing invoice preview");
 			} else {
 				//request.setAttribute("japserPrint", jasperPrint);
-				request.getSession().setAttribute(ImageServlet.DEFAULT_JASPER_PRINT_SESSION_ATTRIBUTE, jasperPrint);
+				addJasperPrint(request, jasperPrint);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

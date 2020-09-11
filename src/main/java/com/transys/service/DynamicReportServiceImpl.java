@@ -96,6 +96,7 @@ import com.transys.core.tags.IColumnTag;
 import com.transys.core.tags.StaticDataColumn;
 import com.transys.core.tags.StaticDataUtil;
 import com.transys.core.util.LabelUtil;
+import com.transys.core.util.ReportUtil;
 import com.transys.core.util.ServletUtil;
 
 import com.transys.model.BaseModel;
@@ -110,8 +111,6 @@ public class DynamicReportServiceImpl implements DynamicReportService {
 	
 	public static String SUBREPORT_DIR_KEY = "SUBREPORT_DIR";
 	
-	private static String JASPER_PRINT_SESSION_ATTRIBUTE_KEY = ImageServlet.DEFAULT_JASPER_PRINT_SESSION_ATTRIBUTE;
-
 	@Autowired
 	private GenericDAO genericDAO;
 	
@@ -1167,7 +1166,7 @@ public class DynamicReportServiceImpl implements DynamicReportService {
 	
 	private void configureForHtml(HtmlExporter htmlExporter, ByteArrayOutputStream out, JasperPrint jp,
 			HttpServletRequest request, String footer) {
-		request.getSession().setAttribute(JASPER_PRINT_SESSION_ATTRIBUTE_KEY, jp);
+		ReportUtil.addJasperPrint(request, jp, getClass().getName());
 		htmlExporter.setExporterInput(new SimpleExporterInput(jp));
 		
 		SimpleHtmlExporterOutput output = new SimpleHtmlExporterOutput(out);
@@ -1203,7 +1202,7 @@ public class DynamicReportServiceImpl implements DynamicReportService {
 		
 		htmlExporter.exportReport();
 		
-		request.getSession().removeAttribute(JASPER_PRINT_SESSION_ATTRIBUTE_KEY);
+		ReportUtil.removeJasperPrint(request, getClass().getName());
 		return out;
 	}
 
@@ -1217,7 +1216,7 @@ public class DynamicReportServiceImpl implements DynamicReportService {
 				
 		htmlExporter.exportReport();
 		
-		request.getSession().removeAttribute(JASPER_PRINT_SESSION_ATTRIBUTE_KEY);
+		ReportUtil.removeJasperPrint(request, getClass().getName());
 		return out;
 	}
 

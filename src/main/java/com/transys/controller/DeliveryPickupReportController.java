@@ -168,7 +168,7 @@ public class DeliveryPickupReportController extends BaseController {
 		int originalPage = criteria.getPage();
 		int originalPageSize = criteria.getPageSize();
 		criteria.setPage(0);
-		criteria.setPageSize(750);
+		criteria.setPageSize(2500);
 		
 		DeliveryPickupReportVO input = (DeliveryPickupReportVO)request.getSession().getAttribute("input");
 		
