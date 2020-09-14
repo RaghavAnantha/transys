@@ -257,8 +257,7 @@ public class BaseController {
 		criteria.setSearchMap(searchMap);
 	}
 
-	protected void setErrorMsg(HttpServletRequest request, HttpServletResponse response, String msg) {
-		response.setContentType(MimeUtil.getContentType("html"));
+	protected void setErrorMsg(HttpServletRequest request, String msg) {
 		request.getSession().setAttribute("error", msg);
 	}
 	

@@ -112,7 +112,7 @@ public class InvoiceController extends BaseController {
 		
 		String returnUrl = getUrlContext() + "/invoice";
 		
-		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
+		SearchCriteria criteria = (SearchCriteria)request.getSession().getAttribute("searchCriteria");
 		processSaveInvoiceReferrer(request, model, criteria, input);
 		
 		validateSearch(input, bindingResult);
@@ -195,7 +195,7 @@ public class InvoiceController extends BaseController {
 		
 		SearchCriteria searchCriteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		searchCriteria.setPage(0);
-		searchCriteria.setPageSize(100);
+		searchCriteria.setPageSize(150);
 		
 		String query = "select obj.id from OrderInvoiceHeader obj where obj.deleteFlag=1 order by obj.id asc";
 		/*List<OrderInvoiceHeader> orderInvoiceHeaderList = genericDAO.executeSimpleQuery(query);
@@ -831,7 +831,7 @@ public class InvoiceController extends BaseController {
 			//setupPreviewInvoice(request, model);
 			//input.setHistoryCount(-2);
 			
-			setErrorMsg(request, response, "Please select at least one order");
+			setErrorMsg(request, "Please select at least one order");
 			return "redirect:/" + getUrlContext() + "/createInvoiceMain.do";
 			//return getUrlContext() + "/previewInvoice";
 		}
@@ -909,8 +909,7 @@ public class InvoiceController extends BaseController {
 		
 		addWaterMarkRendererReportParam(params, true, "Preview");
 		
-		String type = "html";
-		response.setContentType(MimeUtil.getContentType(type));
+		setReportRequestHeaders(response, "html", ORDER_INVOICE_MASTER);
 		
 		try {
 			/*JasperPrint jasperPrint = dynamicReportService.getJasperPrintFromFile(reportName,
@@ -918,14 +917,14 @@ public class InvoiceController extends BaseController {
 			JasperPrint jasperPrint = dynamicReportService.getJasperPrintFromFile(ORDER_INVOICE_MASTER, 
 					ORDER_INVOICE_SUB, invoiceVOList, params, request);
 			if (jasperPrint == null) {
-				setErrorMsg(request, response, "Error occured while processing invoice preview");
+				setErrorMsg(request, "Error occured while processing invoice preview");
 			} else {
 				//request.setAttribute("japserPrint", jasperPrint);
 				addJasperPrint(request, jasperPrint);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			setErrorMsg(request, response, e.getMessage());
+			setErrorMsg(request, e.getMessage());
 		}
 		
 		return getUrlContext() + "/previewInvoice";
@@ -936,22 +935,17 @@ public class InvoiceController extends BaseController {
 			HttpServletResponse response,
 			@RequestParam(required = true, value = "type") String type) {
 		//setupPreviewInvoice(request, model);
-		
-		InvoiceVO input = (InvoiceVO) request.getSession().getAttribute("input");
-		Map<String, Object> datas = generateInvoiceData(request, input);
-		
-		List<InvoiceVO> invoiceVOList = (List<InvoiceVO>) datas.get("data");
-		Map<String, Object> params = (Map<String, Object>) datas.get("params");
-		
-		addWaterMarkRendererReportParam(params, true, "Preview");
-		
-		if (!StringUtils.equals("html", type) && !StringUtils.equals("print", type)) {
-			response.setHeader("Content-Disposition", "attachment;filename="+ORDER_INVOICE_MASTER+"." + type);
-		}
-		response.setContentType(MimeUtil.getContentType(type));
+		type = setReportRequestHeaders(response, type, ORDER_INVOICE_MASTER);
 		
 		ByteArrayOutputStream out = null;
 		try {
+			InvoiceVO input = (InvoiceVO) request.getSession().getAttribute("input");
+			Map<String, Object> datas = generateInvoiceData(request, input);
+			
+			List<InvoiceVO> invoiceVOList = (List<InvoiceVO>) datas.get("data");
+			Map<String, Object> params = (Map<String, Object>) datas.get("params");
+			addWaterMarkRendererReportParam(params, true, "Preview");
+			
 			/*out = dynamicReportService.generateStaticReport(reportName,
 						invoiceVOList, params, type, request);*/
 			out = dynamicReportService.generateStaticMasterSubReport(ORDER_INVOICE_MASTER, ORDER_INVOICE_SUB,
@@ -964,7 +958,7 @@ public class InvoiceController extends BaseController {
 			log.warn("Unable to generate static report:" + e);
 			
 			setupPreviewInvoice(request, model);
-			setErrorMsg(request, response, e.getMessage());
+			setErrorMsg(request, e.getMessage());
 			return getUrlContext() + "/previewInvoice";
 		} finally {
 			if (out != null) {
@@ -982,21 +976,18 @@ public class InvoiceController extends BaseController {
 			@RequestParam("type") String type,
 			@RequestParam("dataQualifier") String dataQualifier,
 			Object objectDAO, Class clazz) {
-		response.setContentType(MimeUtil.getContentType(type));
-		
 		String reportName = "ordersBalanceDueReport";
-		if (!StringUtils.equals("html", type) && !StringUtils.equals("print", type)) {
-			response.setHeader("Content-Disposition", "attachment;filename=" + reportName + "." + type);
-		}
+		type = setReportRequestHeaders(response, type, reportName);
 		
 		SearchCriteria searchCriteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		InvoiceVO input = (InvoiceVO) request.getSession().getAttribute("input");
-		List<Order> orderList = performCreateInvoiceSearch(searchCriteria, input);
-		Map<String, Object> params = new HashMap<String, Object>();
 		
+		Map<String, Object> params = new HashMap<String, Object>();
 		List columnPropertyList = (List) request.getSession().getAttribute(dataQualifier + "ColumnPropertyList");
 		ByteArrayOutputStream out = null;
 		try {
+			List<Order> orderList = performCreateInvoiceSearch(searchCriteria, input);
+			
 			out = dynamicReportService.exportReport(reportName, type, Order.class, orderList,
 						columnPropertyList, request);
 			/*out = dynamicReportService.generateStaticReport(reportName,
@@ -1009,7 +1000,7 @@ public class InvoiceController extends BaseController {
 			log.warn("Unable to generate report:" + e);
 			
 			setupCreateInvoiceList(model, request);
-			setErrorMsg(request, response, e.getMessage());
+			setErrorMsg(request, e.getMessage());
 			return getUrlContext() + "/invoice";
 		} finally {
 			if (out != null) {
@@ -1028,20 +1019,17 @@ public class InvoiceController extends BaseController {
 			@RequestParam("type") String type,
 			@RequestParam("dataQualifier") String dataQualifier,
 			Object objectDAO, Class clazz) {
-		response.setContentType(MimeUtil.getContentType(type));
-		
 		String reportName = "invoiceReport";
-		if (!StringUtils.equals("html", type) && !StringUtils.equals("print", type)) {
-			response.setHeader("Content-Disposition", "attachment;filename=" + reportName + "." + type);
-		}
+		type = setReportRequestHeaders(response, type, reportName);
 		
 		SearchCriteria searchCriteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
-		List<OrderInvoiceHeader> orderInvoiceHeaderList = performManageInvoiceSearch(searchCriteria);
 		//Map<String, Object> params = new HashMap<String, Object>();
 		
 		List columnPropertyList = (List) request.getSession().getAttribute(dataQualifier + "ColumnPropertyList");
 		ByteArrayOutputStream out = null;
 		try {
+			List<OrderInvoiceHeader> orderInvoiceHeaderList = performManageInvoiceSearch(searchCriteria);
+			
 			out = dynamicReportService.exportReport(reportName, type, OrderInvoiceHeader.class, orderInvoiceHeaderList,
 						columnPropertyList, request);
 			/*out = dynamicReportService.generateStaticReport(reportName,
@@ -1054,7 +1042,7 @@ public class InvoiceController extends BaseController {
 			log.warn("Unable to generate report:" + e);
 			
 			setupManageInvoiceList(model, request);
-			setErrorMsg(request, response, e.getMessage());
+			setErrorMsg(request, e.getMessage());
 			return getUrlContext() + "/manageInvoiceList";
 		} finally {
 			if (out != null) {
@@ -1073,19 +1061,16 @@ public class InvoiceController extends BaseController {
 			HttpServletResponse response,
 			@RequestParam(required = true, value = "id") Long invoiceId,
 			@RequestParam(required = true, value = "type") String type) {
+		type = setReportRequestHeaders(response, type, ORDER_INVOICE_MASTER);
+		
 		setupManageInvoiceList(model, request);
-		
-		Map<String, Object> datas = generateInvoiceData(request, invoiceId);
-		List<InvoiceVO> invoiceVOList = (List<InvoiceVO>) datas.get("data");
-		Map<String, Object> params = (Map<String, Object>) datas.get("params");
-		
-		if (!StringUtils.equals("html", type) && !StringUtils.equals("print", type)) {
-			response.setHeader("Content-Disposition", "attachment;filename="+ORDER_INVOICE_MASTER+"." + type);
-		}
-		response.setContentType(MimeUtil.getContentType(type));
 		
 		ByteArrayOutputStream out = null;
 		try {
+			Map<String, Object> datas = generateInvoiceData(request, invoiceId);
+			List<InvoiceVO> invoiceVOList = (List<InvoiceVO>) datas.get("data");
+			Map<String, Object> params = (Map<String, Object>) datas.get("params");
+			
 			/*out = dynamicReportService.generateStaticReport(reportName,
 						invoiceVOList, params, type, request);*/
 			out = dynamicReportService.generateStaticMasterSubReport(ORDER_INVOICE_MASTER, ORDER_INVOICE_SUB,
@@ -1098,7 +1083,7 @@ public class InvoiceController extends BaseController {
 			log.warn("Unable to generate static report:" + e);
 			
 			setupManageInvoiceList(model, request);
-			setErrorMsg(request, response, e.getMessage());
+			setErrorMsg(request, e.getMessage());
 			return getUrlContext() + "/manageInvoiceList";
 		} finally {
 			if (out != null) {

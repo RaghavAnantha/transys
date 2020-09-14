@@ -46,6 +46,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.transys.controller.editor.AbstractModelEditor;
 
 import com.transys.core.report.generator.ExcelReportGenerator;
+import com.transys.core.util.MimeUtil;
 import com.transys.core.util.ModelUtil;
 import com.transys.model.AbstractBaseModel;
 import com.transys.model.Customer;
@@ -69,6 +70,7 @@ import com.transys.model.State;
 import com.transys.model.User;
 import com.transys.model.vo.CustomerVO;
 import com.transys.model.vo.DeliveryAddressVO;
+import com.transys.model.vo.invoice.InvoiceVO;
 
 @SuppressWarnings("unchecked")
 @Controller
@@ -113,6 +115,9 @@ public class PermitController extends CRUDController<Permit> {
 	public void setupList(ModelMap model, HttpServletRequest request) {
 		populateSearchCriteria(request, request.getParameterMap());
 		setupCommon(model, request);
+		
+		model.addAttribute("activeTab", "managePermits");
+		model.addAttribute("mode", "MANAGE");
 		
 		//model.addAttribute("order", genericDAO.executeSimpleQuery("select obj.id from Order obj where obj.deleteFlag='1' order by obj.id asc"));
 		
@@ -184,24 +189,16 @@ public class PermitController extends CRUDController<Permit> {
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		criteria.setPageSize(25);
 		//TODO: Fix me 
-		criteria.getSearchMap().remove("_csrf");
+		//criteria.getSearchMap().remove("_csrf");
 		
 		if (!injectOrderSearchCriteria(criteria)) {
 			// search yielded no results
 			model.addAttribute("list", new ArrayList<Permit>());
-			
-			model.addAttribute("activeTab", "managePermits");
-			model.addAttribute("mode", "MANAGE");
-			
 			return urlContext + "/permit";
 		}
 		
 		List<Permit> listOfPermits = performSearch(criteria);
-		
 		model.addAttribute("list", listOfPermits);
-		
-		model.addAttribute("activeTab", "managePermits");
-		model.addAttribute("mode", "MANAGE");
 		
 		cleanUp(request);
 		
@@ -1341,15 +1338,61 @@ public class PermitController extends CRUDController<Permit> {
 	}
 	
 	@Override
+	@RequestMapping(method = { RequestMethod.GET, RequestMethod.POST }, value = "/export2.do")
+	public String export2(ModelMap model, HttpServletRequest request, HttpServletResponse response,
+			@RequestParam("type") String type,
+			@RequestParam("dataQualifier") String dataQualifier,
+			Object objectDAO, Class clazz) {
+		String reportName = "permitReport";
+		type = setReportRequestHeaders(response, type, reportName);
+		
+		SearchCriteria searchCriteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
+		int origPage = searchCriteria.getPage();
+		int origPageSize = searchCriteria.getPageSize();
+		searchCriteria.setPage(0);
+		searchCriteria.setPageSize(1000);
+		
+		Map<String, Object> params = new HashMap<String, Object>();
+		ByteArrayOutputStream out = null;
+		try {
+			List<Permit> permitList =  retrieveReportData(searchCriteria);
+			
+			out = dynamicReportService.generateStaticReport(reportName, permitList, params, type, request);
+			out.writeTo(response.getOutputStream());
+			
+			return null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.warn("Unable to generate report:" + e);
+			
+			setupList(model, request);
+			setErrorMsg(request, e.getMessage());
+			return getUrlContext() + "/permit";
+		} finally {
+			searchCriteria.setPage(origPage);
+			searchCriteria.setPageSize(origPageSize);
+			if (out != null) {
+				try {
+					out.close();
+					out = null;
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+	
+	/*
+	@Override
 	@RequestMapping(method = { RequestMethod.GET, RequestMethod.POST }, value = "/export.do")
-	public void export(ModelMap model, HttpServletRequest request,
+	public void export1(ModelMap model, HttpServletRequest request,
 			HttpServletResponse response, @RequestParam("type") String type,
 			@RequestParam("dataQualifier") String dataQualifier,
 			Object objectDAO, Class clazz) {
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		
 		criteria.getSearchMap().remove("_csrf");
-		criteria.setPageSize(100000);
+		criteria.setPageSize(1000);
 		int page = criteria.getPage();
 		criteria.setPage(0);
 		
@@ -1365,9 +1408,9 @@ public class PermitController extends CRUDController<Permit> {
 			Map<String, String> headers = new LinkedHashMap<>();
 			headers.put("Delivery Address", "deliveryAddress");
 			headers.put("Permit Address", "getFullPermitAddress1");
-			/*headers.put("Delivery Address", "deliveryAddress.fullLine");
-			headers.put("Permit Address1", "fullLinePermitAddress1");
-			headers.put("Permit Address2", "fullLinePermitAddress2");*/
+			//headers.put("Delivery Address", "deliveryAddress.fullLine");
+			//headers.put("Permit Address1", "fullLinePermitAddress1");
+			//headers.put("Permit Address2", "fullLinePermitAddress2");
 			headers.put("Location Type", "locationType");
 			headers.put("Permit Type", "permitType");
 			headers.put("Permit Class", "permitClass");
@@ -1402,7 +1445,7 @@ public class PermitController extends CRUDController<Permit> {
 				}
 			}
 		}
-	}
+	}*/
 	
 	private List<Permit> retrieveReportData(SearchCriteria criteria) {
 		if (!injectOrderSearchCriteria(criteria)) {

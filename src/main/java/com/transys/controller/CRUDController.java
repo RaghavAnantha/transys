@@ -240,6 +240,14 @@ public abstract class CRUDController<T extends BaseModel> extends BaseController
 		resetEffectiveDateInSearch(request);
 		resetEmptyPermitNumberInSearch(request);
 	}
+	
+	@RequestMapping(method = { RequestMethod.GET, RequestMethod.POST }, value = "/export2.do")
+	public String export2(ModelMap model, HttpServletRequest request, HttpServletResponse response,
+			@RequestParam("type") String type,
+			@RequestParam("dataQualifier") String dataQualifier,
+			Object objectDAO, Class clazz) {
+		return StringUtils.EMPTY;
+	}
 
 	@RequestMapping(method = { RequestMethod.GET, RequestMethod.POST }, value = "/export.do")
 	public void export(ModelMap model, HttpServletRequest request,
