@@ -1366,6 +1366,7 @@ public class PermitController extends CRUDController<Permit> {
 			log.warn("Unable to generate report:" + e);
 			
 			setupList(model, request);
+			response.setContentType(MimeUtil.getContentType("html"));
 			setErrorMsg(request, e.getMessage());
 			return getUrlContext() + "/permit";
 		} finally {
