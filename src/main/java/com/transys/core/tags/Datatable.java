@@ -12,6 +12,7 @@ import javax.servlet.jsp.tagext.BodyTagSupport;
 
 import org.apache.commons.beanutils.NestedNullException;
 import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
@@ -68,6 +69,8 @@ public final class Datatable extends BodyTagSupport {
 	private int additionalColumn=0;
 	
 	private String dataQualifier;
+	
+	private boolean useExport2 = false;
 	
 	public Datatable() {
 		super();
@@ -598,7 +601,14 @@ public final class Datatable extends BodyTagSupport {
 	public void setCssClass(String cssClass) {
 		this.cssClass = cssClass;
 	}
+	
+	public boolean isUseExport2() {
+		return useExport2;
+	}
 
+	public void setUseExport2(boolean useExport2) {
+		this.useExport2 = useExport2;
+	}
 
 	/*------------------------------------------------------------------------------
 	 * Overridden Methods
@@ -986,7 +996,11 @@ public final class Datatable extends BodyTagSupport {
 			if (displayPrint) {		
 				objOut.write("<a href=\"print.do\" onClick=\"smallPopup(this.href);return false;\"><img src=\""+pageContext.getAttribute("resourceCtx")+"/images/print.png\" border=\"0\" class=\"toolbarButton\"/></a>&nbsp;");
 			}
-			String url = "/"+urlContext+"/export.do?dataQualifier=" + getDataQualifier();
+			String exportAction = "export.do";
+			if (isUseExport2()) {
+				exportAction = "export2.do";
+			}
+			String url = "/"+urlContext+"/"+exportAction+"?dataQualifier=" + getDataQualifier();
 			//if (authenticationService.hasUserPermission(user, url)) {
 				if (exportPdf) {
 					//objOut.write("<a href=\""+pageContext.getAttribute("ctx")+url+"&type=pdf\"><img src=\""+pageContext.getAttribute("resourceCtx")+"/images/pdf.png\" border=\"0\" style=\"padding-left: 36px; \" class=\"toolbarButton\"/></a>&nbsp;");
