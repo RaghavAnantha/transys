@@ -34,6 +34,10 @@ function processCancel(url, permitId) {
 <br/>
 <h5 style="margin-top: -15px; !important">Manage Permits</h5>
 <form:form action="list.do" method="get" name="permitSearchForm" id="permitSearchForm">
+	<jsp:include page="/common/messages.jsp">
+		<jsp:param name="msgCtx" value="managePermit" />
+		<jsp:param name="errorCtx" value="managePermit" />
+	</jsp:include>
 	<table id="form-table" class="table">
 		<tr>
 			<td class="form-left"><transys:label code="Delivery Address" /></td>

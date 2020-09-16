@@ -123,6 +123,13 @@ public class BaseController {
 			request.getSession().setAttribute("left", "left");
 		}
 	}*/
+	
+	protected void clearSearchCriteria(HttpServletRequest request) {
+		SearchCriteria searchCriteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
+		if (searchCriteria != null && searchCriteria.getSearchMap() != null) {
+			searchCriteria.getSearchMap().clear();
+		}
+	}
 
 	protected void populateSearchCriteria(HttpServletRequest request, Map<String, String[]> params) {
 		populateSearchCriteria(request, params, "searchCriteria");
@@ -257,7 +264,8 @@ public class BaseController {
 		criteria.setSearchMap(searchMap);
 	}
 
-	protected void setErrorMsg(HttpServletRequest request, String msg) {
+	protected void setErrorMsg(HttpServletRequest request, HttpServletResponse response, String msg) {
+		//response.setContentType(MimeUtil.getContentType("html"));
 		request.getSession().setAttribute("error", msg);
 	}
 	

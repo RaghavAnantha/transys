@@ -177,6 +177,7 @@ function validateAllDates() {
 	<form:hidden path="id" id="id" />
 	<jsp:include page="/common/messages.jsp">
 		<jsp:param name="msgCtx" value="managePermit" />
+		<jsp:param name="errorCtx" value="managePermit" />
 	</jsp:include>
 	<table id="form-table" class="table">
 		<tr><td colspan=10></td></tr>

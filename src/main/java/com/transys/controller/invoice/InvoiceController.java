@@ -82,10 +82,7 @@ public class InvoiceController extends BaseController {
 	
 	@RequestMapping(method = { RequestMethod.GET, RequestMethod.POST }, value = "/createInvoiceMain.do")
 	public String createInvoiceMain(ModelMap model, HttpServletRequest request) {
-		SearchCriteria searchCriteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
-		if (searchCriteria != null && searchCriteria.getSearchMap() != null) {
-			searchCriteria.getSearchMap().clear();
-		}
+		clearSearchCriteria(request);
 		
 		setupCreateInvoiceList(model, request);
 		
@@ -94,10 +91,7 @@ public class InvoiceController extends BaseController {
 	
 	@RequestMapping(method = { RequestMethod.GET, RequestMethod.POST }, value = "/manageInvoiceMain.do")
 	public String manageInvoiceMain(ModelMap model, HttpServletRequest request) {
-		/*SearchCriteria searchCriteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
-		if (searchCriteria != null && searchCriteria.getSearchMap() != null) {
-			searchCriteria.getSearchMap().clear();
-		}*/
+		//clearSearchCriteria(request);
 		
 		setupManageInvoiceList(model, request);
 		
@@ -282,14 +276,15 @@ public class InvoiceController extends BaseController {
 	}
 	
 	private List<OrderInvoiceHeader> performManageInvoiceSearch(SearchCriteria criteria) {
-		String invoiceId = (String) criteria.getSearchMap().get("manageInvoiceInvoiceNo");
-		String customerId = (String) criteria.getSearchMap().get("manageInvoiceCustomerId");
-		String orderId = (String) criteria.getSearchMap().get("manageInvoiceOrderId");
-		String deliveryAddress = (String) criteria.getSearchMap().get("manageInvoiceDeliveryAddress");
-		String orderDateFrom = (String) criteria.getSearchMap().get("manageInvoiceOrderDateFrom");
-		String orderDateTo = (String) criteria.getSearchMap().get("manageInvoiceOrderDateTo");
-		String invoiceDateFrom = (String) criteria.getSearchMap().get("manageInvoiceInvoiceDateFrom");
-		String invoiceDateTo = (String) criteria.getSearchMap().get("manageInvoiceInvoiceDateTo");
+		Map<String, Object> criteriaMap = criteria.getSearchMap();
+		String invoiceId = (String)criteriaMap.get("manageInvoiceInvoiceNo");
+		String customerId = (String)criteriaMap.get("manageInvoiceCustomerId");
+		String orderId = (String)criteriaMap.get("manageInvoiceOrderId");
+		String deliveryAddress = (String)criteriaMap.get("manageInvoiceDeliveryAddress");
+		String orderDateFrom = (String)criteriaMap.get("manageInvoiceOrderDateFrom");
+		String orderDateTo = (String)criteriaMap.get("manageInvoiceOrderDateTo");
+		String invoiceDateFrom = (String)criteriaMap.get("manageInvoiceInvoiceDateFrom");
+		String invoiceDateTo = (String)criteriaMap.get("manageInvoiceInvoiceDateTo");
 		
 		StringBuffer query = new StringBuffer("select distinct obj from OrderInvoiceHeader obj join obj.orderInvoiceDetails oidet where 1=1");
 		StringBuffer countQuery = new StringBuffer("select count(distinct obj.id) from OrderInvoiceHeader obj join obj.orderInvoiceDetails oidet where 1=1");
@@ -831,7 +826,7 @@ public class InvoiceController extends BaseController {
 			//setupPreviewInvoice(request, model);
 			//input.setHistoryCount(-2);
 			
-			setErrorMsg(request, "Please select at least one order");
+			setErrorMsg(request, response, "Please select at least one order");
 			return "redirect:/" + getUrlContext() + "/createInvoiceMain.do";
 			//return getUrlContext() + "/previewInvoice";
 		}
@@ -887,7 +882,7 @@ public class InvoiceController extends BaseController {
 		return genericDAO.executeUpdate(orderUpdateQuery);
 	}
 	
-	@RequestMapping(method = {RequestMethod.POST }, value = "/previewInvoice.do")
+	@RequestMapping(method = {RequestMethod.POST}, value = "/previewInvoice.do")
 	public String previewInvoice(ModelMap model, HttpServletRequest request, HttpServletResponse response,
 					@RequestParam("id") String[] ids,
 					@RequestParam("invoiceDate") Date invoiceDate) {
@@ -909,7 +904,7 @@ public class InvoiceController extends BaseController {
 		
 		addWaterMarkRendererReportParam(params, true, "Preview");
 		
-		setReportRequestHeaders(response, "html", ORDER_INVOICE_MASTER);
+		//setReportRequestHeaders(response, "html", ORDER_INVOICE_MASTER);
 		
 		try {
 			/*JasperPrint jasperPrint = dynamicReportService.getJasperPrintFromFile(reportName,
@@ -917,14 +912,14 @@ public class InvoiceController extends BaseController {
 			JasperPrint jasperPrint = dynamicReportService.getJasperPrintFromFile(ORDER_INVOICE_MASTER, 
 					ORDER_INVOICE_SUB, invoiceVOList, params, request);
 			if (jasperPrint == null) {
-				setErrorMsg(request, "Error occured while processing invoice preview");
+				setErrorMsg(request, response, "Error occured while processing invoice preview");
 			} else {
 				//request.setAttribute("japserPrint", jasperPrint);
 				addJasperPrint(request, jasperPrint);
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			setErrorMsg(request, e.getMessage());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			setErrorMsg(request, response, t.getMessage());
 		}
 		
 		return getUrlContext() + "/previewInvoice";
@@ -934,12 +929,11 @@ public class InvoiceController extends BaseController {
 	public String previewInvoiceExport(ModelMap model, HttpServletRequest request,
 			HttpServletResponse response,
 			@RequestParam(required = true, value = "type") String type) {
-		//setupPreviewInvoice(request, model);
 		type = setReportRequestHeaders(response, type, ORDER_INVOICE_MASTER);
 		
 		ByteArrayOutputStream out = null;
 		try {
-			InvoiceVO input = (InvoiceVO) request.getSession().getAttribute("input");
+			InvoiceVO input = (InvoiceVO)request.getSession().getAttribute("input");
 			Map<String, Object> datas = generateInvoiceData(request, input);
 			
 			List<InvoiceVO> invoiceVOList = (List<InvoiceVO>) datas.get("data");
@@ -953,13 +947,12 @@ public class InvoiceController extends BaseController {
 			out.writeTo(response.getOutputStream());
 			
 			return null;
-		} catch (Exception e) {
-			e.printStackTrace();
-			log.warn("Unable to generate static report:" + e);
+		} catch (Throwable t) {
+			t.printStackTrace();
+			log.warn("Unable to generate static report: " + t);
 			
-			setupPreviewInvoice(request, model);
-			setErrorMsg(request, e.getMessage());
-			return getUrlContext() + "/previewInvoice";
+			setErrorMsg(request, response, "Exception occured while exporting invoice preview: " + t);
+			return "redirect:/" + getUrlContext() + "/previewInvoice.do";
 		} finally {
 			if (out != null) {
 				try {
@@ -982,7 +975,7 @@ public class InvoiceController extends BaseController {
 		SearchCriteria searchCriteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		InvoiceVO input = (InvoiceVO) request.getSession().getAttribute("input");
 		
-		Map<String, Object> params = new HashMap<String, Object>();
+		//Map<String, Object> params = new HashMap<String, Object>();
 		List columnPropertyList = (List) request.getSession().getAttribute(dataQualifier + "ColumnPropertyList");
 		ByteArrayOutputStream out = null;
 		try {
@@ -995,13 +988,12 @@ public class InvoiceController extends BaseController {
 			out.writeTo(response.getOutputStream());
 			
 			return null;
-		} catch (Exception e) {
-			e.printStackTrace();
-			log.warn("Unable to generate report:" + e);
+		} catch (Throwable t) {
+			t.printStackTrace();
+			log.warn("Unable to generate report: " + t);
 			
-			setupCreateInvoiceList(model, request);
-			setErrorMsg(request, e.getMessage());
-			return getUrlContext() + "/invoice";
+			setErrorMsg(request, response, "Exception occured while generating create invoice report: " + t);
+			return "redirect:/" + getUrlContext() + "/createInvoiceMain.do";
 		} finally {
 			if (out != null) {
 				try {
@@ -1037,13 +1029,12 @@ public class InvoiceController extends BaseController {
 			out.writeTo(response.getOutputStream());
 			
 			return null;
-		} catch (Exception e) {
-			e.printStackTrace();
-			log.warn("Unable to generate report:" + e);
+		} catch (Throwable t) {
+			t.printStackTrace();
+			log.warn("Unable to generate report: " + t);
 			
-			setupManageInvoiceList(model, request);
-			setErrorMsg(request, e.getMessage());
-			return getUrlContext() + "/manageInvoiceList";
+			setErrorMsg(request, response, "Exception occured while generating manage invoice report: " + t);
+			return "redirect:/" + getUrlContext() + "/manageInvoiceMain.do";
 		} finally {
 			if (out != null) {
 				try {
@@ -1063,8 +1054,6 @@ public class InvoiceController extends BaseController {
 			@RequestParam(required = true, value = "type") String type) {
 		type = setReportRequestHeaders(response, type, ORDER_INVOICE_MASTER);
 		
-		setupManageInvoiceList(model, request);
-		
 		ByteArrayOutputStream out = null;
 		try {
 			Map<String, Object> datas = generateInvoiceData(request, invoiceId);
@@ -1078,13 +1067,12 @@ public class InvoiceController extends BaseController {
 			out.writeTo(response.getOutputStream());
 			
 			return null;
-		} catch (Exception e) {
-			e.printStackTrace();
-			log.warn("Unable to generate static report:" + e);
+		} catch (Throwable t) {
+			t.printStackTrace();
+			log.warn("Unable to generate static report: " + t);
 			
-			setupManageInvoiceList(model, request);
-			setErrorMsg(request, e.getMessage());
-			return getUrlContext() + "/manageInvoiceList";
+			setErrorMsg(request, response, "Exception occured while generating invoice: " + t);
+			return "redirect:/" + getUrlContext() + "/manageInvoiceMain.do";
 		} finally {
 			if (out != null) {
 				try {

@@ -41,4 +41,9 @@ public class ReportUtil {
 		JasperPrint jasperPrint = (JasperPrint)request.getSession().getAttribute(JASPER_PRINT_SESSION_ATTRIBUTE_KEY);
 		return jasperPrint;
 	}
+	
+	public static boolean hasJasperPrint(HttpServletRequest request) {
+		JasperPrint jasperPrint = (JasperPrint)request.getSession().getAttribute(JASPER_PRINT_SESSION_ATTRIBUTE_KEY);
+		return (jasperPrint != null ? true : false);
+	}
 }

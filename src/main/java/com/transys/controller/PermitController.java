@@ -97,7 +97,7 @@ public class PermitController extends CRUDController<Permit> {
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/main.do")
 	public String displayMain(ModelMap model, HttpServletRequest request) {
-		request.getSession().removeAttribute("searchCriteria");
+		clearSearchCriteria(request);
 		
 		return list(model, request);
 	}
@@ -188,8 +188,6 @@ public class PermitController extends CRUDController<Permit> {
 		
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		criteria.setPageSize(25);
-		//TODO: Fix me 
-		//criteria.getSearchMap().remove("_csrf");
 		
 		if (!injectOrderSearchCriteria(criteria)) {
 			// search yielded no results
@@ -544,6 +542,9 @@ public class PermitController extends CRUDController<Permit> {
 	}
 	
 	private void setupCommon(ModelMap model, HttpServletRequest request) {
+		model.addAttribute("msgCtx", "managePermit");
+		model.addAttribute("errorCtx", "managePermit");
+		
 		Map<String, Object> criterias = new HashMap<String, Object>();
 		model.addAttribute("permitClass", genericDAO.findByCriteria(PermitClass.class, criterias, "permitClass", false));
 		model.addAttribute("permitType", genericDAO.findByCriteria(PermitType.class, criterias, "permitType", false));
@@ -667,7 +668,7 @@ public class PermitController extends CRUDController<Permit> {
 	private String showPermitCreatePageWithError(HttpServletRequest request, Permit entity, ModelMap model, String errorMessage) {
 		setupCreate(model, request);
 		
-		model.addAttribute("msgCtx", "managePermit");
+		//model.addAttribute("msgCtx", "managePermit");
 		model.addAttribute("error", errorMessage);
 		
 		model.addAttribute("activeTab", "managePermits");
@@ -1040,7 +1041,7 @@ public class PermitController extends CRUDController<Permit> {
 	public String saveSuccess(ModelMap model, HttpServletRequest request, Permit entity) {
 		setupCreate(model, request);
 		
-		model.addAttribute("msgCtx", "managePermit");
+		//model.addAttribute("msgCtx", "managePermit");
 		model.addAttribute("msg", "Permit saved successfully");
 		
 		model.addAttribute("activeTab", "managePermits");
@@ -1337,38 +1338,81 @@ public class PermitController extends CRUDController<Permit> {
 		return String.format("Permit # %d is cancelled successfully", entity.getId());
 	}
 	
+	private void addPermitExportParams(Map<String, Object> params, SearchCriteria searchCriteria) {
+		Map<String, Object> criteriaMap = searchCriteria.getSearchMap();
+		String startDateFrom = (String)criteriaMap.get("startDateFrom");
+		String startDateTo = (String)criteriaMap.get("startDateTo");
+		String endDateFrom = (String)criteriaMap.get("endDateFrom");
+		String endDateTo = (String)criteriaMap.get("endDateTo");
+		String customer = (String)criteriaMap.get("customer");
+		
+		String startDateRange = StringUtils.EMPTY;
+		if (StringUtils.isNotEmpty(startDateFrom)) {
+			startDateRange = startDateFrom;
+		}
+		if (StringUtils.isNotEmpty(startDateTo)) {
+			startDateRange += (" - " + startDateTo);
+		}
+		String endDateRange = StringUtils.EMPTY;
+		if (StringUtils.isNotEmpty(endDateFrom)) {
+			endDateRange = endDateFrom;
+		}
+		if (StringUtils.isNotEmpty(endDateTo)) {
+			endDateRange += (" - " + endDateTo);
+		}
+		
+		params.put("startDateRange", startDateRange);
+		params.put("endDateRange", endDateRange);
+		
+		String customerName = retrieveCustomerName(customer);
+		params.put("customer", customerName);
+	}
+	
+	private String retrieveCustomerName(String customerId) {
+		if (StringUtils.isEmpty(customerId)) {
+			return StringUtils.EMPTY;
+		}
+		
+		List<Customer> customerList  = genericDAO.executeSimpleQuery("select obj from Customer obj where obj.deleteFlag='1'"
+					+ " and obj.id=" + customerId);
+		if (customerList == null || customerList.isEmpty()) {
+			return StringUtils.EMPTY;
+		} else {
+			return customerList.get(0).getCompanyName();
+		}
+	}
+	
 	@Override
 	@RequestMapping(method = { RequestMethod.GET, RequestMethod.POST }, value = "/export2.do")
 	public String export2(ModelMap model, HttpServletRequest request, HttpServletResponse response,
 			@RequestParam("type") String type,
 			@RequestParam("dataQualifier") String dataQualifier,
 			Object objectDAO, Class clazz) {
-		String reportName = "permitReport";
-		type = setReportRequestHeaders(response, type, reportName);
-		
 		SearchCriteria searchCriteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		int origPage = searchCriteria.getPage();
 		int origPageSize = searchCriteria.getPageSize();
 		searchCriteria.setPage(0);
 		searchCriteria.setPageSize(1000);
 		
-		Map<String, Object> params = new HashMap<String, Object>();
+		String reportName = "permitReport";
+		type = setReportRequestHeaders(response, type, reportName);
 		ByteArrayOutputStream out = null;
 		try {
 			List<Permit> permitList =  retrieveReportData(searchCriteria);
+			
+			Map<String, Object> params = new HashMap<String, Object>();
+			addPermitExportParams(params, searchCriteria);
 			
 			out = dynamicReportService.generateStaticReport(reportName, permitList, params, type, request);
 			out.writeTo(response.getOutputStream());
 			
 			return null;
-		} catch (Exception e) {
-			e.printStackTrace();
-			log.warn("Unable to generate report:" + e);
+		} catch (Throwable t) {
+			t.printStackTrace();
+			log.warn("Unable to generate report: " + t);
 			
-			setupList(model, request);
-			response.setContentType(MimeUtil.getContentType("html"));
-			setErrorMsg(request, e.getMessage());
-			return getUrlContext() + "/permit";
+			setErrorMsg(request, response, "Exception occured while generating permit report: " + t);
+			return "redirect:/" + getUrlContext() + "/main.do";
 		} finally {
 			searchCriteria.setPage(origPage);
 			searchCriteria.setPageSize(origPageSize);

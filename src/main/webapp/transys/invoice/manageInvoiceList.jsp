@@ -218,6 +218,9 @@ function populateManageInvoiceDeliveryAddress(addressList) {
 				<a href="${ctx}/invoice/manageInvoiceExport.do?dataQualifier=manageInvoice&amp;type=pdf">
 					<img src="${pdfImage}" style="float:right;" class="toolbarButton" border="0">
 				</a>&nbsp;
+				<a href="${ctx}/invoice/manageInvoiceExport.do?dataQualifier=manageInvoice&amp;type=xlsx">
+					<img src="${pdfImage}" style="float:right;" class="toolbarButton" border="0">
+				</a>&nbsp;
 				<a href="${ctx}/invoice/manageInvoiceExport.do?dataQualifier=manageInvoice&amp;type=csv">
 					<img src="${excelImage}" style="float:right;" class="toolbarButton" border="0">
 				</a>

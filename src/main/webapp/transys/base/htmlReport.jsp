@@ -1,10 +1,5 @@
 <%@ include file="/common/taglibs.jsp"%>
 
-<jsp:include page="/common/messages.jsp">
-	<jsp:param name="msgCtx" value="invoicePreview" />
-	<jsp:param name="errorCtx" value="invoicePreview" />
-</jsp:include>
-
 <script language="javascript">
 	function removeJasperPrint() {
 		jQuery.ajax({
@@ -16,26 +11,26 @@
 	} 
 </script>
 
-<%@ page import="java.util.*" %>
-<%@ page import="java.io.*" %>
+<%@page import="java.util.*" %>
+<%@page import="java.io.*" %>
 
-<%@ page import="net.sf.jasperreports.j2ee.servlets.ImageServlet" %>
+<%@page import="net.sf.jasperreports.j2ee.servlets.ImageServlet" %>
 
-<%@ page import="net.sf.jasperreports.engine.JasperPrint" %>
-<%@ page import="net.sf.jasperreports.engine.export.HtmlExporter" %>
+<%@page import="net.sf.jasperreports.engine.JasperPrint" %>
+<%@page import="net.sf.jasperreports.engine.export.HtmlExporter" %>
 
-<%@ page import="net.sf.jasperreports.export.SimpleHtmlReportConfiguration"%>
-<%@ page import="net.sf.jasperreports.export.SimpleHtmlExporterConfiguration"%>
-<%@ page import="net.sf.jasperreports.export.SimpleHtmlExporterOutput"%>
-<%@ page import="net.sf.jasperreports.export.SimpleExporterInput"%>
+<%@page import="net.sf.jasperreports.export.SimpleHtmlReportConfiguration"%>
+<%@page import="net.sf.jasperreports.export.SimpleHtmlExporterConfiguration"%>
+<%@page import="net.sf.jasperreports.export.SimpleHtmlExporterOutput"%>
+<%@page import="net.sf.jasperreports.export.SimpleExporterInput"%>
 
-<%@ page import="net.sf.jasperreports.web.util.WebHtmlResourceHandler"%>
+<%@page import="net.sf.jasperreports.web.util.WebHtmlResourceHandler"%>
 
-<%@ page import="org.apache.commons.lang3.StringUtils"%>
+<%@page import="org.apache.commons.lang3.StringUtils"%>
 
 <%@page import="com.transys.core.util.ReportUtil"%>
 
-<%@ page import="com.transys.model.vo.BaseVO"%>
+<%@page import="com.transys.model.vo.BaseVO"%>
 
 <%
 	JasperPrint jasperPrint = ReportUtil.getJasperPrint(request);

@@ -94,7 +94,7 @@ function validateSubmit() {
 			<a href="export.do?type=pdf" onclick="return validateExport();">
 				<img src="${pdfImage}" border="0" class="toolbarButton"/>
 			</a>
-			<a href="export.do?type=xls">
+			<a href="export.do?type=xlsx">
 				<img src="${excelImage}" border="0" class="toolbarButton" onclick="return validateExport();"/>
 			</a>
 			<a href="export.do?type=csv">

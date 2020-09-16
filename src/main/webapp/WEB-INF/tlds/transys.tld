@@ -164,6 +164,7 @@
 			<name>useExport2</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
+			<elexprvalue>true</elexprvalue>
 			<type>java.lang.Boolean</type>
 		</attribute>
 	</tag>

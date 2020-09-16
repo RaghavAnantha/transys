@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
-<!-- 2020-09-10T21:22:46 -->
+<!-- 2020-09-16T22:36:52 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="deliveryPickupReport" pageWidth="1300" pageHeight="595" orientation="Landscape" columnWidth="1280" leftMargin="10" rightMargin="10" topMargin="10" bottomMargin="10" isSummaryWithPageHeaderAndFooter="true" uuid="f465866e-f394-428d-b546-3108e4a018e2">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
@@ -49,7 +49,7 @@
 	</title>
 	<pageHeader>
 		<band height="80" splitType="Stretch">
-			<printWhenExpression><![CDATA[$V{PAGE_NUMBER} > 0]]></printWhenExpression>
+			<printWhenExpression><![CDATA[$V{PAGE_NUMBER} == 1]]></printWhenExpression>
 			<staticText>
 				<reportElement mode="Opaque" x="499" y="2" width="283" height="18" backcolor="#99CCFF" uuid="d41af175-c951-48fa-9614-95f75b2e7e5a">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
@@ -500,6 +500,29 @@
 			</textField>
 		</band>
 	</detail>
+	<pageFooter>
+		<band height="28">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<textField>
+				<reportElement x="540" y="8" width="100" height="18" uuid="7e95296f-c0dc-4c34-a1e9-5d567f71e6b3">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Page " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="640" y="8" width="100" height="18" uuid="0a54e274-5542-4cbd-a6fa-be65443f65d7">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" of " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
 	<summary>
 		<band height="20" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>

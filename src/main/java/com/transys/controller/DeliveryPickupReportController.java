@@ -93,7 +93,7 @@ public class DeliveryPickupReportController extends BaseController {
 		Map<String, Object> params = new HashMap<String, Object>();
 		ByteArrayOutputStream out = null;
 		try {
-			List<Map<String,Object>> reportData = generateReportData(model, criteria, inputToBeUsed, params);
+			List<Map<String, Object>> reportData = generateReportData(model, criteria, inputToBeUsed, params);
 			
 			String type = "html";
 			setReportRequestHeaders(response, type, "DeliveryPickupReport");
@@ -102,16 +102,15 @@ public class DeliveryPickupReportController extends BaseController {
 			out.writeTo(response.getOutputStream());
 			
 			return null;
-		} catch (Exception e) {
-			e.printStackTrace();
-			log.warn("Unable to create file: " + e);
+		} catch (Throwable t) {
+			t.printStackTrace();
+			log.warn("Unable to create file: " + t);
 			
-			request.getSession().setAttribute("error", e.getMessage());
+			setErrorMsg(request, response, "Exception occured while generating report: " + t);
 			return "report.error";
 		} finally {
 			criteria.setPage(originalPage);
 			criteria.setPageSize(originalPageSize);
-			
 			if (out != null) {
 				try {
 					out.close();

@@ -110,6 +110,7 @@ public class DynamicReportServiceImpl implements DynamicReportService {
 	public static String reportsCtx = "/reports";
 	
 	public static String SUBREPORT_DIR_KEY = "SUBREPORT_DIR";
+	public static String IS_IGNORE_PAGINATION_KEY = "IS_IGNORE_PAGINATION";
 	
 	@Autowired
 	private GenericDAO genericDAO;
@@ -678,7 +679,7 @@ public class DynamicReportServiceImpl implements DynamicReportService {
 			List datas, Map params, String type, HttpServletRequest request) {
 		try {// @@@@@@@@@@@@@@@@@ 1
 			System.out.println("-----------------------");
-			JasperPrint jp = getJasperPrintFromFile(reportName, datas, params, request);
+			JasperPrint jp = getJasperPrintFromFile(reportName, datas, params, type, request);
 			ByteArrayOutputStream out = getStreamByType(type, jp, request);
 			return out;
 		} catch (Exception ex) {
@@ -733,13 +734,41 @@ public class DynamicReportServiceImpl implements DynamicReportService {
 			return null;
 		}
 	}
+	
+	private void addPaginationParams(Map<String, Object> params, String type) {
+		if (params == null || StringUtils.isEmpty(type)) {
+			return;
+		}
+		
+		if (!StringUtils.equalsIgnoreCase("pdf", type)) {
+			params.put(IS_IGNORE_PAGINATION_KEY, true);
+		}
+	}
+	
+	private void addReportProperties(JasperPrint jp) {
+		if (jp == null) {
+			return;
+		}
+		
+		jp.setProperty("net.sf.jasperreports.export.xlsx.exclude.origin.keep.first.band.1", "pageHeader");
+		jp.setProperty("net.sf.jasperreports.export.xlsx.exclude.origin.band.2", "pageFooter");
+		jp.setProperty("net.sf.jasperreports.export.xls.exclude.origin.keep.first.band.1", "pageHeader");
+		jp.setProperty("net.sf.jasperreports.export.xls.exclude.origin.band.2", "pageFooter");
+		jp.setProperty("net.sf.jasperreports.export.html.exclude.origin.keep.first.band.1", "pageHeader");
+		jp.setProperty("net.sf.jasperreports.export.html.exclude.origin.band.2", "pageFooter");
+		
+		jp.setProperty("net.sf.jasperreports.export.csv.exclude.origin.band.1", "pageHeader");
+		jp.setProperty("net.sf.jasperreports.export.csv.exclude.origin.band.2", "pageFooter");
+	}
 
 	public JasperPrint getJasperPrintFromFile(String reportName, List datas,
-			Map params, HttpServletRequest request) {
+			Map params, String type, HttpServletRequest request) {
 		try {// @@@@@@@@@@@@@@@@@ 2
 			File reportFile = new File(request.getSession().getServletContext().getRealPath(reportsCtx + "/"  + reportName + ".jasper"));
 			JasperReport jasperReport = (JasperReport) JRLoader.loadObject(reportFile);
 			//JasperReport jasperReport = (JasperReport) JRLoader.loadObject(reportFile.getPath());
+			
+			addPaginationParams(params, type);
 			
 			// ***********
 			JasperPrint jp = null;
@@ -748,8 +777,11 @@ public class DynamicReportServiceImpl implements DynamicReportService {
 				JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(datas, false);
 				//JRMapCollectionDataSource dataSource = new JRMapCollectionDataSource(datas);
 				jp = JasperFillManager.fillReport(jasperReport, params, dataSource);
-			} else
+			} else {
 				jp = JasperFillManager.fillReport(jasperReport, params);
+			}
+			
+			addReportProperties(jp);
 			return jp;
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -1067,9 +1099,9 @@ public class DynamicReportServiceImpl implements DynamicReportService {
 		SimpleXlsReportConfiguration reportConfig = new SimpleXlsReportConfiguration();
 		reportConfig.setDetectCellType(true);
 		reportConfig.setIgnoreGraphics(true);
-		reportConfig.setWhitePageBackground(true);
-		reportConfig.setRemoveEmptySpaceBetweenColumns(true);
-		reportConfig.setRemoveEmptySpaceBetweenRows(true);
+		//reportConfig.setWhitePageBackground(true);
+		//reportConfig.setRemoveEmptySpaceBetweenColumns(true);
+		//reportConfig.setRemoveEmptySpaceBetweenRows(true);
 		reportConfig.setIgnorePageMargins(true);
 		reportConfig.setShowGridLines(true);
 		exporter.setConfiguration(reportConfig); 
@@ -1093,9 +1125,9 @@ public class DynamicReportServiceImpl implements DynamicReportService {
 		SimpleXlsxReportConfiguration xlsxReportConfig = new SimpleXlsxReportConfiguration();
 		xlsxReportConfig.setDetectCellType(true);
 		xlsxReportConfig.setIgnoreGraphics(true);
-		xlsxReportConfig.setWhitePageBackground(true);
-		xlsxReportConfig.setRemoveEmptySpaceBetweenColumns(true);
-		xlsxReportConfig.setRemoveEmptySpaceBetweenRows(true);
+		//xlsxReportConfig.setWhitePageBackground(true);
+		//xlsxReportConfig.setRemoveEmptySpaceBetweenColumns(true);
+		//xlsxReportConfig.setRemoveEmptySpaceBetweenRows(true);
 		xlsxReportConfig.setIgnorePageMargins(true);
 		xlsxReportConfig.setShowGridLines(true);
 		exporter.setConfiguration(xlsxReportConfig);

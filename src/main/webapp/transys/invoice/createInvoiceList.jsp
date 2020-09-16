@@ -224,6 +224,9 @@ function populateCreateInvoiceDeliveryAddress(addressList) {
 				<a href="${ctx}/invoice/createInvoiceExport.do?dataQualifier=createInvoice&amp;type=pdf">
 					<img src="${pdfImage}" style="float:right;" class="toolbarButton" border="0">
 				</a>&nbsp;
+				<a href="${ctx}/invoice/createInvoiceExport.do?dataQualifier=createInvoice&amp;type=xlsx">
+					<img src="${pdfImage}" style="float:right;" class="toolbarButton" border="0">
+				</a>&nbsp;
 				<a href="${ctx}/invoice/createInvoiceExport.do?dataQualifier=createInvoice&amp;type=csv">
 					<img src="${excelImage}" style="float:right;" class="toolbarButton" border="0">
 				</a>

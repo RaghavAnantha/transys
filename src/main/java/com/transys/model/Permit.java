@@ -2,8 +2,6 @@ package com.transys.model;
 
 import java.math.BigDecimal;
 
-import java.text.SimpleDateFormat;
-
 import java.util.Date;
 import java.util.List;
 
@@ -20,6 +18,8 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import com.transys.core.util.FormatUtil;
 
 @Entity
 @Table(name="permit")
@@ -96,7 +96,26 @@ public class Permit  extends AbstractBaseModel {
 	}
 	
 	@Transient
-	//TODO: Move to utils?
+	public String getFullLineDeliveryAddress() {
+		DeliveryAddress deliveryAddress = getDeliveryAddress();
+		if (deliveryAddress == null) {
+			return StringUtils.EMPTY;
+		}
+		
+		return deliveryAddress.getFullLine();
+	}
+	
+	@Transient
+	public String getFullDeliveryAddress() {
+		DeliveryAddress deliveryAddress = getDeliveryAddress();
+		if (deliveryAddress == null) {
+			return StringUtils.EMPTY;
+		}
+		
+		return deliveryAddress.getFullDeliveryAddress();
+	}
+	
+	@Transient
 	public String getFullLinePermitAddress1() {
 		List<PermitAddress> permitAddressList = getPermitAddress();
 		if (permitAddressList.isEmpty()) {
@@ -107,7 +126,6 @@ public class Permit  extends AbstractBaseModel {
 	}
 	
 	@Transient
-	//TODO: Move to utils?
 	public String getFullLinePermitAddress2() {
 		List<PermitAddress> permitAddressList = getPermitAddress();
 		if (permitAddressList.size() <= 1 ) {
@@ -118,7 +136,6 @@ public class Permit  extends AbstractBaseModel {
 	}
 	
 	@Transient
-	//TODO: Move to utils?
 	public String getFullPermitAddress1() {
 		List<PermitAddress> permitAddressList = getPermitAddress();
 		if (permitAddressList.isEmpty()) {
@@ -178,14 +195,12 @@ public class Permit  extends AbstractBaseModel {
 	
 	@Transient
 	public String getFormattedStartDate() {
-		SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyy");
-		return dateFormat.format(this.startDate);
+		return FormatUtil.formatDate(getStartDate());
 	}
 	
 	@Transient
 	public String getFormattedEndDate() {
-		SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyy");
-		return dateFormat.format(this.endDate);
+		return FormatUtil.formatDate(getEndDate());
 	}
 	
 	@Transient
@@ -262,6 +277,31 @@ public class Permit  extends AbstractBaseModel {
 
 	public void setPermitNotes(List<PermitNotes> permitNotes) {
 		this.permitNotes = permitNotes;
+	}
+	
+	@Transient
+	public String getPermitClassStr() {
+		return (getPermitClass() == null ? StringUtils.EMPTY : getPermitClass().getPermitClass());
+	}
+	
+	@Transient
+	public String getPermitTypeStr() {
+		return (getPermitType() == null ? StringUtils.EMPTY : getPermitType().getPermitType());
+	}
+	
+	@Transient
+	public String getCustomerName() {
+		return (getCustomer() == null ? StringUtils.EMPTY : getCustomer().getCompanyName());
+	}
+	
+	@Transient
+	public String getStatusStr() {
+		return (getStatus() == null ? StringUtils.EMPTY : getStatus().getStatus());
+	}
+	
+	@Transient
+	public String getLocationTypeStr() {
+		return (getLocationType() == null ? StringUtils.EMPTY : getLocationType().getLocationType());
 	}
 
 	@Transient
