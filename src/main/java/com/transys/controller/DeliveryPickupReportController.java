@@ -101,7 +101,7 @@ public class DeliveryPickupReportController extends BaseController {
 								params, type, request);
 			out.writeTo(response.getOutputStream());
 			
-			return null;
+			return null;				
 		} catch (Throwable t) {
 			t.printStackTrace();
 			log.warn("Unable to create file: " + t);

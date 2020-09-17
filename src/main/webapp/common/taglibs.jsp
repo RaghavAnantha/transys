@@ -31,4 +31,7 @@
 <c:set var="iconInformationlImage" value="${imageCtx}/iconInformation.gif"/>
 
 <c:set var="loadingMsg" value="Loading....<img src='${preLoaderImage}' border='0' class='toolbarButton'/>"/>
+<!-- 
 <c:set var="reportLoadingMsg" value="Loading....<img src='${preLoaderReportImage}' border='0' class='toolbarButton'/>"/>
+-->
+<c:set var="reportLoadingMsg" value="Loading....<i class='fa fa-spinner fa-spin' style='font-size:24px'/></i>"/>

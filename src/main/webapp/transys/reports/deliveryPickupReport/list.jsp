@@ -88,17 +88,17 @@ function validateSubmit() {
 		<td align="${left}" width="100%" align="right">
 			<!--  
 			<a href="export.do?type=print" target="_blank" onclick="return validateExport();">
-				<img src="${printImage}" border="0" class="toolbarButton"/>
+				<img src="${printImage}" border="0" class="toolbarButton" title="Print"/>
 			</a>
 			-->
 			<a href="export.do?type=pdf" onclick="return validateExport();">
-				<img src="${pdfImage}" border="0" class="toolbarButton"/>
+				<img src="${pdfImage}" border="0" class="toolbarButton" title="PDF"/>
 			</a>
 			<a href="export.do?type=xlsx">
-				<img src="${excelImage}" border="0" class="toolbarButton" onclick="return validateExport();"/>
+				<img src="${excelImage}" border="0" class="toolbarButton" onclick="return validateExport();" title="XLSX"/>
 			</a>
 			<a href="export.do?type=csv">
-				<img src="${csvImage}" border="0" class="toolbarButton" onclick="return validateExport();"/>
+				<img src="${csvImage}" border="0" class="toolbarButton" onclick="return validateExport();" title="CSV"/>
 			</a>
 		</td>
 		</tr>

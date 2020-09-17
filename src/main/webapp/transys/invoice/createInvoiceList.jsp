@@ -222,13 +222,13 @@ function populateCreateInvoiceDeliveryAddress(addressList) {
 			</td>
 			<td width="90">
 				<a href="${ctx}/invoice/createInvoiceExport.do?dataQualifier=createInvoice&amp;type=pdf">
-					<img src="${pdfImage}" style="float:right;" class="toolbarButton" border="0">
+					<img src="${pdfImage}" style="float:right;" class="toolbarButton" border="0" title="PDF">
 				</a>&nbsp;
 				<a href="${ctx}/invoice/createInvoiceExport.do?dataQualifier=createInvoice&amp;type=xlsx">
-					<img src="${pdfImage}" style="float:right;" class="toolbarButton" border="0">
+					<img src="${excelImage}" style="float:right;" class="toolbarButton" border="0" title="XLSX">
 				</a>&nbsp;
 				<a href="${ctx}/invoice/createInvoiceExport.do?dataQualifier=createInvoice&amp;type=csv">
-					<img src="${excelImage}" style="float:right;" class="toolbarButton" border="0">
+					<img src="${csvImage}" style="float:right;" class="toolbarButton" border="0" title="CSV">
 				</a>
 			</td>
 		</tr>
