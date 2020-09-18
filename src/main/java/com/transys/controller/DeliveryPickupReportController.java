@@ -65,6 +65,9 @@ public class DeliveryPickupReportController extends BaseController {
 	public void setupList(ModelMap model, HttpServletRequest request) {
 		populateSearchCriteria(request, request.getParameterMap());
 		
+		model.addAttribute("msgCtx", "deliveryPickupReport");
+		model.addAttribute("errorCtx", "deliveryPickupReport");
+		
 		List<DeliveryAddressVO> deliveryAddressVOList = ModelUtil.retrieveOrderDeliveryAddresses(genericDAO);
 		model.addAttribute("deliveryAddresses", deliveryAddressVOList);
 	}
@@ -95,9 +98,10 @@ public class DeliveryPickupReportController extends BaseController {
 		try {
 			List<Map<String, Object>> reportData = generateReportData(model, criteria, inputToBeUsed, params);
 			
+			String reportName = "deliveryPickupReport";
 			String type = "html";
-			setReportRequestHeaders(response, type, "DeliveryPickupReport");
-			out = dynamicReportService.generateStaticReport("deliveryPickupReport", reportData, 
+			setReportRequestHeaders(response, type, reportName);
+			out = dynamicReportService.generateStaticReport(reportName, reportData, 
 								params, type, request);
 			out.writeTo(response.getOutputStream());
 			
@@ -161,7 +165,7 @@ public class DeliveryPickupReportController extends BaseController {
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/export.do")
-	public void export(ModelMap model, HttpServletRequest request, HttpServletResponse response,
+	public String export(ModelMap model, HttpServletRequest request, HttpServletResponse response,
 			@RequestParam("type") String type) {
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		int originalPage = criteria.getPage();
@@ -176,13 +180,18 @@ public class DeliveryPickupReportController extends BaseController {
 		try {
 			List<Map<String,Object>> reportData = generateReportData(model, criteria, input, params);
 			
-			type = setReportRequestHeaders(response, type, "DeliveryPickupReport");
-			out = dynamicReportService.generateStaticReport("deliveryPickupReport", reportData, params, type, request);
+			String reportName = "deliveryPickupReport";
+			type = setReportRequestHeaders(response, type, reportName);
+			out = dynamicReportService.generateStaticReport(reportName, reportData, params, type, request);
 			out.writeTo(response.getOutputStream());
-		} catch (Exception e) {
-			e.printStackTrace();
-			log.warn("Unable to create file: " + e);
-			//request.getSession().setAttribute("error", e.getMessage());
+			
+			return null;
+		} catch (Throwable t) {
+			t.printStackTrace();
+			log.warn("Unable to generate report: " + t);
+			
+			setErrorMsg(request, response, "Exception occured while generating Delivery Pickup report: " + t);
+			return "redirect:/" + getUrlContext() + "/main.do";
 		} finally {
 			criteria.setPage(originalPage);
 			criteria.setPageSize(originalPageSize);

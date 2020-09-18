@@ -39,6 +39,10 @@ function validateSubmit() {
 <br/>
 <h4 style="margin-top: -15px; !important">Delivery/Pickup Report</h4>
 <form:form action="search.do" method="get" name="deliveryPickUpReportSearchForm" id="deliveryPickUpReportSearchForm" >
+	<jsp:include page="/common/messages.jsp">
+		<jsp:param name="msgCtx" value="deliveryPickupReport" />
+		<jsp:param name="errorCtx" value="deliveryPickupReport" />
+	</jsp:include>
 	<table id="form-table" class="table">
 	 	<tr><td colspan="10"></td><td colspan="10"></td></tr>
 	 <tr>
