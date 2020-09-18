@@ -709,17 +709,21 @@ public final class Datatable extends BodyTagSupport {
 						editColumn.setWidth("30");
 						editColumn.setPageContext(this.pageContext);
 						editColumn.cssClass = "centerImage";
+						editColumn.setAlterText("Edit");
+						editColumn.setTitle("Edit");
 						this.columns.add(editColumn);
 					//}
 				}
 				if (cancellable) {
-					//String url = "/"+urlContext+"/cancel.do";
+					String url = "/"+urlContext+"/cancel.do";
 					//if (authenticationService.hasUserPermission(user, url)) {
 						cancelColumn = new ImageColumn();
 						cancelColumn.setImageSrc(pageContext.getAttribute("resourceCtx")+"/images/cancel.png");
 						cancelColumn.setImageBorder(0);
 						cancelColumn.setWidth("30");
 						cancelColumn.setPageContext(this.pageContext);
+						editColumn.setAlterText("Cancel");
+						editColumn.setTitle("Cancel");
 						cancelColumn.cssClass = "centerImage";
 						this.columns.add(cancelColumn);
 					//}
@@ -732,6 +736,8 @@ public final class Datatable extends BodyTagSupport {
 						deleteColumn.setPageContext(this.pageContext);
 						deleteColumn.setImageBorder(0);
 						deleteColumn.setWidth("30");
+						editColumn.setAlterText("Delete");
+						editColumn.setTitle("Delete");
 						deleteColumn.cssClass = "centerImage";
 						this.columns.add(deleteColumn);
 					//}

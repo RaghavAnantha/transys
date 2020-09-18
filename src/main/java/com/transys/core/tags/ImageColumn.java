@@ -16,6 +16,8 @@ public final class ImageColumn extends AbstractColumnTag {
     private String linkUrl;
     private String alterText;
     private String target;
+    
+    private String title;
 
     public ImageColumn() {
 	super();
@@ -28,11 +30,20 @@ public final class ImageColumn extends AbstractColumnTag {
     /*------------------------------------------------------------------------------
      * Getters 
      *----------------------------------------------------------------------------*/
+    
     public String getImageSrc() {
 	return this.imageSrc;
     }
 
-    public String getLinkUrl() {
+    public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public String getLinkUrl() {
 	return this.linkUrl;
     }
 
@@ -181,6 +192,8 @@ public final class ImageColumn extends AbstractColumnTag {
 	if (this.imageBorder != -1)
 	    objBuf.append(" border=" + this.imageBorder);
 	objBuf.append(" alt=\"" + this.alterText + "\"");
+	if (this.title != null)
+	    objBuf.append(" title=\"" + this.title + "\"");
 	if (this.target != null)
 	    objBuf.append(" target=\"" + this.target + "\"");
 	objBuf.append("/>");
