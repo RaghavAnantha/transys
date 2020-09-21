@@ -722,8 +722,8 @@ public final class Datatable extends BodyTagSupport {
 						cancelColumn.setImageBorder(0);
 						cancelColumn.setWidth("30");
 						cancelColumn.setPageContext(this.pageContext);
-						editColumn.setAlterText("Cancel");
-						editColumn.setTitle("Cancel");
+						cancelColumn.setAlterText("Cancel");
+						cancelColumn.setTitle("Cancel");
 						cancelColumn.cssClass = "centerImage";
 						this.columns.add(cancelColumn);
 					//}
@@ -736,8 +736,8 @@ public final class Datatable extends BodyTagSupport {
 						deleteColumn.setPageContext(this.pageContext);
 						deleteColumn.setImageBorder(0);
 						deleteColumn.setWidth("30");
-						editColumn.setAlterText("Delete");
-						editColumn.setTitle("Delete");
+						deleteColumn.setAlterText("Delete");
+						deleteColumn.setTitle("Delete");
 						deleteColumn.cssClass = "centerImage";
 						this.columns.add(deleteColumn);
 					//}

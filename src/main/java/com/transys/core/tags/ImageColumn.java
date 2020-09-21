@@ -172,6 +172,8 @@ public final class ImageColumn extends AbstractColumnTag {
 	objRet.setPageContext(this.pageContext);
 	objRet.setParent(this.getParent());
 	objRet.setTarget(this.target);
+	objRet.setTitle(this.title);
+	objRet.setAlterText(this.alterText);
 	return objRet;
     }
 
