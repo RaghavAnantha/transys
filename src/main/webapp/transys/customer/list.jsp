@@ -118,10 +118,11 @@ function processGoToOrder(orderIds) {
 		<transys:textcolumn headerText="Company Name" dataField="companyName" />
 		<transys:textcolumn headerText="Contact Name" dataField="contactName" />
 		<transys:textcolumn headerText="Phone" dataField="phone" />
+		<transys:textcolumn headerText="Charge Company" dataField="chargeCompany" />
 		<transys:textcolumn headerText="Dumpster Discount" dataField="dumpsterDiscount" type="java.math.BigDecimal" width="150px" />
 		<transys:textcolumn headerText="Created Date" dataField="createdAt" dataFormat="MM/dd/yyyy"/>
 		<transys:textcolumn headerText="Status" dataField="customerStatus.status" />
-		<transys:imagecolumn headerText="Create Order" linkUrl="${ctx}/order/create.do?customerId={id}" imageSrc="${ctx}/images/addnew.png" HAlign="center" width="35px"/>
+		<transys:imagecolumn headerText="Create Order" linkUrl="${ctx}/order/create.do?customerId={id}" imageSrc="${ctx}/images/addnew.png" HAlign="center" width="35px" title="Create Order"/>
 </transys:datatable>
 	<%session.setAttribute("manageCustomerColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
 </form:form>

@@ -281,8 +281,8 @@ function populateCustomerDeliveryAddress() {
 		<transys:textcolumn headerText="Inv." dataField="invoiced"/>
 		<transys:textcolumn headerText="Inv. #" dataField="invoiceId"/>
 		<transys:textcolumn headerText="Inv. Dt" dataField="invoiceDate" dataFormat="MM/dd/yyyy"/>
-		<transys:imagecolumn headerText="EXCH" linkUrl="javascript:processExchange('{id}');" imageSrc="${ctx}/images/exchange.png" HAlign="center"/>
-		<transys:imagecolumn headerText="PRINT" linkUrl="javascript:printOrder('{id}');" imageSrc="${ctx}/images/print.png" HAlign="center"/>
+		<transys:imagecolumn headerText="EXCH" linkUrl="javascript:processExchange('{id}');" imageSrc="${ctx}/images/exchange.png" HAlign="center" title="Exchange"/>
+		<transys:imagecolumn headerText="PRINT" linkUrl="javascript:printOrder('{id}');" imageSrc="${ctx}/images/print.png" HAlign="center" title="Print"/>
 	</transys:datatable>
 	<%session.setAttribute("manageOrdersColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
 </form:form>

@@ -2,6 +2,8 @@ package com.transys.core.tags;
 
 import javax.servlet.jsp.JspException;
 
+import org.apache.commons.lang3.StringUtils;
+
 /**
  * A class to represent the image column.
  */
@@ -191,9 +193,12 @@ public final class ImageColumn extends AbstractColumnTag {
 	    objBuf.append(" height=" + this.imageHeight);
 	if (this.imageBorder != -1)
 	    objBuf.append(" border=" + this.imageBorder);
-	objBuf.append(" alt=\"" + this.alterText + "\"");
-	if (this.title != null)
-	    objBuf.append(" title=\"" + this.title + "\"");
+	if (StringUtils.isNotEmpty(getAlterText())) {
+		objBuf.append(" alt=\"" + getAlterText() + "\"");
+	}
+	if (StringUtils.isNotEmpty(getTitle())) {
+		objBuf.append(" title=\"" + getTitle() + "\"");
+	} 
 	if (this.target != null)
 	    objBuf.append(" target=\"" + this.target + "\"");
 	objBuf.append("/>");
