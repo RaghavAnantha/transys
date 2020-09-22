@@ -243,13 +243,13 @@ function populateManageInvoiceDeliveryAddress(addressList) {
 		<transys:textcolumn headerText="Order Date To" dataField="orderDateTo" dataFormat="MM/dd/yyyy"/>
 		<transys:textcolumn headerText="Order Count" dataField="orderCount" />
 		<transys:textcolumn headerText="Total Fees" dataField="totalFees" type="java.math.BigDecimal" dataFormat="#####0.00"/>
-		<transys:textcolumn headerText="Total Discount" dataField="totalDiscount" type="java.math.BigDecimal"/>
+		<transys:textcolumn headerText="Total Discount" dataField="totalDiscount" type="java.math.BigDecimal" dataFormat="#####0.00"/>
 		<transys:textcolumn headerText="Total Amt Paid" dataField="totalAmountPaid" type="java.math.BigDecimal" dataFormat="#####0.00"/>
 		<transys:textcolumn headerText="Bal Due" dataField="totalBalanceAmountDue" type="java.math.BigDecimal" dataFormat="#####0.00"/>
-		<transys:imagecolumn headerText="Download As PDF" linkUrl="${ctx}/invoice/downloadInvoice.do?id={id}&type=pdf" imageSrc="${pdfImage}" HAlign="center"/>
-		<transys:imagecolumn headerText="Download As XLS" linkUrl="${ctx}/invoice/downloadInvoice.do?id={id}&type=xls" imageSrc="${excelImage}" HAlign="center"/>
-		<transys:imagecolumn headerText="Download As CSV" linkUrl="${ctx}/invoice/downloadInvoice.do?id={id}&type=csv" imageSrc="${csvImage}" HAlign="center"/>
-		<transys:imagecolumn headerText="DEL" linkUrl="javascript:confirmDeleteInvoice('{id}');" imageSrc="${deleteImage}" HAlign="center"/>
+		<transys:imagecolumn headerText="Download As PDF" linkUrl="${ctx}/invoice/downloadInvoice.do?id={id}&type=pdf" imageSrc="${pdfImage}" HAlign="center" title="PDF"/>
+		<transys:imagecolumn headerText="Download As XLS" linkUrl="${ctx}/invoice/downloadInvoice.do?id={id}&type=xlsx" imageSrc="${excelImage}" HAlign="center" title="XLSX"/>
+		<transys:imagecolumn headerText="Download As CSV" linkUrl="${ctx}/invoice/downloadInvoice.do?id={id}&type=csv" imageSrc="${csvImage}" HAlign="center" title="CSV"/>
+		<transys:imagecolumn headerText="DEL" linkUrl="javascript:confirmDeleteInvoice('{id}');" imageSrc="${deleteImage}" HAlign="center" title="Delete"/>
 	</transys:datatable>
 	<%session.setAttribute("manageInvoiceColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
 </form:form>

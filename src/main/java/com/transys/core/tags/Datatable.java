@@ -764,15 +764,16 @@ public final class Datatable extends BodyTagSupport {
 						}
 					}
 					
-					Long id = (Long) PropertyUtils.getProperty(currItem, "id");
-					if (cancelColumn!=null) {
+					Long id = (Long)PropertyUtils.getProperty(currItem, "id");
+					if (cancelColumn != null) {
 						cancelColumn.setLinkUrl("javascript:processCancel('"+pageContext.getAttribute("ctx")+"/"+urlContext+"/cancel.do?id="+id+"',"+id+");");
 																								
 					}
 					
-						if (deleteColumn!=null)
-						deleteColumn.setLinkUrl("javascript:confirmDelete('"+pageContext.getAttribute("ctx")+"/"+urlContext+"/delete.do?id="+PropertyUtils.getProperty(currItem, "id")+"');");
-//						deleteColumn.setLinkUrl(pageContext.getAttribute("ctx")+"/"+urlContext+"/delete.do?id="+PropertyUtils.getProperty(currItem, "id"));
+					if (deleteColumn != null) {
+						deleteColumn.setLinkUrl("javascript:processDelete('"+pageContext.getAttribute("ctx")+"/"+urlContext+"/delete.do?id="+id+"',"+id+");");
+						//deleteColumn.setLinkUrl(pageContext.getAttribute("ctx")+"/"+urlContext+"/delete.do?id="+PropertyUtils.getProperty(currItem, "id"));
+					}
 					if (multipleDelete || multipleSelect) {
 						checkBoxColumn.setBodyContent("<input type=\"checkbox\" id=\"objId\" name=\"id\"	value=\""+PropertyUtils.getProperty(currItem, "id")+"\" />");
 					}

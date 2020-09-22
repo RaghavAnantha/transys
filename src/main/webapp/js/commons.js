@@ -154,14 +154,14 @@ $(function() {
 	});
 });
 
-function confirmDelete(url) {
-	if(confirm("Do you want to delete the selected record ?")) {
+function processDelete(url, id) {
+	if (confirm("Do you want to Delete the selected record with id: " + id + "?")) {
 		document.location = url;
 	}	
 }
 
 function processCancel(url, id) {
-	if (confirm("Do you want to Cancel the selected record?")) {
+	if (confirm("Do you want to Cancel the selected record with id: " + id + "?")) {
 		document.location = url;
 	}	
 }
