@@ -1208,7 +1208,7 @@ public class DynamicReportServiceImpl implements DynamicReportService {
 		SimpleHtmlExporterConfiguration htmlExporterConfig = new SimpleHtmlExporterConfiguration();
 		//exporter.setParameter(JRHtmlExporterParameter.IS_USING_IMAGES_TO_ALIGN, false);*/
 		
-		String header = "<html><head><style> @page {size: landscape; margin-left: 0.00in;margin-right: 0.00in;margin-top: 0.00in;margin-bottom: 0.00in;}</style></head><body>";
+		String header = "<html><head><style> @page {size: landscape; margin-left: 0.20in;margin-right: 0.20in;margin-top: 0.40in;margin-bottom: 0.70in;}</style></head><body>";
 		htmlExporterConfig.setHtmlHeader(header);
 		
 		htmlExporterConfig.setHtmlFooter(footer);
@@ -1219,9 +1219,9 @@ public class DynamicReportServiceImpl implements DynamicReportService {
 		htmlExporter.setConfiguration(htmlExporterConfig);
 
 		SimpleHtmlReportConfiguration reportConfig = new SimpleHtmlReportConfiguration();
-		reportConfig.setIgnorePageMargins(true);
+		//reportConfig.setIgnorePageMargins(true);
 		reportConfig.setRemoveEmptySpaceBetweenRows(true);
-		//reportConfig.setBorderCollapse("separate");
+		//reportConfig.setBorderCollapse("separate"); // collapse
 		reportConfig.setZoomRatio(new Float(0.97));
 		htmlExporter.setConfiguration(reportConfig);
 	}

@@ -90,11 +90,6 @@ function validateSubmit() {
 <table width="100%">
 	<tr>
 		<td align="${left}" width="100%" align="right">
-			<!--  
-			<a href="export.do?type=print" target="_blank" onclick="return validateExport();">
-				<img src="${printImage}" border="0" class="toolbarButton" title="Print"/>
-			</a>
-			-->
 			<a href="export.do?type=pdf" onclick="return validateExport();">
 				<img src="${pdfImage}" border="0" class="toolbarButton" title="PDF"/>
 			</a>
@@ -103,6 +98,9 @@ function validateSubmit() {
 			</a>
 			<a href="export.do?type=csv">
 				<img src="${csvImage}" border="0" class="toolbarButton" onclick="return validateExport();" title="CSV"/>
+			</a>
+			<a href="export.do?type=print" target="_blank" onclick="return validateExport();">
+				<img src="${printImage}" border="0" class="toolbarButton" title="Print"/>
 			</a>
 		</td>
 		</tr>
