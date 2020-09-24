@@ -2,7 +2,8 @@ package com.transys.controller;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,9 +13,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
-
+import org.apache.http.conn.ConnectionKeepAliveStrategy;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.apache.http.message.BasicHeaderElementIterator;
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.ClientHttpRequestInterceptor;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 
@@ -22,6 +30,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.client.ResponseErrorHandler;
+import org.springframework.web.client.RestClientException;
+import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -40,13 +51,18 @@ import com.transys.model.vo.DeliveryPickupReportVO;
 
 import com.transys.service.DynamicReportService;
 
+import org.springframework.context.annotation.Bean;
+
 @Controller
 @RequestMapping("/reports/deliveryPickupReport")
 public class DeliveryPickupReportController extends BaseController {
 	@Autowired
 	private DynamicReportService dynamicReportService;
 	
-	public DeliveryPickupReportController(){	
+	@Autowired
+	private RestTemplate restTemplate;
+	
+	public DeliveryPickupReportController() {
 		setUrlContext("reports/deliveryPickupReport");
 	}
 	
@@ -58,6 +74,23 @@ public class DeliveryPickupReportController extends BaseController {
 		}
 		
 		setupList(model, request);
+		
+		//RestTemplate restTemplate = new RestTemplate(new HttpComponentsClientHttpRequestFactory());
+		ResponseEntity<String> result;
+		try {
+			System.out.println(log.getLevel());
+			System.out.println(System.getProperty("jetty.base"));
+			System.out.println(System.getProperty("jetty.home"));
+			System.out.println(System.getProperty("JETTY_HOME"));
+			System.out.println(System.getProperty("JETTY_BASE"));
+			result = restTemplate.getForEntity(new URI("http://www.google.com"), String.class);
+			String body = result.getBody();
+			log.info("Length: " + body.length());
+			log.info("Body: " + body);
+		} catch (RestClientException | URISyntaxException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		return urlContext + "/list";
 	}

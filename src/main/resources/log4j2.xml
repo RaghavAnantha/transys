@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+    <Properties>
+        <Property name="logPath">/transys/logs</Property>
+        <Property name="rollingFileName">transys</Property>
+        <Property name="defaultPattern">%d{MM/dd/yyyy HH:mm:ss.SSS} [%t] %-5level %C:%L %M() - %msg%n%throwable{short.lineNumber}</Property>
+    	<!--
+           	%d{mm/dd/yyyy HH:mm:ss.SSS} [%t] %-5level %logger{36}:%L %M() %c %C - %msg%n%throwable{short.lineNumber}
+           	%style{%date{DEFAULT}}{yellow} [%t] %highlight{%-5level}{FATAL=bg_red, ERROR=red, WARN=yellow, INFO=green} %C:%L %M() - %msg%n%throwable{short.lineNumber}
+           	[%highlight{%-5level}] %d{DEFAULT} %c{1}.%M() - %msg%n%throwable{short.lineNumber}"
+           	%d %-5p %-17c{2} (%30F:%L) %3x- %m%n
+           	%d{yyyy-MM-dd HH:mm:ss} %c{1} [%p] %m%n
+        -->
+    </Properties>
+    <Appenders>
+        <Console name="console" target="SYSTEM_OUT">
+        	<PatternLayout pattern="${defaultPattern}"/>
+        </Console>
+        <RollingFile name="rollingFile" fileName="${logPath}/${rollingFileName}.log" filePattern="${logPath}/${rollingFileName}_%d{yyyy-MM-dd}.log">
+            <PatternLayout pattern="${defaultPattern}"/>
+            <Policies>
+                <!-- Causes a rollover if the log file is older than the current JVM's start time -->
+                <OnStartupTriggeringPolicy />
+                <!-- Causes a rollover once the date/time pattern no longer applies to the active file -->
+                <TimeBasedTriggeringPolicy interval="1" modulate="true" />
+            </Policies>
+        </RollingFile>
+    </Appenders>
+    <Loggers>
+        <Root level="INFO" additivity="false">
+            <AppenderRef ref="console" />
+            <AppenderRef ref="rollingFile" />
+        </Root>
+    </Loggers>
+    <!--
+    log4j.logger.org.springframework.ws.client.MessageTracing=DEBUG
+	log4j.logger.org.hibernate.cfg.beanvalidation.BeanValidationEventListener=trace
+	-->
+</Configuration>
