@@ -237,6 +237,11 @@ public abstract class CRUDController<T extends BaseModel> extends BaseController
 	}
 
 	public void cleanUp(HttpServletRequest request) {
+		SearchCriteria criteria = getSearchCriteria(request);
+		if (criteria == null || criteria.getSearchMap() == null) {
+			return;
+		}
+		
 		resetEffectiveDateInSearch(request);
 		resetEmptyPermitNumberInSearch(request);
 	}

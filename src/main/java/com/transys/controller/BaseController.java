@@ -179,6 +179,11 @@ public class BaseController {
 		request.getSession().setAttribute("searchCriteria", criteria);
 		updateEffectiveDateInSearch(request);
 	}
+	
+	protected SearchCriteria getSearchCriteria(HttpServletRequest request) {
+		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
+		return criteria;
+	}
 
 	protected String getCriteriaAsString(SearchCriteria criteria) {
 		StringBuffer buffer = new StringBuffer("");
