@@ -83,7 +83,7 @@ public class ApacheHttpClientConfig {
 	public Runnable idleConnectionMonitor(PoolingHttpClientConnectionManager pool) {
 		return new Runnable() {
 			@Override
-			@Scheduled(fixedDelay = 12000000) // 20000
+			@Scheduled(fixedDelay = IDLE_CONNECTION_MONITOR_INTERVAL)
 			public void run() {
 				// Only if connection pool is initialised
 				if (pool != null) {

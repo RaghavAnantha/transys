@@ -678,7 +678,7 @@ public final class Datatable extends BodyTagSupport {
 			log.warn("No SuchMethod Exception :"+NSMEx);
 		} catch (NestedNullException NSMEx) {
 			//NSMEx.printStackTrace();
-			log.warn("Nested Null Exception :");//+NSMEx);
+			log.warn("Nested Null Exception");//+NSMEx);
 		}
 		return objRet;
 	}
