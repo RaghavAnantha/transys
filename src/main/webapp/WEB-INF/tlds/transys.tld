@@ -136,6 +136,11 @@
 			<type>java.lang.Boolean</type>
 		</attribute>
 		<attribute>
+			<name>exportPrint</name>
+			<rtexprvalue>true</rtexprvalue>
+			<type>java.lang.Boolean</type>
+		</attribute>
+		<attribute>
 			<name>displayPrint</name>
 			<rtexprvalue>true</rtexprvalue>
 			<type>java.lang.Boolean</type>

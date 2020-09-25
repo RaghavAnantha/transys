@@ -292,7 +292,7 @@ function processCancel(url, permitId) {
 		editable="true" insertable="true" cancellable="true" baseObjects="${list}"
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
 		pagingLink="list.do" multipleDelete="false" searcheable="false" 
-		exportPdf="true" exportCsv="true" exportXlsx="true" useExport2="true" dataQualifier="managePermits">
+		exportPdf="true" exportCsv="true" exportXlsx="true" exportPrint="true" useExport2="true" dataQualifier="managePermits">
 		<transys:textcolumn headerText="Id" dataField="id" />
 		<transys:textcolumn headerText="Status" dataField="status.status" />
 		<transys:textcolumn headerText="Delivery Address" dataField="deliveryAddress.fullLine"/>

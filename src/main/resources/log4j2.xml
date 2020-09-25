@@ -13,6 +13,7 @@
         -->
     </Properties>
     <Appenders>
+        <!--<Console name="console" target="SYSTEM_OUT">-->
         <Console name="console" target="SYSTEM_OUT">
         	<PatternLayout pattern="${defaultPattern}"/>
         </Console>

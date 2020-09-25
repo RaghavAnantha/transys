@@ -1,14 +1,21 @@
 package com.transys.controller;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.net.ssl.HttpsURLConnection;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -19,6 +26,10 @@ import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.message.BasicHeaderElementIterator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
@@ -87,12 +98,121 @@ public class DeliveryPickupReportController extends BaseController {
 			String body = result.getBody();
 			log.info("Length: " + body.length());
 			log.info("Body: " + body);
+			
+			getToken2();
 		} catch (RestClientException | URISyntaxException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
 		return urlContext + "/list";
+	}
+	
+	private String getToken() {
+		String authString = StringUtils.EMPTY;
+		String userName = "14af6733-0d19-4af7-bc61-41fd16edcc91.fleetmatics-p-us";
+		String password = "!ntegration16";
+		String tokenUri = "https://fim.api.us.fleetmatics.com:443/token";
+		ResponseEntity<String> result;
+		try {
+			String basicAuth = buildBasicAuth(userName, password);
+			
+			URL url = new URL(tokenUri); 
+			
+			HttpsURLConnection conn = (HttpsURLConnection) url.openConnection(); 
+			conn.setRequestMethod("GET");
+			conn.setRequestProperty("Authorization", basicAuth); 
+			conn.setRequestProperty("Accept", "text/plain"); 
+			conn.setDoOutput(false); // Do not send request body
+
+			if (conn.getResponseCode() != HttpsURLConnection.HTTP_OK) {
+				conn.getResponseMessage();
+				throw new RuntimeException("Failed : HTTP error code : " + conn.getResponseCode());
+			}
+
+			// Reads text from a character-input stream
+			BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+			authString = br.readLine(); 
+
+			conn.disconnect();
+
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (RestClientException e) {
+			e.printStackTrace();
+		} /*catch (URISyntaxException e) {
+			e.printStackTrace();
+		}*/
+		
+		return authString;
+	}
+	
+	private HttpHeaders createHttpHeaders(String user, String password) {
+		String notEncoded = user + ":" + password;
+		String encodedAuth = "Basic " + Base64.getEncoder().encodeToString(notEncoded.getBytes());
+		HttpHeaders headers = new HttpHeaders();
+		headers.clear();
+		//headers.setContentType(MediaType.TEXT_PLAIN);
+		headers.setAccept(Arrays.asList(new MediaType[] { MediaType.TEXT_PLAIN }));
+		headers.add("Authorization", encodedAuth);
+		return headers;
+	}
+
+	private void getToken2() {
+		String authString = StringUtils.EMPTY;
+		String userName = "14af6733-0d19-4af7-bc61-41fd16edcc91.fleetmatics-p-us";
+		String password = "!ntegration16";
+		String tokenUri = "https://fim.api.us.fleetmatics.com:443/token";
+		try {
+			HttpHeaders headers = createHttpHeaders(userName, password);
+			HttpEntity<String> entity = new HttpEntity<String>("parameters", headers);
+			ResponseEntity<String> response = restTemplate.exchange(tokenUri, HttpMethod.GET, entity, String.class);
+			System.out.println("Result - status (" + response.getStatusCode() + ") has body: " + response.hasBody());
+		} catch (Exception eek) {
+			System.out.println("** Exception: " + eek.getMessage());
+		}
+	}
+	
+	private String getToken1() {
+		String authString = "";
+		String userName = "14af6733-0d19-4af7-bc61-41fd16edcc91.fleetmatics-p-us";
+		String password = "!ntegration16";
+		String tokenUri = "https://fim.api.us.fleetmatics.com:443/token";
+		try {
+			String basicAuth = buildBasicAuth(userName, password);
+
+			URL url = new URL(tokenUri); 
+			HttpsURLConnection conn = (HttpsURLConnection) url.openConnection(); 
+			conn.setRequestMethod("GET"); // Set request type to GET
+			conn.setRequestProperty("Authorization", basicAuth); 
+			conn.setRequestProperty("Accept", "text/plain"); 
+			conn.setDoOutput(false); // Do not send request body
+
+			if (conn.getResponseCode() != HttpsURLConnection.HTTP_OK) {
+				conn.getResponseMessage();
+				throw new RuntimeException("Failed : HTTP error code : " + conn.getResponseCode());
+			}
+
+			// Reads text from a character-input stream
+			BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+			authString = br.readLine(); 
+
+			conn.disconnect();
+
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return authString;
+	}
+
+	private static String buildBasicAuth(String userName, String password) {
+		String userCredentials = userName + ":" + password; 
+		return "Basic " + Base64.getEncoder().encodeToString(userCredentials.getBytes()); 
 	}
 	
 	public void setupList(ModelMap model, HttpServletRequest request) {

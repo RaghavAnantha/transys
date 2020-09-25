@@ -108,7 +108,7 @@ function processOrderNotesDelete(orderNotesId) {
 		dataQualifier="manageOrderNotes">
 		<transys:textcolumn headerText="Id" dataField="id" />
 		<transys:textcolumn headerText="Entered By" dataField="enteredBy" width="150px" />
-		<transys:textcolumn headerText="Date/Time" dataField="createdAt" dataFormat="MM/dd/yyy" width="75px"/>
+		<transys:textcolumn headerText="Date/Time" dataField="createdAt" dataFormat="MM/dd/yyy hh:mm:ss" width="140px"/>
 		<transys:textcolumn headerText="Notes/Comments" dataField="notes" />
 		<transys:imagecolumn headerText="DEL" linkUrl="javascript:processOrderNotesDelete('{id}');" imageSrc="${ctx}/images/delete.png" HAlign="center" width="35px"/>
 	</transys:datatable>

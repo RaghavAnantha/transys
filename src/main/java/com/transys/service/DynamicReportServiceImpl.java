@@ -1208,7 +1208,7 @@ public class DynamicReportServiceImpl implements DynamicReportService {
 		SimpleHtmlExporterConfiguration htmlExporterConfig = new SimpleHtmlExporterConfiguration();
 		//exporter.setParameter(JRHtmlExporterParameter.IS_USING_IMAGES_TO_ALIGN, false);*/
 		
-		String header = "<html><head><style> @page {size: landscape; margin-left: 0.20in;margin-right: 0.20in;margin-top: 0.40in;margin-bottom: 0.70in;}</style></head><body>";
+		String header = "<html><head><style> @page {size: landscape; margin-left: 0.20in;margin-right: 0.20in;margin-top: 0.50in;margin-bottom: 0.70in;}</style></head><body>";
 		htmlExporterConfig.setHtmlHeader(header);
 		
 		htmlExporterConfig.setHtmlFooter(footer);
@@ -1243,7 +1243,7 @@ public class DynamicReportServiceImpl implements DynamicReportService {
 		HtmlExporter htmlExporter = new HtmlExporter();
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		
-		String footer = "<script language=\"javascript\">  try  { document.execCommand('print', false, null); } catch(e) { window.print(); }</script></body></html>";
+		String footer = "<script language=\"javascript\"> try { document.execCommand('print', false, null); } catch(e) { window.print(); }</script></body></html>";
 		configureForHtml(htmlExporter, out, jp, request, footer);
 				
 		htmlExporter.exportReport();

@@ -4,6 +4,9 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.transys.core.report.WaterMarkRenderer;
 
 import net.sf.jasperreports.engine.JasperPrint;
@@ -13,14 +16,16 @@ import net.sf.jasperreports.j2ee.servlets.ImageServlet;
 public class ReportUtil {
 	public static String JASPER_PRINT_SESSION_ATTRIBUTE_KEY = ImageServlet.DEFAULT_JASPER_PRINT_SESSION_ATTRIBUTE;
 
+	protected static Logger log = LogManager.getLogger("com.transys.core.util.ReportUtil");
+	
 	public static void addJasperPrint(HttpServletRequest request, JasperPrint jp, String className) {
 		request.getSession().setAttribute(JASPER_PRINT_SESSION_ATTRIBUTE_KEY, jp);
-		System.out.println(className + "->Added Jasper Print");
+		log.info(className + "->Added Jasper Print");
 	}
 	
 	public static String removeJasperPrint(HttpServletRequest request, String className) {
 		request.getSession().removeAttribute(JASPER_PRINT_SESSION_ATTRIBUTE_KEY);
-		System.out.println(className + "->Removed Jasper Print");
+		log.info(className + "->Removed Jasper Print");
 		return "Success";
 	}
 	
