@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="WARN">
     <Properties>
-        <Property name="logPath">${jetty.home}/logs</Property>
+        <Property name="logPath">${sys:jetty.home}/logs</Property>
         <Property name="rollingFileName">transys</Property>
+        <Property name="rollingFileNameWithPath">${logPath}/${rollingFileName}</Property>
         <Property name="defaultPattern">%d{MM/dd/yyyy HH:mm:ss.SSS} [%t] %-5level %C:%L %M() - %msg%n%throwable{short.lineNumber}</Property>
     	<!--
            	%d{mm/dd/yyyy HH:mm:ss.SSS} [%t] %-5level %logger{36}:%L %M() %c %C - %msg%n%throwable{short.lineNumber}
@@ -16,7 +17,7 @@
         <Console name="console" target="SYSTEM_OUT">
         	<PatternLayout pattern="${defaultPattern}"/>
         </Console>
-        <RollingFile name="rollingFile" fileName="${logPath}/${rollingFileName}.log" filePattern="${logPath}/${rollingFileName}_%d{yyyy-MM-dd}.log">
+        <RollingFile name="rollingFile" fileName="${rollingFileNameWithPath}.log" filePattern="${rollingFileNameWithPath}_%d{yyyy-MM-dd}.log">
             <PatternLayout pattern="${defaultPattern}"/>
             <Policies>
                 <!-- Causes a rollover if the log file is older than the current JVM's start time -->
