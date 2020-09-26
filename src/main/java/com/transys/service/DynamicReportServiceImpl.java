@@ -1209,12 +1209,13 @@ public class DynamicReportServiceImpl implements DynamicReportService {
 		//exporter.setParameter(JRHtmlExporterParameter.IS_USING_IMAGES_TO_ALIGN, false);*/
 		
 		String header = "<html><head><style> @page {size: landscape; margin-left: 0.20in;margin-right: 0.20in;margin-top: 0.50in;margin-bottom: 0.70in;}</style></head><body>";
+		//String header = "<html><head><style> @page {size: landscape;}</style></head><body>";
 		htmlExporterConfig.setHtmlHeader(header);
 		
 		htmlExporterConfig.setHtmlFooter(footer);
 		
-		String betweenPagesHtml = "<div style=\"display:block;page-break-before:always;\"></div>";
-		htmlExporterConfig.setBetweenPagesHtml(betweenPagesHtml);
+		//String betweenPagesHtml = "<div style=\"display:block;page-break-before:always;\"></div>";
+		//htmlExporterConfig.setBetweenPagesHtml(betweenPagesHtml);
 				
 		htmlExporter.setConfiguration(htmlExporterConfig);
 
