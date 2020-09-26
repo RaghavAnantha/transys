@@ -31,7 +31,7 @@
 		searchCriteria="<%=null%>" cellPadding="2"
 		searcheable="false" dataQualifier="manageOrderNotesModal">
 		<transys:textcolumn headerText="Entered By" dataField="enteredBy" width="150px"/>
-		<transys:textcolumn headerText="Date/Time" dataField="createdAt" width="75px" dataFormat="MM/dd/yyyy hh:mm:ss"/>
+		<transys:textcolumn headerText="Date/Time" dataField="createdAt" width="140px" dataFormat="MM/dd/yyyy hh:mm:ss"/>
 		<transys:textcolumn headerText="Notes/Comments" dataField="notes" />
 	</transys:datatable>
 	<%session.setAttribute("manageOrderNotesModalColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
