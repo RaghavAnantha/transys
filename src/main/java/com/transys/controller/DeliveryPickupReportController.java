@@ -1,49 +1,28 @@
 package com.transys.controller;
 
-import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
+
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.net.ssl.HttpsURLConnection;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.conn.ConnectionKeepAliveStrategy;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
-import org.apache.http.message.BasicHeaderElementIterator;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.http.client.ClientHttpRequestInterceptor;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
+
 import org.springframework.stereotype.Controller;
+
 import org.springframework.ui.ModelMap;
 
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.client.ResponseErrorHandler;
-import org.springframework.web.client.RestClientException;
-import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -61,8 +40,7 @@ import com.transys.model.vo.DeliveryAddressVO;
 import com.transys.model.vo.DeliveryPickupReportVO;
 
 import com.transys.service.DynamicReportService;
-
-import org.springframework.context.annotation.Bean;
+import com.transys.service.verizon.VerizonRevealService;
 
 @Controller
 @RequestMapping("/reports/deliveryPickupReport")
@@ -71,7 +49,7 @@ public class DeliveryPickupReportController extends BaseController {
 	private DynamicReportService dynamicReportService;
 	
 	@Autowired
-	private RestTemplate restTemplate;
+	private VerizonRevealService verizonRevealService;
 	
 	public DeliveryPickupReportController() {
 		setUrlContext("reports/deliveryPickupReport");
@@ -86,75 +64,9 @@ public class DeliveryPickupReportController extends BaseController {
 		
 		setupList(model, request);
 		
-		getToken();
+		String token = verizonRevealService.getToken();
 		
 		return urlContext + "/list";
-	}
-	
-	private String getToken1() {
-		String authString = StringUtils.EMPTY;
-		String userName = "14af6733-0d19-4af7-bc61-41fd16edcc91.fleetmatics-p-us";
-		String password = "!ntegration16";
-		String tokenUri = "https://fim.api.us.fleetmatics.com:443/token";
-		try {
-			String basicAuth = buildBasicAuth(userName, password);
-			
-			URL url = new URL(tokenUri); 
-			
-			HttpsURLConnection conn = (HttpsURLConnection) url.openConnection(); 
-			conn.setRequestMethod("GET");
-			conn.setRequestProperty("Authorization", basicAuth); 
-			conn.setRequestProperty("Accept", "text/plain"); 
-			conn.setDoOutput(false); // Do not send request body
-
-			if (conn.getResponseCode() != HttpsURLConnection.HTTP_OK) {
-				conn.getResponseMessage();
-				throw new RuntimeException("Failed : HTTP error code : " + conn.getResponseCode());
-			}
-
-			BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-			authString = br.readLine(); 
-
-			conn.disconnect();
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (RestClientException e) {
-			e.printStackTrace();
-		} 
-		
-		return authString;
-	}
-
-	private void getToken() {
-		String userName = "14af6733-0d19-4af7-bc61-41fd16edcc91.fleetmatics-p-us";
-		String password = "!ntegration16";
-		String tokenUri = "https://fim.api.us.fleetmatics.com:443/token";
-		//RestTemplate restTemplate = new RestTemplate(new HttpComponentsClientHttpRequestFactory());
-		try {
-			HttpHeaders headers = createHttpHeaders(userName, password);
-			HttpEntity<String> entity = new HttpEntity<String>("parameters", headers);
-			ResponseEntity<String> response = restTemplate.exchange(tokenUri, HttpMethod.GET, entity, String.class);
-			System.out.println("Result - status (" + response.getStatusCode() + ") has body: " + response.hasBody());
-		} catch (Exception eek) {
-			System.out.println("** Exception: " + eek.getMessage());
-		}
-	}
-	
-	private static String buildBasicAuth(String userName, String password) {
-		String userCredentials = userName + ":" + password; 
-		return "Basic " + Base64.getEncoder().encodeToString(userCredentials.getBytes()); 
-	}
-	
-	private HttpHeaders createHttpHeaders(String userName, String password) {
-		String basicAuth = buildBasicAuth(userName, password);
-		HttpHeaders headers = new HttpHeaders();
-		headers.clear();
-		//headers.setContentType(MediaType.TEXT_PLAIN);
-		headers.setAccept(Arrays.asList(new MediaType[]{ MediaType.TEXT_PLAIN }));
-		headers.add("Authorization", basicAuth);
-		return headers;
 	}
 	
 	public void setupList(ModelMap model, HttpServletRequest request) {

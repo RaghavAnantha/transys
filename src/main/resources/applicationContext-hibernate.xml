@@ -12,5 +12,4 @@
 
 	<bean id="genericDAO" class="com.transys.core.dao.GenericJpaDAO" lazy-init="true"/>
 	<bean id="userDAO" class="com.transys.dao.admin.UserDAOImpl"  lazy-init="true"/>
-	
 </beans>

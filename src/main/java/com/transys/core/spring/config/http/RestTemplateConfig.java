@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.http.impl.client.CloseableHttpClient;
 
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -30,9 +31,8 @@ public class RestTemplateConfig {
 	@Autowired
 	public RestTemplateConfig() {
 		this.httpClient = null;
-	}
-	*/
-
+	}*/
+	
 	@Bean
 	public HttpComponentsClientHttpRequestFactory clientHttpRequestFactory() {
 		HttpComponentsClientHttpRequestFactory clientHttpRequestFactory = new HttpComponentsClientHttpRequestFactory();
