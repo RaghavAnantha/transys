@@ -1663,13 +1663,15 @@ public class OrderController extends CRUDController<Order> {
 	public @ResponseBody String retrieveCityFee(ModelMap model, HttpServletRequest request,
 														    @RequestParam(value = "cityFeeId") String cityFeeId) {
 		BigDecimal cityFee = retrieveCityFee(cityFeeId);
+		if (cityFee == null) {
+			return "ErrorMsg: Valid city fee not found for selected City";
+		}
 		
 		ObjectMapper objectMapper = new ObjectMapper();
 		String json = StringUtils.EMPTY;
 		try {
 			json = objectMapper.writeValueAsString(cityFee);
 		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return json;
@@ -1711,7 +1713,11 @@ public class OrderController extends CRUDController<Order> {
 						 +  " and '" + todaysDateStr + "' between obj.effectiveStartDate and obj.effectiveEndDate";
 		
 		List<CityFee> cityFeeList = genericDAO.executeSimpleQuery(cityFeeQuery);
-		return cityFeeList.get(0).getFee();
+		if (cityFeeList == null || cityFeeList.isEmpty()) {
+			return null;
+		} else {
+			return cityFeeList.get(0).getFee();
+		}
 	}
 	
 	/*@RequestMapping(method = RequestMethod.GET, value = "/calculateOverweightFee.do")

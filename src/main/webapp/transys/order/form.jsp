@@ -298,12 +298,17 @@ function populateCityFee() {
 	}
 	
 	$.ajax({
-  		url: "retrieveCityFee.do?" + "cityFeeId=" + cityFeeId ,
-  								  
+  		url: "retrieveCityFee.do?" + "cityFeeId=" + cityFeeId,
        	type: "GET",
        	success: function(responseData, textStatus, jqXHR) {
-       		cityFeeInput.val(responseData);
+       		if (responseData == null || responseData == ''
+       				|| responseData.indexOf("ErrorMsg") != -1) {
+       			//var errorMsg = responseData.replace("ErrorMsg: ", "");
+       			//showAlertDialog("Error", errorMsg);
+       			return;
+       		}
        		
+       		cityFeeInput.val(responseData);
        		populateTotalFees();
 		}
 	});

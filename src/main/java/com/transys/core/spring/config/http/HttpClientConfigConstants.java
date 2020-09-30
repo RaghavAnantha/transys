@@ -18,4 +18,5 @@ public interface HttpClientConfigConstants {
 	int IDLE_CONNECTION_WAIT_TIME = 30 * 1000; // 30 sec
 	// Time interval to check for idle connections
 	long IDLE_CONNECTION_MONITOR_INTERVAL = 2400 * 1000; // (20 * 1000)
+	int IDLE_CONNECTION_MONITOR_THREAD_POOL_SIZE = 2; // 5
 }

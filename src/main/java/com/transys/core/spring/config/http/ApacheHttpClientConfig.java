@@ -100,7 +100,7 @@ public class ApacheHttpClientConfig {
 	public TaskScheduler taskScheduler() {
 		ThreadPoolTaskScheduler scheduler = new ThreadPoolTaskScheduler();
 		scheduler.setThreadNamePrefix("idleMonitor");
-		scheduler.setPoolSize(2); //5
+		scheduler.setPoolSize(IDLE_CONNECTION_MONITOR_THREAD_POOL_SIZE);
 		return scheduler;
 	}
 
