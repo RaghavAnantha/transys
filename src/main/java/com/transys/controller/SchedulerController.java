@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,16 +40,20 @@ import com.transys.model.SearchCriteria;
 import com.transys.model.vo.DeliveryAddressVO;
 import com.transys.model.vo.DeliveryPickupReportVO;
 
-import com.transys.service.DynamicReportService;
+import com.transys.service.map.MapService;
+import com.transys.service.verizon.VerizonRevealService;
 
 @Controller
-@RequestMapping("/reports/deliveryPickupReport")
-public class DeliveryPickupReportController extends BaseController {
+@RequestMapping("/scheduler")
+public class SchedulerController extends BaseController {
 	@Autowired
-	private DynamicReportService dynamicReportService;
+	private VerizonRevealService verizonRevealService;
 	
-	public DeliveryPickupReportController() {
-		setUrlContext("reports/deliveryPickupReport");
+	@Autowired
+	private MapService  mapService;
+	
+	public SchedulerController() {
+		setUrlContext("scheduler");
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/main.do")
@@ -60,14 +65,22 @@ public class DeliveryPickupReportController extends BaseController {
 		
 		setupList(model, request);
 		
+		String token = verizonRevealService.getToken();
+		verizonRevealService.getVehicleLocation("124");
+		verizonRevealService.getVehicleLocation(Arrays.asList(new String[]{"124", "11"}));
+		verizonRevealService.getVehicleStatus("124");
+		verizonRevealService.getVehicleStatus(Arrays.asList(new String[]{"124", "11"}));
+		verizonRevealService.getWorkOrder("test");
+		model.addAttribute("latLng", token);
+		
 		return urlContext + "/list";
 	}
 	
 	public void setupList(ModelMap model, HttpServletRequest request) {
 		populateSearchCriteria(request, request.getParameterMap());
 		
-		model.addAttribute("msgCtx", "deliveryPickupReport");
-		model.addAttribute("errorCtx", "deliveryPickupReport");
+		model.addAttribute("msgCtx", "schedulerSearch");
+		model.addAttribute("errorCtx", "schedulerSearch");
 		
 		List<DeliveryAddressVO> deliveryAddressVOList = ModelUtil.retrieveOrderDeliveryAddresses(genericDAO);
 		model.addAttribute("deliveryAddresses", deliveryAddressVOList);
@@ -102,8 +115,8 @@ public class DeliveryPickupReportController extends BaseController {
 			String reportName = "deliveryPickupReport";
 			String type = "html";
 			setReportRequestHeaders(response, type, reportName);
-			out = dynamicReportService.generateStaticReport(reportName, reportData, 
-								params, type, request);
+			//out = dynamicReportService.generateStaticReport(reportName, reportData, 
+			//					params, type, request);
 			out.writeTo(response.getOutputStream());
 			
 			return null;				
@@ -183,7 +196,7 @@ public class DeliveryPickupReportController extends BaseController {
 			
 			String reportName = "deliveryPickupReport";
 			type = setReportRequestHeaders(response, type, reportName);
-			out = dynamicReportService.generateStaticReport(reportName, reportData, params, type, request);
+			//out = dynamicReportService.generateStaticReport(reportName, reportData, params, type, request);
 			out.writeTo(response.getOutputStream());
 			
 			return null;

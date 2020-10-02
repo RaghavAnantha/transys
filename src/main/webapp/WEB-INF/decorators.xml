@@ -18,6 +18,9 @@
     <decorator name="invoice" page="singleColumnLayout.jsp">
         <pattern>/transys/invoice/**</pattern>
     </decorator>
+     <decorator name="scheduler" page="singleColumnLayout.jsp">
+        <pattern>/transys/scheduler/**</pattern>
+    </decorator>
     <decorator name="publicMaterialIntake" page="singleColumnLayout.jsp">
         <pattern>/transys/publicMaterialIntake/**</pattern>
     </decorator>

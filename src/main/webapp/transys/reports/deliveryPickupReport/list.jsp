@@ -110,7 +110,6 @@ function validateSubmit() {
 			</td>
 		</tr>
 </table>
-
 <script language="javascript">
 $("#deliveryPickUpReportSearchForm").submit(function (ev) {
 	if (!validateSubmit()) {
@@ -138,46 +137,3 @@ $("#deliveryPickUpReportSearchForm").submit(function (ev) {
     ev.preventDefault();
 });
 </script>
-
-<!-- 
-<hr class="hr-ext">
-<table class="table" id="form-table"> 
-	<tr><td></td></tr>
-	<tr>
-		<td class="form-left">Total Dumpsters/Boxes Delivered (or Picked up) for:</td>
-	</tr>
-</table>
-<table class="table" id="form-table"> 	
-	<tr>
-		<td class="form-left form-left-ext"><transys:label code="Delivery Date Range:" /></td>
-		<td class="wide td-static" id="deliveryDateRange">${deliveryDateFrom}&nbsp;&nbsp;To&nbsp;&nbsp;${deliveryDateTo}</td>
-
-		<td class="form-left  td-static">Pickup Date Range:</td>
-		<td id="pickupDateRange" class="td-static">${pickupDateFrom}&nbsp;&nbsp;To&nbsp;&nbsp;${pickupDateTo}</td>
-	</tr>
-	<tr>
-		<td class="td-static">${dumpsterSizeAggregation}</td>
-	</tr> 
-</table>
-
-<a href="generateDeliveryPickupReport.do?type=xls"><img src="${ctx}/images/excel.png" border="0" style="float:right" class="toolbarButton"></a>
-<a href="generateDeliveryPickupReport.do?type=pdf"><img src="${ctx}/images/pdf.png" border="0" style="float:right" class="toolbarButton"></a>
-<form:form name="deliveryPickupReport" id="deliveryPickupReport" class="tab-color">
-	<transys:datatable urlContext="reports/deliveryPickupReport"  baseObjects="${ordersList}"
-		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
-		pagingLink="list.do" dataQualifier="deliveryPickupReport">
-		<transys:textcolumn headerText="Order #" dataField="id" />
-		<transys:textcolumn headerText="Customer" dataField="customer.companyName" />
-		<transys:textcolumn headerText="Delivery Address" dataField="deliveryAddress.fullLine" />
-		<transys:textcolumn headerText="City" dataField="deliveryAddress.city" />
-		<transys:textcolumn headerText="Dumpster Size" dataField="dumpsterSize.size" />
-		<transys:textcolumn headerText="Dumpster #" dataField="dumpster.dumpsterNum" />
-		<transys:textcolumn headerText="Delivery Date" dataField="deliveryDate" dataFormat="MM/dd/yyyy"/>
-		<transys:textcolumn headerText="Pickup Date" dataField="pickupDate" dataFormat="MM/dd/yyyy"/>
-		<transys:textcolumn headerText="Tonnage" dataField="netWeightTonnage" />
-		<transys:textcolumn headerText="Driver Name" dataField="dropOffDriver.name" />
-		<transys:textcolumn headerText="Location" dataField="dumpsterLocation" />
-	</transys:datatable>
-	<session.setAttribute("deliveryPickupReportColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
-</form:form>
--->

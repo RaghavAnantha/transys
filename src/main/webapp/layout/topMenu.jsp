@@ -17,6 +17,7 @@
 					<li id="permitPage"><a href="${ctx}/permit/main.do">Permits</a></li>
 					<li id="customerPage"><a href="${ctx}/customer/main.do">Customers</a></li>
 					<li id="invoicePage"><a href="${ctx}/invoice/createInvoiceMain.do">Invoices</a></li>
+					<li id="schedulerPage"><a href="${ctx}/scheduler/main.do">Scheduler</a></li>
 					<li id="materialIntake"><a href="${ctx}/publicMaterialIntake/main.do">Public Material Intake</a></li>
 					<li id="reportPage">
 						<a href="#" data-toggle="dropdown" class="dropdown-toggle">Reports<b class="caret"></b></a>
@@ -94,6 +95,8 @@
 			activePage = "customerPage";
 		} else if (loc.match('/invoice/')) {
 			activePage = "invoicePage";
+		} else if (loc.match('/scheduler/')) {
+			activePage = "schedulerPage";
 		} else if (loc.match('/reports/')) {
 			activePage = "reportPage";
 		} else if (loc.match('/masterData/')) {
