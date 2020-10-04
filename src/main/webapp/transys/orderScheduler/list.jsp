@@ -33,7 +33,8 @@ function validateSubmit() {
 <script>
 "use strict";
   function buildVehicleLocationInfoWindowContent(aVehicleLocation) {
-	var content = "<b>" + aVehicleLocation.VehicleNumber + "</b>"
+	var content = "<b>" + aVehicleLocation.VehicleNumber
+				+ "&nbsp;&nbsp;&nbsp;" + "Dumpster No." + "Dumpster Size" + "</b>"
 				+ "<hr style=\"height:2px;padding:0px;margin: 0px;color:gray;background-color:gray\">"
 				+ aVehicleLocation.DisplayState
 				+ "&nbsp;" + aVehicleLocation.Heading 
@@ -42,7 +43,10 @@ function validateSubmit() {
 				+ "<hr style=\"height:2px;padding:0px;margin: 0px;color:gray;background-color:gray\">"
 				+ "Delivery Order Id: 12345"
 				+ "<br/>" + "Company Name"
-				+ "<br/>" + "Delivery Address";
+				+ "<br/>" + "Delivery Address"
+				+ "<hr style=\"height:2px;padding:0px;margin: 0px;color:gray;background-color:gray\">"
+				+ "Driver Name";
+				
 	return content;
 }
 
@@ -51,6 +55,8 @@ function buildDeliveryOrderAddressInfoWindowContent(aDeliveryOrderAddress) {
 				+ "<hr style=\"height:2px;padding:0px;margin:0px;color:gray;background-color:gray\">"
 				+ aDeliveryOrderAddress.customerName
 				+ "<br/>" + aDeliveryOrderAddress.fullAddress;
+				+ "<hr style=\"height:2px;padding:0px;margin:0px;color:gray;background-color:gray\">"
+				+ "Dumpster: " + aDeliveryOrderAddress.dumpsterSize;
 	return content;
 }
 
@@ -58,7 +64,9 @@ function buildPickupOrderAddressInfoWindowContent(aPickupOrderAddress) {
 	var content = "<b>" + "Pickup Order Id: " + aPickupOrderAddress.orderId + "</b>"
 				+ "<hr style=\"height:2px;padding:0px;margin:0px;color:gray;background-color:gray\">"
 				+ aPickupOrderAddress.customerName
-				+ "<br/>" + aPickupOrderAddress.fullAddress;
+				+ "<br/>" + aPickupOrderAddress.fullAddress
+				+ "<hr style=\"height:2px;padding:0px;margin:0px;color:gray;background-color:gray\">"
+				+ "Dumpster: " + aPickupOrderAddress.dumpsterNum + "&nbsp;" + aPickupOrderAddress.dumpsterSize;
 	return content;
 }
 

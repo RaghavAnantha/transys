@@ -114,7 +114,7 @@ public class OrderScheduleController extends BaseController {
 				continue;
 			}
 			DeliveryAddressVO aDeliveryAddressVO = new DeliveryAddressVO();
-			map(aDeliveryAddressVO, order.getDeliveryAddress(), order.getId());
+			map(aDeliveryAddressVO, order);
 			latLng =  mapService.getGeocode(aDeliveryAddressVO.getFullAddress());
 			aDeliveryAddressVO.setGeoCode(latLng);
 			deliveryAddressVOList.add(aDeliveryAddressVO);
@@ -134,7 +134,7 @@ public class OrderScheduleController extends BaseController {
 				continue;
 			}
 			DeliveryAddressVO aDeliveryAddressVO = new DeliveryAddressVO();
-			map(aDeliveryAddressVO, order.getDeliveryAddress(), order.getId());
+			map(aDeliveryAddressVO, order);
 			latLng =  mapService.getGeocode(aDeliveryAddressVO.getFullAddress());
 			aDeliveryAddressVO.setGeoCode(latLng);
 			deliveryAddressVOList.add(aDeliveryAddressVO);
@@ -189,8 +189,11 @@ public class OrderScheduleController extends BaseController {
 		return vehicleLocationList;
 	}
 	
-	private void map(DeliveryAddressVO aDeliveryAddressVO, DeliveryAddress aDeliveryAddress, Long orderId) {
-		aDeliveryAddressVO.setOrderId(orderId);
+	private void map(DeliveryAddressVO aDeliveryAddressVO, Order order) {
+		DeliveryAddress aDeliveryAddress = order.getDeliveryAddress();
+		aDeliveryAddressVO.setOrderId(order.getId());
+		aDeliveryAddressVO.setDumpsterNum(order.getDumpsterNum());
+		aDeliveryAddressVO.setDumpsterSize(order.getDumpsterSizeStr());
 		aDeliveryAddressVO.setId(aDeliveryAddress.getId());
 		aDeliveryAddressVO.setLine1(aDeliveryAddress.getLine1());
 		aDeliveryAddressVO.setLine2(aDeliveryAddress.getLine2());

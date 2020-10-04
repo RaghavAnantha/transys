@@ -14,11 +14,15 @@ public class DeliveryAddressVO extends BaseVO {
 	
 	private Long orderId;
 	private String customerName = StringUtils.EMPTY;
+	
 	private String geoCode = StringUtils.EMPTY;
 	private String fullLine = StringUtils.EMPTY;
 	private String fullAddress = StringUtils.EMPTY;
 	private Double latitude;
 	private Double longitude;
+	
+	private String dumpsterNum;
+	private String dumpsterSize;
 	
 	public Long getId() {
 		return id;
@@ -108,5 +112,17 @@ public class DeliveryAddressVO extends BaseVO {
 	}
 	public void setLongitude(Double longitude) {
 		this.longitude = longitude;
+	}
+	public String getDumpsterNum() {
+		return dumpsterNum;
+	}
+	public void setDumpsterNum(String dumpsterNum) {
+		this.dumpsterNum = dumpsterNum;
+	}
+	public String getDumpsterSize() {
+		return dumpsterSize;
+	}
+	public void setDumpsterSize(String dumpsterSize) {
+		this.dumpsterSize = dumpsterSize;
 	}
 }

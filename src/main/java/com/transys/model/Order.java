@@ -17,6 +17,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.transys.core.util.FormatUtil;
 
 @Entity
@@ -478,6 +480,17 @@ public class Order extends AbstractBaseModel {
 
 	public void setInvoiceDate(Date invoiceDate) {
 		this.invoiceDate = invoiceDate;
+	}
+	
+	@Transient
+	public String getDumpsterNum() {
+		return getDumpster() == null ? StringUtils.EMPTY : getDumpster().getDumpsterNum();
+	}
+	
+	@Transient
+	public String getDumpsterSizeStr() {
+		return (getDumpster() == null || getDumpster().getDumpsterSize() == null) 
+				? StringUtils.EMPTY : getDumpster().getDumpsterSize().getSize();
 	}
 	
 	/*public String getMaterialType() {
