@@ -256,11 +256,6 @@ function initMap() {
 	</table>
 </form:form>
 <div id="schedulerMap" style="width: 100%; height: 500px;"></div>
-<!--
-<div id="staticSchedulerMap" style="width: 100%; height: 1000px;">
-	<img src="https://maps.googleapis.com/maps/api/staticmap?center=41.771211,-87.7862544&zoom=10&size=2000x2000&maptype=roadmap&markers=color:red%7Clabel:C%7C41.771211,-87.7862544&markers=color:blue%7Clabel:S%7C41.799281,-87.742934&markers=color:green%7Clabel:G%7C41.962855,-87.716021&key=AIzaSyBgZDQfU6LvIVCGmNDRIk17R74GcUMjj5o"/>
-</div>
--->
 <script language="javascript">
 $("#schedulerSearchForm").submit(function (ev) {
 	if (!validateSubmit()) {
