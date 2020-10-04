@@ -38,7 +38,7 @@ function validateSubmit() {
 				+ aVehicleLocation.DisplayState
 				+ "&nbsp;" + aVehicleLocation.Heading 
 				+ "&nbsp;" + aVehicleLocation.Speed + "&nbsp;" + "kmph"
-				+ "<br/>" + aVehicleLocation.addressStr;
+				+ "<br/>" + aVehicleLocation.addressStr
 				+ "<hr style=\"height:2px;padding:0px;margin: 0px;color:gray;background-color:gray\">"
 				+ "Delivery Order Id: 12345"
 				+ "<br/>" + "Company Name"
