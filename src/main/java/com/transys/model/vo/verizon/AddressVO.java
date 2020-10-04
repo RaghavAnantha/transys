@@ -9,10 +9,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.transys.core.util.FormatUtil;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({ "AddressLine1", "AddressLine2", "Locality", "AdministrativeArea", "PostalCode", "Country" })
-public class Address {
+public class AddressVO {
 	@JsonProperty("AddressLine1")
 	private String addressLine1;
 	@JsonProperty("AddressLine2")
@@ -96,5 +97,21 @@ public class Address {
 	@JsonAnySetter
 	public void setAdditionalProperty(String name, Object value) {
 		this.additionalProperties.put(name, value);
+	}
+	
+	@JsonIgnore
+	public String getFullAddress() {
+		return getFullAddress(", "); 
+	}
+	
+	@JsonIgnore
+	public String getFullAddress(String lineSeparator) {
+		return FormatUtil.formatAddress(getAddressLine1(), getAddressLine2(), getLocality(), getAdministrativeArea(), getPostalCode(),
+				lineSeparator);
+	}
+	
+	@Override
+	public String toString() {
+		return getFullAddress();
 	}
 }

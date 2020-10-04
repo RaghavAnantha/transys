@@ -1,5 +1,5 @@
 package com.transys.service.map;
 
 public interface MapService {
-	 public String getGeocode();
+	 public String getGeocode(String address);
 }

@@ -3,6 +3,7 @@ package com.transys.service.verizon;
 import java.util.List;
 
 import com.transys.model.vo.verizon.DriverVO;
+import com.transys.model.vo.verizon.MultipleVehicleLocationVO;
 import com.transys.model.vo.verizon.VehicleLocationVO;
 import com.transys.model.vo.verizon.VehicleStatusVO;
 import com.transys.model.vo.verizon.VehicleVO;
@@ -17,7 +18,7 @@ public interface VerizonRevealService {
 	 public List<VehicleVO> getAllVehicles();
 	 public void updateVehicle(VehicleVO vehicleVO);
 	 public VehicleLocationVO getVehicleLocation(String vehicleNum);
-	 public List<VehicleLocationVO> getVehicleLocation(List<String> vehicleNumList);
+	 public List<MultipleVehicleLocationVO> getVehicleLocation(List<String> vehicleNumList);
 	 public VehicleStatusVO getVehicleStatus(String vehicleNum);
 	 public List<VehicleStatusVO> getVehicleStatus(List<String> vehicleNumList);
 	 

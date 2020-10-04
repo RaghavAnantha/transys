@@ -22,6 +22,7 @@ import org.springframework.web.client.RestTemplate;
 import com.transys.core.util.HttpUtil;
 
 import com.transys.model.vo.verizon.DriverVO;
+import com.transys.model.vo.verizon.MultipleVehicleLocationVO;
 import com.transys.model.vo.verizon.VehicleLocationVO;
 import com.transys.model.vo.verizon.VehicleStatusVO;
 import com.transys.model.vo.verizon.VehicleVO;
@@ -95,14 +96,14 @@ public class VerizonRevealServiceImpl implements VerizonRevealService {
 	}
 	
 	@Override
-	public List<VehicleLocationVO> getVehicleLocation(List<String> vehicleNumList) {
+	public List<MultipleVehicleLocationVO> getVehicleLocation(List<String> vehicleNumList) {
 		String[] vehicleNumArr = vehicleNumList.toArray(new String[vehicleNumList.size()]);
 		HttpEntity<String[]> httpRequestEntity = (HttpEntity<String[]>)buildUpdateHttpRequestEntity(vehicleNumArr);
 		
 		
-		List<VehicleLocationVO> vehicleLocationList = Collections.emptyList();;
-		ResponseEntity<VehicleLocationVO[]> response = restTemplate.exchange(VerizonConfigConstants.getMultipleVehicleLocationsUri, 
-				HttpMethod.POST, httpRequestEntity, VehicleLocationVO[].class);
+		List<MultipleVehicleLocationVO> vehicleLocationList = Collections.emptyList();;
+		ResponseEntity<MultipleVehicleLocationVO[]> response = restTemplate.exchange(VerizonConfigConstants.getMultipleVehicleLocationsUri, 
+				HttpMethod.POST, httpRequestEntity, MultipleVehicleLocationVO[].class);
 		if (response.getStatusCode().is2xxSuccessful()) {
 			vehicleLocationList = Arrays.asList(response.getBody());
 		}

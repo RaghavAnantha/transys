@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,7 +29,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import com.transys.core.util.DateUtil;
 import com.transys.core.util.FormatUtil;
+import com.transys.core.util.JsonUtil;
 import com.transys.core.util.ModelUtil;
 
 import com.transys.model.DeliveryAddress;
@@ -36,24 +39,25 @@ import com.transys.model.Order;
 import com.transys.model.OrderStatus;
 import com.transys.model.Permit;
 import com.transys.model.SearchCriteria;
-
 import com.transys.model.vo.DeliveryAddressVO;
 import com.transys.model.vo.DeliveryPickupReportVO;
-
+import com.transys.model.vo.verizon.MultipleVehicleLocationVO;
+import com.transys.model.vo.verizon.VehicleLocationVO;
+import com.transys.model.vo.verizon.VehicleVO;
 import com.transys.service.map.MapService;
 import com.transys.service.verizon.VerizonRevealService;
 
 @Controller
-@RequestMapping("/scheduler")
-public class SchedulerController extends BaseController {
+@RequestMapping("/orderScheduler")
+public class OrderScheduleController extends BaseController {
 	@Autowired
 	private VerizonRevealService verizonRevealService;
 	
 	@Autowired
-	private MapService  mapService;
+	private MapService mapService;
 	
-	public SchedulerController() {
-		setUrlContext("scheduler");
+	public OrderScheduleController() {
+		setUrlContext("orderScheduler");
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/main.do")
@@ -65,15 +69,148 @@ public class SchedulerController extends BaseController {
 		
 		setupList(model, request);
 		
-		String token = verizonRevealService.getToken();
-		verizonRevealService.getVehicleLocation("124");
-		verizonRevealService.getVehicleLocation(Arrays.asList(new String[]{"124", "11"}));
-		verizonRevealService.getVehicleStatus("124");
-		verizonRevealService.getVehicleStatus(Arrays.asList(new String[]{"124", "11"}));
-		verizonRevealService.getWorkOrder("test");
-		model.addAttribute("latLng", token);
+		List<DeliveryAddressVO> deliveryOrderAddressList = retrieveDeliveryOrderAddress();
+		String deliveryOrderAddressListJson = JsonUtil.toJson(deliveryOrderAddressList);
+		model.addAttribute("deliveryOrderAddressList", deliveryOrderAddressListJson);
+		
+		List<DeliveryAddressVO> pickupOrderAddressList = retrievePickupOrderAddress();
+		String pickupOrderAddressListJson = JsonUtil.toJson(pickupOrderAddressList);
+		model.addAttribute("pickupOrderAddressList", pickupOrderAddressListJson);
+		
+		List<VehicleLocationVO> vehicleLocationList = retrieveVehicleLocations();
+		String vehicleLocationListJson = JsonUtil.toJson(vehicleLocationList);
+		model.addAttribute("vehicleLocationList", vehicleLocationListJson);
 		
 		return urlContext + "/list";
+	}
+	
+	private List<String> retrieveDeliveryOrderAddressGeocode() {
+		Date today = new Date();
+		String todayStr = DateUtil.formatToDbDate2(today);
+		String deliveryAddressQuery = "select obj.deliveryAddress from Order obj where obj.deleteFlag='1'"
+				+ " and obj.deliveryDate = '" + todayStr + "'";
+		List<DeliveryAddress> deliveryAddressList = genericDAO.executeSimpleQuery(deliveryAddressQuery);
+		
+		List<String> deliveryAddressGeocodeList = new ArrayList<String>();
+		String latLng = StringUtils.EMPTY;
+		for (DeliveryAddress aDeliveryAddress : deliveryAddressList) {
+			latLng =  mapService.getGeocode(aDeliveryAddress.getFullDeliveryAddress());
+			deliveryAddressGeocodeList.add(latLng);
+		}
+		return deliveryAddressGeocodeList;
+	}
+	
+	private List<DeliveryAddressVO> retrieveDeliveryOrderAddress() {
+		String todayStr = DateUtil.getTodayDbDateStr();
+		String query = "select obj from Order obj where obj.deleteFlag='1'"
+				+ " and obj.deliveryDate = '" + todayStr + "'"
+				+ " and obj.orderStatus.status = '" + OrderStatus.ORDER_STATUS_OPEN + "' order by id desc";
+		List<Order> orderList = genericDAO.executeSimpleQuery(query);
+		
+		List<DeliveryAddressVO> deliveryAddressVOList = new ArrayList<DeliveryAddressVO>();
+		String latLng = StringUtils.EMPTY;
+		for (Order order : orderList) {
+			if (order.getDeliveryAddress() == null) {
+				continue;
+			}
+			DeliveryAddressVO aDeliveryAddressVO = new DeliveryAddressVO();
+			map(aDeliveryAddressVO, order.getDeliveryAddress(), order.getId());
+			latLng =  mapService.getGeocode(aDeliveryAddressVO.getFullAddress());
+			aDeliveryAddressVO.setGeoCode(latLng);
+			deliveryAddressVOList.add(aDeliveryAddressVO);
+		}
+		return deliveryAddressVOList;
+	}
+	
+	private List<DeliveryAddressVO> retrievePickupOrderAddress() {
+		String query = "select obj from Order obj where obj.deleteFlag='1'"
+				+ " and obj.orderStatus.status = '" + OrderStatus.ORDER_STATUS_PICK_UP + "' order by id desc";
+		List<Order> orderList = genericDAO.executeSimpleQuery(query);
+		
+		List<DeliveryAddressVO> deliveryAddressVOList = new ArrayList<DeliveryAddressVO>();
+		String latLng = StringUtils.EMPTY;
+		for (Order order : orderList.subList(0, 10)) {
+			if (order.getDeliveryAddress() == null) {
+				continue;
+			}
+			DeliveryAddressVO aDeliveryAddressVO = new DeliveryAddressVO();
+			map(aDeliveryAddressVO, order.getDeliveryAddress(), order.getId());
+			latLng =  mapService.getGeocode(aDeliveryAddressVO.getFullAddress());
+			aDeliveryAddressVO.setGeoCode(latLng);
+			deliveryAddressVOList.add(aDeliveryAddressVO);
+		}
+		return deliveryAddressVOList;
+	}
+	
+	private List<String> retrievePickupOrderAddressGeocode() {
+		String deliveryAddressQuery = "select obj.deliveryAddress from Order obj where obj.deleteFlag='1'"
+				+ " and obj.orderStatus.status = 'Pick Up'";
+		List<DeliveryAddress> pickupAddressList = genericDAO.executeSimpleQuery(deliveryAddressQuery);
+		
+		List<String> pickupAddressGeocodeList = new ArrayList<String>();
+		String latLng = StringUtils.EMPTY;
+		for (DeliveryAddress aPickupAddress : pickupAddressList.subList(0, 10)) {
+			latLng =  mapService.getGeocode(aPickupAddress.getFullDeliveryAddress());
+			pickupAddressGeocodeList.add(latLng);
+		}
+		return pickupAddressGeocodeList;
+	}
+	
+	private List<String> retrieveVehicleLocationsGeocode() { 
+		List<MultipleVehicleLocationVO> vehicleLocationList = verizonRevealService.getVehicleLocation(Arrays.asList(new String[]{"2", "6", "11", "20", "21", "22", "23", "33", "34", "124"}));
+		
+		List<String> vehicleLocationGeocodeList = new ArrayList<String>();
+		String latLng = StringUtils.EMPTY;
+		for (MultipleVehicleLocationVO aMultipleVehicleLocationVO : vehicleLocationList) {
+			latLng = aMultipleVehicleLocationVO.getGeocode();
+			if (StringUtils.isNotEmpty(latLng)) {
+				vehicleLocationGeocodeList.add(latLng);
+			}
+		}
+		return vehicleLocationGeocodeList;
+	}
+	
+	private List<VehicleLocationVO> retrieveVehicleLocations() {
+		List<VehicleVO> vehicleVOList = verizonRevealService.getAllVehicles();
+		List<String> vehicleNumberList = new ArrayList<String>();
+		for (VehicleVO aVehicleVO : vehicleVOList) {
+			if (StringUtils.isNotEmpty(aVehicleVO.getVehicleNumber())) {
+				vehicleNumberList.add(aVehicleVO.getVehicleNumber());
+			}
+		}
+		
+		List<MultipleVehicleLocationVO> multipleVehicleLocationList = verizonRevealService.getVehicleLocation(vehicleNumberList);
+		List<VehicleLocationVO> vehicleLocationList = new ArrayList<VehicleLocationVO>();
+		for (MultipleVehicleLocationVO aMultipleVehicleLocationVO : multipleVehicleLocationList) {
+			VehicleLocationVO vehicleLocationVO = new VehicleLocationVO();
+			map(vehicleLocationVO, aMultipleVehicleLocationVO);
+			vehicleLocationList.add(vehicleLocationVO);
+		}
+		return vehicleLocationList;
+	}
+	
+	private void map(DeliveryAddressVO aDeliveryAddressVO, DeliveryAddress aDeliveryAddress, Long orderId) {
+		aDeliveryAddressVO.setOrderId(orderId);
+		aDeliveryAddressVO.setId(aDeliveryAddress.getId());
+		aDeliveryAddressVO.setLine1(aDeliveryAddress.getLine1());
+		aDeliveryAddressVO.setLine2(aDeliveryAddress.getLine2());
+		aDeliveryAddressVO.setCity(aDeliveryAddress.getCity());
+		aDeliveryAddressVO.setState(aDeliveryAddress.getStateStr());
+		aDeliveryAddressVO.setZipcode(aDeliveryAddress.getZipcode());
+		aDeliveryAddressVO.setFullLine(aDeliveryAddress.getFullLine());
+		aDeliveryAddressVO.setFullAddress(aDeliveryAddress.getFullDeliveryAddress());
+		aDeliveryAddressVO.setCustomerName(aDeliveryAddress.getCustomerName());
+	}
+	
+	private void map(VehicleLocationVO vehicleLocationVO, MultipleVehicleLocationVO multipleVehicleLocationVO) {
+		vehicleLocationVO.setVehicleNumber(multipleVehicleLocationVO.getVehicleNumber());
+		vehicleLocationVO.setAddressStr(multipleVehicleLocationVO.getAddressStr());
+		vehicleLocationVO.setLatitude(multipleVehicleLocationVO.getLatitude());
+		vehicleLocationVO.setLongitude(multipleVehicleLocationVO.getLongitude());
+		vehicleLocationVO.setDirection(multipleVehicleLocationVO.getDirection());
+		vehicleLocationVO.setDisplayState(multipleVehicleLocationVO.getDisplayState());
+		vehicleLocationVO.setHeading(multipleVehicleLocationVO.getHeading());
+		vehicleLocationVO.setSpeed(multipleVehicleLocationVO.getSpeed());
 	}
 	
 	public void setupList(ModelMap model, HttpServletRequest request) {

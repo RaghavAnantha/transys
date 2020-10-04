@@ -29,12 +29,11 @@ public class MapServiceImpl implements MapService {
 	}
 	
 	@Override
-	public String getGeocode() {
+	public String getGeocode(String address) {
 			GeocodingResult[] results;
 			String latLngStr = StringUtils.EMPTY;
 			try {
-				results = GeocodingApi.geocode(geoApiContext,
-				   "4249 N Hermitage Ave Chicago, IL 60613").await();
+				results = GeocodingApi.geocode(geoApiContext, address).await();
 				Gson gson = new GsonBuilder().setPrettyPrinting().create();
 				System.out.println(gson.toJson(results[0].addressComponents));
 				LatLng latLng = results[0].geometry.location;

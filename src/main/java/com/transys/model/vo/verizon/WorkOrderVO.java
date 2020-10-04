@@ -4,7 +4,7 @@ public class WorkOrderVO {
   public String ActualDateUtc;
   public Integer ActualDurationSeconds;
   
-  public Address Address;
+  public AddressVO Address;
   
   public String ClientCustomerId;
   public String Description;

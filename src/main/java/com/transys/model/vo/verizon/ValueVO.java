@@ -3,8 +3,6 @@ package com.transys.model.vo.verizon;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.lang.StringUtils;
-
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -15,16 +13,16 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({ "Address", "DeltaDistance", "DeltaTime", "DeviceTimeZoneOffset", "DeviceTimeZoneUseDST",
 		"DisplayState", "Direction", "Heading", "DriverNumber", "GeoFenceName", "Latitude", "Longitude", "Speed",
-		"UpdateUTC" })
-public class VehicleLocationVO {
+		"UpdateUTC", "IsPrivate" })
+public class ValueVO {
 	@JsonProperty("Address")
 	private AddressVO address;
 	@JsonProperty("DeltaDistance")
-	private Integer deltaDistance;
+	private Object deltaDistance;
 	@JsonProperty("DeltaTime")
 	private Object deltaTime;
 	@JsonProperty("DeviceTimeZoneOffset")
-	private Integer deviceTimeZoneOffset;
+	private Object deviceTimeZoneOffset;
 	@JsonProperty("DeviceTimeZoneUseDST")
 	private Boolean deviceTimeZoneUseDST;
 	@JsonProperty("DisplayState")
@@ -42,17 +40,14 @@ public class VehicleLocationVO {
 	@JsonProperty("Longitude")
 	private Double longitude;
 	@JsonProperty("Speed")
-	private Integer speed;
+	private Object speed;
 	@JsonProperty("UpdateUTC")
 	private String updateUTC;
+	@JsonProperty("IsPrivate")
+	private Boolean isPrivate;
 	@JsonIgnore
 	private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
-	@JsonProperty("VehicleNumber")
-	private String vehicleNumber;
-	@JsonProperty("addressStr")
-	private String addressStr;
-	
 	@JsonProperty("Address")
 	public AddressVO getAddress() {
 		return address;
@@ -64,12 +59,12 @@ public class VehicleLocationVO {
 	}
 
 	@JsonProperty("DeltaDistance")
-	public Integer getDeltaDistance() {
+	public Object getDeltaDistance() {
 		return deltaDistance;
 	}
 
 	@JsonProperty("DeltaDistance")
-	public void setDeltaDistance(Integer deltaDistance) {
+	public void setDeltaDistance(Object deltaDistance) {
 		this.deltaDistance = deltaDistance;
 	}
 
@@ -84,12 +79,12 @@ public class VehicleLocationVO {
 	}
 
 	@JsonProperty("DeviceTimeZoneOffset")
-	public Integer getDeviceTimeZoneOffset() {
+	public Object getDeviceTimeZoneOffset() {
 		return deviceTimeZoneOffset;
 	}
 
 	@JsonProperty("DeviceTimeZoneOffset")
-	public void setDeviceTimeZoneOffset(Integer deviceTimeZoneOffset) {
+	public void setDeviceTimeZoneOffset(Object deviceTimeZoneOffset) {
 		this.deviceTimeZoneOffset = deviceTimeZoneOffset;
 	}
 
@@ -174,12 +169,12 @@ public class VehicleLocationVO {
 	}
 
 	@JsonProperty("Speed")
-	public Integer getSpeed() {
+	public Object getSpeed() {
 		return speed;
 	}
 
 	@JsonProperty("Speed")
-	public void setSpeed(Integer speed) {
+	public void setSpeed(Object speed) {
 		this.speed = speed;
 	}
 
@@ -193,6 +188,16 @@ public class VehicleLocationVO {
 		this.updateUTC = updateUTC;
 	}
 
+	@JsonProperty("IsPrivate")
+	public Boolean getIsPrivate() {
+		return isPrivate;
+	}
+
+	@JsonProperty("IsPrivate")
+	public void setIsPrivate(Boolean isPrivate) {
+		this.isPrivate = isPrivate;
+	}
+
 	@JsonAnyGetter
 	public Map<String, Object> getAdditionalProperties() {
 		return this.additionalProperties;
@@ -201,28 +206,5 @@ public class VehicleLocationVO {
 	@JsonAnySetter
 	public void setAdditionalProperty(String name, Object value) {
 		this.additionalProperties.put(name, value);
-	}
-
-	@JsonProperty("vehicleNumber")
-	public String getVehicleNumber() {
-		return vehicleNumber;
-	}
-
-	@JsonProperty("vehicleNumber")
-	public void setVehicleNumber(String vehicleNumber) {
-		this.vehicleNumber = vehicleNumber;
-	}
-
-	@JsonProperty("addressStr")
-	public String getAddressStr() {
-		if (StringUtils.isNotEmpty(addressStr)) {
-			return addressStr;
-		}
-		return getAddress() == null ? StringUtils.EMPTY : getAddress().toString();
-	}
-
-	@JsonProperty("addressStr")
-	public void setAddressStr(String addressStr) {
-		this.addressStr = addressStr;
 	}
 }

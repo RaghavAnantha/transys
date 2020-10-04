@@ -65,4 +65,10 @@ public class DateUtil {
 		Date modifiedDate = DateUtils.addDays(inputDate, days);
 		return formatToDbDate(modifiedDate);
 	}
+	
+	public static String getTodayDbDateStr() {
+		Date today = new Date();
+		String todayStr = DateUtil.formatToDbDate2(today);
+		return todayStr;
+	}
 }

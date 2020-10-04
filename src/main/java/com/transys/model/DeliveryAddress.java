@@ -7,6 +7,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import com.transys.core.util.FormatUtil;
@@ -57,6 +59,16 @@ public class DeliveryAddress extends AbstractBaseModel {
 
 	public void setLine2(String line2) {
 		this.line2 = line2;
+	}
+	
+	@Transient
+	public String getCustomerName() {
+		return getCustomer() == null ? StringUtils.EMPTY : getCustomer().getCompanyName();
+	}
+	
+	@Transient
+	public String getStateStr() {
+		return getState() == null ? StringUtils.EMPTY : getState().getName();
 	}
 	
 	@Transient
