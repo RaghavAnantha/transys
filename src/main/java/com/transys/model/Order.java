@@ -489,8 +489,10 @@ public class Order extends AbstractBaseModel {
 	
 	@Transient
 	public String getDumpsterSizeStr() {
-		return (getDumpster() == null || getDumpster().getDumpsterSize() == null) 
-				? StringUtils.EMPTY : getDumpster().getDumpsterSize().getSize();
+		if (getDumpster() != null && getDumpster().getDumpsterSize() != null) {
+			return getDumpster().getDumpsterSize().getSize();
+		}
+		return getDumpsterSize() == null ? StringUtils.EMPTY : getDumpsterSize().getSize();
 	}
 	
 	@Transient

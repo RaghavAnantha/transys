@@ -55,7 +55,8 @@ function buildVehicleLocationInfoWindowContent(aVehicleLocation) {
 }
 
 function buildDeliveryOrderAddressInfoWindowContent(aDeliveryOrderAddress) {
-	var content = "<b>"  + "Delivery Order Id: " + aDeliveryOrderAddress.orderId + "</b>"
+	var content = "<b>"  + "Delivery Order Id: " + aDeliveryOrderAddress.orderId 
+				+ "&nbsp;Delivery Date Time: " + aDeliveryOrderAddress.deliveryDateTimeRange + "</b>"
 				+ "<hr style=\"height:2px;padding:0px;margin:0px;color:gray;background-color:gray\">"
 				+ aDeliveryOrderAddress.customerName
 				+ "<br/>" + aDeliveryOrderAddress.fullAddress
