@@ -203,6 +203,8 @@ public class OrderScheduleController extends BaseController {
 		aDeliveryAddressVO.setFullLine(aDeliveryAddress.getFullLine());
 		aDeliveryAddressVO.setFullAddress(aDeliveryAddress.getFullDeliveryAddress());
 		aDeliveryAddressVO.setCustomerName(aDeliveryAddress.getCustomerName());
+		aDeliveryAddressVO.setDeliveryDate(order.getDeliveryDate());
+		aDeliveryAddressVO.setDeliveryDateTimeRange(order.getDeliveryDateTimeFullRange());
 	}
 	
 	private void map(VehicleLocationVO vehicleLocationVO, MultipleVehicleLocationVO multipleVehicleLocationVO) {
@@ -214,6 +216,7 @@ public class OrderScheduleController extends BaseController {
 		vehicleLocationVO.setDisplayState(multipleVehicleLocationVO.getDisplayState());
 		vehicleLocationVO.setHeading(multipleVehicleLocationVO.getHeading());
 		vehicleLocationVO.setSpeed(multipleVehicleLocationVO.getSpeed());
+		vehicleLocationVO.setUpdateUTC(multipleVehicleLocationVO.getUpdateUTC());
 	}
 	
 	public void setupList(ModelMap model, HttpServletRequest request) {

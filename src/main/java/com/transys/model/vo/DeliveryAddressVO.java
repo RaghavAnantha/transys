@@ -1,5 +1,7 @@
 package com.transys.model.vo;
 
+import java.util.Date;
+
 import org.apache.commons.lang3.StringUtils;
 
 import com.transys.core.util.FormatUtil;
@@ -23,6 +25,9 @@ public class DeliveryAddressVO extends BaseVO {
 	
 	private String dumpsterNum;
 	private String dumpsterSize;
+	
+	private Date deliveryDate;
+	private String deliveryDateTimeRange;
 	
 	public Long getId() {
 		return id;
@@ -124,5 +129,17 @@ public class DeliveryAddressVO extends BaseVO {
 	}
 	public void setDumpsterSize(String dumpsterSize) {
 		this.dumpsterSize = dumpsterSize;
+	}
+	public Date getDeliveryDate() {
+		return deliveryDate;
+	}
+	public void setDeliveryDate(Date deliveryDate) {
+		this.deliveryDate = deliveryDate;
+	}
+	public String getDeliveryDateTimeRange() {
+		return deliveryDateTimeRange;
+	}
+	public void setDeliveryDateTimeRange(String deliveryDateTimeRange) {
+		this.deliveryDateTimeRange = deliveryDateTimeRange;
 	}
 }

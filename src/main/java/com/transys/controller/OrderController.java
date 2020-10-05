@@ -1270,7 +1270,7 @@ public class OrderController extends CRUDController<Order> {
 		anOrderReportVO.setMaterialType(anOrder.getMaterialType().getMaterialName());
 		
 		anOrderReportVO.setDeliveryDate(anOrder.getFormattedDeliveryDate());
-		anOrderReportVO.setDeliveryDateTime(anOrder.getDeliveryDateTime());
+		anOrderReportVO.setDeliveryDateTime(anOrder.getDeliveryDateTimeRange());
 		anOrderReportVO.setPickupDate(anOrder.getFormattedPickupDate());
 		
 		OrderFees anOrderFees = anOrder.getOrderFees();

@@ -324,7 +324,7 @@ public class Order extends AbstractBaseModel {
 	}
 	
 	@Transient
-	public String getDeliveryDateTime() {
+	public String getDeliveryDateTimeRange() {
 		return FormatUtil.formatDateTimeRange(getDeliveryDate(), getDeliveryHourFrom(), getDeliveryHourTo());
 	}
 
@@ -491,6 +491,12 @@ public class Order extends AbstractBaseModel {
 	public String getDumpsterSizeStr() {
 		return (getDumpster() == null || getDumpster().getDumpsterSize() == null) 
 				? StringUtils.EMPTY : getDumpster().getDumpsterSize().getSize();
+	}
+	
+	@Transient
+	public String getDeliveryDateTimeFullRange() {
+		return FormatUtil.formatDateTimeRange(deliveryDate, deliveryHourFrom, deliveryMinutesFrom,
+				deliveryHourTo, deliveryMinutesTo);
 	}
 	
 	/*public String getMaterialType() {

@@ -87,21 +87,21 @@ public class FormatUtil {
 		return formatDateRange(dateFromStr, dateToStr);
 	}
 	
-	public static String formatDateTimeRange(Date date, String time1, String time2) {
+	public static String formatDateTimeRange(Date date, String timeFrom, String timeTo) {
 		String dateStr = formatDate(date);
 		if (StringUtils.isEmpty(dateStr)) {
 			return StringUtils.EMPTY;
 		}
 		
-		if (StringUtils.isNotEmpty(time1)) {
+		if (StringUtils.isNotEmpty(timeFrom)) {
 			dateStr += "  ";
-			dateStr += time1;
+			dateStr += timeFrom;
 		}
 		
-		if (StringUtils.isNotEmpty(time2) 
-				&& !StringUtils.equals(time1, time2)) {
+		if (StringUtils.isNotEmpty(timeTo) 
+				&& !StringUtils.equals(timeFrom, timeTo)) {
 			dateStr += " - ";
-			dateStr += time2;
+			dateStr += timeTo;
 		}
 		
 		return dateStr;
@@ -157,5 +157,41 @@ public class FormatUtil {
 			contactDetails += (sep + formatPhone(phone));
 		}
 		return contactDetails;
+	}
+	
+	public static String formatDateTime(Date date, String time) {
+		String formattedDateTime = StringUtils.EMPTY;
+		if (date == null) {
+			return formattedDateTime;
+		}
+		
+		formattedDateTime = inputDateFormat.format(date);
+		if (StringUtils.isNotEmpty(time)) {
+			formattedDateTime += " " + time;
+		}
+		return formattedDateTime;
+	}
+	
+	public static String formatDateTimeRange(Date date, String hoursFrom, String minutesFrom, 
+			String hoursTo, String minutesTo) {
+		String formattedDateTime = StringUtils.EMPTY;
+		if (date == null) {
+			return formattedDateTime;
+		}
+		
+		formattedDateTime = inputDateFormat.format(date);
+		if (StringUtils.isNotEmpty(hoursFrom)) {
+			formattedDateTime += " " + hoursFrom;
+		}
+		if (StringUtils.isNotEmpty(minutesFrom)) {
+			formattedDateTime += ":" + minutesFrom;
+		}
+		if (StringUtils.isNotEmpty(hoursTo)) {
+			formattedDateTime += " - " + hoursTo;
+		}
+		if (StringUtils.isNotEmpty(minutesTo)) {
+			formattedDateTime += ":" + minutesTo;
+		}
+		return formattedDateTime;
 	}
 }

@@ -152,6 +152,16 @@ public class MultipleVehicleLocationVO {
 	}
 	
 	@JsonIgnore
+	public String getUpdateUTC() {
+		String updateUTC = StringUtils.EMPTY;
+		ValueVO valueVO = getValueVO();
+		if (valueVO != null && StringUtils.isNotEmpty(valueVO.getUpdateUTC())) {
+			updateUTC = valueVO.getUpdateUTC().replace("T", " ");
+		}
+		return updateUTC;
+	}
+	
+	@JsonIgnore
 	public ValueVO getValueVO() {
 		ValueVO valueVO = null;
 		ContentResourceVO contentResourceVO = getContentResource();

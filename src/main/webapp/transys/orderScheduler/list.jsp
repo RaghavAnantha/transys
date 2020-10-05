@@ -32,14 +32,18 @@ function validateSubmit() {
 ></script>
 <script>
 "use strict";
-  function buildVehicleLocationInfoWindowContent(aVehicleLocation) {
+function buildVehicleLocationInfoWindowContent(aVehicleLocation) {
+	var updateUTC = aVehicleLocation.UpdateUTC + " UTC";
+	var updateLocal = (new Date(updateUTC)).toString();
+	updateLocal = updateLocal.substring(0, updateLocal.indexOf("GMT"));
 	var content = "<b>" + aVehicleLocation.VehicleNumber
-				+ "&nbsp;&nbsp;&nbsp;" + "Dumpster No." + "Dumpster Size" + "</b>"
+				+ "&nbsp;&nbsp;&nbsp;" + "Dumpster No." + "&nbsp;Dumpster Size" + "</b>"
 				+ "<hr style=\"height:2px;padding:0px;margin: 0px;color:gray;background-color:gray\">"
 				+ aVehicleLocation.DisplayState
 				+ "&nbsp;" + aVehicleLocation.Heading 
 				+ "&nbsp;" + aVehicleLocation.Speed + "&nbsp;" + "kmph"
 				+ "<br/>" + aVehicleLocation.addressStr
+				+ "<br/>" + "Last Updated: " + updateLocal
 				+ "<hr style=\"height:2px;padding:0px;margin: 0px;color:gray;background-color:gray\">"
 				+ "Delivery Order Id: 12345"
 				+ "<br/>" + "Company Name"
@@ -54,7 +58,7 @@ function buildDeliveryOrderAddressInfoWindowContent(aDeliveryOrderAddress) {
 	var content = "<b>"  + "Delivery Order Id: " + aDeliveryOrderAddress.orderId + "</b>"
 				+ "<hr style=\"height:2px;padding:0px;margin:0px;color:gray;background-color:gray\">"
 				+ aDeliveryOrderAddress.customerName
-				+ "<br/>" + aDeliveryOrderAddress.fullAddress;
+				+ "<br/>" + aDeliveryOrderAddress.fullAddress
 				+ "<hr style=\"height:2px;padding:0px;margin:0px;color:gray;background-color:gray\">"
 				+ "Dumpster: " + aDeliveryOrderAddress.dumpsterSize;
 	return content;
@@ -103,7 +107,7 @@ function initMap() {
 		var iconUrlSuffix = "0";
 		var heading = aVehicleLocation.Heading;
 		var displayState = aVehicleLocation.DisplayState;
-		if (displayState == "Stop") {
+		if (displayState == "Stop" || displayState == "Idle") {
 			iconUrlSuffix = "none"
 		} else if (displayState == "Moving") {
 			if (heading == "North") {
@@ -120,7 +124,7 @@ function initMap() {
 				iconUrlSuffix = "10"
 			} else if (heading == "West") {
 				iconUrlSuffix = "12"
-			} else if (heading == "Noth West") {
+			} else if (heading == "North West") {
 				iconUrlSuffix = "14"
 			}
 		}
@@ -169,9 +173,9 @@ function initMap() {
             icon: {
             	url: "http://maps.google.com/mapfiles/kml/paddle/grn-blank.png",
             	scaledSize : new google.maps.Size(40, 40),
-            	labelOrigin: new google.maps.Point(18,12)
+            	labelOrigin: new google.maps.Point(20,12)
             },
-			title: 'Delivery Order Id: ' + aDeliveryOrderAddress.addressStr
+			title: 'Delivery Order Id: ' + aDeliveryOrderAddress.orderId
         });
 		
 		var content = buildDeliveryOrderAddressInfoWindowContent(aDeliveryOrderAddress);
