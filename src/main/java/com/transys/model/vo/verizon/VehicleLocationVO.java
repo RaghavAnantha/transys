@@ -52,6 +52,8 @@ public class VehicleLocationVO {
 	private String vehicleNumber;
 	@JsonProperty("addressStr")
 	private String addressStr;
+	@JsonProperty("updateDateTime")
+	private String updateDateTime;
 	
 	@JsonProperty("Address")
 	public AddressVO getAddress() {
@@ -224,5 +226,15 @@ public class VehicleLocationVO {
 	@JsonProperty("addressStr")
 	public void setAddressStr(String addressStr) {
 		this.addressStr = addressStr;
+	}
+
+	@JsonProperty("updateDateTime")
+	public String getUpdateDateTime() {
+		return updateDateTime;
+	}
+
+	@JsonProperty("updateDateTime")
+	public void setUpdateDateTime(String updateDateTime) {
+		this.updateDateTime = updateDateTime;
 	}
 }

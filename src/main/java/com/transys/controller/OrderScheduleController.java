@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
-
+import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Controller;
@@ -84,24 +84,8 @@ public class OrderScheduleController extends BaseController {
 		return urlContext + "/list";
 	}
 	
-	private List<String> retrieveDeliveryOrderAddressGeocode() {
-		Date today = new Date();
-		String todayStr = DateUtil.formatToDbDate2(today);
-		String deliveryAddressQuery = "select obj.deliveryAddress from Order obj where obj.deleteFlag='1'"
-				+ " and obj.deliveryDate = '" + todayStr + "'";
-		List<DeliveryAddress> deliveryAddressList = genericDAO.executeSimpleQuery(deliveryAddressQuery);
-		
-		List<String> deliveryAddressGeocodeList = new ArrayList<String>();
-		String latLng = StringUtils.EMPTY;
-		for (DeliveryAddress aDeliveryAddress : deliveryAddressList) {
-			latLng =  mapService.getGeocode(aDeliveryAddress.getFullDeliveryAddress());
-			deliveryAddressGeocodeList.add(latLng);
-		}
-		return deliveryAddressGeocodeList;
-	}
-	
 	private List<DeliveryAddressVO> retrieveDeliveryOrderAddress() {
-		String todayStr = DateUtil.getTodayDbDateStr();
+		String todayStr = DateUtil.formatTodayToDbDate();
 		String query = "select obj from Order obj where obj.deleteFlag='1'"
 				+ " and obj.deliveryDate = '" + todayStr + "'"
 				+ " and obj.orderStatus.status = '" + OrderStatus.ORDER_STATUS_OPEN + "' order by id desc";
@@ -123,13 +107,19 @@ public class OrderScheduleController extends BaseController {
 	}
 	
 	private List<DeliveryAddressVO> retrievePickupOrderAddress() {
+		String fromDateStr = DateUtil.addDaysToTodayAndFormatToDbDate(-2);
+		String toDateStr = DateUtil.formatTodayToDbDate(); 
+		
 		String query = "select obj from Order obj where obj.deleteFlag='1'"
-				+ " and obj.orderStatus.status = '" + OrderStatus.ORDER_STATUS_PICK_UP + "' order by id desc";
+				+ " and obj.orderStatus.status = '" + OrderStatus.ORDER_STATUS_PICK_UP + "'"
+				+ " and obj.modifiedAt >='" + fromDateStr + "' and obj.modifiedAt <='" + toDateStr + "'"
+				+ " order by obj.modifiedAt desc";
 		List<Order> orderList = genericDAO.executeSimpleQuery(query);
 		
 		List<DeliveryAddressVO> deliveryAddressVOList = new ArrayList<DeliveryAddressVO>();
 		String latLng = StringUtils.EMPTY;
-		for (Order order : orderList.subList(0, 10)) {
+		int maxRows = (orderList.size() <= 50 ? orderList.size() : 50);
+		for (Order order : orderList.subList(0, maxRows)) {
 			if (order.getDeliveryAddress() == null) {
 				continue;
 			}
@@ -140,34 +130,6 @@ public class OrderScheduleController extends BaseController {
 			deliveryAddressVOList.add(aDeliveryAddressVO);
 		}
 		return deliveryAddressVOList;
-	}
-	
-	private List<String> retrievePickupOrderAddressGeocode() {
-		String deliveryAddressQuery = "select obj.deliveryAddress from Order obj where obj.deleteFlag='1'"
-				+ " and obj.orderStatus.status = 'Pick Up'";
-		List<DeliveryAddress> pickupAddressList = genericDAO.executeSimpleQuery(deliveryAddressQuery);
-		
-		List<String> pickupAddressGeocodeList = new ArrayList<String>();
-		String latLng = StringUtils.EMPTY;
-		for (DeliveryAddress aPickupAddress : pickupAddressList.subList(0, 10)) {
-			latLng =  mapService.getGeocode(aPickupAddress.getFullDeliveryAddress());
-			pickupAddressGeocodeList.add(latLng);
-		}
-		return pickupAddressGeocodeList;
-	}
-	
-	private List<String> retrieveVehicleLocationsGeocode() { 
-		List<MultipleVehicleLocationVO> vehicleLocationList = verizonRevealService.getVehicleLocation(Arrays.asList(new String[]{"2", "6", "11", "20", "21", "22", "23", "33", "34", "124"}));
-		
-		List<String> vehicleLocationGeocodeList = new ArrayList<String>();
-		String latLng = StringUtils.EMPTY;
-		for (MultipleVehicleLocationVO aMultipleVehicleLocationVO : vehicleLocationList) {
-			latLng = aMultipleVehicleLocationVO.getGeocode();
-			if (StringUtils.isNotEmpty(latLng)) {
-				vehicleLocationGeocodeList.add(latLng);
-			}
-		}
-		return vehicleLocationGeocodeList;
 	}
 	
 	private List<VehicleLocationVO> retrieveVehicleLocations() {
@@ -217,6 +179,9 @@ public class OrderScheduleController extends BaseController {
 		vehicleLocationVO.setHeading(multipleVehicleLocationVO.getHeading());
 		vehicleLocationVO.setSpeed(multipleVehicleLocationVO.getSpeed());
 		vehicleLocationVO.setUpdateUTC(multipleVehicleLocationVO.getUpdateUTC());
+		
+		String ctTime = DateUtil.convertUTCToCT(multipleVehicleLocationVO.getUpdateUTC());
+		vehicleLocationVO.setUpdateDateTime(ctTime);
 	}
 	
 	public void setupList(ModelMap model, HttpServletRequest request) {
@@ -494,4 +459,49 @@ public class OrderScheduleController extends BaseController {
 	public DeliveryPickupReportVO setupModel(HttpServletRequest request) {
 		return new DeliveryPickupReportVO();
 	}
+	
+	/*
+	private List<String> retrieveDeliveryOrderAddressGeocode() {
+		Date today = new Date();
+		String todayStr = DateUtil.formatToDbDate(today);
+		String deliveryAddressQuery = "select obj.deliveryAddress from Order obj where obj.deleteFlag='1'"
+				+ " and obj.deliveryDate = '" + todayStr + "'";
+		List<DeliveryAddress> deliveryAddressList = genericDAO.executeSimpleQuery(deliveryAddressQuery);
+		
+		List<String> deliveryAddressGeocodeList = new ArrayList<String>();
+		String latLng = StringUtils.EMPTY;
+		for (DeliveryAddress aDeliveryAddress : deliveryAddressList) {
+			latLng =  mapService.getGeocode(aDeliveryAddress.getFullDeliveryAddress());
+			deliveryAddressGeocodeList.add(latLng);
+		}
+		return deliveryAddressGeocodeList;
+	}
+	
+	private List<String> retrievePickupOrderAddressGeocode() {
+		String deliveryAddressQuery = "select obj.deliveryAddress from Order obj where obj.deleteFlag='1'"
+				+ " and obj.orderStatus.status = 'Pick Up'";
+		List<DeliveryAddress> pickupAddressList = genericDAO.executeSimpleQuery(deliveryAddressQuery);
+		
+		List<String> pickupAddressGeocodeList = new ArrayList<String>();
+		String latLng = StringUtils.EMPTY;
+		for (DeliveryAddress aPickupAddress : pickupAddressList.subList(0, 10)) {
+			latLng =  mapService.getGeocode(aPickupAddress.getFullDeliveryAddress());
+			pickupAddressGeocodeList.add(latLng);
+		}
+		return pickupAddressGeocodeList;
+	}
+	
+	private List<String> retrieveVehicleLocationsGeocode() { 
+		List<MultipleVehicleLocationVO> vehicleLocationList = verizonRevealService.getVehicleLocation(Arrays.asList(new String[]{"2", "6", "11", "20", "21", "22", "23", "33", "34", "124"}));
+		
+		List<String> vehicleLocationGeocodeList = new ArrayList<String>();
+		String latLng = StringUtils.EMPTY;
+		for (MultipleVehicleLocationVO aMultipleVehicleLocationVO : vehicleLocationList) {
+			latLng = aMultipleVehicleLocationVO.getGeocode();
+			if (StringUtils.isNotEmpty(latLng)) {
+				vehicleLocationGeocodeList.add(latLng);
+			}
+		}
+		return vehicleLocationGeocodeList;
+	}*/
 }

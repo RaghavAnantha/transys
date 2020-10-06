@@ -1,7 +1,5 @@
 package com.transys.core.util;
 
-import java.text.SimpleDateFormat;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -18,8 +16,6 @@ import com.transys.model.vo.CustomerVO;
 import com.transys.model.vo.DeliveryAddressVO;
 
 public class ModelUtil {
-	public static SimpleDateFormat mysqlDf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-	
 	public static OrderNotes createAuditOrderNotes(GenericDAO genericDAO, Order order, String orderAuditMsg,
 					User createdByUser) {
 		OrderNotes auditOrderNotes = createAuditOrderNotes(genericDAO, order.getId(), orderAuditMsg, createdByUser);

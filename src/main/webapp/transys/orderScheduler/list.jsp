@@ -33,9 +33,9 @@ function validateSubmit() {
 <script>
 "use strict";
 function buildVehicleLocationInfoWindowContent(aVehicleLocation) {
-	var updateUTC = aVehicleLocation.UpdateUTC + " UTC";
+	/*var updateUTC = aVehicleLocation.UpdateUTC + " UTC";
 	var updateLocal = (new Date(updateUTC)).toString();
-	updateLocal = updateLocal.substring(0, updateLocal.indexOf("GMT"));
+	updateLocal = updateLocal.substring(0, updateLocal.indexOf("GMT"));*/
 	var content = "<b>" + aVehicleLocation.VehicleNumber
 				+ "&nbsp;&nbsp;&nbsp;" + "Dumpster No." + "&nbsp;Dumpster Size" + "</b>"
 				+ "<hr style=\"height:2px;padding:0px;margin: 0px;color:gray;background-color:gray\">"
@@ -43,7 +43,7 @@ function buildVehicleLocationInfoWindowContent(aVehicleLocation) {
 				+ "&nbsp;" + aVehicleLocation.Heading 
 				+ "&nbsp;" + aVehicleLocation.Speed + "&nbsp;" + "kmph"
 				+ "<br/>" + aVehicleLocation.addressStr
-				+ "<br/>" + "Last Updated: " + updateLocal
+				+ "<br/>" + "Last Updated: " + aVehicleLocation.updateDateTime
 				+ "<hr style=\"height:2px;padding:0px;margin: 0px;color:gray;background-color:gray\">"
 				+ "Delivery Order Id: 12345"
 				+ "<br/>" + "Company Name"
@@ -174,7 +174,7 @@ function initMap() {
             icon: {
             	url: "http://maps.google.com/mapfiles/kml/paddle/grn-blank.png",
             	scaledSize : new google.maps.Size(40, 40),
-            	labelOrigin: new google.maps.Point(22, 12)
+            	labelOrigin: new google.maps.Point(21, 12)
             },
 			title: 'Delivery Order Id: ' + aDeliveryOrderAddress.orderId
         });

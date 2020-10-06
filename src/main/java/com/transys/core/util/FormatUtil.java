@@ -11,9 +11,13 @@ import com.transys.model.State;
 
 public class FormatUtil {
 	public static SimpleDateFormat inputDateFormat = new SimpleDateFormat("MM/dd/yyyy");
+	
+	public static SimpleDateFormat auditDateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+	
 	public static SimpleDateFormat dbDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-	public static SimpleDateFormat auditDateFormat = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss");
-
+	public static SimpleDateFormat dbDateTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	public static SimpleDateFormat dbDateTimeFormat2 = new SimpleDateFormat("yyyy-MM-dd 00:00:00.0");
+	
 	public static String formatPhone(String phone) {
 		if (StringUtils.isEmpty(phone) || phone.length() < 10 || StringUtils.contains(phone, "-")) {
 			return phone;

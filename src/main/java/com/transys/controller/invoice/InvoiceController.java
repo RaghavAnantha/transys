@@ -47,7 +47,6 @@ import com.transys.service.DynamicReportService;
 
 import com.transys.core.util.CoreUtil;
 import com.transys.core.util.FormatUtil;
-import com.transys.core.util.MimeUtil;
 import com.transys.core.util.ModelUtil;
 import com.transys.core.util.ServletUtil;
 
@@ -62,6 +61,7 @@ import com.transys.model.SearchCriteria;
 import com.transys.model.User;
 import com.transys.model.invoice.OrderInvoiceDetails;
 import com.transys.model.invoice.OrderInvoiceHeader;
+
 import com.transys.model.vo.CustomerVO;
 import com.transys.model.vo.DeliveryAddressVO;
 import com.transys.model.vo.invoice.InvoiceVO;
@@ -871,13 +871,13 @@ public class InvoiceController extends BaseController {
 		
 		String invoiceIdStr = (invoiceId == null) ? "null" : invoiceId.toString();
 		String invoiceDateStr = (invoiceDate == null) ? "null" : 
-			"'" + ModelUtil.mysqlDf.format(invoiceDate) + "'";
+			"'" + FormatUtil.dbDateTimeFormat.format(invoiceDate) + "'";
 		
 		String orderUpdateQuery = "update Order o set o.invoiced = '" + invoiced + "',"
 			+ " o.invoiceId = " + invoiceIdStr + ","
 			+ " o.invoiceDate = " + invoiceDateStr + ","
 			+ " o.modifiedBy = " + createdBy + ","
-			+ " o.modifiedAt = '" + ModelUtil.mysqlDf.format(currentTime) + "'"
+			+ " o.modifiedAt = '" + FormatUtil.dbDateTimeFormat.format(currentTime) + "'"
 			+ " where o.id in (" + orderIds + ")";
 		return genericDAO.executeUpdate(orderUpdateQuery);
 	}

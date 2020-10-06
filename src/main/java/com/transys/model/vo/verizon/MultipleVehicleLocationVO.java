@@ -156,7 +156,7 @@ public class MultipleVehicleLocationVO {
 		String updateUTC = StringUtils.EMPTY;
 		ValueVO valueVO = getValueVO();
 		if (valueVO != null && StringUtils.isNotEmpty(valueVO.getUpdateUTC())) {
-			updateUTC = valueVO.getUpdateUTC().replace("T", " ");
+			updateUTC = valueVO.getUpdateUTC();
 		}
 		return updateUTC;
 	}

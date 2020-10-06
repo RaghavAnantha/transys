@@ -1449,7 +1449,8 @@ public class OrderController extends CRUDController<Order> {
 		
 		String requiredEndDateStr = StringUtils.EMPTY;
 		try {
-			requiredEndDateStr = DateUtil.addDaysAndFormatToDbDate(deliveryDateStr, (requestedPermitDays - 1));
+			requiredEndDateStr = DateUtil.addDaysToInputDateAndFormatToDbDateTime2(deliveryDateStr, 
+					(requestedPermitDays - 1));
 		} catch (ParseException pe) {
 			pe.printStackTrace();
 		}
@@ -1475,7 +1476,7 @@ public class OrderController extends CRUDController<Order> {
 		String requiredEndDateStr = StringUtils.EMPTY;
 		try {
 			//requiredEndDateStr = DateUtil.addDaysAndFormatToDbDate(deliveryDateStr, (requestedPermitDays - 1));
-			requiredEndDateStr =  DateUtil.formatInputDateToDbDate(deliveryDateStr);
+			requiredEndDateStr =  DateUtil.formatInputDateToDbDateTimeFormat2(deliveryDateStr);
 		} catch (ParseException pe) {
 			pe.printStackTrace();
 		}
@@ -1533,7 +1534,7 @@ public class OrderController extends CRUDController<Order> {
 	
 	private DumpsterPrice retrieveDumpsterPrice(Long dumpsterSizeId, Long materialCategoryId,
 					Long materialTypeId, Long customerId) {
-		String todaysDateStr = DateUtil.formatTodayToDbDate2();
+		String todaysDateStr = DateUtil.formatTodayToDbDate();
 		
 		String baseDumpsterPriceQuery = "select obj from DumpsterPrice obj where obj.deleteFlag='1'";
 		baseDumpsterPriceQuery += " and obj.dumpsterSize.id=" + dumpsterSizeId
@@ -1706,7 +1707,7 @@ public class OrderController extends CRUDController<Order> {
 	}
 	
 	private BigDecimal retrieveCityFee(String cityFeeId) {
-		String todaysDateStr = DateUtil.formatTodayToDbDate2();
+		String todaysDateStr = DateUtil.formatTodayToDbDate();
 		
 		String cityFeeQuery = "select obj from CityFee obj where obj.deleteFlag='1' and";
 		cityFeeQuery += " obj.id=" + cityFeeId
@@ -1742,7 +1743,7 @@ public class OrderController extends CRUDController<Order> {
 	
 	private BigDecimal calculateOverweightFee(Date requiredDate, Long dumpsterSizeId, Long materialCategoryId, BigDecimal netWeightTonnage) {
 		Date searchDate = requiredDate == null ? (new Date()) : requiredDate;
-		String searchDateStr = DateUtil.formatToDbDate2(searchDate); 
+		String searchDateStr = DateUtil.formatToDbDate(searchDate); 
 		
 		String overweightFeeQuery = "select obj from OverweightFee obj where obj.deleteFlag='1' and ";
 		overweightFeeQuery += "obj.dumpsterSize.id=" + dumpsterSizeId
@@ -1783,7 +1784,7 @@ public class OrderController extends CRUDController<Order> {
 	}*/
 	
 	private BigDecimal retrieveTonLimit(Long dumpsterSizeId, Long materialCategoryId) {
-		String todaysDateStr = DateUtil.formatTodayToDbDate2(); 
+		String todaysDateStr = DateUtil.formatTodayToDbDate(); 
 		
 		String overweightFeeQuery = "select obj from OverweightFee obj where obj.deleteFlag='1'";
 		overweightFeeQuery += " and obj.dumpsterSize.id=" + dumpsterSizeId
