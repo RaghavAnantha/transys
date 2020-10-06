@@ -41,7 +41,7 @@ function buildVehicleLocationInfoWindowContent(aVehicleLocation) {
 				+ "<hr style=\"height:2px;padding:0px;margin: 0px;color:gray;background-color:gray\">"
 				+ aVehicleLocation.DisplayState
 				+ "&nbsp;" + aVehicleLocation.Heading 
-				+ "&nbsp;" + aVehicleLocation.Speed + "&nbsp;" + "kmph"
+				+ "&nbsp;" + aVehicleLocation.Speed + "&nbsp;" + "mph"
 				+ "<br/>" + aVehicleLocation.addressStr
 				+ "<br/>" + "Last Updated: " + aVehicleLocation.updateDateTime
 				+ "<hr style=\"height:2px;padding:0px;margin: 0px;color:gray;background-color:gray\">"
