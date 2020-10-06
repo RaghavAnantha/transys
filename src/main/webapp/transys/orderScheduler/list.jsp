@@ -174,7 +174,7 @@ function initMap() {
             icon: {
             	url: "http://maps.google.com/mapfiles/kml/paddle/grn-blank.png",
             	scaledSize : new google.maps.Size(40, 40),
-            	labelOrigin: new google.maps.Point(20,12)
+            	labelOrigin: new google.maps.Point(22, 12)
             },
 			title: 'Delivery Order Id: ' + aDeliveryOrderAddress.orderId
         });
