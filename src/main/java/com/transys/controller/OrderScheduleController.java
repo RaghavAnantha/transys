@@ -108,7 +108,7 @@ public class OrderScheduleController extends BaseController {
 	
 	private List<DeliveryAddressVO> retrievePickupOrderAddress() {
 		String fromDateStr = DateUtil.addDaysToTodayAndFormatToDbDate(-2);
-		String toDateStr = DateUtil.formatTodayToDbDate(); 
+		String toDateStr = DateUtil.addDaysToTodayAndFormatToDbDate(1); 
 		
 		String query = "select obj from Order obj where obj.deleteFlag='1'"
 				+ " and obj.orderStatus.status = '" + OrderStatus.ORDER_STATUS_PICK_UP + "'"
