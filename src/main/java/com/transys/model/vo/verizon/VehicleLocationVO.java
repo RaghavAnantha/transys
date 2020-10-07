@@ -12,6 +12,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+import com.transys.core.util.DateUtil;
+
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({ "Address", "DeltaDistance", "DeltaTime", "DeviceTimeZoneOffset", "DeviceTimeZoneUseDST",
 		"DisplayState", "Direction", "Heading", "DriverNumber", "GeoFenceName", "Latitude", "Longitude", "Speed",
@@ -193,6 +195,9 @@ public class VehicleLocationVO {
 	@JsonProperty("UpdateUTC")
 	public void setUpdateUTC(String updateUTC) {
 		this.updateUTC = updateUTC;
+		
+		String ctDateTime = DateUtil.convertUTCToCT(updateUTC);
+		setUpdateDateTime(ctDateTime);
 	}
 
 	@JsonAnyGetter

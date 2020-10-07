@@ -25,7 +25,7 @@ public class MapServiceImpl implements MapService {
 	private GeoApiContext geoApiContext;
 	
 	public MapServiceImpl() {
-		geoApiContext = new GeoApiContext.Builder().apiKey(MapConfigConstants.googleMapsAPIKey).build();
+		geoApiContext = new GeoApiContext.Builder().apiKey(MapConfigConstants.apiKey).build();
 	}
 	
 	@Override
@@ -34,13 +34,14 @@ public class MapServiceImpl implements MapService {
 			String latLngStr = StringUtils.EMPTY;
 			try {
 				results = GeocodingApi.geocode(geoApiContext, address).await();
-				Gson gson = new GsonBuilder().setPrettyPrinting().create();
-				System.out.println(gson.toJson(results[0].addressComponents));
 				LatLng latLng = results[0].geometry.location;
 				log.info("Latitude: {}, Longitude: {}", latLng.lat, latLng.lng);
 				latLngStr = String.format("%s,%s", latLng.lat, latLng.lng);
+				
+				/*Gson gson = new GsonBuilder().setPrettyPrinting().create();
+				log.info(gson.toJson(results[0].addressComponents));*/
 			} catch (ApiException | InterruptedException | IOException e) {
-				e.printStackTrace();
+				log.error(e);
 			}
 			
 			return latLngStr;

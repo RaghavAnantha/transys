@@ -4,8 +4,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,7 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.time.DateUtils;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Controller;
@@ -39,11 +37,13 @@ import com.transys.model.Order;
 import com.transys.model.OrderStatus;
 import com.transys.model.Permit;
 import com.transys.model.SearchCriteria;
+
 import com.transys.model.vo.DeliveryAddressVO;
 import com.transys.model.vo.DeliveryPickupReportVO;
 import com.transys.model.vo.verizon.MultipleVehicleLocationVO;
 import com.transys.model.vo.verizon.VehicleLocationVO;
 import com.transys.model.vo.verizon.VehicleVO;
+
 import com.transys.service.map.MapService;
 import com.transys.service.verizon.VerizonRevealService;
 
@@ -97,12 +97,16 @@ public class OrderScheduleController extends BaseController {
 			if (order.getDeliveryAddress() == null) {
 				continue;
 			}
+			
 			DeliveryAddressVO aDeliveryAddressVO = new DeliveryAddressVO();
 			map(aDeliveryAddressVO, order);
+			
 			latLng =  mapService.getGeocode(aDeliveryAddressVO.getFullAddress());
 			aDeliveryAddressVO.setGeoCode(latLng);
+			
 			deliveryAddressVOList.add(aDeliveryAddressVO);
 		}
+		
 		return deliveryAddressVOList;
 	}
 	
@@ -112,7 +116,7 @@ public class OrderScheduleController extends BaseController {
 		
 		String query = "select obj from Order obj where obj.deleteFlag='1'"
 				+ " and obj.orderStatus.status = '" + OrderStatus.ORDER_STATUS_PICK_UP + "'"
-				+ " and obj.modifiedAt >='" + fromDateStr + "' and obj.modifiedAt <='" + toDateStr + "'"
+				+ " and obj.modifiedAt >='" + fromDateStr + "' and obj.modifiedAt <'" + toDateStr + "'"
 				+ " order by obj.modifiedAt desc";
 		List<Order> orderList = genericDAO.executeSimpleQuery(query);
 		
@@ -179,9 +183,6 @@ public class OrderScheduleController extends BaseController {
 		vehicleLocationVO.setHeading(multipleVehicleLocationVO.getHeading());
 		vehicleLocationVO.setSpeed(multipleVehicleLocationVO.getSpeed());
 		vehicleLocationVO.setUpdateUTC(multipleVehicleLocationVO.getUpdateUTC());
-		
-		String ctTime = DateUtil.convertUTCToCT(multipleVehicleLocationVO.getUpdateUTC());
-		vehicleLocationVO.setUpdateDateTime(ctTime);
 	}
 	
 	public void setupList(ModelMap model, HttpServletRequest request) {

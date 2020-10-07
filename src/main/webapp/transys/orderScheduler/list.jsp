@@ -1,5 +1,7 @@
 <%@include file="/common/taglibs.jsp"%>
 
+<%@page import="com.transys.service.map.MapConfigConstants"%>
+
 <script language="javascript">
 function validateSubmit() {
 	var deliveryDateFrom = $("[name='deliveryDateFrom']").val();
@@ -27,15 +29,12 @@ function validateSubmit() {
 </script>
 <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
 <script
-  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBgZDQfU6LvIVCGmNDRIk17R74GcUMjj5o&callback=initMap&libraries=&v=weekly"
+  src="https://maps.googleapis.com/maps/api/js?key=<%=MapConfigConstants.apiKey%>&callback=initMap&libraries=&v=weekly"
   defer
 ></script>
 <script>
 "use strict";
 function buildVehicleLocationInfoWindowContent(aVehicleLocation) {
-	/*var updateUTC = aVehicleLocation.UpdateUTC + " UTC";
-	var updateLocal = (new Date(updateUTC)).toString();
-	updateLocal = updateLocal.substring(0, updateLocal.indexOf("GMT"));*/
 	var content = "<b>" + aVehicleLocation.VehicleNumber
 				+ "&nbsp;&nbsp;&nbsp;" + "Dumpster No." + "&nbsp;Dumpster Size" + "</b>"
 				+ "<hr style=\"height:2px;padding:0px;margin: 0px;color:gray;background-color:gray\">"
@@ -45,7 +44,7 @@ function buildVehicleLocationInfoWindowContent(aVehicleLocation) {
 				+ "<br/>" + aVehicleLocation.addressStr
 				+ "<br/>" + "Last Updated: " + aVehicleLocation.updateDateTime
 				+ "<hr style=\"height:2px;padding:0px;margin: 0px;color:gray;background-color:gray\">"
-				+ "Delivery Order Id: 12345"
+				+ "Delivery Order #: 12345"
 				+ "<br/>" + "Company Name"
 				+ "<br/>" + "Delivery Address"
 				+ "<hr style=\"height:2px;padding:0px;margin: 0px;color:gray;background-color:gray\">"
@@ -55,7 +54,7 @@ function buildVehicleLocationInfoWindowContent(aVehicleLocation) {
 }
 
 function buildDeliveryOrderAddressInfoWindowContent(aDeliveryOrderAddress) {
-	var content = "<b>"  + "Delivery Order Id: " + aDeliveryOrderAddress.orderId 
+	var content = "<b>"  + "Delivery Order #: " + aDeliveryOrderAddress.orderId 
 				+ "&nbsp;Delivery Date Time: " + aDeliveryOrderAddress.deliveryDateTimeRange + "</b>"
 				+ "<hr style=\"height:2px;padding:0px;margin:0px;color:gray;background-color:gray\">"
 				+ aDeliveryOrderAddress.customerName
@@ -66,7 +65,7 @@ function buildDeliveryOrderAddressInfoWindowContent(aDeliveryOrderAddress) {
 }
 
 function buildPickupOrderAddressInfoWindowContent(aPickupOrderAddress) {
-	var content = "<b>" + "Pickup Order Id: " + aPickupOrderAddress.orderId + "</b>"
+	var content = "<b>" + "Pickup Order #: " + aPickupOrderAddress.orderId + "</b>"
 				+ "<hr style=\"height:2px;padding:0px;margin:0px;color:gray;background-color:gray\">"
 				+ aPickupOrderAddress.customerName
 				+ "<br/>" + aPickupOrderAddress.fullAddress
@@ -79,8 +78,8 @@ let map;
 function initMap() {
 	map = new google.maps.Map(document.getElementById("schedulerMap"), {
 	  center: {
-		lat: 41.771211,
-	    lng: -87.7862544,
+		lat: <%=MapConfigConstants.rdsLatitude%>,
+	    lng: <%=MapConfigConstants.rdsLongitude%>,
 	  },
 	  zoom: 11,
 	});
@@ -92,10 +91,10 @@ function initMap() {
 	var deliveryOrderAddressInfoWindowContent = new Array();
 	var pickupOrderAddressInfoWindowContent = new Array();
 	
-	var baseVehicleLocationIconUrl = "http://earth.google.com/images/kml-icons/track-directional/track-";
-	
+	var baseVehicleLocationMovingIconUrl = "http://earth.google.com/images/kml-icons/track-directional/track-";
+	var baseVehicleLocationStaticIconUrl = "http://maps.google.com/mapfiles/kml/pal3/icon";
+		
 	var vehicleLocationList = ${vehicleLocationList};
-	console.log(vehicleLocationList);
 	for (var i = 0; i < vehicleLocationList.length; i++) {
 		var aVehicleLocation = vehicleLocationList[i];
 		
@@ -104,32 +103,41 @@ function initMap() {
 		var latLng = new google.maps.LatLng(lat, lng);
 		bounds.extend(latLng);
 		
-		var iconUrl = baseVehicleLocationIconUrl;
+		var iconUrl = baseVehicleLocationMovingIconUrl;
 		var iconUrlSuffix = "0";
+		var scaledSize = 38;
 		var heading = aVehicleLocation.Heading;
 		var displayState = aVehicleLocation.DisplayState;
-		if (displayState == "Stop" || displayState == "Idle") {
-			iconUrlSuffix = "none"
+		if (displayState == "Stop") {
+			//iconUrlSuffix = "none";
+			iconUrl = baseVehicleLocationStaticIconUrl;
+			iconUrlSuffix = 38;
+			scaledSize = 27;
+		} if (displayState == "Idle") {
+			iconUrl = baseVehicleLocationStaticIconUrl;
+			iconUrlSuffix = 53;
+			scaledSize = 27;
 		} else if (displayState == "Moving") {
 			if (heading == "North") {
-				iconUrlSuffix = "0"
+				iconUrlSuffix = "0";
 			} else if (heading == "North East") {
-				iconUrlSuffix = "2"
+				iconUrlSuffix = "2";
 			} else if (heading == "East") {
-				iconUrlSuffix = "4"
+				iconUrlSuffix = "4";
 			} else if (heading == "South East") {
-				iconUrlSuffix = "6"
+				iconUrlSuffix = "6";
 			} else if (heading == "South") {
-				iconUrlSuffix = "8"
+				iconUrlSuffix = "8";
 			} else if (heading == "South West") {
-				iconUrlSuffix = "10"
+				iconUrlSuffix = "10";
 			} else if (heading == "West") {
-				iconUrlSuffix = "12"
+				iconUrlSuffix = "12";
 			} else if (heading == "North West") {
-				iconUrlSuffix = "14"
+				iconUrlSuffix = "14";
 			}
 		}
 		iconUrl += (iconUrlSuffix + ".png");
+		
 		var marker = new google.maps.Marker({
             map: map,
             position: latLng,
@@ -138,7 +146,7 @@ function initMap() {
             	scale: 4,
             	rotation: aVehicleLocation.Direction*/
             	url: iconUrl,
-            	scaledSize : new google.maps.Size(40, 40) // 30, 30
+            	scaledSize : new google.maps.Size(scaledSize, scaledSize)
             },
 			title: ('Vehicle: ' + aVehicleLocation.VehicleNumber)
         });
@@ -154,7 +162,6 @@ function initMap() {
 	}
 	
 	var deliveryOrderAddressList = ${deliveryOrderAddressList};
-	console.log(deliveryOrderAddressList);
 	for (var i = 0; i < deliveryOrderAddressList.length; i++) {
 		var aDeliveryOrderAddress = deliveryOrderAddressList[i];
 		
@@ -170,13 +177,12 @@ function initMap() {
                 color: 'black',
                 //fontSize: "8px"
               },
-           	
             icon: {
             	url: "http://maps.google.com/mapfiles/kml/paddle/grn-blank.png",
             	scaledSize : new google.maps.Size(40, 40),
             	labelOrigin: new google.maps.Point(21, 12)
             },
-			title: 'Delivery Order Id: ' + aDeliveryOrderAddress.orderId
+			title: 'Delivery Order #: ' + aDeliveryOrderAddress.orderId
         });
 		
 		var content = buildDeliveryOrderAddressInfoWindowContent(aDeliveryOrderAddress);
@@ -190,7 +196,6 @@ function initMap() {
 	}
 	
 	var pickupOrderAddressList = ${pickupOrderAddressList};
-	console.log(pickupOrderAddressList);
 	for (var i = 0; i < pickupOrderAddressList.length; i++) {
 		var aPickupOrderAddress = pickupOrderAddressList[i];
 		
@@ -205,7 +210,7 @@ function initMap() {
                 url: "http://maps.google.com/mapfiles/kml/pushpin/red-pushpin.png",
                 scaledSize : new google.maps.Size(35, 35)
             },
-			title: 'Pickup Order Id: ' + aPickupOrderAddress.orderId
+			title: 'Pickup Order #:' + aPickupOrderAddress.orderId
         });
 		
         var content = buildPickupOrderAddressInfoWindowContent(aPickupOrderAddress);
