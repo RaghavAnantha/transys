@@ -886,13 +886,14 @@ public class DynamicReportServiceImpl implements DynamicReportService {
 			report.setIgnorePagination(false);
 			
 			Style atStyle = new StyleBuilder(true).setFont(Font.COMIC_SANS_SMALL)
-					.setTextColor(Color.red).build();
+					.setTextColor(Color.red).setPaddingTop(5).build();
 			//AUTOTEXT_CREATED_ON
 			AutoText autoText = new AutoText(AutoText.AUTOTEXT_PAGE_X_OF_Y,
-					AutoText.POSITION_FOOTER, HorizontalBandAlignment.CENTER);
-			autoText.setWidth(new Integer(200));
+					AutoText.POSITION_FOOTER, HorizontalBandAlignment.LEFT);
+			autoText.setWidth(new Integer(400));
+			autoText.setHeight(20);
 			autoText.setStyle(atStyle);
-			report.setFooterVariablesHeight(20);
+			report.setFooterVariablesHeight(30);
 			report.addAutoText(autoText);
 		} else {
 			report.setIgnorePagination(true);
