@@ -178,7 +178,7 @@ function initMap() {
                 //fontSize: "8px"
               },
             icon: {
-            	url: "http://maps.google.com/mapfiles/kml/paddle/grn-blank.png",
+            	url: "http://maps.google.com/mapfiles/kml/paddle/orange-blank.png",
             	scaledSize : new google.maps.Size(40, 40),
             	labelOrigin: new google.maps.Point(21, 12)
             },
