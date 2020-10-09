@@ -58,6 +58,7 @@ public class BaseController {
 	//private AuditService auditService;
 
 	protected String urlContext;
+	protected String reportName;
 
 	public String getUrlContext() {
 		return urlContext;
@@ -65,6 +66,14 @@ public class BaseController {
 
 	public void setUrlContext(String urlContext) {
 		this.urlContext = urlContext;
+	}
+
+	public String getReportName() {
+		return reportName;
+	}
+
+	public void setReportName(String reportName) {
+		this.reportName = reportName;
 	}
 
 	// Set up any custom editors, adds a custom one for java.sql.date by default
@@ -270,12 +279,28 @@ public class BaseController {
 	}
 
 	protected void setErrorMsg(HttpServletRequest request, HttpServletResponse response, String msg) {
-		//response.setContentType(MimeUtil.getContentType("html"));
+		/*if (response != null) {
+			response.setContentType(MimeUtil.getContentType("html"));
+		}*/
 		request.getSession().setAttribute("error", msg);
+	}
+	
+	protected void setErrorMsg(HttpServletRequest request, String msg) {
+		setErrorMsg(request, null, msg);
 	}
 	
 	protected void setSuccessMsg(HttpServletRequest request, String msg) {
 		request.getSession().setAttribute("msg", msg);
+	}
+	
+	protected void setReportFreezeRow(Map<String, Object> params, String type, String rowNo) {
+		if (params == null || StringUtils.isEmpty(type) || StringUtils.isEmpty(rowNo)) {
+			return;
+		}
+		
+		if (StringUtils.equalsIgnoreCase("xlsx", type) || StringUtils.equalsIgnoreCase("xls", type)) {
+			params.put(ReportUtil.FREEZE_ROW_NO_KEY, rowNo);
+		}
 	}
 	
 	/*public void writeActivityLog(String activityType, String details) {

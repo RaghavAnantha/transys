@@ -1,7 +1,27 @@
 <%@include file="/common/taglibs.jsp"%>
+
+<script language="javascript">
+function validateExport() {
+	var reportData = $('#dumpsterRentedReportData').html();
+	if (reportData == "") {
+		showAlertDialog("Data Validation", "No data retrieved to export");
+		return false;
+	}
+	
+	return true;
+}
+
+function validateSubmit() {
+	return true;
+}
+</script>
 <br />
 <h4 style="margin-top: -15px; !important">Dumpsters Rented Report</h4>
-<form:form action="list.do" method="get" name="dumpsterRentedReportsearchForm">
+<form:form action="search.do" method="get" name="dumpstersRentedReportSearchForm" id="dumpstersRentedReportSearchForm">
+	<jsp:include page="/common/messages.jsp">
+		<jsp:param name="msgCtx" value="dumpsterRentedReport" />
+		<jsp:param name="errorCtx" value="dumpsterRentedReport" />
+	</jsp:include>
 	<table id="form-table" class="table">
 	 	<tr><td colspan=10></td><td colspan=10></td></tr>
 		<tr>
@@ -11,55 +31,86 @@
 					<option value="">----Please Select----</option>
 					<c:forEach items="${dumpsterSizes}" var="aDumpsterSize">
 						<c:set var="selected" value="" />
-						<c:if
-							test="${sessionScope.searchCriteria.searchMap['dumpsterSize'] == aDumpsterSize.id}">
+						<c:if test="${sessionScope.searchCriteria.searchMap['dumpsterSize'] == aDumpsterSize.id}">
 							<c:set var="selected" value="selected" />
 						</c:if>
 						<option value="${aDumpsterSize.id}" ${selected}>${aDumpsterSize.size}</option>
 					</c:forEach>
 				</select>
 			</td>
-			
 			<td class="form-left">Status</td>
 			<td class="wide">
 				<select class="flat form-control input-sm" id="status" name="status" style="width: 175px !important">
 					<option value="">----Please Select----</option>
 					<c:forEach items="${dumpsterStatus}" var="status">
 						<c:set var="selected" value="" />
-						<c:if
-							test="${sessionScope.searchCriteria.searchMap['status'] == status.id}">
+						<c:if test="${sessionScope.searchCriteria.searchMap['status'] == status.id}">
 							<c:set var="selected" value="selected" />
 						</c:if>
 						<option value="${status.id}" ${selected}>${status.status}</option>
 					</c:forEach>
-			</select></td>
+				</select>
+			</td>
 		</tr>
 		<tr>
-			<td></td>
-			<td>
-				<input type="button"
-				class="btn btn-primary btn-sm btn-sm-ext"
-				onclick="document.forms['dumpsterRentedReportsearchForm'].submit();"
-				value="<transys:label code="Preview"/>" />
+			<td align="${left}"></td>
+			<td align="${left}">
+				<input type="submit" class="btn btn-primary btn-sm btn-sm-ext"
+					value="<transys:label code="Preview"/>" />
 				<input type="reset" class="btn btn-primary btn-sm btn-sm-ext" value="Clear"/>
 			</td>
 		</tr>
 	</table>
 </form:form>
-
-<a href="generateDumpsterRentedReport.do?type=xls"><img src="${ctx}/images/excel.png" border="0" style="float:right" class="toolbarButton"></a>
-<a href="generateDumpsterRentedReport.do?type=pdf"><img src="${ctx}/images/pdf.png" border="0" style="float:right" class="toolbarButton"></a>
-<form:form name="dumpsterRentedReport" id="dumpsterRentedReport" class="tab-color">
-	<transys:datatable urlContext="reports/dumpsterRentedReports"  baseObjects="${dumpsterInfoList}"
-		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
-		pagingLink="search.do" dataQualifier="dumpsterOnsiteReport">
-		<transys:textcolumn headerText="Dumpster Size" dataField="dumpsterSize.size" width="100px"/>
-		<transys:textcolumn headerText="Dumpster#" dataField="dumpsterNum" />
-		<transys:textcolumn headerText="Delivery Address" dataField="deliveryAddress" />
-		<transys:textcolumn headerText="Delivery Date" dataField="deliveryDate" />
-		<transys:textcolumn headerText="Status" dataField="status.status" />
-	</transys:datatable>
-	<%session.setAttribute("dumpsterOnsiteReportColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
-</form:form>
-
+<table width="100%">
+	<tr>
+		<td align="${left}" width="100%" align="right">
+			<a href="export.do?type=pdf" onclick="return validateExport();">
+				<img src="${pdfImage}" border="0" class="toolbarButton" title="PDF"/>
+			</a>
+			<a href="export.do?type=xlsx">
+				<img src="${excelImage}" border="0" class="toolbarButton" onclick="return validateExport();" title="XLSX"/>
+			</a>
+			<a href="export.do?type=csv">
+				<img src="${csvImage}" border="0" class="toolbarButton" onclick="return validateExport();" title="CSV"/>
+			</a>
+			<a href="export.do?type=print" target="_blank" onclick="return validateExport();">
+				<img src="${printImage}" border="0" class="toolbarButton" title="Print"/>
+			</a>
+		</td>
+		</tr>
+		<tr>
+			<td align="${left}" width="100%" valign="top">
+				<div id="dumpsterRentedReportData"></div>
+			</td>
+		</tr>
+</table>
+<script language="javascript">
+$("#dumpstersRentedReportSearchForm").submit(function (ev) {
+	if (!validateSubmit()) {
+		return false;
+	}
+	
+	var reportData = $('#dumpsterRentedReportData');
+	reportData.html("${reportLoadingMsg}");
+	
+	var $this = $(this);
+    $.ajax({
+        type: $this.attr('method'),
+        url: $this.attr('action'),
+        data: $this.serialize(),
+        success: function(responseData, textStatus, jqXHR) {
+        	reportData.html("");
+        	if (responseData.indexOf("ErrorMsg") >= 0 ) {
+        		var errorMsg = responseData.replace("ErrorMsg: ", "");
+       			showAlertDialog("Error", errorMsg);
+        	} else {
+        		reportData.html(responseData);
+        	}
+        }
+    });
+    
+    ev.preventDefault();
+});
+</script>
 

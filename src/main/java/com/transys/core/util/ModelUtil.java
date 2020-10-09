@@ -7,7 +7,8 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 
 import com.transys.core.dao.GenericDAO;
-
+import com.transys.model.DumpsterSize;
+import com.transys.model.DumpsterStatus;
 import com.transys.model.Order;
 import com.transys.model.OrderNotes;
 import com.transys.model.OrderStatus;
@@ -117,5 +118,31 @@ public class ModelUtil {
 			customerVOList.add(aCustomerVO);
 		}
 		return customerVOList;
+	}
+	
+	public static String retrieveDumpsterSize(GenericDAO genericDAO, String id) {
+		if (StringUtils.isEmpty(id)) {
+			return StringUtils.EMPTY;
+		}
+		
+		DumpsterSize dumpsterSize = genericDAO.getById(DumpsterSize.class, new Long(id));
+		if (dumpsterSize == null) {
+			return StringUtils.EMPTY;
+		}
+		
+		return dumpsterSize.getSize();
+	}
+	
+	public static String retrieveDumpsterStatus(GenericDAO genericDAO, String id) {
+		if (StringUtils.isEmpty(id)) {
+			return StringUtils.EMPTY;
+		}
+		
+		DumpsterStatus dumpsterStatus = genericDAO.getById(DumpsterStatus.class, new Long(id));
+		if (dumpsterStatus == null) {
+			return StringUtils.EMPTY;
+		}
+		
+		return dumpsterStatus.getStatus();
 	}
 }

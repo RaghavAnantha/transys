@@ -62,7 +62,7 @@ import net.sf.jasperreports.web.util.WebHtmlResourceHandler;
 
 import net.sf.jasperreports.j2ee.servlets.ImageServlet;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -745,7 +745,7 @@ public class DynamicReportServiceImpl implements DynamicReportService {
 		}
 	}
 	
-	private void addReportProperties(JasperPrint jp) {
+	private void addReportProperties(JasperPrint jp, Map<String, Object> params, String type) {
 		if (jp == null) {
 			return;
 		}
@@ -759,6 +759,17 @@ public class DynamicReportServiceImpl implements DynamicReportService {
 		
 		jp.setProperty("net.sf.jasperreports.export.csv.exclude.origin.band.1", "pageHeader");
 		jp.setProperty("net.sf.jasperreports.export.csv.exclude.origin.band.2", "pageFooter");
+		
+		if (params == null) {
+			return;
+		}
+		
+		if (StringUtils.equalsIgnoreCase("xlsx", type) || StringUtils.equalsIgnoreCase("xls", type)) {
+			String freezeRowNo = (String)params.get(ReportUtil.FREEZE_ROW_NO_KEY);
+			if (StringUtils.isNotEmpty(freezeRowNo)) {
+				jp.setProperty("net.sf.jasperreports.export.xls.freeze.row", freezeRowNo);
+			}
+		}
 	}
 
 	public JasperPrint getJasperPrintFromFile(String reportName, List datas,
@@ -781,7 +792,7 @@ public class DynamicReportServiceImpl implements DynamicReportService {
 				jp = JasperFillManager.fillReport(jasperReport, params);
 			}
 			
-			addReportProperties(jp);
+			addReportProperties(jp, params, type);
 			return jp;
 		} catch (Exception ex) {
 			ex.printStackTrace();

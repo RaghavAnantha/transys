@@ -15,7 +15,8 @@ import net.sf.jasperreports.j2ee.servlets.ImageServlet;
 
 public class ReportUtil {
 	public static String JASPER_PRINT_SESSION_ATTRIBUTE_KEY = ImageServlet.DEFAULT_JASPER_PRINT_SESSION_ATTRIBUTE;
-
+	public static String FREEZE_ROW_NO_KEY = "FREEZE_ROW_NO";
+	
 	protected static Logger log = LogManager.getLogger("com.transys.core.util.ReportUtil");
 	
 	public static void addJasperPrint(HttpServletRequest request, JasperPrint jp, String className) {

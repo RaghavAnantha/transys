@@ -270,8 +270,8 @@ function initMap() {
 			<td align="${left}"></td>
 			<td align="${left}">
 				<input type="submit" class="btn btn-primary btn-sm btn-sm-ext"
-					value="<transys:label code="Preview"/>" />
-				<input type="reset" class="btn btn-primary btn-sm btn-sm-ext" value="Clear"/>
+					value="<transys:label code="Preview"/>" disabled/>
+				<input type="reset" class="btn btn-primary btn-sm btn-sm-ext" value="Clear" disabled/>
 			</td>
 		</tr>
 		<tr><td></td></tr>

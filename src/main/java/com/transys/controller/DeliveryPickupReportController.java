@@ -102,8 +102,7 @@ public class DeliveryPickupReportController extends BaseController {
 			String reportName = "deliveryPickupReport";
 			String type = "html";
 			setReportRequestHeaders(response, type, reportName);
-			out = dynamicReportService.generateStaticReport(reportName, reportData, 
-								params, type, request);
+			out = dynamicReportService.generateStaticReport(reportName, reportData, params, type, request);
 			out.writeTo(response.getOutputStream());
 			
 			return null;				
@@ -111,7 +110,7 @@ public class DeliveryPickupReportController extends BaseController {
 			t.printStackTrace();
 			log.warn("Unable to create file: " + t);
 			
-			setErrorMsg(request, response, "Exception occured while generating report: " + t);
+			setErrorMsg(request, response, "Exception occured while generating Delivery Pickup report: " + t);
 			return "report.error";
 		} finally {
 			criteria.setPage(originalPage);
@@ -303,15 +302,8 @@ public class DeliveryPickupReportController extends BaseController {
 			}
 			map.put("permit", permitStr);
 			
-			/*ObjectMapper objectMapper = new ObjectMapper();
-			String jSonResponse = StringUtils.EMPTY;
-			try {
-				jSonResponse = objectMapper.writeValueAsString(map);
-				System.out.println(jSonResponse);
-			} catch (JsonProcessingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}*/
+			//String jsonResponse = JsonUtil.toJson(map);
+			//log.info(jsonResponse);
 			
 			reportData.add(map);
 		}

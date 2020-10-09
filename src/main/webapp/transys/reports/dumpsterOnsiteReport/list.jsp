@@ -1,7 +1,27 @@
 <%@include file="/common/taglibs.jsp"%>
+
+<script language="javascript">
+function validateExport() {
+	var reportData = $('#dumpsterOnsiteReportData').html();
+	if (reportData == "") {
+		showAlertDialog("Data Validation", "No data retrieved to export");
+		return false;
+	}
+	
+	return true;
+}
+
+function validateSubmit() {
+	return true;
+}
+</script>
 <br />
 <h4 style="margin-top: -15px; !important">Dumpsters On-site Report</h4>
-<form:form action="list.do" method="get" name="dumpstersOnsiteReportsearchForm">
+<form:form action="search.do" method="get" name="dumpstersOnsiteReportSearchForm" id="dumpstersOnsiteReportSearchForm">
+	<jsp:include page="/common/messages.jsp">
+		<jsp:param name="msgCtx" value="dumpsterOnsiteReport" />
+		<jsp:param name="errorCtx" value="dumpsterOnsiteReport" />
+	</jsp:include>
 	<table id="form-table" class="table">
 	 	<tr><td colspan=10></td><td colspan=10></td></tr>
 		<tr>
@@ -35,29 +55,61 @@
 		<tr>
 			<td align="${left}"></td>
 			<td align="${left}">
-				<input type="button"
-				class="btn btn-primary btn-sm btn-sm-ext"
-				onclick="document.forms['dumpstersOnsiteReportsearchForm'].submit();"
-				value="<transys:label code="Preview"/>" />
+				<input type="submit" class="btn btn-primary btn-sm btn-sm-ext"
+					value="<transys:label code="Preview"/>" />
 				<input type="reset" class="btn btn-primary btn-sm btn-sm-ext" value="Clear"/>
 			</td>
 		</tr>
 	</table>
 </form:form>
-
-<a href="generateDumpsterOnsiteReport.do?type=xls"><img src="${ctx}/images/excel.png" border="0" style="float:right" class="toolbarButton"></a>
-<a href="generateDumpsterOnsiteReport.do?type=pdf"><img src="${ctx}/images/pdf.png" border="0" style="float:right" class="toolbarButton"></a>
-<form:form name="dumpsterOnsiteReport" id="dumpsterOnsiteReport" class="tab-color">
-	<transys:datatable urlContext="reports/dumpsterOnsiteReports"  baseObjects="${dumpsterInfoList}"
-		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
-		pagingLink="search.do" dataQualifier="dumpsterOnsiteReport">
-		<transys:textcolumn headerText="Dumpster Size" dataField="dumpsterSize.size" width="100px"/>
-		<transys:textcolumn headerText="Dumpster#" dataField="dumpsterNum" />
-		<transys:textcolumn headerText="Status" dataField="status.status" />
-
-
-	</transys:datatable>
-	<%session.setAttribute("dumpsterOnsiteReportColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
-</form:form>
-
-
+<table width="100%">
+	<tr>
+		<td align="${left}" width="100%" align="right">
+			<a href="export.do?type=pdf" onclick="return validateExport();">
+				<img src="${pdfImage}" border="0" class="toolbarButton" title="PDF"/>
+			</a>
+			<a href="export.do?type=xlsx">
+				<img src="${excelImage}" border="0" class="toolbarButton" onclick="return validateExport();" title="XLSX"/>
+			</a>
+			<a href="export.do?type=csv">
+				<img src="${csvImage}" border="0" class="toolbarButton" onclick="return validateExport();" title="CSV"/>
+			</a>
+			<a href="export.do?type=print" target="_blank" onclick="return validateExport();">
+				<img src="${printImage}" border="0" class="toolbarButton" title="Print"/>
+			</a>
+		</td>
+		</tr>
+		<tr>
+			<td align="${left}" width="100%" valign="top">
+				<div id="dumpsterOnsiteReportData"></div>
+			</td>
+		</tr>
+</table>
+<script language="javascript">
+$("#dumpstersOnsiteReportSearchForm").submit(function (ev) {
+	if (!validateSubmit()) {
+		return false;
+	}
+	
+	var reportData = $('#dumpsterOnsiteReportData');
+	reportData.html("${reportLoadingMsg}");
+	
+	var $this = $(this);
+    $.ajax({
+        type: $this.attr('method'),
+        url: $this.attr('action'),
+        data: $this.serialize(),
+        success: function(responseData, textStatus, jqXHR) {
+        	reportData.html("");
+        	if (responseData.indexOf("ErrorMsg") >= 0 ) {
+        		var errorMsg = responseData.replace("ErrorMsg: ", "");
+       			showAlertDialog("Error", errorMsg);
+        	} else {
+        		reportData.html(responseData);
+        	}
+        }
+    });
+    
+    ev.preventDefault();
+});
+</script>

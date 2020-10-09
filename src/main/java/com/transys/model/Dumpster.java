@@ -33,6 +33,9 @@ public class Dumpster extends AbstractBaseModel {
 	private String deliveryAddress;
 	
 	@Transient
+	private Long orderId;
+	
+	@Transient
 	private String deliveryDate;
 
 	/*@Column(name="dumpsterPrice")
@@ -94,6 +97,16 @@ public class Dumpster extends AbstractBaseModel {
 	@Transient
 	public void setDeliveryDate(String deliveryDate) {
 		this.deliveryDate = deliveryDate;
+	}
+
+	@Transient
+	public Long getOrderId() {
+		return orderId;
+	}
+
+	@Transient
+	public void setOrderId(Long orderId) {
+		this.orderId = orderId;
 	}
 
 	public String getComments() {

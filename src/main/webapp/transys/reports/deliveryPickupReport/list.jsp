@@ -24,7 +24,6 @@ function validateSubmit() {
 			&& deliveryAddress == "") {
 		missingData = true;
 	}
-		
 	
 	if (missingData) {
 		var alertMsg = "<span style='color:red'><b>Please select any search criteria</b><br></span>"
@@ -45,22 +44,21 @@ function validateSubmit() {
 	</jsp:include>
 	<table id="form-table" class="table">
 	 	<tr><td colspan="10"></td><td colspan="10"></td></tr>
-	 <tr>
-		  <td class="form-left "><transys:label code="Delivery Date From"/></td>
-		  <td class="wide"><input class="flat" id="datepicker1" name="deliveryDateFrom" style="width: 175px" /></td>
-				
-		  <td align="${left}" class="form-left"><transys:label code="Delivery Date To"/></td>
-	      <td align="${left}" class="wide"><input class="flat" id="datepicker2" name="deliveryDateTo" style="width: 175px" /></td>
-	 </tr>
-	 <tr>
-		  <td align="${left}" class="form-left"><transys:label code="Pickup Date From"/></td>
-		  <td align="${left}" class="wide"><input class="flat" id="datepicker3" name="pickupDateFrom" style="width: 175px" /></td>
-				
-		  <td align="${left}" class="form-left"><transys:label code="Pickup Date To"/></td>
-	      <td align="${left}" class="wide"><input class="flat" id="datepicker4" name="pickupDateTo" style="width: 175px" /></td>
-	 </tr>
-	 <tr>
-		<td align="${left}" class="form-left"><transys:label code="Delivery Address" /></td>
+		<tr>
+			<td class="form-left "><transys:label code="Delivery Date From"/></td>
+			<td class="wide"><input class="flat" id="datepicker1" name="deliveryDateFrom" style="width: 175px" /></td>
+			
+			<td align="${left}" class="form-left"><transys:label code="Delivery Date To"/></td>
+			   <td align="${left}" class="wide"><input class="flat" id="datepicker2" name="deliveryDateTo" style="width: 175px" /></td>
+		 </tr>
+		 <tr>
+			<td align="${left}" class="form-left"><transys:label code="Pickup Date From"/></td>
+			<td align="${left}" class="wide"><input class="flat" id="datepicker3" name="pickupDateFrom" style="width: 175px" /></td>
+			<td align="${left}" class="form-left"><transys:label code="Pickup Date To"/></td>
+			<td align="${left}" class="wide"><input class="flat" id="datepicker4" name="pickupDateTo" style="width: 175px" /></td>
+		 </tr>
+		 <tr>
+			<td align="${left}" class="form-left"><transys:label code="Delivery Address" /></td>
 			<td align="${left}">
 				<select class="flat form-control input-sm" id="deliveryAddress" name="deliveryAddress" style="width: 175px !important">
 					<option value="">------<transys:label code="Please Select" />------</option>
@@ -84,7 +82,6 @@ function validateSubmit() {
 				<input type="reset" class="btn btn-primary btn-sm btn-sm-ext" value="Clear"/>
 			</td>
 		</tr>
-		<tr><td></td></tr>
 	</table>
 </form:form>
 <table width="100%">
@@ -127,7 +124,8 @@ $("#deliveryPickUpReportSearchForm").submit(function (ev) {
         success: function(responseData, textStatus, jqXHR) {
         	reportData.html("");
         	if (responseData.indexOf("ErrorMsg") >= 0 ) {
-        		showAlertDialog("Exception", "Error while processing request");
+        		var errorMsg = responseData.replace("ErrorMsg: ", "");
+       			showAlertDialog("Error", errorMsg);
         	} else {
         		reportData.html(responseData);
         	}
