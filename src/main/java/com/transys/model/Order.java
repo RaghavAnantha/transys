@@ -501,6 +501,21 @@ public class Order extends AbstractBaseModel {
 				deliveryHourTo, deliveryMinutesTo);
 	}
 	
+	@Transient
+	public String getCustomerName() {
+		return getCustomer() == null ? StringUtils.EMPTY : getCustomer().getCompanyName();
+	}
+	
+	@Transient
+	public String getDeliveryAddressFullLine() {
+		return getDeliveryAddress() == null ? StringUtils.EMPTY : getDeliveryAddress().getFullLine();
+	}
+	
+	@Transient
+	public String getFullDeliveryAddress() {
+		return getDeliveryAddress() == null ? StringUtils.EMPTY : getDeliveryAddress().getFullDeliveryAddress();
+	}
+	
 	/*public String getMaterialType() {
 		return materialType;
 	}

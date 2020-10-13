@@ -230,8 +230,8 @@ function initMap() {
 <h4 style="margin-top: -15px; !important">Scheduler</h4>
 <form:form action="search.do" method="get" name="schedulerSearchForm" id="schedulerSearchForm" >
 	<jsp:include page="/common/messages.jsp">
-		<jsp:param name="msgCtx" value="schedulerSearch" />
-		<jsp:param name="errorCtx" value="schedulerSearch" />
+		<jsp:param name="msgCtx" value="${msgCtx}" />
+		<jsp:param name="errorCtx" value="${errorCtx}" />
 	</jsp:include>
 	<table id="form-table" class="table">
 	 	<tr><td colspan="10"></td><td colspan="10"></td></tr>

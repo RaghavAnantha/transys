@@ -10,7 +10,7 @@
 <%
 	if (ReportUtil.hasJasperPrint(request)) {
 %>		
-		<jsp:include page="../base/htmlReport.jsp">
+		<jsp:include page="../reports/htmlReport.jsp">
 			<jsp:param name="saveLabel" value="Save Invoice" />
 			<jsp:param name="exportLabel" value="Export Invoice Preview As PDF" />
 			<jsp:param name="saveAction" value="saveInvoice.do" />

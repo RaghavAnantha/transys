@@ -1,16 +1,6 @@
 <%@include file="/common/taglibs.jsp"%>
 
 <script language="javascript">
-function validateExport() {
-	var reportData = $('#dumpsterOnsiteReportData').html();
-	if (reportData == "") {
-		showAlertDialog("Data Validation", "No data retrieved to export");
-		return false;
-	}
-	
-	return true;
-}
-
 function validateSubmit() {
 	return true;
 }
@@ -62,54 +52,7 @@ function validateSubmit() {
 		</tr>
 	</table>
 </form:form>
-<table width="100%">
-	<tr>
-		<td align="${left}" width="100%" align="right">
-			<a href="export.do?type=pdf" onclick="return validateExport();">
-				<img src="${pdfImage}" border="0" class="toolbarButton" title="PDF"/>
-			</a>
-			<a href="export.do?type=xlsx">
-				<img src="${excelImage}" border="0" class="toolbarButton" onclick="return validateExport();" title="XLSX"/>
-			</a>
-			<a href="export.do?type=csv">
-				<img src="${csvImage}" border="0" class="toolbarButton" onclick="return validateExport();" title="CSV"/>
-			</a>
-			<a href="export.do?type=print" target="_blank" onclick="return validateExport();">
-				<img src="${printImage}" border="0" class="toolbarButton" title="Print"/>
-			</a>
-		</td>
-		</tr>
-		<tr>
-			<td align="${left}" width="100%" valign="top">
-				<div id="dumpsterOnsiteReportData"></div>
-			</td>
-		</tr>
-</table>
-<script language="javascript">
-$("#dumpstersOnsiteReportSearchForm").submit(function (ev) {
-	if (!validateSubmit()) {
-		return false;
-	}
-	
-	var reportData = $('#dumpsterOnsiteReportData');
-	reportData.html("${reportLoadingMsg}");
-	
-	var $this = $(this);
-    $.ajax({
-        type: $this.attr('method'),
-        url: $this.attr('action'),
-        data: $this.serialize(),
-        success: function(responseData, textStatus, jqXHR) {
-        	reportData.html("");
-        	if (responseData.indexOf("ErrorMsg") >= 0 ) {
-        		var errorMsg = responseData.replace("ErrorMsg: ", "");
-       			showAlertDialog("Error", errorMsg);
-        	} else {
-        		reportData.html(responseData);
-        	}
-        }
-    });
-    
-    ev.preventDefault();
-});
-</script>
+<jsp:include page="../reportToolbar.jsp">
+	<jsp:param name="reportSearchForm" value="dumpstersOnsiteReportSearchForm" />
+	<jsp:param name="reportDataElem" value="dumpsterOnsiteReportData" />
+</jsp:include>

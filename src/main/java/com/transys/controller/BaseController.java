@@ -17,10 +17,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 
 import org.springframework.ui.Model;
-
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.Validator;
 
 import org.springframework.web.bind.WebDataBinder;
+
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -42,6 +43,7 @@ import com.transys.model.Permit;
 import com.transys.model.SearchCriteria;
 //import com.transys.model.StaticData;
 import com.transys.model.User;
+import com.transys.service.DynamicReportService;
 
 import net.sf.jasperreports.engine.JasperPrint;
 
@@ -49,25 +51,24 @@ import net.sf.jasperreports.engine.JasperPrint;
 
 @SuppressWarnings("unchecked")
 public class BaseController {
-	//protected static DecimalFormat decimalFormat = new DecimalFormat("######.000");
-	//public static SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
-
 	protected static Logger log = LogManager.getLogger("com.transys.controller");
 	
+	protected static String MSG_CTX_KEY = "msgCtx";
+	protected static String ERROR_CTX_KEY = "errorCtx";
+	
+	protected static String MSG_KEY = "msg";
+	protected static String ERROR_KEY = "error";
+	
+	@Autowired
+	protected DynamicReportService dynamicReportService;
 	//@Autowired
-	//private AuditService auditService;
+	//protected AuditService auditService;
 
 	protected String urlContext;
+	
+	protected String messageCtx;
 	protected String reportName;
-
-	public String getUrlContext() {
-		return urlContext;
-	}
-
-	public void setUrlContext(String urlContext) {
-		this.urlContext = urlContext;
-	}
-
+	
 	public String getReportName() {
 		return reportName;
 	}
@@ -76,6 +77,22 @@ public class BaseController {
 		this.reportName = reportName;
 	}
 
+	public String getMessageCtx() {
+		return messageCtx;
+	}
+
+	public void setMessageCtx(String messageCtx) {
+		this.messageCtx = messageCtx;
+	}
+	
+	public String getUrlContext() {
+		return urlContext;
+	}
+
+	public void setUrlContext(String urlContext) {
+		this.urlContext = urlContext;
+	}
+	
 	// Set up any custom editors, adds a custom one for java.sql.date by default
 	@InitBinder
 	public void initBinder(WebDataBinder binder) {
@@ -107,6 +124,11 @@ public class BaseController {
 	 */
 	public void setValidator(Validator validator) {
 		this.validator = validator;
+	}
+	
+	protected void addCtx(ModelMap model) {
+		model.addAttribute(MSG_CTX_KEY, getMessageCtx());
+		model.addAttribute(ERROR_CTX_KEY, getMessageCtx());
 	}
 
 	protected User getUser(HttpServletRequest request) {
@@ -282,7 +304,7 @@ public class BaseController {
 		/*if (response != null) {
 			response.setContentType(MimeUtil.getContentType("html"));
 		}*/
-		request.getSession().setAttribute("error", msg);
+		request.getSession().setAttribute(ERROR_KEY, msg);
 	}
 	
 	protected void setErrorMsg(HttpServletRequest request, String msg) {
@@ -290,7 +312,7 @@ public class BaseController {
 	}
 	
 	protected void setSuccessMsg(HttpServletRequest request, String msg) {
-		request.getSession().setAttribute("msg", msg);
+		request.getSession().setAttribute(MSG_KEY, msg);
 	}
 	
 	protected void setReportFreezeRow(Map<String, Object> params, String type, String rowNo) {

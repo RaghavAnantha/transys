@@ -1,5 +1,8 @@
 package com.transys.core.util;
 
+import java.math.BigDecimal;
+
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
@@ -17,6 +20,10 @@ public class FormatUtil {
 	public static SimpleDateFormat dbDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 	public static SimpleDateFormat dbDateTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	public static SimpleDateFormat dbDateTimeFormat2 = new SimpleDateFormat("yyyy-MM-dd 00:00:00.0");
+	
+	public static DecimalFormat decimalFormat = new DecimalFormat("#####0.00");
+	public static DecimalFormat currencyFormat = new DecimalFormat("########0.00");
+	public static DecimalFormat currencyFormatWithSep = new DecimalFormat("###,###,##0.00");
 	
 	public static String formatPhone(String phone) {
 		if (StringUtils.isEmpty(phone) || phone.length() < 10 || StringUtils.contains(phone, "-")) {
@@ -197,5 +204,62 @@ public class FormatUtil {
 			formattedDateTime += ":" + minutesTo;
 		}
 		return formattedDateTime;
+	}
+	
+	public static String format(BigDecimal bigDecimal) {
+		String formattedStr = StringUtils.EMPTY;
+		if (bigDecimal == null) {
+			return formattedStr;
+		}
+		
+		return decimalFormat.format(bigDecimal);
+	}
+	
+	public static String formatFee(BigDecimal fee) {
+		String formattedFee = StringUtils.EMPTY;
+		if (fee == null) {
+			return formattedFee;
+		}
+		
+		return currencyFormat.format(fee);
+	}
+	
+	public static String formatFee(BigDecimal fee, boolean preffixCurrency) {
+		String formattedFee = StringUtils.EMPTY;
+		if (fee == null) {
+			return formattedFee;
+		}
+		
+		if (preffixCurrency) {
+			formattedFee = "$";
+		}
+		
+		return (formattedFee + formatFee(fee));
+	}
+	
+	public static String formatFee(BigDecimal fee, boolean preffixCurrency, boolean addSep) {
+		String formattedFee = StringUtils.EMPTY;
+		if (fee == null) {
+			return formattedFee;
+		}
+		
+		if (!addSep) {
+			return formatFee(fee, preffixCurrency);
+		}
+		
+		if (preffixCurrency) {
+			formattedFee = "$";
+		}
+		return (formattedFee + currencyFormatWithSep.format(fee));
+	}
+	
+	public static String formatFee(String feeStr, boolean preffixCurrency, boolean addSep) {
+		String formattedFee = StringUtils.EMPTY;
+		if (StringUtils.isEmpty(feeStr)) {
+			return formattedFee;
+		}
+		
+		BigDecimal fee = new BigDecimal(feeStr);
+		return formatFee(fee, preffixCurrency, addSep);
 	}
 }

@@ -14,6 +14,10 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.j2ee.servlets.ImageServlet;
 
 public class ReportUtil {
+	public static String paramsKey = "params";
+	public static String dataKey = "data";
+	public static String inputKey = "input";
+	
 	public static String JASPER_PRINT_SESSION_ATTRIBUTE_KEY = ImageServlet.DEFAULT_JASPER_PRINT_SESSION_ATTRIBUTE;
 	public static String FREEZE_ROW_NO_KEY = "FREEZE_ROW_NO";
 	

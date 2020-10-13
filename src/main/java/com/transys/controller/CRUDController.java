@@ -39,26 +39,6 @@ import com.transys.service.DynamicReportService;
 
 @SuppressWarnings("unchecked")
 public abstract class CRUDController<T extends BaseModel> extends BaseController {
-	
-	@Autowired
-	protected DynamicReportService dynamicReportService;
-
-	public void setDynamicReportService(DynamicReportService dynamicReportService) {
-		this.dynamicReportService = dynamicReportService;
-	}
-
-	protected String urlContext;
-
-	@Override
-	public String getUrlContext() {
-		return urlContext;
-	}
-
-	@Override
-	public void setUrlContext(String urlContext) {
-		this.urlContext = urlContext;
-	}
-
 	public CRUDController() {
 		super();
 		setUrlContext(ClassUtils.getShortName(getEntityClass()).toLowerCase());
@@ -91,8 +71,7 @@ public abstract class CRUDController<T extends BaseModel> extends BaseController
 		setupList(model, request);
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		criteria.setPageSize(25);
-		//TODO: Fix me 
-		criteria.getSearchMap().remove("_csrf");
+		
 		model.addAttribute("list",genericDAO.search(getEntityClass(), criteria));
 		return urlContext + "/list";
 	}
@@ -136,7 +115,7 @@ public abstract class CRUDController<T extends BaseModel> extends BaseController
 			log.warn("Error in validation :" + e);
 		}
 		
-		// return to form if we had errors
+		// Return to form if we had errors
 		if (bindingResult.hasErrors()) {
 			List<ObjectError> errors = bindingResult.getAllErrors();
 			for(ObjectError e : errors) {
@@ -260,7 +239,6 @@ public abstract class CRUDController<T extends BaseModel> extends BaseController
 			@RequestParam("dataQualifier") String dataQualifier,
 			Object objectDAO, Class clazz) {
 		List columnPropertyList = (List) request.getSession().getAttribute(dataQualifier + "ColumnPropertyList");
-		//List columnPropertyList = (List) request.getSession().getAttribute("columnPropertyList");
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 
 		response.setContentType(MimeUtil.getContentType(type));
@@ -268,7 +246,7 @@ public abstract class CRUDController<T extends BaseModel> extends BaseController
 			response.setHeader("Content-Disposition", "attachment;filename="
 					+ urlContext + "Report." + type);
 		try {
-			criteria.setPageSize(100000);
+			criteria.setPageSize(10000);
 			String label = getCriteriaAsString(criteria);
 			System.out.println("Criteria: " + label);
 			ByteArrayOutputStream out = dynamicReportService.exportReport(

@@ -41,7 +41,7 @@
 	output.setImageHandler(new WebHtmlResourceHandler(request.getContextPath() + "/image?image={0}"));
 	htmlExporter.setExporterOutput(output);
 	
-	BaseVO input = (BaseVO) request.getSession().getAttribute("input");
+	BaseVO input = (BaseVO) request.getSession().getAttribute(ReportUtil.inputKey);
 	int historyCount = input.getHistoryCount();
 	
 	String saveLabel = request.getParameter("saveLabel");

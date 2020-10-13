@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
-<!-- 2020-10-09T01:23:09 -->
+<!-- 2020-10-13T16:34:42 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="dumpsterRentedReport" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isSummaryWithPageHeaderAndFooter="true" uuid="faf505e5-0136-4842-b2f3-9d43bbd13323">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
@@ -17,6 +17,9 @@
 	<field name="deliveryAddress" class="java.lang.String"/>
 	<field name="deliveryDate" class="java.lang.String"/>
 	<field name="orderId" class="java.lang.Long"/>
+	<field name="customer" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
 	<variable name="rowCount" class="java.lang.Integer" calculation="Count">
 		<variableExpression><![CDATA[$F{dumpsterNum}]]></variableExpression>
 	</variable>
@@ -33,7 +36,7 @@
 			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 			<printWhenExpression><![CDATA[$V{PAGE_NUMBER} > 0]]></printWhenExpression>
 			<staticText>
-				<reportElement mode="Opaque" x="136" y="0" width="283" height="18" backcolor="#99CCFF" uuid="9d112302-b358-4dac-aca8-7366e4911bb0">
+				<reportElement mode="Opaque" x="136" y="2" width="283" height="18" backcolor="#99CCFF" uuid="9d112302-b358-4dac-aca8-7366e4911bb0">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
@@ -105,7 +108,7 @@
 			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 			<printWhenExpression><![CDATA[$V{PAGE_NUMBER} > 0]]></printWhenExpression>
 			<staticText>
-				<reportElement mode="Opaque" x="480" y="2" width="75" height="18" forecolor="#000000" backcolor="#99CCFF" uuid="539919a7-712f-4202-a553-e20d8bf91487">
+				<reportElement mode="Opaque" x="490" y="2" width="65" height="18" forecolor="#000000" backcolor="#99CCFF" uuid="539919a7-712f-4202-a553-e20d8bf91487">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
 				<box>
@@ -121,7 +124,7 @@
 				<text><![CDATA[Status]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="0" y="2" width="60" height="18" forecolor="#000000" backcolor="#99CCFF" uuid="32e3694a-75d9-4fe8-a086-6c8e003c3381">
+				<reportElement mode="Opaque" x="0" y="2" width="70" height="18" forecolor="#000000" backcolor="#99CCFF" uuid="32e3694a-75d9-4fe8-a086-6c8e003c3381">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
 				<box>
@@ -134,10 +137,10 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="10" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Dumpster Size]]></text>
+				<text><![CDATA[Dump. Size]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="60" y="2" width="76" height="18" forecolor="#000000" backcolor="#99CCFF" uuid="fa1e4eaf-5fb4-44ed-b16b-fa9fde060d36">
+				<reportElement mode="Opaque" x="70" y="2" width="66" height="18" forecolor="#000000" backcolor="#99CCFF" uuid="fa1e4eaf-5fb4-44ed-b16b-fa9fde060d36">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
 				<box>
@@ -150,10 +153,10 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="10" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Dumpster Num]]></text>
+				<text><![CDATA[Dump. No.]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="200" y="2" width="207" height="18" forecolor="#000000" backcolor="#99CCFF" uuid="9f65f432-3578-4fee-9709-25a3a55f3130">
+				<reportElement mode="Opaque" x="260" y="2" width="170" height="18" forecolor="#000000" backcolor="#99CCFF" uuid="9f65f432-3578-4fee-9709-25a3a55f3130">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
 				<box>
@@ -169,7 +172,7 @@
 				<text><![CDATA[Delivery Address]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="407" y="2" width="73" height="18" forecolor="#000000" backcolor="#99CCFF" uuid="48490d27-552b-4cec-9e52-aebc2d5d1428">
+				<reportElement mode="Opaque" x="430" y="2" width="60" height="18" forecolor="#000000" backcolor="#99CCFF" uuid="48490d27-552b-4cec-9e52-aebc2d5d1428">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
 				<box>
@@ -185,7 +188,7 @@
 				<text><![CDATA[Del. Date]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="136" y="2" width="64" height="18" forecolor="#000000" backcolor="#99CCFF" uuid="dca81984-d6e4-4e90-b4db-db1fdefb5b9e">
+				<reportElement mode="Opaque" x="136" y="2" width="51" height="18" forecolor="#000000" backcolor="#99CCFF" uuid="dca81984-d6e4-4e90-b4db-db1fdefb5b9e">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
 				<box>
@@ -200,6 +203,22 @@
 				</textElement>
 				<text><![CDATA[Order #]]></text>
 			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="187" y="2" width="73" height="18" forecolor="#000000" backcolor="#99CCFF" uuid="7e990907-f9bc-459c-95a5-eec5b27907ec">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="1.0" lineColor="#333333"/>
+					<topPen lineWidth="1.0" lineColor="#333333"/>
+					<leftPen lineWidth="1.0" lineColor="#333333"/>
+					<bottomPen lineWidth="1.0" lineColor="#333333"/>
+					<rightPen lineWidth="1.0" lineColor="#333333"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Customer]]></text>
+			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
@@ -207,7 +226,7 @@
 			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
 			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 			<textField isBlankWhenNull="true">
-				<reportElement x="0" y="0" width="60" height="18" uuid="49d5bea4-befc-4ee7-be2b-70645bd6c96f">
+				<reportElement x="0" y="0" width="70" height="18" uuid="49d5bea4-befc-4ee7-be2b-70645bd6c96f">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
 				<box>
@@ -222,7 +241,7 @@
 				<textFieldExpression><![CDATA[$F{dumpsterSize.size}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="60" y="0" width="76" height="18" uuid="31cb4025-e542-404e-9bc6-a841a0bae981"/>
+				<reportElement x="70" y="0" width="66" height="18" uuid="31cb4025-e542-404e-9bc6-a841a0bae981"/>
 				<box>
 					<topPen lineWidth="0.5"/>
 					<leftPen lineWidth="0.5"/>
@@ -235,7 +254,7 @@
 				<textFieldExpression><![CDATA[$F{dumpsterNum}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="480" y="0" width="75" height="18" uuid="ed508bd3-7a8b-483a-a194-8af0252746de"/>
+				<reportElement x="490" y="0" width="65" height="18" uuid="ed508bd3-7a8b-483a-a194-8af0252746de"/>
 				<box>
 					<topPen lineWidth="0.5"/>
 					<leftPen lineWidth="0.5"/>
@@ -248,7 +267,7 @@
 				<textFieldExpression><![CDATA[$F{status.status}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="200" y="0" width="207" height="18" uuid="1435aed1-e1c5-4b25-9217-92338d4138a6"/>
+				<reportElement x="260" y="0" width="170" height="18" uuid="1435aed1-e1c5-4b25-9217-92338d4138a6"/>
 				<box>
 					<topPen lineWidth="0.5"/>
 					<leftPen lineWidth="0.5"/>
@@ -261,7 +280,7 @@
 				<textFieldExpression><![CDATA[$F{deliveryAddress}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="407" y="0" width="73" height="18" uuid="7531de2f-d0a8-4a5b-8b92-3636311c6d70"/>
+				<reportElement x="430" y="0" width="60" height="18" uuid="7531de2f-d0a8-4a5b-8b92-3636311c6d70"/>
 				<box>
 					<topPen lineWidth="0.5"/>
 					<leftPen lineWidth="0.5"/>
@@ -274,7 +293,7 @@
 				<textFieldExpression><![CDATA[$F{deliveryDate}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="136" y="0" width="64" height="18" uuid="0bdd1733-14fb-4e68-82af-a355e348396c"/>
+				<reportElement x="136" y="0" width="51" height="18" uuid="0bdd1733-14fb-4e68-82af-a355e348396c"/>
 				<box>
 					<topPen lineWidth="0.5"/>
 					<leftPen lineWidth="0.5"/>
@@ -285,6 +304,19 @@
 					<font fontName="SansSerif" size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{orderId}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="187" y="0" width="73" height="18" uuid="226b26d6-e96c-462d-a0de-8e86dd5c7daf"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{customer}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
@@ -313,7 +345,7 @@
 		<band height="20" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 			<staticText>
-				<reportElement x="0" y="1" width="49" height="18" uuid="4e79561c-0a51-40e9-a6c6-d299a8bf6a4e">
+				<reportElement x="0" y="1" width="70" height="18" uuid="4e79561c-0a51-40e9-a6c6-d299a8bf6a4e">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
 				<box>
@@ -323,14 +355,14 @@
 					<bottomPen lineWidth="0.0"/>
 					<rightPen lineWidth="0.0"/>
 				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
+				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="10" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Total]]></text>
+				<text><![CDATA[Count]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="49" y="1" width="73" height="18" uuid="ec6384ad-0397-495d-bb08-0acd9dcd397d"/>
-				<textElement verticalAlignment="Middle">
+				<reportElement x="70" y="1" width="73" height="18" uuid="ec6384ad-0397-495d-bb08-0acd9dcd397d"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="10" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{rowCount}]]></textFieldExpression>
