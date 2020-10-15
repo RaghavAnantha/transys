@@ -693,7 +693,7 @@ public class DynamicReportServiceImpl implements DynamicReportService {
 			List<?> datas, Map params, String type, HttpServletRequest request) {
 		try {// @@@@@@@@@@@@@@@@@ 1a
 			System.out.println("-----------------------");
-			JasperPrint jp = getJasperPrintFromFile(masterReportName, subReportName, datas, params, request);
+			JasperPrint jp = getJasperPrintFromFile(masterReportName, subReportName, datas, params, type, request);
 			ByteArrayOutputStream out = getStreamByType(type, jp, request);
 			return out;
 		} catch (Exception ex) {
@@ -705,7 +705,7 @@ public class DynamicReportServiceImpl implements DynamicReportService {
 	
 	@Override
 	public JasperPrint getJasperPrintFromFile(String masterReportName, String subReportName, List datas,
-			Map params, HttpServletRequest request) {
+			Map params, String type, HttpServletRequest request) {
 		// @@@@@@@@@@@@@@@@@ 2a
 		try {
 			String masterReportFilePath = ServletUtil.getRealPath(request, reportsCtx + "/" + masterReportName + ".jasper");
@@ -715,6 +715,8 @@ public class DynamicReportServiceImpl implements DynamicReportService {
 			String subReportPathName = ServletUtil.getRealPath(request, reportsCtx);
 			/*File subReportFile = new File(request.getSession().getServletContext().getRealPath(reportsCtx + "/"  + subReportName + ".jasper"));
 			JasperReport subJasperReport = (JasperReport) JRLoader.loadObject(subReportFile);*/
+			
+			addPaginationParams(params, type);
 			
 			// ***********
 			JasperPrint jp = null;
@@ -728,6 +730,7 @@ public class DynamicReportServiceImpl implements DynamicReportService {
 			jp = JasperFillManager.fillReport(masterJasperReport, params, dataSource);
 			/*JasperFillManager.fillReportToFile(jasperMasterReport, destFileName, parameters, beanColDataSource);*/
 			
+			addReportProperties(jp, params, type);
 			return jp;
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -1242,8 +1245,8 @@ public class DynamicReportServiceImpl implements DynamicReportService {
 		SimpleHtmlReportConfiguration reportConfig = new SimpleHtmlReportConfiguration();
 		//reportConfig.setIgnorePageMargins(true);
 		reportConfig.setRemoveEmptySpaceBetweenRows(true);
-		//reportConfig.setBorderCollapse("separate"); // collapse
-		reportConfig.setZoomRatio(new Float(0.97));
+		//reportConfig.setBorderCollapse("separate"); // collapse 
+		reportConfig.setZoomRatio(new Float(0.97)); // 0.97
 		htmlExporter.setConfiguration(reportConfig);
 	}
 	

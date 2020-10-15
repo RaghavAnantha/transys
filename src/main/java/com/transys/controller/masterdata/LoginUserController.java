@@ -1,4 +1,4 @@
-package com.transys.controller;
+package com.transys.controller.masterdata;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.transys.controller.CRUDController;
 import com.transys.controller.editor.AbstractModelEditor;
 import com.transys.model.Employee;
 import com.transys.model.EmployeeStatus;

@@ -1,4 +1,4 @@
-package com.transys.controller;
+package com.transys.controller.masterdata;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.transys.controller.CRUDController;
 import com.transys.controller.editor.AbstractModelEditor;
 import com.transys.model.PublicMaterialIntake;
 import com.transys.model.RecycleLocation;

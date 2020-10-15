@@ -1,4 +1,4 @@
-package com.transys.controller;
+package com.transys.controller.report;
 
 import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.transys.controller.CRUDController;
 import com.transys.core.report.generator.RecycleReportGenerator;
 import com.transys.model.MaterialCategory;
 import com.transys.model.MaterialType;

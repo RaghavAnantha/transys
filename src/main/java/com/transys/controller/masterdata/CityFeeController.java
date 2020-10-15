@@ -1,4 +1,4 @@
-package com.transys.controller;
+package com.transys.controller.masterdata;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -6,33 +6,43 @@ import java.util.Map;
 import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.transys.model.AdditionalFee;
+import com.transys.controller.CRUDController;
 import com.transys.model.CityFee;
 import com.transys.model.DumpsterPrice;
+import com.transys.model.MaterialType;
 import com.transys.model.SearchCriteria;
 
-@SuppressWarnings("unchecked")
 @Controller
-@RequestMapping("/masterData/additionalFee")
-public class AdditionalFeeController extends CRUDController<AdditionalFee> {
-	
-	public AdditionalFeeController() {
-		setUrlContext("masterData/additionalFee");
+@RequestMapping("/masterData/cityFee")
+public class CityFeeController extends CRUDController<CityFee> {
+	public CityFeeController() {
+		setUrlContext("masterData/cityFee");
 	}
-
+	
 	@RequestMapping(method = RequestMethod.GET, value = "/main.do")
 	public String displayMain(ModelMap model, HttpServletRequest request) {
 		request.getSession().removeAttribute("searchCriteria");
 		setupList(model, request);
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
-		model.addAttribute("list", genericDAO.search(AdditionalFee.class, criteria, "description, effectiveStartDate desc", null, null));
+		model.addAttribute("list", genericDAO.search(CityFee.class, criteria, "suburbName, effectiveStartDate desc", null, null));
+		return urlContext + "/list";
+	}
+	
+	@Override
+	public String search2(ModelMap model, HttpServletRequest request) {
+		setupList(model, request);
+		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
+		model.addAttribute("list", genericDAO.search(CityFee.class, criteria, "suburbName, effectiveStartDate desc", null, null));
+		
 		return urlContext + "/list";
 	}
 
@@ -44,17 +54,8 @@ public class AdditionalFeeController extends CRUDController<AdditionalFee> {
 		criteria.getSearchMap().remove("_csrf");
 		criteria.setPageSize(25);
 		
-		model.addAttribute("list", genericDAO.search(AdditionalFee.class, criteria, "description, effectiveStartDate desc", false));
+		model.addAttribute("list", genericDAO.search(CityFee.class, criteria, "suburbName, effectiveStartDate desc", false));
 		cleanUp(request);
-		
-		return urlContext + "/list";
-	}
-	
-	@Override
-	public String search2(ModelMap model, HttpServletRequest request) {
-		setupList(model, request);
-		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
-		model.addAttribute("list", genericDAO.search(AdditionalFee.class, criteria, "description, effectiveStartDate desc", false));
 		
 		return urlContext + "/list";
 	}
@@ -74,15 +75,15 @@ public class AdditionalFeeController extends CRUDController<AdditionalFee> {
 	@Override
 	public void setupCreate(ModelMap model, HttpServletRequest request) {
 		Map criterias = new HashMap();
-		model.addAttribute("additionalFees", genericDAO.findByCriteria(AdditionalFee.class, criterias, "description", false));
-		model.addAttribute("uniqueAdditionalFees", genericDAO.executeSimpleQuery("select DISTINCT(obj.fee) from AdditionalFee obj where obj.deleteFlag='1' order by obj.fee asc"));
+		model.addAttribute("cityFees", genericDAO.findByCriteria(CityFee.class, criterias, "suburbName", false));
+		model.addAttribute("uniqueCityFees", genericDAO.executeSimpleQuery("select DISTINCT(obj.fee) from CityFee obj where obj.deleteFlag='1' order by obj.fee asc"));
 	}
 	
 	@Override
-	public String save(HttpServletRequest request, @ModelAttribute("modelObject") AdditionalFee entity,
+	public String save(HttpServletRequest request, @ModelAttribute("modelObject") CityFee entity,
 			BindingResult bindingResult, ModelMap model) {
 		setupCreate(model, request);
-		model.addAttribute("msgCtx", "manageAdditionalFees");
+		model.addAttribute("msgCtx", "manageCityFee");
 		
 		try {
 			beforeSave(request, entity, model);
@@ -95,17 +96,17 @@ public class AdditionalFeeController extends CRUDController<AdditionalFee> {
 			return urlContext + "/form";
 		}
 		
-		model.addAttribute("msg", "Additional Fee saved successfully");
+		model.addAttribute("msg", "City Fee saved successfully");
 		
 		if (entity.getModifiedBy() == null) {
-			model.addAttribute("modelObject", new AdditionalFee());
+			model.addAttribute("modelObject", new CityFee());
 		}
 				
 		return urlContext + "/form";
 	}
 	
 	private String extractSaveErrorMsg(Exception e) {
-		String errorMsg = "Error occured while saving additional fee";
+		String errorMsg = "Error occured while saving city fee";
 		return errorMsg;
 	}
 }

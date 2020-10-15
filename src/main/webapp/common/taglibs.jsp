@@ -13,6 +13,7 @@
 
 <c:set var="ctx" value="${pageContext.request.contextPath}"/>
 <c:set var="resourceCtx" value="${pageContext.request.contextPath}"/>
+<c:set var="urlCtx" value="${ctx}/${urlContext}"/>
 
 <c:set var="reportsMenuCtx" value="${ctx}/reports"/>
 <c:set var="masterDataMenuCtx" value="${ctx}/masterData"/>

@@ -55,6 +55,7 @@ public class BaseController {
 	
 	protected static String MSG_CTX_KEY = "msgCtx";
 	protected static String ERROR_CTX_KEY = "errorCtx";
+	protected static String URL_CTX_KEY = "urlContext";
 	
 	protected static String MSG_KEY = "msg";
 	protected static String ERROR_KEY = "error";
@@ -65,9 +66,10 @@ public class BaseController {
 	//protected AuditService auditService;
 
 	protected String urlContext;
-	
 	protected String messageCtx;
+	
 	protected String reportName;
+	protected String subReportName;
 	
 	public String getReportName() {
 		return reportName;
@@ -75,6 +77,14 @@ public class BaseController {
 
 	public void setReportName(String reportName) {
 		this.reportName = reportName;
+	}
+
+	public String getSubReportName() {
+		return subReportName;
+	}
+
+	public void setSubReportName(String subReportName) {
+		this.subReportName = subReportName;
 	}
 
 	public String getMessageCtx() {
@@ -129,6 +139,7 @@ public class BaseController {
 	protected void addCtx(ModelMap model) {
 		model.addAttribute(MSG_CTX_KEY, getMessageCtx());
 		model.addAttribute(ERROR_CTX_KEY, getMessageCtx());
+		model.addAttribute(URL_CTX_KEY, getUrlContext());
 	}
 
 	protected User getUser(HttpServletRequest request) {

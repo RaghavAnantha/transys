@@ -39,10 +39,13 @@
         <pattern>/transys/customer/deliveryAddressModal.jsp</pattern>
         <pattern>/transys/permit/formModal.jsp</pattern>
         <pattern>/transys/permit/formForCustomerModal.jsp</pattern>
-        
-        <pattern>/transys/orderPermitAlert/**</pattern>
+    </decorator>
+    <decorator name="inline" page="popUpLayout.jsp">
+    	<pattern>/transys/orderPermitAlert/**</pattern>
         
         <pattern>/transys/customer/customerListReport.jsp</pattern>
+        <pattern>/transys/reports/customerOrdersReport/**</pattern>
+        
         <pattern>/transys/invoice/manageInvoiceList.jsp</pattern>
     </decorator>
     <decorator name="blank" page="blankLayout.jsp">

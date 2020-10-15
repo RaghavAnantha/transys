@@ -1,4 +1,4 @@
-package com.transys.controller;
+package com.transys.controller.masterdata;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -7,7 +7,6 @@ import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
-import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -16,33 +15,29 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.transys.controller.editor.AbstractModelEditor;
-import com.transys.model.Dumpster;
-import com.transys.model.DumpsterSize;
-import com.transys.model.DumpsterStatus;
+import com.transys.controller.CRUDController;
+import com.transys.model.LocationType;
 import com.transys.model.SearchCriteria;
 
-@SuppressWarnings("unchecked")
 @Controller
-@RequestMapping("/masterData/dumpsters")
-public class DumpsterController extends CRUDController<Dumpster> {
-	
-	public DumpsterController() {
-		setUrlContext("masterData/dumpsters");
+@RequestMapping("/masterData/locationType")
+public class LocationTypeController extends CRUDController<LocationType> {
+
+	public LocationTypeController() {
+		setUrlContext("masterData/locationType");
 	}
 
 	@Override
 	public void initBinder(WebDataBinder binder) {
-		binder.registerCustomEditor(DumpsterStatus.class, new AbstractModelEditor(DumpsterStatus.class));
-		binder.registerCustomEditor(DumpsterSize.class, new AbstractModelEditor(DumpsterSize.class));
+		super.initBinder(binder);
 	}
-	
+
 	@RequestMapping(method = RequestMethod.GET, value = "/main.do")
 	public String displayMain(ModelMap model, HttpServletRequest request) {
 		request.getSession().removeAttribute("searchCriteria");
 		setupList(model, request);
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
-		model.addAttribute("list", genericDAO.search(Dumpster.class, criteria, "dumpsterNum", null, null));
+		model.addAttribute("list", genericDAO.search(LocationType.class, criteria, "locationType", null, null));
 		return urlContext + "/list";
 	}
 
@@ -52,15 +47,8 @@ public class DumpsterController extends CRUDController<Dumpster> {
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		// TODO:
 		criteria.getSearchMap().remove("_csrf");
-		model.addAttribute("list", genericDAO.search(Dumpster.class, criteria, "dumpsterNum", null, null));
-		return urlContext + "/list";
-	}
-	
-	@RequestMapping(method = { RequestMethod.GET, RequestMethod.POST }, value = "/search.do")
-	public String search2(ModelMap model, HttpServletRequest request) {
-		setupList(model, request);
-		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
-		model.addAttribute("list", genericDAO.search(Dumpster.class, criteria, "dumpsterNum", null, null));
+		criteria.setPageSize(25);
+		model.addAttribute("list", genericDAO.search(LocationType.class, criteria, "locationType", false));
 		return urlContext + "/list";
 	}
 
@@ -79,16 +67,14 @@ public class DumpsterController extends CRUDController<Dumpster> {
 	@Override
 	public void setupCreate(ModelMap model, HttpServletRequest request) {
 		Map criterias = new HashMap();
-		model.addAttribute("dumpsters", genericDAO.findByCriteria(Dumpster.class, criterias, "dumpsterNum", false));
-		model.addAttribute("dumpsterStatus", genericDAO.findByCriteria(DumpsterStatus.class, criterias, "status", false));
-		model.addAttribute("dumpsterSizes", genericDAO.findUniqueByCriteria(DumpsterSize.class, criterias, "id", false));
+		model.addAttribute("locationTypes", genericDAO.findByCriteria(LocationType.class, criterias, "locationType", false));
 	}
-
+	
 	@Override
-	public String save(HttpServletRequest request, @ModelAttribute("modelObject") Dumpster entity,
+	public String save(HttpServletRequest request, @ModelAttribute("modelObject") LocationType entity,
 			BindingResult bindingResult, ModelMap model) {
 		setupCreate(model, request);
-		model.addAttribute("msgCtx", "manageDumpsters");
+		model.addAttribute("msgCtx", "manageLocationTypes");
 		
 		try {
 			beforeSave(request, entity, model);
@@ -101,10 +87,10 @@ public class DumpsterController extends CRUDController<Dumpster> {
 			return urlContext + "/form";
 		}
 		
-		model.addAttribute("msg", "Dumpster saved successfully");
+		model.addAttribute("msg", "Location Type saved successfully");
 		
 		if (entity.getModifiedBy() == null) {
-			model.addAttribute("modelObject", new Dumpster());
+			model.addAttribute("modelObject", new LocationType());
 		}
 				
 		return urlContext + "/form";
@@ -112,10 +98,10 @@ public class DumpsterController extends CRUDController<Dumpster> {
 	
 	private String extractSaveErrorMsg(Exception e) {
 		String errorMsg = StringUtils.EMPTY;
-		if (isConstraintError(e, "dumpster")) {
-			errorMsg = "Duplicate dumpster num - dumpster num already exists"; 
+		if (isConstraintError(e, "location")) {
+			errorMsg = "Duplicate location type - location type already exists"; 
 		} else {
-			errorMsg = "Error occured while saving Dumpster";
+			errorMsg = "Error occured while saving location type";
 		}
 		
 		return errorMsg;

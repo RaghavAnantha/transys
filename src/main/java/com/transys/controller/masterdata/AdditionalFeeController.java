@@ -1,4 +1,4 @@
-package com.transys.controller;
+package com.transys.controller.masterdata;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -6,29 +6,26 @@ import java.util.Map;
 import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.transys.model.LocationType;
+import com.transys.controller.CRUDController;
+import com.transys.model.AdditionalFee;
+import com.transys.model.CityFee;
+import com.transys.model.DumpsterPrice;
 import com.transys.model.SearchCriteria;
 
+@SuppressWarnings("unchecked")
 @Controller
-@RequestMapping("/masterData/locationType")
-public class LocationTypeController extends CRUDController<LocationType> {
-
-	public LocationTypeController() {
-		setUrlContext("masterData/locationType");
-	}
-
-	@Override
-	public void initBinder(WebDataBinder binder) {
-		super.initBinder(binder);
+@RequestMapping("/masterData/additionalFee")
+public class AdditionalFeeController extends CRUDController<AdditionalFee> {
+	
+	public AdditionalFeeController() {
+		setUrlContext("masterData/additionalFee");
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/main.do")
@@ -36,7 +33,7 @@ public class LocationTypeController extends CRUDController<LocationType> {
 		request.getSession().removeAttribute("searchCriteria");
 		setupList(model, request);
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
-		model.addAttribute("list", genericDAO.search(LocationType.class, criteria, "locationType", null, null));
+		model.addAttribute("list", genericDAO.search(AdditionalFee.class, criteria, "description, effectiveStartDate desc", null, null));
 		return urlContext + "/list";
 	}
 
@@ -47,7 +44,19 @@ public class LocationTypeController extends CRUDController<LocationType> {
 		// TODO:
 		criteria.getSearchMap().remove("_csrf");
 		criteria.setPageSize(25);
-		model.addAttribute("list", genericDAO.search(LocationType.class, criteria, "locationType", false));
+		
+		model.addAttribute("list", genericDAO.search(AdditionalFee.class, criteria, "description, effectiveStartDate desc", false));
+		cleanUp(request);
+		
+		return urlContext + "/list";
+	}
+	
+	@Override
+	public String search2(ModelMap model, HttpServletRequest request) {
+		setupList(model, request);
+		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
+		model.addAttribute("list", genericDAO.search(AdditionalFee.class, criteria, "description, effectiveStartDate desc", false));
+		
 		return urlContext + "/list";
 	}
 
@@ -66,14 +75,15 @@ public class LocationTypeController extends CRUDController<LocationType> {
 	@Override
 	public void setupCreate(ModelMap model, HttpServletRequest request) {
 		Map criterias = new HashMap();
-		model.addAttribute("locationTypes", genericDAO.findByCriteria(LocationType.class, criterias, "locationType", false));
+		model.addAttribute("additionalFees", genericDAO.findByCriteria(AdditionalFee.class, criterias, "description", false));
+		model.addAttribute("uniqueAdditionalFees", genericDAO.executeSimpleQuery("select DISTINCT(obj.fee) from AdditionalFee obj where obj.deleteFlag='1' order by obj.fee asc"));
 	}
 	
 	@Override
-	public String save(HttpServletRequest request, @ModelAttribute("modelObject") LocationType entity,
+	public String save(HttpServletRequest request, @ModelAttribute("modelObject") AdditionalFee entity,
 			BindingResult bindingResult, ModelMap model) {
 		setupCreate(model, request);
-		model.addAttribute("msgCtx", "manageLocationTypes");
+		model.addAttribute("msgCtx", "manageAdditionalFees");
 		
 		try {
 			beforeSave(request, entity, model);
@@ -86,23 +96,17 @@ public class LocationTypeController extends CRUDController<LocationType> {
 			return urlContext + "/form";
 		}
 		
-		model.addAttribute("msg", "Location Type saved successfully");
+		model.addAttribute("msg", "Additional Fee saved successfully");
 		
 		if (entity.getModifiedBy() == null) {
-			model.addAttribute("modelObject", new LocationType());
+			model.addAttribute("modelObject", new AdditionalFee());
 		}
 				
 		return urlContext + "/form";
 	}
 	
 	private String extractSaveErrorMsg(Exception e) {
-		String errorMsg = StringUtils.EMPTY;
-		if (isConstraintError(e, "location")) {
-			errorMsg = "Duplicate location type - location type already exists"; 
-		} else {
-			errorMsg = "Error occured while saving location type";
-		}
-		
+		String errorMsg = "Error occured while saving additional fee";
 		return errorMsg;
 	}
 }

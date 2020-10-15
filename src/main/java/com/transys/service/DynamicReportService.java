@@ -119,5 +119,5 @@ public interface DynamicReportService {
     
     public JasperPrint getJasperPrintFromFile(String reportName, List datas, Map params, String type, HttpServletRequest request);
     public JasperPrint getJasperPrintFromFile(String masterReportName, String subReportName, List datas,
- 			Map params, HttpServletRequest request);
+ 			Map params, String type, HttpServletRequest request);
 }

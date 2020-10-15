@@ -24,14 +24,14 @@
 		<div id="customerReports" class="tab-pane" style="background-color: white;padding-top: 5px;">
 			<ul class="nav nav-tabs" id="customer_reports_tabs">
 				<li><a href="${ctx}/customer/customerListReportMain.do" id="customerListReportTab" data-toggle="tabajax" data-target="#customerListReport">Customer List Report</a></li>
+				<li><a href="${ctx}/reports/customerOrdersReport/main.do" id="customerOrdersReportTab" data-toggle="tabajax" data-target="#customerOrdersReport">Customer Orders Report</a></li>
+				<!--
 				<li><a href="#customerOrdersReport" data-toggle="tab">Customer Orders Report</a></li>
+				-->
 			</ul>
-			<div class="tab-content" style="background-color: white;padding-top: 5px;">
-				<div id="customerListReport" class="tab-pane"></div>
-				<div id="customerOrdersReport" class="tab-pane">
-					<%@include file="customerOrdersReport.jsp"%>
-				</div>
-
+			<div class="tab-content" style="padding-top: 5px;">
+				<div id="customerListReport" class="tab-pane">${loadingMsg}</div>
+				<div id="customerOrdersReport" class="tab-pane">${loadingMsg}</div>
 			</div>
 		</div>
 	</div>
@@ -43,25 +43,20 @@
 	showTab('${activeTab}');
 	showTab('${activeSubTab}');
 	
-	function validate() {
-		var error = false;
-		var ids = ["companyName", "billingAddressLine1", "city"];
-		for (var i= 0; i < ids.length; i++) {	
-			if ($("#typeForm").find('input[id="'+ids[i] +'"]').val().length == 0 ) {
-				$("#typeForm").find('input[id="'+ids[i] +'"]').addClass("border");
-				error = true;
-			}		
-		} 
-		
-		if (error) {
-			//$("#validations").html("Please fill out the required fields Name, Address Line 1 and City");	
-			return false;
-		} else {
-			return true;
-		}
-	};
-	
 	$('#customerListReportTab').click(function(e) {
+	    var $this = $(this),
+	        loadurl = $this.attr('href'),
+	        targ = $this.attr('data-target');
+	
+	    $.get(loadurl, function(data) {
+	        $(targ).html(data);
+	    });
+	
+	    $this.tab('show');
+	    return false;
+	});
+	
+	$('#customerOrdersReportTab').click(function(e) {
 	    var $this = $(this),
 	        loadurl = $this.attr('href'),
 	        targ = $this.attr('data-target');

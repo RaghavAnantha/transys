@@ -904,13 +904,13 @@ public class InvoiceController extends BaseController {
 		
 		addWaterMarkRendererReportParam(params, true, "Preview");
 		
-		//setReportRequestHeaders(response, "html", ORDER_INVOICE_MASTER);
-		
+		String type = "html";
+		//setReportRequestHeaders(response, type, ORDER_INVOICE_MASTER);
 		try {
 			/*JasperPrint jasperPrint = dynamicReportService.getJasperPrintFromFile(reportName,
 						invoiceVOList, params, request);*/
 			JasperPrint jasperPrint = dynamicReportService.getJasperPrintFromFile(ORDER_INVOICE_MASTER, 
-					ORDER_INVOICE_SUB, invoiceVOList, params, request);
+					ORDER_INVOICE_SUB, invoiceVOList, params, type, request);
 			if (jasperPrint == null) {
 				setErrorMsg(request, response, "Error occured while processing invoice preview");
 			} else {

@@ -283,3 +283,21 @@ function validateRegex(text, regex, validLength) {
 	var textPattern = new RegExp("^[" + regex + "]{1," + validLength + "}$");
 	return textPattern.test(text);
 }
+
+/*function validate() {
+	var error = false;
+	var ids = ["companyName", "billingAddressLine1", "city"];
+	for (var i= 0; i < ids.length; i++) {	
+		if ($("#typeForm").find('input[id="'+ids[i] +'"]').val().length == 0) {
+			$("#typeForm").find('input[id="'+ids[i] +'"]').addClass("border");
+			error = true;
+		}		
+	} 
+	
+	if (error) {
+		//$("#validations").html("Please fill out the required fields Name, Address Line 1 and City");	
+		return false;
+	} else {
+		return true;
+	}
+}*/

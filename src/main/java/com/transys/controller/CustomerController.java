@@ -1,29 +1,31 @@
 package com.transys.controller;
 
 import java.io.ByteArrayOutputStream;
+
 import java.math.BigDecimal;
-import java.sql.Timestamp;
-import java.text.ParseException;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.SortedSet;
-import java.util.TreeSet;
 
 import javax.persistence.PersistenceException;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import javax.validation.ValidationException;
 
 import org.apache.commons.lang3.StringUtils;
-import org.hibernate.exception.ConstraintViolationException;
+
 import org.springframework.stereotype.Controller;
+
 import org.springframework.ui.ModelMap;
+
 import org.springframework.validation.BindingResult;
+
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,10 +36,16 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 //import com.google.gson.Gson;
+
 import com.transys.controller.CRUDController;
+
 import com.transys.controller.editor.AbstractModelEditor;
+
 import com.transys.core.util.DateUtil;
 import com.transys.core.util.MimeUtil;
+import com.transys.core.util.ModelUtil;
+
+import com.transys.model.BaseModel;
 import com.transys.model.AbstractBaseModel;
 import com.transys.model.DeliveryAddress;
 import com.transys.model.Customer;
@@ -46,19 +54,12 @@ import com.transys.model.CustomerStatus;
 import com.transys.model.CustomerType;
 import com.transys.model.Order;
 import com.transys.model.OrderFees;
-import com.transys.model.OrderNotes;
-import com.transys.model.OrderPayment;
 import com.transys.model.OrderStatus;
-import com.transys.model.Permit;
-import com.transys.model.PermitNotes;
-//import com.transys.model.FuelVendor;
-//import com.transys.model.Location;
 import com.transys.model.SearchCriteria;
 import com.transys.model.State;
 import com.transys.model.User;
+
 import com.transys.model.vo.CustomerReportVO;
-import com.transys.model.vo.OrderReportVO;
-import com.transys.model.BaseModel;
 
 @Controller
 @RequestMapping("/customer")
@@ -86,15 +87,9 @@ public class CustomerController extends CRUDController<Customer> {
 		List<Customer> customerList = genericDAO.executeSimpleQuery("select obj from Customer obj where obj.deleteFlag='1' order by obj.companyName asc");
 		model.addAttribute("customer", customerList);
 		
-		SortedSet<String> phoneSet = new TreeSet<String>();
-		SortedSet<String> contactNameSet = new TreeSet<String>();
-		for (Customer aCustomer : customerList) {
-			phoneSet.add(aCustomer.getPhone());
-			contactNameSet.add(aCustomer.getContactName());
-		}
-		
-		String[] phoneArr = phoneSet.toArray(new String[0]);
-		String[] contactNameArr = contactNameSet.toArray(new String[0]);
+		Object[] objArr = ModelUtil.retrieveContactDetails(customerList);
+		String[] phoneArr = (String[])objArr[0];
+		String[] contactNameArr = (String[])objArr[1];
 		
 		model.addAttribute("phones", phoneArr);
 		model.addAttribute("contactNames", contactNameArr);
@@ -276,56 +271,6 @@ public class CustomerController extends CRUDController<Customer> {
 		//return urlContext + "/customer";
 	}
 	
-	@RequestMapping(method = RequestMethod.GET, value = "/customerOrdersReport.do")
-	public String customerOrdersReport(ModelMap model, HttpServletRequest request) {
-		setupList(model, request);
-		
-		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
-		//criteria.getSearchMap().put("id!",0l);
-		criteria.getSearchMap().remove("_csrf");
-		
-		//List<CustomerReportVO> customerReportVOList = retrieveCustomerListReportData(criteria);
-		List<CustomerReportVO> customerReportVOList = retrieveCustomerOrdersReportData(criteria);
-		//request.getSession().setAttribute("customerOrdersReportList", customerReportVOList);
-		
-		String[] orderDates = extractOrderDateRange(criteria, customerReportVOList);
-		
-		model.addAttribute("customerOrdersReportList", customerReportVOList);
-		model.addAttribute("customerOrdersReportOrderDateFrom", orderDates[0]);
-		model.addAttribute("customerOrdersReportOrderDateTo", orderDates[1]);
-		
-		if (!customerReportVOList.isEmpty()) {
-			model.addAttribute("customerOrdersReportCompanyName", customerReportVOList.get(0).getCompanyName());
-			model.addAttribute("customerOrdersReportTotalOrders", customerReportVOList.get(0).getTotalOrders());
-			model.addAttribute("customerOrdersReportTotalOrderAmount", customerReportVOList.get(0).getTotalOrderAmount());
-		}
-		
-		model.addAttribute("activeTab", "customerReports");
-		model.addAttribute("activeSubTab", "customerOrdersReport");
-		model.addAttribute("mode", "MANAGE");
-		
-		//return urlContext + "/list";
-		return urlContext + "/customer";
-	}
-	
-	private String[] extractOrderDateRange(SearchCriteria criteria, List<CustomerReportVO> customerReportVOList) {
-		String orderDateFrom = criteria.getSearchMap().getOrDefault("createdAtFrom", StringUtils.EMPTY).toString();
-		String orderDateTo = criteria.getSearchMap().getOrDefault("createdAtTo", StringUtils.EMPTY).toString();
-		
-		if (StringUtils.isEmpty(orderDateFrom)) {
-			if (!customerReportVOList.isEmpty() && !customerReportVOList.get(0).getOrderList().isEmpty()) {
-				List<OrderReportVO> orderList = customerReportVOList.get(0).getOrderList();
-				orderDateFrom = orderList.get(0).getOrderDate();
-				orderDateTo = orderList.get(orderList.size() - 1).getOrderDate();
-			}
-		}
-		
-		String orderDates[] = new String[2];
-		orderDates[0] = orderDateFrom;
-		orderDates[1] = orderDateTo;
-		return orderDates;
-	}
-	
 	private List<CustomerReportVO> retrieveCustomerListReportData(SearchCriteria criteria) {
 		List<CustomerReportVO> customerReportVOList = new ArrayList<CustomerReportVO>();
 		
@@ -379,89 +324,12 @@ public class CustomerController extends CRUDController<Customer> {
       return customerReportVOList;
 	}
 	
-	private List<CustomerReportVO> retrieveCustomerOrdersReportData(SearchCriteria criteria) {
-		List<CustomerReportVO> customerReportVOList = new ArrayList<CustomerReportVO>();
-		
-		List<Order> orderList = genericDAO.search(Order.class, criteria, "customer.companyName", null, null);
-		if (orderList.isEmpty()) {
-			return customerReportVOList;
-		}
-		
-		Map<Long, List<Order>> customerOrderMap = new HashMap<Long, List<Order>>();
-		for (Order anOrder : orderList) {
-			Long customerId = anOrder.getCustomer().getId();
-			List<Order> customerOrderList = customerOrderMap.get(customerId);
-			if (customerOrderList == null) {
-				customerOrderList = new ArrayList<Order>();
-				customerOrderMap.put(customerId, customerOrderList);
-			}
-			
-			customerOrderList.add(anOrder);
-		}
-		
-		for (Long customerKey : customerOrderMap.keySet()) {
-			CustomerReportVO aCcustomerReportVO =  new CustomerReportVO();
-			map(customerOrderMap.get(customerKey), aCcustomerReportVO);
-
-         customerReportVOList.add(aCcustomerReportVO);
-		}
-      
-      return customerReportVOList;
-	}
-	
 	private void map(Customer aCustomer, CustomerReportVO aCustomerReportVO) {
 		aCustomerReportVO.setId(aCustomer.getId());
 		aCustomerReportVO.setCompanyName(aCustomer.getCompanyName());
 		aCustomerReportVO.setStatus(aCustomer.getCustomerStatus().getStatus());
 		aCustomerReportVO.setContactName(aCustomer.getContactName());
 		aCustomerReportVO.setPhoneNumber(aCustomer.getPhone());
-	}
-	
-	private void map(List<Order> orderList, CustomerReportVO aCustomerReportVO) {
-		Customer aCustomer = orderList.get(0).getCustomer();
-		map(aCustomer, aCustomerReportVO);
-		
-		BigDecimal totalOrderAmount = new BigDecimal("0.00");
-		List<OrderReportVO> anOrderReportVOList = new ArrayList<OrderReportVO>();
-		for (Order anOrder : orderList) {
-			OrderReportVO anOrderReportVO = new OrderReportVO();
-			map(anOrder, anOrderReportVO);
-			anOrderReportVOList.add(anOrderReportVO);
-			
-			totalOrderAmount = totalOrderAmount.add(anOrderReportVO.getTotalFees());
-		}
-		
-		aCustomerReportVO.setTotalOrderAmount(totalOrderAmount);
-      aCustomerReportVO.setTotalOrders(orderList.size());
-		
-		aCustomerReportVO.setOrderList(anOrderReportVOList);
-	}
-	
-	private void map(Order anOrder, OrderReportVO anOrderReportVO) {
-		anOrderReportVO.setId(anOrder.getId());
-		anOrderReportVO.setOrderDate(anOrder.getFormattedCreatedAt());
-		anOrderReportVO.setStatus(anOrder.getOrderStatus().getStatus());
-		
-		anOrderReportVO.setDeliveryContactName(anOrder.getDeliveryContactName());
-		anOrderReportVO.setDeliveryContactPhone1(anOrder.getDeliveryContactPhone1());
-		anOrderReportVO.setDeliveryAddressFullLine(anOrder.getDeliveryAddress().getFullLine());
-		anOrderReportVO.setDeliveryCity(anOrder.getDeliveryAddress().getCity());
-		
-		anOrderReportVO.setDeliveryDate(anOrder.getFormattedDeliveryDate());
-		anOrderReportVO.setPickupDate(anOrder.getFormattedPickupDate());
-		
-		OrderFees anOrderFees = anOrder.getOrderFees();
-		anOrderReportVO.setDumpsterPrice(anOrderFees.getDumpsterPrice());
-		
-		anOrderReportVO.setCityFee(anOrderFees.getCityFee() == null ? (new BigDecimal("0.00")) : anOrderFees.getCityFee());
-		
-		anOrderReportVO.setPermitFees(anOrderFees.getTotalPermitFees());
-		anOrderReportVO.setOverweightFee(anOrderFees.getOverweightFee());
-		anOrderReportVO.setAdditionalFees(anOrderFees.getTotalAdditionalFees());
-		anOrderReportVO.setTotalFees(anOrderFees.getTotalFees());
-		
-		anOrderReportVO.setTotalAmountPaid(anOrder.getTotalAmountPaid());
-		anOrderReportVO.setBalanceAmountDue(anOrder.getBalanceAmountDue());
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/generateCustomerListReport.do")
@@ -508,45 +376,6 @@ public class CustomerController extends CRUDController<Customer> {
 				out = dynamicReportService.generateStaticReport("customerListReport"+"print",
 						reportData, params, type, request);
 			}*/
-		
-			out.writeTo(response.getOutputStream());
-			out.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-			log.warn("Unable to create file :" + e);
-			request.getSession().setAttribute("errors", e.getMessage());
-		}
-	}
-	
-	@RequestMapping(method = RequestMethod.GET, value = "/generateCustomerOrdersReport.do")
-	public void generateCustomerOrdersReport(ModelMap model, HttpServletRequest request,
-			HttpServletResponse response, @RequestParam("type") String type,
-			Object objectDAO, Class clazz) {
-		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
-		//criteria.getSearchMap().put("id!",0l);
-		criteria.getSearchMap().remove("_csrf");
-		
-		List<CustomerReportVO> customerReportVOList = retrieveCustomerOrdersReportData(criteria);
-		
-		String[] orderDates = extractOrderDateRange(criteria, customerReportVOList);
-		
-		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("ORDER_DATE_FROM", orderDates[0]);
-		params.put("ORDER_DATE_TO", orderDates[1]);
-		
-		try {
-			if (StringUtils.isEmpty(type))
-				type = "xlsx";
-			if (!type.equals("html") && !(type.equals("print"))) {
-				response.setHeader("Content-Disposition",
-					"attachment;filename= customerOrdersReport." + type);
-			}
-			
-			response.setContentType(MimeUtil.getContentType(type));
-			
-			ByteArrayOutputStream out = new ByteArrayOutputStream();
-			out = dynamicReportService.generateStaticMasterSubReport("customerOrdersReportMaster", "customerOrdersReportSub",
-					customerReportVOList, params, type, request);
 		
 			out.writeTo(response.getOutputStream());
 			out.close();
@@ -605,7 +434,6 @@ public class CustomerController extends CRUDController<Customer> {
 				break;
 			}
 		}*/
-		
 		
 		String aggregationQuery = "select count(obj), max(obj.deliveryDate) from Order obj where"
 				+ " obj.customer.id=" +  customerId + " and obj.deleteFlag='1'";

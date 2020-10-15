@@ -1,4 +1,4 @@
-package com.transys.controller;
+package com.transys.controller.masterdata;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -6,6 +6,8 @@ import java.util.Map;
 import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -14,48 +16,34 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.transys.controller.CRUDController;
 import com.transys.controller.editor.AbstractModelEditor;
 import com.transys.model.Dumpster;
 import com.transys.model.DumpsterSize;
-import com.transys.model.MaterialCategory;
-import com.transys.model.OverweightFee;
-import com.transys.model.PermitFee;
+import com.transys.model.DumpsterStatus;
 import com.transys.model.SearchCriteria;
 
+@SuppressWarnings("unchecked")
 @Controller
-@RequestMapping("/masterData/overweightFee")
-public class OverweightFeeController extends CRUDController<OverweightFee> {
-	public OverweightFeeController() {
-		setUrlContext("masterData/overweightFee");
+@RequestMapping("/masterData/dumpsters")
+public class DumpsterController extends CRUDController<Dumpster> {
+	
+	public DumpsterController() {
+		setUrlContext("masterData/dumpsters");
 	}
 
 	@Override
 	public void initBinder(WebDataBinder binder) {
-		binder.registerCustomEditor(OverweightFee.class, new AbstractModelEditor(OverweightFee.class));
+		binder.registerCustomEditor(DumpsterStatus.class, new AbstractModelEditor(DumpsterStatus.class));
 		binder.registerCustomEditor(DumpsterSize.class, new AbstractModelEditor(DumpsterSize.class));
-		binder.registerCustomEditor(MaterialCategory.class, new AbstractModelEditor(MaterialCategory.class));
-		super.initBinder(binder);
 	}
-
+	
 	@RequestMapping(method = RequestMethod.GET, value = "/main.do")
 	public String displayMain(ModelMap model, HttpServletRequest request) {
 		request.getSession().removeAttribute("searchCriteria");
-		
 		setupList(model, request);
-		
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
-		model.addAttribute("list", genericDAO.search(OverweightFee.class, criteria, "materialCategory.category, effectiveStartDate desc", null, null));
-		
-		return urlContext + "/list";
-	}
-	
-	@Override
-	public String search2(ModelMap model, HttpServletRequest request) {
-		setupList(model, request);
-		
-		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
-		model.addAttribute("list", genericDAO.search(OverweightFee.class, criteria,"materialCategory.category, effectiveStartDate desc", null, null));
-		
+		model.addAttribute("list", genericDAO.search(Dumpster.class, criteria, "dumpsterNum", null, null));
 		return urlContext + "/list";
 	}
 
@@ -65,15 +53,18 @@ public class OverweightFeeController extends CRUDController<OverweightFee> {
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		// TODO:
 		criteria.getSearchMap().remove("_csrf");
-		criteria.setPageSize(25);
-		
-		model.addAttribute("list", genericDAO.search(OverweightFee.class, criteria, "materialCategory.category, effectiveStartDate desc", null, null));
-		
-		cleanUp(request);
-		
+		model.addAttribute("list", genericDAO.search(Dumpster.class, criteria, "dumpsterNum", null, null));
 		return urlContext + "/list";
 	}
 	
+	@RequestMapping(method = { RequestMethod.GET, RequestMethod.POST }, value = "/search.do")
+	public String search2(ModelMap model, HttpServletRequest request) {
+		setupList(model, request);
+		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
+		model.addAttribute("list", genericDAO.search(Dumpster.class, criteria, "dumpsterNum", null, null));
+		return urlContext + "/list";
+	}
+
 	@Override
 	public void setupList(ModelMap model, HttpServletRequest request) {
 		populateSearchCriteria(request, request.getParameterMap());
@@ -89,17 +80,16 @@ public class OverweightFeeController extends CRUDController<OverweightFee> {
 	@Override
 	public void setupCreate(ModelMap model, HttpServletRequest request) {
 		Map criterias = new HashMap();
+		model.addAttribute("dumpsters", genericDAO.findByCriteria(Dumpster.class, criterias, "dumpsterNum", false));
+		model.addAttribute("dumpsterStatus", genericDAO.findByCriteria(DumpsterStatus.class, criterias, "status", false));
 		model.addAttribute("dumpsterSizes", genericDAO.findUniqueByCriteria(DumpsterSize.class, criterias, "id", false));
-		model.addAttribute("overweightFee", genericDAO.executeSimpleQuery("select DISTINCT(obj.fee) from OverweightFee obj where obj.deleteFlag='1' order by obj.fee asc"));
-		model.addAttribute("materialCategories", genericDAO.findByCriteria(MaterialCategory.class, criterias, "category", false));
-		model.addAttribute("tonLimits", genericDAO.executeSimpleQuery("select DISTINCT(obj.tonLimit) from OverweightFee obj where obj.deleteFlag='1' order by obj.tonLimit asc"));
 	}
-	
+
 	@Override
-	public String save(HttpServletRequest request, @ModelAttribute("modelObject") OverweightFee entity,
+	public String save(HttpServletRequest request, @ModelAttribute("modelObject") Dumpster entity,
 			BindingResult bindingResult, ModelMap model) {
 		setupCreate(model, request);
-		model.addAttribute("msgCtx", "manageOverweightFee");
+		model.addAttribute("msgCtx", "manageDumpsters");
 		
 		try {
 			beforeSave(request, entity, model);
@@ -112,17 +102,23 @@ public class OverweightFeeController extends CRUDController<OverweightFee> {
 			return urlContext + "/form";
 		}
 		
-		model.addAttribute("msg", "Overweight Fee saved successfully");
+		model.addAttribute("msg", "Dumpster saved successfully");
 		
 		if (entity.getModifiedBy() == null) {
-			model.addAttribute("modelObject", new OverweightFee());
+			model.addAttribute("modelObject", new Dumpster());
 		}
 				
 		return urlContext + "/form";
 	}
 	
 	private String extractSaveErrorMsg(Exception e) {
-		String errorMsg = "Error occured while saving overweight fee";
+		String errorMsg = StringUtils.EMPTY;
+		if (isConstraintError(e, "dumpster")) {
+			errorMsg = "Duplicate dumpster num - dumpster num already exists"; 
+		} else {
+			errorMsg = "Error occured while saving Dumpster";
+		}
+		
 		return errorMsg;
 	}
 }

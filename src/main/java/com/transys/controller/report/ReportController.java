@@ -85,6 +85,8 @@ public abstract class ReportController extends BaseController {
 		criteria.setPage(getCriteriaPage());
 		criteria.setPageSize(getCriteriaSearchPageSize());
 		
+		String reportName = getReportName();
+		String subReportName = getSubReportName();
 		ByteArrayOutputStream out = null;
 		try {
 			Map<String, Object> reportData = generateReportData(request, criteria);
@@ -92,13 +94,18 @@ public abstract class ReportController extends BaseController {
 			List<?> data = (List<?>)reportData.get(ReportUtil.dataKey);
 			
 			String type = "html";
-			setReportRequestHeaders(response, type, getReportName());
+			setReportRequestHeaders(response, type, reportName);
 			
 			if (data.isEmpty()) {
 				return "report.empty";
 			}
 			
-			out = dynamicReportService.generateStaticReport(getReportName(), data, params, type, request);
+			if (StringUtils.isNotEmpty(subReportName)) {
+				out = dynamicReportService.generateStaticMasterSubReport(reportName, subReportName, data, params, 
+						type, request);
+			} else {
+				out = dynamicReportService.generateStaticReport(reportName, data, params, type, request);
+			}
 			out.writeTo(response.getOutputStream());
 			
 			return null;
@@ -131,6 +138,8 @@ public abstract class ReportController extends BaseController {
 		criteria.setPage(getCriteriaPage());
 		criteria.setPageSize(getCriteriaExportPageSize());
 		
+		String reportName = getReportName();
+		String subReportName = getSubReportName();
 		ByteArrayOutputStream out = null;
 		try {
 			Map<String, Object> reportData = generateReportData(request, criteria);
@@ -143,7 +152,12 @@ public abstract class ReportController extends BaseController {
 				setReportFreezeRow(params, type, reportFreezeRow);
 			}
 			
-			out = dynamicReportService.generateStaticReport(getReportName(), data, params, type, request);
+			if (StringUtils.isNotEmpty(subReportName)) {
+				out = dynamicReportService.generateStaticMasterSubReport(reportName, subReportName, data, params, 
+						type, request);
+			} else {
+				out = dynamicReportService.generateStaticReport(reportName, data, params, type, request);
+			}
 			out.writeTo(response.getOutputStream());
 			
 			return null;

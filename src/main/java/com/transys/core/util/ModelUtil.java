@@ -3,10 +3,13 @@ package com.transys.core.util;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import org.apache.commons.lang3.StringUtils;
 
 import com.transys.core.dao.GenericDAO;
+import com.transys.model.Customer;
 import com.transys.model.DumpsterSize;
 import com.transys.model.DumpsterStatus;
 import com.transys.model.Order;
@@ -144,5 +147,26 @@ public class ModelUtil {
 		}
 		
 		return dumpsterStatus.getStatus();
+	}
+	
+	public static Object[] retrieveContactDetails(List<Customer> customerList) {
+		if (customerList == null || customerList.isEmpty()) {
+			return null;
+		}
+		
+		SortedSet<String> phoneSet = new TreeSet<String>();
+		SortedSet<String> contactNameSet = new TreeSet<String>();
+		for (Customer aCustomer : customerList) {
+			phoneSet.add(aCustomer.getPhone());
+			contactNameSet.add(aCustomer.getContactName());
+		}
+		
+		String[] phoneArr = phoneSet.toArray(new String[0]);
+		String[] contactNameArr = contactNameSet.toArray(new String[0]);
+		
+		Object[] objArr = new Object[2];
+		objArr[0] = phoneArr;
+		objArr[1] = contactNameArr;
+		return objArr;
 	}
 }
