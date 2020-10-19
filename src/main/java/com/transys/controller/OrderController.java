@@ -1,7 +1,6 @@
 package com.transys.controller;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -14,8 +13,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.SortedSet;
-import java.util.TreeSet;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -24,6 +21,7 @@ import javax.validation.ValidationException;
 
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
+
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 
@@ -47,6 +45,7 @@ import com.transys.controller.editor.AbstractModelEditor;
 import com.transys.core.util.DateUtil;
 import com.transys.core.util.MimeUtil;
 import com.transys.core.util.ModelUtil;
+
 import com.transys.model.AbstractBaseModel;
 import com.transys.model.AdditionalFee;
 import com.transys.model.DeliveryAddress;
@@ -251,8 +250,8 @@ public class OrderController extends CRUDController<Order> {
 	public void setupCreate(ModelMap model, HttpServletRequest request) {
 		setupCommon(model, request);
 		
-		Map<String, Object> criterias = new HashMap<String, Object>();
-		model.addAttribute("customers", genericDAO.findByCriteria(Customer.class, criterias, "companyName", false));
+		List<CustomerVO> customerVOList = ModelUtil.retrieveCustomers(genericDAO);
+		model.addAttribute("customers", customerVOList);
 		
       model.addAttribute("dusmpsterLocationTypes", genericDAO.executeSimpleQuery("select obj from LocationType obj where obj.deleteFlag='1' and obj.id!=0 order by obj.locationType asc"));
       
@@ -322,35 +321,6 @@ public class OrderController extends CRUDController<Order> {
 		model.addAttribute("mode", "MANAGE");
 		
 		//return urlContext + "/list";
-		return urlContext + "/order";
-	}
-	
-	@RequestMapping(method = RequestMethod.GET, value = "/orderReport.do")
-	public String orderReport(ModelMap model, HttpServletRequest request) {
-		setupList(model, request);
-		
-		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
-		//criteria.getSearchMap().put("id!",0l);
-		//TODO fix me
-		criteria.getSearchMap().remove("_csrf");
-		
-		List<Order> orderList =  genericDAO.search(getEntityClass(), criteria,"id", null, null);
-		
-		model.addAttribute("orderReportList", orderList);
-		model.addAttribute("activeTab", "orderReports");
-		model.addAttribute("mode", "MANAGE");
-		
-		String orderDateFrom = criteria.getSearchMap().get("createdAtFrom").toString();
-		String orderDateTo = criteria.getSearchMap().get("createdAtTo").toString();
-		
-		if (orderList != null && !orderList.isEmpty()) {
-			orderDateFrom = StringUtils.defaultIfEmpty(orderDateFrom, orderList.get(0).getFormattedCreatedAt());
-			orderDateTo = StringUtils.defaultIfEmpty(orderDateTo, orderList.get(orderList.size() - 1).getFormattedCreatedAt());
-		}
-		
-		model.addAttribute("orderDateFrom", orderDateFrom);
-		model.addAttribute("orderDateTo", orderDateTo);
-		
 		return urlContext + "/order";
 	}
 	
@@ -1140,51 +1110,6 @@ public class OrderController extends CRUDController<Order> {
 		return urlContext + "/order";
 	}
 	
-	@RequestMapping(method = { RequestMethod.GET, RequestMethod.POST }, value = "/generateOrderReport.do")
-	public void generateOrderReport(ModelMap model, HttpServletRequest request,
-			HttpServletResponse response, @RequestParam("type") String type,
-			Object objectDAO, Class clazz) {
-		ByteArrayOutputStream out = null;
-		try {
-			if (StringUtils.isEmpty(type))
-				type = "xlsx";
-			if (!type.equals("html") && !(type.equals("print"))) {
-				response.setHeader("Content-Disposition", "attachment;filename= ordersReport." + type);
-			}
-			
-			response.setContentType(MimeUtil.getContentType(type));
-			
-			SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
-			criteria.setPageSize(100000);
-			//criteria.setPage(0);
-			List<Order> orderList = genericDAO.search(getEntityClass(), criteria, "id", false, null);
-			
-			Map<String, Object> reportParams = new HashMap<String,Object>();
-			List<Map<String, Object>> reportList = new ArrayList<Map<String, Object>>();
-			populateOrderReportData(criteria, orderList, reportList, reportParams);
-			
-			out = dynamicReportService.generateStaticReport("ordersReport", reportList, reportParams, type, request);
-		
-			out.writeTo(response.getOutputStream());
-			
-			criteria.setPageSize(25);
-		} catch (Exception e) {
-			e.printStackTrace();
-			log.warn("Unable to create file :" + e);
-			request.getSession().setAttribute("errors", e.getMessage());
-		} finally {
-			if (out != null) {
-				try {
-					out.close();
-					out = null;
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		}
-	}
-	
 	@RequestMapping(method = {RequestMethod.GET}, value = "/printOrder.do")
 	public void printOrder(ModelMap model, HttpServletRequest request, HttpServletResponse response, 
 			@RequestParam("orderId") Long orderId) {
@@ -1319,70 +1244,6 @@ public class OrderController extends CRUDController<Order> {
 		}
 		anOrderReportVO.setPermitEndDate(permitEndDate);
 		anOrderReportVO.setPermitAddressFullLine(permitAddress);
-	}
-	
-	private void populateOrderReportData(SearchCriteria criteria, 
-			List<Order> orderList, List<Map<String, Object>> reportList, Map<String, Object> reportParams) {
-		if (orderList == null || orderList.isEmpty()) {
-			return;
-		}
-		
-		for (Order order : orderList) {
-			Map<String, Object> aReportRow = new HashMap<String, Object>();
-			
-			aReportRow.put("id", order.getId());
-			aReportRow.put("customer", order.getCustomer().getCompanyName());
-			aReportRow.put("deliveryContactName", order.getDeliveryContactName());
-			aReportRow.put("phone", order.getDeliveryContactPhone1());
-			aReportRow.put("deliveryAddressFullLine", order.getDeliveryAddress().getFullLine());
-			aReportRow.put("city", order.getDeliveryAddress().getCity());
-			aReportRow.put("status", order.getOrderStatus().getStatus());
-			
-			aReportRow.put("deliveryDate", order.getFormattedDeliveryDate());
-			aReportRow.put("pickupDate", order.getFormattedPickupDate());
-			
-			/*List<OrderPayment> orderPaymentList = order.getOrderPayment();
-			if (orderPaymentList != null && !orderPaymentList.isEmpty()) {
-				OrderPayment anOrderPayment = orderPaymentList.get(0);
-				aReportRow.put("paymentMethod", StringUtils.defaultIfEmpty(anOrderPayment.getPaymentMethod().getMethod(), StringUtils.EMPTY));
-			}*/
-			
-			OrderFees orderFees = order.getOrderFees();
-			if (orderFees != null) {
-				aReportRow.put("dumpsterPrice", StringUtils.defaultIfEmpty(orderFees.getDumpsterPrice().toString(), "0.00"));
-				
-				String cityFee = "0.00";
-				if (orderFees.getCityFee() != null) {
-					cityFee = orderFees.getCityFee().toString();
-				}
-				aReportRow.put("cityFee", cityFee);
-				
-				aReportRow.put("permitFees", StringUtils.defaultIfEmpty(orderFees.getTotalPermitFees().toString(), "0.00"));
-				aReportRow.put("overweightFee", StringUtils.defaultIfEmpty(orderFees.getOverweightFee().toString(), "0.00"));
-				aReportRow.put("additionalFees", StringUtils.defaultIfEmpty(orderFees.getTotalAdditionalFees().toString(), "0.00"));
-				aReportRow.put("totalFees", StringUtils.defaultIfEmpty(orderFees.getTotalFees().toString(), "0.00"));
-				aReportRow.put("totalPaid", StringUtils.defaultIfEmpty(order.getTotalAmountPaid().toString(), "0.00"));
-				aReportRow.put("balanceDue", StringUtils.defaultIfEmpty(order.getBalanceAmountDue().toString(), "0.00"));
-			}
-			
-			reportList.add(aReportRow);
-		}
-		
-		String orderDateFrom = StringUtils.EMPTY;
-		if (criteria.getSearchMap().get("createdAtFrom") != null) {
-			orderDateFrom = criteria.getSearchMap().get("createdAtFrom").toString();
-		}
-		
-		String orderDateTo = StringUtils.EMPTY;
-		if (criteria.getSearchMap().get("createdAtTo") != null) {
-			orderDateTo = criteria.getSearchMap().get("createdAtTo").toString();
-		}
-		
-		orderDateFrom = StringUtils.defaultIfEmpty(orderDateFrom, orderList.get(0).getFormattedCreatedAt());
-		orderDateTo = StringUtils.defaultIfEmpty(orderDateTo, orderList.get(orderList.size() - 1).getFormattedCreatedAt());
-		
-		reportList.get(0).put("orderDateFrom", orderDateFrom);
-		reportList.get(0).put("orderDateTo", orderDateTo);
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/retrievePermit.do")
@@ -1872,18 +1733,9 @@ public class OrderController extends CRUDController<Order> {
 		
 		//model.addAttribute("orderIds", genericDAO.executeSimpleQuery("select obj.id from Order obj where obj.deleteFlag='1' order by obj.id asc"));
 		
-		List<?> objectList = genericDAO.executeSimpleQuery("select obj.deliveryContactPhone1, obj.deliveryContactName from Order obj where obj.deleteFlag='1' order by obj.id asc");
-		
-		SortedSet<String> contactNameSet = new TreeSet<String>();
-		SortedSet<String> phoneSet = new TreeSet<String>();
-		for (int i = 0; i < objectList.size(); i++) {
-			Object anObject[] = (Object[])objectList.get(i);
-			phoneSet.add(anObject[0].toString());
-			contactNameSet.add(anObject[1].toString());
-		}
-		
-		String[] phoneArr = phoneSet.toArray(new String[0]);
-		//String[] contactNameArr = contactNameSet.toArray(new String[0]);
+		String[][] strArrOfArr = ModelUtil.retrieveOrderDeliveryContactDetails(genericDAO);
+		String[] phoneArr = strArrOfArr[0];
+		//String[] contactNameArr = strArrOfArr[1];
 		
 		model.addAttribute("deliveryContactPhones", phoneArr);
 		//model.addAttribute("deliveryContactNames", contactNameArr);

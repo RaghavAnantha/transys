@@ -16,19 +16,20 @@ function processGoToOrder(orderIds) {
 		<tr>
 			<td align="${left}" class="form-left">Company Name</td>
 			<td align="${left}" class="wide">
-				<select class="flat form-control input-sm" id="companyName" name="companyName" style="width:175px !important">
+				<select class="flat form-control input-sm" id="id" name="id" style="width:175px !important">
 					<option value="">----Please Select----</option>
-					<c:forEach items="${customer}" var="customer">
+					<c:forEach items="${customers}" var="aCustomer">
 						<c:set var="selected" value="" />
-						<c:if test="${sessionScope.searchCriteria.searchMap['companyName'] == customer.companyName}">
+						<c:if test="${sessionScope.searchCriteria.searchMap['id'] == aCustomer.id}">
 							<c:set var="selected" value="selected" />
 						</c:if>
-						<option value="${customer.companyName}" ${selected}>${customer.companyName}</option>
+						<option value="${aCustomer.id}" ${selected}>${aCustomer.companyName}</option>
 					</c:forEach>
 				</select>
 			</td>
 			<td align="${left}" class="form-left">Customer ID</td>
 			<td align="${left}">
+				<!--  
 				<select class="flat form-control input-sm" id="customerId" name="id" style="width:175px !important">
 					<option value="">----Please Select----</option>
 					<c:forEach items="${customerIds}" var="customerId">
@@ -39,6 +40,8 @@ function processGoToOrder(orderIds) {
 						<option value="${customerId}" ${selected}>${customerId}</option>
 					</c:forEach>
 				</select>
+				-->
+				<input class="flat" id="id" name="id" value="${sessionScope.searchCriteria.searchMap['id']}" style="width: 175px !important" />
 			</td>
 		</tr>
 		<tr>

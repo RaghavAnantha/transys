@@ -198,7 +198,7 @@ function validateAllDates() {
 			<td>
 				<form:select id="customerSelect" cssClass="flat form-control input-sm" path="customer" style="width: 175px !important" onChange="return populateDeliveryAddress();"> 
 					<form:option value="">----Please Select----</form:option>
-					<form:options items="${customer}" itemValue="id" itemLabel="companyName" />
+					<form:options items="${customers}" itemValue="id" itemLabel="companyName" />
 				</form:select> 
 			 	<form:errors path="customer" cssClass="errorMessage" />
 			</td>

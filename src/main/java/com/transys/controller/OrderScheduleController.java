@@ -121,6 +121,7 @@ public class OrderScheduleController extends ReportController {
 			if (order.getDeliveryAddress() == null) {
 				continue;
 			}
+			
 			DeliveryAddressVO aDeliveryAddressVO = new DeliveryAddressVO();
 			map(aDeliveryAddressVO, order);
 			latLng =  mapService.getGeocode(aDeliveryAddressVO.getFullAddress());
@@ -131,7 +132,12 @@ public class OrderScheduleController extends ReportController {
 	}
 	
 	private List<VehicleLocationVO> retrieveVehicleLocations() {
+		List<VehicleLocationVO> vehicleLocationList = new ArrayList<VehicleLocationVO>();
 		List<VehicleVO> vehicleVOList = verizonRevealService.getAllVehicles();
+		if (vehicleVOList == null || vehicleVOList.isEmpty()) {
+			return vehicleLocationList;
+		}
+		
 		List<String> vehicleNumberList = new ArrayList<String>();
 		for (VehicleVO aVehicleVO : vehicleVOList) {
 			if (StringUtils.isNotEmpty(aVehicleVO.getVehicleNumber())) {
@@ -140,7 +146,10 @@ public class OrderScheduleController extends ReportController {
 		}
 		
 		List<MultipleVehicleLocationVO> multipleVehicleLocationList = verizonRevealService.getVehicleLocation(vehicleNumberList);
-		List<VehicleLocationVO> vehicleLocationList = new ArrayList<VehicleLocationVO>();
+		if (multipleVehicleLocationList == null || multipleVehicleLocationList.isEmpty()) {
+			return vehicleLocationList;
+		}
+		
 		for (MultipleVehicleLocationVO aMultipleVehicleLocationVO : multipleVehicleLocationList) {
 			VehicleLocationVO vehicleLocationVO = new VehicleLocationVO();
 			map(vehicleLocationVO, aMultipleVehicleLocationVO);

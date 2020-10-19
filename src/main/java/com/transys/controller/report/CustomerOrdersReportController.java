@@ -21,17 +21,18 @@ import com.transys.core.util.ModelUtil;
 
 import com.transys.model.Customer;
 import com.transys.model.Order;
-import com.transys.model.OrderFees;
 import com.transys.model.OrderStatus;
 import com.transys.model.SearchCriteria;
+
 import com.transys.model.vo.CustomerReportVO;
+import com.transys.model.vo.CustomerVO;
 import com.transys.model.vo.OrderReportVO;
 
 @Controller
-@RequestMapping("/reports/customerOrdersReport")
+@RequestMapping("/reports/customer/customerOrdersReport")
 public class CustomerOrdersReportController extends ReportController {
 	public CustomerOrdersReportController(){	
-		setUrlContext("reports/customerOrdersReport");
+		setUrlContext("reports/customer/customerOrdersReport");
 		setMessageCtx("customerOrdersReport");
 		
 		setReportName("customerOrdersReportMaster");
@@ -52,12 +53,12 @@ public class CustomerOrdersReportController extends ReportController {
 	protected void setupList(ModelMap model, HttpServletRequest request) {
 		super.setupList(model, request);
 		
-		List<Customer> customerList = genericDAO.executeSimpleQuery("select obj from Customer obj where obj.deleteFlag='1' order by obj.companyName asc");
-		model.addAttribute("customer", customerList);
+		List<CustomerVO> customerVOList = ModelUtil.retrieveCustomers(genericDAO);
+		model.addAttribute("customers", customerVOList);
 		
-		Object[] objArr = ModelUtil.retrieveContactDetails(customerList);
-		String[] phoneArr = (String[])objArr[0];
-		String[] contactNameArr = (String[])objArr[1];
+		String[][] strArrOfArr = ModelUtil.extractContactDetails(customerVOList);
+		String[] phoneArr = (String[])strArrOfArr[0];
+		String[] contactNameArr = (String[])strArrOfArr[1];
 		
 		model.addAttribute("phones", phoneArr);
 		model.addAttribute("contactNames", contactNameArr);
@@ -69,6 +70,9 @@ public class CustomerOrdersReportController extends ReportController {
 	@Override
 	protected List<CustomerReportVO> performSearch(HttpServletRequest request, SearchCriteria criteria, Map<String, Object> params) {
 		List<CustomerReportVO> customerReportVOList = retrieveCustomerOrdersReportData(criteria);
+		if (customerReportVOList.isEmpty()) {
+			return customerReportVOList;
+		}
 		
 		String[] orderDates = extractOrderDateRange(criteria, customerReportVOList);
 		params.put("ORDER_DATE_FROM", orderDates[0]);
@@ -127,23 +131,15 @@ public class CustomerOrdersReportController extends ReportController {
       return customerReportVOList;
 	}
 	
-	private void map(Customer aCustomer, CustomerReportVO aCustomerReportVO) {
-		aCustomerReportVO.setId(aCustomer.getId());
-		aCustomerReportVO.setCompanyName(aCustomer.getCompanyName());
-		aCustomerReportVO.setStatus(aCustomer.getCustomerStatus().getStatus());
-		aCustomerReportVO.setContactName(aCustomer.getContactName());
-		aCustomerReportVO.setPhoneNumber(aCustomer.getPhone());
-	}
-	
 	private void map(List<Order> orderList, CustomerReportVO aCustomerReportVO) {
 		Customer aCustomer = orderList.get(0).getCustomer();
-		map(aCustomer, aCustomerReportVO);
+		ModelUtil.map(aCustomerReportVO, aCustomer);
 		
 		BigDecimal totalOrderAmount = new BigDecimal("0.00");
 		List<OrderReportVO> anOrderReportVOList = new ArrayList<OrderReportVO>();
 		for (Order anOrder : orderList) {
 			OrderReportVO anOrderReportVO = new OrderReportVO();
-			map(anOrder, anOrderReportVO);
+			ModelUtil.map(anOrderReportVO, anOrder);
 			anOrderReportVOList.add(anOrderReportVO);
 			
 			totalOrderAmount = totalOrderAmount.add(anOrderReportVO.getTotalFees());
@@ -153,32 +149,5 @@ public class CustomerOrdersReportController extends ReportController {
       aCustomerReportVO.setTotalOrders(orderList.size());
 		
 		aCustomerReportVO.setOrderList(anOrderReportVOList);
-	}
-	
-	private void map(Order anOrder, OrderReportVO anOrderReportVO) {
-		anOrderReportVO.setId(anOrder.getId());
-		anOrderReportVO.setOrderDate(anOrder.getFormattedCreatedAt());
-		anOrderReportVO.setStatus(anOrder.getOrderStatus().getStatus());
-		
-		anOrderReportVO.setDeliveryContactName(anOrder.getDeliveryContactName());
-		anOrderReportVO.setDeliveryContactPhone1(anOrder.getDeliveryContactPhone1());
-		anOrderReportVO.setDeliveryAddressFullLine(anOrder.getDeliveryAddress().getFullLine());
-		anOrderReportVO.setDeliveryCity(anOrder.getDeliveryAddress().getCity());
-		
-		anOrderReportVO.setDeliveryDate(anOrder.getFormattedDeliveryDate());
-		anOrderReportVO.setPickupDate(anOrder.getFormattedPickupDate());
-		
-		OrderFees anOrderFees = anOrder.getOrderFees();
-		anOrderReportVO.setDumpsterPrice(anOrderFees.getDumpsterPrice());
-		
-		anOrderReportVO.setCityFee(anOrderFees.getCityFee() == null ? (new BigDecimal("0.00")) : anOrderFees.getCityFee());
-		
-		anOrderReportVO.setPermitFees(anOrderFees.getTotalPermitFees());
-		anOrderReportVO.setOverweightFee(anOrderFees.getOverweightFee());
-		anOrderReportVO.setAdditionalFees(anOrderFees.getTotalAdditionalFees());
-		anOrderReportVO.setTotalFees(anOrderFees.getTotalFees());
-		
-		anOrderReportVO.setTotalAmountPaid(anOrder.getTotalAmountPaid());
-		anOrderReportVO.setBalanceAmountDue(anOrder.getBalanceAmountDue());
 	}
 }

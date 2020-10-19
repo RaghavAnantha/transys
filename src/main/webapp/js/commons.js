@@ -1,5 +1,24 @@
+function log(msg) {
+	console.log(msg);
+}
+
 function showTab(tab) {
+	if (tab.length == 0) {
+		return;
+	}
 	$('.nav-tabs a[href="#' + tab + '"]').tab('show');
+}
+
+function loadTab(tab) {
+	var loadurl = tab.attr('href'),
+        targ = tab.attr('data-target');
+
+    $.get(loadurl, function(data) {
+        $(targ).html(data);
+    });
+
+    tab.tab('show');
+    return false;
 }
 
 function emptySelect(selectElem) {

@@ -23,8 +23,8 @@
 		</div>
 		<div id="customerReports" class="tab-pane" style="background-color: white;padding-top: 5px;">
 			<ul class="nav nav-tabs" id="customer_reports_tabs">
-				<li><a href="${ctx}/customer/customerListReportMain.do" id="customerListReportTab" data-toggle="tabajax" data-target="#customerListReport">Customer List Report</a></li>
-				<li><a href="${ctx}/reports/customerOrdersReport/main.do" id="customerOrdersReportTab" data-toggle="tabajax" data-target="#customerOrdersReport">Customer Orders Report</a></li>
+				<li><a href="${ctx}/reports/customer/customerListReport/main.do" id="customerListReportTab" data-toggle="tabajax" data-target="#customerListReport">Customer List Report</a></li>
+				<li><a href="${ctx}/reports/customer/customerOrdersReport/main.do" id="customerOrdersReportTab" data-toggle="tabajax" data-target="#customerOrdersReport">Customer Orders Report</a></li>
 				<!--
 				<li><a href="#customerOrdersReport" data-toggle="tab">Customer Orders Report</a></li>
 				-->
@@ -36,36 +36,16 @@
 		</div>
 	</div>
 <script type="text/javascript">
-	function showTab(tab){
-		$('.nav-tabs a[href="#' + tab + '"]').tab('show');		    
-	};
-	
 	showTab('${activeTab}');
 	showTab('${activeSubTab}');
 	
 	$('#customerListReportTab').click(function(e) {
-	    var $this = $(this),
-	        loadurl = $this.attr('href'),
-	        targ = $this.attr('data-target');
-	
-	    $.get(loadurl, function(data) {
-	        $(targ).html(data);
-	    });
-	
-	    $this.tab('show');
+	    loadTab($(this));
 	    return false;
 	});
 	
 	$('#customerOrdersReportTab').click(function(e) {
-	    var $this = $(this),
-	        loadurl = $this.attr('href'),
-	        targ = $this.attr('data-target');
-	
-	    $.get(loadurl, function(data) {
-	        $(targ).html(data);
-	    });
-	
-	    $this.tab('show');
+		loadTab($(this));
 	    return false;
 	});
 	

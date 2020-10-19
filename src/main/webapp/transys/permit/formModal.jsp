@@ -60,7 +60,7 @@ $("#permitModalFromAlertForm").submit(function (ev) {
 			<td class="form-left"><transys:label code="Customer" /><span class="errorMessage">*</span></td>
 			<td>
 				<form:select id="customerSelect" cssClass="flat form-control input-sm" path="customer" style="width: 175px !important">
-				<form:options items="${customer}" itemValue="id" itemLabel="companyName" />
+					<form:options items="${customers}" itemValue="id" itemLabel="companyName" />
 				</form:select>
 			 	<form:errors path="customer" cssClass="errorMessage" />
 			</td>

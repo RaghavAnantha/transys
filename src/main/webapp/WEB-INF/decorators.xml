@@ -43,8 +43,10 @@
     <decorator name="inline" page="popUpLayout.jsp">
     	<pattern>/transys/orderPermitAlert/**</pattern>
         
-        <pattern>/transys/customer/customerListReport.jsp</pattern>
-        <pattern>/transys/reports/customerOrdersReport/**</pattern>
+        <pattern>/transys/reports/customer/customerListReport/**</pattern>
+        <pattern>/transys/reports/customer/customerOrdersReport/**</pattern>
+        
+         <pattern>/transys/reports/order/orderListReport/**</pattern>
         
         <pattern>/transys/invoice/manageInvoiceList.jsp</pattern>
     </decorator>

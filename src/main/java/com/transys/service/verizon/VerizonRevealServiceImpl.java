@@ -100,7 +100,6 @@ public class VerizonRevealServiceImpl implements VerizonRevealService {
 		String[] vehicleNumArr = vehicleNumList.toArray(new String[vehicleNumList.size()]);
 		HttpEntity<String[]> httpRequestEntity = (HttpEntity<String[]>)buildUpdateHttpRequestEntity(vehicleNumArr);
 		
-		
 		List<MultipleVehicleLocationVO> vehicleLocationList = Collections.emptyList();;
 		ResponseEntity<MultipleVehicleLocationVO[]> response = restTemplate.exchange(VerizonConfigConstants.getMultipleVehicleLocationsUri, 
 				HttpMethod.POST, httpRequestEntity, MultipleVehicleLocationVO[].class);

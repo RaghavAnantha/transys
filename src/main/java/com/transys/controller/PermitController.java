@@ -11,11 +11,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.SortedSet;
-import java.util.TreeSet;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -45,19 +42,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import com.transys.controller.editor.AbstractModelEditor;
 
-import com.transys.core.report.generator.ExcelReportGenerator;
-import com.transys.core.util.MimeUtil;
 import com.transys.core.util.ModelUtil;
+
 import com.transys.model.AbstractBaseModel;
 import com.transys.model.Customer;
 import com.transys.model.DeliveryAddress;
-import com.transys.model.DumpsterStatus;
 import com.transys.model.LocationType;
-import com.transys.model.Order;
 import com.transys.model.OrderFees;
-import com.transys.model.OrderNotes;
 import com.transys.model.OrderPermits;
-import com.transys.model.OrderStatus;
 import com.transys.model.Permit;
 import com.transys.model.PermitAddress;
 import com.transys.model.PermitClass;
@@ -70,9 +62,8 @@ import com.transys.model.State;
 import com.transys.model.User;
 import com.transys.model.vo.CustomerVO;
 import com.transys.model.vo.DeliveryAddressVO;
-import com.transys.model.vo.invoice.InvoiceVO;
+import com.transys.model.vo.PermitAddressVO;
 
-@SuppressWarnings("unchecked")
 @Controller
 @RequestMapping("/permit")
 public class PermitController extends CRUDController<Permit> {
@@ -129,41 +120,16 @@ public class PermitController extends CRUDController<Permit> {
 		model.addAttribute("deliveryAddressesLine2", genericDAO.executeSimpleQuery(deliveryAddresseQuery));
 		*/
 		
-		String deliveryAddressQuery = "select distinct obj.deliveryAddress.id, obj.deliveryAddress.line1, obj.deliveryAddress.line2"
-					+ " from Permit obj where obj.deleteFlag='1' order by obj.deliveryAddress.line1 asc";
-		List<?> objectList = genericDAO.executeSimpleQuery(deliveryAddressQuery);
-		List<DeliveryAddressVO> deliveryAddressVOList = ModelUtil.mapToDeliveryAddressVO(objectList);
+		List<DeliveryAddressVO> deliveryAddressVOList = ModelUtil.retrievePermitDeliveryAddresses(genericDAO);
 		model.addAttribute("deliveryAddresses", deliveryAddressVOList);
 	
 		//String permitAddressQuery = "select obj.permitAddress.line1, obj.permitAddress.line2"
 		//		+ " from Permit obj where obj.deleteFlag='1' order by obj.permitAddress.line1 asc";
-		String permitAddressQuery = "select obj.line1, obj.line2 from PermitAddress obj where obj.deleteFlag='1' order by obj.line1 asc";
-	   objectList = genericDAO.executeSimpleQuery(permitAddressQuery);
-		
-		SortedSet<String> permitAddressLine1Set = new TreeSet<String>();
-		SortedSet<String> permitAddressLine2Set = new TreeSet<String>();
-		for (int i = 0; i < objectList.size(); i++) {
-			Object anObject[] = (Object[])objectList.get(i);
-			
-			if (anObject[0] != null && StringUtils.isNotEmpty(anObject[0].toString())) {
-				permitAddressLine1Set.add(anObject[0].toString());
-			}
-			if (anObject[1] != null && StringUtils.isNotEmpty(anObject[1].toString())) {
-				permitAddressLine2Set.add(anObject[1].toString());
-			}
-		}
-		
-		String[] permitAddressLine1Arr = permitAddressLine1Set.toArray(new String[0]);
-		String[] permitAddressLine2Arr = permitAddressLine2Set.toArray(new String[0]);
-		
-		model.addAttribute("allPermitAddressesLine1", permitAddressLine1Arr);
-		model.addAttribute("allPermitAddressesLine2", permitAddressLine2Arr);
-	   
-		String customerQuery = "select distinct obj.customer.id, obj.customer.companyName from Permit obj"
-					+ " where obj.deleteFlag='1' order by obj.customer.companyName asc";
-		objectList = genericDAO.executeSimpleQuery(customerQuery);
-		List<CustomerVO> customerVOList = ModelUtil.mapToCustomerVO(objectList);
-		model.addAttribute("customer", customerVOList);
+		List<PermitAddressVO> permitAddressVOList = ModelUtil.retrievePermitAddresses(genericDAO);
+		model.addAttribute("permitAddresses", permitAddressVOList);
+		 
+		List<CustomerVO> customerVOList = ModelUtil.retrievePermitCustomers(genericDAO);
+		model.addAttribute("customers", customerVOList);
 		
 		/*SortedSet<String> phoneSet = new TreeSet<String>();
 		SortedSet<String> contactNameSet = new TreeSet<String>();
@@ -554,10 +520,10 @@ public class PermitController extends CRUDController<Permit> {
 	public void setupCreate(ModelMap model, HttpServletRequest request) {
 		setupCommon(model, request);
 		
-		Map<String, Object> criterias = new HashMap<String, Object>();
-		
-	   List<Customer> customerList = genericDAO.findByCriteria(Customer.class, criterias, "companyName", false);
-		model.addAttribute("customer", customerList);
+		List<CustomerVO> customerVOList = ModelUtil.retrieveCustomers(genericDAO);
+	   model.addAttribute("customers", customerVOList);
+	   
+	   Map<String, Object> criterias = new HashMap<String, Object>();
 		model.addAttribute("locationType", genericDAO.findByCriteria(LocationType.class, criterias, "locationType", false));
 		model.addAttribute("state", genericDAO.findByCriteria(State.class, criterias, "name", false));
 	}

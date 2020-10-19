@@ -29,23 +29,11 @@
 	</div>
 	
 <script type="text/javascript">
-	function showTab(tab){
-		$('.nav-tabs a[href="#' + tab + '"]').tab('show');
-	};
-	
 	showTab('${activeTab}');
 	showTab('${activeSubTab}');
 	
 	$('#orderPermitAlertTab').click(function(e) {
-	    var $this = $(this),
-	        loadurl = $this.attr('href'),
-	        targ = $this.attr('data-target');
-	
-	    $.get(loadurl, function(data) {
-	        $(targ).html(data);
-	    });
-	
-	    $this.tab('show');
+	  	loadTab($(this));
 	    return false;
 	});
 	

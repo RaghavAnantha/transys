@@ -82,6 +82,9 @@ public class DeliveryAddressVO extends BaseVO {
 	}
 	public void setGeoCode(String geoCode) {
 		this.geoCode = geoCode;
+		if (StringUtils.isEmpty(this.geoCode)) {
+			return;
+		}
 		
 		String[] geoCodeArr = geoCode.split(",");
 		setLatitude(new Double(geoCodeArr[0]));

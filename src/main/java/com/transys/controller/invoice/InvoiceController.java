@@ -70,9 +70,6 @@ import com.transys.model.vo.invoice.InvoiceVO;
 @RequestMapping("/invoice")
 @Transactional(readOnly = false)
 public class InvoiceController extends BaseController {
-	@Autowired
-	private DynamicReportService dynamicReportService;
-	
 	private static String ORDER_INVOICE_MASTER = "orderInvoiceMaster";
 	private static String ORDER_INVOICE_SUB = "orderInvoiceSub";
 	

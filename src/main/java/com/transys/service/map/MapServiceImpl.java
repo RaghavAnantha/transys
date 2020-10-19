@@ -34,7 +34,15 @@ public class MapServiceImpl implements MapService {
 			String latLngStr = StringUtils.EMPTY;
 			try {
 				results = GeocodingApi.geocode(geoApiContext, address).await();
-				LatLng latLng = results[0].geometry.location;
+				if (results == null || results.length <= 0) {
+					return latLngStr;
+				}
+				GeocodingResult aResult = results[0];
+				if (aResult.geometry == null || aResult.geometry.location == null) {
+					return latLngStr;
+				}
+				
+				LatLng latLng = aResult.geometry.location;
 				log.info("Latitude: {}, Longitude: {}", latLng.lat, latLng.lng);
 				latLngStr = String.format("%s,%s", latLng.lat, latLng.lng);
 				

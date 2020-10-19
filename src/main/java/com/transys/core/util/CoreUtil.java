@@ -1,5 +1,7 @@
 package com.transys.core.util;
 
+import java.math.BigDecimal;
+
 import java.util.List;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -40,5 +42,21 @@ public class CoreUtil {
 	
 	public static String concatenate(String str1, String str2) {
 		return concatenate(str1, str2, " ");
+	}
+	
+	public static String defaultIfEmpty(String str, String defaultStr) {
+		return StringUtils.defaultIfEmpty(str, defaultStr);
+	}
+	
+	public static String defaultIfEmpty(String str) {
+		return StringUtils.defaultIfEmpty(str, StringUtils.EMPTY);
+	}
+	
+	public static BigDecimal defaultIfNull(BigDecimal bigDecimal, BigDecimal defaultValue) {
+		return bigDecimal == null ? defaultValue : bigDecimal;
+	}
+	
+	public static BigDecimal defaultIfNull(BigDecimal bigDecimal) {
+		return bigDecimal == null ? new BigDecimal(0.00) : bigDecimal;
 	}
 }

@@ -2,6 +2,23 @@
 
 <script language="javascript">
 function validateSubmit() {
+	var orderDateFrom = $("[name='createdAtFrom']").val();
+	var orderDateTo = $("[name='createdAtTo']").val();
+	var customer = $('#customerOrdersReport.id').val();
+	
+	var missingData = false;
+	if (orderDateFrom.length() == 0 && orderDateTo.length() == 0
+			&& customer.length() == 0) {
+		missingData = true;
+	}	
+	
+	if (missingData) {
+		var alertMsg = "<span style='color:red'><b>Please select any search criteria</b><br></span>"
+		showAlertDialog("Data Validation", alertMsg);
+		
+		return false;
+	}
+	
 	return true;
 }
 </script>
@@ -17,14 +34,14 @@ function validateSubmit() {
 		<tr>
 			<td class="form-left">Company Name</td>
 			<td class="wide">
-				<select class="flat form-control input-sm" id="customerOrdersReport.companyName" name="customer.companyName" style="width:175px !important">
+				<select class="flat form-control input-sm" id="customerOrdersReport.id" name="customer.id" style="width:175px !important">
 					<option value="">----Please Select----</option>
-					<c:forEach items="${customer}" var="customer">
+					<c:forEach items="${customers}" var="aCustomer">
 						<c:set var="selected" value="" />
-						<c:if test="${sessionScope.searchCriteria.searchMap['customer.companyName'] == customer.companyName}">
+						<c:if test="${sessionScope.searchCriteria.searchMap['customer.id'] == aCustomer.id}">
 							<c:set var="selected" value="selected" />
 						</c:if>
-						<option value="${customer.companyName}" ${selected}>${customer.companyName}</option>
+						<option value="${aCustomer.id}" ${selected}>${aCustomer.companyName}</option>
 					</c:forEach>
 				</select>
 			</td>
@@ -95,7 +112,7 @@ function validateSubmit() {
 		<tr><td></td></tr>
 	</table>
 </form:form>
-<jsp:include page="../reportToolbar.jsp">
+<jsp:include page="${reportsMenuCtx}/reportToolbar.jsp">
 	<jsp:param name="reportSearchForm" value="customerOrdersReportSearchForm" />
 	<jsp:param name="reportDataElem" value="customerOrdersReportData" />
 </jsp:include>

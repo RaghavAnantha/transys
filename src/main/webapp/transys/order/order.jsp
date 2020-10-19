@@ -8,7 +8,7 @@
 <body>
 	<ul class="nav nav-tabs" id="order_main_tabs">
 		<li><a href="#manageOrders" data-toggle="tab" >Orders</a></li>
-		<li><a href="#orderReports" data-toggle="tab" >Order Reports</a></li>
+		<li><a href="${reportsMenuCtx}/order/orderListReport/main.do" id="orderReportsTab" data-toggle="tabajax" data-target="#orderReports">Order Reports</a></li>
 	</ul>
 	<div class="tab-content" style="background-color: white;">
 		<div id="manageOrders" class="tab-pane">
@@ -20,18 +20,17 @@
 				<%@include file="addEdit.jsp"%>
 			</c:if>
 		</div>
-		<div id="orderReports" class="tab-pane">
-			<%@include file="ordersReport.jsp"%>
-		</div>
+		<div id="orderReports" class="tab-pane">${loadingMsg}</div>
 	</div>
 	
 <script type="text/javascript">
-	function showTab(tab){
-		$('.nav-tabs a[href="#' + tab + '"]').tab('show');
-	};
-	
 	showTab('${activeTab}');
 	showTab('${activeSubTab}');
+	
+	$('#orderReportsTab').click(function(e) {
+	    loadTab($(this));
+	    return false;
+	});
 	
 	$(window).load(function() {
 		$("#manageOrderLoadingImgDiv").hide();

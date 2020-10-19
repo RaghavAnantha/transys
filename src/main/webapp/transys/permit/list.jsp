@@ -21,7 +21,6 @@ function processCancel(url, permitId) {
         		var xpath = ".//form[@id='permitServiceForm']/table[@class='datagrid']/tbody/tr/td[text()='"
                     + permitId + "']/following-sibling::td[text()!='Assigned']";
 				var statusTd = document.evaluate(xpath, document, null, XPathResult.ANY_TYPE, null).iterateNext();
-				alert(statusTd);
 				statusTd.textContent = "Canceled";
         	}
        		
@@ -87,13 +86,13 @@ function processCancel(url, permitId) {
 			<td>
 				<select class="flat form-control input-sm" id="permitAddress" name="permitAddress[0].line1" style="width: 175px !important">
 					<option value="">------Please Select------</option>
-					<c:forEach items="${allPermitAddressesLine1}" var="aPermitAddressLine1">
-						<c:if test="${not empty aPermitAddressLine1}">
+					<c:forEach items="${permitAddresses}" var="aPermitAddress">
+						<c:if test="${not empty aPermitAddress.line1}">
 							<c:set var="selected" value=""/>
-							<c:if test="${sessionScope.searchCriteria.searchMap['permitAddress[0].line1'] == aPermitAddressLine1}">
+							<c:if test="${sessionScope.searchCriteria.searchMap['permitAddress[0].line1'] == aPermitAddress.line1}">
 								<c:set var="selected" value="selected"/>
 							</c:if> 
-							<option value="${aPermitAddressLine1}" ${selected}>${aPermitAddressLine1}</option>
+							<option value="${aPermitAddress.line1}" ${selected}>${aPermitAddress.line1}</option>
 						</c:if>
 					</c:forEach>
 				</select>
@@ -101,13 +100,13 @@ function processCancel(url, permitId) {
 			<td class="form-left form-left-ext">Permit Addrs Line2</td>
 			<td><select class="flat form-control input-sm" id="permitStreet" name="permitAddress[0].line2" style="width: 175px !important">
 				<option value="">------Please Select------</option>
-				<c:forEach items="${allPermitAddressesLine2}" var="aPermitAddressLine2">
-					<c:if test="${not empty aPermitAddressLine2}">
+				<c:forEach items="${permitAddresses}" var="aPermitAddress">
+					<c:if test="${not empty aPermitAddress.line2}">
 						<c:set var="selected" value=""/>
-						<c:if test="${sessionScope.searchCriteria.searchMap['permitAddress[0].line2'] == aPermitAddressLine2}">
+						<c:if test="${sessionScope.searchCriteria.searchMap['permitAddress[0].line2'] == aPermitAddress.line2}">
 							<c:set var="selected" value="selected"/>
 						</c:if> 
-						<option value="${aPermitAddressLine2}" ${selected}>${aPermitAddressLine2}</option>
+						<option value="${aPermitAddress.line2}" ${selected}>${aPermitAddress.line2}</option>
 					</c:if>
 				</c:forEach>
 			</select>
@@ -234,7 +233,7 @@ function processCancel(url, permitId) {
 			<td>
 				<select class="flat form-control input-sm" id="customerName" name="customer.companyName" style="width: 175px !important">
 					<option value="">------Please Select------</option>
-					<c:forEach items="${customer}" var="customer">
+					<c:forEach items="${customers}" var="customer">
 						<c:if test='${not empty customer.companyName}'>
 							<c:set var="selected" value=""/>
 							<c:if test="${sessionScope.searchCriteria.searchMap['customer.companyName'] == customer.companyName}">
@@ -249,7 +248,7 @@ function processCancel(url, permitId) {
 			<td>
 				<select class="flat form-control input-sm" id="customer" name="customer" style="width: 175px !important">
 					<option value="">------Please Select------</option>
-					<c:forEach items="${customer}" var="aCustomer">
+					<c:forEach items="${customers}" var="aCustomer">
 						<c:set var="selected" value="" />
 						<c:if test="${sessionScope.searchCriteria.searchMap['customer'] == aCustomer.id}">
 							<c:set var="selected" value="selected" />

@@ -97,9 +97,12 @@ function initMap() {
 	var vehicleLocationList = ${vehicleLocationList};
 	for (var i = 0; i < vehicleLocationList.length; i++) {
 		var aVehicleLocation = vehicleLocationList[i];
-		
 		var lat = aVehicleLocation.Latitude;
 		var lng = aVehicleLocation.Longitude;
+		if (lat == null || lng == null) {
+			continue;
+		}
+		
 		var latLng = new google.maps.LatLng(lat, lng);
 		bounds.extend(latLng);
 		
@@ -164,9 +167,12 @@ function initMap() {
 	var deliveryOrderAddressList = ${deliveryOrderAddressList};
 	for (var i = 0; i < deliveryOrderAddressList.length; i++) {
 		var aDeliveryOrderAddress = deliveryOrderAddressList[i];
-		
 		var lat = aDeliveryOrderAddress.latitude;
 		var lng = aDeliveryOrderAddress.longitude;
+		if (lat == null || lng == null) {
+			continue;
+		}
+		
 		var latLng = new google.maps.LatLng(lat, lng);
 		bounds.extend(latLng);
 		var marker = new google.maps.Marker({
@@ -198,9 +204,12 @@ function initMap() {
 	var pickupOrderAddressList = ${pickupOrderAddressList};
 	for (var i = 0; i < pickupOrderAddressList.length; i++) {
 		var aPickupOrderAddress = pickupOrderAddressList[i];
-		
 		var lat = aPickupOrderAddress.latitude;
 		var lng = aPickupOrderAddress.longitude;
+		if (lat == null || lng == null) {
+			continue;
+		}
+		
 		var latLng = new google.maps.LatLng(lat, lng);
 		bounds.extend(latLng);
 		var marker = new google.maps.Marker({

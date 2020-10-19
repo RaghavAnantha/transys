@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
-<!-- 2020-10-14T23:38:23 -->
+<!-- 2020-10-19T11:14:17 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="customerOrdersReportSub" pageWidth="795" pageHeight="842" columnWidth="795" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="27b0d00f-2ed5-470f-9062-b72911004ad8">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
 	<field name="totalAmountPaid" class="java.math.BigDecimal"/>
@@ -291,7 +291,7 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Paid]]></text>
+				<text><![CDATA[Due]]></text>
 			</staticText>
 			<staticText>
 				<reportElement mode="Opaque" x="709" y="6" width="40" height="15" backcolor="#C0DCF3" uuid="a50f2ee6-d9b5-4541-9353-3118c67cabf5">
@@ -307,7 +307,7 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Due]]></text>
+				<text><![CDATA[Paid]]></text>
 			</staticText>
 		</band>
 	</columnHeader>
