@@ -250,8 +250,10 @@ public class OrderController extends CRUDController<Order> {
 	public void setupCreate(ModelMap model, HttpServletRequest request) {
 		setupCommon(model, request);
 		
-		List<CustomerVO> customerVOList = ModelUtil.retrieveCustomers(genericDAO);
-		model.addAttribute("customers", customerVOList);
+		//List<CustomerVO> customerVOList = ModelUtil.retrieveCustomers(genericDAO);
+		List<Customer> customerList = genericDAO.executeSimpleQuery("select obj from Customer obj where obj.deleteFlag='1'"
+				+ " order by obj.companyName asc");
+		model.addAttribute("customers", customerList);
 		
       model.addAttribute("dusmpsterLocationTypes", genericDAO.executeSimpleQuery("select obj from LocationType obj where obj.deleteFlag='1' and obj.id!=0 order by obj.locationType asc"));
       
