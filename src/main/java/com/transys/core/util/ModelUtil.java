@@ -243,7 +243,7 @@ public class ModelUtil {
 	}
 	
 	public static List<PermitAddressVO> retrievePermitAddresses(GenericDAO genericDAO) {
-		String permitAddressQuery = "select obj.line1, obj.line2 from PermitAddress obj where obj.deleteFlag='1' order by obj.line1 asc";
+		String permitAddressQuery = "select obj.id, obj.line1, obj.line2 from PermitAddress obj where obj.deleteFlag='1' order by obj.line1 asc";
 		List<?> objectList = genericDAO.executeSimpleQuery(permitAddressQuery);
 		List<PermitAddressVO> permitAddressVOList = ModelUtil.mapToPermitAddressVO(objectList);
 		return permitAddressVOList;
