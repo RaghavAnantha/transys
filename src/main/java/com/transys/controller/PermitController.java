@@ -123,11 +123,16 @@ public class PermitController extends CRUDController<Permit> {
 		List<DeliveryAddressVO> deliveryAddressVOList = ModelUtil.retrievePermitDeliveryAddresses(genericDAO);
 		model.addAttribute("deliveryAddresses", deliveryAddressVOList);
 	
-		//String permitAddressQuery = "select obj.permitAddress.line1, obj.permitAddress.line2"
+		//String permitAddressQuery = "select distinct obj.permitAddress.line1, obj.permitAddress.line2"
 		//		+ " from Permit obj where obj.deleteFlag='1' order by obj.permitAddress.line1 asc";
-		List<PermitAddressVO> permitAddressVOList = ModelUtil.retrievePermitAddresses(genericDAO);
-		model.addAttribute("permitAddresses", permitAddressVOList);
-		 
+		//List<PermitAddressVO> permitAddressVOList = ModelUtil.retrievePermitAddressesAsVO(genericDAO);
+		//model.addAttribute("permitAddresses", permitAddressVOList);
+		
+		String permitAddressQuery = "select distinct obj.line1 from PermitAddress obj where obj.deleteFlag='1' order by obj.line1 asc";
+		model.addAttribute("permitAddressLine1List", genericDAO.executeSimpleQuery(permitAddressQuery));
+		permitAddressQuery = "select distinct obj.line2 from PermitAddress obj where obj.deleteFlag='1' order by obj.line2 asc";
+		model.addAttribute("permitAddressLine2List", genericDAO.executeSimpleQuery(permitAddressQuery));
+		
 		List<CustomerVO> customerVOList = ModelUtil.retrievePermitCustomers(genericDAO);
 		model.addAttribute("customers", customerVOList);
 		
@@ -520,8 +525,10 @@ public class PermitController extends CRUDController<Permit> {
 	public void setupCreate(ModelMap model, HttpServletRequest request) {
 		setupCommon(model, request);
 		
-		List<CustomerVO> customerVOList = ModelUtil.retrieveCustomers(genericDAO);
-	   model.addAttribute("customers", customerVOList);
+		//List<CustomerVO> customerVOList = ModelUtil.retrieveCustomers(genericDAO);
+		List<Customer> customerList = genericDAO.executeSimpleQuery("select obj from Customer obj where obj.deleteFlag='1'"
+				+ " order by obj.companyName asc");
+	   model.addAttribute("customers", customerList);
 	   
 	   Map<String, Object> criterias = new HashMap<String, Object>();
 		model.addAttribute("locationType", genericDAO.findByCriteria(LocationType.class, criterias, "locationType", false));

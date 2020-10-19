@@ -78,10 +78,7 @@ public class OrderPermitAlertController extends CRUDController<OrderPermits> {
 		model.addAttribute("deliveryAddressesLine2", genericDAO.executeSimpleQuery(deliveryAddresseQuery));
 		*/
 		
-		String deliveryAddressQuery = "select distinct obj.deliveryAddress.id, obj.deliveryAddress.line1, obj.deliveryAddress.line2"
-				+ " from Order obj where obj.deleteFlag='1' order by obj.deliveryAddress.line1 asc";
-		List<?> objectList = genericDAO.executeSimpleQuery(deliveryAddressQuery);
-		List<DeliveryAddressVO> deliveryAddressVOList = ModelUtil.mapToDeliveryAddressVO(objectList);
+		List<DeliveryAddressVO> deliveryAddressVOList = ModelUtil.retrieveOrderDeliveryAddresses(genericDAO);
 		model.addAttribute("deliveryAddresses", deliveryAddressVOList);
 	
 		//model.addAttribute("order", genericDAO.executeSimpleQuery("select obj.id from Order obj where obj.deleteFlag='1' order by obj.id asc"));
