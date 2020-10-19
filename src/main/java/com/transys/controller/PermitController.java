@@ -283,7 +283,7 @@ public class PermitController extends CRUDController<Permit> {
 			@RequestParam(value = "deliveryDate") Date deliveryDate) {
 		String customerQuery = "select obj from Customer obj where obj.deleteFlag='1' and obj.id=" + customerId;
 		List<Customer> customerList = genericDAO.executeSimpleQuery(customerQuery);
-		model.put("customer", customerList);
+		model.put("customers", customerList);
 		
 		String deliveryAddressQuery = "select obj from DeliveryAddress obj where obj.deleteFlag='1' and obj.id=" + deliveryAddressId + " order by line1 asc";
 		List<DeliveryAddress> deliveryAddressList = genericDAO.executeSimpleQuery(deliveryAddressQuery);
@@ -338,7 +338,7 @@ public class PermitController extends CRUDController<Permit> {
 		
 		String customerQuery = "select obj from Customer obj where obj.deleteFlag='1' and obj.id=" + permit.getCustomer().getId();
 		List<Customer> customerList = genericDAO.executeSimpleQuery(customerQuery);
-		model.put("customer", customerList);
+		model.put("customers", customerList);
 		
 		String deliveryAddressQuery = "select obj from DeliveryAddress obj where obj.deleteFlag='1' and obj.id=" + permit.getDeliveryAddress().getId();
 		List<DeliveryAddress> deliveryAddressList = genericDAO.executeSimpleQuery(deliveryAddressQuery);
@@ -401,7 +401,7 @@ public class PermitController extends CRUDController<Permit> {
 		
 		List<Customer> customers = new ArrayList<>();
 		customers.add(permitToBeEdited.getCustomer());
-		model.put("customer", customers);
+		model.put("customers", customers);
 		
 		List<DeliveryAddress> deliveryAddress = new ArrayList<>();
 		deliveryAddress.add(permitToBeEdited.getDeliveryAddress());
