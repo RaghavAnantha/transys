@@ -2,13 +2,14 @@
 
 <script language="javascript">
 function validateSubmit() {
-	var orderDateFrom = $("[name='createdAtFrom']").val();
-	var orderDateTo = $("[name='createdAtTo']").val();
-	var customer = $('#customer').val();
+	var form = $('#orderListReportSearchForm');
+	var orderDateFrom = form.find("[name='createdAtFrom']").val();
+	var orderDateTo = form.find("[name='createdAtTo']").val();
+	var customer = $('#orderListReport\\.customer').val();
 	
 	var missingData = false;
-	if (orderDateFrom.length() == 0 && orderDateTo.length() == 0
-			&& customer.length() == 0) {
+	if (orderDateFrom.length == 0 && orderDateTo.length == 0
+			&& customer.length == 0) {
 		missingData = true;
 	}	
 	
@@ -24,7 +25,7 @@ function validateSubmit() {
 </script>
 <br />
 <h5 style="margin-top: -15px; !important">Orders Report</h5>
-<form:form action="${urlCtx}/search.do" method="get" name="ordersReportSearchForm" id="ordersReportSearchForm">
+<form:form action="${urlCtx}/search.do" method="get" name="orderListReportSearchForm" id="orderListReportSearchForm">
 	<jsp:include page="/common/messages.jsp">
 		<jsp:param name="msgCtx" value="${msgCtx}" />
 		<jsp:param name="errorCtx" value="${errorCtx}" />
@@ -34,7 +35,7 @@ function validateSubmit() {
 		<tr>
 			<td class="form-left">Customer</td>
 			<td class="wide">
-				<select class="flat form-control input-sm" id="customer" name="customer" style="width: 175px !important">
+				<select class="flat form-control input-sm" id="orderListReport.customer" name="customer" style="width: 175px !important">
 					<option value="">------Please Select------</option>
 					<c:forEach items="${customers}" var="aCustomer">
 						<c:set var="selected" value="" />
@@ -98,6 +99,6 @@ function validateSubmit() {
 	</table>
 </form:form>
 <jsp:include page="${reportsMenuCtx}/reportToolbar.jsp">
-	<jsp:param name="reportSearchForm" value="ordersReportSearchForm" />
+	<jsp:param name="reportSearchForm" value="orderListReportSearchForm" />
 	<jsp:param name="reportDataElem" value="orderListReportData" />
 </jsp:include>

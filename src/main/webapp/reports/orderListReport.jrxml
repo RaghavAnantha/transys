@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
-<!-- 2020-10-18T13:10:48 -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="orderListReport" pageWidth="1210" pageHeight="555" orientation="Landscape" columnWidth="1190" leftMargin="10" rightMargin="10" topMargin="10" bottomMargin="10" isSummaryWithPageHeaderAndFooter="true" uuid="1c66690f-01f1-4b96-ab51-00f1d62e1ce2">
+<!-- 2020-10-20T23:46:48 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="orderListReport" pageWidth="1220" pageHeight="555" orientation="Landscape" columnWidth="1200" leftMargin="10" rightMargin="10" topMargin="10" bottomMargin="10" isSummaryWithPageHeaderAndFooter="true" uuid="1c66690f-01f1-4b96-ab51-00f1d62e1ce2">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
@@ -62,7 +62,7 @@
 		<band height="70" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 			<staticText>
-				<reportElement mode="Opaque" x="461" y="3" width="283" height="18" backcolor="#99CCFF" uuid="d3dc7da8-305c-4f8b-9cdd-7423d0db5785">
+				<reportElement mode="Opaque" x="459" y="3" width="283" height="18" backcolor="#99CCFF" uuid="d3dc7da8-305c-4f8b-9cdd-7423d0db5785">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
@@ -71,7 +71,7 @@
 				<text><![CDATA[ORDER REPORT]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="452" y="25" width="153" height="18" backcolor="#99CCFF" uuid="85f88294-33d5-4518-bde0-2b37a53e5575"/>
+				<reportElement mode="Opaque" x="448" y="25" width="153" height="18" backcolor="#99CCFF" uuid="85f88294-33d5-4518-bde0-2b37a53e5575"/>
 				<box>
 					<pen lineWidth="1.0" lineColor="#333333"/>
 					<topPen lineWidth="1.0" lineColor="#333333"/>
@@ -85,7 +85,7 @@
 				<text><![CDATA[Order Date From]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="605" y="25" width="152" height="18" backcolor="#99CCFF" uuid="143ba55a-a554-409a-8eab-870d725ab699"/>
+				<reportElement mode="Opaque" x="601" y="25" width="152" height="18" backcolor="#99CCFF" uuid="143ba55a-a554-409a-8eab-870d725ab699"/>
 				<box>
 					<pen lineWidth="1.0" lineColor="#333333"/>
 					<topPen lineWidth="1.0" lineColor="#333333"/>
@@ -99,7 +99,7 @@
 				<text><![CDATA[Order Date To]]></text>
 			</staticText>
 			<textField pattern="" isBlankWhenNull="true">
-				<reportElement x="605" y="43" width="152" height="18" uuid="119d4c8e-4f64-4de7-8b7e-223817511b60"/>
+				<reportElement x="601" y="43" width="152" height="18" uuid="119d4c8e-4f64-4de7-8b7e-223817511b60"/>
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -113,7 +113,7 @@
 				<textFieldExpression><![CDATA[$P{orderDateTo}]]></textFieldExpression>
 			</textField>
 			<textField pattern="" isBlankWhenNull="true">
-				<reportElement x="452" y="43" width="153" height="18" uuid="c2619bc9-fbba-4ae3-a16f-f4d87042f652"/>
+				<reportElement x="448" y="43" width="153" height="18" uuid="c2619bc9-fbba-4ae3-a16f-f4d87042f652"/>
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -153,7 +153,7 @@
 				<text><![CDATA[Order #]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="192" y="1" width="89" height="20" backcolor="#C0DCF3" uuid="462418b9-ddc8-4a65-9dda-b6da3ae15a5a"/>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="239" y="1" width="81" height="20" backcolor="#C0DCF3" uuid="462418b9-ddc8-4a65-9dda-b6da3ae15a5a"/>
 				<box>
 					<topPen lineWidth="1.0"/>
 					<leftPen lineWidth="1.0"/>
@@ -166,7 +166,7 @@
 				<text><![CDATA[Phone]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="281" y="1" width="100" height="20" backcolor="#C0DCF3" uuid="522443ed-1ef0-4239-8a29-325d79fa9ed3"/>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="320" y="1" width="106" height="20" backcolor="#C0DCF3" uuid="522443ed-1ef0-4239-8a29-325d79fa9ed3"/>
 				<box>
 					<topPen lineWidth="1.0"/>
 					<leftPen lineWidth="1.0"/>
@@ -179,7 +179,7 @@
 				<text><![CDATA[Del Adds]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="381" y="1" width="72" height="20" backcolor="#C0DCF3" uuid="9ef44617-dbef-4049-bba3-9830b207d37f"/>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="426" y="1" width="63" height="20" backcolor="#C0DCF3" uuid="9ef44617-dbef-4049-bba3-9830b207d37f"/>
 				<box>
 					<topPen lineWidth="1.0"/>
 					<leftPen lineWidth="1.0"/>
@@ -192,7 +192,7 @@
 				<text><![CDATA[City]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="515" y="1" width="80" height="20" backcolor="#C0DCF3" uuid="b0ebf467-fc6b-4fc2-a91a-cb7e9880a9b7"/>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="547" y="1" width="63" height="20" backcolor="#C0DCF3" uuid="b0ebf467-fc6b-4fc2-a91a-cb7e9880a9b7"/>
 				<box>
 					<topPen lineWidth="1.0"/>
 					<leftPen lineWidth="1.0"/>
@@ -205,7 +205,7 @@
 				<text><![CDATA[Del Date]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="595" y="1" width="81" height="20" backcolor="#C0DCF3" uuid="6d9b14a3-0cfe-449c-8d3c-8f98c501aa80"/>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="610" y="1" width="66" height="20" backcolor="#C0DCF3" uuid="6d9b14a3-0cfe-449c-8d3c-8f98c501aa80"/>
 				<box>
 					<topPen lineWidth="1.0"/>
 					<leftPen lineWidth="1.0"/>
@@ -270,7 +270,7 @@
 				<text><![CDATA[Ovr. Wt. Fees]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="123" y="1" width="69" height="20" backcolor="#C0DCF3" uuid="d340982d-c4a4-46f8-9eb4-fba52cbef1c2"/>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="170" y="1" width="69" height="20" backcolor="#C0DCF3" uuid="d340982d-c4a4-46f8-9eb4-fba52cbef1c2"/>
 				<box>
 					<topPen lineWidth="1.0"/>
 					<leftPen lineWidth="1.0"/>
@@ -283,7 +283,7 @@
 				<text><![CDATA[Contact Name]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="58" y="1" width="65" height="20" backcolor="#C0DCF3" uuid="6e6246f8-29f0-4c58-8e77-e5a4d45d8de1"/>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="58" y="1" width="112" height="20" backcolor="#C0DCF3" uuid="6e6246f8-29f0-4c58-8e77-e5a4d45d8de1"/>
 				<box>
 					<topPen lineWidth="1.0"/>
 					<leftPen lineWidth="1.0"/>
@@ -322,7 +322,7 @@
 				<text><![CDATA[Total Fees]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="453" y="1" width="62" height="20" backcolor="#C0DCF3" uuid="bff756c9-df0c-4cc6-9e8d-033ad86c655a"/>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="489" y="1" width="58" height="20" backcolor="#C0DCF3" uuid="bff756c9-df0c-4cc6-9e8d-033ad86c655a"/>
 				<box>
 					<topPen lineWidth="1.0"/>
 					<leftPen lineWidth="1.0"/>
@@ -421,7 +421,7 @@
 				<textFieldExpression><![CDATA[$F{permitFees}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="595" y="-1" width="81" height="20" backcolor="#FFFFFF" uuid="60f82e54-dd51-4a7f-8408-5338715d2949"/>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="610" y="-1" width="66" height="20" backcolor="#FFFFFF" uuid="60f82e54-dd51-4a7f-8408-5338715d2949"/>
 				<box>
 					<topPen lineWidth="1.0"/>
 					<leftPen lineWidth="1.0"/>
@@ -432,7 +432,7 @@
 				<textFieldExpression><![CDATA[$F{pickupDate}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="515" y="-1" width="80" height="20" backcolor="#FFFFFF" uuid="9b32193b-61c3-4d87-93e0-6a36ffd98be3"/>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="547" y="-1" width="63" height="20" backcolor="#FFFFFF" uuid="9b32193b-61c3-4d87-93e0-6a36ffd98be3"/>
 				<box>
 					<topPen lineWidth="1.0"/>
 					<leftPen lineWidth="1.0"/>
@@ -443,7 +443,7 @@
 				<textFieldExpression><![CDATA[$F{deliveryDate}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="453" y="-1" width="62" height="20" backcolor="#FFFFFF" uuid="aa7b1b36-7b53-4afa-84ad-df58ada47633"/>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="489" y="-1" width="58" height="20" backcolor="#FFFFFF" uuid="aa7b1b36-7b53-4afa-84ad-df58ada47633"/>
 				<box>
 					<topPen lineWidth="1.0"/>
 					<leftPen lineWidth="1.0"/>
@@ -454,7 +454,7 @@
 				<textFieldExpression><![CDATA[$F{status}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="381" y="-1" width="72" height="20" backcolor="#FFFFFF" uuid="6871bf9a-8c27-4cf6-a91d-e07d5c4bd715"/>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="426" y="-1" width="63" height="20" backcolor="#FFFFFF" uuid="6871bf9a-8c27-4cf6-a91d-e07d5c4bd715"/>
 				<box>
 					<topPen lineWidth="1.0"/>
 					<leftPen lineWidth="1.0"/>
@@ -465,7 +465,7 @@
 				<textFieldExpression><![CDATA[$F{city}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="281" y="-1" width="100" height="20" backcolor="#FFFFFF" uuid="3a388def-97c9-4baf-84c8-f7e52cfac4c4"/>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="320" y="-1" width="106" height="20" backcolor="#FFFFFF" uuid="3a388def-97c9-4baf-84c8-f7e52cfac4c4"/>
 				<box>
 					<topPen lineWidth="1.0"/>
 					<leftPen lineWidth="1.0"/>
@@ -476,7 +476,7 @@
 				<textFieldExpression><![CDATA[$F{deliveryAddressFullLine}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="192" y="-1" width="89" height="20" backcolor="#FFFFFF" uuid="d4a81a28-adcf-44bc-814b-78b88b8fd0f2"/>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="239" y="-1" width="81" height="20" backcolor="#FFFFFF" uuid="d4a81a28-adcf-44bc-814b-78b88b8fd0f2"/>
 				<box>
 					<topPen lineWidth="1.0"/>
 					<leftPen lineWidth="1.0"/>
@@ -487,7 +487,7 @@
 				<textFieldExpression><![CDATA[$F{phone}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="123" y="-1" width="69" height="20" backcolor="#FFFFFF" uuid="7f7005e8-5646-47ad-9ed8-9528d6d33a17"/>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="170" y="-1" width="69" height="20" backcolor="#FFFFFF" uuid="7f7005e8-5646-47ad-9ed8-9528d6d33a17"/>
 				<box>
 					<topPen lineWidth="1.0"/>
 					<leftPen lineWidth="1.0"/>
@@ -498,7 +498,7 @@
 				<textFieldExpression><![CDATA[$F{deliveryContactName}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="58" y="-1" width="65" height="20" backcolor="#FFFFFF" uuid="d8a1f25c-4c53-4f01-996f-1a21118baccf"/>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="58" y="-1" width="112" height="20" backcolor="#FFFFFF" uuid="d8a1f25c-4c53-4f01-996f-1a21118baccf"/>
 				<box>
 					<topPen lineWidth="1.0"/>
 					<leftPen lineWidth="1.0"/>
@@ -607,7 +607,7 @@
 				<textFieldExpression><![CDATA[$V{rowCount}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="627" y="-1" width="49" height="18" uuid="c5d16877-5ad1-4b41-930d-ecd5b1444862">
+				<reportElement x="610" y="-1" width="66" height="18" uuid="c5d16877-5ad1-4b41-930d-ecd5b1444862">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
 				<box>

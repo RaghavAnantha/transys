@@ -2,13 +2,14 @@
 
 <script language="javascript">
 function validateSubmit() {
-	var orderDateFrom = $("[name='createdAtFrom']").val();
-	var orderDateTo = $("[name='createdAtTo']").val();
-	var customer = $('#customerOrdersReport.id').val();
+	var form = $('#customerOrdersReportSearchForm');
+	var orderDateFrom = form.find("[name='createdAtFrom']").val();
+	var orderDateTo =form.find("[name='createdAtTo']").val();
+	var customer = $('#customerOrdersReport\\.id').val();
 	
 	var missingData = false;
-	if (orderDateFrom.length() == 0 && orderDateTo.length() == 0
-			&& customer.length() == 0) {
+	if (orderDateFrom.length == 0 && orderDateTo.length == 0
+			&& customer.length == 0) {
 		missingData = true;
 	}	
 	
