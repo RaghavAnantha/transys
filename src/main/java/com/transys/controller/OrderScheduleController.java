@@ -39,9 +39,8 @@ import com.transys.service.verizon.VerizonRevealService;
 @Controller
 @RequestMapping("/orderScheduler")
 public class OrderScheduleController extends ReportController {
-	protected static int MAX_DELIVERY_ORDERS = 3;
-	protected static int MAX_PICKUP_ORDERS = 3;
-	protected static int MAX_VEHICLES = 5;
+	protected static int MAX_DISPLAY_ORDERS = 40;
+	protected static int MAX_DISPLAY_VEHICLES = 30;
 	
 	@Autowired
 	private VerizonRevealService verizonRevealService;
@@ -121,12 +120,11 @@ public class OrderScheduleController extends ReportController {
 	}
 	
 	private List<DeliveryAddressVO> retrievePickupOrderAddress(SearchCriteria criteria) {
-		//String fromDateStr = DateUtil.addDaysToTodayAndFormatToDbDate(-2);
-		//String toDateStr = DateUtil.addDaysToTodayAndFormatToDbDate(1);
-		//+ " and obj.modifiedAt >='" + fromDateStr + "' and obj.modifiedAt <'" + toDateStr + "'"
-		
+		String fromDateStr = DateUtil.addDaysToTodayAndFormatToDbDate(-5);
+		String toDateStr = DateUtil.addDaysToTodayAndFormatToDbDate(1);
 		String query = "select obj from Order obj where obj.deleteFlag='1'"
 				+ " and obj.orderStatus.status = '" + OrderStatus.ORDER_STATUS_PICK_UP + "'"
+				+ " and obj.modifiedAt >='" + fromDateStr + "' and obj.modifiedAt <'" + toDateStr + "'"
 				+ " order by obj.modifiedAt desc";
 		
 		List<DeliveryAddressVO> deliveryAddressVOList = retrieveOrderAddress(query);
@@ -141,7 +139,7 @@ public class OrderScheduleController extends ReportController {
 		}
 		
 		String latLng = StringUtils.EMPTY;
-		int maxRows = (orderList.size() <= MAX_PICKUP_ORDERS ? orderList.size() : MAX_PICKUP_ORDERS);
+		int maxRows = (orderList.size() <= MAX_DISPLAY_ORDERS ? orderList.size() : MAX_DISPLAY_ORDERS);
 		for (Order order : orderList.subList(0, maxRows)) {
 			if (order.getDeliveryAddress() == null) {
 				continue;
@@ -166,7 +164,7 @@ public class OrderScheduleController extends ReportController {
 		}
 		
 		List<String> vehicleNumberList = new ArrayList<String>();
-		int maxRows = (vehicleVOList.size() <= MAX_VEHICLES ? vehicleVOList.size() : MAX_VEHICLES);
+		int maxRows = (vehicleVOList.size() <= MAX_DISPLAY_VEHICLES ? vehicleVOList.size() : MAX_DISPLAY_VEHICLES);
 		for (VehicleVO aVehicleVO : vehicleVOList.subList(0, maxRows)) {
 			if (StringUtils.isNotEmpty(aVehicleVO.getVehicleNumber())) {
 				vehicleNumberList.add(aVehicleVO.getVehicleNumber());
