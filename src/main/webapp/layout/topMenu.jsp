@@ -17,7 +17,7 @@
 					<li id="permitPage"><a href="${ctx}/permit/main.do">Permits</a></li>
 					<li id="customerPage"><a href="${ctx}/customer/main.do">Customers</a></li>
 					<li id="invoicePage"><a href="${ctx}/invoice/createInvoiceMain.do">Invoices</a></li>
-					<li id="orderSchedulerPage"><a href="${ctx}/orderScheduler/main.do">Scheduler</a></li>
+					<li id="orderSchedulerPage"><a href="${ctx}/orderScheduler/main.do">Order Scheduler</a></li>
 					<li id="materialIntake"><a href="${ctx}/publicMaterialIntake/main.do">Public Material Intake</a></li>
 					<li id="reportPage">
 						<a href="#" data-toggle="dropdown" class="dropdown-toggle">Reports<b class="caret"></b></a>

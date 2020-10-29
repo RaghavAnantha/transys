@@ -166,6 +166,7 @@ public class BaseController {
 		}
 	}*/
 	
+	
 	protected void clearSearchCriteria(HttpServletRequest request) {
 		SearchCriteria searchCriteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		if (searchCriteria != null && searchCriteria.getSearchMap() != null) {

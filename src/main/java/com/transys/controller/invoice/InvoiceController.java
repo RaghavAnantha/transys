@@ -249,10 +249,10 @@ public class InvoiceController extends BaseController {
 			whereClause.append(" and obj.id=" + orderId);
 		}
 		if (StringUtils.isNotEmpty(orderDateFrom)){
-        	whereClause.append(" and obj.createdAt >='"+FormatUtil.convertInputDateToDbDate(orderDateFrom)+"'");
+        	whereClause.append(" and obj.createdAt >='"+FormatUtil.formatInputDateToDbDate(orderDateFrom)+"'");
 		}
       if (StringUtils.isNotEmpty(orderDateTo)){
-	     	whereClause.append(" and obj.createdAt <='"+FormatUtil.convertInputDateToDbDate(orderDateTo)+"'");
+	     	whereClause.append(" and obj.createdAt <='"+FormatUtil.formatInputDateToDbDate(orderDateTo)+"'");
 	   }
       
       query.append(whereClause);
@@ -300,16 +300,16 @@ public class InvoiceController extends BaseController {
 			whereClause.append(" and oidet.orderId=" + orderId);
 		}
 		if (StringUtils.isNotEmpty(orderDateFrom)){
-        	whereClause.append(" and obj.orderDateFrom >='"+FormatUtil.convertInputDateToDbDate(orderDateFrom)+"'");
+        	whereClause.append(" and obj.orderDateFrom >='"+FormatUtil.formatInputDateToDbDate(orderDateFrom)+"'");
 		}
       if (StringUtils.isNotEmpty(orderDateTo)){
-	     	whereClause.append(" and obj.orderDateTo <='"+FormatUtil.convertInputDateToDbDate(orderDateTo)+"'");
+	     	whereClause.append(" and obj.orderDateTo <='"+FormatUtil.formatInputDateToDbDate(orderDateTo)+"'");
 	   }
       if (StringUtils.isNotEmpty(invoiceDateFrom)){
-        	whereClause.append(" and obj.invoiceDate >='"+FormatUtil.convertInputDateToDbDate(invoiceDateFrom)+"'");
+        	whereClause.append(" and obj.invoiceDate >='"+FormatUtil.formatInputDateToDbDate(invoiceDateFrom)+"'");
 		}
       if (StringUtils.isNotEmpty(invoiceDateTo)){
-	     	whereClause.append(" and obj.invoiceDate <='"+FormatUtil.convertInputDateToDbDate(invoiceDateTo)+"'");
+	     	whereClause.append(" and obj.invoiceDate <='"+FormatUtil.formatInputDateToDbDate(invoiceDateTo)+"'");
 	   }
       
       query.append(whereClause);

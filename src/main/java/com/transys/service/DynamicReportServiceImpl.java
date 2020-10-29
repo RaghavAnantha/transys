@@ -830,7 +830,7 @@ public class DynamicReportServiceImpl implements DynamicReportService {
 		String clazz=ClassUtils.getShortName(entityClass);
 		report.setHeaderHeight(new Integer("10"));
 		Style oddRowStyle = new Style();
-		oddRowStyle.setBackgroundColor(new Color(0xE6E6E6));
+		oddRowStyle.setBackgroundColor(new Color(0xF9F9F9)); //0xE6E6E6
 		report.setOddRowBackgroundStyle(oddRowStyle);
 		report.setPrintBackgroundOnOddRows(true);
 		report.setUseFullPageWidth(true); // make columns to fill the page width
@@ -889,7 +889,7 @@ public class DynamicReportServiceImpl implements DynamicReportService {
 		//		new Integer(80), ImageBanner.ALIGN_RIGHT);
 		report.setHeaderHeight(new Integer("10"));
 		Style oddRowStyle = new Style();
-		oddRowStyle.setBackgroundColor(new Color(0xE6E6E6));
+		oddRowStyle.setBackgroundColor(new Color(0xF9F9F9)); //0xE6E6E6
 		report.setOddRowBackgroundStyle(oddRowStyle);
 		report.setPrintBackgroundOnOddRows(true);
 		report.setUseFullPageWidth(true); // make columns to fill the page width

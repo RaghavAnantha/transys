@@ -62,7 +62,7 @@ public class DeliveryPickupReportController extends ModelReportController<Delive
 	}
 	
 	@Override
-	protected List<Map<String, Object>> performSearch(HttpServletRequest request, SearchCriteria criteria, DeliveryPickupReportVO input,
+	protected List<Map<String, Object>> performSearch(ModelMap model, HttpServletRequest request, SearchCriteria criteria, DeliveryPickupReportVO input,
 			Map<String, Object> params) {
 		List<Map<String, Object>> reportData = new ArrayList<Map<String, Object>>();
 		
@@ -150,16 +150,16 @@ public class DeliveryPickupReportController extends ModelReportController<Delive
 			whereClause.append(" and obj.deliveryAddress.id=" + deliveryAddressId);
 		}
 		if (StringUtils.isNotEmpty(deliveryDateFrom)){
-        	whereClause.append(" and obj.deliveryDate >='"+FormatUtil.convertInputDateToDbDate(deliveryDateFrom)+"'");
+        	whereClause.append(" and obj.deliveryDate >='"+FormatUtil.formatInputDateToDbDate(deliveryDateFrom)+"'");
 		}
       if (StringUtils.isNotEmpty(deliveryDateTo)){
-	     	whereClause.append(" and obj.deliveryDate <='"+FormatUtil.convertInputDateToDbDate(deliveryDateTo)+"'");
+	     	whereClause.append(" and obj.deliveryDate <='"+FormatUtil.formatInputDateToDbDate(deliveryDateTo)+"'");
 	   }
       if (StringUtils.isNotEmpty(pickupDateFrom)){
-        	whereClause.append(" and obj.pickupDate >='"+FormatUtil.convertInputDateToDbDate(pickupDateFrom)+"'");
+        	whereClause.append(" and obj.pickupDate >='"+FormatUtil.formatInputDateToDbDate(pickupDateFrom)+"'");
 		}
       if (StringUtils.isNotEmpty(pickupDateTo)){
-	     	whereClause.append(" and obj.pickupDate <='"+FormatUtil.convertInputDateToDbDate(pickupDateTo)+"'");
+	     	whereClause.append(" and obj.pickupDate <='"+FormatUtil.formatInputDateToDbDate(pickupDateTo)+"'");
 	   }
       
       query.append(whereClause);

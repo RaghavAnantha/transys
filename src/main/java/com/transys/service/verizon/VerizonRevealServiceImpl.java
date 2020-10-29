@@ -58,14 +58,17 @@ public class VerizonRevealServiceImpl implements VerizonRevealService {
 	@Override
 	public List<VehicleVO> getAllVehicles() {
 		HttpEntity<String> httpRequestEntity = buildGetHttpRequestEntity();
-		
 		List<VehicleVO> vehicleList = Collections.emptyList();
-		ResponseEntity<VehicleVO[]> response = restTemplate.exchange(VerizonConfigConstants.getAllVehiclesUri, 
-				HttpMethod.GET, httpRequestEntity, VehicleVO[].class);
-		
-		if (response.getStatusCode().is2xxSuccessful()) {
-			vehicleList = Arrays.asList(response.getBody());
+		try {
+			ResponseEntity<VehicleVO[]> response = restTemplate.exchange(VerizonConfigConstants.getAllVehiclesUri, 
+					HttpMethod.GET, httpRequestEntity, VehicleVO[].class);
+			if (response.getStatusCode().is2xxSuccessful()) {
+				vehicleList = Arrays.asList(response.getBody());
+			}
+		} catch (Exception e) {
+			log.error(e);
 		}
+		
 		return vehicleList;
 	}
 	
@@ -100,11 +103,15 @@ public class VerizonRevealServiceImpl implements VerizonRevealService {
 		String[] vehicleNumArr = vehicleNumList.toArray(new String[vehicleNumList.size()]);
 		HttpEntity<String[]> httpRequestEntity = (HttpEntity<String[]>)buildUpdateHttpRequestEntity(vehicleNumArr);
 		
-		List<MultipleVehicleLocationVO> vehicleLocationList = Collections.emptyList();;
-		ResponseEntity<MultipleVehicleLocationVO[]> response = restTemplate.exchange(VerizonConfigConstants.getMultipleVehicleLocationsUri, 
-				HttpMethod.POST, httpRequestEntity, MultipleVehicleLocationVO[].class);
-		if (response.getStatusCode().is2xxSuccessful()) {
-			vehicleLocationList = Arrays.asList(response.getBody());
+		List<MultipleVehicleLocationVO> vehicleLocationList = Collections.emptyList();
+		try {
+			ResponseEntity<MultipleVehicleLocationVO[]> response = restTemplate.exchange(VerizonConfigConstants.getMultipleVehicleLocationsUri, 
+					HttpMethod.POST, httpRequestEntity, MultipleVehicleLocationVO[].class);
+			if (response.getStatusCode().is2xxSuccessful()) {
+				vehicleLocationList = Arrays.asList(response.getBody());
+			}
+		} catch (Exception e) {
+			log.error(e);
 		}
 		
 		return vehicleLocationList;

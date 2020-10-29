@@ -25,10 +25,10 @@ import com.transys.model.SearchCriteria;
 import com.transys.model.vo.BaseVO;
 
 public abstract class ModelReportController<T extends BaseVO> extends ReportController {
-	protected Map<String, Object> generateReportData(HttpServletRequest request, SearchCriteria criteria, 
+	protected Map<String, Object> generateReportData(ModelMap model, HttpServletRequest request, SearchCriteria criteria, 
 			T input) {
 		Map<String, Object> params = new HashMap<String, Object>();
-		List<?> data = performSearch(request, criteria, input, params);
+		List<?> data = performSearch(model, request, criteria, input, params);
 		
 		Map<String, Object> reportData = new HashMap<String, Object>();
 		reportData.put(ReportUtil.dataKey, data);
@@ -37,11 +37,11 @@ public abstract class ModelReportController<T extends BaseVO> extends ReportCont
 		return reportData;
 	}
 	
-	protected abstract List<?> performSearch(HttpServletRequest request, SearchCriteria criteria, T input,
+	protected abstract List<?> performSearch(ModelMap model, HttpServletRequest request, SearchCriteria criteria, T input,
 			Map<String, Object> params);
 	
 	@Override
-	protected List<?> performSearch(HttpServletRequest request, SearchCriteria criteria,
+	protected List<?> performSearch(ModelMap model, HttpServletRequest request, SearchCriteria criteria,
 			Map<String, Object> params) {
 		return null;
 	}
@@ -69,7 +69,7 @@ public abstract class ModelReportController<T extends BaseVO> extends ReportCont
 		
 		ByteArrayOutputStream out = null;
 		try {
-			Map<String, Object> reportData = generateReportData(request, criteria, input);
+			Map<String, Object> reportData = generateReportData(model, request, criteria, input);
 			Map<String, Object> params = (Map<String, Object>)reportData.get(ReportUtil.paramsKey);
 			List<?> data = (List<?>)reportData.get(ReportUtil.dataKey);
 			
@@ -117,7 +117,7 @@ public abstract class ModelReportController<T extends BaseVO> extends ReportCont
 		
 		ByteArrayOutputStream out = null;
 		try {
-			Map<String, Object> reportData = generateReportData(request, criteria, input);
+			Map<String, Object> reportData = generateReportData(model, request, criteria, input);
 			Map<String, Object> params = (Map<String, Object>)reportData.get(ReportUtil.paramsKey);
 			List<?> data = (List<?>)reportData.get(ReportUtil.dataKey);
 			

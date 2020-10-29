@@ -15,10 +15,12 @@
 <c:set var="resourceCtx" value="${pageContext.request.contextPath}"/>
 <c:set var="urlCtx" value="${ctx}/${urlContext}"/>
 
+<c:set var="jsCtx" value="${ctx}/js"/>
 <c:set var="reportsMenuCtx" value="${ctx}/reports"/>
 <c:set var="masterDataMenuCtx" value="${ctx}/masterData"/>
 
 <c:set var="imageCtx" value="${ctx}/images"/>
+<c:set var="mapImageCtx" value="${imageCtx}/map"/>
 <c:set var="preLoaderImage" value="${imageCtx}/preloader.gif"/>
 <c:set var="preLoaderReportImage" value="${imageCtx}/preLoaderReport.gif"/>
 <c:set var="addImage" value="${imageCtx}/add.png"/>

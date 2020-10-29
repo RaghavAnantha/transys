@@ -32,7 +32,7 @@ public abstract class ReportController extends BaseController {
 		
 		setupList(model, request);
 		
-		processDisplayMain(model, request);
+		processDisplayMain(model, request, searchCriteria);
 		
 		return urlContext + "/list";
 	}
@@ -42,7 +42,7 @@ public abstract class ReportController extends BaseController {
 		addCtx(model);
 	}
 	
-	protected void processDisplayMain(ModelMap model, HttpServletRequest request) {
+	protected void processDisplayMain(ModelMap model, HttpServletRequest request, SearchCriteria searchCriteria) {
 	}
 	
 	protected int getCriteriaPage() {
@@ -61,9 +61,9 @@ public abstract class ReportController extends BaseController {
 		return null;
 	}
 	
-	protected Map<String, Object> generateReportData(HttpServletRequest request, SearchCriteria criteria) {
+	protected Map<String, Object> generateReportData(ModelMap model, HttpServletRequest request, SearchCriteria criteria) {
 		Map<String, Object> params = new HashMap<String, Object>();
-		List<?> data = performSearch(request, criteria, params);
+		List<?> data = performSearch(model, request, criteria, params);
 		
 		Map<String, Object> reportData = new HashMap<String, Object>();
 		reportData.put(ReportUtil.dataKey, data);
@@ -72,7 +72,7 @@ public abstract class ReportController extends BaseController {
 		return reportData;
 	}
 	
-	protected abstract List<?> performSearch(HttpServletRequest request, SearchCriteria criteria,
+	protected abstract List<?> performSearch(ModelMap model, HttpServletRequest request, SearchCriteria criteria,
 			Map<String, Object> params);
 	
 	@RequestMapping(method = {RequestMethod.GET, RequestMethod.POST}, value = "/search.do")
@@ -89,7 +89,13 @@ public abstract class ReportController extends BaseController {
 		String subReportName = getSubReportName();
 		ByteArrayOutputStream out = null;
 		try {
-			Map<String, Object> reportData = generateReportData(request, criteria);
+			Map<String, Object> reportData = generateReportData(model, request, criteria);
+			
+			if (StringUtils.isEmpty(reportName)) {
+				setupList(model, request);
+				return urlContext + "/list";
+			}
+			
 			Map<String, Object> params = (Map<String, Object>)reportData.get(ReportUtil.paramsKey);
 			List<?> data = (List<?>)reportData.get(ReportUtil.dataKey);
 			
@@ -142,7 +148,7 @@ public abstract class ReportController extends BaseController {
 		String subReportName = getSubReportName();
 		ByteArrayOutputStream out = null;
 		try {
-			Map<String, Object> reportData = generateReportData(request, criteria);
+			Map<String, Object> reportData = generateReportData(model, request, criteria);
 			Map<String, Object> params = (Map<String, Object>)reportData.get(ReportUtil.paramsKey);
 			List<?> data = (List<?>)reportData.get(ReportUtil.dataKey);
 			

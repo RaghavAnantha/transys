@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 
 import org.springframework.stereotype.Controller;
-
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.transys.model.DeliveryAddress;
@@ -44,7 +44,7 @@ public class OrdersRevenueReportController extends ReportController {
 	}
 
 	@Override
-	protected List<Map<String, Object>> performSearch(HttpServletRequest request, SearchCriteria criteria,
+	protected List<Map<String, Object>> performSearch(ModelMap model, HttpServletRequest request, SearchCriteria criteria,
 			Map<String, Object> params) {
 		List<Map<String, Object>> reportData = new ArrayList<Map<String, Object>>();
 		

@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.transys.controller.report.ReportController;
 
 import com.transys.core.util.DateUtil;
+import com.transys.core.util.FormatUtil;
 import com.transys.core.util.JsonUtil;
 import com.transys.core.util.ModelUtil;
 
@@ -38,6 +39,10 @@ import com.transys.service.verizon.VerizonRevealService;
 @Controller
 @RequestMapping("/orderScheduler")
 public class OrderScheduleController extends ReportController {
+	protected static int MAX_DELIVERY_ORDERS = 3;
+	protected static int MAX_PICKUP_ORDERS = 3;
+	protected static int MAX_VEHICLES = 5;
+	
 	@Autowired
 	private VerizonRevealService verizonRevealService;
 	
@@ -59,12 +64,22 @@ public class OrderScheduleController extends ReportController {
 	}
 	
 	@Override
-	protected void processDisplayMain(ModelMap model, HttpServletRequest request) {
-		List<DeliveryAddressVO> deliveryOrderAddressList = retrieveDeliveryOrderAddress();
+	protected void processDisplayMain(ModelMap model, HttpServletRequest request, SearchCriteria searchCriteria) {
+		performSearch(model, request, null);
+	}
+	
+	@Override
+	protected List<?> performSearch(ModelMap model, HttpServletRequest request, SearchCriteria criteria, Map<String, Object> params) {
+		performSearch(model, request, criteria);
+		return null;
+	}
+	
+	private void performSearch(ModelMap model, HttpServletRequest request, SearchCriteria criteria) {
+		List<DeliveryAddressVO> deliveryOrderAddressList = retrieveDeliveryOrderAddress(criteria);
 		String deliveryOrderAddressListJson = JsonUtil.toJson(deliveryOrderAddressList);
 		model.addAttribute("deliveryOrderAddressList", deliveryOrderAddressListJson);
 		
-		List<DeliveryAddressVO> pickupOrderAddressList = retrievePickupOrderAddress();
+		List<DeliveryAddressVO> pickupOrderAddressList = retrievePickupOrderAddress(criteria);
 		String pickupOrderAddressListJson = JsonUtil.toJson(pickupOrderAddressList);
 		model.addAttribute("pickupOrderAddressList", pickupOrderAddressListJson);
 		
@@ -73,50 +88,60 @@ public class OrderScheduleController extends ReportController {
 		model.addAttribute("vehicleLocationList", vehicleLocationListJson);
 	}
 	
-	@Override
-	protected List<?> performSearch(HttpServletRequest request, SearchCriteria criteria, Map<String, Object> params) {
-		return null;
-	}
-	
-	private List<DeliveryAddressVO> retrieveDeliveryOrderAddress() {
-		String todayStr = DateUtil.formatTodayToDbDate();
-		String query = "select obj from Order obj where obj.deleteFlag='1'"
-				+ " and obj.deliveryDate = '" + todayStr + "'"
-				+ " and obj.orderStatus.status = '" + OrderStatus.ORDER_STATUS_OPEN + "' order by id desc";
-		List<Order> orderList = genericDAO.executeSimpleQuery(query);
-		
-		List<DeliveryAddressVO> deliveryAddressVOList = new ArrayList<DeliveryAddressVO>();
-		String latLng = StringUtils.EMPTY;
-		for (Order order : orderList) {
-			if (order.getDeliveryAddress() == null) {
-				continue;
-			}
-			
-			DeliveryAddressVO aDeliveryAddressVO = new DeliveryAddressVO();
-			map(aDeliveryAddressVO, order);
-			
-			latLng =  mapService.getGeocode(aDeliveryAddressVO.getFullAddress());
-			aDeliveryAddressVO.setGeoCode(latLng);
-			
-			deliveryAddressVOList.add(aDeliveryAddressVO);
+	private List<DeliveryAddressVO> retrieveDeliveryOrderAddress(SearchCriteria criteria) {
+		String deliveryDateFrom = StringUtils.EMPTY;
+		String deliveryDateTo = StringUtils.EMPTY;
+		String deliveryAddress = StringUtils.EMPTY;
+		if (criteria != null) {
+			Map<String, Object> criteriaMap = criteria.getSearchMap();
+			deliveryDateFrom = (String) criteriaMap.get("deliveryDateFrom");
+			deliveryDateTo = (String) criteriaMap.get("deliveryDateTo");
+			deliveryAddress = (String) criteriaMap.get("deliveryAddress");
 		}
 		
+		String query = "select obj from Order obj where obj.deleteFlag='1'"
+				+ " and obj.orderStatus.status = '" + OrderStatus.ORDER_STATUS_OPEN + "'";
+		
+		if (StringUtils.isNotEmpty(deliveryDateFrom) && StringUtils.isNotEmpty(deliveryDateTo)) {
+			//query +=	(" and obj.deliveryDate >='" + FormatUtil.formatInputDateToDbDate(deliveryDateFrom) + "' and obj.deliveryDate <='" + FormatUtil.formatInputDateToDbDate(deliveryDateTo) + "'");
+			query +=	(" and obj.deliveryDate between '" + FormatUtil.formatInputDateToDbDate(deliveryDateFrom) + "' and '" + FormatUtil.formatInputDateToDbDate(deliveryDateTo) + "'");
+		} else {
+			String todayStr = DateUtil.formatTodayToDbDate();
+			query +=	(" and obj.deliveryDate = '" + todayStr + "'");
+		}
+		
+		if (StringUtils.isNotEmpty(deliveryAddress)) {
+			query +=	(" and obj.deliveryAddress = " + deliveryAddress);
+		}
+		
+		query +=	" order by id desc";
+		
+		List<DeliveryAddressVO> deliveryAddressVOList = retrieveOrderAddress(query);
 		return deliveryAddressVOList;
 	}
 	
-	private List<DeliveryAddressVO> retrievePickupOrderAddress() {
+	private List<DeliveryAddressVO> retrievePickupOrderAddress(SearchCriteria criteria) {
 		//String fromDateStr = DateUtil.addDaysToTodayAndFormatToDbDate(-2);
-		//String toDateStr = DateUtil.addDaysToTodayAndFormatToDbDate(1); 
+		//String toDateStr = DateUtil.addDaysToTodayAndFormatToDbDate(1);
+		//+ " and obj.modifiedAt >='" + fromDateStr + "' and obj.modifiedAt <'" + toDateStr + "'"
 		
 		String query = "select obj from Order obj where obj.deleteFlag='1'"
 				+ " and obj.orderStatus.status = '" + OrderStatus.ORDER_STATUS_PICK_UP + "'"
-				//+ " and obj.modifiedAt >='" + fromDateStr + "' and obj.modifiedAt <'" + toDateStr + "'"
 				+ " order by obj.modifiedAt desc";
-		List<Order> orderList = genericDAO.executeSimpleQuery(query);
 		
+		List<DeliveryAddressVO> deliveryAddressVOList = retrieveOrderAddress(query);
+		return deliveryAddressVOList;
+	}
+	
+	private List<DeliveryAddressVO> retrieveOrderAddress(String query) {
 		List<DeliveryAddressVO> deliveryAddressVOList = new ArrayList<DeliveryAddressVO>();
+		List<Order> orderList = genericDAO.executeSimpleQuery(query);
+		if (orderList == null || orderList.isEmpty()) {
+			return deliveryAddressVOList;
+		}
+		
 		String latLng = StringUtils.EMPTY;
-		int maxRows = (orderList.size() <= 40 ? orderList.size() : 40);
+		int maxRows = (orderList.size() <= MAX_PICKUP_ORDERS ? orderList.size() : MAX_PICKUP_ORDERS);
 		for (Order order : orderList.subList(0, maxRows)) {
 			if (order.getDeliveryAddress() == null) {
 				continue;
@@ -124,8 +149,10 @@ public class OrderScheduleController extends ReportController {
 			
 			DeliveryAddressVO aDeliveryAddressVO = new DeliveryAddressVO();
 			map(aDeliveryAddressVO, order);
+			
 			latLng =  mapService.getGeocode(aDeliveryAddressVO.getFullAddress());
 			aDeliveryAddressVO.setGeoCode(latLng);
+			
 			deliveryAddressVOList.add(aDeliveryAddressVO);
 		}
 		return deliveryAddressVOList;
@@ -139,7 +166,8 @@ public class OrderScheduleController extends ReportController {
 		}
 		
 		List<String> vehicleNumberList = new ArrayList<String>();
-		for (VehicleVO aVehicleVO : vehicleVOList) {
+		int maxRows = (vehicleVOList.size() <= MAX_VEHICLES ? vehicleVOList.size() : MAX_VEHICLES);
+		for (VehicleVO aVehicleVO : vehicleVOList.subList(0, maxRows)) {
 			if (StringUtils.isNotEmpty(aVehicleVO.getVehicleNumber())) {
 				vehicleNumberList.add(aVehicleVO.getVehicleNumber());
 			}

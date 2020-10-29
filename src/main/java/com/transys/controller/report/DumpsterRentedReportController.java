@@ -56,7 +56,7 @@ public class DumpsterRentedReportController extends ReportController {
 	}
 	
 	@Override
-	protected List<Dumpster> performSearch(HttpServletRequest request, SearchCriteria criteria,
+	protected List<Dumpster> performSearch(ModelMap model, HttpServletRequest request, SearchCriteria criteria,
 			Map<String, Object> params) {
 		Map<String, Object> criteriaMap = (Map<String, Object>)criteria.getSearchMap();
 		

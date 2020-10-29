@@ -10,13 +10,20 @@ function showTab(tab) {
 }
 
 function loadTab(tab) {
-	var loadurl = tab.attr('href'),
-        targ = tab.attr('data-target');
+	var loadUrl = tab.attr('href'),
+		dataTarget = tab.attr('data-target'),
+		dataToggle = tab.attr('data-toggle');
 
-    $.get(loadurl, function(data) {
-        $(targ).html(data);
+	if (dataToggle == 'tab') {
+		tab.tab('show');
+		return false;
+	}
+	
+    $.get(loadUrl, function(data) {
+        $(dataTarget).html(data);
     });
 
+    //tab.attr('data-toggle', 'tab')
     tab.tab('show');
     return false;
 }

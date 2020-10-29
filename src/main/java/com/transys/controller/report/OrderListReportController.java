@@ -65,7 +65,7 @@ public class OrderListReportController extends ReportController {
 	}
 	
 	@Override
-	protected List<Map<String, Object>> performSearch(HttpServletRequest request, SearchCriteria criteria, Map<String, Object> params) {
+	protected List<Map<String, Object>> performSearch(ModelMap model, HttpServletRequest request, SearchCriteria criteria, Map<String, Object> params) {
 		List<Map<String, Object>> reportDataList = new ArrayList<Map<String, Object>>();
 		
 		List<Order> orderList =  genericDAO.search(Order.class, criteria, "id", null, null);

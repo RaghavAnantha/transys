@@ -68,7 +68,7 @@ public class CustomerOrdersReportController extends ReportController {
 	}
 	
 	@Override
-	protected List<CustomerReportVO> performSearch(HttpServletRequest request, SearchCriteria criteria, Map<String, Object> params) {
+	protected List<CustomerReportVO> performSearch(ModelMap model, HttpServletRequest request, SearchCriteria criteria, Map<String, Object> params) {
 		List<CustomerReportVO> customerReportVOList = retrieveCustomerOrdersReportData(criteria);
 		if (customerReportVOList.isEmpty()) {
 			return customerReportVOList;

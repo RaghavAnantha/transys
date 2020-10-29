@@ -55,7 +55,7 @@ public class FormatUtil {
 		return formatAuditDate(date);
 	}
 	
-	public static String convertInputDateToDbDate(String inputDateStr) {
+	public static String formatInputDateToDbDate(String inputDateStr) {
 		Date inputDate = parseInputDate(inputDateStr);
 		if (inputDate == null) {
 			return StringUtils.EMPTY;

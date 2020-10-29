@@ -18,33 +18,18 @@
 		<div id="manageInvoice" class="tab-pane">${loadingMsg}</div>	
 	</div>
 	
-	<script type="text/javascript">
-		showTab('${activeTab}');
-		showTab('${activeSubTab}');
-		
-		$('#manageInvoiceTab').click(function(e) {
-			var $this = $(this),
-		        loadUrl = $this.attr('href'),
-		        dataTarget = $this.attr('data-target'),
-		        dataToggle = $this.attr('data-toggle');
-			
-			if (dataToggle == 'tab') {
-				$this.tab('show');
-				return false;
-			}
-		   
-		    $.get(loadUrl, function(data) {
-		        $(dataTarget).html(data);
-		    });
-		
-		    $this.attr('data-toggle', 'tab')
-		    $this.tab('show');
-		    return false;
-		});
-		
-		$(window).load(function() {
-			$("#createInvoiceLoadingImgDiv").hide();
-		});
-	</script>
+<script type="text/javascript">
+	showTab('${activeTab}');
+	showTab('${activeSubTab}');
+	
+	$('#manageInvoiceTab').click(function(e) {
+		loadTab($(this));
+		return false;
+	});
+	
+	$(window).load(function() {
+		$("#createInvoiceLoadingImgDiv").hide();
+	});
+</script>
 </body>
 </html>
