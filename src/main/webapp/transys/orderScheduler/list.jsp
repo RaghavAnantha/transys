@@ -36,7 +36,8 @@ var rdsIconUrl = "${mapImageCtx}/R.png";
 var deliveryOrderIconUrl = "${mapImageCtx}/orange-blank.png";
 var pickupOrderIconUrl = "${mapImageCtx}/red-pushpin.png";
 
-var hrTag = "<hr style=\"height:2px;padding:0px;margin:0px;color:gray;background-color:gray\">";
+var hrTagDark = "<hr style=\"height:2px;padding:0px;margin:0px;color:black;background-color:black\">";
+var hrTagLight = "<hr style=\"height:1px;padding:0px;margin:0px;color:gray;background-color:gray\">";
 
 var directionsService;
 //var directionsRenderer;
@@ -88,17 +89,17 @@ function buildVehicleLocationIconUrl(heading, displayState) {
 function buildVehicleLocationInfoWindowContent(aVehicleLocation) {
 	var content = "<b>" + aVehicleLocation.VehicleNumber
 				+ "&nbsp;&nbsp;&nbsp;" + "Dumpster No." + "&nbsp;Dumpster Size" + "</b>"
-				+ hrTag
+				+ hrTagDark
 				+ aVehicleLocation.DisplayState
 				+ "&nbsp;" + aVehicleLocation.Heading 
 				+ "&nbsp;" + aVehicleLocation.Speed + "&nbsp;" + "mph"
 				+ "<br/>" + aVehicleLocation.addressStr
 				+ "<br/>" + "Last Updated: " + aVehicleLocation.updateDateTime
-				+ hrTag
+				+ hrTagLight
 				+ "Delivery Order #: 12345"
 				+ "<br/>" + "Company Name"
 				+ "<br/>" + "Delivery Address"
-				+ hrTag
+				+ hrTagLight
 				+ "Driver Name";
 				
 	return content;
@@ -107,20 +108,20 @@ function buildVehicleLocationInfoWindowContent(aVehicleLocation) {
 function buildDeliveryOrderAddressInfoWindowContent(aDeliveryOrderAddress) {
 	var content = "<b>"  + "Delivery Order #: " + aDeliveryOrderAddress.orderId 
 				+ "&nbsp;Delivery Date Time: " + aDeliveryOrderAddress.deliveryDateTimeRange + "</b>"
-				+ hrTag
+				+ hrTagDark
 				+ aDeliveryOrderAddress.customerName
 				+ "<br/>" + aDeliveryOrderAddress.fullAddress
-				+ hrTag
+				+ hrTagLight
 				+ "Dumpster: " + aDeliveryOrderAddress.dumpsterSize;
 	return content;
 }
 
 function buildPickupOrderAddressInfoWindowContent(aPickupOrderAddress) {
 	var content = "<b>" + "Pickup Order #: " + aPickupOrderAddress.orderId + "</b>"
-				+ hrTag
+				+ hrTagDark
 				+ aPickupOrderAddress.customerName
 				+ "<br/>" + aPickupOrderAddress.fullAddress
-				+ hrTag
+				+ hrTagLight
 				+ "Dumpster: " + aPickupOrderAddress.dumpsterNum + "&nbsp;" + aPickupOrderAddress.dumpsterSize;
 	return content;
 }
@@ -134,8 +135,10 @@ function buildRoutePromptInfoWindowContent(lat, lng) {
 	return content;
 }
 
-function buildRouteInfoWindowContent(distance, duration) {
-	var content = "<b>Distance: </b>" + distance + "<b> Duration: </b>" + duration;
+function buildRouteInfoWindowContent(startAddress, endAddress, distance, duration) {
+	var content = "<b>Start: </b>" + startAddress + "<br/>"
+			 + "<b>End: </b>" + endAddress + "<br/>"
+			 + "<b>Distance: </b>" + distance + "<b> Duration: </b>" + duration;
 	return content;
 }
 
@@ -207,7 +210,7 @@ function plotVehicleLocations(vehicleLocationList) {
 		var content = buildVehicleLocationInfoWindowContent(aVehicleLocation);
 		vehicleLocationInfoWindowContent.push(content);
 		
-		addMarkerClickListenerForInfo(marker, vehicleLocationInfoWindowContent[i]);
+		addMarkerClickListenerForInfo(marker, content);
 		addMarkerRightClickListenerForRoute(marker);
 	}
 }
@@ -249,7 +252,7 @@ function plotDeliveryOrderLocations(deliveryOrderAddressList) {
 		var content = buildDeliveryOrderAddressInfoWindowContent(aDeliveryOrderAddress);
 		deliveryOrderAddressInfoWindowContent.push(content);
 		
-		addMarkerClickListenerForInfo(marker, deliveryOrderAddressInfoWindowContent[i]);
+		addMarkerClickListenerForInfo(marker, content);
 		addMarkerRightClickListenerForRoute(marker);
 	}
 }
@@ -277,7 +280,7 @@ function plotPickupOrderLocations(pickupOrderAddressList) {
         var content = buildPickupOrderAddressInfoWindowContent(aPickupOrderAddress);
 		pickupOrderAddressInfoWindowContent.push(content);
        
-		addMarkerClickListenerForInfo(marker, pickupOrderAddressInfoWindowContent[i]);
+		addMarkerClickListenerForInfo(marker, content);
         addMarkerRightClickListenerForRoute(marker);
 	}
 }
@@ -367,15 +370,16 @@ function processDistanceCalculationEnd(endLat, endLng) {
 		if (status != 'OK') {
 			return;
 		}
-		
 		if (result == null || result.routes.length <= 0 || result.routes[0].legs.length <= 0) {
 			return;
 		}
 		
 		var leg = result.routes[0].legs[0];
+		var startAddress = leg.start_address;
+		var endAddress = leg.end_address;
 		var distance = leg.distance.text;
 		var duration = leg.duration.text;
-		var routeInfo = buildRouteInfoWindowContent(distance, duration);
+		var routeInfo = buildRouteInfoWindowContent(startAddress, endAddress, distance, duration);
    		infoWindow.setContent(routeInfo);
    		infoWindow.open(map);
    		
