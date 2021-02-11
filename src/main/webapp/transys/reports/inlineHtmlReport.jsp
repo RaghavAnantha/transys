@@ -37,26 +37,10 @@
 	htmlExporter.setExporterOutput(output);
 	
 	BaseVO input = (BaseVO) request.getSession().getAttribute(ReportUtil.inputKey);
-	int historyCount = input.getHistoryCount();
-	
-	String saveLabel = request.getParameter("saveLabel");
-	String exportLabel = request.getParameter("exportLabel");
-	String saveAction = request.getParameter("saveAction");
-	String exportAction = request.getParameter("exportAction");
 	
 	String buttonClass = "class=\"flat btn btn-primary btn-sm btn-sm-ext\"";
 	StringBuffer headerFooterBuffer = new StringBuffer("</td></tr></table><table width=\"100%\">");
-	//headerFooterBuffer.append("<input type=\"button\" value=\"Back\" onclick=\"javascript:location.href='create.do'\">");
-	headerFooterBuffer.append("&nbsp;&nbsp;&nbsp;<input type=\"button\" value=\"Back\""
-				+ " onclick=\"javascript:history.go("+historyCount+");\""
-				+ " " + buttonClass + ">");
-	headerFooterBuffer.append("&nbsp;&nbsp;<input type=\"button\" value=\""+saveLabel+"\""
-				+ " onclick=\"javascript:location.href='" + saveAction + "'\""
-				+ " " + buttonClass + ">");
-	headerFooterBuffer.append("&nbsp;&nbsp;<input type=\"button\" value=\""+exportLabel+"\""
-				+ " onclick=\"javascript:location.href='" + exportAction + "'\""
-				+ " " + buttonClass + ">");
-	headerFooterBuffer.append("</table>");
+	headerFooterBuffer.append("<tr><td/></tr></table>");
 	
 	SimpleHtmlExporterConfiguration htmlExporterConfig = new SimpleHtmlExporterConfiguration();
 	htmlExporterConfig.setBetweenPagesHtml(StringUtils.EMPTY);
@@ -72,7 +56,7 @@
 	
 	SimpleHtmlReportConfiguration reportConfig = new SimpleHtmlReportConfiguration();
 	reportConfig.setRemoveEmptySpaceBetweenRows(true);
-	reportConfig.setBorderCollapse("separate");
+	//reportConfig.setBorderCollapse("separate");
 	reportConfig.setZoomRatio(new Float(0.97));
 	reportConfig.setIgnorePageMargins(true);
 	htmlExporter.setConfiguration(reportConfig);
@@ -85,6 +69,10 @@
 	
 	//request.getSession().removeAttribute(net.sf.jasperreports.j2ee.servlets.ImageServlet.DEFAULT_JASPER_PRINT_SESSION_ATTRIBUTE);
 %>
+
+<c:if test="${param.pagingLink != null and param.pagingLink != ''}">
+	<tg:pagingJS searchCriteria="${sessionScope.searchCriteria}" pagingLink="${param.pagingLink}"></tg:pagingJS>
+</c:if>
 
 <script language="javascript">
 	removeJasperPrint();

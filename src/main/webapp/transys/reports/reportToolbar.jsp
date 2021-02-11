@@ -61,4 +61,25 @@ $("#${reportSearchForm}").submit(function (ev) {
     
     ev.preventDefault();
 });
+
+function processPaging(pagingLink) {
+	var reportDataElem = $('#${reportDataElem}');
+	reportDataElem.html("${reportLoadingMsg}");
+	
+	$.ajax({
+  		url: pagingLink,
+       	type: "GET",
+       	success: function(responseData, textStatus, jqXHR) {
+        	reportDataElem.html("");
+        	if (responseData.indexOf("ErrorMsg") >= 0 ) {
+        		var errorMsg = responseData.replace("ErrorMsg: ", "");
+       			showAlertDialog("Error", errorMsg);
+        	} else {
+        		reportDataElem.html(responseData);
+        	}
+        }
+    });
+	 
+	return false; 
+}
 </script>

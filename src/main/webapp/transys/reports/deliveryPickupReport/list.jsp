@@ -27,7 +27,7 @@ function validateSubmit() {
 </script>
 <br/>
 <h4 style="margin-top: -15px; !important">Delivery/Pickup Report</h4>
-<form:form action="searchModel.do" method="get" name="deliveryPickUpReportSearchForm" id="deliveryPickUpReportSearchForm" >
+<form:form action="searchModelWithPaging.do" method="get" name="deliveryPickUpReportSearchForm" id="deliveryPickUpReportSearchForm" >
 	<jsp:include page="/common/messages.jsp">
 		<jsp:param name="msgCtx" value="${msgCtx}" />
 		<jsp:param name="errorCtx" value="${errorCtx}" />

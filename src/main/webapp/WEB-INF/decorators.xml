@@ -49,6 +49,8 @@
          <pattern>/transys/reports/order/orderListReport/**</pattern>
         
         <pattern>/transys/invoice/manageInvoiceList.jsp</pattern>
+        
+        <pattern>/transys/reports/deliveryPickupReport/html.jsp</pattern>
     </decorator>
     <decorator name="blank" page="blankLayout.jsp">
     	<pattern>/transys/blank/**</pattern>

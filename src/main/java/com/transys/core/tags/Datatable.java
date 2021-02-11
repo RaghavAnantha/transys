@@ -825,6 +825,8 @@ public final class Datatable extends BodyTagSupport {
 					objOut.println("</span>");
 					objOut.println("</td>");
 					objOut.println("</tr>");
+					objOut.println("<tr><td/></tr>");
+					objOut.println("<tr><td/></tr>");
 				} 
 				objOut.println("</table>");
 			}

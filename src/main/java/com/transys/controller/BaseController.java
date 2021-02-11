@@ -347,7 +347,7 @@ public class BaseController {
 		return processAjaxRequest(request, action, model);
 	}
 
-	protected String processAjaxRequest(HttpServletRequest request,String action, Model model) {
+	protected String processAjaxRequest(HttpServletRequest request, String action, Model model) {
 		if ("removeJasperPrint".equalsIgnoreCase(action)) {
 			return removeJasperPrint(request);
 		}

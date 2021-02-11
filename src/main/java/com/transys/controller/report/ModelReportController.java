@@ -24,6 +24,8 @@ import com.transys.model.SearchCriteria;
 
 import com.transys.model.vo.BaseVO;
 
+import net.sf.jasperreports.engine.JasperPrint;
+
 public abstract class ModelReportController<T extends BaseVO> extends ReportController {
 	protected Map<String, Object> generateReportData(ModelMap model, HttpServletRequest request, SearchCriteria criteria, 
 			T input) {
@@ -44,6 +46,65 @@ public abstract class ModelReportController<T extends BaseVO> extends ReportCont
 	protected List<?> performSearch(ModelMap model, HttpServletRequest request, SearchCriteria criteria,
 			Map<String, Object> params) {
 		return null;
+	}
+	
+	@RequestMapping(method = {RequestMethod.GET, RequestMethod.POST}, value = "/searchModelWithPaging.do")
+	public String searchModelWithPaging(ModelMap model, HttpServletRequest request, HttpServletResponse response,
+			@ModelAttribute("modelObject") T input) {
+		populateSearchCriteria(request, request.getParameterMap());
+		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
+		
+		criteria.setPageSize(getCriteriaSearchPageSize());
+		
+		T inputToBeUsed = input;
+		
+		// Paging related
+		String p = request.getParameter("p");
+		if (StringUtils.isEmpty(p)) {
+			request.getSession().setAttribute(ReportUtil.inputKey, input);
+		} else {
+			inputToBeUsed = (T)request.getSession().getAttribute(ReportUtil.inputKey);
+		}
+		
+		ByteArrayOutputStream out = null;
+		try {
+			Map<String, Object> reportData = generateReportData(model, request, criteria, inputToBeUsed);
+			Map<String, Object> params = (Map<String, Object>)reportData.get(ReportUtil.paramsKey);
+			List<?> data = (List<?>)reportData.get(ReportUtil.dataKey);
+			
+			String type = "html";
+			setReportRequestHeaders(response, type, getReportName());
+			
+			if (data.isEmpty()) {
+				return "report.empty";
+			}
+			
+			JasperPrint jasperPrint = dynamicReportService.getJasperPrintFromFile(reportName,
+					data, params, type, request);
+			if (jasperPrint == null) {
+				setErrorMsg(request, response, "Error occured while processing invoice preview");
+			} else {
+				//request.setAttribute("japserPrint", jasperPrint);
+				addJasperPrint(request, jasperPrint);
+			}
+			
+			return getUrlContext() + "/html";
+		} catch (Throwable t) {
+			t.printStackTrace();
+			log.warn("Unable to create file: " + t);
+			
+			setErrorMsg(request, response, "Exception occured while generating report: " + t);
+			return "report.error";
+		} finally {
+			if (out != null) {
+				try {
+					out.close();
+					out = null;
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
 	}
 	
 	@RequestMapping(method = {RequestMethod.GET, RequestMethod.POST}, value = "/searchModel.do")
@@ -69,7 +130,7 @@ public abstract class ModelReportController<T extends BaseVO> extends ReportCont
 		
 		ByteArrayOutputStream out = null;
 		try {
-			Map<String, Object> reportData = generateReportData(model, request, criteria, input);
+			Map<String, Object> reportData = generateReportData(model, request, criteria, inputToBeUsed);
 			Map<String, Object> params = (Map<String, Object>)reportData.get(ReportUtil.paramsKey);
 			List<?> data = (List<?>)reportData.get(ReportUtil.dataKey);
 			

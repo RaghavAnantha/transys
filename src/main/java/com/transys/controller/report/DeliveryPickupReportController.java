@@ -50,7 +50,7 @@ public class DeliveryPickupReportController extends ModelReportController<Delive
 	
 	@Override
 	protected int getCriteriaExportPageSize() {
-		return 2500;
+		return 3500;
 	}
 	
 	@Override
