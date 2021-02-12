@@ -163,7 +163,7 @@ public class CustomerOrdersReportController extends ReportController {
 		String createdTo = (String)searchMap.get("createdAtTo");
 		String customer = (String)searchMap.get("customer.id");
 		
-		StringBuffer query = new StringBuffer("select obj.customer.companyName, count(*) as orderCount from Order obj where 1=1");
+		StringBuffer query = new StringBuffer("select obj.customer.companyName as companyName, count(*) as orderCount from Order obj where 1=1");
 		StringBuffer whereClause = new StringBuffer(" and obj.deleteFlag=1");
 		
 		OrderStatus orderStatus = ModelUtil.retrieveOrderStatus(genericDAO, OrderStatus.ORDER_STATUS_CANCELED);
@@ -182,7 +182,7 @@ public class CustomerOrdersReportController extends ReportController {
       query.append(whereClause);
 
       query.append(" group by obj.customer.companyName");
-      query.append(" order by orderCount desc");
+      query.append(" order by orderCount desc, companyName asc");
 
 		List<?> orderList = 
 				genericDAO.getEntityManager().createQuery(query.toString())
