@@ -126,7 +126,7 @@ public class CustomerOrdersReportController extends ReportController {
 		
 		List<CustomerReportVO> customerReportVOList = new ArrayList<CustomerReportVO>();
 		
-		List<Order> orderList = genericDAO.search(Order.class, criteria, "customer.companyName", null, null);
+		List<Order> orderList = genericDAO.search(Order.class, criteria, "id", null, null);
 		if (orderList.isEmpty()) {
 			return customerReportVOList;
 		}
@@ -150,6 +150,7 @@ public class CustomerOrdersReportController extends ReportController {
          customerReportVOList.add(aCustomerReportVO);
 		}
       
+		ModelUtil.sort(customerReportVOList);
       return customerReportVOList;
 	}
 	
