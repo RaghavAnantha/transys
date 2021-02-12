@@ -29,6 +29,11 @@ textarea {
 	background-color: #f8f8f8;
 }
 
+.reportPaging {
+	font-weight: bold;
+	padding-bottom: 40px;
+}
+
 .section-header {
     background-color: #337ab7 !important;
 }

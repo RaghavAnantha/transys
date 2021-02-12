@@ -187,6 +187,7 @@ public abstract class ModelReportController<T extends BaseVO> extends ReportCont
 			if (StringUtils.isNotEmpty(reportFreezeRow)) {
 				setReportFreezeRow(params, type, reportFreezeRow);
 			}
+			setExcludeCsvHeader(params, excludeCsvHeader());
 			
 			out = dynamicReportService.generateStaticReport(getReportName(), data, params, type, request);
 			out.writeTo(response.getOutputStream());

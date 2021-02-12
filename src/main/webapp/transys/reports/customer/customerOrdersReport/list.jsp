@@ -2,9 +2,9 @@
 
 <script language="javascript">
 function validateSubmit() {
-	var form = $('#customerOrdersReportSearchForm');
+	var form = getCurrentForm();
 	var orderDateFrom = form.find("[name='createdAtFrom']").val();
-	var orderDateTo =form.find("[name='createdAtTo']").val();
+	var orderDateTo = form.find("[name='createdAtTo']").val();
 	var customer = $('#customerOrdersReport\\.id').val();
 	
 	var missingData = false;
@@ -22,10 +22,38 @@ function validateSubmit() {
 	
 	return true;
 }
+
+function processCustomerOrderDetailsReport() {
+	setReportType("DETAIL");
+	submitForm();
+}
+
+function processCustomerOrderTotalsReport() {
+	setReportType("TOTALS");
+	submitForm();
+}
+
+function setReportType(reportType) {
+	$('#customerOrderReportType').val(reportType);
+}
+
+function getCurrentForm() {
+	return $('#customerOrdersReportSearchForm');
+}
+
+function submitForm() {
+	if (!validateSubmit()) {
+		return;
+	}
+	
+	var form = getCurrentForm();
+	form.submit();
+}
 </script>
 <br />
 <h5 style="margin-top: -15px; !important">Customer Orders Report</h5>
 <form:form action="${urlCtx}/search.do" method="get" name="customerOrdersReportSearchForm" id="customerOrdersReportSearchForm">
+	<input type="hidden" id="customerOrderReportType" name="customerOrderReportType"/>
 	<jsp:include page="/common/messages.jsp">
 		<jsp:param name="msgCtx" value="${msgCtx}" />
 		<jsp:param name="errorCtx" value="${errorCtx}" />
@@ -103,10 +131,12 @@ function validateSubmit() {
 			</td>
 		</tr>
 		<tr>
-			<td align="${left}"></td>
-			<td align="${left}">
-				<input type="submit" class="btn btn-primary btn-sm btn-sm-ext"
-					value="<transys:label code="Preview"/>" />
+			<td></td>
+			<td colspan="3">
+				<input type="button" class="btn btn-primary btn-sm btn-sm-ext"
+					onclick="javascript:processCustomerOrderDetailsReport()" value="Detail" />
+				<input type="button" class="btn btn-primary btn-sm btn-sm-ext"
+					onclick="javascript:processCustomerOrderTotalsReport()" value="Totals" />
 				<input type="reset" class="btn btn-primary btn-sm btn-sm-ext" value="Clear"/>
 			</td>
 		</tr>

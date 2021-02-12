@@ -62,6 +62,7 @@ import net.sf.jasperreports.web.util.WebHtmlResourceHandler;
 
 import net.sf.jasperreports.j2ee.servlets.ImageServlet;
 
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import org.hibernate.Query;
@@ -759,12 +760,16 @@ public class DynamicReportServiceImpl implements DynamicReportService {
 		jp.setProperty("net.sf.jasperreports.export.xls.exclude.origin.band.2", "pageFooter");
 		jp.setProperty("net.sf.jasperreports.export.html.exclude.origin.keep.first.band.1", "pageHeader");
 		jp.setProperty("net.sf.jasperreports.export.html.exclude.origin.band.2", "pageFooter");
-		
-		jp.setProperty("net.sf.jasperreports.export.csv.exclude.origin.band.1", "pageHeader");
 		jp.setProperty("net.sf.jasperreports.export.csv.exclude.origin.band.2", "pageFooter");
 		
-		if (params == null) {
+		if (params == null || params.isEmpty()) {
 			return;
+		}
+		
+		if (BooleanUtils.isTrue((Boolean)params.get(ReportUtil.EXCLUDE_CSV_HEADER))) {
+			jp.setProperty("net.sf.jasperreports.export.csv.exclude.origin.band.1", "pageHeader");
+		} else {
+			jp.setProperty("net.sf.jasperreports.export.csv.exclude.origin.keep.first.band.1", "pageHeader");
 		}
 		
 		if (StringUtils.equalsIgnoreCase("xlsx", type) || StringUtils.equalsIgnoreCase("xls", type)) {

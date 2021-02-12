@@ -337,6 +337,10 @@ public class BaseController {
 		}
 	}
 	
+	protected void setExcludeCsvHeader(Map<String, Object> params, boolean exclude) {
+		params.put(ReportUtil.EXCLUDE_CSV_HEADER, exclude);
+	}
+	
 	/*public void writeActivityLog(String activityType, String details) {
 		auditService.writeActivityLog(urlContext, activityType, details);
 	}*/

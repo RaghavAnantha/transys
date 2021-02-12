@@ -62,7 +62,7 @@ $("#${reportSearchForm}").submit(function (ev) {
     ev.preventDefault();
 });
 
-function processPaging(pagingLink) {
+function processReportPaging(pagingLink) {
 	var reportDataElem = $('#${reportDataElem}');
 	reportDataElem.html("${reportLoadingMsg}");
 	

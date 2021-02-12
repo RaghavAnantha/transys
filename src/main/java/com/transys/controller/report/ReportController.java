@@ -10,6 +10,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import org.springframework.ui.ModelMap;
@@ -58,7 +59,11 @@ public abstract class ReportController extends BaseController {
 	}
 	
 	protected String getReportFreezeRow() {
-		return null;
+		return StringUtils.EMPTY;
+	}
+	
+	protected boolean excludeCsvHeader() {
+		return false;
 	}
 	
 	protected Map<String, Object> generateReportData(ModelMap model, HttpServletRequest request, SearchCriteria criteria) {
@@ -85,39 +90,35 @@ public abstract class ReportController extends BaseController {
 		criteria.setPage(getCriteriaPage());
 		criteria.setPageSize(getCriteriaSearchPageSize());
 		
-		String reportName = getReportName();
-		String subReportName = getSubReportName();
 		ByteArrayOutputStream out = null;
 		try {
 			Map<String, Object> reportData = generateReportData(model, request, criteria);
 			
-			if (StringUtils.isEmpty(reportName)) {
-				setupList(model, request);
-				return urlContext + "/list";
-			}
-			
 			Map<String, Object> params = (Map<String, Object>)reportData.get(ReportUtil.paramsKey);
 			List<?> data = (List<?>)reportData.get(ReportUtil.dataKey);
 			
+			String deducedReportName = deduceReportName(params);
+			String deducedSubReportName = deduceSubReportName(params);
+			
 			String type = "html";
-			setReportRequestHeaders(response, type, reportName);
+			setReportRequestHeaders(response, type, deducedReportName);
 			
 			if (data.isEmpty()) {
 				return "report.empty";
 			}
 			
-			if (StringUtils.isNotEmpty(subReportName)) {
-				out = dynamicReportService.generateStaticMasterSubReport(reportName, subReportName, data, params, 
+			if (StringUtils.isNotEmpty(deducedSubReportName)) {
+				out = dynamicReportService.generateStaticMasterSubReport(deducedReportName, deducedSubReportName, data, params, 
 						type, request);
 			} else {
-				out = dynamicReportService.generateStaticReport(reportName, data, params, type, request);
+				out = dynamicReportService.generateStaticReport(deducedReportName, data, params, type, request);
 			}
 			out.writeTo(response.getOutputStream());
 			
 			return null;
 		} catch (Throwable t) {
 			t.printStackTrace();
-			log.warn("Unable to create file: " + t);
+			log.warn("Unable to generate report: " + t);
 			
 			setErrorMsg(request, response, "Exception occured while generating report: " + t);
 			return "report.error";
@@ -135,6 +136,27 @@ public abstract class ReportController extends BaseController {
 		}
 	}
 	
+	protected String deduceReportName(Map<String, Object> params) {
+		String deducedReportName = getReportName();
+		String reportNameFromParams = (String)params.get(ReportUtil.reportNameKey);
+		if (StringUtils.isNotEmpty(reportNameFromParams)) {
+			deducedReportName = reportNameFromParams;
+		}
+		return deducedReportName;
+	}
+	
+	protected String deduceSubReportName(Map<String, Object> params) {
+		String deducedSubReportName = StringUtils.EMPTY;
+		if (BooleanUtils.isTrue((Boolean)params.get(ReportUtil.subReportIndicatorKey))) {
+			deducedSubReportName = getSubReportName();
+			String subReportNameFromParams = (String)params.get(ReportUtil.subReportNameKey);
+			if (StringUtils.isNotEmpty(subReportNameFromParams)) {
+				deducedSubReportName = subReportNameFromParams;
+			}
+		}
+		return deducedSubReportName;
+	}
+	
 	@RequestMapping(method = RequestMethod.GET, value = "/export.do")
 	public String export(ModelMap model, HttpServletRequest request, HttpServletResponse response,
 			@RequestParam("type") String type) {
@@ -144,25 +166,27 @@ public abstract class ReportController extends BaseController {
 		criteria.setPage(getCriteriaPage());
 		criteria.setPageSize(getCriteriaExportPageSize());
 		
-		String reportName = getReportName();
-		String subReportName = getSubReportName();
 		ByteArrayOutputStream out = null;
 		try {
 			Map<String, Object> reportData = generateReportData(model, request, criteria);
 			Map<String, Object> params = (Map<String, Object>)reportData.get(ReportUtil.paramsKey);
 			List<?> data = (List<?>)reportData.get(ReportUtil.dataKey);
 			
-			type = setReportRequestHeaders(response, type, getReportName());
+			String deducedReportName = deduceReportName(params);
+			String deducedSubReportName = deduceSubReportName(params);
+			
+			type = setReportRequestHeaders(response, type, deducedReportName);
 			String reportFreezeRow = getReportFreezeRow();
 			if (StringUtils.isNotEmpty(reportFreezeRow)) {
 				setReportFreezeRow(params, type, reportFreezeRow);
 			}
+			setExcludeCsvHeader(params, excludeCsvHeader());
 			
-			if (StringUtils.isNotEmpty(subReportName)) {
-				out = dynamicReportService.generateStaticMasterSubReport(reportName, subReportName, data, params, 
+			if (StringUtils.isNotEmpty(deducedSubReportName)) {
+				out = dynamicReportService.generateStaticMasterSubReport(deducedReportName, deducedSubReportName, data, params, 
 						type, request);
 			} else {
-				out = dynamicReportService.generateStaticReport(reportName, data, params, type, request);
+				out = dynamicReportService.generateStaticReport(deducedReportName, data, params, type, request);
 			}
 			out.writeTo(response.getOutputStream());
 			

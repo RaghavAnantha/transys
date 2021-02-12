@@ -4,7 +4,7 @@
 <%@ attribute name="pagingLink" required="true" type="java.lang.String" %>
 <%@ attribute name="redirect" required="false" type="java.lang.String" %>
 
-<span class="smalltext" style="padding: 40px;">
+<span class="reportPaging">
 <c:if test="${searchCriteria.pageCount > 1}">
     Page ${searchCriteria.page+1} of ${searchCriteria.pageCount}&nbsp;&nbsp;
     <c:if test="${!(searchCriteria.page==0)}">

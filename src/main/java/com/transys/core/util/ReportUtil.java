@@ -18,8 +18,14 @@ public class ReportUtil {
 	public static String dataKey = "data";
 	public static String inputKey = "input";
 	
+	public static String reportNameKey = "reportName";
+	public static String subReportNameKey = "subReportName";
+	
+	public static String subReportIndicatorKey = "subReportPresent";
+	
 	public static String JASPER_PRINT_SESSION_ATTRIBUTE_KEY = ImageServlet.DEFAULT_JASPER_PRINT_SESSION_ATTRIBUTE;
 	public static String FREEZE_ROW_NO_KEY = "FREEZE_ROW_NO";
+	public static String EXCLUDE_CSV_HEADER = "EXCLUDE_CSV_HEADER";
 	
 	protected static Logger log = LogManager.getLogger("com.transys.core.util.ReportUtil");
 	
