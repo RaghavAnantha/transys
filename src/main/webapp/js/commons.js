@@ -421,3 +421,8 @@ function formatDate(datepicker){
 	 }
    }
 }
+
+function clearTextAndFocus(field) {
+	document.getElementById(field).value = "";
+	$("#"+field).focus();
+}
