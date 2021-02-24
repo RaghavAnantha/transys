@@ -72,6 +72,10 @@ function populateCustomerDeliveryAddress() {
 		}
 	}); 
 }
+
+function processManageDocs(id) {
+	document.location = "${ctx}/order/edit.do?id=" + id + "&mode=manageDocs";
+}
 </script>
 <br />
 <h5 style="margin-top: -15px; !important">Manage Orders</h5>
@@ -281,9 +285,10 @@ function populateCustomerDeliveryAddress() {
 		<transys:textcolumn headerText="Inv." dataField="invoiced"/>
 		<transys:textcolumn headerText="Inv. #" dataField="invoiceId"/>
 		<transys:textcolumn headerText="Inv. Dt" dataField="invoiceDate" dataFormat="MM/dd/yyyy"/>
-		<transys:imagecolumn headerText="EXCH" linkUrl="javascript:processExchange('{id}');" imageSrc="${ctx}/images/exchange.png" HAlign="center" title="Exchange"/>
-		<transys:imagecolumn headerText="PRINT" linkUrl="javascript:printOrder('{id}');" imageSrc="${ctx}/images/print.png" HAlign="center" title="Print"/>
-	</transys:datatable>
+		<transys:imagecolumn headerText="EXCH" linkUrl="javascript:processExchange('{id}');" imageSrc="${imageCtx}/exchange.png" HAlign="center" title="Exchange"/>
+		<transys:imagecolumn headerText="PRINT" linkUrl="javascript:printOrder('{id}');" imageSrc="${imageCtx}/print.png" HAlign="center" title="Print"/>
+		<transys:imagecolumn headerText="Manage Docs" linkUrl="javascript:processManageDocs('{id}');" imageSrc="fa fa-file-o" HAlign="center" title="Manage Docs"/>
+	 </transys:datatable>
 	<%session.setAttribute("manageOrdersColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
 </form:form>
 

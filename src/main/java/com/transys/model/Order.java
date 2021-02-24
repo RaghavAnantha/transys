@@ -116,6 +116,22 @@ public class Order extends AbstractBaseModel {
 	
 	@Column(name="balanceAmountDue")
 	private BigDecimal balanceAmountDue;
+	
+	@Column(name="hasDocs")
+	private String hasDocs;
+	
+	@Transient
+	String[] fileList;
+
+	@Override
+	public String getHasDocs() {
+		return hasDocs;
+	}
+
+	@Override
+	public void setHasDocs(String hasDocs) {
+		this.hasDocs = hasDocs;
+	}
 
 	public BigDecimal getTotalAmountPaid() {
 		return totalAmountPaid;
@@ -514,6 +530,17 @@ public class Order extends AbstractBaseModel {
 	@Transient
 	public String getFullDeliveryAddress() {
 		return getDeliveryAddress() == null ? StringUtils.EMPTY : getDeliveryAddress().getFullDeliveryAddress();
+	}
+
+	@Transient
+	@Override
+	public String[] getFileList() {
+		return fileList;
+	}
+
+	@Transient
+	public void setFileList(String[] fileList) {
+		this.fileList = fileList;
 	}
 	
 	/*public String getMaterialType() {

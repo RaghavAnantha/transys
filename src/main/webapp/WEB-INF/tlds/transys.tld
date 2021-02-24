@@ -668,6 +668,11 @@
 			<required>true</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
+		<attribute>
+			<name>fontAwesomeImg</name>
+			<rtexprvalue>true</rtexprvalue>
+			<type>java.lang.Boolean</type>
+		</attribute>
 	</tag>
 	<tag>
 		<name>rownumcolumn</name>

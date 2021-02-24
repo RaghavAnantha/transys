@@ -905,7 +905,7 @@ public class InvoiceController extends BaseController {
 		//setReportRequestHeaders(response, type, ORDER_INVOICE_MASTER);
 		try {
 			/*JasperPrint jasperPrint = dynamicReportService.getJasperPrintFromFile(reportName,
-						invoiceVOList, params, request);*/
+						invoiceVOList, params, type, request);*/
 			JasperPrint jasperPrint = dynamicReportService.getJasperPrintFromFile(ORDER_INVOICE_MASTER, 
 					ORDER_INVOICE_SUB, invoiceVOList, params, type, request);
 			if (jasperPrint == null) {

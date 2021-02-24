@@ -63,5 +63,9 @@
 	    </property>
 	</bean>
 	
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="maxUploadSize" value="268435456"/>
+	</bean>
+	
 	<import resource="security-config.xml" /> 
 </beans>

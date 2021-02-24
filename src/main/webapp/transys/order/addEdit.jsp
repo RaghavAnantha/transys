@@ -5,7 +5,8 @@
 	<li><a href="#orderDetails" data-toggle="tab">Order Details</a></li>
 	<li><a href="#dropOffDriver" data-toggle="tab">Drop Off</a></li>
 	<li><a href="#pickupDriver" data-toggle="tab">Pickup</a></li>
-	<li><a href="#orderNotesTab" data-toggle="tab">Notes</a></li>
+	<li><a href="#orderNotes" data-toggle="tab">Notes</a></li>
+	<li><a href="#manageDocs" data-toggle="tab">Manage Docs</a></li>
 </ul>
 <div class="tab-content" style="background-color: white;">
 	<div id="orderDetails" class="tab-pane">
@@ -17,7 +18,10 @@
 	<div id="pickupDriver" class="tab-pane">
 		<%@include file="pickupDriver.jsp"%>
 	</div>
-	<div id="orderNotesTab" class="tab-pane">
+	<div id="orderNotes" class="tab-pane">
 		<%@include file="notes.jsp"%>
+	</div>
+	<div id="manageDocs" class="tab-pane">
+		<%@include file="manageDocs.jsp"%>
 	</div>
 </div>

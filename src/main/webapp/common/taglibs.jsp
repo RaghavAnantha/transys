@@ -38,3 +38,5 @@
 <c:set var="reportLoadingMsg" value="Loading....<img src='${preLoaderReportImage}' border='0' class='toolbarButton'/>"/>
 -->
 <c:set var="reportLoadingMsg" value="Loading....<i class='fa fa-spinner fa-spin' style='font-size:24px'/></i>"/>
+
+<c:set var="csrfParam" value="${_csrf.parameterName}=${_csrf.token}"/>

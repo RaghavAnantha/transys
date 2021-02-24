@@ -17,7 +17,7 @@
 		
 		<!-- Rest all pages currently are accessible by Role-Admin -->
 		<security:intercept-url pattern="/**/home.do" access="hasAnyRole('ADMIN','DATA_ENTRY_BILLING')" />
-		<security:intercept-url pattern="/**/order/*" access="hasAnyRole('ADMIN','DATA_ENTRY_BILLING')" />
+		<security:intercept-url pattern="/**/order/**" access="hasAnyRole('ADMIN','DATA_ENTRY_BILLING')" />
 		<security:intercept-url pattern="/**/permit/*" access="hasAnyRole('ADMIN','DATA_ENTRY_BILLING')" />
 		<security:intercept-url pattern="/**/customer/*" access="hasAnyRole('ADMIN','DATA_ENTRY_BILLING')" />
 		<security:intercept-url pattern="/**/orderScheduler/*" access="hasAnyRole('ADMIN','DATA_ENTRY_BILLING')" />
@@ -47,5 +47,4 @@
 	<bean id="bcryptEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
  
 	<bean id="userDetailService" class="com.transys.core.spring.DatabaseUserDetailService"/>
-	
 </beans>

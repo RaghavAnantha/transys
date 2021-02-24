@@ -7,6 +7,7 @@ import java.math.RoundingMode;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -49,7 +50,6 @@ import com.transys.core.util.ModelUtil;
 import com.transys.model.AbstractBaseModel;
 import com.transys.model.AdditionalFee;
 import com.transys.model.DeliveryAddress;
-import com.transys.model.BaseModel;
 import com.transys.model.CityFee;
 import com.transys.model.Customer;
 import com.transys.model.Dumpster;
@@ -74,6 +74,7 @@ import com.transys.model.PermitType;
 import com.transys.model.Role;
 import com.transys.model.SearchCriteria;
 import com.transys.model.User;
+
 import com.transys.model.vo.CustomerVO;
 import com.transys.model.vo.DeliveryAddressVO;
 import com.transys.model.vo.OrderReportVO;
@@ -81,6 +82,9 @@ import com.transys.model.vo.OrderReportVO;
 @Controller
 @RequestMapping("/order")
 public class OrderController extends CRUDController<Order> {
+	private static final String ORDER_DOC_UPLOAD_DIR = "order";
+	private static final String ORDER_DOC_FILE_SUFFIX = "order_doc";
+	
 	public OrderController() {
 		setUrlContext("order");
 	}
@@ -114,6 +118,8 @@ public class OrderController extends CRUDController<Order> {
 		setupCreate(model, request);
 		
 		setupCreateForCustomer(model, request);
+
+      setupManageDocs(model, order);
 		
 		String dumpsterQuery = "select obj from Dumpster obj where obj.deleteFlag='1' and obj.status.status='Available'";
 		Dumpster assignedDumpster = null;
@@ -181,9 +187,7 @@ public class OrderController extends CRUDController<Order> {
 		
 		String notes = orderNotesEntity.getNotes();
 		if (StringUtils.contains(notes, OrderNotes.NOTES_TYPE_AUDIT)) {
-			model.addAttribute("errorCtx", "manageOrderNotes");
-			model.addAttribute("error", "Audit notes cannot be deleted");
-		
+			addError(model, "manageOrderNotes", "Audit notes cannot be deleted");
 			return orderNotesSaveSuccess(request, orderNotesEntity, model);
 		}
 		
@@ -211,8 +215,7 @@ public class OrderController extends CRUDController<Order> {
 		
 		cleanUp(request);
 		
-		model.addAttribute("msgCtx", "manageOrderNotes");
-		model.addAttribute("msg", "Order Notes deleted successfully");
+		addMsg(model, "manageOrderNotes", "Order Notes deleted successfully");
 		
 		return orderNotesSaveSuccess(request, orderNotesEntity, model);
 	}
@@ -304,25 +307,14 @@ public class OrderController extends CRUDController<Order> {
 		
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		criteria.setPageSize(25);
-		//criteria.getSearchMap().put("id!",0l);
 		//TODO fix me
 		criteria.getSearchMap().remove("_csrf");
-		
-		/*if (criteria.getSearchMap().get("customer") != null) {
-			String customerId = (String)criteria.getSearchMap().get("customer");
-			if (StringUtils.isNotEmpty(customerId)) {
-				String deliveryAddressQuery = "select obj from DeliveryAddress obj where obj.deleteFlag='1' and obj.customer.id=" + customerId  + " order by obj.line1 asc";
-				model.addAttribute("deliveryAddresses", genericDAO.executeSimpleQuery(deliveryAddressQuery));
-			}
-	   }*/
 		
 		model.addAttribute("list", genericDAO.search(getEntityClass(), criteria, "deliveryDate desc, orderStatus.status desc, id desc", null, null));
 		
 		model.addAttribute("activeTab", "manageOrders");
-		//model.addAttribute("activeSubTab", "orderDetails");
 		model.addAttribute("mode", "MANAGE");
 		
-		//return urlContext + "/list";
 		return urlContext + "/order";
 	}
 	
@@ -472,7 +464,7 @@ public class OrderController extends CRUDController<Order> {
 		notes.setOrder(emptyOrder);
 		model.addAttribute("notesModelObject", notes);
 	
-		List<BaseModel> notesList = genericDAO.executeSimpleQuery("select obj from OrderNotes obj where obj.deleteFlag='1' and obj.order.id=" +  orderId + " order by obj.id asc");
+		List<OrderNotes> notesList = genericDAO.executeSimpleQuery("select obj from OrderNotes obj where obj.deleteFlag='1' and obj.order.id=" +  orderId + " order by obj.id asc");
 		model.addAttribute("notesList", notesList);
 		
 		return urlContext + "/notesModal";
@@ -528,7 +520,7 @@ public class OrderController extends CRUDController<Order> {
 		notes.setOrder(emptyOrder);
 		model.addAttribute("notesModelObject", notes);
 	
-		List<BaseModel> notesList = genericDAO.executeSimpleQuery("select obj from OrderNotes obj where obj.order.id=" +  orderId + " order by obj.id asc");
+		List<OrderNotes> notesList = genericDAO.executeSimpleQuery("select obj from OrderNotes obj where obj.order.id=" +  orderId + " order by obj.id asc");
 		model.addAttribute("notesList", notesList);
 		
 		return urlContext + "/notesModal";*/
@@ -544,7 +536,8 @@ public class OrderController extends CRUDController<Order> {
 			e.printStackTrace();
 			log.warn("Error in validation :" + e);
 		}
-		// return to form if we had errors
+		
+		// Return to form if we had errors
 		if (bindingResult.hasErrors()) {
 			setupCreate(model, request, null);
 			return urlContext + "/form";
@@ -555,12 +548,12 @@ public class OrderController extends CRUDController<Order> {
 			AbstractBaseModel baseModel = (AbstractBaseModel) entity;
 			if (baseModel.getId() == null) {
 				baseModel.setCreatedAt(Calendar.getInstance().getTime());
-				if (baseModel.getCreatedBy()==null) {
+				if (baseModel.getCreatedBy() == null) {
 					baseModel.setCreatedBy(getUser(request).getId());
 				}
 			} else {
 				baseModel.setModifiedAt(Calendar.getInstance().getTime());
-				if (baseModel.getModifiedBy()==null) {
+				if (baseModel.getModifiedBy() == null) {
 					baseModel.setModifiedBy(getUser(request).getId());
 				}
 			}
@@ -575,35 +568,7 @@ public class OrderController extends CRUDController<Order> {
 	}
 	
 	private String orderNotesSaveSuccess(HttpServletRequest request, OrderNotes entity, ModelMap model) {
-		cleanUp(request);
-		
-		Long orderId = entity.getOrder().getId();
-		List<Order> orderList = genericDAO.executeSimpleQuery("select obj from Order obj where obj.deleteFlag='1' and obj.id=" + orderId);
-		Order savedOrder = orderList.get(0);
-		model.addAttribute("modelObject", savedOrder);
-
-		setupCreate(model, request, savedOrder);
-		
-		model.addAttribute("activeTab", "manageOrders");
-		model.addAttribute("mode", "ADD");
-		model.addAttribute("activeSubTab", "orderNotesTab");
-		
-		Order emptyOrder = new Order();
-		emptyOrder.setId(orderId);
-		OrderNotes notes = new OrderNotes();
-		notes.setOrder(emptyOrder);
-		model.addAttribute("notesModelObject", notes);
-	
-		List<OrderNotes> notesList = genericDAO.executeSimpleQuery("select obj from OrderNotes obj where obj.deleteFlag='1' and obj.order.id=" +  orderId + " order by obj.id asc");
-		model.addAttribute("notesList", notesList);
-		
-		String query = "select obj from DeliveryAddress obj where obj.deleteFlag='1' and obj.customer.id=" +  savedOrder.getCustomer().getId() + " order by obj.line1 asc";
-		model.addAttribute("deliveryAddresses", genericDAO.executeSimpleQuery(query));
-		
-		List<List<Permit>> allPermitsOfChosenTypesList = retrievePermitsOfChosenType(savedOrder);
-		model.addAttribute("allPermitsOfChosenTypesList", allPermitsOfChosenTypesList);
-		
-		return urlContext + "/order";
+		return actionCompleteCommon(request, entity.getOrder().getId(), model, "orderNotes");
 	}
 	
 
@@ -765,38 +730,8 @@ public class OrderController extends CRUDController<Order> {
 	}
 	
 	private String dropOffSaveSuccess(HttpServletRequest request, Order entity, ModelMap model) {
-		cleanUp(request);
-
-		setupCreate(model, request, entity);
-		
-		//model.addAttribute("modelObject", entity);
-		model.addAttribute("activeTab", "manageOrders");
-		model.addAttribute("mode", "ADD");
-		model.addAttribute("activeSubTab", "dropOffDriver");
-		
-		model.addAttribute("msgCtx", "manageDropOffDriver");
-		model.addAttribute("msg", "Drop off data saved successfully");
-		
-		Long orderId = entity.getId();
-		List<Order> orderList = genericDAO.executeSimpleQuery("select obj from Order obj where obj.deleteFlag='1' and obj.id=" + orderId);
-		model.addAttribute("modelObject", orderList.get(0));
-		
-		Order emptyOrder = new Order();
-		emptyOrder.setId(orderId);
-		OrderNotes notes = new OrderNotes();
-		notes.setOrder(emptyOrder);
-		model.addAttribute("notesModelObject", notes);
-	
-		List<OrderNotes> notesList = genericDAO.executeSimpleQuery("select obj from OrderNotes obj where obj.deleteFlag='1' and obj.order.id=" +  orderId + " order by obj.id asc");
-		model.addAttribute("notesList", notesList);
-		
-		String query = "select obj from DeliveryAddress obj where obj.deleteFlag='1' and obj.customer.id=" +  entity.getCustomer().getId() + " order by obj.line1 asc";
-		model.addAttribute("deliveryAddresses", genericDAO.executeSimpleQuery(query));
-		
-		List<List<Permit>> allPermitsOfChosenTypesList = retrievePermitsOfChosenType(entity);
-		model.addAttribute("allPermitsOfChosenTypesList", allPermitsOfChosenTypesList);
-		
-		return urlContext + "/order";
+		addMsg(model, "manageDropOffDriver", "Drop off data saved successfully");
+		return actionCompleteCommon(request, entity.getId(), model, "dropOffDriver");
 	}
 	
 	private PermitStatus retrievePermitStatus(String status) {
@@ -953,38 +888,8 @@ public class OrderController extends CRUDController<Order> {
 	}
 	
 	private String pickupSaveSuccess(HttpServletRequest request, Order entity, ModelMap model) {
-		cleanUp(request);
-
-		setupCreate(model, request, entity);
-		
-		//model.addAttribute("modelObject", entity);
-		model.addAttribute("activeTab", "manageOrders");
-		model.addAttribute("mode", "ADD");
-		model.addAttribute("activeSubTab", "pickupDriver");
-		
-		model.addAttribute("msgCtx", "managePickupDriver");
-		model.addAttribute("msg", "Pickup data saved successfully");
-		
-		Long orderId = entity.getId();
-		List<Order> orderList = genericDAO.executeSimpleQuery("select obj from Order obj where obj.deleteFlag='1' and obj.id=" + orderId);
-		model.addAttribute("modelObject", orderList.get(0));
-		
-		Order emptyOrder = new Order();
-		emptyOrder.setId(orderId);
-		OrderNotes notes = new OrderNotes();
-		notes.setOrder(emptyOrder);
-		model.addAttribute("notesModelObject", notes);
-	
-		List<OrderNotes> notesList = genericDAO.executeSimpleQuery("select obj from OrderNotes obj where obj.deleteFlag='1' and obj.order.id=" +  orderId + " order by obj.id asc");
-		model.addAttribute("notesList", notesList);
-		
-		String query = "select obj from DeliveryAddress obj where obj.deleteFlag='1' and obj.customer.id=" +  entity.getCustomer().getId() + " order by obj.line1 asc";
-		model.addAttribute("deliveryAddresses", genericDAO.executeSimpleQuery(query));
-		
-		List<List<Permit>> allPermitsOfChosenTypesList = retrievePermitsOfChosenType(entity);
-		model.addAttribute("allPermitsOfChosenTypesList", allPermitsOfChosenTypesList);
-		
-		return urlContext + "/order";
+		addMsg(model, "managePickupDriver", "Pickup data saved successfully");
+		return actionCompleteCommon(request, entity.getId(), model, "pickupDriver");
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/processOrderReadyForPickup.do")
@@ -1067,7 +972,6 @@ public class OrderController extends CRUDController<Order> {
 		setupList(model, request);
 		
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
-		//criteria.getSearchMap().put("id!",0l);
 		
 		model.addAttribute("list", genericDAO.search(getEntityClass(), criteria, "deliveryDate desc, orderStatus.status desc, id desc", null, null));
 		model.addAttribute("activeTab", "manageOrders");
@@ -1082,7 +986,6 @@ public class OrderController extends CRUDController<Order> {
 		
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		criteria.setPageSize(25);
-		//criteria.getSearchMap().put("id!",0l);
 		
 		/*if (criteria.getSearchMap().get("customer") != null) {
 			String customerId = (String)criteria.getSearchMap().get("customer");
@@ -1697,13 +1600,19 @@ public class OrderController extends CRUDController<Order> {
 	
 	@Override
 	public String edit2(ModelMap model, HttpServletRequest request) {
-		Order orderToBeEdited = (Order)model.get("modelObject");
+		/*Order orderToBeEdited = (Order)model.get("modelObject");
 		
 		setupUpdate(model, request, orderToBeEdited);
 		
 		model.addAttribute("activeTab", "manageOrders");
 		model.addAttribute("mode", "ADD");
-		model.addAttribute("activeSubTab", "orderDetails");
+		
+		String activeSubTab = "orderDetails";
+		String mode = request.getParameter("mode");
+		if (StringUtils.equals("manageDocs", mode)) {
+			activeSubTab = "manageDocs";
+		} 
+		model.addAttribute("activeSubTab", activeSubTab);
 		
 		String query = "select obj from DeliveryAddress obj where obj.deleteFlag='1' and obj.customer.id=" +  orderToBeEdited.getCustomer().getId() + " order by obj.line1 asc";
 		model.addAttribute("deliveryAddresses", genericDAO.executeSimpleQuery(query));
@@ -1714,20 +1623,24 @@ public class OrderController extends CRUDController<Order> {
 		notes.setOrder(emptyOrder);
 		model.addAttribute("notesModelObject", notes);
 	
-		List<BaseModel> notesList = genericDAO.executeSimpleQuery("select obj from OrderNotes obj where obj.deleteFlag='1' and obj.order.id=" +  orderToBeEdited.getId() + " order by obj.id asc");
+		List<OrderNotes> notesList = genericDAO.executeSimpleQuery("select obj from OrderNotes obj where obj.deleteFlag='1' and obj.order.id=" +  orderToBeEdited.getId() + " order by obj.id asc");
 		model.addAttribute("notesList", notesList);
 		
 		List<List<Permit>> allPermitsOfChosenTypesList = retrievePermitsOfChosenType(orderToBeEdited);
 		model.addAttribute("allPermitsOfChosenTypesList", allPermitsOfChosenTypesList);
 		
-		//return urlContext + "/form";
-		return urlContext + "/order";
+		return urlContext + "/order";*/
+		
+		Order orderToBeEdited = (Order)model.get("modelObject");
+		
+		String activeSubTab = "orderDetails";
+		String mode = request.getParameter("mode");
+		if (StringUtils.equals("manageDocs", mode)) {
+			activeSubTab = "manageDocs";
+		}
+		return actionCompleteCommon(request, orderToBeEdited.getId(), model, activeSubTab);
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see com.primovision.lutransport.controller.CRUDController#setupList(org.springframework.ui.ModelMap, javax.servlet.http.HttpServletRequest)
-	 */
 	@Override
 	public void setupList(ModelMap model, HttpServletRequest request) {
 		populateSearchCriteria(request, request.getParameterMap());
@@ -1762,7 +1675,6 @@ public class OrderController extends CRUDController<Order> {
 		try {
 			json = objectMapper.writeValueAsString(addressList);
 		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return json;
@@ -2097,52 +2009,58 @@ public class OrderController extends CRUDController<Order> {
 	}*/
 	
 	public String saveSuccess(ModelMap model, HttpServletRequest request, Order entity) {
-		model.addAttribute("msgCtx", "manageOrder");
-		model.addAttribute("msg", "Order saved successfully");
+		addMsg(model, "manageOrder", "Order saved successfully");
+		return actionCompleteCommon(request, entity.getId(), model, "orderDetails");
+		
+		/*Long customerId = entity.getCustomer().getId();
+		List<Customer> customerList = genericDAO.executeSimpleQuery("select obj from Customer obj where obj.deleteFlag='1' and obj.id=" + customerId);
+		Customer orderCustomer = customerList.get(0);
+		entity.setCustomer(orderCustomer);*/
+	}
+	
+	private String actionCompleteCommon(HttpServletRequest request, Long orderId, ModelMap model, String activeSubTab) {
+		cleanUp(request);
+		
+		List<Order> orderList = genericDAO.executeSimpleQuery("select obj from Order obj where obj.deleteFlag='1' and obj.id=" + orderId);
+		Order entity = orderList.get(0);
+		model.addAttribute("modelObject", entity);
+
+		setupUpdate(model, request, entity);
 		
 		model.addAttribute("activeTab", "manageOrders");
-		model.addAttribute("activeSubTab", "orderDetails");
 		model.addAttribute("mode", "ADD");
+		model.addAttribute("activeSubTab", activeSubTab);
 		
-		// EMPTY_ORDER after save change
-		/*if (entity.getModifiedBy() == null) {
-			setupCreate(model, request);
-			
-			Order emptyOrder = new Order();
-			model.addAttribute("modelObject", emptyOrder);
-			
-			OrderNotes notes = new OrderNotes();
-			notes.setOrder(emptyOrder);
-			model.addAttribute("notesModelObject", notes);
-		} else {*/
-			setupCreate(model, request, entity);
-			
-			model.addAttribute("modelObject", entity);
-			
-			Order emptyOrder = new Order();
-			emptyOrder.setId(entity.getId());
-			OrderNotes notes = new OrderNotes();
-			notes.setOrder(emptyOrder);
-			model.addAttribute("notesModelObject", notes);
-			
-			List<OrderNotes> notesList = genericDAO.executeSimpleQuery("select obj from OrderNotes obj where obj.deleteFlag='1' and obj.order.id=" +  entity.getId() + " order by obj.id asc");
-			model.addAttribute("notesList", notesList);
-			
-			String query = "select obj from DeliveryAddress obj where obj.deleteFlag='1' and obj.customer.id=" +  entity.getCustomer().getId() + " order by obj.line1 asc";
-			model.addAttribute("deliveryAddresses", genericDAO.executeSimpleQuery(query));
-			
-			List<List<Permit>> allPermitsOfChosenTypesList = retrievePermitsOfChosenType(entity);
-			model.addAttribute("allPermitsOfChosenTypesList", allPermitsOfChosenTypesList);
-			
-			Long customerId = entity.getCustomer().getId();
-			List<Customer> customerList = genericDAO.executeSimpleQuery("select obj from Customer obj where obj.deleteFlag='1' and obj.id=" + customerId);
-			Customer orderCustomer = customerList.get(0);
-			entity.setCustomer(orderCustomer);
-		//}
+		Order emptyOrder = new Order();
+		emptyOrder.setId(orderId);
+		OrderNotes notes = new OrderNotes();
+		notes.setOrder(emptyOrder);
+		model.addAttribute("notesModelObject", notes);
 		
-		//return urlContext + "/form";
+		List<OrderNotes> notesList = genericDAO.executeSimpleQuery("select obj from OrderNotes obj where obj.deleteFlag='1' and obj.order.id=" +  orderId + " order by obj.id asc");
+		model.addAttribute("notesList", notesList);
+		
+		String query = "select obj from DeliveryAddress obj where obj.deleteFlag='1' and obj.customer.id=" +  entity.getCustomer().getId() + " order by obj.line1 asc";
+		model.addAttribute("deliveryAddresses", genericDAO.executeSimpleQuery(query));
+		
+		List<List<Permit>> allPermitsOfChosenTypesList = retrievePermitsOfChosenType(entity);
+		model.addAttribute("allPermitsOfChosenTypesList", allPermitsOfChosenTypesList);
+		
 		return urlContext + "/order";
-
-		//return super.save(request, entity, bindingResult, model);
+	}
+	
+	@Override
+	protected String getEntityDocUploadSubDir() {
+		return ORDER_DOC_UPLOAD_DIR;
+	}
+	
+	@Override
+	protected String getEntityDocFileSuffix() {
+		return ORDER_DOC_FILE_SUFFIX;
+	}
+	
+	@Override
+	protected String docActionComplete(HttpServletRequest request, Order entity, ModelMap model) {
+		return actionCompleteCommon(request, entity.getId(), model, "manageDocs");
 	}
 }

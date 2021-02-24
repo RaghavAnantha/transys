@@ -4,3 +4,4 @@
 <script type="text/javascript" src="${ctx}/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="${ctx}/js/commons.js"></script>
 <script type="text/javascript" src="${ctx}/js/validations.js"></script>
+<script type="text/javascript" src="${ctx}/js/manageDocs.js"></script>

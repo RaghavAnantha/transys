@@ -36,7 +36,7 @@ var rdsIconUrl = "${mapImageCtx}/R.png";
 var deliveryOrderIconUrl = "${mapImageCtx}/orange-blank.png";
 var pickupOrderIconUrl = "${mapImageCtx}/red-pushpin.png";
 
-var hrTagDark = "<hr style=\"height:2px;padding:0px;margin:0px;color:black;background-color:black\">";
+var hrTagBold = "<hr style=\"height:2px;padding:0px;margin:0px;color:black;background-color:black\">";
 var hrTagLight = "<hr style=\"height:1px;padding:0px;margin:0px;color:gray;background-color:gray\">";
 
 var directionsService;
@@ -89,7 +89,7 @@ function buildVehicleLocationIconUrl(heading, displayState) {
 function buildVehicleLocationInfoWindowContent(aVehicleLocation) {
 	var content = "<b>" + aVehicleLocation.VehicleNumber
 				+ "&nbsp;&nbsp;&nbsp;" + "Dumpster No." + "&nbsp;Dumpster Size" + "</b>"
-				+ hrTagDark
+				+ hrTagBold
 				+ aVehicleLocation.DisplayState
 				+ "&nbsp;" + aVehicleLocation.Heading 
 				+ "&nbsp;" + aVehicleLocation.Speed + "&nbsp;" + "mph"
@@ -108,7 +108,7 @@ function buildVehicleLocationInfoWindowContent(aVehicleLocation) {
 function buildDeliveryOrderAddressInfoWindowContent(aDeliveryOrderAddress) {
 	var content = "<b>"  + "Delivery Order #: " + aDeliveryOrderAddress.orderId 
 				+ "&nbsp;Delivery Date Time: " + aDeliveryOrderAddress.deliveryDateTimeRange + "</b>"
-				+ hrTagDark
+				+ hrTagBold
 				+ aDeliveryOrderAddress.customerName
 				+ "<br/>" + aDeliveryOrderAddress.fullAddress
 				+ hrTagLight
@@ -118,7 +118,7 @@ function buildDeliveryOrderAddressInfoWindowContent(aDeliveryOrderAddress) {
 
 function buildPickupOrderAddressInfoWindowContent(aPickupOrderAddress) {
 	var content = "<b>" + "Pickup Order #: " + aPickupOrderAddress.orderId + "</b>"
-				+ hrTagDark
+				+ hrTagBold
 				+ aPickupOrderAddress.customerName
 				+ "<br/>" + aPickupOrderAddress.fullAddress
 				+ hrTagLight

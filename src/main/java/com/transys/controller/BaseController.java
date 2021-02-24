@@ -43,6 +43,7 @@ import com.transys.model.Permit;
 import com.transys.model.SearchCriteria;
 //import com.transys.model.StaticData;
 import com.transys.model.User;
+
 import com.transys.service.DynamicReportService;
 
 import net.sf.jasperreports.engine.JasperPrint;
@@ -59,6 +60,10 @@ public class BaseController {
 	
 	protected static String MSG_KEY = "msg";
 	protected static String ERROR_KEY = "error";
+	
+	protected static String DOC_UPLOAD_DIR = "/transys/storage";
+	
+	protected static String MANAGE_DOCS_CTX = "manageDocs";
 	
 	@Autowired
 	protected DynamicReportService dynamicReportService;
@@ -144,6 +149,11 @@ public class BaseController {
 
 	protected User getUser(HttpServletRequest request) {
 		return (User) request.getSession().getAttribute("userInfo");
+	}
+	
+	protected Long getUserId(HttpServletRequest request) {
+		User user = (User) request.getSession().getAttribute("userInfo");
+		return user.getId();
 	}
 
 	/*protected List<StaticData> listStaticData(String staticDataType) {
@@ -369,5 +379,15 @@ public class BaseController {
 	
 	protected void addWaterMarkRendererReportParam(Map<String, Object> params, boolean display, String displayText) {
 		ReportUtil.addWaterMarkRendererReportParam(params, display, displayText);
+	}
+	
+	protected void addMsg(ModelMap model, String msgCtx, String msg) {
+		model.addAttribute(MSG_CTX_KEY, msgCtx);
+		model.addAttribute(MSG_KEY, msg);
+	}
+	
+	protected void addError(ModelMap model, String errorCtx, String error) {
+		model.addAttribute(ERROR_CTX_KEY, errorCtx);
+		model.addAttribute(ERROR_KEY, error);
 	}
 }

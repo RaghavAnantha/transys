@@ -2,6 +2,7 @@ package com.transys.core.tags;
 
 import javax.servlet.jsp.JspException;
 
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -20,6 +21,8 @@ public final class ImageColumn extends AbstractColumnTag {
     private String target;
     
     private String title;
+    
+    private Boolean fontAwesomeImg;
 
     public ImageColumn() {
 	super();
@@ -29,10 +32,6 @@ public final class ImageColumn extends AbstractColumnTag {
 	this.cssClass = "centerImage";
     }
 
-    /*------------------------------------------------------------------------------
-     * Getters 
-     *----------------------------------------------------------------------------*/
-    
     public String getImageSrc() {
 	return this.imageSrc;
     }
@@ -69,16 +68,19 @@ public final class ImageColumn extends AbstractColumnTag {
 	return this.imageBorder;
     }
 
-    /*------------------------------------------------------------------------------
-     * Setters 
-     *----------------------------------------------------------------------------*/
-    public void setImageSrc(String pstrSrc) {
-	this.imageSrc = pstrSrc;
-    }
+   public void setImageSrc(String pstrSrc) {
+   	this.imageSrc = pstrSrc;
+   	
+   	if (StringUtils.contains(this.imageSrc, "fa ")) {
+			setFontAwesomeImg(true);
+		} else {
+			setFontAwesomeImg(false);
+		}
+   }
 
-    public void setLinkUrl(String pstrUrl) {
-	this.linkUrl = pstrUrl;
-    }
+   public void setLinkUrl(String pstrUrl) {
+   	this.linkUrl = pstrUrl;
+   }
 
     public void setAlterText(String pstrAltText) {
 	this.alterText = pstrAltText;
@@ -100,15 +102,15 @@ public final class ImageColumn extends AbstractColumnTag {
 	this.imageBorder = pintBorder;
     }
 
-    /*------------------------------------------------------------------------------
-     * Overridden methods
-     * @see javax.servlet.jsp.tagext.Tag
-     *----------------------------------------------------------------------------*/
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.servlet.jsp.tagext.Tag#doEndTag()
-     */
+	public Boolean getFontAwesomeImg() {
+		return fontAwesomeImg;
+	}
+
+	public void setFontAwesomeImg(Boolean fontAwesomeImg) {
+		this.fontAwesomeImg = fontAwesomeImg;
+	}
+
+	@Override
     public int doEndTag() throws JspException {
 	Datatable objTmp = null;
 
@@ -124,14 +126,11 @@ public final class ImageColumn extends AbstractColumnTag {
 	return EVAL_PAGE;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.servlet.jsp.tagext.Tag#doStartTag()
-     */
+	@Override
     public int doStartTag() throws JspException {
-	if (!(this.getParent() instanceof Datatable))
+	if (!(this.getParent() instanceof Datatable)) {
 	    throw new JspException("Error: Column tag needs to be a child of Datatable!");
+	}
 
 	// This tag does not have body contents.
 	return SKIP_BODY;
@@ -174,21 +173,29 @@ public final class ImageColumn extends AbstractColumnTag {
 	objRet.setTarget(this.target);
 	objRet.setTitle(this.title);
 	objRet.setAlterText(this.alterText);
+	objRet.setFontAwesomeImg(this.getFontAwesomeImg());
 	return objRet;
     }
 
     @Override
     protected String renderColumnDetail(Object value) {
-	// TODO Auto-generated method stub
 	StringBuffer objBuf = new StringBuffer();
 	if (linkUrl != null) {
 	    objBuf.append("<a href=\"");
 	    objBuf.append(resolveFields(this.linkUrl));
 	    objBuf.append("\">");
 	}
-	objBuf.append("<img src=\"");
+	
+	if (BooleanUtils.isTrue(getFontAwesomeImg())) {
+		//objBuf.append("<i style=\"font-size:14px;\"");
+		objBuf.append("<i class=\"fontAwesomeDGColIcon ");
+	} else {
+		objBuf.append("<img src=\"");
+	}
+	
 	objBuf.append(this.imageSrc);
 	objBuf.append("\"");
+	
 	if (this.imageWidth != -1)
 	    objBuf.append(" width=" + this.imageWidth);
 	if (this.imageHeight != -1)

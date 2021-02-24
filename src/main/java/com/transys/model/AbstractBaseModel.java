@@ -128,4 +128,15 @@ public abstract class AbstractBaseModel implements BaseModel {
 			return StringUtils.EMPTY;
 		}
 	}
+	
+	public String getHasDocs() {
+		return StringUtils.EMPTY;
+	}
+
+	public void setHasDocs(String hasDocs) {
+	}
+	
+	public String[] getFileList() {
+		return null;
+	}
 }

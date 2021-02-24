@@ -1,41 +1,59 @@
 package com.transys.controller;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileFilter;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.OutputStream;
+
 import java.lang.reflect.ParameterizedType;
-import java.text.SimpleDateFormat;
+
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import javax.servlet.ServletContext;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import javax.validation.ValidationException;
 
+import org.apache.commons.io.filefilter.WildcardFileFilter;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.core.Logger;
+
 import org.hibernate.exception.ConstraintViolationException;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+
 import org.springframework.util.ClassUtils;
+
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.support.ByteArrayMultipartFileEditor;
 
 import com.transys.core.util.FormatUtil;
 import com.transys.core.util.MimeUtil;
+
 import com.transys.model.AbstractBaseModel;
 import com.transys.model.BaseModel;
 import com.transys.model.SearchCriteria;
 //import com.transys.model.StaticData;
-import com.transys.service.DynamicReportService;
 
 @SuppressWarnings("unchecked")
 public abstract class CRUDController<T extends BaseModel> extends BaseController {
@@ -287,5 +305,275 @@ public abstract class CRUDController<T extends BaseModel> extends BaseController
 		} else {
 			return false;
 		}
+	}
+	
+	protected void setupManageDocs(ModelMap model, T entity) {
+		String[] fileNamesList = getUploadedFileNames(entity);
+		model.addAttribute("fileList", fileNamesList);
+	}
+	
+	@RequestMapping("/managedocs/uploaddoc.do")
+	public String uploadDoc(HttpServletRequest request,
+			HttpServletResponse response, ModelMap model,
+			@ModelAttribute("modelObject") T entity,
+			@RequestParam("dataFile") MultipartFile file) {
+		List<String> errorList = new ArrayList<String>();
+		model.addAttribute("errorList", errorList);
+		
+		try {
+			if (!validateUploadDoc(errorList, entity, file)) {
+				return docActionComplete(request, entity, model);
+			}
+			
+			Long createdBy = getUser(request).getId();
+			saveDoc(request, entity, file, createdBy, errorList);
+			if (errorList.isEmpty()) {
+				model.addAttribute("msgCtx", MANAGE_DOCS_CTX);
+				model.addAttribute("msg", "Successfully uploaded the doc");
+			} 
+		} catch (Exception ex) {
+			log.warn("Unable to upload doc:===>>>>>>>>>" + ex);
+			
+			model.addAttribute("errorCtx", MANAGE_DOCS_CTX);
+			model.addAttribute("error", "An error occurred while uploading doc!!");
+		}
+		
+		return docActionComplete(request, entity, model);
+	}
+	
+	@RequestMapping("/managedocs/deletedoc.do")
+	public String deleteDoc(ModelMap model, HttpServletRequest request, 
+				@ModelAttribute("modelObject") T entity) {
+		String filePath = constructDocFilePath(entity);
+		File file = new File(filePath);
+		
+		boolean status = file.delete();
+		if (status) {
+			if (!docsUploaded(entity)) {
+				entity.setHasDocs("N");
+				entity.setModifiedAt(Calendar.getInstance().getTime());
+				entity.setModifiedBy(getUser(request).getId());
+				genericDAO.saveOrUpdate(entity);
+			}
+			
+			model.addAttribute("msgCtx", MANAGE_DOCS_CTX);
+			model.addAttribute("msg", "Successfully deleted the doc");
+		} else {
+			model.addAttribute("errorCtx", MANAGE_DOCS_CTX);
+			model.addAttribute("error", "An error occurred while deleting the doc!!");
+		}
+		
+		
+		return docActionComplete(request, entity, model);
+	}
+	
+	@RequestMapping("/managedocs/downloaddoc.do")
+	public String downloadDoc(ModelMap model, HttpServletRequest request, HttpServletResponse response,
+				@ModelAttribute("modelObject") T entity) {
+		try {
+			processDocDownload(request, response, entity);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	private void processDocDownload(HttpServletRequest request, HttpServletResponse response, T entity) {
+		// Reads input file from an absolute path
+		String filePath = constructDocFilePath(entity);
+		File downloadFile = new File(filePath);
+		FileInputStream inStream = null;
+		try {
+			inStream = new FileInputStream(downloadFile);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			return;
+		}
+      
+		// Obtains ServletContext
+		ServletContext context = request.getServletContext();
+     
+		/*// If you want to use a relative path to context root:
+     	String relativePath = context.getRealPath("");
+     	System.out.println("relativePath = " + relativePath);*/
+      
+		// Gets MIME type of the file
+		String mimeType = context.getMimeType(filePath);
+		if (mimeType == null) {        
+			// Set to binary type if MIME mapping not found
+         mimeType = "application/pdf";
+		}
+		System.out.println("MIME type: " + mimeType);
+      
+		// Modifies response
+		response.setContentType(mimeType);
+		response.setContentLength((int)downloadFile.length());
+      
+		// Forces download
+		String headerKey = "Content-Disposition";
+		String headerValue = String.format("attachment; filename=\"%s\"", downloadFile.getName());
+		response.setHeader(headerKey, headerValue);
+      
+		// Obtains response's output stream
+		OutputStream outStream = null;
+		try {
+			outStream = response.getOutputStream();
+			byte[] buffer = new byte[4096];
+			int bytesRead = -1;
+	      
+			while ((bytesRead = inStream.read(buffer)) != -1) {
+				outStream.write(buffer, 0, bytesRead);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (inStream != null) {
+				try {
+					inStream.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			if (outStream != null) {
+				try {
+					outStream.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}  
+	}
+	
+	protected boolean validateUploadDoc(List<String> errorList, T entity, MultipartFile file) {
+		if (StringUtils.isEmpty(file.getOriginalFilename())) {
+		    errorList.add("Please choose a file to upload !!");
+		    return false;
+	   }
+		
+		String ext = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
+		if (!(ext.equalsIgnoreCase(".pdf"))) {
+      	errorList.add("Please choose a file to upload with extention .pdf!!");
+		   return false;
+		}
+		
+		/*if (doesDocExist(entity, file)) {
+			errorList.add("File with same name has been already uploaded");
+		   return false;
+		}*/
+		
+		if (file.isEmpty()) {
+			errorList.add("Empty file");
+			return false;
+		}
+		
+		return true;
+	}
+	
+	protected String docActionComplete(HttpServletRequest request, T entity, ModelMap model)	{
+		return StringUtils.EMPTY;
+	}
+	
+	protected void saveDoc(HttpServletRequest request, T entity, MultipartFile file,
+			Long userId, List<String> errorList) {
+		try {
+			/*String realPathToUploads =  request.getServletContext().getRealPath(UPLOAD_DIR);
+			if (!new File(realPathtoUploads).exists()) {
+			    new File(realPathtoUploads).mkdir();
+			}*/
+
+			String filePath = constructDocFilePath(entity.getId(), file);
+			File dest = new File(filePath);
+			file.transferTo(dest);
+			
+			entity.setHasDocs("Y");
+			entity.setModifiedAt(Calendar.getInstance().getTime());
+			entity.setModifiedBy(getUserId(request));
+			genericDAO.saveOrUpdate(entity);
+		} catch (Exception e) {
+			errorList.add("Error occured while uploading file");
+			return;
+		}
+	}
+	
+	protected String constructDocFilePath() {
+		String filePath = DOC_UPLOAD_DIR + "/" + getEntityDocUploadSubDir(); 
+		return filePath;
+	}
+	
+	protected String constructDocFilePath(Long id, MultipartFile file) {
+		return constructDocFilePath(id, file.getOriginalFilename());
+	}
+	
+	protected String constructDocFilePath(Long id, String file) {
+		String filePath = constructDocFilePath() 
+					+ "/" + id + "_" + getEntityDocFileSuffix();
+		String originalFileName = file.replaceAll("\\s", StringUtils.EMPTY);
+		return filePath + "_" + originalFileName;
+	}
+	
+	protected String constructDocFilePath(T entity) {
+		String filePath = constructDocFilePath() + "/" + entity.getFileList()[0];
+		return filePath;
+	}
+	
+	protected String getEntityDocUploadSubDir() {
+		return StringUtils.EMPTY;
+	}
+	
+	protected String getEntityDocFileSuffix() {
+		return StringUtils.EMPTY;
+	}
+	
+	protected boolean docsUploaded(T entity) {
+		String[] filaeNamesList = getUploadedFileNames(entity);
+		return (filaeNamesList.length > 0) ? true : false;
+	}
+	
+	protected String[] getUploadedFileNames(T entity) {
+		if (entity == null || entity.getId() == null) {
+			return (new String[0]);
+		}
+		
+		String docPattern = constructDocFilePattern(entity.getId());
+		FileFilter fileFilter = new WildcardFileFilter(docPattern);
+		File dir = new File(constructDocFilePath());
+		File[] files = dir.listFiles(fileFilter);
+		String[] fileNamesList = new String[files.length];
+		for (int i = 0; i < files.length; i++) {
+			fileNamesList[i] = files[i].getName();
+		}
+		return fileNamesList;
+	}
+	
+	protected String constructDocFilePattern(Long id) {
+		String filePath = id + "_" + getEntityDocFileSuffix() + "*.*";
+		return filePath;
+	}
+	
+	@Override
+	protected String processAjaxRequest(HttpServletRequest request, String action, Model model) {
+		 if (StringUtils.equalsIgnoreCase("doesDocExist", action)) {
+			String file = request.getParameter("file");
+			if (StringUtils.isEmpty(file)) {
+				return StringUtils.EMPTY;
+			}
+			
+			String idStr = request.getParameter("id");
+			Long id = new Long(idStr);
+			boolean responseBool = doesDocExist(id, file);
+			return BooleanUtils.toStringTrueFalse(responseBool);
+		} else {
+			return super.processAjaxRequest(request, action, model);
+		}
+	}
+	
+	protected boolean doesDocExist(Long id, String file) {
+		String filePath = constructDocFilePath(id, file);
+		return doesDocExist(filePath);
+	}
+	
+	protected boolean doesDocExist(String file) {
+		File fileToCheck = new File(file);
+		return fileToCheck.exists();
 	}
 }
