@@ -17,7 +17,7 @@ function validateFileToUpload(fileElem, fileTypeAllowed) {
 	return true;
 }
 
-function processUploadDoc(fileElem) {
+function processUploadDoc(fileElem, csrfParam) {
 	var fileElem = document.getElementById(fileElem);
 	var noOfFiles = fileElem.files.length;
 	if (noOfFiles == 0) {
@@ -38,7 +38,7 @@ function processUploadDoc(fileElem) {
            		}
        		}
        		if (uploadFile) {
-       			uploadDoc(file);
+       			uploadDoc(csrfParam);
        		}
 		}
 	});
@@ -64,7 +64,7 @@ function validateCheckedDocs(fileListElem) {
 	return true;
 }
 
-function submitManageDocsForm(action) {
+function submitManageDocsForm(action, csrfParam) {
 	var form = getForm();
 	
 	var manageDocsCtx = "managedocs";
@@ -72,28 +72,28 @@ function submitManageDocsForm(action) {
 	if (document.location.href.indexOf(manageDocsCtx) == -1) {
 		actionPrefix = manageDocsCtx + "/";
 	}
-	form.action = actionPrefix + action + "?${csrfParam}";
+	form.action = actionPrefix + action + "?" + csrfParam;
 	form.submit();
 }
 
-function uploadDoc() {
-	submitManageDocsForm("uploaddoc.do");
+function uploadDoc(csrfParam) {
+	submitManageDocsForm("uploaddoc.do", csrfParam);
 }
 
-function processDownloadDoc(fileListElem) {
+function processDownloadDoc(fileListElem, csrfParam) {
 	if (!validateCheckedDocs(fileListElem)) {
 		return;
 	}
 	
-	submitManageDocsForm("downloaddoc.do");
+	submitManageDocsForm("downloaddoc.do", csrfParam);
 }
 
-function processDeleteDoc(fileListElem) {
+function processDeleteDoc(fileListElem, csrfParam) {
 	if (!validateCheckedDocs(fileListElem)) {
 		return;
 	}
 	
 	if (confirm("Do you want to Delete the selected doc?")) {
-		submitForm("deletedoc.do");
+		submitManageDocsForm("deletedoc.do", csrfParam);
   	}
 }

@@ -28,10 +28,10 @@ function getForm() {
 		<td></td>
 		<td>
 			<input type="button" id="downloadFileBtn" value="Download" class="btn btn-primary btn-sm btn-sm-ext" 
-				onclick="javascript:processDownloadDoc('fileList');"/>
+				onclick="javascript:processDownloadDoc('fileList', '${csrfParam}');"/>
 			&nbsp;
 			<input type="button" id="deleteFileBtn" value="Delete" class="btn btn-primary btn-sm btn-sm-ext" 
-				onclick="javascript:processDeleteDoc('fileList');" />
+				onclick="javascript:processDeleteDoc('fileList', '${csrfParam}');" />
 		</td>
 	</tr>
 	<tr><td></td></tr>
@@ -50,7 +50,7 @@ function getForm() {
 	<tr>
 		<td></td>
 		<td>
-			<input type="button" id="uploadBtn" value="Upload" class="btn btn-primary btn-sm btn-sm-ext" onclick="javascript:processUploadDoc('dataFile');"/>
+			<input type="button" id="uploadBtn" value="Upload" class="btn btn-primary btn-sm btn-sm-ext" onclick="javascript:processUploadDoc('dataFile', '${csrfParam}');"/>
 			&nbsp;
 			<input type="button" id="cancelBtn" class="btn btn-primary btn-sm btn-sm-ext" value="Cancel" class="flat"
 				onClick="document.location.href='list.do'" />
