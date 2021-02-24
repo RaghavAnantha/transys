@@ -203,7 +203,7 @@ public class OrderController extends CRUDController<Order> {
 		}
 		orderNotesList.remove(i);
 		
-		Long modifiedBy = getUser(request).getId();
+		Long modifiedBy = getUserId(request);
 		order.setModifiedBy(modifiedBy);
 		order.setModifiedAt(Calendar.getInstance().getTime());
 		genericDAO.saveOrUpdate(order);
@@ -344,7 +344,7 @@ public class OrderController extends CRUDController<Order> {
 		order.setOrderStatus(pickUpOrderStatus);
 		
 		order.setModifiedAt(Calendar.getInstance().getTime());
-		order.setModifiedBy(getUser(request).getId());
+		order.setModifiedBy(getUserId(request));
 		
 		genericDAO.saveOrUpdate(order);
 		
@@ -493,12 +493,12 @@ public class OrderController extends CRUDController<Order> {
 			if (baseModel.getId() == null) {
 				baseModel.setCreatedAt(Calendar.getInstance().getTime());
 				if (baseModel.getCreatedBy() == null) {
-					baseModel.setCreatedBy(getUser(request).getId());
+					baseModel.setCreatedBy(getUserId(request));
 				}
 			} else {
 				baseModel.setModifiedAt(Calendar.getInstance().getTime());
 				if (baseModel.getModifiedBy() == null) {
-					baseModel.setModifiedBy(getUser(request).getId());
+					baseModel.setModifiedBy(getUserId(request));
 				}
 			}
 		}
@@ -549,12 +549,12 @@ public class OrderController extends CRUDController<Order> {
 			if (baseModel.getId() == null) {
 				baseModel.setCreatedAt(Calendar.getInstance().getTime());
 				if (baseModel.getCreatedBy() == null) {
-					baseModel.setCreatedBy(getUser(request).getId());
+					baseModel.setCreatedBy(getUserId(request));
 				}
 			} else {
 				baseModel.setModifiedAt(Calendar.getInstance().getTime());
 				if (baseModel.getModifiedBy() == null) {
-					baseModel.setModifiedBy(getUser(request).getId());
+					baseModel.setModifiedBy(getUserId(request));
 				}
 			}
 		}
@@ -924,7 +924,7 @@ public class OrderController extends CRUDController<Order> {
 		}
 		
 		order.setModifiedAt(Calendar.getInstance().getTime());
-		order.setModifiedBy(getUser(request).getId());
+		order.setModifiedBy(getUserId(request));
 		
 		OrderStatus pickUpOrderStatus = retrieveOrderStatus(pickUpOrderStatusStr);
 		order.setOrderStatus(pickUpOrderStatus);
@@ -952,7 +952,7 @@ public class OrderController extends CRUDController<Order> {
 		}
 		
 		order.setModifiedAt(Calendar.getInstance().getTime());
-		order.setModifiedBy(getUser(request).getId());
+		order.setModifiedBy(getUserId(request));
 		
 		OrderStatus orderStatus = retrieveOrderStatus(OrderStatus.ORDER_STATUS_PICK_UP);
 		order.setOrderStatus(orderStatus);
@@ -1810,7 +1810,7 @@ public class OrderController extends CRUDController<Order> {
 		// TODO: Why both created by and modified by and why set if not changed?
 		setupOrderFees(entity);
 		
-		Long modifiedBy = getUser(request).getId();
+		Long modifiedBy = getUserId(request);
 		
 		// TODO: Why both created by and modified by and why set if not changed?
 		setupOrderNotes(entity, modifiedBy);
@@ -1976,37 +1976,10 @@ public class OrderController extends CRUDController<Order> {
 		return auditOrderNotes;
 	}
 	
-	/*@Override
-	@RequestMapping(method = {RequestMethod.GET, RequestMethod.POST}, value = "/export.do")
-	public void export(ModelMap model, HttpServletRequest request,
-			HttpServletResponse response, @RequestParam("type") String type,
-			Object objectDAO, Class clazz) {
-		String dataQualifier = request.getParameter("dataQualifier");
-		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
-		List columnPropertyList = (List) request.getSession().getAttribute(dataQualifier + "ColumnPropertyList");
-		
-		response.setContentType(MimeUtil.getContentType(type));
-		if (!type.equals("html"))
-			response.setHeader("Content-Disposition", "attachment;filename="
-					+ urlContext + "Report." + type);
-		try {
-			criteria.setPageSize(100000);
-			//String label = getCriteriaAsString(criteria);
-			ByteArrayOutputStream out = dynamicReportService.exportReport(
-					urlContext + "Report", type, getEntityClass(),
-					columnPropertyList, criteria, request);
-			out.writeTo(response.getOutputStream());
-			if (type.equals("html"))
-				response.getOutputStream()
-						.println(
-								"<script language=\"javascript\">window.print()</script>");
-			criteria.setPageSize(25);
-			out.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-			log.warn("Unable to create file :" + e);
-		}
-	}*/
+	@Override
+	protected void auditDocAction(Order entity, String auditMsg, Long createdBy) {
+		createAuditOrderNotes(entity, auditMsg, createdBy);
+	}
 	
 	public String saveSuccess(ModelMap model, HttpServletRequest request, Order entity) {
 		addMsg(model, "manageOrder", "Order saved successfully");

@@ -152,7 +152,7 @@ public class BaseController {
 	}
 	
 	protected Long getUserId(HttpServletRequest request) {
-		User user = (User) request.getSession().getAttribute("userInfo");
+		User user = getUser(request);
 		return user.getId();
 	}
 

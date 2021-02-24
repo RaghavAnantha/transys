@@ -350,9 +350,12 @@ public abstract class CRUDController<T extends BaseModel> extends BaseController
 		boolean status = file.delete();
 		if (status) {
 			if (!docsUploaded(entity)) {
+				Long userId = getUserId(request);
+				auditDocAction(entity, "Doc deleted", userId);
+				
 				entity.setHasDocs("N");
 				entity.setModifiedAt(Calendar.getInstance().getTime());
-				entity.setModifiedBy(getUser(request).getId());
+				entity.setModifiedBy(userId);
 				genericDAO.saveOrUpdate(entity);
 			}
 			
@@ -365,6 +368,9 @@ public abstract class CRUDController<T extends BaseModel> extends BaseController
 		
 		
 		return docActionComplete(request, entity, model);
+	}
+	
+	protected void auditDocAction(T entity, String auditMsg, Long createdBy) {
 	}
 	
 	@RequestMapping("/managedocs/downloaddoc.do")
@@ -485,9 +491,11 @@ public abstract class CRUDController<T extends BaseModel> extends BaseController
 			File dest = new File(filePath);
 			file.transferTo(dest);
 			
+			auditDocAction(entity, "Doc uploaded", userId);
+			
 			entity.setHasDocs("Y");
 			entity.setModifiedAt(Calendar.getInstance().getTime());
-			entity.setModifiedBy(getUserId(request));
+			entity.setModifiedBy(userId);
 			genericDAO.saveOrUpdate(entity);
 		} catch (Exception e) {
 			errorList.add("Error occured while uploading file");

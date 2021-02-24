@@ -287,7 +287,8 @@ function processManageDocs(id) {
 		<transys:textcolumn headerText="Inv. Dt" dataField="invoiceDate" dataFormat="MM/dd/yyyy"/>
 		<transys:imagecolumn headerText="EXCH" linkUrl="javascript:processExchange('{id}');" imageSrc="${imageCtx}/exchange.png" HAlign="center" title="Exchange"/>
 		<transys:imagecolumn headerText="PRINT" linkUrl="javascript:printOrder('{id}');" imageSrc="${imageCtx}/print.png" HAlign="center" title="Print"/>
-		<transys:imagecolumn headerText="Manage Docs" linkUrl="javascript:processManageDocs('{id}');" imageSrc="fa fa-file-o" HAlign="center" title="Manage Docs"/>
+		<transys:textcolumn headerText="Docs" dataField="hasDocs"/>
+		<transys:imagecolumn headerText="MAN. DOC" linkUrl="javascript:processManageDocs('{id}');" imageSrc="fa fa-file-o" HAlign="center" title="Manage Docs"/>
 	 </transys:datatable>
 	<%session.setAttribute("manageOrdersColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
 </form:form>
