@@ -47,6 +47,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.support.ByteArrayMultipartFileEditor;
 
+import com.transys.core.util.CoreUtil;
 import com.transys.core.util.FormatUtil;
 import com.transys.core.util.MimeUtil;
 
@@ -90,7 +91,7 @@ public abstract class CRUDController<T extends BaseModel> extends BaseController
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		criteria.setPageSize(25);
 		
-		model.addAttribute("list",genericDAO.search(getEntityClass(), criteria));
+		model.addAttribute("list", genericDAO.search(getEntityClass(), criteria));
 		return urlContext + "/list";
 	}
 
@@ -104,7 +105,7 @@ public abstract class CRUDController<T extends BaseModel> extends BaseController
 	public String search2(ModelMap model, HttpServletRequest request) {
 		setupList(model, request);
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
-		model.addAttribute("list",genericDAO.search(getEntityClass(), criteria));
+		model.addAttribute("list", genericDAO.search(getEntityClass(), criteria));
 		return urlContext + "/list";
 	}
 
@@ -197,19 +198,23 @@ public abstract class CRUDController<T extends BaseModel> extends BaseController
 	}
 
 	protected void beforeSave(HttpServletRequest request,
-			@ModelAttribute("modelObject") T entity, ModelMap model) {
+			@ModelAttribute(MODEL_OBJECT_KEY) T entity, ModelMap model) {
 		if (entity instanceof AbstractBaseModel) {
 			AbstractBaseModel baseModel = (AbstractBaseModel) entity;
-			if (baseModel.getId() == null) {
-				baseModel.setCreatedAt(Calendar.getInstance().getTime());
-				if (baseModel.getCreatedBy()==null) {
-					baseModel.setCreatedBy(getUser(request).getId());
-				}
-			} else {
-				baseModel.setModifiedAt(Calendar.getInstance().getTime());
-				if (baseModel.getModifiedBy()==null) {
-					baseModel.setModifiedBy(getUser(request).getId());
-				}
+			setModifier(request, baseModel);
+		}
+	}
+	
+	protected void setModifier(HttpServletRequest request, AbstractBaseModel entity) {
+		if (entity.getId() == null) {
+			entity.setCreatedAt(Calendar.getInstance().getTime());
+			if (entity.getCreatedBy() == null) {
+				entity.setCreatedBy(getUserId(request));
+			}
+		} else {
+			entity.setModifiedAt(Calendar.getInstance().getTime());
+			if (entity.getModifiedBy() == null) {
+				entity.setModifiedBy(getUserId(request));
 			}
 		}
 	}
@@ -260,31 +265,30 @@ public abstract class CRUDController<T extends BaseModel> extends BaseController
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 
 		response.setContentType(MimeUtil.getContentType(type));
-		if (!type.equals("html"))
-			response.setHeader("Content-Disposition", "attachment;filename="
-					+ urlContext + "Report." + type);
+		if (!StringUtils.equals(type, "html") && !StringUtils.equals(type, "print")) {
+			response.setHeader("Content-Disposition", "attachment;filename=" + urlContext + "Report." + type);
+		}
+		ByteArrayOutputStream out = null;
 		try {
 			criteria.setPageSize(10000);
 			String label = getCriteriaAsString(criteria);
 			System.out.println("Criteria: " + label);
-			ByteArrayOutputStream out = dynamicReportService.exportReport(
-					urlContext + "Report", type, getEntityClass(),
-					columnPropertyList, criteria, request);
+			out = dynamicReportService.exportReport(urlContext + "Report", type, getEntityClass(),
+						columnPropertyList, criteria, request);
 			out.writeTo(response.getOutputStream());
-			if (type.equals("html"))
-				response.getOutputStream()
-						.println(
-								"<script language=\"javascript\">window.print()</script>");
+			if (StringUtils.equals(type, "html") || StringUtils.equals(type, "print")) {
+				response.getOutputStream().println("<script language=\"javascript\">window.print()</script>");
+			}
 			criteria.setPageSize(25);
-			out.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 			log.warn("Unable to create file :" + e);
-		}
+		} finally {
+			CoreUtil.close(out);
+		}  
 	}
 
 	// Set up any custom editors, adds a custom one for java.sql.date by default
-
 	@Override
 	@InitBinder
 	public void initBinder(WebDataBinder binder) {
@@ -328,14 +332,11 @@ public abstract class CRUDController<T extends BaseModel> extends BaseController
 			Long createdBy = getUser(request).getId();
 			saveDoc(request, entity, file, createdBy, errorList);
 			if (errorList.isEmpty()) {
-				model.addAttribute("msgCtx", MANAGE_DOCS_CTX);
-				model.addAttribute("msg", "Successfully uploaded the doc");
+				addMsg(model, MANAGE_DOCS_CTX, "Successfully uploaded the doc");
 			} 
 		} catch (Exception ex) {
 			log.warn("Unable to upload doc:===>>>>>>>>>" + ex);
-			
-			model.addAttribute("errorCtx", MANAGE_DOCS_CTX);
-			model.addAttribute("error", "An error occurred while uploading doc!!");
+			addError(model, MANAGE_DOCS_CTX, "An error occurred while uploading doc!!");
 		}
 		
 		return docActionComplete(request, entity, model);
@@ -359,13 +360,10 @@ public abstract class CRUDController<T extends BaseModel> extends BaseController
 				genericDAO.saveOrUpdate(entity);
 			}
 			
-			model.addAttribute("msgCtx", MANAGE_DOCS_CTX);
-			model.addAttribute("msg", "Successfully deleted the doc");
+			addMsg(model, MANAGE_DOCS_CTX, "Successfully deleted the doc");
 		} else {
-			model.addAttribute("errorCtx", MANAGE_DOCS_CTX);
-			model.addAttribute("error", "An error occurred while deleting the doc!!");
+			addError(model, MANAGE_DOCS_CTX, "An error occurred while deleting the doc!!");
 		}
-		
 		
 		return docActionComplete(request, entity, model);
 	}
@@ -409,8 +407,7 @@ public abstract class CRUDController<T extends BaseModel> extends BaseController
 			// Set to binary type if MIME mapping not found
          mimeType = "application/pdf";
 		}
-		System.out.println("MIME type: " + mimeType);
-      
+		
 		// Modifies response
 		response.setContentType(mimeType);
 		response.setContentLength((int)downloadFile.length());
@@ -433,20 +430,8 @@ public abstract class CRUDController<T extends BaseModel> extends BaseController
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
-			if (inStream != null) {
-				try {
-					inStream.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-			if (outStream != null) {
-				try {
-					outStream.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
+			CoreUtil.close(inStream);
+			CoreUtil.close(outStream);
 		}  
 	}
 	
@@ -504,7 +489,7 @@ public abstract class CRUDController<T extends BaseModel> extends BaseController
 	}
 	
 	protected String constructDocFilePath() {
-		String filePath = DOC_UPLOAD_DIR + "/" + getEntityDocUploadSubDir(); 
+		String filePath = DOCS_UPLOAD_DIR + "/" + getEntityDocUploadSubDir(); 
 		return filePath;
 	}
 	

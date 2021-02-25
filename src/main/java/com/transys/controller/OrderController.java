@@ -47,7 +47,6 @@ import com.transys.core.util.DateUtil;
 import com.transys.core.util.MimeUtil;
 import com.transys.core.util.ModelUtil;
 
-import com.transys.model.AbstractBaseModel;
 import com.transys.model.AdditionalFee;
 import com.transys.model.DeliveryAddress;
 import com.transys.model.CityFee;
@@ -82,6 +81,10 @@ import com.transys.model.vo.OrderReportVO;
 @Controller
 @RequestMapping("/order")
 public class OrderController extends CRUDController<Order> {
+	private static final String ORDERS_TAB = "manageOrders";
+	
+	private static final String ORDER_DETAILS_TAB = "orderDetails";
+	
 	private static final String ORDER_DOC_UPLOAD_DIR = "order";
 	private static final String ORDER_DOC_FILE_SUFFIX = "order_doc";
 	
@@ -229,7 +232,7 @@ public class OrderController extends CRUDController<Order> {
 		String customerIdStr = (String) customerIdObj;
 		Customer customer = genericDAO.getById(Customer.class, Long.valueOf(customerIdStr));
 			
-		Order modelOrder = (Order) model.get("modelObject");
+		Order modelOrder = (Order) model.get(MODEL_OBJECT_KEY);
 		modelOrder.setCustomer(customer);
 		
 		String query = "select obj from DeliveryAddress obj where obj.deleteFlag='1' and obj.customer.id=" 
@@ -307,13 +310,10 @@ public class OrderController extends CRUDController<Order> {
 		
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		criteria.setPageSize(25);
-		//TODO fix me
-		criteria.getSearchMap().remove("_csrf");
 		
 		model.addAttribute("list", genericDAO.search(getEntityClass(), criteria, "deliveryDate desc, orderStatus.status desc, id desc", null, null));
 		
-		model.addAttribute("activeTab", "manageOrders");
-		model.addAttribute("mode", "MANAGE");
+		addTabAttributes(model, "manageOrders", "MANAGE", StringUtils.EMPTY);
 		
 		return urlContext + "/order";
 	}
@@ -322,11 +322,9 @@ public class OrderController extends CRUDController<Order> {
 	public String create(ModelMap model, HttpServletRequest request) {
 		setupCreate(model, request, null);
 		
-		model.addAttribute("activeTab", "manageOrders");
-		model.addAttribute("mode", "ADD");
-		model.addAttribute("activeSubTab", "orderDetails");
+		addTabAttributes(model, StringUtils.EMPTY, ORDER_DETAILS_TAB);
 		
-		model.addAttribute("notesModelObject", new OrderNotes());
+		addNotesModelObject(model, new OrderNotes());
 		
 		return urlContext + "/order";
 	}
@@ -352,7 +350,7 @@ public class OrderController extends CRUDController<Order> {
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/createExchange.do")
-	public String createExchange(HttpServletRequest request, @ModelAttribute("modelObject") Order entity,
+	public String createExchange(HttpServletRequest request, @ModelAttribute(MODEL_OBJECT_KEY) Order entity,
 			BindingResult bindingResult, ModelMap model) {
 		Order exchangeOrder = new Order();
 		exchangeOrder.setPickupOrderId(entity.getId());
@@ -419,18 +417,16 @@ public class OrderController extends CRUDController<Order> {
 			model.addAttribute("allPermitsOfChosenTypesList", allPermitsOfChosenTypesList);
 		}
 		
-		model.addAttribute("modelObject", exchangeOrder);
+		model.addAttribute(MODEL_OBJECT_KEY, exchangeOrder);
 		
 		setupCreate(model, request, exchangeOrder);
 		
-		model.addAttribute("activeTab", "manageOrders");
-		model.addAttribute("mode", "ADD");
-		model.addAttribute("activeSubTab", "orderDetails");
+		addTabAttributes(model, StringUtils.EMPTY, ORDER_DETAILS_TAB);
 		
 		String query = "select obj from DeliveryAddress obj where obj.deleteFlag='1' and obj.customer.id=" +  exchangeOrder.getCustomer().getId() + " order by obj.line1 asc";
 		model.addAttribute("deliveryAddresses", genericDAO.executeSimpleQuery(query));
     	
-		model.addAttribute("notesModelObject", new OrderNotes());
+		addNotesModelObject(model, new OrderNotes());
 		
 		return urlContext + "/order";
 	}
@@ -462,7 +458,7 @@ public class OrderController extends CRUDController<Order> {
 		emptyOrder.setId(orderId);
 		OrderNotes notes = new OrderNotes();
 		notes.setOrder(emptyOrder);
-		model.addAttribute("notesModelObject", notes);
+		addNotesModelObject(model, notes);
 	
 		List<OrderNotes> notesList = genericDAO.executeSimpleQuery("select obj from OrderNotes obj where obj.deleteFlag='1' and obj.order.id=" +  orderId + " order by obj.id asc");
 		model.addAttribute("notesList", notesList);
@@ -472,7 +468,7 @@ public class OrderController extends CRUDController<Order> {
 	
 	@RequestMapping(method = RequestMethod.POST, value = "/saveOrderNotesModal.do")
 	public @ResponseBody String saveOrderNotesModal(HttpServletRequest request,
-			@ModelAttribute("notesModelObject") OrderNotes entity,
+			@ModelAttribute(NOTES_MODEL_OBJECT_KEY) OrderNotes entity,
 			BindingResult bindingResult, ModelMap model) {
 		try {
 			getValidator().validate(entity, bindingResult);
@@ -487,21 +483,7 @@ public class OrderController extends CRUDController<Order> {
 			return urlContext + "/notesModal";
 		}
 		
-		//beforeSave(request, entity, model);
-		if (entity instanceof AbstractBaseModel) {
-			AbstractBaseModel baseModel = (AbstractBaseModel) entity;
-			if (baseModel.getId() == null) {
-				baseModel.setCreatedAt(Calendar.getInstance().getTime());
-				if (baseModel.getCreatedBy() == null) {
-					baseModel.setCreatedBy(getUserId(request));
-				}
-			} else {
-				baseModel.setModifiedAt(Calendar.getInstance().getTime());
-				if (baseModel.getModifiedBy() == null) {
-					baseModel.setModifiedBy(getUserId(request));
-				}
-			}
-		}
+		setModifier(request, entity);
 		
 		entity.setNotesType(OrderNotes.NOTES_TYPE_USER);
 		updateEnteredBy(entity);
@@ -511,24 +493,11 @@ public class OrderController extends CRUDController<Order> {
 		cleanUp(request);
 		
 		return "Order notes saved successfully";
-		
-		/*Long orderId = entity.getOrder().getId();
-		
-		Order emptyOrder = new Order();
-		emptyOrder.setId(orderId);
-		OrderNotes notes = new OrderNotes();
-		notes.setOrder(emptyOrder);
-		model.addAttribute("notesModelObject", notes);
-	
-		List<OrderNotes> notesList = genericDAO.executeSimpleQuery("select obj from OrderNotes obj where obj.order.id=" +  orderId + " order by obj.id asc");
-		model.addAttribute("notesList", notesList);
-		
-		return urlContext + "/notesModal";*/
 	}
 	
 	@RequestMapping(method = RequestMethod.POST, value = "/saveOrderNotes.do")
 	public String saveOrderNotes(HttpServletRequest request,
-			@ModelAttribute("notesModelObject") OrderNotes entity,
+			@ModelAttribute(NOTES_MODEL_OBJECT_KEY) OrderNotes entity,
 			BindingResult bindingResult, ModelMap model) {
 		try {
 			getValidator().validate(entity, bindingResult);
@@ -543,21 +512,7 @@ public class OrderController extends CRUDController<Order> {
 			return urlContext + "/form";
 		}
 		
-		//beforeSave(request, entity, model);
-		if (entity instanceof AbstractBaseModel) {
-			AbstractBaseModel baseModel = (AbstractBaseModel) entity;
-			if (baseModel.getId() == null) {
-				baseModel.setCreatedAt(Calendar.getInstance().getTime());
-				if (baseModel.getCreatedBy() == null) {
-					baseModel.setCreatedBy(getUserId(request));
-				}
-			} else {
-				baseModel.setModifiedAt(Calendar.getInstance().getTime());
-				if (baseModel.getModifiedBy() == null) {
-					baseModel.setModifiedBy(getUserId(request));
-				}
-			}
-		}
+		setModifier(request, entity);
 		
 		entity.setNotesType(OrderNotes.NOTES_TYPE_USER);
 		updateEnteredBy(entity);
@@ -609,7 +564,7 @@ public class OrderController extends CRUDController<Order> {
 	@RequestMapping(method = RequestMethod.POST, value = "/saveDropOffDriver.do")
 	public String saveDropOffDriver(HttpServletRequest request,
 			@RequestParam(value = "currentlyAssignedDumpsterId") Long currentlyAssignedDumpsterId,
-			@ModelAttribute("modelObject") Order entity,
+			@ModelAttribute(MODEL_OBJECT_KEY) Order entity,
 			BindingResult bindingResult, ModelMap model) {
 		try {
 			getValidator().validate(entity, bindingResult);
@@ -655,7 +610,7 @@ public class OrderController extends CRUDController<Order> {
 	
 	@RequestMapping(method = RequestMethod.POST, value = "/revertDropOffToOpen.do")
 	public String revertDropOffToOpen(HttpServletRequest request,
-			@ModelAttribute("modelObject") Order entity,
+			@ModelAttribute(MODEL_OBJECT_KEY) Order entity,
 			BindingResult bindingResult, ModelMap model) {
 		try {
 			getValidator().validate(entity, bindingResult);
@@ -694,7 +649,7 @@ public class OrderController extends CRUDController<Order> {
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/revertCancelToOpen.do")
 	public String revertCancelToOpen(HttpServletRequest request,
-			@ModelAttribute("modelObject") Order entity,
+			@ModelAttribute(MODEL_OBJECT_KEY) Order entity,
 			BindingResult bindingResult, ModelMap model) {
 		try {
 			getValidator().validate(entity, bindingResult);
@@ -806,7 +761,7 @@ public class OrderController extends CRUDController<Order> {
 	
 	@RequestMapping(method = RequestMethod.POST, value = "/savePickupDriver.do")
 	public String savePickupDriver(HttpServletRequest request,
-			@ModelAttribute("modelObject") Order entity,
+			@ModelAttribute(MODEL_OBJECT_KEY) Order entity,
 			BindingResult bindingResult, ModelMap model) {
 		try {
 			getValidator().validate(entity, bindingResult);
@@ -974,8 +929,7 @@ public class OrderController extends CRUDController<Order> {
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		
 		model.addAttribute("list", genericDAO.search(getEntityClass(), criteria, "deliveryDate desc, orderStatus.status desc, id desc", null, null));
-		model.addAttribute("activeTab", "manageOrders");
-		model.addAttribute("mode", "MANAGE");
+		addTabAttributes(model, MODE_MANAGE, StringUtils.EMPTY);
 		
 		return urlContext + "/order";
 	}
@@ -1007,11 +961,8 @@ public class OrderController extends CRUDController<Order> {
 		
 		model.addAttribute("list", genericDAO.search(getEntityClass(), criteria, orderBy, null, null));
 		
-		model.addAttribute("activeTab", "manageOrders");
-		//model.addAttribute("activeSubTab", "orderDetails");
-		model.addAttribute("mode", "MANAGE");
+		addTabAttributes(model, MODE_MANAGE, StringUtils.EMPTY);
 		
-		//return urlContext + "/list";
 		return urlContext + "/order";
 	}
 	
@@ -1447,7 +1398,7 @@ public class OrderController extends CRUDController<Order> {
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/isOrderExchangable.do")
-	public @ResponseBody String isOrderExchangable(HttpServletRequest request, @ModelAttribute("modelObject") Order entity,
+	public @ResponseBody String isOrderExchangable(HttpServletRequest request, @ModelAttribute(MODEL_OBJECT_KEY) Order entity,
 			BindingResult bindingResult, ModelMap model) {
 		/*String errorMsg = String.format("No Dumpster assigned to Örder # %d to be exchanged", entity.getId());
 		return (entity.getDumpster() == null) ? errorMsg : "true";*/
@@ -1600,43 +1551,12 @@ public class OrderController extends CRUDController<Order> {
 	
 	@Override
 	public String edit2(ModelMap model, HttpServletRequest request) {
-		/*Order orderToBeEdited = (Order)model.get("modelObject");
+		Order orderToBeEdited = (Order)model.get(MODEL_OBJECT_KEY);
 		
-		setupUpdate(model, request, orderToBeEdited);
-		
-		model.addAttribute("activeTab", "manageOrders");
-		model.addAttribute("mode", "ADD");
-		
-		String activeSubTab = "orderDetails";
-		String mode = request.getParameter("mode");
-		if (StringUtils.equals("manageDocs", mode)) {
-			activeSubTab = "manageDocs";
-		} 
-		model.addAttribute("activeSubTab", activeSubTab);
-		
-		String query = "select obj from DeliveryAddress obj where obj.deleteFlag='1' and obj.customer.id=" +  orderToBeEdited.getCustomer().getId() + " order by obj.line1 asc";
-		model.addAttribute("deliveryAddresses", genericDAO.executeSimpleQuery(query));
-    	
-		Order emptyOrder = new Order();
-		emptyOrder.setId(orderToBeEdited.getId());
-		OrderNotes notes = new OrderNotes();
-		notes.setOrder(emptyOrder);
-		model.addAttribute("notesModelObject", notes);
-	
-		List<OrderNotes> notesList = genericDAO.executeSimpleQuery("select obj from OrderNotes obj where obj.deleteFlag='1' and obj.order.id=" +  orderToBeEdited.getId() + " order by obj.id asc");
-		model.addAttribute("notesList", notesList);
-		
-		List<List<Permit>> allPermitsOfChosenTypesList = retrievePermitsOfChosenType(orderToBeEdited);
-		model.addAttribute("allPermitsOfChosenTypesList", allPermitsOfChosenTypesList);
-		
-		return urlContext + "/order";*/
-		
-		Order orderToBeEdited = (Order)model.get("modelObject");
-		
-		String activeSubTab = "orderDetails";
-		String mode = request.getParameter("mode");
-		if (StringUtils.equals("manageDocs", mode)) {
-			activeSubTab = "manageDocs";
+		String activeSubTab = ORDER_DETAILS_TAB;
+		String mode = request.getParameter(MODE_KEY);
+		if (StringUtils.equals(MANAGE_DOCS_TAB, mode)) {
+			activeSubTab = MANAGE_DOCS_TAB;
 		}
 		return actionCompleteCommon(request, orderToBeEdited.getId(), model, activeSubTab);
 	}
@@ -1725,7 +1645,7 @@ public class OrderController extends CRUDController<Order> {
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/cancel.do")
-	public @ResponseBody String cancel(HttpServletRequest request, @ModelAttribute("modelObject") Order entity,
+	public @ResponseBody String cancel(HttpServletRequest request, @ModelAttribute(MODEL_OBJECT_KEY) Order entity,
 				BindingResult bindingResult, ModelMap model) {
 		if (!StringUtils.equals(OrderStatus.ORDER_STATUS_OPEN, entity.getOrderStatus().getStatus())) {
 			return String.format("Order # %d cannot be Cancelled as it is not in 'Open' status", entity.getId());
@@ -1754,7 +1674,7 @@ public class OrderController extends CRUDController<Order> {
 	}
 	
 	@Override
-	public String save(HttpServletRequest request, @ModelAttribute("modelObject") Order entity,
+	public String save(HttpServletRequest request, @ModelAttribute(MODEL_OBJECT_KEY) Order entity,
 			BindingResult bindingResult, ModelMap model) {
 		try {
 			getValidator().validate(entity, bindingResult);
@@ -1996,19 +1916,17 @@ public class OrderController extends CRUDController<Order> {
 		
 		List<Order> orderList = genericDAO.executeSimpleQuery("select obj from Order obj where obj.deleteFlag='1' and obj.id=" + orderId);
 		Order entity = orderList.get(0);
-		model.addAttribute("modelObject", entity);
+		addModelObject(model, entity);
 
 		setupUpdate(model, request, entity);
 		
-		model.addAttribute("activeTab", "manageOrders");
-		model.addAttribute("mode", "ADD");
-		model.addAttribute("activeSubTab", activeSubTab);
+		addTabAttributes(model, StringUtils.EMPTY, activeSubTab);
 		
 		Order emptyOrder = new Order();
 		emptyOrder.setId(orderId);
 		OrderNotes notes = new OrderNotes();
 		notes.setOrder(emptyOrder);
-		model.addAttribute("notesModelObject", notes);
+		addNotesModelObject(model, notes);
 		
 		List<OrderNotes> notesList = genericDAO.executeSimpleQuery("select obj from OrderNotes obj where obj.deleteFlag='1' and obj.order.id=" +  orderId + " order by obj.id asc");
 		model.addAttribute("notesList", notesList);
@@ -2035,5 +1953,9 @@ public class OrderController extends CRUDController<Order> {
 	@Override
 	protected String docActionComplete(HttpServletRequest request, Order entity, ModelMap model) {
 		return actionCompleteCommon(request, entity.getId(), model, "manageDocs");
+	}
+	
+	protected void addTabAttributes(ModelMap model, String mode, String activeSubTab) {
+		addTabAttributes(model, ORDERS_TAB, mode, activeSubTab);
 	}
 }

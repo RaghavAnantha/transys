@@ -1,5 +1,9 @@
 package com.transys.core.util;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
 import java.math.BigDecimal;
 
 import java.util.List;
@@ -58,5 +62,29 @@ public class CoreUtil {
 	
 	public static BigDecimal defaultIfNull(BigDecimal bigDecimal) {
 		return bigDecimal == null ? new BigDecimal(0.00) : bigDecimal;
+	}
+	
+	public static void close(InputStream is) {
+		if (is == null) {
+			return;
+		}
+		try {
+			is.close();
+			is = null;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void close(OutputStream os) {
+		if (os == null) {
+			return;
+		}
+		try {
+			os.close();
+			os = null;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }

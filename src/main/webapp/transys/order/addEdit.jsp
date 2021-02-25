@@ -22,6 +22,6 @@
 		<%@include file="notes.jsp"%>
 	</div>
 	<div id="manageDocs" class="tab-pane">
-		<%@include file="manageDocs.jsp"%>
+		<%@include file="/common/manageDocs.jsp"%>
 	</div>
 </div>

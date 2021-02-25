@@ -37,7 +37,7 @@ import com.transys.core.dao.GenericDAO;
 import com.transys.core.util.FormatUtil;
 import com.transys.core.util.MimeUtil;
 import com.transys.core.util.ReportUtil;
-
+import com.transys.model.BaseModel;
 import com.transys.model.Permit;
 //import com.transys.model.Language;
 import com.transys.model.SearchCriteria;
@@ -54,16 +54,28 @@ import net.sf.jasperreports.engine.JasperPrint;
 public class BaseController {
 	protected static Logger log = LogManager.getLogger("com.transys.controller");
 	
-	protected static String MSG_CTX_KEY = "msgCtx";
-	protected static String ERROR_CTX_KEY = "errorCtx";
-	protected static String URL_CTX_KEY = "urlContext";
+	protected static final String MODEL_OBJECT_KEY = "modelObject";
+	protected static final String NOTES_MODEL_OBJECT_KEY = "notesModelObject";
 	
-	protected static String MSG_KEY = "msg";
-	protected static String ERROR_KEY = "error";
+	protected static final String MSG_CTX_KEY = "msgCtx";
+	protected static final String ERROR_CTX_KEY = "errorCtx";
+	protected static final String URL_CTX_KEY = "urlContext";
 	
-	protected static String DOC_UPLOAD_DIR = "/transys/storage";
+	protected static final String MSG_KEY = "msg";
+	protected static final String ERROR_KEY = "error";
 	
-	protected static String MANAGE_DOCS_CTX = "manageDocs";
+	protected static final String ACTIVE_TAB_KEY = "activeTab";
+	protected static final String ACTIVE_SUB_TAB_KEY = "activeSubTab";
+	protected static final String MODE_KEY = "mode";
+	
+	protected static final String MODE_ADD = "ADD";
+	protected static final String MODE_MANAGE = "MANAGE";
+	
+	protected static final String MANAGE_DOCS_TAB = "manageDocs";
+	
+	protected static final String DOCS_UPLOAD_DIR = "/transys/storage";
+	
+	protected static final String MANAGE_DOCS_CTX = "manageDocs";
 	
 	@Autowired
 	protected DynamicReportService dynamicReportService;
@@ -201,7 +213,7 @@ public class BaseController {
 		}
 		
 		criteria.setRequestParams(params);
-		if (params != null && params.size()>0) {
+		if (params != null && params.size() > 0) {
 			Map parameters = new HashMap();
 			if (params.get("pageSize") != null) {
 				criteria.setPageSize(Integer.parseInt(params.get("pageSize")[0]));
@@ -211,15 +223,13 @@ public class BaseController {
 				criteria.setPage(Integer.parseInt(request.getParameter("p")));
 			} else {
 				if (params.get("queryString") != null) {
-						parameters.put(params.get("searchBy")[0],
-								params.get("queryString")[0]);
+						parameters.put(params.get("searchBy")[0], params.get("queryString")[0]);
 					} else {
 						Object[] keys = params.keySet().toArray();
 						for (int i = 0; i < keys.length; i++) {
 							if (params.get(keys[i]) != null) {
 								if (!"rst".equalsIgnoreCase(keys[i].toString()))
-									parameters.put(keys[i],
-											params.get(keys[i])[0]);
+									parameters.put(keys[i], params.get(keys[i])[0]);
 							}
 						}
 					}
@@ -229,8 +239,11 @@ public class BaseController {
 			}
 		}
 		
+		//TODO fix me
+		criteria.getSearchMap().remove("_csrf");
+		updateEffectiveDateInSearch(criteria);
+		
 		request.getSession().setAttribute("searchCriteria", criteria);
-		updateEffectiveDateInSearch(request);
 	}
 	
 	protected SearchCriteria getSearchCriteria(HttpServletRequest request) {
@@ -272,8 +285,7 @@ public class BaseController {
 		return type;
 	}
 	
-	protected void updateEffectiveDateInSearch(HttpServletRequest request) {
-		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
+	protected void updateEffectiveDateInSearch(SearchCriteria criteria) {
 		Map<String, Object> searchMap = criteria.getSearchMap();
 		
 		if (searchMap.containsKey("effectiveStartDate")) {
@@ -285,8 +297,6 @@ public class BaseController {
 			searchMap.put("effectiveEndDate", "<=" + searchMap.get("effectiveEndDate"));
 			System.out.println("Setting effective end date");
 		}
-		
-		criteria.setSearchMap(searchMap);
 	}
 	
 	protected void resetEffectiveDateInSearch(HttpServletRequest request) {
@@ -306,8 +316,6 @@ public class BaseController {
 				System.out.println("Resetting effective end date");
 			}
 		}
-		
-		criteria.setSearchMap(searchMap);
 	}
 	
 	protected void resetEmptyPermitNumberInSearch(HttpServletRequest request) {
@@ -318,8 +326,6 @@ public class BaseController {
 			searchMap.put("number", Permit.EMPTY_PERMIT_NUMBER);
 			System.out.println("Resetting Permit Number");
 		}
-		
-		criteria.setSearchMap(searchMap);
 	}
 
 	protected void setErrorMsg(HttpServletRequest request, HttpServletResponse response, String msg) {
@@ -389,5 +395,24 @@ public class BaseController {
 	protected void addError(ModelMap model, String errorCtx, String error) {
 		model.addAttribute(ERROR_CTX_KEY, errorCtx);
 		model.addAttribute(ERROR_KEY, error);
+	}
+	
+	protected void addModelObject(ModelMap model, BaseModel modelObj) {
+		model.addAttribute(MODEL_OBJECT_KEY, modelObj);
+	}
+	
+	protected void addNotesModelObject(ModelMap model, BaseModel notesModelObj) {
+		model.addAttribute(NOTES_MODEL_OBJECT_KEY, notesModelObj);
+	}
+	
+	protected void addTabAttributes(ModelMap model, String activeTab, String mode, String activeSubTab) {
+		model.addAttribute(ACTIVE_TAB_KEY, activeTab);
+		
+		String modeToBeUsed = StringUtils.defaultIfEmpty(mode, MODE_ADD);
+		model.addAttribute(MODE_KEY, modeToBeUsed);
+		
+		if (StringUtils.isNotEmpty(activeSubTab)) {
+			model.addAttribute(ACTIVE_SUB_TAB_KEY, activeSubTab);
+		}
 	}
 }

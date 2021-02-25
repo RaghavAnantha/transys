@@ -118,7 +118,7 @@ public class Order extends AbstractBaseModel {
 	private BigDecimal balanceAmountDue;
 	
 	@Column(name="hasDocs")
-	private String hasDocs;
+	private String hasDocs = "N";;
 	
 	@Transient
 	String[] fileList;

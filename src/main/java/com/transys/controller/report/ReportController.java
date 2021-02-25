@@ -63,7 +63,7 @@ public abstract class ReportController extends BaseController {
 	}
 	
 	protected boolean excludeCsvHeader() {
-		return false;
+		return true;
 	}
 	
 	protected Map<String, Object> generateReportData(ModelMap model, HttpServletRequest request, SearchCriteria criteria) {
