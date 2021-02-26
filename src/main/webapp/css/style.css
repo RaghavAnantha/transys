@@ -824,17 +824,23 @@ a {
 	font-size: 14px !important;
 }
 
-.custom-checkbox input[type="checkbox"], label {
+.custom-checkbox input[type="checkbox"] {
     background-color: initial;
     cursor: default;
     appearance: auto;
     box-sizing: border-box;
     padding: initial;
     border: initial;
-    margin-right: 2px;
+    margin-right: 0px;
+    margin-left: 0px;
+}
+
+.custom-checkbox label {
+    margin-right: 9px;
     margin-left: 4px;
     margin-bottom: 0px !important;
     line-height: 1.42857143; 
     font-size: 12px;
     font-weight: 100 !important;
+    vertical-align: text-top;
 }
