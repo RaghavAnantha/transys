@@ -22,6 +22,8 @@
 		<%@include file="notes.jsp"%>
 	</div>
 	<div id="manageDocs" class="tab-pane">
-		<%@include file="/common/manageDocs.jsp"%>
+		<jsp:include page="/common/manageDocs.jsp">
+			<jsp:param name="entityName" value="Order" />
+		</jsp:include>
 	</div>
 </div>

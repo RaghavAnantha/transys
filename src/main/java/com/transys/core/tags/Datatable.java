@@ -825,8 +825,12 @@ public final class Datatable extends BodyTagSupport {
 					objOut.println("</span>");
 					objOut.println("</td>");
 					objOut.println("</tr>");
-					objOut.println("<tr><td/></tr>");
-					objOut.println("<tr><td/></tr>");
+					
+					String paddingTd = "<td colspan=" + this.columns.size()
+						+ " style=\"background-color: #EAEAF3;\"/>";
+					String paddingTr = "<tr>" + paddingTd + "</tr>";
+					objOut.println(paddingTr);
+					objOut.println(paddingTr);
 				} 
 				objOut.println("</table>");
 			}

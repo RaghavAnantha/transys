@@ -129,13 +129,13 @@ function processCancel() {
 <table id="form-table" class="table">
 	<tr><td></td></tr>
 	<tr>
-		<td class="form-left">Order #</td>
+		<td class="form-left">${param.entityName} #</td>
 		<td class="td-static">${modelObject.id}</td>
 	</tr>
 	<tr>
 		<td class="form-left">Uploaded Docs<span class="errorMessage"></span>
-		<td style="line-height: 1.42857143;font-size: 13px;">
-			<form:checkboxes items="${fileList}" path="fileList"/>
+		<td>
+			<div class="custom-checkbox"><form:checkboxes items="${fileList}" path="fileList"/></div>
 		</td>
 		<td><form:errors path="fileList" cssClass="error" /></td>
 	</tr>
