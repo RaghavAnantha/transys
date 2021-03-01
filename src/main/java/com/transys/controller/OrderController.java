@@ -248,10 +248,6 @@ public class OrderController extends CRUDController<Order> {
       model.addAttribute("dumpsterSizes", genericDAO.executeSimpleQuery("select obj from DumpsterSize obj where obj.deleteFlag='1' and obj.id != 0 order by obj.id asc"));
    }
 	
-	/*
-	 * (non-Javadoc)
-	 * @see com.primovision.lutransport.controller.CRUDController#setupCreate(org.springframework.ui.ModelMap, javax.servlet.http.HttpServletRequest)
-	 */
 	@Override
 	public void setupCreate(ModelMap model, HttpServletRequest request) {
 		setupCommon(model, request);
@@ -295,13 +291,6 @@ public class OrderController extends CRUDController<Order> {
 		}
       
       model.addAttribute("deliveryHours", deliveryHours);
-      
-      /*List<String> deliveryMinutes = new ArrayList<String>();
-      deliveryMinutes.add("--");
-      deliveryMinutes.add("00");
-      deliveryMinutes.add("15");
-      
-      model.addAttribute("deliveryMinutes", deliveryMinutes);*/
 	}
 	
 	@Override
@@ -309,10 +298,8 @@ public class OrderController extends CRUDController<Order> {
 		setupList(model, request);
 		
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
-		criteria.setPageSize(25);
 		
 		model.addAttribute("list", genericDAO.search(getEntityClass(), criteria, "deliveryDate desc, orderStatus.status desc, id desc", null, null));
-		
 		addTabAttributes(model, "manageOrders", "MANAGE", StringUtils.EMPTY);
 		
 		return urlContext + "/order";
@@ -370,11 +357,6 @@ public class OrderController extends CRUDController<Order> {
 		if (entityOrderFees != null) {
 			OrderFees exchangeOrderFees = new OrderFees();
 			BigDecimal exchangeTotalFees = new BigDecimal(0.00);
-			
-			/*if (entityOrderFees.getPermitFee1() != null) {
-				exchangeOrderFees.setPermitFee1(entityOrderFees.getPermitFee1());
-				exchangeTotalFees = exchangeTotalFees.add(entityOrderFees.getPermitFee1());
-			}*/
 			
 			if (entityOrderFees.getDumpsterPrice() != null) {
 				exchangeOrderFees.setDumpsterPrice(entityOrderFees.getDumpsterPrice());
@@ -470,19 +452,6 @@ public class OrderController extends CRUDController<Order> {
 	public @ResponseBody String saveOrderNotesModal(HttpServletRequest request,
 			@ModelAttribute(NOTES_MODEL_OBJECT_KEY) OrderNotes entity,
 			BindingResult bindingResult, ModelMap model) {
-		try {
-			getValidator().validate(entity, bindingResult);
-		} catch (ValidationException e) {
-			e.printStackTrace();
-			log.warn("Error in validation :" + e);
-		}
-		
-		// Return to form if we had errors
-		if (bindingResult.hasErrors()) {
-			setupCreate(model, request, null);
-			return urlContext + "/notesModal";
-		}
-		
 		setModifier(request, entity);
 		
 		entity.setNotesType(OrderNotes.NOTES_TYPE_USER);
@@ -502,14 +471,12 @@ public class OrderController extends CRUDController<Order> {
 		try {
 			getValidator().validate(entity, bindingResult);
 		} catch (ValidationException e) {
-			e.printStackTrace();
 			log.warn("Error in validation :" + e);
 		}
 		
 		// Return to form if we had errors
 		if (bindingResult.hasErrors()) {
-			setupCreate(model, request, null);
-			return urlContext + "/form";
+			return actionCompleteCommon(request, entity.getOrder().getId(), model, "orderNotes");
 		}
 		
 		setModifier(request, entity);
@@ -569,13 +536,12 @@ public class OrderController extends CRUDController<Order> {
 		try {
 			getValidator().validate(entity, bindingResult);
 		} catch (ValidationException e) {
-			e.printStackTrace();
 			log.warn("Error in validation :" + e);
 		}
+		
 		// Return to form if we had errors
 		if (bindingResult.hasErrors()) {
-			setupCreate(model, request, entity);
-			return urlContext + "/form";
+			return actionCompleteCommon(request, entity.getId(), model, "dropOffDriver");
 		}
 		
 		beforeSave(request, entity, model);
@@ -615,14 +581,12 @@ public class OrderController extends CRUDController<Order> {
 		try {
 			getValidator().validate(entity, bindingResult);
 		} catch (ValidationException e) {
-			e.printStackTrace();
 			log.warn("Error in validation :" + e);
 		}
 		
 		// Return to form if we had errors
 		if (bindingResult.hasErrors()) {
-			setupCreate(model, request, entity);
-			return urlContext + "/order";
+			actionCompleteCommon(request, entity.getId(), model, "dropOffDriver");
 		}
 		
 		beforeSave(request, entity, model);
@@ -654,14 +618,12 @@ public class OrderController extends CRUDController<Order> {
 		try {
 			getValidator().validate(entity, bindingResult);
 		} catch (ValidationException e) {
-			e.printStackTrace();
 			log.warn("Error in validation :" + e);
 		}
 		
 		// Return to form if we had errors
 		if (bindingResult.hasErrors()) {
-			setupCreate(model, request, entity);
-			return urlContext + "/order";
+			actionCompleteCommon(request, entity.getId(), model, "orderDetails");
 		}
 		
 		beforeSave(request, entity, model);
@@ -766,14 +728,12 @@ public class OrderController extends CRUDController<Order> {
 		try {
 			getValidator().validate(entity, bindingResult);
 		} catch (ValidationException e) {
-			e.printStackTrace();
 			log.warn("Error in validation :" + e);
 		}
 		
 		// Return to form if we had errors
 		if (bindingResult.hasErrors()) {
-			setupCreate(model, request, entity);
-			return urlContext + "/form";
+			actionCompleteCommon(request, entity.getId(), model, "pickupDriver");
 		}
 		
 		beforeSave(request, entity, model);
@@ -939,26 +899,7 @@ public class OrderController extends CRUDController<Order> {
 		setupList(model, request);
 		
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
-		criteria.setPageSize(25);
-		
-		/*if (criteria.getSearchMap().get("customer") != null) {
-			String customerId = (String)criteria.getSearchMap().get("customer");
-			if (StringUtils.isNotEmpty(customerId)) {
-				String deliveryAddressQuery = "select obj from DeliveryAddress obj where obj.deleteFlag='1' and obj.customer.id=" + customerId  + " order by obj.line1 asc";
-				model.addAttribute("deliveryAddresses", genericDAO.executeSimpleQuery(deliveryAddressQuery));
-			}
-	   }*/
-		
 		String orderBy = "deliveryDate desc, orderStatus.status desc, id desc"; 
-		/*String deliveryDateFrom = (String)criteria.getSearchMap().get("deliveryDateFrom");
-		String deliveryDateTo = (String)criteria.getSearchMap().get("deliveryDateTo");
-		String pickupDateFrom = (String)criteria.getSearchMap().get("pickupDateFrom");
-		String pickupDateTo = (String)criteria.getSearchMap().get("pickupDateTo");
-		if ( (StringUtils.isNotEmpty(deliveryDateFrom) && StringUtils.isNotEmpty(deliveryDateTo)) ||
-				(StringUtils.isNotEmpty(pickupDateFrom) && StringUtils.isNotEmpty(pickupDateTo)) ) {
-			orderBy = "deliveryAddress.line1";
-		}*/
-		
 		model.addAttribute("list", genericDAO.search(getEntityClass(), criteria, orderBy, null, null));
 		
 		addTabAttributes(model, MODE_MANAGE, StringUtils.EMPTY);
@@ -1139,8 +1080,6 @@ public class OrderController extends CRUDController<Order> {
 			e.printStackTrace();
 		}
 		return json;
-		//String json = (new Gson()).toJson(permitList);
-		//return json;
 	}
 	
 	private List<Permit> retrievePermit(String permitId) {
@@ -1188,8 +1127,6 @@ public class OrderController extends CRUDController<Order> {
 	
 	private List<OrderPermits> retrieveOrderPermits(String orderId, String customerId, String deliveryAddressId, String permitClassId, 
 			String permitTypeId, String deliveryDateStr, String locationTypeId) {
-		//int requestedPermitDays = retrievePermitTypeDays(permitTypeId);
-		
 		String requiredEndDateStr = StringUtils.EMPTY;
 		try {
 			//requiredEndDateStr = DateUtil.addDaysAndFormatToDbDate(deliveryDateStr, (requestedPermitDays - 1));
@@ -1241,12 +1178,9 @@ public class OrderController extends CRUDController<Order> {
 		try {
 			json = objectMapper.writeValueAsString(dumpsterPrice);
 		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return json;
-		//String json = (new Gson()).toJson(permitList);
-		//return json;
 	}
 	
 	private DumpsterPrice retrieveDumpsterPrice(Long dumpsterSizeId, Long materialCategoryId,
@@ -1331,12 +1265,9 @@ public class OrderController extends CRUDController<Order> {
 		try {
 			json = objectMapper.writeValueAsString(materialCategories);
 		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return json;
-		//String json = (new Gson()).toJson(permitList);
-		//return json;
 	}
 	
 	private List<MaterialCategory> retrieveMaterialCategories(Long dumpsterSizeId) {
@@ -1358,19 +1289,12 @@ public class OrderController extends CRUDController<Order> {
 		try {
 			json = objectMapper.writeValueAsString(materialTypes);
 		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return json;
-		//String json = (new Gson()).toJson(permitList);
-		//return json;
 	}
 	
 	private List<MaterialType> retrieveMaterialTypes(Long dumpsterSizeId, Long materialCategoryId) {
-		/*String dumpsterPriceQuery = "select distinct obj.materialType from DumpsterPrice obj where obj.deleteFlag='1'";
-		dumpsterPriceQuery += " and obj.dumpsterSize.id=" + dumpsterSizeId
-				    		  	 +  " and obj.materialCategory.id=" + materialCategoryId
-				    		  	 +  " order by obj.materialType.materialName asc";*/
 		String dumpsterPriceQuery = "select obj from MaterialType obj where obj.deleteFlag='1' and";
 		dumpsterPriceQuery	+= " obj.materialCategory.id=" + materialCategoryId + " order by obj.materialName asc";
 		List<MaterialType> materialTypes = genericDAO.executeSimpleQuery(dumpsterPriceQuery);
@@ -1393,8 +1317,6 @@ public class OrderController extends CRUDController<Order> {
 			e.printStackTrace();
 		}
 		return json;
-		//String json = (new Gson()).toJson(permitList);
-		//return json;
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/isOrderExchangable.do")
@@ -1415,12 +1337,9 @@ public class OrderController extends CRUDController<Order> {
 		try {
 			json = objectMapper.writeValueAsString(permitClassList);
 		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return json;
-		//String json = (new Gson()).toJson(permitList);
-		//return json;
 	}
 	
 	private BigDecimal retrieveCityFee(String cityFeeId) {
@@ -1450,12 +1369,9 @@ public class OrderController extends CRUDController<Order> {
 		try {
 			json = objectMapper.writeValueAsString(overweightFee);
 		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return json;
-		//String json = (new Gson()).toJson(permitList);
-		//return json;
 	}*/
 	
 	private BigDecimal calculateOverweightFee(Date requiredDate, Long dumpsterSizeId, Long materialCategoryId, BigDecimal netWeightTonnage) {
@@ -1566,17 +1482,10 @@ public class OrderController extends CRUDController<Order> {
 		populateSearchCriteria(request, request.getParameterMap());
 		setupCommon(model, request);
 		
-		//model.addAttribute("orderIds", genericDAO.executeSimpleQuery("select obj.id from Order obj where obj.deleteFlag='1' order by obj.id asc"));
-		
 		String[][] strArrOfArr = ModelUtil.retrieveOrderDeliveryContactDetails(genericDAO);
 		String[] phoneArr = strArrOfArr[0];
-		//String[] contactNameArr = strArrOfArr[1];
 		
 		model.addAttribute("deliveryContactPhones", phoneArr);
-		//model.addAttribute("deliveryContactNames", contactNameArr);
-		
-		//String deliveryAddresseQuery = "select distinct obj.line2 from DeliveryAddress obj where obj.deleteFlag='1' and obj.line2 != '' order by obj.line2 asc";
-		//model.addAttribute("deliveryAddressStreets", genericDAO.executeSimpleQuery(deliveryAddresseQuery));
 		
 		List<CustomerVO> customerVOList = ModelUtil.retrieveOrderCustomers(genericDAO);
 		model.addAttribute("customers", customerVOList);
@@ -1598,9 +1507,6 @@ public class OrderController extends CRUDController<Order> {
 			e.printStackTrace();
 		}
 		return json;
-		
-		//String json = (new Gson()).toJson(addressList);
-		//return json;
 	}
 	
 	
@@ -1620,9 +1526,6 @@ public class OrderController extends CRUDController<Order> {
 		}
 		
 		return existingDroppedOffOrderId;
-		
-		//String json = (new Gson()).toJson(customerList.get(0));
-		//return json;
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/customerAddress.do")
@@ -1635,13 +1538,9 @@ public class OrderController extends CRUDController<Order> {
 		try {
 			json = objectMapper.writeValueAsString(customerList.get(0));
 		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return json;
-		
-		//String json = (new Gson()).toJson(customerList.get(0));
-		//return json;
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/cancel.do")
@@ -1679,14 +1578,12 @@ public class OrderController extends CRUDController<Order> {
 		try {
 			getValidator().validate(entity, bindingResult);
 		} catch (ValidationException e) {
-			e.printStackTrace();
 			log.warn("Error in validation :" + e);
 		}
 		
 		// Return to form if we had errors
 		if (bindingResult.hasErrors()) {
-			setupCreate(model, request, entity);
-			return urlContext + "/order";
+			actionCompleteCommon(request, entity.getId(), model, "orderDetails");
 		}
 		
 		String isExchange = request.getParameter("isExchange");
@@ -1759,7 +1656,6 @@ public class OrderController extends CRUDController<Order> {
 		
 		cleanUp(request);
 		
-		//return list(model, request);
 		return saveSuccess(model, request, entity);
 	}
 	
@@ -1904,11 +1800,6 @@ public class OrderController extends CRUDController<Order> {
 	public String saveSuccess(ModelMap model, HttpServletRequest request, Order entity) {
 		addMsg(model, "manageOrder", "Order saved successfully");
 		return actionCompleteCommon(request, entity.getId(), model, "orderDetails");
-		
-		/*Long customerId = entity.getCustomer().getId();
-		List<Customer> customerList = genericDAO.executeSimpleQuery("select obj from Customer obj where obj.deleteFlag='1' and obj.id=" + customerId);
-		Customer orderCustomer = customerList.get(0);
-		entity.setCustomer(orderCustomer);*/
 	}
 	
 	private String actionCompleteCommon(HttpServletRequest request, Long orderId, ModelMap model, String activeSubTab) {
