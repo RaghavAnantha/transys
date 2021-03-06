@@ -30,7 +30,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-//import com.google.gson.Gson;
 
 import com.transys.controller.CRUDController;
 
@@ -67,10 +66,6 @@ public class CustomerController extends CRUDController<Customer> {
 		binder.registerCustomEditor(CustomerStatus.class, new AbstractModelEditor(CustomerStatus.class));
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see com.primovision.lutransport.controller.CRUDController#setupCreate(org.springframework.ui.ModelMap, javax.servlet.http.HttpServletRequest)
-	 */
 	@Override
 	public void setupCreate(ModelMap model, HttpServletRequest request) {
 		//model.addAttribute("customerIds", genericDAO.executeSimpleQuery("select obj.id from Customer obj where obj.deleteFlag='1' order by obj.id asc"));
@@ -96,9 +91,6 @@ public class CustomerController extends CRUDController<Customer> {
 		model.addAttribute("chargeCompanyOptions", chargeCompanyOptions);
 		
 		model.addAttribute("customerStatuses", genericDAO.findByCriteria(CustomerStatus.class, criterias, "status", false));
-		
-		//TODO:  This is for order report - think of moving the report to order
-		//model.addAttribute("orderStatuses", genericDAO.findByCriteria(OrderStatus.class, criterias, "status", false));
 	}
 	
 	@Override
@@ -112,20 +104,11 @@ public class CustomerController extends CRUDController<Customer> {
 		
 		model.addAttribute("deliveryAddressModelObject", new DeliveryAddress());
 			
-		//return urlContext + "/form";
 		return urlContext + "/customer";
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/createModal.do")
 	public String createModal(ModelMap model, HttpServletRequest request) {
-		//setupCreate(model, request);
-		//model.addAttribute("activeTab", "manageCustomer");
-		//model.addAttribute("mode", "ADD");
-		//model.addAttribute("activeSubTab", "billing");
-		//return urlContext + "/form";
-		
-		//model.addAttribute("deliveryAddressModelObject", new Address());
-		
 		Map<String, Object> criterias = new HashMap<String, Object>();
 		model.addAttribute("state", genericDAO.findByCriteria(State.class, criterias, "name", false));
 		
@@ -144,12 +127,6 @@ public class CustomerController extends CRUDController<Customer> {
 	@RequestMapping(method = RequestMethod.GET, value = "/deliveryAddressCreateModal.do")
 	public String deliveryAddressCreateModal(ModelMap model, HttpServletRequest request,
 			 										@RequestParam(value = "customerId") Long customerId) {
-		//setupCreate(model, request);
-		//model.addAttribute("activeTab", "manageCustomer");
-		//model.addAttribute("mode", "ADD");
-		//model.addAttribute("activeSubTab", "billing");
-		//return urlContext + "/form";
-		
 		Map<String, Object> criterias = new HashMap<String, Object>();
 		model.addAttribute("state", genericDAO.findByCriteria(State.class, criterias, "name", false));
 		
@@ -163,8 +140,7 @@ public class CustomerController extends CRUDController<Customer> {
 		return urlContext + "/deliveryAddressModal";
 	}
 	
-	//@Override
-	public String saveSuccess(ModelMap model, HttpServletRequest request, Customer entity) {
+	private String saveSuccess(ModelMap model, HttpServletRequest request, Customer entity) {
 		setupCreate(model, request);
 		
 		model.addAttribute("msgCtx", "manageCustomer");
@@ -196,7 +172,6 @@ public class CustomerController extends CRUDController<Customer> {
 		
 		populateAggregartionValues(model, customerId);
 		
-		//return urlContext + "/form";
 		return urlContext + "/customer";
 	}
 	
@@ -205,17 +180,14 @@ public class CustomerController extends CRUDController<Customer> {
 		setupList(model, request);
 		
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
-		//criteria.getSearchMap().put("id!",0l);
 		criteria.getSearchMap().remove("_csrf");
 		criteria.setPageSize(25);
 		
-		model.addAttribute("list", genericDAO.search(getEntityClass(), criteria,"companyName",null,null));
+		model.addAttribute("list", genericDAO.search(getEntityClass(), criteria, "companyName", null,null));
 		model.addAttribute("activeTab", "manageCustomer");
 		
-		//model.addAttribute("activeSubTab", "billing");
 		model.addAttribute("mode", "MANAGE");
 		
-		//return urlContext + "/list";
 		return urlContext + "/customer";
 	}
 	
@@ -250,7 +222,6 @@ public class CustomerController extends CRUDController<Customer> {
 		
 		populateAggregartionValues(model, customerId);
 		
-		//return urlContext + "/form";
 		return urlContext + "/customer";
 	}
 	
@@ -289,8 +260,6 @@ public class CustomerController extends CRUDController<Customer> {
 		setupList(model, request);
 		
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
-		//criteria.getSearchMap().put("id!",0l);
-		//criteria.setPageSize(25);
 		
 		model.addAttribute("list", genericDAO.search(getEntityClass(), criteria, "companyName", null, null));
 		model.addAttribute("activeTab", "manageCustomer");
@@ -298,24 +267,12 @@ public class CustomerController extends CRUDController<Customer> {
 		
 		return urlContext + "/customer";
 	}
-	/*@RequestMapping(method = RequestMethod.GET, value = "/address.do")
-	public String displayDeliveryAddress(ModelMap model, HttpServletRequest request) {
-		request.getSession().removeAttribute("searchCriteria");
-		setupList(model, request);
-		
-		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
-		//criteria.getSearchMap().put("id!",0l);
-		model.addAttribute("list", genericDAO.search(getEntityClass(), criteria, "companyName", null, null));
-		model.addAttribute("activeTab", "deliveryAddress");
-		return urlContext + "/deliveryAddress";
-	}*/
 	
 	@Override
 	public String search2(ModelMap model, HttpServletRequest request) {
 		setupList(model, request);
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		
-		//criteria.getSearchMap().put("id!",0l);
 		criteria.setPageSize(25);
 		
 		model.addAttribute("list", genericDAO.search(getEntityClass(), criteria, "companyName", null, null));
@@ -325,20 +282,12 @@ public class CustomerController extends CRUDController<Customer> {
 		return urlContext + "/customer";
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see com.primovision.lutransport.controller.CRUDController#setupList(org.springframework.ui.ModelMap, javax.servlet.http.HttpServletRequest)
-	 */
 	@Override
 	public void setupList(ModelMap model, HttpServletRequest request) {
 		populateSearchCriteria(request, request.getParameterMap());
 		setupCreate(model, request);
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see com.primovision.lutransport.controller.CRUDController#save(javax.servlet.http.HttpServletRequest, com.primovision.lutransport.model.BaseModel, org.springframework.validation.BindingResult, org.springframework.ui.ModelMap)
-	 */
 	@Override
 	public String save(HttpServletRequest request, @ModelAttribute("modelObject") Customer entity,
 			BindingResult bindingResult, ModelMap model) {
@@ -346,7 +295,6 @@ public class CustomerController extends CRUDController<Customer> {
 			bindingResult.rejectValue("state", "error.select.option", null, null);*/
 		/*if(entity.getCity() == null)
 			bindingResult.rejectValue("city", "typeMismatch.java.lang.String", null, null);
-		//server side verification
 		if(entity.getZipcode() != null){
 			if(entity.getZipcode().toString().length() < 5)
 			bindingResult.rejectValue("zipcode", "typeMismatch.java.lang.Integer", null, null);
@@ -368,7 +316,6 @@ public class CustomerController extends CRUDController<Customer> {
 			log.warn("Error in validation :" + e);
 		}
 		
-		// return to form if we had errors
 		if (bindingResult.hasErrors()) {
 			setupCreate(model, request);
 			return urlContext + "/form";
@@ -395,7 +342,6 @@ public class CustomerController extends CRUDController<Customer> {
 			model.addAttribute("msgCtx", "manageCustomer");
 			model.addAttribute("error", errorMsg);
 			
-			//TODO: is this reqd?
 			setupCreate(model, request);
 			
 			model.addAttribute("modelObject", entity);
@@ -412,25 +358,6 @@ public class CustomerController extends CRUDController<Customer> {
 		
 		cleanUp(request);
 		
-		//return "redirect:/" + urlContext + "/list.do";
-		//model.addAttribute("activeTab", "manageCustomer");
-		//return urlContext + "/list";
-		
-		/*SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
-		//criteria.getSearchMap().put("id!",0l);
-		//TODO: Fix me 
-		criteria.getSearchMap().remove("_csrf");*/
-		
-		/*setupList(model, request);
-		
-		model.addAttribute("list",genericDAO.search(getEntityClass(), criteria,"companyName",null,null));
-		model.addAttribute("activeTab", "manageCustomer");
-		//return urlContext + "/list";
-		return urlContext + "/customer";*/
-		//request.getSession().removeAttribute("searchCriteria");
-		//request.getParameterMap().remove("_csrf");
-		
-		//return list(model, request);
 		return saveSuccess(model, request, entity);
 	}
 	
@@ -455,7 +382,7 @@ public class CustomerController extends CRUDController<Customer> {
 			e.printStackTrace();
 			log.warn("Error in validation :" + e);
 		}
-		// return to form if we had errors
+		
 		if (bindingResult.hasErrors()) {
 			setupCreate(model, request);
 			return urlContext + "/form";
@@ -474,8 +401,6 @@ public class CustomerController extends CRUDController<Customer> {
 			return urlContext + "/customer";
 		}
 
-		
-		//beforeSave(request, entity, model);
 		if (entity instanceof AbstractBaseModel) {
 			AbstractBaseModel baseModel = (AbstractBaseModel) entity;
 			if (baseModel.getId() == null) {
@@ -506,7 +431,6 @@ public class CustomerController extends CRUDController<Customer> {
 
 		setupCreate(model, request);
 		
-		//model.addAttribute("modelObject", entity);
 		model.addAttribute("activeTab", "manageCustomer");
 		model.addAttribute("mode", "ADD");
 		model.addAttribute("activeSubTab", "customerNotesTab");
@@ -611,7 +535,6 @@ public class CustomerController extends CRUDController<Customer> {
 			log.warn("Error in validation :" + e);
 		}
 		
-		// Return to form if we had errors
 		if (bindingResult.hasErrors()) {
 			setupCreate(model, request);
 			return urlContext + "/form";
@@ -642,7 +565,6 @@ public class CustomerController extends CRUDController<Customer> {
 			return urlContext + "/customer";
 		}
 		
-		//beforeSave(request, entity, model);
 		if (entity instanceof AbstractBaseModel) {
 			AbstractBaseModel baseModel = (AbstractBaseModel) entity;
 			if (baseModel.getId() == null) {
@@ -838,7 +760,6 @@ public class CustomerController extends CRUDController<Customer> {
 			log.warn("Error in validation :" + e);
 		}
 		
-		// Return to form if we had errors
 		if (bindingResult.hasErrors()) {
 			setupCreate(model, request);
 			return urlContext + "/form";
@@ -848,7 +769,6 @@ public class CustomerController extends CRUDController<Customer> {
 			return "ErrorMsg: Duplicate Delivery address";
 		}
 		
-		//beforeSave(request, entity, model);
 		if (entity instanceof AbstractBaseModel) {
 			AbstractBaseModel baseModel = (AbstractBaseModel) entity;
 			if (baseModel.getId() == null) {
@@ -904,13 +824,11 @@ public class CustomerController extends CRUDController<Customer> {
 			log.warn("Error in validation :" + e);
 		}
 		
-		// return to form if we had errors
 		if (bindingResult.hasErrors()) {
 			setupCreate(model, request);
 			return urlContext + "/form";
 		}
 		
-		//beforeSave(request, entity, model);
 		if (entity instanceof AbstractBaseModel) {
 			AbstractBaseModel baseModel = (AbstractBaseModel) entity;
 			if (baseModel.getId() == null) {
@@ -953,37 +871,11 @@ public class CustomerController extends CRUDController<Customer> {
 		
 		cleanUp(request);
 		
-		//return "redirect:/" + urlContext + "/list.do";
-		//model.addAttribute("activeTab", "manageCustomer");
-		//return urlContext + "/list";
-		
-		/*SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
-		//criteria.getSearchMap().put("id!",0l);
-		//TODO: Fix me 
-		criteria.getSearchMap().remove("_csrf");*/
-		
-		/*setupList(model, request);
-		
-		model.addAttribute("list",genericDAO.search(getEntityClass(), criteria,"companyName",null,null));
-		model.addAttribute("activeTab", "manageCustomer");
-		//return urlContext + "/list";
-		return urlContext + "/customer";*/
-		//request.getSession().removeAttribute("searchCriteria");
-		//request.getParameterMap().remove("_csrf");
-		
-		//return list(model, request);
-		//return saveSuccess(model, request, entity);
-		//setupCreate(model, request);
-		//model.addAttribute("modelObject", entity);
-		
 		//Or retrieve cust again?
 		List<State> stateList = genericDAO.executeSimpleQuery("select obj from State obj where obj.id= " + entity.getState().getId() + " and obj.deleteFlag='1' order by obj.name");
 		entity.getState().setName(stateList.get(0).getName());
 		
 		return constructResponseJson(entity);
-				
-		/*String json = (new Gson()).toJson(entity);
-		return json;*/
 	}
 	
 	private String constructResponseJson(Customer entity) {
@@ -992,7 +884,6 @@ public class CustomerController extends CRUDController<Customer> {
 		try {
 			json = objectMapper.writeValueAsString(entity);
 		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
