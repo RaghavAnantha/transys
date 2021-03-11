@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -55,6 +56,7 @@ import com.transys.model.Dumpster;
 import com.transys.model.DumpsterPrice;
 import com.transys.model.DumpsterSize;
 import com.transys.model.DumpsterStatus;
+import com.transys.model.EmployeeStatus;
 import com.transys.model.LocationType;
 import com.transys.model.MaterialCategory;
 import com.transys.model.MaterialType;
@@ -152,7 +154,9 @@ public class OrderController extends CRUDController<Order> {
 		if (order == null) {
 			return;
 		}
-			
+		
+		addMissingDrivers(model, order);
+		
 		Long materialCategoryId = null;
 		if (order.getMaterialType().getMaterialCategory() == null) {
 			Long materialTypeId = order.getMaterialType().getId();
@@ -182,6 +186,32 @@ public class OrderController extends CRUDController<Order> {
 		}
 		model.addAttribute("permitClasses", permitClassList);
    }
+	
+	private void addMissingDrivers(ModelMap model, Order entity) {
+		if (entity == null) {
+			return;
+		}
+		
+		User dropOffDriver = entity.getDropOffDriver();
+		User pickupDriver = entity.getPickupDriver();
+		if (dropOffDriver == null && pickupDriver == null) {
+			return;
+		}
+		
+		List<User> modelDriverList = (List<User>) model.get("drivers");
+		List<String> driverIds = ModelUtil.extractIds(modelDriverList);
+		
+		if (dropOffDriver != null
+				&& !driverIds.contains(String.valueOf(dropOffDriver.getId()))) {
+			modelDriverList.add(0, dropOffDriver);
+		}
+		
+		if (pickupDriver != null 
+				&& !driverIds.contains(String.valueOf(pickupDriver.getId()))
+				&& pickupDriver.getId().longValue() != dropOffDriver.getId().longValue()) {
+			modelDriverList.add(0, pickupDriver);
+		} 
+	}
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/deleteOrderNotes.do")
 	public String deleteOrderNotes(ModelMap model, HttpServletRequest request,
@@ -273,7 +303,7 @@ public class OrderController extends CRUDController<Order> {
       String driverRole = Role.DRIVER_ROLE;
       String driverQuery = "select obj from User obj where obj.deleteFlag='1' and obj.id!=0"
       		+ " and obj.role.name='" + driverRole + "'"
-      		//+ " and obj.accountStatus=1 and obj.employee.status=1"
+      		+ " and obj.accountStatus=1 and obj.employee.status=1"
       		+ " order by obj.employee.firstName asc";
       List<User> driversList = genericDAO.executeSimpleQuery(driverQuery);
       model.addAttribute("drivers", driversList);
@@ -1467,13 +1497,13 @@ public class OrderController extends CRUDController<Order> {
 	
 	@Override
 	public String edit2(ModelMap model, HttpServletRequest request) {
-		Order orderToBeEdited = (Order)model.get(MODEL_OBJECT_KEY);
-		
 		String activeSubTab = ORDER_DETAILS_TAB;
 		String mode = request.getParameter(MODE_KEY);
 		if (StringUtils.equals(MANAGE_DOCS_TAB, mode)) {
 			activeSubTab = MANAGE_DOCS_TAB;
 		}
+		
+		Order orderToBeEdited = (Order)model.get(MODEL_OBJECT_KEY);
 		return actionCompleteCommon(request, orderToBeEdited.getId(), model, activeSubTab);
 	}
 	

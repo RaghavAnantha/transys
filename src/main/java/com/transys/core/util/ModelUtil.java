@@ -13,6 +13,7 @@ import org.apache.commons.collections.comparators.ComparatorChain;
 import org.apache.commons.lang3.StringUtils;
 
 import com.transys.core.dao.GenericDAO;
+import com.transys.model.AbstractBaseModel;
 import com.transys.model.Customer;
 import com.transys.model.DumpsterSize;
 import com.transys.model.DumpsterStatus;
@@ -339,5 +340,17 @@ public class ModelUtil {
 		
 		anOrderReportVO.setTotalAmountPaid(anOrder.getTotalAmountPaid());
 		anOrderReportVO.setBalanceAmountDue(anOrder.getBalanceAmountDue());
+	}
+	
+	public static List<String> extractIds(List<? extends AbstractBaseModel> entityList) {
+		if (entityList == null || entityList.isEmpty()) {
+			return Collections.EMPTY_LIST;
+		}
+		
+		List<String> entityIds = new ArrayList<String>();
+		for (AbstractBaseModel anEntity : entityList) {
+			entityIds.add(String.valueOf(anEntity.getId().longValue()));
+		}
+		return entityIds;
 	}
 }
