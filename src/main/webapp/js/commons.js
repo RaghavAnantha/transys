@@ -48,7 +48,7 @@ function ValidateFileType(fileId) {
 	return true;
  }
 
-function removeData() {
+function processBulkDelete() {
 	var inputs = document.getElementsByName("id");
 	var submitForm = false;
 	for ( var i = 0; i < inputs.length; i++) {
