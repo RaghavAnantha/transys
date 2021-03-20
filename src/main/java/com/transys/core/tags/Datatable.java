@@ -908,19 +908,19 @@ public final class Datatable extends BodyTagSupport {
 					}
 					
 					if (cancelColumn != null) {
-						cancelColumn.setLinkUrl("javascript:processCancel('"+baseCancelUrl.replace(idValueHolder, idStr)+"',"+id+");");
+						cancelColumn.setLinkUrl("javascript:processCancel('"+baseCancelUrl.replace(idValueHolder, idStr)+"',"+idStr+");");
 					}
 					
 					if (deleteColumn != null) {
-						deleteColumn.setLinkUrl("javascript:processDelete('"+baseDeleteUrl.replace(idValueHolder, idStr)+"',"+id+");");
+						deleteColumn.setLinkUrl("javascript:processDelete('"+baseDeleteUrl.replace(idValueHolder, idStr)+"',"+idStr+");");
 					}
 					
 					if (itemPrintColumn != null) {
-						itemPrintColumn.setLinkUrl("javascript:processItemPrint('"+baseItemPrintUrl.replace(idValueHolder, idStr)+"',"+id+");");
+						itemPrintColumn.setLinkUrl("javascript:processItemPrint('"+baseItemPrintUrl.replace(idValueHolder, idStr)+"',"+idStr+");");
 					}
 					
 					if (manageDocsColumn != null) {
-						manageDocsColumn.setLinkUrl("javascript:processManageDocs('"+baseManageDocsUrl.replace(idValueHolder, idStr)+"',"+id+");");
+						manageDocsColumn.setLinkUrl("javascript:processManageDocs('"+baseManageDocsUrl.replace(idValueHolder, idStr)+"',"+idStr+");");
 					}
 					
 					if (multipleDelete || multipleSelect) {
