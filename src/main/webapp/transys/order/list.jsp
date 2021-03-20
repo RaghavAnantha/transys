@@ -256,7 +256,8 @@ function processManageDocs(id) {
 
 <form:form name="orderServiceForm" id="orderServiceForm" class="tab-color">
 	<transys:datatable urlContext="order" deletable="false"
-		editable="true" cancellable="true" insertable="true" baseObjects="${list}"
+		editable="true" cancellable="true" insertable="true" itemPrintable="true"  
+		manageDocs="true" baseObjects="${list}"
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
 		pagingLink="search.do" multipleDelete="false" searcheable="false"
 		exportPdf="true" exportXls="true" dataQualifier="manageOrders">
@@ -285,10 +286,8 @@ function processManageDocs(id) {
 		<transys:textcolumn headerText="Inv." dataField="invoiced"/>
 		<transys:textcolumn headerText="Inv. #" dataField="invoiceId"/>
 		<transys:textcolumn headerText="Inv. Dt" dataField="invoiceDate" dataFormat="MM/dd/yyyy"/>
-		<transys:textcolumn headerText="Docs" dataField="hasDocs"/>
-		<transys:imagecolumn headerText="MAN. DOC" linkUrl="javascript:processManageDocs('{id}');" imageSrc="fa fa-file-o" HAlign="center" title="Manage Docs"/>
-	 	<transys:imagecolumn headerText="EXCH" linkUrl="javascript:processExchange('{id}');" imageSrc="${imageCtx}/exchange.png" HAlign="center" title="Exchange"/>
-		<transys:imagecolumn headerText="PRINT" linkUrl="javascript:printOrder('{id}');" imageSrc="${imageCtx}/print.png" HAlign="center" title="Print"/>
+		<transys:textcolumn headerText="Doc" dataField="hasDocs"/>
+		<transys:imagecolumn headerText="EXCH" linkUrl="javascript:processExchange('{id}');" imageSrc="${imageCtx}/exchange.png" HAlign="center" title="Exchange"/>
 	</transys:datatable>
 	<%session.setAttribute("manageOrdersColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
 </form:form>
