@@ -192,6 +192,19 @@ function processCancel(url, id) {
 	}	
 }
 
+function processManageDocs(url, id) {
+	document.location = url;
+}
+
+function processItemPrint(url, id) {
+	document.location = url;
+}
+
+function processItemPrintHref(id) {
+	var href = "printItem.do?id=" + id;
+	document.location.href = href
+}
+
 function hideTr( objId ){
 	var obj =  document.getElementById( objId );
 	if( obj != null )

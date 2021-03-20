@@ -935,9 +935,9 @@ public class OrderController extends CRUDController<Order> {
 		return urlContext + "/order";
 	}
 	
-	@RequestMapping(method = {RequestMethod.GET}, value = "/printOrder.do")
+	@RequestMapping(method = {RequestMethod.GET}, value = "/printItem.do")
 	public void printOrder(ModelMap model, HttpServletRequest request, HttpServletResponse response, 
-			@RequestParam("orderId") Long orderId) {
+			@RequestParam("id") Long orderId) {
 		String query = "select obj from Order obj where obj.deleteFlag='1' and obj.id= ";
 		List<Order> orderList = genericDAO.executeSimpleQuery(query + orderId);
 		

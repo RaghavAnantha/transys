@@ -1095,10 +1095,10 @@ public final class Datatable extends BodyTagSupport {
 			//User user = (User)pageContext.getSession().getAttribute("userInfo");
 			//AuthenticationService authenticationService = (AuthenticationService)SpringAppContext.getBean("authenticationService");
 			
-			String locale=(String)pageContext.getSession().getAttribute("lang");
+			//String locale=(String)pageContext.getSession().getAttribute("lang");
 			
 			if (editable) {
-				String url = "/"+urlContext+"/edit.do";
+				//String url = "/"+urlContext+"/edit.do";
 				//if (authenticationService.hasUserPermission(user, url)) {
 					//objOut.println("<th width=\"30\">"+CacheUtil.getText("messageResourceCache","label_Edit_"+locale)+"</th>");
 					objOut.println("<th width=\"30\">"+"EDIT"+"</th>");
@@ -1114,10 +1114,26 @@ public final class Datatable extends BodyTagSupport {
 				//}
 			}
 			if (deletable) {
-				String url = "/"+urlContext+"/delete.do";
+				//String url = "/"+urlContext+"/delete.do";
 				//if (authenticationService.hasUserPermission(user, url)){
 					//objOut.println("<th  width=\"30\">"+CacheUtil.getText("messageResourceCache","label_Delete_"+locale)+"</th>");
 					objOut.println("<th  width=\"30\">"+"DEL"+"</th>");
+					additionalColumn++;
+				//}
+			}
+			if (itemPrintable) {
+				//String url = "/"+urlContext+"/printItem.do";
+				//if (authenticationService.hasUserPermission(user, url)){
+					//objOut.println("<th  width=\"30\">"+CacheUtil.getText("messageResourceCache","label_Delete_"+locale)+"</th>");
+					objOut.println("<th  width=\"30\">"+"PRINT"+"</th>");
+					additionalColumn++;
+				//}
+			}
+			if (manageDocs) {
+				//String url = "/"+urlContext+"/edit.do&mode=manageDocs";
+				//if (authenticationService.hasUserPermission(user, url)){
+					//objOut.println("<th  width=\"30\">"+CacheUtil.getText("messageResourceCache","label_Delete_"+locale)+"</th>");
+					objOut.println("<th  width=\"30\">"+"MAN. DOC"+"</th>");
 					additionalColumn++;
 				//}
 			}

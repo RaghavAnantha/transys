@@ -1848,7 +1848,8 @@ $(function() {
 				<c:if test="${modelObject.id == null}">
 					<c:set var="printDisabled" value="disabled" />
 				</c:if>
-				<input type="button" id="orderPrintBtn" ${printDisabled} value="Print" class="flat btn btn-primary btn-sm btn-sm-ext" onClick="location.href='printOrder.do?orderId=${modelObject.id}'" />
+				<input type="button" id="orderPrintBtn" ${printDisabled} value="Print" class="flat btn btn-primary btn-sm btn-sm-ext" 
+					onClick= "javascript:processItemPrintHref('${modelObject.id}');" />
 			</td>
 		</tr>
 		<tr><td></td></tr>

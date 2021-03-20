@@ -1,10 +1,5 @@
 <%@include file="/common/taglibs.jsp"%>
 <script>
-function printOrder(orderId) {
-	var href = "printOrder.do?orderId=" + orderId;
-	document.location.href = href
-}
-
 function processExchange(orderId) {
 	if (!confirm("Do you want to Exchange Order # " + orderId + "?")) {
 		return;
@@ -71,10 +66,6 @@ function populateCustomerDeliveryAddress() {
     	   	});
 		}
 	}); 
-}
-
-function processManageDocs(id) {
-	document.location = "${ctx}/order/edit.do?id=" + id + "&mode=manageDocs";
 }
 </script>
 <br />
