@@ -52,8 +52,10 @@ public final class Datatable extends BodyTagSupport {
 	private boolean editable;
 	private boolean cancellable;
 	private boolean deletable;
+	private boolean itemPrintable;
 	private boolean multipleDelete;
 	private boolean multipleSelect;
+	private boolean manageDocs;
 	private boolean exportPdf;
 	private boolean exportXls;
 	private boolean exportXlsx;
@@ -66,6 +68,8 @@ public final class Datatable extends BodyTagSupport {
 	private String deletableParams = StringUtils.EMPTY;
 	private String exportableParams = StringUtils.EMPTY;
 	private String cancelableParams = StringUtils.EMPTY;
+	private String itemPrintableParams = StringUtils.EMPTY;
+	private String manageDocsParams = StringUtils.EMPTY;
 	
 	private String cssClass = null;
 	private String bgColor = null;
@@ -641,6 +645,45 @@ public final class Datatable extends BodyTagSupport {
 	public void setExportableParams(String exportableParams) {
 		this.exportableParams = exportableParams;
 	}
+	public boolean isManageDocs() {
+		return manageDocs;
+	}
+
+	public void setManageDocs(boolean manageDocs) {
+		this.manageDocs = manageDocs;
+	}
+
+	public String getManageDocsParams() {
+		return manageDocsParams;
+	}
+
+	public void setManageDocsParams(String manageDocsParams) {
+		this.manageDocsParams = manageDocsParams;
+	}
+
+	public boolean isItemPrintable() {
+		return itemPrintable;
+	}
+
+	public void setItemPrintable(boolean itemPrintable) {
+		this.itemPrintable = itemPrintable;
+	}
+
+	public String getCancelableParams() {
+		return cancelableParams;
+	}
+
+	public void setCancelableParams(String cancelableParams) {
+		this.cancelableParams = cancelableParams;
+	}
+
+	public String getItemPrintableParams() {
+		return itemPrintableParams;
+	}
+
+	public void setItemPrintableParams(String itemPrintableParams) {
+		this.itemPrintableParams = itemPrintableParams;
+	}
 
 	/*------------------------------------------------------------------------------
 	 * Overridden Methods
@@ -713,13 +756,19 @@ public final class Datatable extends BodyTagSupport {
 	 *----------------------------------------------------------------------------*/
 	private void drawGrid() throws JspException {
 		String strFld = null;
+		
 		IColumnTag objCol = null;
+		
 		JspWriter objOut = null;
 		Iterator iterCol = null;
+		
 		ImageColumn editColumn = null;
 		ImageColumn cancelColumn = null;
 		ImageColumn deleteColumn = null;
-		TextColumn checkBoxColumn=null;
+		ImageColumn itemPrintColumn = null;
+		ImageColumn manageDocsColumn = null;
+		
+		TextColumn checkBoxColumn = null;
 		
 		//User user = (User)pageContext.getSession().getAttribute("userInfo");
 		//AuthenticationService authenticationService = (AuthenticationService)SpringAppContext.getBean("authenticationService");
@@ -776,6 +825,34 @@ public final class Datatable extends BodyTagSupport {
 						this.columns.add(deleteColumn);
 					//}
 				}
+				if (itemPrintable) {
+					String url = "/"+urlContext+"/printItem.do";
+					//if (authenticationService.hasUserPermission(user, url)) {
+						itemPrintColumn = new ImageColumn();
+						itemPrintColumn.setImageSrc(pageContext.getAttribute("resourceCtx")+"/images/print.png");
+						itemPrintColumn.setPageContext(this.pageContext);
+						itemPrintColumn.setImageBorder(0);
+						itemPrintColumn.setWidth("30");
+						itemPrintColumn.setAlterText("Print");
+						itemPrintColumn.setTitle("Print");
+						itemPrintColumn.cssClass = "centerImage";
+						this.columns.add(itemPrintColumn);
+					//}
+				}
+				if (manageDocs) {
+					String url = "/"+urlContext+"/edit.do";
+					//if (authenticationService.hasUserPermission(user, url)) {
+						manageDocsColumn = new ImageColumn();
+						manageDocsColumn.setImageSrc("fa fa-file-o");
+						manageDocsColumn.setPageContext(this.pageContext);
+						manageDocsColumn.setImageBorder(0);
+						manageDocsColumn.setWidth("30");
+						manageDocsColumn.setAlterText("Manage Docs");
+						manageDocsColumn.setTitle("Manage Docs");
+						manageDocsColumn.cssClass = "centerImage";
+						this.columns.add(manageDocsColumn);
+					//}
+				}
 				if (multipleDelete || multipleSelect) {
 					checkBoxColumn = new TextColumn();
 					checkBoxColumn.setPageContext(this.pageContext);
@@ -801,6 +878,16 @@ public final class Datatable extends BodyTagSupport {
 					baseCancelUrl += ("&" + cancelableParams);
 				}
 				
+				String baseItemPrintUrl = baseUrl+"/printItem.do" + idParams;
+				if (StringUtils.isNotEmpty(itemPrintableParams)) {
+					baseItemPrintUrl += ("&" + itemPrintableParams);
+				}
+				
+				String baseManageDocsUrl = baseUrl+"/edit.do" + idParams + "&mode=manageDocs";
+				if (StringUtils.isNotEmpty(manageDocsParams)) {
+					baseManageDocsUrl += ("&" + manageDocsParams);
+				}
+				
 				for (int i = 0; i < baseObjects.size(); i++) {
 					if ((i % 2) == 0)
 						objOut.println("<tr class=\"even\">");
@@ -811,7 +898,7 @@ public final class Datatable extends BodyTagSupport {
 					this.currItem = baseObjects.get(i);
 					String idStr = String.valueOf(PropertyUtils.getProperty(currItem, "id"));
 					
-					if (editColumn!=null) {
+					if (editColumn != null) {
 						//editColumn.setLinkUrl(pageContext.getAttribute("ctx")+"/"+urlContext+"/edit.do?id="+PropertyUtils.getProperty(currItem, "id") + "\" data-backdrop=\"static\" data-remote=\"false\" data-toggle=\"modal\" data-target=\"#editModal");
 						if (editableInScreen) {
 							editColumn.setLinkUrl("#");
@@ -821,11 +908,19 @@ public final class Datatable extends BodyTagSupport {
 					}
 					
 					if (cancelColumn != null) {
-						cancelColumn.setLinkUrl("javascript:processCancel('"+baseDeleteUrl.replace(idValueHolder, idStr)+"',"+id+");");
+						cancelColumn.setLinkUrl("javascript:processCancel('"+baseCancelUrl.replace(idValueHolder, idStr)+"',"+id+");");
 					}
 					
 					if (deleteColumn != null) {
 						deleteColumn.setLinkUrl("javascript:processDelete('"+baseDeleteUrl.replace(idValueHolder, idStr)+"',"+id+");");
+					}
+					
+					if (itemPrintColumn != null) {
+						itemPrintColumn.setLinkUrl("javascript:processItemPrint('"+baseItemPrintUrl.replace(idValueHolder, idStr)+"',"+id+");");
+					}
+					
+					if (manageDocsColumn != null) {
+						manageDocsColumn.setLinkUrl("javascript:processManageDocs('"+baseManageDocsUrl.replace(idValueHolder, idStr)+"',"+id+");");
 					}
 					
 					if (multipleDelete || multipleSelect) {
