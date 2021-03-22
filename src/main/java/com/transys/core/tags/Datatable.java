@@ -1100,7 +1100,7 @@ public final class Datatable extends BodyTagSupport {
 				//String url = "/"+urlContext+"/edit.do";
 				//if (authenticationService.hasUserPermission(user, url)) {
 					//objOut.println("<th width=\"30\">"+CacheUtil.getText("messageResourceCache","label_Edit_"+locale)+"</th>");
-					objOut.println("<th width=\"30\">"+"EDIT"+"</th>");
+					objOut.println("<th width=\"30\">"+"EDT"+"</th>");
 					additionalColumn++;
 				//}
 			}
@@ -1124,7 +1124,7 @@ public final class Datatable extends BodyTagSupport {
 				//String url = "/"+urlContext+"/printItem.do";
 				//if (authenticationService.hasUserPermission(user, url)){
 					//objOut.println("<th  width=\"30\">"+CacheUtil.getText("messageResourceCache","label_Delete_"+locale)+"</th>");
-					objOut.println("<th  width=\"30\">"+"PRINT"+"</th>");
+					objOut.println("<th  width=\"30\">"+"PRN"+"</th>");
 					additionalColumn++;
 				//}
 			}
@@ -1132,7 +1132,7 @@ public final class Datatable extends BodyTagSupport {
 				//String url = "/"+urlContext+"/edit.do&mode=manageDocs";
 				//if (authenticationService.hasUserPermission(user, url)){
 					//objOut.println("<th  width=\"30\">"+CacheUtil.getText("messageResourceCache","label_Delete_"+locale)+"</th>");
-					objOut.println("<th  width=\"30\">"+"MAN. DOC"+"</th>");
+					objOut.println("<th  width=\"30\">"+"MAN DOC"+"</th>");
 					additionalColumn++;
 				//}
 			}
