@@ -439,3 +439,45 @@ function clearTextAndFocus(field) {
 	document.getElementById(field).value = "";
 	$("#"+field).focus();
 }
+
+function isImageLoaded(img) {
+    // check for IE
+    if (!img.complete) {
+        return false;
+    }
+    // check for Firefox
+    if (typeof img.naturalWidth != "undefined" && img.naturalWidth == 0) {
+        return false;
+    }
+    //console.log("Complete: " + img.complete);
+    //console.log("Natural width: " + img.naturalWidth);
+    
+    // assume it's ok
+    return true;
+}
+
+function areReportImagesLoaded(ctx) {
+	var imgLoaded = true;
+	$("img").filter("[src^='" + ctx + "/image?image=img_']").each(function() {
+		var img = $(this)[0];
+		if (!isImageLoaded(img)) {
+			imgLoaded = false;
+		}
+	});
+	return imgLoaded;
+}
+
+function removeJasperPrint() {
+	jQuery.ajax({
+		url:'ajax.do?action=removeJasperPrint', 
+		success: function(data) {
+		}
+	});
+}
+
+function verifyAndRemoveJasperPrint(ctx) {
+	if (areReportImagesLoaded(ctx)) {
+		removeJasperPrint();
+	}
+}
+

@@ -1,16 +1,5 @@
 <%@ include file="/common/taglibs.jsp"%>
 
-<script language="javascript">
-	function removeJasperPrint() {
-		jQuery.ajax({
-			url:'ajax.do?action=removeJasperPrint', 
-			success: function( data ) {
-				// Do nothing
-			}
-		});	
-	} 
-</script>
-
 <%@page import="net.sf.jasperreports.engine.JasperPrint" %>
 <%@page import="net.sf.jasperreports.engine.export.HtmlExporter" %>
 
