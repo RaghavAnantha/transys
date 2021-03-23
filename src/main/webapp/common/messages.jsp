@@ -19,7 +19,7 @@
 	    <div class="message">
 	    	<div style="margin-top: 5px"></div>
 	        <c:forEach var="message" items="${msg}">
-	            <img src="${iconInformationlImage}" alt="Information" class="icon" />
+	            <img src="${iconInformationImage}" alt="Information" class="icon" />
 	            <c:out value="${message}" escapeXml="false"/><br />
 	        </c:forEach>
 	    </div>

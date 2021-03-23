@@ -1,4 +1,4 @@
-package com.transys.model;
+package com.transys.model.invoice;
 
 import java.math.BigDecimal;
 
@@ -13,12 +13,15 @@ import javax.persistence.Transient;
 
 import com.transys.core.util.FormatUtil;
 
+import com.transys.model.AbstractBaseModel;
+import com.transys.model.PaymentMethodType;
+
 @Entity
-@Table(name="orderPayment")
-public class OrderPayment extends AbstractBaseModel {
+@Table(name="orderInvoicePayment")
+public class OrderInvoicePayment extends AbstractBaseModel {
 		@ManyToOne
-		@JoinColumn(name="orderId") 
-		private Order order;
+		@JoinColumn(name="invoiceId") 
+		private OrderInvoiceHeader invoice;
 		
 		@ManyToOne
 		@JoinColumn(name="paymentMethodId") 
@@ -45,14 +48,14 @@ public class OrderPayment extends AbstractBaseModel {
 		@Column(name="paymentDate")
 		private Date paymentDate;
 
-		public Order getOrder() {
-			return order;
+		public OrderInvoiceHeader getInvoice() {
+			return invoice;
 		}
 
-		public void setOrder(Order order) {
-			this.order = order;
+		public void setInvoice(OrderInvoiceHeader invoice) {
+			this.invoice = invoice;
 		}
-		
+
 		public PaymentMethodType getPaymentMethod() {
 			return paymentMethod;
 		}

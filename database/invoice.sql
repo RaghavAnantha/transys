@@ -134,5 +134,29 @@ ADD COLUMN `invoiced` VARCHAR(10) NULL DEFAULT 'N' COMMENT '' AFTER `balanceAmou
 ALTER TABLE `transys`.`transysOrder` 
 ADD COLUMN `invoiceDate` DATETIME NULL DEFAULT NULL COMMENT '' AFTER `invoiced`,
 ADD COLUMN `invoiceId` BIGINT(20) NULL DEFAULT NULL COMMENT '' AFTER `invoiceDate`;
+------------
+
+CREATE TABLE `transys`.`orderInvoicePayment` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `created_at` datetime NOT NULL,
+  `created_by` bigint(20) NOT NULL,
+  `delete_flag` int(11) NOT NULL DEFAULT '1',
+  `modified_at` datetime DEFAULT NULL,
+  `modified_by` bigint(20) DEFAULT NULL,
+  `amountPaid` decimal(6,2) NOT NULL DEFAULT '0.00',
+  `ccExpDate` datetime DEFAULT NULL,
+  `ccName` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `ccNumber` varchar(45) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `ccReferenceNum` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `checkNum` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `paymentDate` datetime NOT NULL,
+  `invoiceId` bigint(20) NOT NULL,
+  `paymentMethodId` bigint(20) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `orderInvoicePaymentInvoiceHeaderRef_idx` (`invoiceId`),
+  KEY `orderInvoicePaymentMethodRef_idx` (`paymentMethodId`),
+  CONSTRAINT `orderInvoicePaymentInvoiceHeaderRef` FOREIGN KEY (`invoiceId`) REFERENCES `orderInvoiceHeader` (`id`),
+  CONSTRAINT `orderInvoicePaymentMethodRef` FOREIGN KEY (`paymentMethodId`) REFERENCES `paymentMethodType` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 

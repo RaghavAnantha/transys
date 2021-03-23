@@ -61,7 +61,7 @@ import com.transys.model.SearchCriteria;
 import com.transys.model.User;
 import com.transys.model.invoice.OrderInvoiceDetails;
 import com.transys.model.invoice.OrderInvoiceHeader;
-
+import com.transys.model.invoice.OrderInvoicePayment;
 import com.transys.model.vo.CustomerVO;
 import com.transys.model.vo.DeliveryAddressVO;
 import com.transys.model.vo.invoice.InvoiceVO;
@@ -93,6 +93,15 @@ public class InvoiceController extends BaseController {
 		setupManageInvoiceList(model, request);
 		
 		return getUrlContext() + "/manageInvoiceList";
+	}
+	
+	@RequestMapping(method = { RequestMethod.GET, RequestMethod.POST }, value = "/invoicePaymentMain.do")
+	public String invoicePaymentMain(ModelMap model, HttpServletRequest request) {
+		//clearSearchCriteria(request);
+		
+		setupInvoicePaymentList(model, request);
+		
+		return getUrlContext() + "/invoicePaymentList";
 	}
 	
 	@RequestMapping(method = {RequestMethod.GET, RequestMethod.POST }, value = "/createInvoiceSearch.do")
@@ -152,6 +161,17 @@ public class InvoiceController extends BaseController {
 		return getUrlContext() + "/manageInvoiceList";
 	}
 	
+	@RequestMapping(method = {RequestMethod.GET, RequestMethod.POST }, value = "/invoicePaymentSearch.do")
+	public String invoicePaymentSearch(ModelMap model, HttpServletRequest request) {
+		setupManageInvoiceList(model, request);
+		
+		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
+		List<OrderInvoicePayment> orderInvoicePaymentList = performInvoicePaymentSearch(criteria);
+		model.addAttribute("list", orderInvoicePaymentList);
+		
+		return getUrlContext() + "/invoicePaymentList";
+	}
+	
 	private void setupCommon(ModelMap model, HttpServletRequest request,
 					String customerIdKey, String orderInvoiced) {
 		populateSearchCriteria(request, request.getParameterMap());
@@ -189,17 +209,26 @@ public class InvoiceController extends BaseController {
 		searchCriteria.setPageSize(150);
 		
 		String query = "select obj.id from OrderInvoiceHeader obj where obj.deleteFlag=1 order by obj.id asc";
-		/*List<OrderInvoiceHeader> orderInvoiceHeaderList = genericDAO.executeSimpleQuery(query);
-		List<String> invoiceNoList = new ArrayList<String>();
-		for (Object obj : orderInvoiceHeaderList) {
-			invoiceNoList.add(obj.toString());
-		}
-		model.addAttribute("invoiceNos", invoiceNoList);*/
 		model.addAttribute("invoiceNos", genericDAO.executeSimpleQuery(query));
 		
 		model.addAttribute("msgCtx", "manageInvoice");
 		model.addAttribute("errorCtx", "manageInvoice");
 		model.addAttribute("activeTab", "manageInvoice");
+	}
+	
+	private void setupInvoicePaymentList(ModelMap model, HttpServletRequest request) {
+		setupCommon(model, request, "invoicePaymentCustomerId", "Y");
+		
+		SearchCriteria searchCriteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
+		searchCriteria.setPage(0);
+		searchCriteria.setPageSize(150);
+		
+		String query = "select obj.id from OrderInvoiceHeader obj where obj.deleteFlag=1 order by obj.id asc";
+		model.addAttribute("invoiceNos", genericDAO.executeSimpleQuery(query));
+		
+		model.addAttribute("msgCtx", "invoicePayment");
+		model.addAttribute("errorCtx", "invoicePayment");
+		model.addAttribute("activeTab", "invoicePayment");
 	}
 	
 	private List<Order> retrieveOrderIds(String invoiced) {
@@ -213,13 +242,6 @@ public class InvoiceController extends BaseController {
 		query	+= " order by obj.id asc";
 		
 		return genericDAO.executeSimpleQuery(query);
-		
-		/*List<Order> orderList = genericDAO.executeSimpleQuery(query);
-		List<String> orderIdList = new ArrayList<String>();
-		for (Object obj : orderList) {
-			orderIdList.add(obj.toString());
-		}
-		return orderIdList;*/
 	}
 	
 	private List<Order> performCreateInvoiceSearch(SearchCriteria criteria, InvoiceVO input) {
@@ -327,6 +349,55 @@ public class InvoiceController extends BaseController {
 						.getResultList();
 		
 		return orderInvoiceHeaderList;
+	}
+	
+	private List<OrderInvoicePayment> performInvoicePaymentSearch(SearchCriteria criteria) {
+		Map<String, Object> criteriaMap = criteria.getSearchMap();
+		String invoiceId = (String)criteriaMap.get("invoicePaymentInvoiceNo");
+		String customerId = (String)criteriaMap.get("invoicePaymentCustomerId");
+		String orderDateFrom = (String)criteriaMap.get("invoicePaymentOrderDateFrom");
+		String orderDateTo = (String)criteriaMap.get("invoicePaymentOrderDateTo");
+		String invoiceDateFrom = (String)criteriaMap.get("invoicePaymentInvoiceDateFrom");
+		String invoiceDateTo = (String)criteriaMap.get("invoicePaymentInvoiceDateTo");
+		
+		StringBuffer query = new StringBuffer("select obj from OrderInvoicePayment obj where 1=1");
+		StringBuffer countQuery = new StringBuffer("select count(obj.id) from OrderInvoicePayment obj where 1=1");
+		StringBuffer whereClause = new StringBuffer(" and obj.deleteFlag=1");
+		
+		if (StringUtils.isNotEmpty(invoiceId)) {
+			whereClause.append(" and obj.invoice=" + invoiceId);
+		}
+		if (StringUtils.isNotEmpty(customerId)) {
+			whereClause.append(" and obj.invoice.customerId=" + customerId);
+		}
+		if (StringUtils.isNotEmpty(orderDateFrom)){
+        	whereClause.append(" and obj.invoice.orderDateFrom >='"+FormatUtil.formatInputDateToDbDate(orderDateFrom)+"'");
+		}
+      if (StringUtils.isNotEmpty(orderDateTo)){
+	     	whereClause.append(" and obj.invoice.orderDateTo <='"+FormatUtil.formatInputDateToDbDate(orderDateTo)+"'");
+	   }
+      if (StringUtils.isNotEmpty(invoiceDateFrom)){
+        	whereClause.append(" and obj.invoice.invoiceDate >='"+FormatUtil.formatInputDateToDbDate(invoiceDateFrom)+"'");
+		}
+      if (StringUtils.isNotEmpty(invoiceDateTo)){
+	     	whereClause.append(" and obj.invoice.invoiceDate <='"+FormatUtil.formatInputDateToDbDate(invoiceDateTo)+"'");
+	   }
+      
+      query.append(whereClause);
+      countQuery.append(whereClause);
+      
+      query.append(" order by obj.id desc");
+      
+      Long recordCount = (Long) genericDAO.getEntityManager().createQuery(countQuery.toString()).getSingleResult();        
+		criteria.setRecordCount(recordCount.intValue());	
+		
+		List<OrderInvoicePayment> orderInvoicePaymentList = 
+				genericDAO.getEntityManager().createQuery(query.toString())
+						.setMaxResults(criteria.getPageSize())
+						.setFirstResult(criteria.getPage() * criteria.getPageSize())
+						.getResultList();
+		
+		return orderInvoicePaymentList;
 	}
 	
 	private void validateSearch(InvoiceVO input, BindingResult bindingResult) {

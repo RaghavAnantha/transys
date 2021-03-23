@@ -263,7 +263,7 @@ $("#manageInvoiceSearchForm").submit(function (ev) {
         url: $this.attr('action'),
         data: $this.serialize(),
         success: function(responseData, textStatus, jqXHR) {
-        	$("#manageInvoice").html(responseData)
+        	loadManageInvoice(responseData);
         }
     });
     

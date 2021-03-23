@@ -31,7 +31,7 @@
 <c:set var="printImage" value="${imageCtx}/print.png"/>
 <c:set var="excelImage" value="${imageCtx}/excel.png"/>
 <c:set var="iconWarningImage" value="${imageCtx}/iconWarning.gif"/>
-<c:set var="iconInformationlImage" value="${imageCtx}/iconInformation.gif"/>
+<c:set var="iconInformationImage" value="${imageCtx}/iconInformation.gif"/>
 
 <c:set var="loadingMsg" value="Loading....<img src='${preLoaderImage}' border='0' class='toolbarButton'/>"/>
 <!-- 
