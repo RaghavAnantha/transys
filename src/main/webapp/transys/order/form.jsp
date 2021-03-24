@@ -1714,9 +1714,9 @@ $(function() {
 				<form:input path="orderPayment[0].ccNumber" maxlength="19" cssClass="flat" onChange="return formatCCNumber(0);" />
 				<br><form:errors path="orderPayment[0].ccNumber" cssClass="errorMessage" />
 			</td>
-			<td>
+			<td class="td-static wide">
 				<form:input path="orderPayment[0].ccExpDate" cssClass="flat" style="width:172px !important" maxlength="10" />
-				<br><form:errors path="orderPayment[0].ccExpDate" cssClass="errorMessage" />
+				<form:errors path="orderPayment[0].ccExpDate" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>
@@ -1751,9 +1751,9 @@ $(function() {
 				<form:input path="orderPayment[1].ccNumber" maxlength="19" cssClass="flat" onChange="return formatCCNumber(1);" />
 				<br><form:errors path="orderPayment[1].ccNumber" cssClass="errorMessage" />
 			</td>
-			<td>
+			<td class="td-static wide">
 				<form:input path="orderPayment[1].ccExpDate" cssClass="flat" style="width:172px !important" id="datepicker12" maxlength="10" />
-				<br><form:errors path="orderPayment[1].ccExpDate" cssClass="errorMessage" />
+				<form:errors path="orderPayment[1].ccExpDate" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>
@@ -1788,9 +1788,9 @@ $(function() {
 				<form:input path="orderPayment[2].ccNumber" maxlength="19" cssClass="flat" onChange="return formatCCNumber(2);" />
 				<br><form:errors path="orderPayment[2].ccNumber" cssClass="errorMessage" />
 			</td>
-			<td>
+			<td class="td-static wide">
 				<form:input path="orderPayment[2].ccExpDate" cssClass="flat" style="width:172px !important" id="datepicker13" maxlength="10" />
-				<br><form:errors path="orderPayment[2].ccExpDate" cssClass="errorMessage" />
+				<form:errors path="orderPayment[2].ccExpDate" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>

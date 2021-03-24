@@ -44,6 +44,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.transys.controller.editor.AbstractModelEditor;
 
 import com.transys.core.util.DateUtil;
+import com.transys.core.util.FormatUtil;
 import com.transys.core.util.MimeUtil;
 import com.transys.core.util.ModelUtil;
 
@@ -113,6 +114,12 @@ public class OrderController extends CRUDController<Order> {
 		SimpleDateFormat ccExpDateFormat = new SimpleDateFormat("MM/yyyy");
 		ccExpDateFormat.setLenient(false);
 		binder.registerCustomEditor(Date.class, "orderPayment[0].ccExpDate", new CustomDateEditor(ccExpDateFormat, true));
+		binder.registerCustomEditor(Date.class, "orderPayment[1].ccExpDate", new CustomDateEditor(ccExpDateFormat, true));
+		binder.registerCustomEditor(Date.class, "orderPayment[2].ccExpDate", new CustomDateEditor(ccExpDateFormat, true));
+		
+		binder.registerCustomEditor(Date.class, "orderPayment[0].paymentDate", new CustomDateEditor(FormatUtil.inputDateFormat, true));
+		binder.registerCustomEditor(Date.class, "orderPayment[1].paymentDate", new CustomDateEditor(FormatUtil.inputDateFormat, true));
+		binder.registerCustomEditor(Date.class, "orderPayment[2].paymentDate", new CustomDateEditor(FormatUtil.inputDateFormat, true));
 		
 		super.initBinder(binder);
 	}
@@ -1611,7 +1618,7 @@ public class OrderController extends CRUDController<Order> {
 		
 		// Return to form if we had errors
 		if (bindingResult.hasErrors()) {
-			//return actionCompleteCommon(request, entity.getId(), model, "orderDetails");
+			return actionCompleteCommon(request, entity.getId(), model, "orderDetails");
 		}
 		
 		String isExchange = request.getParameter("isExchange");
