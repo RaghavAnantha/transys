@@ -1611,7 +1611,7 @@ public class OrderController extends CRUDController<Order> {
 		
 		// Return to form if we had errors
 		if (bindingResult.hasErrors()) {
-			actionCompleteCommon(request, entity.getId(), model, "orderDetails");
+			//return actionCompleteCommon(request, entity.getId(), model, "orderDetails");
 		}
 		
 		String isExchange = request.getParameter("isExchange");
