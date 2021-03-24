@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 
 import org.springframework.stereotype.Controller;
 
@@ -28,7 +29,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
 
 import org.springframework.validation.BindingResult;
-
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -42,7 +44,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import com.transys.controller.BaseController;
-
+import com.transys.controller.editor.AbstractModelEditor;
 import com.transys.service.DynamicReportService;
 
 import com.transys.core.util.CoreUtil;
@@ -54,8 +56,10 @@ import com.transys.model.Customer;
 import com.transys.model.DeliveryAddress;
 import com.transys.model.Order;
 import com.transys.model.OrderFees;
+import com.transys.model.OrderNotes;
 import com.transys.model.OrderPayment;
 import com.transys.model.OrderStatus;
+import com.transys.model.PaymentMethodType;
 import com.transys.model.Permit;
 import com.transys.model.SearchCriteria;
 import com.transys.model.User;
@@ -75,6 +79,15 @@ public class InvoiceController extends BaseController {
 	
 	public InvoiceController() {
 		setUrlContext("invoice");
+	}
+	
+	@Override
+	@InitBinder
+	public void initBinder(WebDataBinder binder) {
+		super.initBinder(binder);
+		
+		binder.registerCustomEditor(PaymentMethodType.class, new AbstractModelEditor(PaymentMethodType.class));
+		binder.registerCustomEditor(OrderInvoiceHeader.class, new AbstractModelEditor(OrderInvoiceHeader.class));
 	}
 	
 	@RequestMapping(method = { RequestMethod.GET, RequestMethod.POST }, value = "/createInvoiceMain.do")
@@ -102,6 +115,25 @@ public class InvoiceController extends BaseController {
 		setupInvoicePaymentList(model, request);
 		
 		return getUrlContext() + "/invoicePaymentList";
+	}
+	
+	@RequestMapping(method = { RequestMethod.GET, RequestMethod.POST }, value = "/createInvoicePayment.do")
+	public String createInvoicePayment(ModelMap model, HttpServletRequest request) {
+		//clearSearchCriteria(request);
+		
+		String query = "select obj.id from OrderInvoiceHeader obj where obj.deleteFlag=1 order by obj.id asc";
+		model.addAttribute("invoiceNos", genericDAO.executeSimpleQuery(query));
+		
+		model.addAttribute("paymentMethods", genericDAO.executeSimpleQuery("select obj from PaymentMethodType obj where obj.deleteFlag='1' and obj.id!=0 order by obj.method asc"));
+	   
+		OrderInvoicePayment invoicePayment = new OrderInvoicePayment();
+		model.addAttribute("invoicePaymentModelObject", invoicePayment);
+		
+		model.addAttribute("msgCtx", "createInvoicePayment");
+		model.addAttribute("errorCtx", "createInvoicePayment");
+		model.addAttribute("activeTab", "invoicePayment");
+		
+		return getUrlContext() + "/invoicePaymentForm";
 	}
 	
 	@RequestMapping(method = {RequestMethod.GET, RequestMethod.POST }, value = "/createInvoiceSearch.do")
@@ -226,8 +258,8 @@ public class InvoiceController extends BaseController {
 		String query = "select obj.id from OrderInvoiceHeader obj where obj.deleteFlag=1 order by obj.id asc";
 		model.addAttribute("invoiceNos", genericDAO.executeSimpleQuery(query));
 		
-		model.addAttribute("msgCtx", "invoicePayment");
-		model.addAttribute("errorCtx", "invoicePayment");
+		model.addAttribute("msgCtx", "manageInvoicePayment");
+		model.addAttribute("errorCtx", "manageInvoicePayment");
 		model.addAttribute("activeTab", "invoicePayment");
 	}
 	
@@ -471,7 +503,7 @@ public class InvoiceController extends BaseController {
 		
 		anInvoiceVO.setDumpsterPrice(orderInvoiceDetails.getDumpsterPrice());
 		
-		anInvoiceVO.setCityFee(orderInvoiceDetails.getCityFee() == null ? (new BigDecimal("0.00")) : orderInvoiceDetails.getCityFee());
+		anInvoiceVO.setCityFee(orderInvoiceDetails.getCityFee() == null ? (new BigDecimal(0.00)) : orderInvoiceDetails.getCityFee());
 		
 		anInvoiceVO.setPermitFees(orderInvoiceDetails.getTotalPermitFees());
 		anInvoiceVO.setOverweightFee(orderInvoiceDetails.getOverweightFee());
@@ -533,7 +565,7 @@ public class InvoiceController extends BaseController {
 		OrderFees anOrderFees = anOrder.getOrderFees();
 		anInvoiceVO.setDumpsterPrice(anOrderFees.getDumpsterPrice());
 		
-		anInvoiceVO.setCityFee(anOrderFees.getCityFee() == null ? (new BigDecimal("0.00")) : anOrderFees.getCityFee());
+		anInvoiceVO.setCityFee(anOrderFees.getCityFee() == null ? (new BigDecimal(0.00)) : anOrderFees.getCityFee());
 		
 		anInvoiceVO.setPermitFees(anOrderFees.getTotalPermitFees());
 		anInvoiceVO.setOverweightFee(anOrderFees.getOverweightFee());
@@ -730,7 +762,7 @@ public class InvoiceController extends BaseController {
 		OrderFees anOrderFees = anOrder.getOrderFees();
 		orderInvoiceDetails.setDumpsterPrice(anOrderFees.getDumpsterPrice());
 		
-		orderInvoiceDetails.setCityFee(anOrderFees.getCityFee() == null ? (new BigDecimal("0.00"))
+		orderInvoiceDetails.setCityFee(anOrderFees.getCityFee() == null ? (new BigDecimal(0.00))
 				: anOrderFees.getCityFee());
 		orderInvoiceDetails.setCityFeeSuburbName(anOrderFees.getCityFeeType() == null ? 
 					StringUtils.EMPTY : anOrderFees.getCityFeeType().getSuburbName());
@@ -879,13 +911,142 @@ public class InvoiceController extends BaseController {
 			e.printStackTrace();
 		}
 		return json;
-		
-		//String json = (new Gson()).toJson(addressList);
-		//return json;
 	}
 	
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-	@RequestMapping(method = { RequestMethod.GET, RequestMethod.POST }, value = "/saveInvoice.do")
+	@RequestMapping(method = { RequestMethod.POST }, value = "/saveInvoicePayment.do")
+	public String saveInvoicePayment(HttpServletRequest request,
+			@ModelAttribute("invoicePaymentModelObject") OrderInvoicePayment invoicePayment,
+			BindingResult bindingResult, ModelMap model) {
+		OrderInvoiceHeader invoiceHeader = invoicePayment.getInvoice();
+		
+		List<Order> orderList = retrieveOrders(invoiceHeader.getId());
+		
+		List<OrderPayment> newOrderPaymentList = new ArrayList<OrderPayment>();
+		BigDecimal amountAvailable = updateOrderPayment(orderList, invoicePayment, newOrderPaymentList);
+		invoicePayment.setAmountAvailable(amountAvailable);
+		
+		setModifier(request, invoicePayment);
+		genericDAO.save(invoicePayment);
+		
+		saveInvoiceHeader(invoiceHeader, invoicePayment);
+		
+		saveOrderPayment(newOrderPaymentList, invoicePayment);
+		
+		setSuccessMsg(request, "Invoice payment saved successfully");
+		return "redirect:/" + getUrlContext() + "/invoicePaymentSearch.do";
+	}
+	
+	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+	private String saveInvoiceHeader(OrderInvoiceHeader invoiceHeader, OrderInvoicePayment invoicePayment) {
+		invoiceHeader.setTotalInvoicePaymentDone(invoiceHeader.getTotalInvoicePaymentDone()
+				.add(invoicePayment.getAmountPaid()));
+		invoiceHeader.setTotalInvoiceBalanceDue(invoiceHeader.getTotalInvoiceBalanceDue()
+				.subtract(invoicePayment.getAmountPaid()));
+		invoiceHeader.setTotalInvoiceBalanceAvailable(invoiceHeader.getTotalInvoiceBalanceAvailable()
+				.add(invoicePayment.getAmountAvailable()));
+		
+		invoiceHeader.setModifiedBy(invoicePayment.getCreatedBy());
+		invoiceHeader.setModifiedAt(invoicePayment.getCreatedAt());
+		genericDAO.saveOrUpdate(invoiceHeader);
+		
+		return "Successfully saved invoice header";
+	}
+	
+	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+	private String saveOrderPayment(List<OrderPayment> orderPaymentList, OrderInvoicePayment invoicePayment) {
+		User createdByUser = genericDAO.getById(User.class, invoicePayment.getCreatedBy());
+		for (OrderPayment anOrderPayment : orderPaymentList) {
+			anOrderPayment.setInvoicePaymentId(invoicePayment.getId());
+			anOrderPayment.setCreatedAt(invoicePayment.getCreatedAt());
+			anOrderPayment.setCreatedBy(invoicePayment.getCreatedBy());
+			
+			Order order = anOrderPayment.getOrder();
+			order.setModifiedAt(invoicePayment.getCreatedAt());
+			order.setModifiedBy(invoicePayment.getCreatedBy());
+			genericDAO.saveOrUpdate(order);
+			
+			String auditMsg = String.format("Order payment updated.  Invoice#: {0}.  Invoice payment#: {1}",
+					invoicePayment.getInvoice().getId(), invoicePayment.getId());
+			ModelUtil.createAuditOrderNotes(genericDAO, order, auditMsg, createdByUser);
+		}
+		return "Successfully saved order payment and order";
+	}
+	
+	private BigDecimal updateOrderPayment(List<Order> orderList, OrderInvoicePayment invoicePayment,
+			List<OrderPayment> newOrderPaymentList) {
+		BigDecimal amountAvailable = invoicePayment.getAmountPaid();
+		for (Order anOrder : orderList) {
+			BigDecimal balanceAmountDue = anOrder.getBalanceAmountDue();
+			if (balanceAmountDue.doubleValue() == 0.0) {
+				continue;
+			}
+			
+			OrderPayment orderPayment = new OrderPayment();
+			orderPayment.setOrder(anOrder);
+			map(invoicePayment, orderPayment);
+			
+			BigDecimal payableAmount = balanceAmountDue;
+			if (balanceAmountDue.doubleValue() > amountAvailable.doubleValue()) {
+				payableAmount = amountAvailable;
+				amountAvailable = new BigDecimal(0.00);
+			} else {
+				amountAvailable = amountAvailable.subtract(balanceAmountDue);
+			}
+			orderPayment.setAmountPaid(payableAmount);
+			
+			List<OrderPayment> orderPaymentList = anOrder.getOrderPayment();
+			orderPaymentList.add(orderPayment);
+			newOrderPaymentList.add(orderPayment);
+			
+			anOrder.setTotalAmountPaid(anOrder.getTotalAmountPaid().add(orderPayment.getAmountPaid()));
+			anOrder.setBalanceAmountDue(anOrder.getBalanceAmountDue().subtract(orderPayment.getAmountPaid()));
+			
+			if (amountAvailable.doubleValue() == 0.0) {
+				break;
+			}
+		}
+		return amountAvailable;
+	}
+	
+	private void map(OrderInvoicePayment invoicePayment, OrderPayment orderPayment) {
+		orderPayment.setPaymentMethod(invoicePayment.getPaymentMethod());
+		orderPayment.setPaymentDate(invoicePayment.getPaymentDate());
+		orderPayment.setCheckNum(invoicePayment.getCheckNum());
+		orderPayment.setCcReferenceNum(invoicePayment.getCcReferenceNum());
+		orderPayment.setCcName(invoicePayment.getCcName());
+		orderPayment.setCcNumber(invoicePayment.getCcNumber());
+		orderPayment.setCcExpDate(invoicePayment.getCcExpDate());
+		orderPayment.setInvoiceId(invoicePayment.getInvoice().getId());
+	}
+	
+	private List<Order> retrieveOrders(Long invoiceId) {
+		List<Long> orderIdList = retrieveInvoiceOrderIds(invoiceId);
+		List<Order> orderList = retrieveOrders(orderIdList);
+		return orderList;
+	}
+	
+	private List<Order> retrieveOrders(List<Long> orderIdList) {
+		String orderIdsStr = CoreUtil.toStringGeneric(orderIdList);
+		List<Order> orderList = genericDAO.findByCommaSeparatedIds(Order.class, orderIdsStr);
+		ModelUtil.sortOrder(orderList, "deliveryDate");
+		return orderList;
+	}
+	
+	private List<Long> retrieveInvoiceOrderIds(Long invoiceId) {
+		String query = "select obj.orderId from OrderInvoiceDetails obj where obj.deleteFlag=1"
+					+ " and obj.invoiceHeader=" + invoiceId;
+		List<OrderInvoiceDetails> invoiceDetailsList = genericDAO.executeSimpleQuery(query);
+		List<Long> orderIdList = new ArrayList<Long>();
+		for (Object obj : invoiceDetailsList) {
+			Long anOrderId = (Long) obj;
+			orderIdList.add(anOrderId);
+		}
+		return orderIdList;
+	}
+	
+	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+	@RequestMapping(method = { RequestMethod.POST }, value = "/saveInvoice.do")
 	public String saveInvoice(ModelMap model, HttpServletRequest request, HttpServletResponse response) {
 		InvoiceVO input = (InvoiceVO) request.getSession().getAttribute("input");
 		
@@ -937,13 +1098,13 @@ public class InvoiceController extends BaseController {
 		Date currentTime = Calendar.getInstance().getTime();
 		String orderIds = CoreUtil.toString(orderIdsArr);
 		
-		String invoiceIdStr = (invoiceId == null) ? "null" : invoiceId.toString();
+		String invoiceIdStr = (invoiceId == null) ? "null" : "'"+invoiceId.toString()+"'";
 		String invoiceDateStr = (invoiceDate == null) ? "null" : 
 			"'" + FormatUtil.dbDateTimeFormat.format(invoiceDate) + "'";
 		
 		String orderUpdateQuery = "update Order o set o.invoiced = '" + invoiced + "',"
-			+ " o.invoiceId = " + invoiceIdStr + ","
-			+ " o.invoiceDate = " + invoiceDateStr + ","
+			+ " o.invoiceIds = " + invoiceIdStr + ","
+			+ " o.invoiceDates = " + invoiceDateStr + ","
 			+ " o.modifiedBy = " + createdBy + ","
 			+ " o.modifiedAt = '" + FormatUtil.dbDateTimeFormat.format(currentTime) + "'"
 			+ " where o.id in (" + orderIds + ")";

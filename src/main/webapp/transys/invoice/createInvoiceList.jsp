@@ -215,8 +215,8 @@ function populateCreateInvoiceDeliveryAddress(addressList) {
 		<tr><td/></tr>
 		<tr>
 			<td>
-				<a href="javascript:;" onclick="createInvoice()">
-					<img src="${editImage}" title="Create Invoice" class="toolbarButton" border="0">
+				<a href="javascript:;" onclick="createInvoice();">
+					<img src="${editImage}" title="Preview Invoice" class="toolbarButton" border="0">
 					Preview Invoice
 				</a>
 			</td>

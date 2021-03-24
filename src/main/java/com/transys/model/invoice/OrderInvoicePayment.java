@@ -47,6 +47,12 @@ public class OrderInvoicePayment extends AbstractBaseModel {
 		
 		@Column(name="paymentDate")
 		private Date paymentDate;
+		
+		@Column(name="amountAvailable")
+		private BigDecimal amountAvailable;
+		
+		@Column(name="notes")
+		private String notes;
 
 		public OrderInvoiceHeader getInvoice() {
 			return invoice;
@@ -118,6 +124,22 @@ public class OrderInvoicePayment extends AbstractBaseModel {
 
 		public void setCcExpDate(Date ccExpDate) {
 			this.ccExpDate = ccExpDate;
+		}
+
+		public BigDecimal getAmountAvailable() {
+			return amountAvailable;
+		}
+
+		public void setAmountAvailable(BigDecimal amountAvailable) {
+			this.amountAvailable = amountAvailable;
+		}
+
+		public String getNotes() {
+			return notes;
+		}
+
+		public void setNotes(String notes) {
+			this.notes = notes;
 		}
 
 		@Transient

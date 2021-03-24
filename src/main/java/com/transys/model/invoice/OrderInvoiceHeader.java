@@ -78,6 +78,18 @@ public class OrderInvoiceHeader extends AbstractBaseModel {
    @Column(name = "totalBalanceAmountDue")
  	private BigDecimal totalBalanceAmountDue;
    
+   @Column(name="notes")
+	private String notes;
+   
+   @Column(name = "totalInvoicePaymentDone")
+ 	private BigDecimal totalInvoicePaymentDone;
+   
+   @Column(name = "totalInvoiceBalanceDue")
+ 	private BigDecimal totalInvoiceBalanceDue;
+   
+   @Column(name = "totalInvoiceBalanceAvailable")
+ 	private BigDecimal totalInvoiceBalanceAvailable;
+   
    @OneToMany(mappedBy="invoiceHeader", cascade = CascadeType.ALL)
 	private List<OrderInvoiceDetails> orderInvoiceDetails;
 	
@@ -247,6 +259,38 @@ public class OrderInvoiceHeader extends AbstractBaseModel {
 
 	public void setTotalBalanceAmountDue(BigDecimal totalBalanceAmountDue) {
 		this.totalBalanceAmountDue = totalBalanceAmountDue;
+	}
+
+	public BigDecimal getTotalInvoicePaymentDone() {
+		return totalInvoicePaymentDone;
+	}
+
+	public void setTotalInvoicePaymentDone(BigDecimal totalInvoicePaymentDone) {
+		this.totalInvoicePaymentDone = totalInvoicePaymentDone;
+	}
+
+	public BigDecimal getTotalInvoiceBalanceDue() {
+		return totalInvoiceBalanceDue;
+	}
+
+	public void setTotalInvoiceBalanceDue(BigDecimal totalInvoiceBalanceDue) {
+		this.totalInvoiceBalanceDue = totalInvoiceBalanceDue;
+	}
+
+	public BigDecimal getTotalInvoiceBalanceAvailable() {
+		return totalInvoiceBalanceAvailable;
+	}
+
+	public void setTotalInvoiceBalanceAvailable(BigDecimal totalInvoiceBalanceAvailable) {
+		this.totalInvoiceBalanceAvailable = totalInvoiceBalanceAvailable;
+	}
+
+	public String getNotes() {
+		return notes;
+	}
+
+	public void setNotes(String notes) {
+		this.notes = notes;
 	}
 
 	@Transient

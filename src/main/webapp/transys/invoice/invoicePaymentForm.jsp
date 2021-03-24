@@ -1,10 +1,15 @@
 <%@include file="/common/taglibs.jsp"%>
 
 <script type="text/javascript">
+function getInvoicePaymentForm() {
+	var form = $('#invoicePaymentForm');
+	return form;
+}
+
 function processInvoicePaymentForm() {
 	if (validateInvoicePaymentForm()) {
-		var permitDetailsEditForm = $("#permitDetailsForm");
-		permitDetailsEditForm.submit();
+		var invoicePaymentForm = getInvoicePaymentForm();
+		invoicePaymentForm.submit();
 		return true;
 	} else {
 		return false;
@@ -21,7 +26,7 @@ function validateInvoicePaymentForm() {
 		return false;
 	}
 	
-	var formatValidation = validateDetailsDataFormat();
+	var formatValidation = validateInvoicePaymentDataFormat();
 	if (formatValidation != "") {
 		var alertMsg = "<span style='color:red'><b>Please correct following invalid data:</b><br></span>"
 					 + formatValidation;
@@ -36,23 +41,18 @@ function validateInvoicePaymentForm() {
 function validateInvoicePaymentMissingData() {
 	var missingData = "";
 	
-	if ($('#customerSelect').val() == "") {
-		missingData += "Customer, "
+	var form = getInvoicePaymentForm();
+	if (form.find('#invoice').val() == "") {
+		missingData += "Invoice #, "
 	}
-	if ($('#deliveryAddressSelect').val() == "") {
-		missingData += "Delivery Address, "
+	if (form.find('#paymentMethod').val() == "") {
+		missingData += "Payment method, "
 	}
-	if ($('#locationTypeSelect').val() == "") {
-		missingData += "Location Type, "
+	if (form.find('#amountPaid').val() == "") {
+		missingData += "Amount Paid, "
 	}
-	if ($('#permitClassSelect').val() == "") {
-		missingData += "Permit Class, "
-	}
-	if ($("#permitTypeSelect").val() == "") {
-		missingData += "Permit Type, "
-	}
-	if ($('#datepicker7').val() == "") {
-		missingData += "Start Date, "
+	if (form.find("[name='paymentDate']").val() == "") {
+		missingData += "Payment Date, "
 	}
 	
 	if (missingData != "") {
@@ -62,11 +62,10 @@ function validateInvoicePaymentMissingData() {
 	return missingData;
 }
 
-function validateDetailsDataFormat() {
+function validateInvoicePaymentDataFormat() {
 	var validationMsg = "";
 	
-	validationMsg += validateAllText();
-	validationMsg += validateFees(); 
+	validationMsg += validateAmounts(); 
 	validationMsg += validateAllDates();
 	
 	if (validationMsg != "") {
@@ -75,26 +74,14 @@ function validateDetailsDataFormat() {
 	return validationMsg;
 }
 
-function validateAllText() {
+function validateAmounts() {
 	var validationMsg = "";
 	
-	var notes = $('#permitNotesTextArea').val();
-	if (notes != "") {
-		if (!validateText(notes, 500)) {
-			validationMsg += "Notes, "
-		}
-	}
-	
-	return validationMsg;
-}
-
-function validateFees() {
-	var validationMsg = "";
-	
-	var parkingMeterFee = $('#parkingMeterFeeInput').val();
-	if (parkingMeterFee != "") {
-		if (!validateAmount(parkingMeterFee, 1500)) {
-			validationMsg += "Parking Meter Fee, "
+	var form = getInvoicePaymentForm();
+	var amountPaid = form.find('#amountPaid').val();
+	if (amountPaid != "") {
+		if (!validateAmount(amountPaid, 15000)) {
+			validationMsg += "Amount Paid, "
 		}
 	}
 	
@@ -104,10 +91,18 @@ function validateFees() {
 function validateAllDates() {
 	var validationMsg = "";
 	
-	var startDate = $("[name='startDate']").val();
-	if (startDate != "") {
-		if (!validateDate(startDate)) {
-			validationMsg += "Start Date, "
+	var form = getInvoicePaymentForm();
+	var paymentDate = form.find("[name='paymentDate']").val();
+	if (paymentDate != "") {
+		if (!validateDate(paymentDate)) {
+			validationMsg += "Payment Date, "
+		}
+	}
+	
+	var ccExpDate = form.find("[name='ccExpDate']").val();
+	if (ccExpDate != "") {
+		if (!validateDate(ccExpDate)) {
+			validationMsg += "CC Expiry Date, "
 		}
 	}
 	
@@ -115,32 +110,43 @@ function validateAllDates() {
 }
 </script>
 
-<form:form action="save.do" id="permitDetailsForm" name="permitDetailsForm" commandName="modelObject" method="post" >
+<br />
+<h5 style="margin-top: -15px; !important">Create Invoice Payment</h5>
+<form:form action="saveInvoicePayment.do" id="invoicePaymentForm" name="invoicePaymentForm" commandName="invoicePaymentModelObject" method="post" >
 	<form:hidden path="id" id="id" />
 	<jsp:include page="/common/messages.jsp">
-		<jsp:param name="msgCtx" value="managePermit" />
-		<jsp:param name="errorCtx" value="managePermit" />
+		<jsp:param name="msgCtx" value="createInvoicePayment" />
+		<jsp:param name="errorCtx" value="createInvoicePayment" />
 	</jsp:include>
 	<table id="form-table" class="table">
+		<tr><td></td></tr>
 		<tr>
+			<td class="form-left">Invoice #<span class="errorMessage">*</span></td>
 			<td>
-				<form:select cssClass="flat" path="invoice" style="min-width:184px; max-width:184px">
+				<form:select cssClass="flat form-control input-sm" path="invoice" style="width:172px !important">
 					<form:option value="">------Please Select------</form:option>
 					<form:options items="${invoiceNos}"/>
-				</form:select>
-				<br><form:errors path="invoice" cssClass="errorMessage" />
+				</form:select><form:errors path="invoice" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>
-			<td class="form-left">Payment Method</td>
-			<td class="form-left">Payment Date</td>
-			<td class="form-left">Amount</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td colspan=10 class="section-header" style="line-height: 0.7;font-size: 13px;font-weight: bold;color: white;">Payment Information</td>
+		</tr>
+		<tr>
+			<td></td>
+		</tr>
+		<tr>
+			<td class="form-left">Payment Method<span class="errorMessage">*</span></td>
+			<td class="form-left">Payment Date<span class="errorMessage">*</span></td>
+			<td class="form-left">Amount<span class="errorMessage">*</span></td>
 			<td class="form-left">Check #</td>
 			<td class="form-left">CC Reference #</td>
 			<td class="form-left">CC Name</td>
 			<td class="form-left">CC #</td>
 			<td class="form-left">CC Expiry Date</td>
-			
 		</tr>
 		<tr>
 			<td class="wide">
@@ -155,7 +161,7 @@ function validateAllDates() {
 				<form:errors path="paymentDate" cssClass="errorMessage" />
 			</td>
 			<td class="wide">
-				<form:input path="amountPaid" maxlength="7" cssClass="flat" onChange="updateTotalPaid();"/>
+				<form:input path="amountPaid" maxlength="7" cssClass="flat"/>
 				<br><form:errors path="amountPaid" cssClass="errorMessage" />
 			</td>
 			<td class="wide">
@@ -186,7 +192,7 @@ function validateAllDates() {
 			<td>&nbsp;</td>
 			<td colspan="2">
 				<input type="button" id="create" onclick="processInvoicePaymentForm();" value="Save" class="flat btn btn-primary btn-sm btn-sm-ext" /> 
-				<input type="button" id="cancelBtn" value="Back">" class="flat btn btn-primary btn-sm btn-sm-ext" onClick="location.href='list.do'" />
+				<input type="button" id="cancelBtn" value="Back" class="flat btn btn-primary btn-sm btn-sm-ext" onClick="location.href='list.do'" />
 			</td>
 		</tr>
 	</table>

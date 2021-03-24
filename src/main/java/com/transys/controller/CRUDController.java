@@ -12,7 +12,6 @@ import java.lang.reflect.ParameterizedType;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import javax.servlet.ServletContext;
@@ -23,12 +22,12 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.ValidationException;
 
 import org.apache.commons.io.filefilter.WildcardFileFilter;
+
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import org.hibernate.exception.ConstraintViolationException;
 
-import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 
@@ -37,18 +36,14 @@ import org.springframework.util.ClassUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 
-import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.support.ByteArrayMultipartFileEditor;
 
 import com.transys.core.util.CoreUtil;
-import com.transys.core.util.FormatUtil;
 import com.transys.core.util.MimeUtil;
 
 import com.transys.model.AbstractBaseModel;
@@ -205,20 +200,6 @@ public abstract class CRUDController<T extends BaseModel> extends BaseController
 		}
 	}
 	
-	protected void setModifier(HttpServletRequest request, AbstractBaseModel entity) {
-		if (entity.getId() == null) {
-			entity.setCreatedAt(Calendar.getInstance().getTime());
-			if (entity.getCreatedBy() == null) {
-				entity.setCreatedBy(getUserId(request));
-			}
-		} else {
-			entity.setModifiedAt(Calendar.getInstance().getTime());
-			if (entity.getModifiedBy() == null) {
-				entity.setModifiedBy(getUserId(request));
-			}
-		}
-	}
-
 	public void setupCreate(ModelMap model, HttpServletRequest request) {
 		// Default is no implementation
 	}
@@ -286,15 +267,6 @@ public abstract class CRUDController<T extends BaseModel> extends BaseController
 		} finally {
 			CoreUtil.close(out);
 		}  
-	}
-
-	// Set up any custom editors, adds a custom one for java.sql.date by default
-	@Override
-	@InitBinder
-	public void initBinder(WebDataBinder binder) {
-		//dateFormat.setLenient(false);
-		binder.registerCustomEditor(Date.class, new CustomDateEditor(FormatUtil.inputDateFormat, true));
-		binder.registerCustomEditor(byte[].class, new ByteArrayMultipartFileEditor());
 	}
 
 	protected boolean isConstraintError(Exception e, String errorKey) {

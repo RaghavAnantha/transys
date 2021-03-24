@@ -31,6 +31,25 @@ public class CoreUtil {
 		return toString(strList.toArray(stringArr));
 	}
 	
+	public static String toStringGeneric(Object[] objArr) {
+		if (objArr == null || objArr.length <= 0) {
+			return StringUtils.EMPTY;
+		}
+		
+		String str = ArrayUtils.toString(objArr);
+		str = StringUtils.replacePattern(str, "\\{|\\}", StringUtils.EMPTY);
+		return str;
+	}
+	
+	public static String toStringGeneric(List<Long> objList) {
+		if (objList == null || objList.isEmpty()) {
+			return StringUtils.EMPTY;
+		}
+		
+		String[] stringArr = new String[objList.size()];
+		return toString(objList.toArray(stringArr));
+	}
+	
 	public static String concatenate(String str1, String str2, String sep) {
 		StringBuffer concStrBuff = new StringBuffer();
 		if (StringUtils.isNotEmpty(str1)) {

@@ -67,17 +67,23 @@ function processDeleteInvoicePaymnet(invoiceId) {
 	//document.location = "${ctx}/invoice/deleteInvoicePayment.do?id=" + invoiceId;
 }
 
+function processInvoicePaymentCreate() {
+	$.get("createInvoicePayment.do", function(data) {
+		loadInvoicePayment(data);
+    });
+}
+
 function loadInvoicePayment(data) {
 	$("#invoicePayment").html(data);
 }
 </script>
 
 <br />
-<h5 style="margin-top: -15px; !important">Manage Invoice</h5>
+<h5 style="margin-top: -15px; !important">Manage Invoice Payments</h5>
 <form:form action="invoicePaymentSearch.do" method="get" id="invoicePaymentSearchForm" name="invoicePaymentSearchForm">
 	<jsp:include page="/common/messages.jsp">
-		<jsp:param name="msgCtx" value="invoicePayment" />
-		<jsp:param name="errorCtx" value="invoicePayment" />
+		<jsp:param name="msgCtx" value="manageInvoicePayment" />
+		<jsp:param name="errorCtx" value="manageInvoicePayment" />
 	</jsp:include>
 	<table id="form-table" class="table">
 		<tr>
@@ -143,7 +149,7 @@ function loadInvoicePayment(data) {
 		<tr><td/></tr>
 		<tr>
 			<td>
-				<a href="${ctx}/invoice/createInvoicePayment.do">
+				<a href="javascript:;" onclick="processInvoicePaymentCreate();">
 					<img src="${addImage}" title="Create Invoice" class="toolbarButton" border="0">
 				</a>
 			</td>

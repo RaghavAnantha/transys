@@ -44,6 +44,12 @@ public class OrderPayment extends AbstractBaseModel {
 		
 		@Column(name="paymentDate")
 		private Date paymentDate;
+		
+		@Column(name="invoiceId")
+		private Long invoiceId;
+		
+		@Column(name="invoicePaymentId")
+		private Long invoicePaymentId;
 
 		public Order getOrder() {
 			return order;
@@ -115,6 +121,22 @@ public class OrderPayment extends AbstractBaseModel {
 
 		public void setCcExpDate(Date ccExpDate) {
 			this.ccExpDate = ccExpDate;
+		}
+
+		public Long getInvoiceId() {
+			return invoiceId;
+		}
+
+		public void setInvoiceId(Long invoiceId) {
+			this.invoiceId = invoiceId;
+		}
+
+		public Long getInvoicePaymentId() {
+			return invoicePaymentId;
+		}
+
+		public void setInvoicePaymentId(Long invoicePaymentId) {
+			this.invoicePaymentId = invoicePaymentId;
 		}
 
 		@Transient

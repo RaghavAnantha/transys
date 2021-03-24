@@ -1,5 +1,6 @@
 package com.transys.controller;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -37,6 +38,8 @@ import com.transys.core.dao.GenericDAO;
 import com.transys.core.util.FormatUtil;
 import com.transys.core.util.MimeUtil;
 import com.transys.core.util.ReportUtil;
+
+import com.transys.model.AbstractBaseModel;
 import com.transys.model.BaseModel;
 import com.transys.model.Permit;
 //import com.transys.model.Language;
@@ -413,6 +416,20 @@ public class BaseController {
 		
 		if (StringUtils.isNotEmpty(activeSubTab)) {
 			model.addAttribute(ACTIVE_SUB_TAB_KEY, activeSubTab);
+		}
+	}
+	
+	protected void setModifier(HttpServletRequest request, AbstractBaseModel entity) {
+		if (entity.getId() == null) {
+			entity.setCreatedAt(Calendar.getInstance().getTime());
+			if (entity.getCreatedBy() == null) {
+				entity.setCreatedBy(getUserId(request));
+			}
+		} else {
+			entity.setModifiedAt(Calendar.getInstance().getTime());
+			if (entity.getModifiedBy() == null) {
+				entity.setModifiedBy(getUserId(request));
+			}
 		}
 	}
 }

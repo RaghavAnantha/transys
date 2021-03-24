@@ -274,9 +274,6 @@ function populateCustomerDeliveryAddress() {
 		<transys:textcolumn headerText="Amt Paid" dataField="totalAmountPaid" type="java.math.BigDecimal" />
 		<transys:textcolumn headerText="Bal Due" dataField="balanceAmountDue" type="java.math.BigDecimal" />
 		<transys:textcolumn headerText="Status" dataField="orderStatus.status"/>
-		<transys:textcolumn headerText="Inv." dataField="invoiced"/>
-		<transys:textcolumn headerText="Inv. #" dataField="invoiceId"/>
-		<transys:textcolumn headerText="Inv. Dt" dataField="invoiceDate" dataFormat="MM/dd/yyyy"/>
 		<transys:textcolumn headerText="Doc" dataField="hasDocs"/>
 		<transys:imagecolumn headerText="EXC" linkUrl="javascript:processExchange('{id}');" imageSrc="${imageCtx}/exchange.png" HAlign="center" title="Exchange"/>
 	</transys:datatable>

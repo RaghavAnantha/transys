@@ -50,6 +50,7 @@
         
         <pattern>/transys/invoice/manageInvoiceList.jsp</pattern>
         <pattern>/transys/invoice/invoicePaymentList.jsp</pattern>
+        <pattern>/transys/invoice/invoicePaymentForm.jsp</pattern>
         
         <pattern>/transys/reports/deliveryPickupReport/html.jsp</pattern>
     </decorator>

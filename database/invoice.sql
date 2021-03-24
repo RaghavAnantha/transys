@@ -159,4 +159,23 @@ CREATE TABLE `transys`.`orderInvoicePayment` (
   CONSTRAINT `orderInvoicePaymentMethodRef` FOREIGN KEY (`paymentMethodId`) REFERENCES `paymentMethodType` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+----------
+ALTER TABLE `transys`.`transysOrder` 
+CHANGE COLUMN `invoiceDate` `invoiceDates` VARCHAR(50) NULL DEFAULT NULL COMMENT '' ,
+CHANGE COLUMN `invoiceId` `invoiceIds` VARCHAR(100) NULL DEFAULT NULL COMMENT '' ;
+
+ALTER TABLE `transys`.`orderPayment` 
+ADD COLUMN `invoiceId` BIGINT(20) NULL DEFAULT NULL COMMENT '' AFTER `ccExpDate`,
+ADD COLUMN `invoicePaymentId` BIGINT(20) NULL COMMENT '' AFTER `invoiceId`;
+
+ALTER TABLE `transys`.`orderInvoicePayment` 
+ADD COLUMN `amountAvailable` DECIMAL(6,2) NOT NULL DEFAULT '0.00' COMMENT '' AFTER `paymentMethodId`,
+ADD COLUMN `notes` VARCHAR(500) NULL DEFAULT NULL COMMENT '' AFTER `amountAvailable`;
+
+ALTER TABLE `transys`.`orderInvoiceHeader` 
+ADD COLUMN `notes` VARCHAR(500) NULL DEFAULT NULL COMMENT '' AFTER `totalBalanceAmountDue`,
+ADD COLUMN `totalInvoicePaymentDone` DECIMAL(9,2) NULL DEFAULT '0.00' COMMENT '' AFTER `notes`,
+ADD COLUMN `totalInvoiceBalanceDue` DECIMAL(9,2) NULL DEFAULT '0.00' COMMENT '' AFTER `totalInvoicePaymentDone`,
+ADD COLUMN `totalInvoiceBalanceAvailable` DECIMAL(9,2) NULL DEFAULT '0.00' COMMENT '' AFTER `totalInvoiceBalanceDue`;
+
 

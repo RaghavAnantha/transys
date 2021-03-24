@@ -251,11 +251,11 @@ public class Order extends AbstractBaseModel {
 	@Column(name="invoiced")
 	private String invoiced;
 	
-	@Column(name="invoiceId")
-	private Long invoiceId;
+	@Column(name="invoiceIds")
+	private String invoiceIds;
 	
-	@Column(name="invoiceDate")
-	private Date invoiceDate;
+	@Column(name="invoiceDates")
+	private String invoiceDates;
 	
 	public BigDecimal getGrossWeight() {
 		return grossWeight;
@@ -481,23 +481,23 @@ public class Order extends AbstractBaseModel {
 	public void setInvoiced(String invoiced) {
 		this.invoiced = invoiced;
 	}
-
-	public Long getInvoiceId() {
-		return invoiceId;
-	}
-
-	public void setInvoiceId(Long invoiceId) {
-		this.invoiceId = invoiceId;
-	}
-
-	public Date getInvoiceDate() {
-		return invoiceDate;
-	}
-
-	public void setInvoiceDate(Date invoiceDate) {
-		this.invoiceDate = invoiceDate;
-	}
 	
+	public String getInvoiceIds() {
+		return invoiceIds;
+	}
+
+	public void setInvoiceIds(String invoiceIds) {
+		this.invoiceIds = invoiceIds;
+	}
+
+	public String getInvoiceDates() {
+		return invoiceDates;
+	}
+
+	public void setInvoiceDates(String invoiceDates) {
+		this.invoiceDates = invoiceDates;
+	}
+
 	@Transient
 	public String getDumpsterNum() {
 		return getDumpster() == null ? StringUtils.EMPTY : getDumpster().getDumpsterNum();

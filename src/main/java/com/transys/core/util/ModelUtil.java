@@ -1,6 +1,7 @@
 package com.transys.core.util;
 
 import java.math.BigDecimal;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -13,6 +14,7 @@ import org.apache.commons.collections.comparators.ComparatorChain;
 import org.apache.commons.lang3.StringUtils;
 
 import com.transys.core.dao.GenericDAO;
+
 import com.transys.model.AbstractBaseModel;
 import com.transys.model.Customer;
 import com.transys.model.DumpsterSize;
@@ -283,19 +285,44 @@ public class ModelUtil {
 			sortBy1 = sortBy[0];
 		}
 		if (StringUtils.equals("companyName", sortBy1)) {
-			chain.addComparator(companyNameComparator);
+			chain.addComparator(customerReportCompanyNameComparator);
 		}
 		
 		Collections.sort(customerReportVOList, chain);
 	}
 	
-	public static Comparator<CustomerReportVO> companyNameComparator = new Comparator<CustomerReportVO>() {
+	public static Comparator<CustomerReportVO> customerReportCompanyNameComparator = new Comparator<CustomerReportVO>() {
 		@Override
 		public int compare(CustomerReportVO o1, CustomerReportVO o2) {
 			if (StringUtils.isEmpty(o1.getCompanyName()) || StringUtils.isEmpty(o2.getCompanyName())) {
 				return 0;
 			}
 			return o1.getCompanyName().compareTo(o2.getCompanyName());
+		}
+	};
+	
+	public static void sortOrder(List<Order> orderList, String... sortBy) {
+		if (orderList == null || orderList.isEmpty()) {
+			return;
+		}
+		
+		ComparatorChain chain = new ComparatorChain(); 
+		
+		String sortBy1 = "deliveryDate";
+		if (sortBy.length > 0) {
+			sortBy1 = sortBy[0];
+		}
+		if (StringUtils.equals("deliveryDate", sortBy1)) {
+			chain.addComparator(orderDeliveryDateComparator);
+		}
+		
+		Collections.sort(orderList, chain);
+	}
+	
+	public static Comparator<Order> orderDeliveryDateComparator = new Comparator<Order>() {
+		@Override
+		public int compare(Order o1, Order o2) {
+			return o1.getDeliveryDate().compareTo(o2.getDeliveryDate());
 		}
 	};
 	
