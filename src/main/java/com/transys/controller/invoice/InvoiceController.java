@@ -987,7 +987,7 @@ public class InvoiceController extends BaseController {
 			map(invoicePayment, orderPayment);
 			
 			BigDecimal payableAmount = balanceAmountDue;
-			if (balanceAmountDue.doubleValue() > amountAvailable.doubleValue()) {
+			if (balanceAmountDue.doubleValue() >= amountAvailable.doubleValue()) {
 				payableAmount = amountAvailable;
 				amountAvailable = new BigDecimal(0.00);
 			} else {
@@ -1068,6 +1068,11 @@ public class InvoiceController extends BaseController {
 		OrderInvoiceHeader orderInvoiceHeader = new OrderInvoiceHeader();
 		orderInvoiceHeader.setCreatedAt(Calendar.getInstance().getTime());
 		orderInvoiceHeader.setCreatedBy(createdBy);
+		
+		orderInvoiceHeader.setTotalInvoicePaymentDone(new BigDecimal(0.00));
+		orderInvoiceHeader.setTotalInvoiceBalanceDue(new BigDecimal(0.00));
+		orderInvoiceHeader.setTotalInvoiceBalanceAvailable(new BigDecimal(0.00));
+		
 		orderInvoiceHeader.setOrderCount(orderList.size());
 		
 		map(input, orderInvoiceHeader);
