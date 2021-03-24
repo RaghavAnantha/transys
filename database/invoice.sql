@@ -165,7 +165,7 @@ CHANGE COLUMN `invoiceDate` `invoiceDates` VARCHAR(50) NULL DEFAULT NULL COMMENT
 CHANGE COLUMN `invoiceId` `invoiceIds` VARCHAR(100) NULL DEFAULT NULL COMMENT '' ;
 
 ALTER TABLE `transys`.`orderPayment` 
-ADD COLUMN `invoiceId` BIGINT(20) NULL DEFAULT NULL COMMENT '' AFTER `ccExpDate`,
+ADD COLUMN `invoiceId` BIGINT(20) NULL COMMENT '' AFTER `ccExpDate`,
 ADD COLUMN `invoicePaymentId` BIGINT(20) NULL COMMENT '' AFTER `invoiceId`;
 
 ALTER TABLE `transys`.`orderInvoicePayment` 
