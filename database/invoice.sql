@@ -161,7 +161,7 @@ CREATE TABLE `transys`.`orderInvoicePayment` (
 
 ----------
 ALTER TABLE `transys`.`transysOrder` 
-CHANGE COLUMN `invoiceDate` `invoiceDates` VARCHAR(50) NULL DEFAULT NULL COMMENT '' ,
+CHANGE COLUMN `invoiceDate` `invoiceDates` VARCHAR(100) NULL DEFAULT NULL COMMENT '' ,
 CHANGE COLUMN `invoiceId` `invoiceIds` VARCHAR(100) NULL DEFAULT NULL COMMENT '' ;
 
 ALTER TABLE `transys`.`orderPayment` 

@@ -380,4 +380,14 @@ public class ModelUtil {
 		}
 		return entityIds;
 	}
+	
+	public static List<Long> extractObjIds(List<? extends AbstractBaseModel> objList) {
+		List<Long> idList = new ArrayList<Long>();
+		for (Object obj : objList) {
+			Long anId = (Long) obj;
+			idList.add(anId);
+		}
+		return idList;
+	}
+	
 }

@@ -41,13 +41,16 @@ public class CoreUtil {
 		return str;
 	}
 	
-	public static String toStringGeneric(List<Long> objList) {
-		if (objList == null || objList.isEmpty()) {
+	public static String toStringFromLong(List<Long> longList) {
+		if (longList == null || longList.isEmpty()) {
 			return StringUtils.EMPTY;
 		}
 		
-		String[] stringArr = new String[objList.size()];
-		return toString(objList.toArray(stringArr));
+		String[] stringArr = new String[longList.size()];
+		for (int i = 0; i < longList.size(); i++) {
+			stringArr[i] = String.valueOf(longList.get(i));
+		}
+		return toString(stringArr);
 	}
 	
 	public static String concatenate(String str1, String str2, String sep) {

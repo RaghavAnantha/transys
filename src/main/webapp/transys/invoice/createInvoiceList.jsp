@@ -21,7 +21,7 @@ function processCreateInvoiceSearch() {
 function validateCreateInvoiceSearchForm() {
 	var missingData = validateCreateInvoiceSearchMissingData();
 	if (missingData != "") {
-		var alertMsg = "<span style='color:red'><b>Please provide following required data:</b><br></span>"
+		var alertMsg = "<span style='color:red'><b>Please provide one of the following required data:</b><br></span>"
 					 + missingData;
 		showAlertDialog("Data Validation", alertMsg);
 		
@@ -41,17 +41,13 @@ function validateCreateInvoiceSearchMissingData() {
 	}
 	
 	if (createInvoiceSearchForm.find('#customerId').val() == "") {
-		missingData += "Company Name, ";
+		missingData += "Customer, ";
 	}
 	
 	var orderDateFrom = createInvoiceSearchForm.find("input[name='orderDateFrom']").val();
-	if (orderDateFrom == "") {
-		missingData += "Order Date From, ";
-	}
-	
 	var orderDateTo = createInvoiceSearchForm.find("input[name='orderDateTo']").val();
-	if (orderDateTo == "") {
-		missingData += "Order Date To, ";
+	if ((orderDateFrom == "" || orderDateTo == "")) {
+		missingData += "Order #/ Order Dates, ";
 	}
 	
 	if (missingData != "") {
@@ -117,6 +113,9 @@ function handleCreateInvoiceCustomerChange() {
 	var deliveryAddressSelect = $('#deliveryAddress');
 	emptySelect(deliveryAddressSelect);
 	
+	var orderIdSelect = $('#orderId');
+	emptySelect(orderIdSelect);
+	
 	var customerSelect =  $('#customerId');
 	var customerId = customerSelect.val();
 	if (customerId == "") {
@@ -124,6 +123,7 @@ function handleCreateInvoiceCustomerChange() {
 	}
 	
 	retrieveAndPopulateCreateInvoiceDeliveryAddress(customerId);
+	retrieveAndPopulateCreateInvoiceOrderIds(customerId);
 }
 
 function retrieveAndPopulateCreateInvoiceDeliveryAddress(customerId) {
@@ -144,6 +144,27 @@ function populateCreateInvoiceDeliveryAddress(addressList) {
    	        val: this.id,
    	        text: this.fullLine
    	    }).appendTo(deliveryAddressSelect);
+   	});
+}
+
+function retrieveAndPopulateCreateInvoiceOrderIds(customerId) {
+	$.ajax({
+  		url: "invoicableOrderIdsSearch.do?id=" + customerId,
+       	type: "GET",
+       	success: function(responseData, textStatus, jqXHR) {
+    	   	var orderIdList = jQuery.parseJSON(responseData);
+    	   	populateCreateInvoiceOrderIds(orderIdList);
+		}
+	});
+}
+
+function populateCreateInvoiceOrderIds(orderIdList) {
+	var orderIdSelect = $('#orderId');
+	$.each(orderIdList, function () {
+   		$("<option />", {
+   	        val: this,
+   	        text: this
+   	    }).appendTo(orderIdSelect);
    	});
 }
 </script>
@@ -183,9 +204,6 @@ function populateCreateInvoiceDeliveryAddress(addressList) {
 					<form:options items="${orderIds}"/>
 				</form:select>
 				<form:errors path="orderId" cssClass="errorMessage" />
-				<!--  
-				<form:input path="orderId" id="orderId" cssClass="flat" style="width:172px !important" maxlength="10"/>
-				-->
 			</td>
 		</tr>
 		<tr>
@@ -206,6 +224,7 @@ function populateCreateInvoiceDeliveryAddress(addressList) {
 			<td>
 				<input type="button" id="createInvoiceSearchSubmitBtn" onclick="processCreateInvoiceSearch();" value="Search" class="flat btn btn-primary btn-sm btn-sm-ext" />
 				<input type="reset" class="btn btn-primary btn-sm btn-sm-ext" value="Clear"/>
+				<input type="button" id="createInvoiceSearchBackBtn" onclick="document.location.href='manageInvoiceMain.do'" value="Back" class="flat btn btn-primary btn-sm btn-sm-ext" />
 			</td>
 		</tr>
 	</table>
@@ -216,8 +235,8 @@ function populateCreateInvoiceDeliveryAddress(addressList) {
 		<tr>
 			<td>
 				<a href="javascript:;" onclick="createInvoice();">
-					<img src="${editImage}" title="Preview Invoice" class="toolbarButton" border="0">
-					Preview Invoice
+					<img src="${editImage}" title="Create Invoice Preview" class="toolbarButton" border="0">
+					Create Invoice Preview
 				</a>
 			</td>
 			<td width="90">
@@ -253,11 +272,11 @@ function populateCreateInvoiceDeliveryAddress(addressList) {
 		<transys:textcolumn headerText="Del L1" dataField="deliveryAddress.line1" />
 		<transys:textcolumn headerText="Del L2" dataField="deliveryAddress.line2" />
 		<transys:textcolumn headerText="City" dataField="deliveryAddress.city" />
-		<transys:textcolumn headerText="Dmpstr Size" dataField="dumpsterSize.size" />
-		<transys:textcolumn headerText="Dmpstr #" dataField="dumpster.dumpsterNum" />
+		<transys:textcolumn headerText="Dmp. Size" dataField="dumpsterSize.size" />
+		<transys:textcolumn headerText="Dmp. #" dataField="dumpster.dumpsterNum" />
 		<transys:textcolumn headerText="Del Dt" dataField="deliveryDate" dataFormat="MM/dd/yyyy"/>
 		<transys:textcolumn headerText="Pickup Dt" dataField="pickupDate" dataFormat="MM/dd/yyyy"/>
-		<transys:textcolumn headerText="Dmpstr Price" dataField="orderFees.dumpsterPrice" type="java.math.BigDecimal"/>
+		<transys:textcolumn headerText="Dmp. Price" dataField="orderFees.dumpsterPrice" type="java.math.BigDecimal"/>
 		<transys:textcolumn headerText="Ton. Fee" dataField="orderFees.tonnageFee" type="java.math.BigDecimal"/>
 		<transys:textcolumn headerText="Permit Fee" dataField="orderFees.totalPermitFees" type="java.math.BigDecimal"/>
 		<transys:textcolumn headerText="City Fee" dataField="orderFees.cityFee" type="java.math.BigDecimal"/>
@@ -303,7 +322,7 @@ function populateCreateInvoiceDeliveryAddress(addressList) {
 			<tr>
 				<td>&nbsp;</td>
 				<td colspan="2">
-					<input type="button" id="createInvoiceParamsDialogSubmitBtn" value="Preview Invoice" class="flat btn btn-primary btn-sm btn-sm-ext" 
+					<input type="button" id="createInvoiceParamsDialogSubmitBtn" value="Create Invoice Preview" class="flat btn btn-primary btn-sm btn-sm-ext" 
 						onclick="javascript:processCreateInvoiceParamsDialogSubmit();"/>
 					<input type="button" id="createInvoiceParamsDialogCancelBtn" value="Cancel" class="flat btn btn-primary btn-sm btn-sm-ext" data-dismiss="modal" />
 				</td>

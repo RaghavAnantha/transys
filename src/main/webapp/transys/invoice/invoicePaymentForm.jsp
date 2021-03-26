@@ -6,7 +6,17 @@ function getInvoicePaymentForm() {
 	return form;
 }
 
-function processInvoicePaymentForm() {
+function loadInvoicePayment(data) {
+	$("#invoicePayment").html(data);
+}
+
+function processInvoicePaymentBack() {
+	$.get("invoicePaymentMain.do", function(data) {
+		loadInvoicePayment(data);
+    });
+}
+
+function processInvoicePaymentFormSubmit() {
 	if (validateInvoicePaymentForm()) {
 		var invoicePaymentForm = getInvoicePaymentForm();
 		invoicePaymentForm.submit();
@@ -42,7 +52,10 @@ function validateInvoicePaymentMissingData() {
 	var missingData = "";
 	
 	var form = getInvoicePaymentForm();
-	if (form.find('#invoice').val() == "") {
+	if (form.find('#createInvoicePaymentCustomerId').val() == "") {
+		missingData += "Customer, "
+	}
+	if (form.find('#createInvoicePaymentInvoiceNo').val() == "") {
 		missingData += "Invoice #, "
 	}
 	if (form.find('#paymentMethod').val() == "") {
@@ -108,6 +121,40 @@ function validateAllDates() {
 	
 	return validationMsg;
 }
+
+function handleCreateInvoicePaymentCustomerChange() {
+	var invoiceNoSelect = $('#createInvoicePaymentInvoiceNo');
+	emptySelect(invoiceNoSelect);
+	
+	var customerSelect =  $('#createInvoicePaymentCustomerId');
+	var customerId = customerSelect.val();
+	if (customerId == "") {
+		return false;
+	}
+	
+	retrieveAndPopulateCreateInvoicePaymentInvoiceNos(customerId);
+}
+
+function retrieveAndPopulateCreateInvoicePaymentInvoiceNos(customerId) {
+	$.ajax({
+  		url: "payableInvoiceNosSearch.do?id=" + customerId,
+       	type: "GET",
+       	success: function(responseData, textStatus, jqXHR) {
+    	   	var invoiceNoList = jQuery.parseJSON(responseData);
+    	   	populateCreateInvoicePaymentInvoiceNos(invoiceNoList);
+		}
+	});
+}
+
+function populateCreateInvoicePaymentInvoiceNos(invoiceNoList) {
+	var invoiceNoSelect = $('#createInvoicePaymentInvoiceNo');
+	$.each(invoiceNoList, function () {
+   		$("<option />", {
+   	        val: this,
+   	        text: this
+   	    }).appendTo(invoiceNoSelect);
+   	});
+}
 </script>
 
 <br />
@@ -121,12 +168,26 @@ function validateAllDates() {
 	<table id="form-table" class="table">
 		<tr><td></td></tr>
 		<tr>
+			<td class="form-left">Customer<span class="errorMessage">*</span></td>
+			<td class="wide">
+				<form:select cssClass="flat form-control input-sm" style="width:172px !important" 
+					id="createInvoicePaymentCustomerId" path="invoice.customerId" 
+					onChange="return handleCreateInvoicePaymentCustomerChange();">
+					<form:option value="">----Please Select----</form:option>
+					<form:options items="${customers}" itemValue="id" itemLabel="companyName"/>
+				</form:select> 
+				<form:errors path="invoice.customerId" cssClass="errorMessage" />
+			</td>
+		</tr>
+		<tr>
 			<td class="form-left">Invoice #<span class="errorMessage">*</span></td>
 			<td>
-				<form:select cssClass="flat form-control input-sm" path="invoice" style="width:172px !important">
-					<form:option value="">------Please Select------</form:option>
+				<form:select cssClass="flat form-control input-sm" style="width:172px !important" 
+					id="createInvoicePaymentInvoiceNo" path="invoice" >
+					<form:option value="">----Please Select----</form:option>
 					<form:options items="${invoiceNos}"/>
-				</form:select><form:errors path="invoice" cssClass="errorMessage" />
+				</form:select> 
+				<form:errors path="invoice" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>
@@ -191,8 +252,8 @@ function validateAllDates() {
 		<tr>
 			<td>&nbsp;</td>
 			<td colspan="2">
-				<input type="button" id="create" onclick="processInvoicePaymentForm();" value="Save" class="flat btn btn-primary btn-sm btn-sm-ext" /> 
-				<input type="button" id="cancelBtn" value="Back" class="flat btn btn-primary btn-sm btn-sm-ext" onClick="location.href='list.do'" />
+				<input type="button" id="create" onclick="processInvoicePaymentFormSubmit();" value="Save" class="flat btn btn-primary btn-sm btn-sm-ext" /> 
+				<input type="button" id="cancelBtn" value="Back" class="flat btn btn-primary btn-sm btn-sm-ext" onClick="processInvoicePaymentBack();" />
 			</td>
 		</tr>
 	</table>

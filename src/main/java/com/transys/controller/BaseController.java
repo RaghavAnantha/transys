@@ -161,6 +161,22 @@ public class BaseController {
 		model.addAttribute(ERROR_CTX_KEY, getMessageCtx());
 		model.addAttribute(URL_CTX_KEY, getUrlContext());
 	}
+	
+	protected void addCtx(ModelMap model, String msgCtx, String urlCtx) {
+		model.addAttribute(MSG_CTX_KEY, msgCtx);
+		model.addAttribute(ERROR_CTX_KEY, msgCtx);
+		model.addAttribute(URL_CTX_KEY, urlCtx);
+	}
+	
+	protected void addMsgCtx(ModelMap model) {
+		model.addAttribute(MSG_CTX_KEY, getMessageCtx());
+		model.addAttribute(ERROR_CTX_KEY, getMessageCtx());
+	}
+	
+	protected void addMsgCtx(ModelMap model, String msgCtx) {
+		model.addAttribute(MSG_CTX_KEY, msgCtx);
+		model.addAttribute(ERROR_CTX_KEY, msgCtx);
+	}
 
 	protected User getUser(HttpServletRequest request) {
 		return (User) request.getSession().getAttribute("userInfo");

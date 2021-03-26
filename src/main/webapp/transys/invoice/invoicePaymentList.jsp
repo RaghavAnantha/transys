@@ -16,7 +16,7 @@ function processInvoicePaymentSearch() {
 function validateInvoicePaymentSearchForm() {
 	var missingData = validateInvoicePaymentSearchMissingData();
 	if (missingData != "") {
-		var alertMsg = "<span style='color:red'><b>Please provide following required data:</b><br></span>"
+		var alertMsg = "<span style='color:red'><b>Please provide one of the following required data:</b><br></span>"
 					 + missingData;
 		showAlertDialog("Data Validation", alertMsg);
 		
@@ -36,16 +36,19 @@ function validateInvoicePaymentSearchMissingData() {
 	}
 	
 	if (invoicePaymentSearchForm.find('#invoicePaymentCustomerId').val() == "") {
-		missingData += "Company Name, ";
+		missingData += "Customer, ";
 	}
 	
+	var paymentDateFrom = invoicePaymentSearchForm.find("input[name='invoicePaymentDateFrom']").val();
+	var paymentDateTo = invoicePaymentSearchForm.find("input[name='invoicePaymentDateTo']").val();
 	var orderDateFrom = invoicePaymentSearchForm.find("input[name='invoicePaymentOrderDateFrom']").val();
 	var orderDateTo = invoicePaymentSearchForm.find("input[name='invoicePaymentOrderDateTo']").val();
 	var invoiceDateFrom = invoicePaymentSearchForm.find("input[name='invoicePaymentInvoiceDateFrom']").val();
 	var invoiceDateTo = invoicePaymentSearchForm.find("input[name='invoicePaymentInvoiceDateTo']").val();
-	if ((orderDateFrom == "" || orderDateTo == "")
+	if ((paymentDateFrom == "" || paymentDateTo == "")
+			&& (orderDateFrom == "" || orderDateTo == "")
 			&& (invoiceDateFrom == "" || invoiceDateTo == "")) {
-		missingData += "Invoice #/Invoice or Order Dates, ";
+		missingData += "Invoice #/ Payment, Invoice or Order Dates, ";
 	}
 	
 	if (missingData != "") {
@@ -54,13 +57,13 @@ function validateInvoicePaymentSearchMissingData() {
 	return missingData;
 }
 
-function confirmDeleteInvoice(invoiceId) {
-	showConfirmDialogWithPurpose("Confirm Invoice Delete", "Do you want to Delete Invoice #: " + invoiceId + "?",
-			"DEL_INVOICE:"+invoiceId);
+function confirmDeleteInvoicePayment(invoicePaymentId) {
+	showConfirmDialogWithPurpose("Confirm Invoice Payment Delete", "Do you want to Delete Invoice Payment#: " + invoicePaymentId + "?",
+			"DEL_INVOICE_PAYMENT:"+invoicePaymentId);
 }
 
-function processDeleteInvoicePaymnet(invoiceId) {
-	$.get("deleteInvoicePayment.do?id=" + invoiceId, function(data) {
+function processDeleteInvoicePaymnet(invoicePaymentId) {
+	$.get("deleteInvoicePayment.do?id=" + invoicePaymentId, function(data) {
 		loadInvoicePayment(data);
     });
 	
@@ -79,7 +82,7 @@ function loadInvoicePayment(data) {
 </script>
 
 <br />
-<h5 style="margin-top: -15px; !important">Manage Invoice Payments</h5>
+<h5 style="margin-top: -15px; !important">Manage Invoice Payment</h5>
 <form:form action="invoicePaymentSearch.do" method="get" id="invoicePaymentSearchForm" name="invoicePaymentSearchForm">
 	<jsp:include page="/common/messages.jsp">
 		<jsp:param name="msgCtx" value="manageInvoicePayment" />
@@ -100,20 +103,34 @@ function loadInvoicePayment(data) {
 					</c:forEach>
 				</select>
 			</td>
-			<td class="form-left">Invoice #<span class="errorMessage"><span class="errorMessage">*</span></td>
+			<td class="form-left">Invoice #<span class="errorMessage">*</span></td>
 			<td class="wide">
+				<!-- 
 				<select class="flat form-control input-sm" id="invoicePaymentInvoiceNo" name="invoicePaymentInvoiceNo" style="width:175px !important">
 					<option value="">-----Please Select-----</option>
 					<c:forEach items="${invoiceNos}" var="anInvoiceNo">
 						<c:set var="selected" value="" />
-						<c:if test="${sessionScope.searchCriteria.searchMap['innvoicePaymentInvoiceNo'] == anInvoiceNo}">
+						<c:if test="${sessionScope.searchCriteria.searchMap['invoicePaymentInvoiceNo'] == anInvoiceNo}">
 							<c:set var="selected" value="selected" />
 						</c:if>
 						<option value="${anInvoiceNo}" ${selected}>${anInvoiceNo}</option>
 					</c:forEach>
 				</select>
+				 -->
+				<input class="flat" id="invoicePaymentInvoiceNo" name="invoicePaymentInvoiceNo" 
+					value="${sessionScope.searchCriteria.searchMap['invoicePaymentInvoiceNo']}" style="width: 175px !important" />
 			</td>
 			<td colspan=10></td>
+		</tr>
+		<tr>
+			<td class="form-left">Payment Date From<span class="errorMessage">*</span></td>
+			<td>
+				<input class="flat" id="datepicker3" name="invoicePaymentDateFrom" value="${sessionScope.searchCriteria.searchMap['invoicePaymentDateFrom']}" style="width: 175px" />
+			</td>
+			<td class="form-left">Payment Date To<span class="errorMessage">*</span></td>
+			<td>
+				<input class="flat" id="datepicker4" name="invoicePaymentDateTo" value="${sessionScope.searchCriteria.searchMap['invoicePaymentDateTo']}" style="width: 175px" />
+			</td>
 		</tr>
 		<tr>
 			<td class="form-left">Invoice Date From<span class="errorMessage">*</span></td>
@@ -128,11 +145,11 @@ function loadInvoicePayment(data) {
 		<tr>
 			<td class="form-left">Order Date From<span class="errorMessage">*</span></td>
 			<td>
-				<input class="flat" id="datepicker3" name="invoicePaymentOrderDateFrom" value="${sessionScope.searchCriteria.searchMap['invoicePaymentOrderDateFrom']}" style="width: 175px" />
+				<input class="flat" id="datepicker7" name="invoicePaymentOrderDateFrom" value="${sessionScope.searchCriteria.searchMap['invoicePaymentOrderDateFrom']}" style="width: 175px" />
 			</td>
 			<td class="form-left">Order Date To<span class="errorMessage">*</span></td>
 			<td>
-				<input class="flat" id="datepicker4" name="invoicePaymentOrderDateTo" value="${sessionScope.searchCriteria.searchMap['invoicePaymentOrderDateTo']}" style="width: 175px" />
+				<input class="flat" id="datepicker8" name="invoicePaymentOrderDateTo" value="${sessionScope.searchCriteria.searchMap['invoicePaymentOrderDateTo']}" style="width: 175px" />
 			</td>
 		</tr>
 		<tr>
@@ -150,7 +167,7 @@ function loadInvoicePayment(data) {
 		<tr>
 			<td>
 				<a href="javascript:;" onclick="processInvoicePaymentCreate();">
-					<img src="${addImage}" title="Create Invoice" class="toolbarButton" border="0">
+					<img src="${addImage}" title="Create Invoice Payment" class="toolbarButton" border="0">
 				</a>
 			</td>
 			<td width="90">
@@ -174,17 +191,20 @@ function loadInvoicePayment(data) {
 		pagingLink="invoicePaymentSearch.do" multipleSelect="false" searcheable="false"
 		exportPdf="false" exportXls="false" dataQualifier="invoicePayment">
 		<transys:textcolumn headerText="Invoice #" dataField="invoice.id" />
+		<transys:textcolumn headerText="Invoice Date" dataField="invoice.invoiceDate" dataFormat="MM/dd/yyyy"/>
+		<transys:textcolumn headerText="Customer" dataField="invoice.companyName" />
 		<transys:textcolumn headerText="Payment Method" dataField="paymentMethod.method" />
 		<transys:textcolumn headerText="Payment Date" dataField="paymentDate" dataFormat="MM/dd/yyyy"/>
-		<transys:textcolumn headerText="Amt Paid" dataField="amountPaid" type="java.math.BigDecimal" dataFormat="#####0.00"/>
-		<transys:textcolumn headerText="Check Name" dataField="checkNum" />
+		<transys:textcolumn headerText="Amt. Paid" dataField="amountPaid" type="java.math.BigDecimal" dataFormat="#####0.00"/>
+		<transys:textcolumn headerText="Check #" dataField="checkNum" />
+		<transys:textcolumn headerText="CC Ref. #" dataField="ccReferenceNum" />
 		<transys:textcolumn headerText="CC Name" dataField="ccName" />
 		<transys:textcolumn headerText="CC #" dataField="ccNumber" />
-		<transys:textcolumn headerText="CC Reference #" dataField="ccReferenceNum" />
 		<transys:textcolumn headerText="CC Exp. Date" dataField="ccExpDate" dataFormat="MM/dd/yyyy"/>
 		<transys:imagecolumn headerText="Download As PDF" linkUrl="${ctx}/invoice/downloadInvoicePayment.do?id={id}&type=pdf" imageSrc="${pdfImage}" HAlign="center" title="PDF"/>
 		<transys:imagecolumn headerText="Download As XLS" linkUrl="${ctx}/invoice/downloadInvoicePayment.do?id={id}&type=xlsx" imageSrc="${excelImage}" HAlign="center" title="XLSX"/>
 		<transys:imagecolumn headerText="Download As CSV" linkUrl="${ctx}/invoice/downloadInvoicePayment.do?id={id}&type=csv" imageSrc="${csvImage}" HAlign="center" title="CSV"/>
+		<transys:imagecolumn headerText="EDT" linkUrl="editInvoicePayment.do?id={id};" imageSrc="${editImage}" HAlign="center" title="Edit"/>
 		<transys:imagecolumn headerText="DEL" linkUrl="javascript:confirmDeleteInvoicePayment('{id}');" imageSrc="${deleteImage}" HAlign="center" title="Delete"/>
 	</transys:datatable>
 	<%session.setAttribute("invoicePaymentColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>

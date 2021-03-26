@@ -16,7 +16,7 @@ function processManageInvoiceSearch() {
 function validateManageInvoiceSearchForm() {
 	var missingData = validateManageInvoiceSearchMissingData();
 	if (missingData != "") {
-		var alertMsg = "<span style='color:red'><b>Please provide following required data:</b><br></span>"
+		var alertMsg = "<span style='color:red'><b>Please provide one of the following required data:</b><br></span>"
 					 + missingData;
 		showAlertDialog("Data Validation", alertMsg);
 		
@@ -39,7 +39,7 @@ function validateManageInvoiceSearchMissingData() {
 	}
 	
 	if (manageInvoiceSearchForm.find('#manageInvoiceCustomerId').val() == "") {
-		missingData += "Company Name, ";
+		missingData += "Customer, ";
 	}
 	
 	var orderDateFrom = manageInvoiceSearchForm.find("input[name='manageInvoiceOrderDateFrom']").val();
@@ -49,7 +49,7 @@ function validateManageInvoiceSearchMissingData() {
 	if ((orderDateFrom == "" || orderDateTo == "")
 			&& (invoiceDateFrom == "" || invoiceDateTo == "")
 			&& (deliveryAddress == "")) {
-		missingData += "Invoice #/Order #/Delivery Address/Invoice or Order Dates, ";
+		missingData += "Invoice #/ Order #/ Delivery Address/ Invoice or Order Dates, ";
 	}
 	
 	if (missingData != "") {
@@ -151,6 +151,7 @@ function populateManageInvoiceDeliveryAddress(addressList) {
 		<tr>
 			<td class="form-left">Invoice #<span class="errorMessage"></span></td>
 			<td class="wide">
+				<!-- 
 				<select class="flat form-control input-sm" id="manageInvoiceInvoiceNo" name="manageInvoiceInvoiceNo" style="width:175px !important">
 					<option value="">-----Please Select-----</option>
 					<c:forEach items="${invoiceNos}" var="anInvoiceNo">
@@ -161,9 +162,13 @@ function populateManageInvoiceDeliveryAddress(addressList) {
 						<option value="${anInvoiceNo}" ${selected}>${anInvoiceNo}</option>
 					</c:forEach>
 				</select>
+				 -->
+				<input class="flat" id="manageInvoiceInvoiceNo" name="manageInvoiceInvoiceNo" 
+					value="${sessionScope.searchCriteria.searchMap['manageInvoiceInvoiceNo']}" style="width: 175px !important" />
 			</td>
 			<td class="form-left">Order #<span class="errorMessage"></span></td>
 			<td class="wide">
+				<!--  
 				<select class="flat form-control input-sm" id="manageInvoiceOrderId" name="manageInvoiceOrderId" style="width:175px !important">
 					<option value="">-----Please Select-----</option>
 					<c:forEach items="${orderIds}" var="anOrderId">
@@ -174,10 +179,9 @@ function populateManageInvoiceDeliveryAddress(addressList) {
 						<option value="${anOrderId}" ${selected}>${anOrderId}</option>
 					</c:forEach>
 				</select>
-				<!-- 
+				-->
 				<input class="flat" id="manageInvoiceOrderId" name="manageInvoiceOrderId" 
 					value="${sessionScope.searchCriteria.searchMap['manageInvoiceOrderId']}" style="width: 175px !important" />
-				-->
 			</td>
 		</tr>
 		<tr>
@@ -213,7 +217,11 @@ function populateManageInvoiceDeliveryAddress(addressList) {
 	<tbody>
 		<tr><td/></tr>
 		<tr>
-			<td></td>
+			<td>
+				<a href="createInvoiceMain.do">
+					<img src="${addImage}" title="Create Invoice" class="toolbarButton" border="0">
+				</a>
+			</td>
 			<td width="90">
 				<a href="${ctx}/invoice/manageInvoiceExport.do?dataQualifier=manageInvoice&amp;type=pdf">
 					<img src="${pdfImage}" style="float:right;" class="toolbarButton" border="0" title="PDF">
@@ -255,21 +263,6 @@ function populateManageInvoiceDeliveryAddress(addressList) {
 </form:form>
 
 <script type="text/javascript">
-$("#manageInvoiceSearchForm").submit(function (ev) {
-	var $this = $(this);
-	
-    $.ajax({
-        type: $this.attr('method'),
-        url: $this.attr('action'),
-        data: $this.serialize(),
-        success: function(responseData, textStatus, jqXHR) {
-        	loadManageInvoice(responseData);
-        }
-    });
-    
-    ev.preventDefault();
-});
-
 $("#confirmDialogYes").unbind('click').bind('click', function (ev) {
 	var confirmPurpose = getConfirmDialogPurpose();
 	if (confirmPurpose.indexOf('DEL_INVOICE') != -1) {

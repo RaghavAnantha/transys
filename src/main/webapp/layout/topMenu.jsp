@@ -16,7 +16,7 @@
 					<li id="orderPage"><a href="${ctx}/order/main.do">Orders</a></li>
 					<li id="permitPage"><a href="${ctx}/permit/main.do">Permits</a></li>
 					<li id="customerPage"><a href="${ctx}/customer/main.do">Customers</a></li>
-					<li id="invoicePage"><a href="${ctx}/invoice/createInvoiceMain.do">Invoices</a></li>
+					<li id="invoicePage"><a href="${ctx}/invoice/manageInvoiceMain.do">Invoices</a></li>
 					<li id="orderSchedulerPage"><a href="${ctx}/orderScheduler/main.do">Order Scheduler</a></li>
 					<li id="materialIntake"><a href="${ctx}/publicMaterialIntake/main.do">Public Material Intake</a></li>
 					<li id="reportPage">

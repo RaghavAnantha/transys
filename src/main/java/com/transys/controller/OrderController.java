@@ -24,6 +24,7 @@ import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import org.springframework.beans.propertyeditors.CustomDateEditor;
+
 import org.springframework.stereotype.Controller;
 
 import org.springframework.ui.ModelMap;
@@ -335,7 +336,7 @@ public class OrderController extends CRUDController<Order> {
 		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		
 		model.addAttribute("list", genericDAO.search(getEntityClass(), criteria, "deliveryDate desc, orderStatus.status desc, id desc", null, null));
-		addTabAttributes(model, "manageOrders", "MANAGE", StringUtils.EMPTY);
+		addTabAttributes(model, MODE_MANAGE, StringUtils.EMPTY);
 		
 		return urlContext + "/order";
 	}
@@ -344,7 +345,7 @@ public class OrderController extends CRUDController<Order> {
 	public String create(ModelMap model, HttpServletRequest request) {
 		setupCreate(model, request, null);
 		
-		addTabAttributes(model, StringUtils.EMPTY, ORDER_DETAILS_TAB);
+		addTabAttributes(model, MODE_ADD, ORDER_DETAILS_TAB);
 		
 		addNotesModelObject(model, new OrderNotes());
 		

@@ -259,7 +259,7 @@ function populateCustomerDeliveryAddress() {
 		<transys:textcolumn headerText="Del L1" dataField="deliveryAddress.line1" />
 		<transys:textcolumn headerText="Del L2" dataField="deliveryAddress.line2" />
 		<transys:textcolumn headerText="City" dataField="deliveryAddress.city" />
-		<transys:textcolumn headerText="Dmpstr Size" dataField="dumpsterSize.size" />
+		<transys:textcolumn headerText="Dmp. Size" dataField="dumpsterSize.size" />
 		<transys:textcolumn headerText="Dmpstr #" dataField="dumpster.dumpsterNum" />
 		<transys:textcolumn headerText="Del Dt" dataField="deliveryDate" dataFormat="MM/dd/yyyy"/>
 		<transys:textcolumn headerText="Pickup Dt" dataField="pickupDate" dataFormat="MM/dd/yyyy"/>
