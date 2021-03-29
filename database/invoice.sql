@@ -181,3 +181,21 @@ ADD COLUMN `totalInvoiceBalanceAvailable` DECIMAL(9,2) NULL DEFAULT '0.00' COMME
 update transys.transysOrder
 set invoiced = 'N'
 where invoiced is null;
+
+update transys.transysOrder
+set invoiced = 'N'
+where invoiced = 'Y' or invoiced is null;
+
+update transys.transysOrder
+set invoiceDates=null, invoiceIds=null
+where invoiced = 'N'
+
+delete from transys.orderInvoiceDetails
+where invoiceId in (1,2);
+
+delete from transys.orderInvoiceHeader
+where id in (1,2);
+
+select * from transys.transysOrder
+where invoiced = 'Y' or invoiced is null
+order by id desc;
