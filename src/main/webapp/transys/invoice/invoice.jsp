@@ -6,7 +6,7 @@
 <title>Invoices</title>
 </head>
 <body>
-	<ul class="nav nav-tabs" id="invoice_main_tabs">
+	<ul class="nav nav-tabs" id="invoiceMainTabs">
 		<li><a href="#manageInvoice" id="manageInvoiceTab" data-toggle="tab" >Invoice</a></li>
 		<li><a href="invoicePaymentMain.do" id="invoicePaymentTab" data-toggle="tabajax" data-target="#invoicePayment">Invoice Payment</a></li>
 	</ul>
@@ -28,7 +28,7 @@
 	showTab('${activeSubTab}');
 	
 	$('#invoicePaymentTab').click(function(e) {
-		loadTab($(this));
+		loadTab($(this), null);
 		return false;
 	});
 	

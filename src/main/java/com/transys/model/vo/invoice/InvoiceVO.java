@@ -74,6 +74,7 @@ public class InvoiceVO extends BaseVO {
 	private String orderDateFrom;
 	private String orderDateTo;
 	
+	// Used for order ids
 	private String[] ids;
 	private Date invoiceDate;
 	

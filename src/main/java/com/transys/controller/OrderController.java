@@ -986,10 +986,10 @@ public class OrderController extends CRUDController<Order> {
 	private void mapPickupOrder(Order pickupOrder, OrderReportVO anOrderReportVO) {
 		anOrderReportVO.setPickupOrderId(pickupOrder.getId());
 		anOrderReportVO.setPickupOrderDeliveryDate(pickupOrder.getFormattedDeliveryDate());
-		anOrderReportVO.setPickupOrderDeliveryAddress(pickupOrder.getDeliveryAddress().getFullDeliveryAddress("\n"));
-		anOrderReportVO.setPickupOrderDeliveryCity(pickupOrder.getDeliveryAddress().getCity());
-		anOrderReportVO.setPickupOrderDumpsterNum(pickupOrder.getDumpster().getDumpsterNum());
-		anOrderReportVO.setPickupOrderDumpsterSize(pickupOrder.getDumpsterSize().getSize());
+		anOrderReportVO.setPickupOrderDeliveryAddress(pickupOrder.getFullDeliveryAddress("\n"));
+		anOrderReportVO.setPickupOrderDeliveryCity(pickupOrder.getDeliveryCity());
+		anOrderReportVO.setPickupOrderDumpsterNum(pickupOrder.getDumpsterNum());
+		anOrderReportVO.setPickupOrderDumpsterSize(pickupOrder.getDumpsterSizeStr());
 	}
 	
 	private void map(Order anOrder, OrderReportVO anOrderReportVO) {
@@ -1676,6 +1676,8 @@ public class OrderController extends CRUDController<Order> {
 			
 			OrderStatus orderStatus = retrieveOrderStatus(OrderStatus.ORDER_STATUS_OPEN);
 			entity.setOrderStatus(orderStatus);
+			
+			entity.setInvoiced("N");
 		} else {
 			orderAuditMsg = "Order details updated";
 		}

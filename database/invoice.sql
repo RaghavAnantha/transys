@@ -178,4 +178,6 @@ ADD COLUMN `totalInvoicePaymentDone` DECIMAL(9,2) NULL DEFAULT '0.00' COMMENT ''
 ADD COLUMN `totalInvoiceBalanceDue` DECIMAL(9,2) NULL DEFAULT '0.00' COMMENT '' AFTER `totalInvoicePaymentDone`,
 ADD COLUMN `totalInvoiceBalanceAvailable` DECIMAL(9,2) NULL DEFAULT '0.00' COMMENT '' AFTER `totalInvoiceBalanceDue`;
 
-
+update transys.transysOrder
+set invoiced = 'N'
+where invoiced is null;

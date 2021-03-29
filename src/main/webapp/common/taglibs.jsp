@@ -24,6 +24,7 @@
 <c:set var="preLoaderImage" value="${imageCtx}/preloader.gif"/>
 <c:set var="preLoaderReportImage" value="${imageCtx}/preLoaderReport.gif"/>
 <c:set var="addImage" value="${imageCtx}/add.png"/>
+<c:set var="addNewImage" value="${imageCtx}/addnew.png"/>
 <c:set var="editImage" value="${imageCtx}/edit.png"/>
 <c:set var="deleteImage" value="${imageCtx}/delete.png"/>
 <c:set var="csvImage" value="${imageCtx}/csv.png"/>

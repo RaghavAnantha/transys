@@ -33,7 +33,7 @@
 	showTab('${activeSubTab}');
 	
 	$('#orderPermitAlertTab').click(function(e) {
-	  	loadTab($(this));
+	  	loadTab($(this), null);
 	    return false;
 	});
 	

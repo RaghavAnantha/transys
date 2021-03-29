@@ -71,7 +71,7 @@ public final class ImageColumn extends AbstractColumnTag {
    public void setImageSrc(String pstrSrc) {
    	this.imageSrc = pstrSrc;
    	
-   	if (StringUtils.contains(this.imageSrc, "fa ")) {
+   	if (StringUtils.startsWith(this.imageSrc, "fa")) {
 			setFontAwesomeImg(true);
 		} else {
 			setFontAwesomeImg(false);

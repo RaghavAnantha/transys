@@ -2,29 +2,43 @@ function log(msg) {
 	console.log(msg);
 }
 
+function findTabToBeShown(tab) {
+	var tabToBeUsed = tab;
+	if (tab.indexOf(".do") == -1) {
+		tabToBeUsed = "#" + tabToBeUsed;
+	}
+	
+	return $('.nav-tabs a[href="' + tabToBeUsed + '"]');
+}
+
 function showTab(tab) {
 	if (tab.length == 0) {
 		return;
 	}
-	$('.nav-tabs a[href="#' + tab + '"]').tab('show');
+	
+	var $tabToBeShown = findTabToBeShown(tab);
+	$tabToBeShown.tab('show');
 }
 
-function loadTab(tab) {
-	var loadUrl = tab.attr('href'),
-		dataTarget = tab.attr('data-target'),
-		dataToggle = tab.attr('data-toggle');
-
+function loadTab($tab, loadUrlPassed) {
 	if (dataToggle == 'tab') {
-		tab.tab('show');
+		$tab.tab('show');
 		return false;
 	}
 	
-    $.get(loadUrl, function(data) {
+	var loadUrlToBeUsed = $tab.attr('href'),
+		dataTarget = $tab.attr('data-target'),
+		dataToggle = $tab.attr('data-toggle');
+	if (loadUrlPassed != null) {
+		loadUrlToBeUsed = loadUrlPassed;
+	}
+	
+    $.get(loadUrlToBeUsed, function(data) {
         $(dataTarget).html(data);
     });
 
-    //tab.attr('data-toggle', 'tab')
-    tab.tab('show');
+    //$tab.attr('data-toggle', 'tab')
+    $tab.tab('show');
     return false;
 }
 
@@ -35,7 +49,7 @@ function emptySelect(selectElem) {
 	selectElem.append(firstOption);
 }
 
-function ValidateFileType(fileId) {
+function validateFileType(fileId) {
 	var image = document.getElementById(fileId).value;
 	if (image != '') {
 		var checkimg = image.toLowerCase();
@@ -46,7 +60,7 @@ function ValidateFileType(fileId) {
 		}		
 	}
 	return true;
- }
+}
 
 function processBulkDelete() {
 	var inputs = document.getElementsByName("id");
@@ -303,37 +317,25 @@ function onlyNumbers(evt, dec) {
 	return true;
 }
 
-//Checks a string to see if it in a valid date format
-//of (M)M/(D)D/(YY)YY and returns true/false
-function isValidDate(s) {
- // format D(D)/M(M)/(YY)YY
- var dateFormat = /^\d{1,2}[\.|\/|-]\d{1,2}[\.|\/|-]\d{1,4}$/;
-
- if (dateFormat.test(s)) {
-     // remove any leading zeros from date values
-     s = s.replace(/0*(\d*)/gi,"$1");
-     var dateArray = s.split(/[\.|\/|-]/);
-   
-     // correct month value
-     dateArray[0] = dateArray[0]-1;
-
-     // correct year value
-     if (dateArray[2].length<4) {
-         // correct year value
-         dateArray[2] = (parseInt(dateArray[2]) < 50) ? 2000 + parseInt(dateArray[2]) : 1900 + parseInt(dateArray[2]);
-     }
-
-     var testDate = new Date(dateArray[2], dateArray[0], dateArray[1]);
-     if (testDate.getDate()!=dateArray[1] || testDate.getMonth()!=dateArray[0] || testDate.getFullYear()!=dateArray[2]) {
-         return false;
-     } else {
-         return true;
-     }
- } else {
-     return false;
- }
+function toJSDate(screenDateStr) {
+	// 07-26-2020
+	var dateStrSplit = screenDateStr.split('-');
+	// 2020-07-26
+	var jsDateStr = dateStrSplit[2] + "-" + dateStrSplit[0] + "-" + dateStrSplit[1];
+	return new Date(jsDateStr);
 }
 
+function dateDiff(fromDate, toDate) {
+    // Take the difference between the dates and divide by milliseconds per day.
+    // Round to nearest whole number to deal with DST.
+    return Math.round((toDate - fromDate)/(1000*60*60*24));
+}
+
+function dateDiffForDateStr(fromDateStr, toDateStr) {
+	var fromDate = toJSDate(fromDateStr);
+	var toDate = toJSDate(toDateStr);
+    return dateDiff(fromDate, toDate);
+}
 
 /**
  * Function for Editable Date
@@ -433,6 +435,42 @@ function formatDate(datepicker){
 		}
 	 }
    }
+}
+
+function formatPhone(phone) {
+	if (phone.trim() == "") {
+		return phone;
+	}
+	
+	if (phone.length < 10) {
+		return phone;
+	}
+	
+	var str = new String(phone);
+	if (str.match("-")) {
+		return phone;
+	}
+	
+	var p1 = str.substring(0,3);
+	var p2 = str.substring(3,6);
+	var p3 = str.substring(6,10);				
+	return p1 + "-" + p2 + "-" + p3;
+}
+
+function formatCCNumber(ccNumber) {
+	var formattedCCNum = ccNumber;
+	if (ccNumber.length < 15 
+			|| ccNumber.length > 16) {
+		return formattedCCNum;
+	}
+	
+	var formattedCCNum = ccNumber.substring(0, 4);
+	if (ccNumber.length == 16) {
+		formattedCCNum += ("-xxxx-xxxx-" + ccNumber.substring(12));
+	} else {
+		formattedCCNum += ("-xxxx-xxx-" + ccNumber.substring(11));
+	}
+	return formattedCCNum;
 }
 
 function clearTextAndFocus(field) {

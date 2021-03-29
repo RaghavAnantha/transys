@@ -843,7 +843,7 @@ public final class Datatable extends BodyTagSupport {
 					String url = "/"+urlContext+"/edit.do";
 					//if (authenticationService.hasUserPermission(user, url)) {
 						manageDocsColumn = new ImageColumn();
-						manageDocsColumn.setImageSrc("fa fa-file-o");
+						manageDocsColumn.setImageSrc("fas fa-book");
 						manageDocsColumn.setPageContext(this.pageContext);
 						manageDocsColumn.setImageBorder(0);
 						manageDocsColumn.setWidth("30");

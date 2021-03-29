@@ -108,6 +108,11 @@ function populateManageInvoiceDeliveryAddress(addressList) {
    	    }).appendTo(deliveryAddressSelect);
    	});
 }
+
+function processMakeInvoicePayment(invoiceId) {
+	var $tabToBeShown = findTabToBeShown('invoicePaymentMain.do');
+    loadTab($tabToBeShown, "createInvoicePayment.do?invoiceId="+invoiceId);
+}
 </script>
 
 <br />
@@ -242,22 +247,22 @@ function populateManageInvoiceDeliveryAddress(addressList) {
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
 		pagingLink="manageInvoiceSearch.do" multipleSelect="false" searcheable="false"
 		exportPdf="false" exportXls="false" dataQualifier="manageInvoice">
-		<transys:textcolumn headerText="Invoice #" dataField="id" />
-		<transys:textcolumn headerText="Invoice Date" dataField="invoiceDate" dataFormat="MM/dd/yyyy"/>
+		<transys:textcolumn headerText="Inv.#" dataField="id" />
+		<transys:textcolumn headerText="Inv. Date" width="70px" dataField="invoiceDate" dataFormat="MM/dd/yyyy"/>
 		<transys:textcolumn headerText="Customer" dataField="companyName" />
 		<transys:textcolumn headerText="Contact" dataField="contactName" />
 		<transys:textcolumn headerText="Phone" dataField="formattedPhone1" />
-		<transys:textcolumn headerText="Order Date From" dataField="orderDateFrom" dataFormat="MM/dd/yyyy"/>
-		<transys:textcolumn headerText="Order Date To" dataField="orderDateTo" dataFormat="MM/dd/yyyy"/>
-		<transys:textcolumn headerText="Order Count" dataField="orderCount" />
-		<transys:textcolumn headerText="Total Fees" dataField="totalFees" type="java.math.BigDecimal" dataFormat="#####0.00"/>
-		<transys:textcolumn headerText="Total Discount" dataField="totalDiscount" type="java.math.BigDecimal" dataFormat="#####0.00"/>
-		<transys:textcolumn headerText="Total Amt Paid" dataField="totalAmountPaid" type="java.math.BigDecimal" dataFormat="#####0.00"/>
-		<transys:textcolumn headerText="Bal Due" dataField="totalBalanceAmountDue" type="java.math.BigDecimal" dataFormat="#####0.00"/>
-		<transys:imagecolumn headerText="Download As PDF" linkUrl="${ctx}/invoice/downloadInvoice.do?id={id}&type=pdf" imageSrc="${pdfImage}" HAlign="center" title="PDF"/>
-		<transys:imagecolumn headerText="Download As XLS" linkUrl="${ctx}/invoice/downloadInvoice.do?id={id}&type=xlsx" imageSrc="${excelImage}" HAlign="center" title="XLSX"/>
-		<transys:imagecolumn headerText="Download As CSV" linkUrl="${ctx}/invoice/downloadInvoice.do?id={id}&type=csv" imageSrc="${csvImage}" HAlign="center" title="CSV"/>
-		<transys:imagecolumn headerText="DEL" linkUrl="javascript:confirmDeleteInvoice('{id}');" imageSrc="${deleteImage}" HAlign="center" title="Delete"/>
+		<transys:textcolumn headerText="Order Dt. Fr." width="73px" dataField="orderDateFrom" dataFormat="MM/dd/yyyy"/>
+		<transys:textcolumn headerText="Order Dt. To" width="73px" dataField="orderDateTo" dataFormat="MM/dd/yyyy"/>
+		<transys:textcolumn headerText="Order Count"  width="32px" dataField="orderCount" />
+		<transys:textcolumn headerText="Inv. Amt"  width="50px" dataField="totalBalanceAmountDue" type="java.math.BigDecimal" dataFormat="#####0.00"/>
+		<transys:textcolumn headerText="Pay. made"  width="50px" dataField="totalInvoicePaymentDone" type="java.math.BigDecimal" dataFormat="#####0.00"/>
+		<transys:textcolumn headerText="Bal. Due"  width="50px" dataField="totalInvoiceBalanceDue" type="java.math.BigDecimal" dataFormat="#####0.00"/>
+		<transys:textcolumn headerText="Notes" dataField="notes" />
+		<transys:imagecolumn headerText="Pay" width="32px" linkUrl="javascript:processMakeInvoicePayment('{id}');" imageSrc="fas fa-dollar-sign" HAlign="center" title="Make Payment"/>
+		<transys:imagecolumn headerText="PDF" width="32px" linkUrl="${ctx}/invoice/downloadInvoice.do?id={id}&type=pdf" imageSrc="${pdfImage}" HAlign="center" title="PDF"/>
+		<transys:imagecolumn headerText="XLS" width="32px" linkUrl="${ctx}/invoice/downloadInvoice.do?id={id}&type=xlsx" imageSrc="${excelImage}" HAlign="center" title="XLSX"/>
+		<transys:imagecolumn headerText="CSV" width="32px" linkUrl="${ctx}/invoice/downloadInvoice.do?id={id}&type=csv" imageSrc="${csvImage}" HAlign="center" title="CSV"/>
 	</transys:datatable>
 	<%session.setAttribute("manageInvoiceColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
 </form:form>

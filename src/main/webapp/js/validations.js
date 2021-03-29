@@ -42,24 +42,17 @@ function validateAndFormatPhoneModal(phoneId) {
 	}	
 }
 
-function formatPhone(phone) {
-	if (phone.trim() == "") {
-		return phone;
+function validateAmountAndRange(amt, minValue, maxValue) {
+	if (!validateAmount(amt, maxValue)) {
+		return false;
 	}
 	
-	if (phone.length < 10) {
-		return phone;
+	var intAmt = parseInt(amt);
+	if (minValue != null && intAmt <= minValue) {
+		return false;
 	}
 	
-	var str = new String(phone);
-	if (str.match("-")) {
-		return phone;
-	}
-	
-	var p1 = str.substring(0,3);
-	var p2 = str.substring(3,6);
-	var p3 = str.substring(6,10);				
-	return p1 + "-" + p2 + "-" + p3;
+	return true;
 }
 
 function validateAmount(amt, maxValue) {
@@ -67,11 +60,16 @@ function validateAmount(amt, maxValue) {
 		return false;
 	}
 	
+	if (isNaN(amt)) {
+		return false;
+	}
+	
 	if (!/(^\d+\.\d{2}$)|(^\d+$)/.test(amt)) {
 		return false;
 	}
 	
-	if (maxValue !=  null && amt > maxValue) {
+	var intAmt = parseInt(amt);
+	if (maxValue != null && intAmt > maxValue) {
 		return false;
 	}
 	
@@ -119,6 +117,56 @@ function validateDate(date) {
     }
 
     return true;
+}
+
+function validateExpiryDate(date) {
+	if (date.trim() == "") {
+		return false;
+	}
+	
+	var datePattern = new RegExp("^([0-9]{2})\/([0-9]{4})$");
+	if(!datePattern.test(date)) {
+		return false;
+	}
+	
+	var data = date.split("/");
+    // using ISO 8601 Date String
+    if (isNaN(Date.parse(data[1] + "-" + data[0]))) {
+    	return false;
+    }
+
+    return true;
+}
+
+//Checks a string to see if it in a valid date format
+//of (M)M/(D)D/(YY)YY and returns true/false
+function isValidDate(s) {
+	// format D(D)/M(M)/(YY)YY
+	var dateFormat = /^\d{1,2}[\.|\/|-]\d{1,2}[\.|\/|-]\d{1,4}$/;
+	
+	if (dateFormat.test(s)) {
+	   // remove any leading zeros from date values
+	   s = s.replace(/0*(\d*)/gi,"$1");
+	   var dateArray = s.split(/[\.|\/|-]/);
+	 
+	   // correct month value
+	   dateArray[0] = dateArray[0]-1;
+	
+	   // correct year value
+	   if (dateArray[2].length<4) {
+	       // correct year value
+	       dateArray[2] = (parseInt(dateArray[2]) < 50) ? 2000 + parseInt(dateArray[2]) : 1900 + parseInt(dateArray[2]);
+	   }
+	
+	   var testDate = new Date(dateArray[2], dateArray[0], dateArray[1]);
+	   if (testDate.getDate()!=dateArray[1] || testDate.getMonth()!=dateArray[0] || testDate.getFullYear()!=dateArray[2]) {
+	       return false;
+	   } else {
+	       return true;
+	   }
+	} else {
+	   return false;
+	}
 }
 
 function validateTimeRange(timeFrom, timeTo) {
@@ -328,6 +376,18 @@ function validateTime(timeField) {
 	
 	var time = hour+":"+min;
 	document.getElementById(timeField).value = time;
+}
+
+function validateCCNumber(ccNumber) {
+	var validationMsg = "";
+	if (ccNumber.length <= 0) {
+		return validationMsg;
+	}
+	if (ccNumber.length < 15 
+			|| ccNumber.length > 19) {
+		validationMsg = "Credit card no. should be 15 or 16 digits in length, ";
+	}
+	return validationMsg;
 }
 
 /*function validate() {

@@ -1,5 +1,11 @@
 <%@include file="/common/taglibs.jsp"%>
 
+<style>
+.hide-calendar .ui-datepicker-calendar {
+    display: none;
+}
+</style>
+
 <script type="text/javascript">
 function getInvoicePaymentForm() {
 	var form = $('#invoicePaymentForm');
@@ -61,12 +67,15 @@ function validateInvoicePaymentMissingData() {
 	if (form.find('#paymentMethod').val() == "") {
 		missingData += "Payment method, "
 	}
-	if (form.find('#amountPaid').val() == "") {
+	var amountPaid = form.find('#amountPaid').val();
+	if (amountPaid == "") {
 		missingData += "Amount Paid, "
 	}
 	if (form.find("[name='paymentDate']").val() == "") {
 		missingData += "Payment Date, "
 	}
+	
+	missingData += validateMissingInvoicePayment();
 	
 	if (missingData != "") {
 		missingData = missingData.substring(0, missingData.length - 2);
@@ -75,11 +84,59 @@ function validateInvoicePaymentMissingData() {
 	return missingData;
 }
 
+function validateMissingInvoicePayment() {
+	var missingData = "";
+	
+	var form = getInvoicePaymentForm();
+	var paymentMethod = form.find('#paymentMethod').val();
+	if (paymentMethod == "") {
+		return missingData;
+	}
+	
+	var checkNum = form.find('#checkNum').val();
+	var ccReferenceNum = form.find('#ccReferenceNum').val();
+	var ccName = form.find('#ccName').val();
+	var ccNumber = form.find('#ccNumber').val();
+	var ccExpDate = form.find("[name='ccExpDate']").val();
+	
+	// Credit card
+	if (paymentMethod == "3" && checkNum != "") {
+		missingData += "Cc Reference#, ";
+	}
+	// Not cash
+	if ((paymentMethod == "1" || paymentMethod == "4" || paymentMethod == "5") && ccReferenceNum != "") {
+		missingData += "Check #, ";
+	}
+	// Credit card
+	if (paymentMethod == "3") {
+		if (ccReferenceNum == "") {
+			missingData += "Cc Reference#, ";
+		}
+		if (ccName == "") {
+			missingData += "Cc Name, ";
+		}
+		if (ccNumber == "") {
+			missingData += "Cc#, ";
+		}
+		if (ccExpDate == "") {
+			missingData += "Cc Exp Date, ";
+		}
+		
+	}
+	// Not cash
+	if ((paymentMethod == "1" || paymentMethod == "4" || paymentMethod == "5") && checkNum == "") {
+		missingData += "Check#, ";
+	}
+	return missingData;
+}
+
 function validateInvoicePaymentDataFormat() {
 	var validationMsg = "";
 	
-	validationMsg += validateAmounts(); 
+	validationMsg += validateAllAmounts(); 
 	validationMsg += validateAllDates();
+	validationMsg += validateAllCCNumbers();
+	validationMsg += validatePaymentReferenceNum();
 	
 	if (validationMsg != "") {
 		validationMsg = validationMsg.substring(0, validationMsg.length - 2);
@@ -87,13 +144,44 @@ function validateInvoicePaymentDataFormat() {
 	return validationMsg;
 }
 
-function validateAmounts() {
+function validateAllCCNumbers() {
+	var form = getInvoicePaymentForm();
+	var ccNumber = form.find('#ccNumber').val();
+	return validateCCNumber(ccNumber);
+}
+
+function validatePaymentReferenceNum() {
+	var validationMsg = "";
+	
+	var form = getInvoicePaymentForm();
+	var ccReferenceNum = form.find('#ccReferenceNum').val();
+	var checkNum = form.find('#checkNum').val();
+	
+	if (ccReferenceNum != "") {
+		if (!validateReferenceNum(ccReferenceNum, 50)) {
+			validationMsg += "CC Reference#, "
+		}
+	}
+	if (checkNum != "") {
+		if (!validateReferenceNum(checkNum, 50)) {
+			validationMsg += "Check#, "
+		}
+	}
+	if (ccReferenceNum != "" && checkNum != "") {
+		validationMsg += "Both CC Reference# and Check# specified, ";
+	}
+	
+	return validationMsg;
+}
+
+
+function validateAllAmounts() {
 	var validationMsg = "";
 	
 	var form = getInvoicePaymentForm();
 	var amountPaid = form.find('#amountPaid').val();
 	if (amountPaid != "") {
-		if (!validateAmount(amountPaid, 15000)) {
+		if (!validateAmountAndRange(amountPaid, 0, 15000)) {
 			validationMsg += "Amount Paid, "
 		}
 	}
@@ -114,12 +202,19 @@ function validateAllDates() {
 	
 	var ccExpDate = form.find("[name='ccExpDate']").val();
 	if (ccExpDate != "") {
-		if (!validateDate(ccExpDate)) {
+		if (!validateExpiryDate(ccExpDate)) {
 			validationMsg += "CC Expiry Date, "
 		}
 	}
 	
 	return validationMsg;
+}
+
+function updateCCNumber() {
+	var form = getInvoicePaymentForm();
+	var ccNumElem =  form.find('#ccNumber');
+	var formattedCCNumber = formatCCNumber(ccNumElem.val());
+	ccNumElem.val(formattedCCNumber);
 }
 
 function handleCreateInvoicePaymentCustomerChange() {
@@ -155,18 +250,44 @@ function populateCreateInvoicePaymentInvoiceNos(invoiceNoList) {
    	    }).appendTo(invoiceNoSelect);
    	});
 }
+
+function handleCreateInvoicePaymentInvoiceNoChange() {
+	var invoicePaymentBalanceDueElem = $('#invoicePaymentBalanceDue');
+	invoicePaymentBalanceDueElem.html("");
+	
+	var invoiceNo = $('#createInvoicePaymentInvoiceNo').val();
+	if (invoiceNo == "") {
+		return false;
+	}
+	
+	$.ajax({
+  		url: "retrieveInvoiceBalanceDue.do?invoiceNo=" + invoiceNo,
+       	type: "GET",
+       	success: function(responseData, textStatus, jqXHR) {
+       		if (!invoicePaymentBalanceDueElem.hasClass('errorMessage')) {
+       			invoicePaymentBalanceDueElem.addClass('errorMessage');
+       		}
+       		invoicePaymentBalanceDueElem.html(responseData);
+		}
+	});
+}
 </script>
 
-<br />
-<h5 style="margin-top: -15px; !important">Create Invoice Payment</h5>
+<br/>
+<h5 style="margin-top: -15px; !important">Make Invoice Payment</h5>
 <form:form action="saveInvoicePayment.do" id="invoicePaymentForm" name="invoicePaymentForm" commandName="invoicePaymentModelObject" method="post" >
 	<form:hidden path="id" id="id" />
+	<form:hidden path="createdBy" id="createdBy" />
 	<jsp:include page="/common/messages.jsp">
 		<jsp:param name="msgCtx" value="createInvoicePayment" />
 		<jsp:param name="errorCtx" value="createInvoicePayment" />
 	</jsp:include>
 	<table id="form-table" class="table">
 		<tr><td></td></tr>
+		<tr>
+			<td class="form-left">Payment #</td>
+			<td class="wide td-static" id="paymentIdTd">${invoicePaymentModelObject.id}</td>
+		</tr>
 		<tr>
 			<td class="form-left">Customer<span class="errorMessage">*</span></td>
 			<td class="wide">
@@ -183,12 +304,26 @@ function populateCreateInvoicePaymentInvoiceNos(invoiceNoList) {
 			<td class="form-left">Invoice #<span class="errorMessage">*</span></td>
 			<td>
 				<form:select cssClass="flat form-control input-sm" style="width:172px !important" 
-					id="createInvoicePaymentInvoiceNo" path="invoice" >
+					id="createInvoicePaymentInvoiceNo" path="invoice"
+					onChange="return handleCreateInvoicePaymentInvoiceNoChange();">
 					<form:option value="">----Please Select----</form:option>
 					<form:options items="${invoiceNos}"/>
 				</form:select> 
 				<form:errors path="invoice" cssClass="errorMessage" />
 			</td>
+		</tr>
+		<tr>
+			<c:set var="balanceDueAlertClass" value="" />
+			<c:if test="${invoicePaymentModelObject.invoiceBalanceDue != null
+							and invoicePaymentModelObject.invoiceBalanceDue > 0}">
+				<c:set var="balanceDueAlertClass" value="errorMessage" />
+			</c:if>
+			<td class="form-left">Balance Due</td>
+	       	<td class="td-static">
+	       		<span class="${balanceDueAlertClass}" id="invoicePaymentBalanceDue" style="font-weight: bold;font-size: 13px; padding: 0 10px;">
+	       			${invoicePaymentModelObject.invoiceBalanceDueStr}
+	       		</span>
+	       	</td>
 		</tr>
 		<tr>
 			<td></td>
@@ -222,28 +357,45 @@ function populateCreateInvoicePaymentInvoiceNos(invoiceNoList) {
 				<form:errors path="paymentDate" cssClass="errorMessage" />
 			</td>
 			<td class="wide">
-				<form:input path="amountPaid" maxlength="7" cssClass="flat"/>
-				<br><form:errors path="amountPaid" cssClass="errorMessage" />
+				<form:input path="amountPaid" onkeypress="return onlyNumbers(event, true)" maxlength="8" cssClass="flat"/>
+				<form:errors path="amountPaid" cssClass="errorMessage" />
 			</td>
 			<td class="wide">
 				<form:input path="checkNum" maxlength="50" cssClass="flat" />
-				<br><form:errors path="checkNum" cssClass="errorMessage" />
+				<form:errors path="checkNum" cssClass="errorMessage" />
 			</td>
 			<td class="wide">
 				<form:input path="ccReferenceNum" maxlength="50" cssClass="flat" />
-				<br><form:errors path="ccReferenceNum" cssClass="errorMessage" />
+				<form:errors path="ccReferenceNum" cssClass="errorMessage" />
 			</td>
 			<td>
 				<form:input path="ccName" maxlength="50" cssClass="flat" />
-				<br><form:errors path="ccName" cssClass="errorMessage" />
+				<form:errors path="ccName" cssClass="errorMessage" />
 			</td>
 			<td>
-				<form:input path="ccNumber" maxlength="19" cssClass="flat" onChange="return formatCCNumber();" />
-				<br><form:errors path="ccNumber" cssClass="errorMessage" />
+				<form:input path="ccNumber" maxlength="19" cssClass="flat" 
+					onkeypress="return onlyNumbers(event, false)" onChange="return updateCCNumber();" />
+				<form:errors path="ccNumber" cssClass="errorMessage" />
 			</td>
-			<td>
-				<form:input path="ccExpDate" cssClass="flat" style="width:172px !important" maxlength="10" />
-				<br><form:errors path="ccExpDate" cssClass="errorMessage" />
+			<td class="td-static wide">
+				<form:input path="ccExpDate" cssClass="flat" style="width:172px !important" maxlength="7" />
+				<form:errors path="ccExpDate" cssClass="errorMessage" />
+			</td>
+		</tr>
+		<tr>
+			<td></td>
+		</tr>
+		<tr>
+			<td colspan=10 class="section-header" style="line-height: 0.7;font-size: 13px;font-weight: bold;color: white;">Notes/Comments</td>
+		</tr>
+		<tr>
+			<td></td>
+		</tr>
+		<tr><td class="form-left">Notes<span class="errorMessage"></span></td></tr>
+		<tr>
+			<td colspan="7">
+				<form:textarea row="5" id="invoicePaymentNotes" path="notes" cssClass="flat notes"/>
+				<br><form:errors path="notes" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>
@@ -258,4 +410,46 @@ function populateCreateInvoicePaymentInvoiceNos(invoiceNoList) {
 		</tr>
 	</table>
 </form:form>
+
+<script type="text/javascript">
+$(function() {
+	getInvoicePaymentForm().find("[name='ccExpDate']").datepicker( {
+        changeMonth: true,
+        changeYear: true,
+        showButtonPanel: true,
+        dateFormat: 'mm/yy',
+        onClose: function(dateText, inst) { 
+        	var iMonth = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
+            var iYear = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
+            $(this).datepicker('setDate', new Date(iYear, iMonth, 1));
+            
+            $('#ui-datepicker-div').removeClass('hide-calendar');
+        },
+        beforeShow : function(input, inst) {
+        	$('#ui-datepicker-div').addClass('hide-calendar');
+        	
+        	if ((selDate = $(this).val()).length > 0) {
+               iYear = selDate.substring(selDate.length - 4, selDate.length);
+               iMonth = jQuery.inArray(selDate.substring(0, selDate.length - 5), $(this).datepicker('option', 'monthNames'));
+               $(this).datepicker('option', 'defaultDate', new Date(iYear, iMonth, 1));
+               $(this).datepicker('setDate', new Date(iYear, iMonth, 1));
+            }
+        }
+    });
+});
+
+$("#invoicePaymentForm").submit(function (ev) {
+	var $this = $(this);
 	
+    $.ajax({
+        type: $this.attr('method'),
+        url: $this.attr('action'),
+        data: $this.serialize(),
+        success: function(responseData, textStatus, jqXHR) {
+        	loadInvoicePayment(responseData);
+        }
+    });
+    
+    ev.preventDefault();
+});
+</script>

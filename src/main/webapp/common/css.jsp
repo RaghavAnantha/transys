@@ -8,4 +8,7 @@
 <!--  
 <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 -->
+<!-- 
 <link href="${ctx}/css/font-awesome-4.7.0/css/font-awesome.min.css" type="text/css" rel="stylesheet"/>
+-->
+<link href="${ctx}/css/fontawesome-free-5.15.3-web/css/all.css" type="text/css" rel="stylesheet"/>

@@ -67,6 +67,10 @@ function populateCustomerDeliveryAddress() {
 		}
 	}); 
 }
+
+function processCreateInvoice(orderId) {
+	document.location.href = "${ctx}/invoice/createInvoiceSearch.do?orderId="+orderId;
+}
 </script>
 <br />
 <h5 style="margin-top: -15px; !important">Manage Orders</h5>
@@ -259,22 +263,23 @@ function populateCustomerDeliveryAddress() {
 		<transys:textcolumn headerText="Del L1" dataField="deliveryAddress.line1" />
 		<transys:textcolumn headerText="Del L2" dataField="deliveryAddress.line2" />
 		<transys:textcolumn headerText="City" dataField="deliveryAddress.city" />
-		<transys:textcolumn headerText="Dmp. Size" dataField="dumpsterSize.size" />
-		<transys:textcolumn headerText="Dmpstr #" dataField="dumpster.dumpsterNum" />
+		<transys:textcolumn headerText="Dmp. Size" dataField="dumpsterSize.size" width="34px"/>
+		<transys:textcolumn headerText="Dmp. #" dataField="dumpster.dumpsterNum" />
 		<transys:textcolumn headerText="Del Dt" dataField="deliveryDate" dataFormat="MM/dd/yyyy"/>
 		<transys:textcolumn headerText="Pickup Dt" dataField="pickupDate" dataFormat="MM/dd/yyyy"/>
-		<transys:textcolumn headerText="Dmpstr Price" dataField="orderFees.dumpsterPrice" type="java.math.BigDecimal"/>
-		<transys:textcolumn headerText="Ton. Fee" dataField="orderFees.tonnageFee" type="java.math.BigDecimal"/>
-		<transys:textcolumn headerText="Permit Fee" dataField="orderFees.totalPermitFees" type="java.math.BigDecimal"/>
-		<transys:textcolumn headerText="City Fee" dataField="orderFees.cityFee" type="java.math.BigDecimal"/>
-		<transys:textcolumn headerText="OverWt Fee" dataField="orderFees.overweightFee" type="java.math.BigDecimal"/>
-		<transys:textcolumn headerText="Addnl Fee" dataField="orderFees.totalAdditionalFees" type="java.math.BigDecimal"/>
+		<transys:textcolumn headerText="Dmp. Price" dataField="orderFees.dumpsterPrice"  width="34px" type="java.math.BigDecimal"/>
+		<transys:textcolumn headerText="Ton. Fee" dataField="orderFees.tonnageFee"  width="30px" type="java.math.BigDecimal"/>
+		<transys:textcolumn headerText="Permit Fee" dataField="orderFees.totalPermitFees"  width="35px" type="java.math.BigDecimal"/>
+		<transys:textcolumn headerText="City Fee" dataField="orderFees.cityFee"  width="32px" type="java.math.BigDecimal"/>
+		<transys:textcolumn headerText="Over. Fee" dataField="orderFees.overweightFee"  width="34px" type="java.math.BigDecimal"/>
+		<transys:textcolumn headerText="Add. Fee" dataField="orderFees.totalAdditionalFees"  width="34px" type="java.math.BigDecimal"/>
 		<transys:textcolumn headerText="Disc." dataField="orderFees.discountAmount" type="java.math.BigDecimal"/>
-		<transys:textcolumn headerText="Total Amt" dataField="orderFees.totalFees" type="java.math.BigDecimal" />
+		<transys:textcolumn headerText="Tot Amt" dataField="orderFees.totalFees" type="java.math.BigDecimal" />
 		<transys:textcolumn headerText="Amt Paid" dataField="totalAmountPaid" type="java.math.BigDecimal" />
 		<transys:textcolumn headerText="Bal Due" dataField="balanceAmountDue" type="java.math.BigDecimal" />
 		<transys:textcolumn headerText="Status" dataField="orderStatus.status"/>
 		<transys:textcolumn headerText="Doc" dataField="hasDocs"/>
+		<transys:textcolumn headerText="Inv" dataField="invoiced"/>
 		<transys:imagecolumn headerText="EXC" linkUrl="javascript:processExchange('{id}');" imageSrc="${imageCtx}/exchange.png" HAlign="center" title="Exchange"/>
 	</transys:datatable>
 	<%session.setAttribute("manageOrdersColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>

@@ -531,6 +531,16 @@ public class Order extends AbstractBaseModel {
 	public String getFullDeliveryAddress() {
 		return getDeliveryAddress() == null ? StringUtils.EMPTY : getDeliveryAddress().getFullDeliveryAddress();
 	}
+	
+	@Transient
+	public String getFullDeliveryAddress(String lineSep) {
+		return getDeliveryAddress() == null ? StringUtils.EMPTY : getDeliveryAddress().getFullDeliveryAddress(lineSep);
+	}
+	
+	@Transient
+	public String getDeliveryCity() {
+		return getDeliveryAddress() == null ? StringUtils.EMPTY : getDeliveryAddress().getCity();
+	}
 
 	@Transient
 	@Override

@@ -43,18 +43,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import com.transys.controller.BaseController;
 import com.transys.controller.editor.AbstractModelEditor;
-import com.transys.service.DynamicReportService;
 
 import com.transys.core.util.CoreUtil;
 import com.transys.core.util.FormatUtil;
 import com.transys.core.util.ModelUtil;
 import com.transys.core.util.ServletUtil;
-import com.transys.model.AbstractBaseModel;
+
 import com.transys.model.Customer;
 import com.transys.model.DeliveryAddress;
 import com.transys.model.Order;
 import com.transys.model.OrderFees;
-import com.transys.model.OrderNotes;
 import com.transys.model.OrderPayment;
 import com.transys.model.OrderStatus;
 import com.transys.model.PaymentMethodType;
@@ -74,6 +72,14 @@ import com.transys.model.vo.invoice.InvoiceVO;
 public class InvoiceController extends BaseController {
 	private static final String INVOICE_TAB = "manageInvoice";
 	private static final String INVOICE_PAYMENT_TAB = "invoicePayment";
+	
+	private static final String INVOICE_PAYMENT_MODEL_OBJECT_KEY = "invoicePaymentModelObject";
+	
+	private static final String createInvoiceMsgCtx = "createInvoice";
+	private static final String manageInvoiceMsgCtx = "manageInvoice";
+	private static final String createInvoicePaymentMsgCtx = "createInvoicePayment";
+	private static final String manageInvoicePaymentMsgCtx = "manageInvoicePayment";
+	
 	
 	private static String ORDER_INVOICE_MASTER = "orderInvoiceMaster";
 	private static String ORDER_INVOICE_SUB = "orderInvoiceSub";
@@ -113,17 +119,16 @@ public class InvoiceController extends BaseController {
 	}
 	
 	@RequestMapping(method = { RequestMethod.GET }, value = "/createInvoicePayment.do")
-	public String createInvoicePayment(ModelMap model, HttpServletRequest request) {
-		List<CustomerVO> customerVOList = ModelUtil.retrieveOrderCustomers(genericDAO);
-		model.addAttribute("customers", customerVOList);
-		
-		model.addAttribute("paymentMethods", genericDAO.executeSimpleQuery("select obj from PaymentMethodType obj where obj.deleteFlag='1' and obj.id!=0 order by obj.method asc"));
-	   
+	public String createInvoicePayment(ModelMap model, HttpServletRequest request,
+			@RequestParam(value = "invoiceId", required = false) Long invoiceId) {
 		OrderInvoicePayment invoicePayment = new OrderInvoicePayment();
-		model.addAttribute("invoicePaymentModelObject", invoicePayment);
+		OrderInvoiceHeader invoiceHeader = null;
+		if (invoiceId != null) {
+			invoiceHeader = genericDAO.getById(OrderInvoiceHeader.class, invoiceId);
+			invoicePayment.setInvoice(invoiceHeader);
+		}
 		
-		addTabAttributes(model, INVOICE_PAYMENT_TAB, MODE_MANAGE, StringUtils.EMPTY);
-		addMsgCtx(model, "createInvoicePayment");
+		setupCreateInvoicePayment(model, request, invoiceHeader, invoicePayment);
 		
 		return getUrlContext() + "/invoicePaymentForm";
 	}
@@ -132,17 +137,36 @@ public class InvoiceController extends BaseController {
 	public String editInvoicePayment(ModelMap model, HttpServletRequest request,
 			@RequestParam("id") Long invoicePaymentId) {
 		OrderInvoicePayment invoicePayment = genericDAO.getById(OrderInvoicePayment.class, invoicePaymentId);
-		model.addAttribute("invoicePaymentModelObject", invoicePayment);
+		OrderInvoiceHeader invoiceHeader = invoicePayment.getInvoice();
+		setupCreateInvoicePayment(model, request, invoiceHeader, invoicePayment);
 		
-		List<CustomerVO> customerVOList = ModelUtil.retrieveOrderCustomers(genericDAO);
+		return getUrlContext() + "/invoicePaymentForm";
+	}
+	
+	private void setupCreateInvoicePayment(ModelMap model, HttpServletRequest request, 
+			OrderInvoiceHeader invoiceHeader, OrderInvoicePayment invoicePayment) {
+		model.addAttribute(INVOICE_PAYMENT_MODEL_OBJECT_KEY, invoicePayment);
+		
+		List<CustomerVO> customerVOList = null;
+		if (invoiceHeader != null) {
+			customerVOList = new ArrayList<CustomerVO>();
+			CustomerVO customerVO = new CustomerVO();
+			customerVO.setId(invoiceHeader.getCustomerId());
+			customerVO.setCompanyName(invoiceHeader.getCompanyName());
+			customerVOList.add(customerVO);
+			
+			List<String> invoiceNos = new ArrayList<String>();
+			invoiceNos.add(String.valueOf(invoiceHeader.getId()));
+			model.addAttribute("invoiceNos", invoiceNos);
+		} else {
+			customerVOList = ModelUtil.retrieveOrderCustomers(genericDAO);
+		}
 		model.addAttribute("customers", customerVOList);
 		
 		model.addAttribute("paymentMethods", genericDAO.executeSimpleQuery("select obj from PaymentMethodType obj where obj.deleteFlag='1' and obj.id!=0 order by obj.method asc"));
 	   
 		addTabAttributes(model, INVOICE_PAYMENT_TAB, MODE_MANAGE, StringUtils.EMPTY);
-		addMsgCtx(model, "createInvoicePayment");
-		
-		return getUrlContext() + "/invoicePaymentForm";
+		addMsgCtx(model, createInvoicePaymentMsgCtx);
 	}
 	
 	@RequestMapping(method = {RequestMethod.GET, RequestMethod.POST }, value = "/createInvoiceSearch.do")
@@ -221,7 +245,7 @@ public class InvoiceController extends BaseController {
 		return getUrlContext() + "/invoicePaymentList";
 	}
 	
-	private void setupCommon(ModelMap model, HttpServletRequest request,
+	private void setupManageInvoiceCommon(ModelMap model, HttpServletRequest request,
 					String customerIdKey, String orderInvoiced) {
 		populateSearchCriteria(request, request.getParameterMap());
 		SearchCriteria searchCriteria = (SearchCriteria)request.getSession().getAttribute("searchCriteria");
@@ -239,7 +263,7 @@ public class InvoiceController extends BaseController {
 	}
 	
 	private void setupCreateInvoiceList(ModelMap model, HttpServletRequest request) {
-		setupCommon(model, request, "customerId", "N");
+		setupManageInvoiceCommon(model, request, "customerId", "N");
 		
 		SearchCriteria searchCriteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		searchCriteria.setPage(0);
@@ -247,11 +271,11 @@ public class InvoiceController extends BaseController {
 		
 		addTabAttributes(model, MODE_ADD, StringUtils.EMPTY);
 
-		addMsgCtx(model, "createInvoice");
+		addMsgCtx(model, createInvoiceMsgCtx);
 	}
 	
 	private void setupManageInvoiceList(ModelMap model, HttpServletRequest request) {
-		setupCommon(model, request, "manageInvoiceCustomerId", "Y");
+		setupManageInvoiceCommon(model, request, "manageInvoiceCustomerId", "Y");
 		
 		SearchCriteria searchCriteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
 		searchCriteria.setPage(0);
@@ -261,7 +285,7 @@ public class InvoiceController extends BaseController {
 		model.addAttribute("invoiceNos", genericDAO.executeSimpleQuery(query));*/
 		
 		addTabAttributes(model, MODE_MANAGE, StringUtils.EMPTY);
-		addMsgCtx(model, "manageInvoice");
+		addMsgCtx(model, manageInvoiceMsgCtx);
 	}
 	
 	private void setupInvoicePaymentList(ModelMap model, HttpServletRequest request) {
@@ -274,7 +298,7 @@ public class InvoiceController extends BaseController {
 		model.addAttribute("invoiceNos", genericDAO.executeSimpleQuery(query));*/
 		
 		addTabAttributes(model, INVOICE_PAYMENT_TAB, MODE_MANAGE, StringUtils.EMPTY);
-		addMsgCtx(model, "manageInvoicePayment");
+		addMsgCtx(model, manageInvoicePaymentMsgCtx);
 	}
 	
 	private List<Long> retrieveOrderIds(String invoiced, String customerId) {
@@ -437,10 +461,10 @@ public class InvoiceController extends BaseController {
 			whereClause.append(" and obj.invoice.customerId=" + customerId);
 		}
 		 if (StringUtils.isNotEmpty(paymentDateFrom)){
-	        	whereClause.append(" and obj.invoice.paymentDate >='"+FormatUtil.formatInputDateToDbDate(paymentDateFrom)+"'");
+	        	whereClause.append(" and obj.paymentDate >='"+FormatUtil.formatInputDateToDbDate(paymentDateFrom)+"'");
 			}
 	      if (StringUtils.isNotEmpty(paymentDateTo)){
-		     	whereClause.append(" and obj.invoice.paymentDate <='"+FormatUtil.formatInputDateToDbDate(paymentDateTo)+"'");
+		     	whereClause.append(" and obj.paymentDate <='"+FormatUtil.formatInputDateToDbDate(paymentDateTo)+"'");
 		   }
 		if (StringUtils.isNotEmpty(orderDateFrom)){
         	whereClause.append(" and obj.invoice.orderDateFrom >='"+FormatUtil.formatInputDateToDbDate(orderDateFrom)+"'");
@@ -458,7 +482,7 @@ public class InvoiceController extends BaseController {
       query.append(whereClause);
       countQuery.append(whereClause);
       
-      query.append(" order by obj.paymentDate desc");
+      query.append(" order by obj.id desc");
       
       Long recordCount = (Long) genericDAO.getEntityManager().createQuery(countQuery.toString()).getSingleResult();        
 		criteria.setRecordCount(recordCount.intValue());	
@@ -988,22 +1012,29 @@ public class InvoiceController extends BaseController {
 		return json;
 	}
 	
+	@RequestMapping(method = RequestMethod.GET, value = "/retrieveInvoiceBalanceDue.do")
+	public @ResponseBody String retrieveInvoiceBalanceDue(ModelMap model, HttpServletRequest request,
+					@RequestParam("invoiceNo") Long invoiceNo) {
+		OrderInvoiceHeader invoiceHeader = genericDAO.getById(OrderInvoiceHeader.class, invoiceNo);
+		return String.valueOf(invoiceHeader.getTotalInvoiceBalanceDue());
+	}
+	
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
 	@RequestMapping(method = { RequestMethod.POST }, value = "/saveInvoicePayment.do")
 	public String saveInvoicePayment(HttpServletRequest request,
-			@ModelAttribute("invoicePaymentModelObject") OrderInvoicePayment invoicePayment,
+			@ModelAttribute(INVOICE_PAYMENT_MODEL_OBJECT_KEY) OrderInvoicePayment invoicePayment,
 			BindingResult bindingResult, ModelMap model) {
-		OrderInvoiceHeader invoiceHeader = invoicePayment.getInvoice();
+		setModifier(request, invoicePayment);
 		
-		List<Order> orderList = retrieveOrders(invoiceHeader.getId());
-		
+		Long invoiceId = invoicePayment.getInvoice().getId();
+		List<Order> orderList = retrieveOrders(invoiceId);
 		List<OrderPayment> newOrderPaymentList = new ArrayList<OrderPayment>();
 		BigDecimal amountAvailable = updateOrderPayment(orderList, invoicePayment, newOrderPaymentList);
 		invoicePayment.setAmountAvailable(amountAvailable);
 		
-		setModifier(request, invoicePayment);
-		genericDAO.save(invoicePayment);
+		genericDAO.saveOrUpdate(invoicePayment);
 		
+		OrderInvoiceHeader invoiceHeader = genericDAO.getById(OrderInvoiceHeader.class, invoiceId);
 		saveInvoiceHeader(invoiceHeader, invoicePayment);
 		
 		saveOrderPayment(newOrderPaymentList, invoicePayment);
@@ -1033,8 +1064,6 @@ public class InvoiceController extends BaseController {
 		User createdByUser = genericDAO.getById(User.class, invoicePayment.getCreatedBy());
 		for (OrderPayment anOrderPayment : orderPaymentList) {
 			anOrderPayment.setInvoicePaymentId(invoicePayment.getId());
-			anOrderPayment.setCreatedAt(invoicePayment.getCreatedAt());
-			anOrderPayment.setCreatedBy(invoicePayment.getCreatedBy());
 			
 			Order order = anOrderPayment.getOrder();
 			order.setModifiedAt(invoicePayment.getCreatedAt());
@@ -1093,6 +1122,8 @@ public class InvoiceController extends BaseController {
 		orderPayment.setCcNumber(invoicePayment.getCcNumber());
 		orderPayment.setCcExpDate(invoicePayment.getCcExpDate());
 		orderPayment.setInvoiceId(invoicePayment.getInvoice().getId());
+		orderPayment.setCreatedAt(invoicePayment.getCreatedAt());
+		orderPayment.setCreatedBy(invoicePayment.getCreatedBy());
 	}
 	
 	private List<Order> retrieveOrders(Long invoiceId) {
@@ -1187,12 +1218,14 @@ public class InvoiceController extends BaseController {
 	@RequestMapping(method = {RequestMethod.POST}, value = "/previewInvoice.do")
 	public String previewInvoice(ModelMap model, HttpServletRequest request, HttpServletResponse response,
 					@RequestParam("id") String[] ids,
-					@RequestParam("invoiceDate") Date invoiceDate) {
+					@RequestParam("invoiceDate") Date invoiceDate,
+					@RequestParam("invoiceNotes") String invoiceNotes) {
 		setupPreviewInvoice(request, model);
 		
 		InvoiceVO input = (InvoiceVO) request.getSession().getAttribute("input");
 		input.setIds(ids);
 		input.setInvoiceDate(invoiceDate);
+		input.setNotes(invoiceNotes);
 		//input.setHistoryCount(-1);
 		
 		return processPreviewInvoiceCommon(request, response, input);

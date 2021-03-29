@@ -40,12 +40,12 @@
 	showTab('${activeSubTab}');
 	
 	$('#customerListReportTab').click(function(e) {
-	    loadTab($(this));
+	    loadTab($(this), null);
 	    return false;
 	});
 	
 	$('#customerOrdersReportTab').click(function(e) {
-		loadTab($(this));
+		loadTab($(this), null);
 	    return false;
 	});
 	

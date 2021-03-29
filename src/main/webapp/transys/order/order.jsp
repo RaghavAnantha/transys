@@ -28,7 +28,7 @@
 	showTab('${activeSubTab}');
 	
 	$('#orderReportsTab').click(function(e) {
-	    loadTab($(this));
+	    loadTab($(this), null);
 	    return false;
 	});
 	

@@ -58,6 +58,7 @@ function validateCreateInvoiceSearchMissingData() {
 
 function processCreateInvoiceParamsDialogSubmit() {
 	//var invoiceParamsDialogInvoiceNo = document.getElementById("createInvoiceParamsDialogInvoiceNo").value;
+	
 	var invoiceParamsDialogInvoiceDate = document.getElementById("createInvoiceParamsDialogInvoiceDate").value;
 	if (invoiceParamsDialogInvoiceDate == '') {
 		var alertMsg = "<span><b>Please specify invoice date</b><br></span>";
@@ -66,7 +67,17 @@ function processCreateInvoiceParamsDialogSubmit() {
 		return false;
 	}
 	
-	setCreateInvoiceServiceFormValues(invoiceParamsDialogInvoiceDate);
+	var createInvoiceParamsDialogNotes = document.getElementById("createInvoiceParamsDialogNotes").value;
+	if (createInvoiceParamsDialogNotes != "") {
+		if (!validateText(createInvoiceParamsDialogNotes, 500)) {
+			var alertMsg = "<span><b>Please correct following invalid data: Notes</b><br></span>";
+			displayPopupDialogErrorMessage(alertMsg, false);
+
+			return false;
+		}
+	}
+	
+	setCreateInvoiceServiceFormValues(invoiceParamsDialogInvoiceDate, createInvoiceParamsDialogNotes);
 	
 	$('#createInvoiceParamsDialogCancelBtn').click();
 	
@@ -75,7 +86,7 @@ function processCreateInvoiceParamsDialogSubmit() {
 	form.submit();
 }
 
-function setCreateInvoiceServiceFormValues(invoiceDate) {
+function setCreateInvoiceServiceFormValues(invoiceDate, invoiceNotes) {
 	var createInvoiceServiceForm = getCreateInvoiceServiceForm();
 	
 	/*var serviceFormInvoiceNoElem = createInvoiceServiceForm.find('#invoiceNo');
@@ -83,6 +94,9 @@ function setCreateInvoiceServiceFormValues(invoiceDate) {
 	
 	var serviceFormInvoiceDateElem = createInvoiceServiceForm.find('#invoiceDate');
 	serviceFormInvoiceDateElem.val(invoiceDate);
+	
+	var serviceFormInvoiceNotesElem = createInvoiceServiceForm.find('#invoiceNotes');
+	serviceFormInvoiceNotesElem.val(invoiceNotes);
 }
 	
 function createInvoice() {
@@ -255,6 +269,7 @@ function populateCreateInvoiceOrderIds(orderIdList) {
 </table>
 <form:form name="createInvoiceServiceForm" id="createInvoiceServiceForm" class="tab-color">
 	<input type=hidden id="invoiceDate" name="invoiceDate" value=""/>
+	<input type=hidden id="invoiceNotes" name="invoiceNotes" value=""/>
 	
 	<!-- To make datepicker work in modal dialog -->
 	<input type=hidden id="createInvoiceParamsDialogInvoiceDate" name="createInvoiceParamsDialogInvoiceDate" value=""/>
@@ -280,10 +295,10 @@ function populateCreateInvoiceOrderIds(orderIdList) {
 		<transys:textcolumn headerText="Ton. Fee" dataField="orderFees.tonnageFee" type="java.math.BigDecimal"/>
 		<transys:textcolumn headerText="Permit Fee" dataField="orderFees.totalPermitFees" type="java.math.BigDecimal"/>
 		<transys:textcolumn headerText="City Fee" dataField="orderFees.cityFee" type="java.math.BigDecimal"/>
-		<transys:textcolumn headerText="OverWt Fee" dataField="orderFees.overweightFee" type="java.math.BigDecimal"/>
-		<transys:textcolumn headerText="Addnl Fee" dataField="orderFees.totalAdditionalFees" type="java.math.BigDecimal"/>
+		<transys:textcolumn headerText="Over Fee" dataField="orderFees.overweightFee" type="java.math.BigDecimal"/>
+		<transys:textcolumn headerText="Add Fee" dataField="orderFees.totalAdditionalFees" type="java.math.BigDecimal"/>
 		<transys:textcolumn headerText="Disc." dataField="orderFees.discountAmount" type="java.math.BigDecimal"/>
-		<transys:textcolumn headerText="Total Amt" dataField="orderFees.totalFees" type="java.math.BigDecimal" />
+		<transys:textcolumn headerText="Tot. Amt" dataField="orderFees.totalFees" type="java.math.BigDecimal" />
 		<transys:textcolumn headerText="Amt Paid" dataField="totalAmountPaid" type="java.math.BigDecimal" />
 		<transys:textcolumn headerText="Bal Due" dataField="balanceAmountDue" type="java.math.BigDecimal" />
 		<transys:textcolumn headerText="Status" dataField="orderStatus.status" />
@@ -316,6 +331,12 @@ function populateCreateInvoiceOrderIds(orderIdList) {
 							});
 						});
 					</script>
+				</td>
+			</tr>
+			<tr>
+				<td class="form-left">Notes<span class="errorMessage"></span></td>
+				<td>
+					<textarea id="createInvoiceParamsDialogNotes" rows="10" cols="70" class="flat notes"></textarea>
 				</td>
 			</tr>
 			<tr><td colspan="2"></td></tr>
