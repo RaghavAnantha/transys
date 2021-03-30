@@ -280,6 +280,7 @@ function processCreateInvoice(orderId) {
 		<transys:textcolumn headerText="Status" dataField="orderStatus.status"/>
 		<transys:textcolumn headerText="Doc" dataField="hasDocs"/>
 		<transys:textcolumn headerText="Inv" dataField="invoiced"/>
+		<transys:imagecolumn headerText="INV" linkUrl="javascript:processCreateInvoice('{id}');" imageSrc="fas fa-file-invoice-dollar" HAlign="center" title="Create Invoice"/>
 		<transys:imagecolumn headerText="EXC" linkUrl="javascript:processExchange('{id}');" imageSrc="${imageCtx}/exchange.png" HAlign="center" title="Exchange"/>
 	</transys:datatable>
 	<%session.setAttribute("manageOrdersColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>

@@ -389,5 +389,4 @@ public class ModelUtil {
 		}
 		return idList;
 	}
-	
 }

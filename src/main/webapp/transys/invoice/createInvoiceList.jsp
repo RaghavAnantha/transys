@@ -60,8 +60,8 @@ function processCreateInvoiceParamsDialogSubmit() {
 	//var invoiceParamsDialogInvoiceNo = document.getElementById("createInvoiceParamsDialogInvoiceNo").value;
 	
 	var invoiceParamsDialogInvoiceDate = document.getElementById("createInvoiceParamsDialogInvoiceDate").value;
-	if (invoiceParamsDialogInvoiceDate == '') {
-		var alertMsg = "<span><b>Please specify invoice date</b><br></span>";
+	if (!validateDate(invoiceParamsDialogInvoiceDate)) {
+		var alertMsg = "<span><b>Please specify valid invoice date</b><br></span>";
 		displayPopupDialogErrorMessage(alertMsg, false);
 
 		return false;

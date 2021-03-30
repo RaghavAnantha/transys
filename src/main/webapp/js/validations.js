@@ -332,16 +332,53 @@ function validateRegex(text, regex, validLength) {
 	return textPattern.test(text);
 }
 
-function validateTime(timeField) {
-	var time = document.getElementById(timeField).value;
+function validateImageFileType(fileId) {
+	var fileElem = document.getElementById(fileId);
+	var file = fileElem.value;
+	if (file != '') {
+		var fileLower = file.toLowerCase();
+    	if (!fileLower.match(/(\.jpg|\.png|\.JPG|\.PNG|\.jpeg|\.JPEG|\.GIF|\.gif|\.html|\.HTML)$/)) {
+    		fileElem.value = null;
+			//alert("Only JPG,PNG,JPEG,GIF,HTML files are allowed !");
+			return false;
+		}		
+	}
+	return true;
+}
+
+function validateFile(fileElem, fileTypeAllowed) {
+	var validationMsg = "";
+	
+	var fileElem = document.getElementById(fileElem);
+	var file = fileElem.value;
+	var fileExt = file.lastIndexOf("." + fileTypeAllowed);
+	if (fileExt == -1) {
+		fileElem.value = "";
+		validationMsg += ("Only " + fileTypeAllowed + " file is allowed, ");
+	}
+	var commaIndx = file.indexOf(",");
+	if (commaIndx != -1) {
+		fileElem.value = "";
+		validationMsg += ("File name cannot have commas, ");
+	}
+	
+	if (validationMsg != "") {
+		validationMsg = validationMsg.substring(0, validationMsg.length - 2);
+	}
+	return validationMsg;
+}
+
+function validateAndFormatTime(timeElemId) {
+	var timeElem = document.getElementById(timeElemId);
+	var time = timeElem.value;
 	if (time == "") {
-		return true;
+		return false;
 	}
 	
 	if (time.length < 4 || time.length > 5) {
-		alert("Invalidte time format");
-		clearTextAndFocus(timeField);
-		return true;
+		//alert("Invalid time format");
+		clearTextAndFocus(timeElemId);
+		return false;
 	} 
 	
 	var str = new String(time);
@@ -349,33 +386,136 @@ function validateTime(timeField) {
 	var min = "";
 	if (str.match(":")) {
 		if (time.length < 5) {
-			alert("Invalidte time format");
-			clearTextAndFocus(timeField);
-			return true;
+			//alert("Invalid time format");
+			clearTextAndFocus(timeElemId);
+			return false;
 		} 
 		if (str.indexOf(":") != 2) {
-			alert("Invalidte time format");
-			clearTextAndFocus(timeField);
-			return true;
+			//alert("Invalid time format");
+			clearTextAndFocus(timeElemId);
+			return false;
 		}
 		min = str.substring(3, 5);
 	} else {
 		if (time.length > 4) {
-			alert("Invalidte time format");
-			clearTextAndFocus(timeField);
-			return true;
+			//alert("Invalid time format");
+			clearTextAndFocus(timeElemId);
+			return false;
 		} 
 		min = str.substring(2, 4);
 	}
 	
 	if (hour >= 24 || min >= 60){
-		alert("Invalidte time format");
-		clearTextAndFocus(timeField);
+		//alert("Invalid time format");
+		clearTextAndFocus(timeElemId);
+		return false;
+	}
+	
+	var formattedTime = hour+":"+min;
+	timeElem.value = formattedTime;
+	return true;
+}
+
+function validateAndFormatReportDate(dateElemId){
+	var dateElem = document.getElementById(dateElemId);
+	var date = dateElem.value;
+	if (date == "") {
+		return false;
+	}
+	
+	if (date.length >= 8) {
+		var str = new String(date);
+		if (!str.match("-")) {
+			var mm = str.substring(0,2);
+			var dd = str.substring(2,4);
+			var yy = str.substring(4,8);
+			var formattedDate = mm+"-"+dd+"-"+yy;
+			dateElem.value = formattedDate;
+			return true;
+		}
+	} else {
+		//alert("Invalid date");
+		clearTextAndFocus(dateElemId);
+		return false;
+	}
+}
+
+function validateAndFormatDate(dateElemId) {
+	var dateElem = document.getElementById(dateElemId);
+	var date = dateElem.value;
+	if (date == "") {
+		return false;
+	}
+	
+	if (date.length < 8) {
+		//alert("Invalidte date format");
+		dateElem.value = "";
+		return false;
+	} 
+	
+	var str = new String(date);
+	if (str.match("-")) {
 		return true;
 	}
 	
-	var time = hour+":"+min;
-	document.getElementById(timeField).value = time;
+	var mm = str.substring(0,2);
+	var dd = str.substring(2,4);
+	var yy = str.substring(4,8);
+	var enddigit = str.substring(6,8);
+	if (!enddigit == 00 && enddigit%4 == 0 ) {
+		if (mm == 04 || mm == 06 || mm == 09 || mm == 11) {
+			if (dd > 30) {
+				//alert("Invalid date format");
+				dateElem.value = "";
+				return false;
+			}
+		} if (mm == 02 && dd > 29) {
+			//alert("Invalid date format");
+			dateElem.value = "";
+			return false;
+		} else if (dd > 31) {
+			//alert("Invalid date format");
+			dateElem.value = "";
+			return false;
+		}
+	} 
+	if (enddigit == 00 && yy%400 == 0) {
+		if (mm == 04 || mm == 06 || mm == 09 || mm == 11) {
+			if (dd > 30) {
+				//alert("Invalid date format");
+				dateElem.value = "";
+				return false;
+			}
+		} if (mm == 02 && dd > 29) {
+			//alert("Invalid date format");
+			dateElem.value = "";
+			return false;
+		} else if (dd > 31) {
+			//alert("Invalid date format");
+			dateElem.value = "";
+			return false;
+		}					
+	} else {
+		if (mm == 04 || mm == 06 || mm == 09 || mm == 11) {
+			if (dd > 30) {
+				//alert("Invalid date format");
+				dateElem.value = "";
+				return false;
+			}
+		} if (mm == 02 && dd > 28) {
+			//alert("Invalid date format");
+			dateElem.value = "";
+			return false;
+		} else if (dd > 31) {
+			//alert("Invalid date format");
+			dateElem.value = "";
+			return false;
+		}
+	}
+	
+	date = mm+"-"+dd+"-"+yy;
+	dateElem.value = date;
+	return true;
 }
 
 function validateCCNumber(ccNumber) {

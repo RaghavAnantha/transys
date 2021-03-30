@@ -929,29 +929,13 @@ public class InvoiceController extends BaseController {
 		User createdByUser = getUser(request);
 		Long createdBy = createdByUser.getId();
 		
-		//String query = "Select obj.id, obj.orderId from OrderInvoiceDetails obj where obj.invoiceHeader=" + invoiceId;
-		String query = "Select obj.orderId from OrderInvoiceDetails obj where obj.invoiceHeader=" + invoiceId;
+		String query = "select obj.orderId from OrderInvoiceDetails obj where obj.invoiceHeader=" + invoiceId;
 		List<OrderInvoiceDetails> orderInvoiceDetailsList = genericDAO.executeSimpleQuery(query);
-		
-		//Long[] invoiceDetailsIdArr = new Long[orderInvoiceDetailsList.size()];
-		String[] orderIdsArr = new String[orderInvoiceDetailsList.size()];
-		int i = 0;
-		for (Object obj : orderInvoiceDetailsList) {
-			//Object[] resultObjArr = (Object[]) obj;
-			//invoiceDetailsIdArr[i] = (Long) resultObjArr[0];
-			//orderIdsArr[i] = resultObjArr[1].toString();
-			orderIdsArr[i] = obj.toString();
-			i++;
-		}
-		
-		//String orderIds = CoreUtil.toString(orderIdsArr);
-		//List<Order> orderList = genericDAO.findByCommaSeparatedIds(Order.class, orderIds);
+		List<Long> orderIdList = ModelUtil.extractObjIds(orderInvoiceDetailsList);
+		String[] orderIdsArr = CoreUtil.toStringArrFromLong(orderIdList);
 		
 		String deleteQuery = "delete OrderInvoiceDetails oid where oid.invoiceHeader = " + invoiceId;
 		int noRowsDel = genericDAO.executeUpdate(deleteQuery);
-		/*for (Long invoiceDetailsId : invoiceDetailsIdArr) {
-			genericDAO.deleteById(OrderInvoiceDetails.class, invoiceDetailsId);
-		}*/
 		
 		genericDAO.deleteById(OrderInvoiceHeader.class, invoiceId);
 		
@@ -962,7 +946,6 @@ public class InvoiceController extends BaseController {
 		
 		setSuccessMsg(request, successMsg);
 		return "redirect:/" + getUrlContext() + "/manageInvoiceSearch.do";
-		//return getUrlContext() + "/manageInvoiceList";
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/deliveryAddressSearch.do")
@@ -995,6 +978,14 @@ public class InvoiceController extends BaseController {
 			e.printStackTrace();
 		}
 		return json;
+	}
+	
+	@RequestMapping(method = RequestMethod.GET, value = "/isInvoicableDeletable.do")
+	public @ResponseBody String isInvoicableDeletable(ModelMap model, HttpServletRequest request,
+					@RequestParam("id") Long invoiceId) {
+		String query = "select obj OrderInvoicePayment obj where obj.invoice=" + invoiceId;
+		List<OrderInvoicePayment> invoicePaymentList = genericDAO.executeSimpleQuery(query);
+		return (invoicePaymentList == null || invoicePaymentList.isEmpty()) ? "true" : "false";
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/payableInvoiceNosSearch.do")

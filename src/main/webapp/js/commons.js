@@ -49,19 +49,6 @@ function emptySelect(selectElem) {
 	selectElem.append(firstOption);
 }
 
-function validateFileType(fileId) {
-	var image = document.getElementById(fileId).value;
-	if (image != '') {
-		var checkimg = image.toLowerCase();
-    	if (!checkimg.match(/(\.jpg|\.png|\.JPG|\.PNG|\.jpeg|\.JPEG|\.GIF|\.gif|\.html|\.HTML)$/)) {
-	  		document.getElementById("image").value = null;
-			alert("Only JPG,PNG,JPEG,GIF,HTML  files are allowed !");
-			return false;
-		}		
-	}
-	return true;
-}
-
 function processBulkDelete() {
 	var inputs = document.getElementsByName("id");
 	var submitForm = false;
@@ -335,106 +322,6 @@ function dateDiffForDateStr(fromDateStr, toDateStr) {
 	var fromDate = toJSDate(fromDateStr);
 	var toDate = toJSDate(toDateStr);
     return dateDiff(fromDate, toDate);
-}
-
-/**
- * Function for Editable Date
- */
-function formatReportDate(d1){
-	var date1=document.getElementById(d1).value;
-	if(date1!="") {
-		if (date1.length>=8){
-			var str=new String(date1);
-			if(!str.match("-")){
-				var mm=str.substring(0,2);
-				var dd=str.substring(2,4);
-				var yy=str.substring(4,8);
-				var date1=mm+"-"+dd+"-"+yy;
-				document.getElementById(d1).value=date1;
-			}
-		}
-		else {
-			alert("Invalid date");
-			document.getElementById(d1).focus();
-		}
-	}
-}
-
-function formatDate(datepicker){
-	var date=document.getElementById(datepicker).value;
-	if(date!=""){
-	if(date.length<8){
-		alert("Invalidte date format");
-		document.getElementById(datepicker).value="";
-		return true;
-	}
-	else{
-		var str=new String(date);
-		if(!str.match("-")){
-			var mm=str.substring(0,2);
-			var dd=str.substring(2,4);
-			var yy=str.substring(4,8);
-			var enddigit=str.substring(6,8);
-			if(mm>12){
-				alert("invalid date format");
-				document.getElementById(datepicker).value="";
-				return true;
-			}
-			if(!enddigit==00 && enddigit%4==0 ){
-				if(mm==04 || mm==06 || mm==09 || mm==11){
-					if(dd>30){
-						alert("invalid date format");
-						document.getElementById(datepicker).value="";
-						return true;
-					}
-				}if(mm==02 && dd>29){
-					alert("invalid date format");
-					document.getElementById(datepicker).value="";
-					return true;
-				}
-				else if(dd>31){
-					alert("invalid date format");
-					document.getElementById(datepicker).value="";
-					return true;
-				}
-			}if(enddigit==00 && yy%400==0){
-				if(mm==04 || mm==06 || mm==09 || mm==11){
-					if(dd>30){
-						alert("invalid date format");
-						document.getElementById(datepicker).value="";
-						return true;
-					}
-				}if(mm==02 && dd>29){
-					alert("invalid date format");
-					document.getElementById(datepicker).value="";
-					return true;
-				}else if(dd>31){
-					alert("invalid date format");
-					document.getElementById(datepicker).value="";
-					return true;
-				}					
-			}else{
-				if(mm==04 || mm==06 || mm==09 || mm==11){
-					if(dd>30){
-						alert("invalid date format");
-						document.getElementById(datepicker).value="";
-						return true;
-					}
-				}if(mm==02 && dd>28){
-					alert("invalid date format");
-					document.getElementById(datepicker).value="";
-					return true;
-				}else if(dd>31){
-					alert("invalid date format");
-					document.getElementById(datepicker).value="";
-					return true;
-				}
-			}
-			var date=mm+"-"+dd+"-"+yy;
-			document.getElementById(datepicker).value=date;
-		}
-	 }
-   }
 }
 
 function formatPhone(phone) {

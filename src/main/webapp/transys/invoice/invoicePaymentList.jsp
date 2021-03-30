@@ -208,10 +208,11 @@ function loadInvoicePayment(data) {
 		<transys:textcolumn headerText="CC Name" dataField="ccName" />
 		<transys:textcolumn headerText="CC #" dataField="ccNumber" />
 		<transys:textcolumn headerText="CC Exp. Dt" width="70px" dataField="ccExpDate" dataFormat="MM/dd/yyyy"/>
+		<transys:imagecolumn width="32px" headerText="EDT" linkUrl="javascript:processEditInvoicePayment('{id}');" imageSrc="${editImage}" HAlign="center" title="Edit"/>
+		<transys:imagecolumn width="32px" headerText="DEL" linkUrl="javascript:confirmDeleteInvoicePayment('{id}');" imageSrc="${deleteImage}" HAlign="center" title="Delete"/>
 		<transys:imagecolumn width="32px" headerText="PDF" linkUrl="${ctx}/invoice/downloadInvoicePayment.do?id={id}&type=pdf" imageSrc="${pdfImage}" HAlign="center" title="PDF"/>
 		<transys:imagecolumn width="32px" headerText="XLS" linkUrl="${ctx}/invoice/downloadInvoicePayment.do?id={id}&type=xlsx" imageSrc="${excelImage}" HAlign="center" title="XLSX"/>
 		<transys:imagecolumn width="32px" headerText="CSV" linkUrl="${ctx}/invoice/downloadInvoicePayment.do?id={id}&type=csv" imageSrc="${csvImage}" HAlign="center" title="CSV"/>
-		<transys:imagecolumn width="32px" headerText="DEL" linkUrl="javascript:confirmDeleteInvoicePayment('{id}');" imageSrc="${deleteImage}" HAlign="center" title="Delete"/>
 	</transys:datatable>
 	<%session.setAttribute("invoicePaymentColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
 </form:form>

@@ -53,6 +53,19 @@ public class CoreUtil {
 		return toString(stringArr);
 	}
 	
+	public static String[] toStringArrFromLong(List<Long> longList) {
+		String[] stringArr = new String[0];
+		if (longList == null || longList.isEmpty()) {
+			return stringArr;
+		}
+		
+		stringArr = new String[longList.size()];
+		for (int i = 0; i < longList.size(); i++) {
+			stringArr[i] = String.valueOf(longList.get(i));
+		}
+		return stringArr;
+	}
+	
 	public static String concatenate(String str1, String str2, String sep) {
 		StringBuffer concStrBuff = new StringBuffer();
 		if (StringUtils.isNotEmpty(str1)) {

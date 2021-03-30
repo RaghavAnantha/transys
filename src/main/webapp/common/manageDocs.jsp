@@ -2,22 +2,13 @@
 
 <script type="text/javascript">
 function validateFileToUpload(fileElem, fileTypeAllowed) {
-	var fileElem = document.getElementById(fileElem);
-	var file = fileElem.value;
-	var fileExt = file.lastIndexOf("." + fileTypeAllowed);
-	var commaIndx = file.indexOf(",");
-	if (fileExt == -1) {    
-		showAlertDialog("Data Validation", "Only " + fileTypeAllowed + " file is allowed");
-		fileElem.value = "";   
-		return false;
-	} 
-	if (commaIndx != -1) {    
-		showAlertDialog("Data Validation", "File name cannot have commas");
-		fileElem.value = "";   
+	var validationMsg = validateFile(fileElem, fileTypeAllowed);
+	if (validationMsg == "") {
+		return true;
+	} else {
+		showAlertDialog("Data Validation", validationMsg);
 		return false;
 	}
-	
-	return true;
 }
 
 function processUploadDoc(fileElem) {
