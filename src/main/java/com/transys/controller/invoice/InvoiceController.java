@@ -1418,8 +1418,6 @@ public class InvoiceController extends BaseController {
 	
 	private void setupPreviewInvoice(HttpServletRequest request, ModelMap model) {
 		addMsgCtx(model, previewInvoiceMsgCtx);
-		//model.addAttribute("activeTab", "createInvoice");
-		//addTabAttributes(model, INVOICE_TAB, StringUtils.EMPTY, StringUtils.EMPTY);
 	}
 	
 	private Map<String, Object> generateInvoiceData(HttpServletRequest request, InvoiceVO input) {
