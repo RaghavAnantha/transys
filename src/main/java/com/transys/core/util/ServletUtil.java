@@ -8,6 +8,6 @@ public class ServletUtil {
 	}
 	
 	public static String getLogoFilePath(HttpServletRequest request) {
-		return getRealPath(request, "/images/" + "rds_logo.png");
+		return getRealPath(request, "/images/" + "rds_logo_2.png");
 	}
 }

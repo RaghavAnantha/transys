@@ -270,9 +270,7 @@ function processMakeInvoicePayment(invoiceId) {
 		<transys:textcolumn headerText="Bal. Due"  width="50px" dataField="totalInvoiceBalanceDue" type="java.math.BigDecimal" dataFormat="#####0.00"/>
 		<transys:textcolumn headerText="Notes" dataField="notes" />
 		<transys:imagecolumn headerText="Pay" width="32px" linkUrl="javascript:processMakeInvoicePayment('{id}');" imageSrc="fas fa-dollar-sign" HAlign="center" title="Make Payment"/>
-		<transys:imagecolumn headerText="DEL" width="32px" linkUrl="javascript:confirmDeleteInvoice('{id}');" imageSrc="${deleteImage}" HAlign="center" title="Delete"/>
 		<transys:imagecolumn headerText="PDF" width="32px" linkUrl="${ctx}/invoice/downloadInvoice.do?id={id}&type=pdf" imageSrc="${pdfImage}" HAlign="center" title="PDF"/>
-		<transys:imagecolumn headerText="XLS" width="32px" linkUrl="${ctx}/invoice/downloadInvoice.do?id={id}&type=xlsx" imageSrc="${excelImage}" HAlign="center" title="XLSX"/>
 		<transys:imagecolumn headerText="CSV" width="32px" linkUrl="${ctx}/invoice/downloadInvoice.do?id={id}&type=csv" imageSrc="${csvImage}" HAlign="center" title="CSV"/>
 	</transys:datatable>
 	<%session.setAttribute("manageInvoiceColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>

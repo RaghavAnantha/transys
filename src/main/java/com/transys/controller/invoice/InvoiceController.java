@@ -77,12 +77,11 @@ public class InvoiceController extends BaseController {
 	
 	private static final String createInvoiceMsgCtx = "createInvoice";
 	private static final String manageInvoiceMsgCtx = "manageInvoice";
+	private static final String previewInvoiceMsgCtx = "invoicePreview";
 	private static final String createInvoicePaymentMsgCtx = "createInvoicePayment";
 	private static final String manageInvoicePaymentMsgCtx = "manageInvoicePayment";
 	
-	
-	private static String ORDER_INVOICE_MASTER = "orderInvoiceMaster";
-	private static String ORDER_INVOICE_SUB = "orderInvoiceSub";
+	private static String ORDER_INVOICE_REPORT = "orderInvoice";
 	
 	public InvoiceController() {
 		setUrlContext("invoice");
@@ -1145,12 +1144,8 @@ public class InvoiceController extends BaseController {
 		
 		String[] orderIdsArr = input.getIds();
 		if (orderIdsArr == null || orderIdsArr.length <= 0) {
-			//setupPreviewInvoice(request, model);
-			//input.setHistoryCount(-2);
-			
 			setErrorMsg(request, response, "Please select at least one order");
 			return "redirect:/" + getUrlContext() + "/createInvoiceMain.do";
-			//return getUrlContext() + "/previewInvoice";
 		}
 		
 		User createdByUser = getUser(request);
@@ -1184,8 +1179,7 @@ public class InvoiceController extends BaseController {
 		ModelUtil.createAuditOrderNotes(genericDAO, orderIdsArr, successMsg, createdByUser);
 		
 		setSuccessMsg(request, successMsg);
-		return "redirect:/" + getUrlContext() + "/createInvoiceSearch.do";
-		//return processPreviewInvoiceCommon(request, response, input);
+		return "redirect:/" + getUrlContext() + "/manageInvoiceMain.do";
 	}
 	
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
@@ -1231,12 +1225,12 @@ public class InvoiceController extends BaseController {
 		addWaterMarkRendererReportParam(params, true, "Preview");
 		
 		String type = "html";
-		//setReportRequestHeaders(response, type, ORDER_INVOICE_MASTER);
+		//setReportRequestHeaders(response, type, ORDER_INVOICE_MASTER_REPORT);
 		try {
-			/*JasperPrint jasperPrint = dynamicReportService.getJasperPrintFromFile(reportName,
-						invoiceVOList, params, type, request);*/
-			JasperPrint jasperPrint = dynamicReportService.getJasperPrintFromFile(ORDER_INVOICE_MASTER, 
-					ORDER_INVOICE_SUB, invoiceVOList, params, type, request);
+			JasperPrint jasperPrint = dynamicReportService.getJasperPrintFromFile(ORDER_INVOICE_REPORT,
+						invoiceVOList, params, type, request);
+			/*JasperPrint jasperPrint = dynamicReportService.getJasperPrintFromFile(ORDER_INVOICE_MASTER_REPORT, 
+					ORDER_INVOICE_SUB_REPORT, invoiceVOList, params, type, request);*/
 			if (jasperPrint == null) {
 				setErrorMsg(request, response, "Error occured while processing invoice preview");
 			} else {
@@ -1255,7 +1249,7 @@ public class InvoiceController extends BaseController {
 	public String previewInvoiceExport(ModelMap model, HttpServletRequest request,
 			HttpServletResponse response,
 			@RequestParam(required = true, value = "type") String type) {
-		type = setReportRequestHeaders(response, type, ORDER_INVOICE_MASTER);
+		type = setReportRequestHeaders(response, type, ORDER_INVOICE_REPORT);
 		
 		ByteArrayOutputStream out = null;
 		try {
@@ -1266,10 +1260,10 @@ public class InvoiceController extends BaseController {
 			Map<String, Object> params = (Map<String, Object>) datas.get("params");
 			addWaterMarkRendererReportParam(params, true, "Preview");
 			
-			/*out = dynamicReportService.generateStaticReport(reportName,
-						invoiceVOList, params, type, request);*/
-			out = dynamicReportService.generateStaticMasterSubReport(ORDER_INVOICE_MASTER, ORDER_INVOICE_SUB,
-					invoiceVOList, params, type, request);
+			out = dynamicReportService.generateStaticReport(ORDER_INVOICE_REPORT,
+						invoiceVOList, params, type, request);
+			/*out = dynamicReportService.generateStaticMasterSubReport(ORDER_INVOICE_MASTER_REPORT, 
+					ORDER_INVOICE_SUB_REPORT, invoiceVOList, params, type, request);*/
 			out.writeTo(response.getOutputStream());
 			
 			return null;
@@ -1378,7 +1372,7 @@ public class InvoiceController extends BaseController {
 			HttpServletResponse response,
 			@RequestParam(required = true, value = "id") Long invoiceId,
 			@RequestParam(required = true, value = "type") String type) {
-		type = setReportRequestHeaders(response, type, ORDER_INVOICE_MASTER);
+		type = setReportRequestHeaders(response, type, ORDER_INVOICE_REPORT);
 		
 		ByteArrayOutputStream out = null;
 		try {
@@ -1386,10 +1380,10 @@ public class InvoiceController extends BaseController {
 			List<InvoiceVO> invoiceVOList = (List<InvoiceVO>) datas.get("data");
 			Map<String, Object> params = (Map<String, Object>) datas.get("params");
 			
-			/*out = dynamicReportService.generateStaticReport(reportName,
-						invoiceVOList, params, type, request);*/
-			out = dynamicReportService.generateStaticMasterSubReport(ORDER_INVOICE_MASTER, ORDER_INVOICE_SUB,
-					invoiceVOList, params, type, request);
+			out = dynamicReportService.generateStaticReport(ORDER_INVOICE_REPORT,
+						invoiceVOList, params, type, request);
+			/*out = dynamicReportService.generateStaticMasterSubReport(ORDER_INVOICE_MASTER_REPORT, ORDER_INVOICE_SUB_REPORT,
+					invoiceVOList, params, type, request);*/
 			out.writeTo(response.getOutputStream());
 			
 			return null;
@@ -1423,12 +1417,9 @@ public class InvoiceController extends BaseController {
 	}
 	
 	private void setupPreviewInvoice(HttpServletRequest request, ModelMap model) {
-		/*Map<String, Object> imagesMap = new HashMap<String, Object>();
-		request.getSession().setAttribute("IMAGES_MAP", imagesMap);*/
-		
-		model.addAttribute("msgCtx", "invoicePreview");
-		model.addAttribute("errorCtx", "invoicePreview");
-		model.addAttribute("activeTab", "createInvoice");
+		addMsgCtx(model, previewInvoiceMsgCtx);
+		//model.addAttribute("activeTab", "createInvoice");
+		//addTabAttributes(model, INVOICE_TAB, StringUtils.EMPTY, StringUtils.EMPTY);
 	}
 	
 	private Map<String, Object> generateInvoiceData(HttpServletRequest request, InvoiceVO input) {
@@ -1441,6 +1432,7 @@ public class InvoiceController extends BaseController {
 		Map<String, Object> params = new HashMap<String, Object>();
 		map(input, invoiceVOList, invoicePaymentVOList, params);
 		
+		addRDSBillingInfo(params);
 		addLogoFilePath(request, params);
 		
 		Map<String,Object> datas = new HashMap<String,Object>();
@@ -1470,6 +1462,7 @@ public class InvoiceController extends BaseController {
 		mapToInvoiceVOList(orderInvoiceDetailsList, invoiceVOList, invoiceVOPaymentList);
 		params.put("orderPaymentList", invoiceVOPaymentList);
 		
+		addRDSBillingInfo(params);
 		addLogoFilePath(request, params);
 		
 		Map<String,Object> datas = new HashMap<String,Object>();

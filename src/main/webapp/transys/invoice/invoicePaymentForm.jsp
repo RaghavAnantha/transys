@@ -320,7 +320,7 @@ function handleCreateInvoicePaymentInvoiceNoChange() {
 			</c:if>
 			<td class="form-left">Balance Due</td>
 	       	<td class="td-static">
-	       		<span class="${balanceDueAlertClass}" id="invoicePaymentBalanceDue" style="font-weight: bold;font-size: 13px; padding: 0 10px;">
+	       		<span class="${balanceDueAlertClass}" id="invoicePaymentBalanceDue" style="font-weight: bold;font-size: 13px; padding: 0 14px;">
 	       			${invoicePaymentModelObject.invoiceBalanceDueStr}
 	       		</span>
 	       	</td>

@@ -448,4 +448,13 @@ public class BaseController {
 			}
 		}
 	}
+	
+	protected void addRDSBillingInfo(Map<String, Object> params) {
+		params.put("rdsName", "Ravenswood Disposal Services, Inc");
+		
+		String rdsBillingAddress = "6660 S Nashville"
+				+ "\n" + "Bedford Park, IL 60638";
+		params.put("rdsBillingAddress", rdsBillingAddress);
+		params.put("rdsContact", "773-722-4444");
+	}
 }

@@ -11,13 +11,15 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Dimension2D;
 import java.awt.geom.Rectangle2D;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import net.sf.jasperreports.engine.JRAbstractRenderer;
 import net.sf.jasperreports.engine.JRException;
+
 import net.sf.jasperreports.engine.type.ImageTypeEnum;
 import net.sf.jasperreports.engine.type.RenderableTypeEnum;
 
+@SuppressWarnings("serial")
 public class WaterMarkRenderer extends JRAbstractRenderer {
 	public static String PAGE_ORIENTATION_PORTRAIT = "PORTRAIT";
 	public static String PAGE_ORIENTATION_LANDSCAPE = "LANDSCAPE";
