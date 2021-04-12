@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
-<!-- 2020-10-21T15:00:15 -->
+<!-- 2021-04-12T23:32:32 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="customerOrdersReportMaster" pageWidth="840" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="18fcb7af-9502-4d2a-97bb-f1aa4d3e0b40">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
 	<scriptlet name="JasperScriptletUtil" class="com.transys.core.util.JasperScriptletUtil"/>
@@ -37,7 +37,7 @@
 		<band height="70" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 			<textField>
-				<reportElement x="510" y="11" width="160" height="20" uuid="14398782-2678-4c8f-aae5-d2b299f6558c"/>
+				<reportElement x="510" y="11" width="130" height="20" uuid="14398782-2678-4c8f-aae5-d2b299f6558c"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#333333"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -60,7 +60,7 @@
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/customerOrdersReportSub.jasper"]]></subreportExpression>
 			</subreport>
 			<textField>
-				<reportElement x="670" y="11" width="130" height="20" uuid="447c5232-4ff7-489f-be99-190e96631193">
+				<reportElement x="640" y="11" width="160" height="20" uuid="447c5232-4ff7-489f-be99-190e96631193">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>

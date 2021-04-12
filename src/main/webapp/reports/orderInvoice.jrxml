@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
-<!-- 2021-04-12T21:02:18 -->
+<!-- 2021-04-12T23:03:42 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="orderInvoice" pageWidth="1000" pageHeight="800" orientation="Landscape" columnWidth="960" leftMargin="20" rightMargin="20" topMargin="10" bottomMargin="10" isSummaryWithPageHeaderAndFooter="true" uuid="53a6c0df-7db3-4567-a441-f90a0edf36dc">
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
@@ -94,7 +94,7 @@
 		<band height="158" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 			<staticText>
-				<reportElement mode="Opaque" x="711" y="37" width="96" height="18" backcolor="#FFFFFF" uuid="10dedeb4-4e21-4897-a1f3-c13eec96e36a"/>
+				<reportElement mode="Opaque" x="710" y="37" width="96" height="18" backcolor="#FFFFFF" uuid="10dedeb4-4e21-4897-a1f3-c13eec96e36a"/>
 				<box>
 					<pen lineWidth="0.0" lineColor="#333333"/>
 				</box>
@@ -124,7 +124,7 @@
 				<textFieldExpression><![CDATA[$P{invoiceNo}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="70" y="27" width="249" height="46" uuid="983382a4-e31b-4d41-a7fd-d1ffe0c653d2">
+				<reportElement x="73" y="27" width="249" height="46" uuid="983382a4-e31b-4d41-a7fd-d1ffe0c653d2">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
@@ -134,19 +134,19 @@
 				<textFieldExpression><![CDATA[$P{rdsBillingAddress} + "\n" + $P{rdsContact}]]></textFieldExpression>
 			</textField>
 			<image hAlign="Center" vAlign="Middle">
-				<reportElement x="319" y="11" width="349" height="110" uuid="52aeb398-2338-44f6-be95-8a1dd18ba957"/>
+				<reportElement x="328" y="9" width="338" height="110" uuid="52aeb398-2338-44f6-be95-8a1dd18ba957"/>
 				<graphicElement fill="Solid"/>
 				<imageExpression><![CDATA[$P{LOGO_FILE_PATH}]]></imageExpression>
 			</image>
 			<staticText>
-				<reportElement x="11" y="71" width="59" height="18" uuid="e12d7a0f-ec75-4247-898c-bcc9489c6d1b"/>
+				<reportElement x="11" y="77" width="59" height="18" uuid="e12d7a0f-ec75-4247-898c-bcc9489c6d1b"/>
 				<textElement verticalAlignment="Bottom">
 					<font size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Bill To:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="70" y="71" width="249" height="18" uuid="5461df35-2ef8-4e87-b6dd-8c12a7a136da">
+				<reportElement x="73" y="77" width="249" height="18" uuid="5461df35-2ef8-4e87-b6dd-8c12a7a136da">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
 				<textElement textAlignment="Left" verticalAlignment="Bottom">
@@ -155,9 +155,9 @@
 				<textFieldExpression><![CDATA[$P{customer}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="70" y="90" width="249" height="51" uuid="2412d5ae-8761-4d45-81e1-afc0232723d6">
+				<reportElement x="73" y="95" width="249" height="46" uuid="2412d5ae-8761-4d45-81e1-afc0232723d6">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 				</reportElement>
 				<textElement textAlignment="Left" verticalAlignment="Top">
 					<font isBold="true"/>
@@ -172,7 +172,7 @@
 				<text><![CDATA[INVOICE]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="711" y="55" width="96" height="18" backcolor="#FFFFFF" uuid="5ac0a85c-825d-4485-9911-c7fe0463e471"/>
+				<reportElement mode="Opaque" x="710" y="55" width="96" height="18" backcolor="#FFFFFF" uuid="5ac0a85c-825d-4485-9911-c7fe0463e471"/>
 				<box>
 					<pen lineWidth="0.0" lineColor="#333333"/>
 				</box>
@@ -182,9 +182,7 @@
 				<text><![CDATA[Invoice Number:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="711" y="79" width="125" height="18" backcolor="#FFFFFF" uuid="b5334a28-ca1a-4dff-a2b7-2b1f2ebd30dc">
-					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-				</reportElement>
+				<reportElement mode="Opaque" x="710" y="77" width="125" height="18" backcolor="#FFFFFF" uuid="b5334a28-ca1a-4dff-a2b7-2b1f2ebd30dc"/>
 				<box>
 					<pen lineWidth="0.0" lineColor="#333333"/>
 				</box>
@@ -194,7 +192,9 @@
 				<text><![CDATA[Total Charges]]></text>
 			</staticText>
 			<textField evaluationTime="Report" pattern="" isBlankWhenNull="true">
-				<reportElement x="710" y="97" width="125" height="18" uuid="52ddee3d-02c7-4261-9005-515e6231d918"/>
+				<reportElement x="710" y="95" width="125" height="18" uuid="52ddee3d-02c7-4261-9005-515e6231d918">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
 				<box>
 					<pen lineWidth="1.0"/>
 				</box>
@@ -204,7 +204,7 @@
 				<textFieldExpression><![CDATA["$" + (new java.text.DecimalFormat("#,##0.00").format($V{totalTotalFees}.doubleValue()))]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement mode="Opaque" x="835" y="79" width="125" height="18" backcolor="#FFFFFF" uuid="721b43e1-201c-411d-aff3-edc8dcb6bd5d"/>
+				<reportElement mode="Opaque" x="835" y="77" width="125" height="18" backcolor="#FFFFFF" uuid="721b43e1-201c-411d-aff3-edc8dcb6bd5d"/>
 				<box>
 					<pen lineWidth="0.0" lineColor="#333333"/>
 				</box>
@@ -214,7 +214,7 @@
 				<text><![CDATA[Total Amount Due]]></text>
 			</staticText>
 			<textField evaluationTime="Report" pattern="" isBlankWhenNull="true">
-				<reportElement x="835" y="97" width="125" height="18" uuid="87b5b4ac-8e27-4f16-813e-d991098298b0"/>
+				<reportElement x="835" y="95" width="125" height="18" uuid="87b5b4ac-8e27-4f16-813e-d991098298b0"/>
 				<box>
 					<pen lineWidth="1.0"/>
 				</box>
@@ -224,7 +224,7 @@
 				<textFieldExpression><![CDATA["$" + (new java.text.DecimalFormat("#,##0.00").format($V{totalBalanceAmountDue}.doubleValue()))]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="70" y="9" width="249" height="18" uuid="cc81ab11-bea3-4c1b-8f60-bc81527a4d11">
+				<reportElement x="73" y="9" width="249" height="18" uuid="cc81ab11-bea3-4c1b-8f60-bc81527a4d11">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
 				<textElement textAlignment="Left" verticalAlignment="Bottom">
@@ -238,7 +238,7 @@
 		<band height="50" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 			<staticText>
-				<reportElement mode="Opaque" x="11" y="31" width="49" height="18" forecolor="#000000" backcolor="#99CCFF" uuid="3b7e170d-d95c-4c98-a770-e027a574868d">
+				<reportElement mode="Opaque" x="11" y="31" width="59" height="18" forecolor="#000000" backcolor="#99CCFF" uuid="3b7e170d-d95c-4c98-a770-e027a574868d">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
 				<box>
@@ -254,7 +254,7 @@
 				<text><![CDATA[Order #]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="130" y="31" width="130" height="18" forecolor="#000000" backcolor="#99CCFF" uuid="aeb2d618-8d57-4bcd-97b1-0b620bb9d577"/>
+				<reportElement mode="Opaque" x="140" y="31" width="130" height="18" forecolor="#000000" backcolor="#99CCFF" uuid="aeb2d618-8d57-4bcd-97b1-0b620bb9d577"/>
 				<box>
 					<pen lineWidth="1.0" lineColor="#333333"/>
 					<topPen lineWidth="1.0" lineColor="#333333"/>
@@ -268,7 +268,7 @@
 				<text><![CDATA[Del. Adds.]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="260" y="31" width="80" height="18" forecolor="#000000" backcolor="#99CCFF" uuid="17dfccff-4ae7-40d8-b02d-7b3624d86a65"/>
+				<reportElement mode="Opaque" x="270" y="31" width="80" height="18" forecolor="#000000" backcolor="#99CCFF" uuid="17dfccff-4ae7-40d8-b02d-7b3624d86a65"/>
 				<box>
 					<pen lineWidth="1.0" lineColor="#333333"/>
 					<topPen lineWidth="1.0" lineColor="#333333"/>
@@ -282,7 +282,7 @@
 				<text><![CDATA[City]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="340" y="31" width="70" height="18" forecolor="#000000" backcolor="#99CCFF" uuid="bcd9bda5-f103-4f26-85e9-c2e29bfe1774"/>
+				<reportElement mode="Opaque" x="350" y="31" width="70" height="18" forecolor="#000000" backcolor="#99CCFF" uuid="bcd9bda5-f103-4f26-85e9-c2e29bfe1774"/>
 				<box>
 					<pen lineWidth="1.0" lineColor="#333333"/>
 					<topPen lineWidth="1.0" lineColor="#333333"/>
@@ -296,7 +296,7 @@
 				<text><![CDATA[Del. Dt.]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="410" y="31" width="70" height="18" forecolor="#000000" backcolor="#99CCFF" uuid="faeaf233-a816-46b9-b9dd-2973da0f0cc6"/>
+				<reportElement mode="Opaque" x="420" y="31" width="70" height="18" forecolor="#000000" backcolor="#99CCFF" uuid="faeaf233-a816-46b9-b9dd-2973da0f0cc6"/>
 				<box>
 					<pen lineWidth="1.0" lineColor="#333333"/>
 					<topPen lineWidth="1.0" lineColor="#333333"/>
@@ -310,7 +310,7 @@
 				<text><![CDATA[Pickup. Dt.]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="480" y="31" width="60" height="18" forecolor="#000000" backcolor="#99CCFF" uuid="237407eb-dc90-4b80-af84-72e73b3e021d"/>
+				<reportElement mode="Opaque" x="490" y="31" width="60" height="18" forecolor="#000000" backcolor="#99CCFF" uuid="237407eb-dc90-4b80-af84-72e73b3e021d"/>
 				<box>
 					<pen lineWidth="1.0" lineColor="#333333"/>
 					<topPen lineWidth="1.0" lineColor="#333333"/>
@@ -324,7 +324,7 @@
 				<text><![CDATA[Dump. Price]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="540" y="31" width="60" height="18" forecolor="#000000" backcolor="#99CCFF" uuid="69ee2425-241f-4c3b-9506-04e93d301215"/>
+				<reportElement mode="Opaque" x="550" y="31" width="60" height="18" forecolor="#000000" backcolor="#99CCFF" uuid="69ee2425-241f-4c3b-9506-04e93d301215"/>
 				<box>
 					<pen lineWidth="1.0" lineColor="#333333"/>
 					<topPen lineWidth="1.0" lineColor="#333333"/>
@@ -338,7 +338,7 @@
 				<text><![CDATA[Addnl. Fees]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="600" y="31" width="60" height="18" forecolor="#000000" backcolor="#99CCFF" uuid="bb1b9e66-1e95-4935-b459-00bfa0a2c2b4"/>
+				<reportElement mode="Opaque" x="610" y="31" width="50" height="18" forecolor="#000000" backcolor="#99CCFF" uuid="bb1b9e66-1e95-4935-b459-00bfa0a2c2b4"/>
 				<box>
 					<pen lineWidth="1.0" lineColor="#333333"/>
 					<topPen lineWidth="1.0" lineColor="#333333"/>
@@ -408,7 +408,7 @@
 				<text><![CDATA[Balance]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="60" y="31" width="70" height="18" forecolor="#000000" backcolor="#99CCFF" uuid="e8af2ff6-1adf-47d6-9e8d-01b48a1db382"/>
+				<reportElement mode="Opaque" x="70" y="31" width="70" height="18" forecolor="#000000" backcolor="#99CCFF" uuid="e8af2ff6-1adf-47d6-9e8d-01b48a1db382"/>
 				<box>
 					<pen lineWidth="1.0" lineColor="#333333"/>
 					<topPen lineWidth="1.0" lineColor="#333333"/>
@@ -436,7 +436,7 @@
 				<text><![CDATA[Total Fees]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="11" y="13" width="119" height="18" forecolor="#000000" backcolor="#99CCFF" uuid="a05bc661-c7d5-4f43-be2f-78bce3346761">
+				<reportElement mode="Opaque" x="11" y="13" width="129" height="18" forecolor="#000000" backcolor="#99CCFF" uuid="a05bc661-c7d5-4f43-be2f-78bce3346761">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
 				<box>
@@ -457,7 +457,7 @@
 		<band height="18" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 			<textField isBlankWhenNull="true">
-				<reportElement x="11" y="-1" width="49" height="18" uuid="c45081e3-2d03-4ac0-87e1-11c0feb7dfc5"/>
+				<reportElement x="11" y="-1" width="59" height="18" uuid="c45081e3-2d03-4ac0-87e1-11c0feb7dfc5"/>
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -471,7 +471,7 @@
 				<textFieldExpression><![CDATA[$F{orderId}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="130" y="-1" width="130" height="18" uuid="4bff6cc4-ac43-4b95-94b6-42e2aa9419eb"/>
+				<reportElement x="140" y="-1" width="130" height="18" uuid="4bff6cc4-ac43-4b95-94b6-42e2aa9419eb"/>
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -485,7 +485,7 @@
 				<textFieldExpression><![CDATA[$F{deliveryAddressFullLine}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="260" y="-1" width="80" height="18" uuid="5b9fe8c2-6f25-4cc8-a90c-6c4ae3459227"/>
+				<reportElement x="270" y="-1" width="80" height="18" uuid="5b9fe8c2-6f25-4cc8-a90c-6c4ae3459227"/>
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -499,7 +499,7 @@
 				<textFieldExpression><![CDATA[$F{deliveryCity}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="340" y="-1" width="70" height="18" uuid="38ba3ff3-3f9f-4946-9fbb-7794762d0006"/>
+				<reportElement x="350" y="-1" width="70" height="18" uuid="38ba3ff3-3f9f-4946-9fbb-7794762d0006"/>
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -513,7 +513,7 @@
 				<textFieldExpression><![CDATA[$F{deliveryDate}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="410" y="-1" width="70" height="18" uuid="74979043-1bb3-47d4-9fa5-1548a1c9e62b"/>
+				<reportElement x="420" y="-1" width="70" height="18" uuid="74979043-1bb3-47d4-9fa5-1548a1c9e62b"/>
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -527,7 +527,7 @@
 				<textFieldExpression><![CDATA[$F{pickupDate}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="480" y="-1" width="60" height="18" uuid="b0d5fa92-e65d-4cc3-9ff3-a32abc60812c"/>
+				<reportElement x="490" y="-1" width="60" height="18" uuid="b0d5fa92-e65d-4cc3-9ff3-a32abc60812c"/>
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -541,7 +541,7 @@
 				<textFieldExpression><![CDATA[$F{dumpsterPrice} == null ? "" : (new java.text.DecimalFormat("###0.00").format($F{dumpsterPrice}.doubleValue()))]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="540" y="-1" width="60" height="18" uuid="129f3a1e-a3c6-4802-8fee-1e0e806303c2"/>
+				<reportElement x="550" y="-1" width="60" height="18" uuid="129f3a1e-a3c6-4802-8fee-1e0e806303c2"/>
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -555,7 +555,7 @@
 				<textFieldExpression><![CDATA[$F{additionalFees}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="600" y="-1" width="60" height="18" uuid="3605181c-d3b2-4c2f-8db0-d7c53452e6e2"/>
+				<reportElement x="610" y="-1" width="50" height="18" uuid="3605181c-d3b2-4c2f-8db0-d7c53452e6e2"/>
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -625,7 +625,7 @@
 				<textFieldExpression><![CDATA[$F{balanceAmountDue}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="60" y="-1" width="70" height="18" uuid="47fb498d-eeff-4651-b60d-95c33483fa49"/>
+				<reportElement x="70" y="-1" width="70" height="18" uuid="47fb498d-eeff-4651-b60d-95c33483fa49"/>
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -663,7 +663,7 @@
 		<band height="28" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 			<textField>
-				<reportElement x="430" y="5" width="76" height="18" uuid="c16a809c-7c8e-4c1d-bd91-0363b6fb295e">
+				<reportElement x="428" y="5" width="76" height="18" uuid="c16a809c-7c8e-4c1d-bd91-0363b6fb295e">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
@@ -672,7 +672,7 @@
 				<textFieldExpression><![CDATA["Page " + $V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 			<textField evaluationTime="Report" isBlankWhenNull="true">
-				<reportElement x="506" y="5" width="40" height="18" uuid="0f44923f-90b5-4a74-845d-9f965d3d61b4">
+				<reportElement x="504" y="5" width="40" height="18" uuid="0f44923f-90b5-4a74-845d-9f965d3d61b4">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
@@ -687,7 +687,7 @@
 		<band height="19" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<staticText>
-				<reportElement x="11" y="-1" width="49" height="18" uuid="0226784c-f16f-43b3-9d34-f6aafedc9f2c">
+				<reportElement x="11" y="-1" width="59" height="18" uuid="0226784c-f16f-43b3-9d34-f6aafedc9f2c">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
@@ -696,7 +696,7 @@
 				<text><![CDATA[Count:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="60" y="-1" width="70" height="18" uuid="efe89dc3-93e3-44a3-bcf0-c682e1f13c90">
+				<reportElement x="70" y="-1" width="60" height="18" uuid="efe89dc3-93e3-44a3-bcf0-c682e1f13c90">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
@@ -705,7 +705,7 @@
 				<textFieldExpression><![CDATA[$V{orderCount}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="480" y="-1" width="60" height="18" uuid="62dc9ede-e6dc-4441-a678-da208795ce44">
+				<reportElement x="490" y="-1" width="60" height="18" uuid="62dc9ede-e6dc-4441-a678-da208795ce44">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
 				<box>
@@ -720,7 +720,7 @@
 				<textFieldExpression><![CDATA["$" + (new java.text.DecimalFormat("#,##0.00").format($V{totalDumpsterPrice}.doubleValue()))]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="430" y="-1" width="49" height="18" uuid="994f4751-3be2-472b-8ae9-51869985c49c">
+				<reportElement x="440" y="-1" width="49" height="18" uuid="994f4751-3be2-472b-8ae9-51869985c49c">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
@@ -729,7 +729,7 @@
 				<text><![CDATA[Total:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="540" y="-1" width="60" height="18" uuid="c9d66bf7-0644-48ad-a106-3c4ba3b60659">
+				<reportElement x="550" y="-1" width="60" height="18" uuid="c9d66bf7-0644-48ad-a106-3c4ba3b60659">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
 				<box>
@@ -744,7 +744,7 @@
 				<textFieldExpression><![CDATA["$" + (new java.text.DecimalFormat("#,##0.00").format($V{totalAdditionalFees}.doubleValue()))]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="600" y="-1" width="60" height="18" uuid="c01e48e8-1d4e-422e-9ede-24bcbeee0be4">
+				<reportElement x="610" y="-1" width="50" height="18" uuid="c01e48e8-1d4e-422e-9ede-24bcbeee0be4">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
 				<box>

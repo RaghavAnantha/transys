@@ -55,8 +55,6 @@
 	} catch(Exception e){
 		e.printStackTrace();
 	}
-	
-	//request.getSession().removeAttribute(net.sf.jasperreports.j2ee.servlets.ImageServlet.DEFAULT_JASPER_PRINT_SESSION_ATTRIBUTE);
 %>
 
 <c:if test="${param.pagingLink != null and param.pagingLink != ''}">
@@ -64,5 +62,7 @@
 </c:if>
 
 <script language="javascript">
-	removeJasperPrint();
+$(window).on("load", function() {
+	verifyAndRemoveJasperPrint('${ctx}');
+});
 </script>
