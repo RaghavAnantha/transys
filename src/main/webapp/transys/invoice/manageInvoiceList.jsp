@@ -257,17 +257,17 @@ function processMakeInvoicePayment(invoiceId) {
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
 		pagingLink="manageInvoiceSearch.do" multipleSelect="false" searcheable="false"
 		exportPdf="false" exportXls="false" dataQualifier="manageInvoice">
-		<transys:textcolumn headerText="Inv.#" dataField="id" />
+		<transys:textcolumn headerText="Inv.#" dataField="id" width="55px"/>
 		<transys:textcolumn headerText="Inv. Date" width="70px" dataField="invoiceDate" dataFormat="MM/dd/yyyy"/>
 		<transys:textcolumn headerText="Customer" dataField="companyName" />
-		<transys:textcolumn headerText="Contact" dataField="contactName" />
-		<transys:textcolumn headerText="Phone" dataField="formattedPhone1" />
-		<transys:textcolumn headerText="Order Dt. Fr." width="73px" dataField="orderDateFrom" dataFormat="MM/dd/yyyy"/>
-		<transys:textcolumn headerText="Order Dt. To" width="73px" dataField="orderDateTo" dataFormat="MM/dd/yyyy"/>
-		<transys:textcolumn headerText="Order Count"  width="32px" dataField="orderCount" />
-		<transys:textcolumn headerText="Inv. Amt"  width="50px" dataField="totalBalanceAmountDue" type="java.math.BigDecimal" dataFormat="#####0.00"/>
-		<transys:textcolumn headerText="Pay. made"  width="50px" dataField="totalInvoicePaymentDone" type="java.math.BigDecimal" dataFormat="#####0.00"/>
-		<transys:textcolumn headerText="Bal. Due"  width="50px" dataField="totalInvoiceBalanceDue" type="java.math.BigDecimal" dataFormat="#####0.00"/>
+		<transys:textcolumn headerText="Contact" dataField="contactName" width="100px"/>
+		<transys:textcolumn headerText="Phone" dataField="formattedPhone1" width="100px"/>
+		<transys:textcolumn headerText="Ord. Dt. Fr." width="73px" dataField="orderDateFrom" dataFormat="MM/dd/yyyy"/>
+		<transys:textcolumn headerText="Ord. Dt. To" width="73px" dataField="orderDateTo" dataFormat="MM/dd/yyyy"/>
+		<transys:textcolumn headerText="Ord. Cnt"  width="32px" dataField="orderCount" />
+		<transys:textcolumn headerText="Inv. Amt"  width="70px" dataField="totalBalanceAmountDue" type="java.math.BigDecimal" dataFormat="#####0.00"/>
+		<transys:textcolumn headerText="Pay. made"  width="70px" dataField="totalInvoicePaymentDone" type="java.math.BigDecimal" dataFormat="#####0.00"/>
+		<transys:textcolumn headerText="Bal. Due"  width="70px" dataField="totalInvoiceBalanceDue" type="java.math.BigDecimal" dataFormat="#####0.00"/>
 		<transys:textcolumn headerText="Notes" dataField="notes" />
 		<transys:imagecolumn headerText="Pay" width="32px" linkUrl="javascript:processMakeInvoicePayment('{id}');" imageSrc="fas fa-dollar-sign" HAlign="center" title="Make Payment"/>
 		<transys:imagecolumn headerText="PDF" width="32px" linkUrl="${ctx}/invoice/downloadInvoice.do?id={id}&type=pdf" imageSrc="${pdfImage}" HAlign="center" title="PDF"/>

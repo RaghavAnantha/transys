@@ -141,17 +141,10 @@ public class BaseController {
 	@Autowired
 	protected Validator validator;
 
-	/**
-	 * @return the validator
-	 */
 	public Validator getValidator() {
 		return validator;
 	}
 
-	/**
-	 * @param validator
-	 *            the validator to set
-	 */
 	public void setValidator(Validator validator) {
 		this.validator = validator;
 	}

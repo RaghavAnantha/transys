@@ -28,6 +28,8 @@ import com.transys.model.Order;
 import com.transys.model.OrderStatus;
 import com.transys.model.SearchCriteria;
 
+import com.transys.model.map.Geocode;
+
 import com.transys.model.vo.DeliveryAddressVO;
 import com.transys.model.vo.verizon.MultipleVehicleLocationVO;
 import com.transys.model.vo.verizon.VehicleLocationVO;
@@ -74,11 +76,11 @@ public class OrderScheduleController extends ReportController {
 	}
 	
 	private void performSearch(ModelMap model, HttpServletRequest request, SearchCriteria criteria) {
-		List<DeliveryAddressVO> deliveryOrderAddressList = retrieveDeliveryOrderAddress(criteria);
+		List<DeliveryAddressVO> deliveryOrderAddressList = retrieveDeliveryOrderAddress(criteria, request);
 		String deliveryOrderAddressListJson = JsonUtil.toJson(deliveryOrderAddressList);
 		model.addAttribute("deliveryOrderAddressList", deliveryOrderAddressListJson);
 		
-		List<DeliveryAddressVO> pickupOrderAddressList = retrievePickupOrderAddress(criteria);
+		List<DeliveryAddressVO> pickupOrderAddressList = retrievePickupOrderAddress(criteria, request);
 		String pickupOrderAddressListJson = JsonUtil.toJson(pickupOrderAddressList);
 		model.addAttribute("pickupOrderAddressList", pickupOrderAddressListJson);
 		
@@ -87,7 +89,7 @@ public class OrderScheduleController extends ReportController {
 		model.addAttribute("vehicleLocationList", vehicleLocationListJson);
 	}
 	
-	private List<DeliveryAddressVO> retrieveDeliveryOrderAddress(SearchCriteria criteria) {
+	private List<DeliveryAddressVO> retrieveDeliveryOrderAddress(SearchCriteria criteria, HttpServletRequest request) {
 		String deliveryDateFrom = StringUtils.EMPTY;
 		String deliveryDateTo = StringUtils.EMPTY;
 		String deliveryAddress = StringUtils.EMPTY;
@@ -115,11 +117,11 @@ public class OrderScheduleController extends ReportController {
 		
 		query +=	" order by id desc";
 		
-		List<DeliveryAddressVO> deliveryAddressVOList = retrieveOrderAddress(query);
+		List<DeliveryAddressVO> deliveryAddressVOList = retrieveOrderAddress(query, request);
 		return deliveryAddressVOList;
 	}
 	
-	private List<DeliveryAddressVO> retrievePickupOrderAddress(SearchCriteria criteria) {
+	private List<DeliveryAddressVO> retrievePickupOrderAddress(SearchCriteria criteria, HttpServletRequest request) {
 		String fromDateStr = DateUtil.addDaysToTodayAndFormatToDbDate(-5);
 		String toDateStr = DateUtil.addDaysToTodayAndFormatToDbDate(1);
 		String query = "select obj from Order obj where obj.deleteFlag='1'"
@@ -127,18 +129,17 @@ public class OrderScheduleController extends ReportController {
 				+ " and obj.modifiedAt >='" + fromDateStr + "' and obj.modifiedAt <'" + toDateStr + "'"
 				+ " order by obj.modifiedAt desc";
 		
-		List<DeliveryAddressVO> deliveryAddressVOList = retrieveOrderAddress(query);
+		List<DeliveryAddressVO> deliveryAddressVOList = retrieveOrderAddress(query, request);
 		return deliveryAddressVOList;
 	}
 	
-	private List<DeliveryAddressVO> retrieveOrderAddress(String query) {
+	private List<DeliveryAddressVO> retrieveOrderAddress(String query, HttpServletRequest request) {
 		List<DeliveryAddressVO> deliveryAddressVOList = new ArrayList<DeliveryAddressVO>();
 		List<Order> orderList = genericDAO.executeSimpleQuery(query);
 		if (orderList == null || orderList.isEmpty()) {
 			return deliveryAddressVOList;
 		}
 		
-		String latLng = StringUtils.EMPTY;
 		int maxRows = (orderList.size() <= MAX_DISPLAY_ORDERS ? orderList.size() : MAX_DISPLAY_ORDERS);
 		for (Order order : orderList.subList(0, maxRows)) {
 			if (order.getDeliveryAddress() == null) {
@@ -148,8 +149,8 @@ public class OrderScheduleController extends ReportController {
 			DeliveryAddressVO aDeliveryAddressVO = new DeliveryAddressVO();
 			map(aDeliveryAddressVO, order);
 			
-			latLng =  mapService.getGeocode(aDeliveryAddressVO.getFullAddress());
-			aDeliveryAddressVO.setGeoCode(latLng);
+			Geocode geocode =  mapService.retrieveGeocode(aDeliveryAddressVO.getFullAddress(), request);
+			aDeliveryAddressVO.setGeoCode(geocode.getLatLng());
 			
 			deliveryAddressVOList.add(aDeliveryAddressVO);
 		}

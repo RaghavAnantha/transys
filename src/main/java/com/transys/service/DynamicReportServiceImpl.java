@@ -60,7 +60,7 @@ import net.sf.jasperreports.export.SimpleXlsxReportConfiguration;
 
 import net.sf.jasperreports.web.util.WebHtmlResourceHandler;
 
-import net.sf.jasperreports.j2ee.servlets.ImageServlet;
+//import net.sf.jasperreports.j2ee.servlets.ImageServlet;
 
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -68,7 +68,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.ClassUtils;
 
 import ar.com.fdvs.dj.core.DynamicJasperHelper;
@@ -91,8 +90,6 @@ import ar.com.fdvs.dj.domain.constants.Transparency;
 import ar.com.fdvs.dj.domain.constants.VerticalAlign;
 import ar.com.fdvs.dj.domain.entities.columns.AbstractColumn;
 
-import com.transys.core.dao.GenericDAO;
-
 import com.transys.core.tags.IColumnTag;
 import com.transys.core.tags.StaticDataColumn;
 import com.transys.core.tags.StaticDataUtil;
@@ -103,26 +100,13 @@ import com.transys.core.util.ServletUtil;
 import com.transys.model.BaseModel;
 import com.transys.model.SearchCriteria;
 
-/**
- * @author gaurav
- */
 @SuppressWarnings({ "unchecked", "deprecation" })
-public class DynamicReportServiceImpl implements DynamicReportService {
+public class DynamicReportServiceImpl extends BaseService implements DynamicReportService {
 	public static String reportsCtx = "/reports";
 	
 	public static String SUBREPORT_DIR_KEY = "SUBREPORT_DIR";
 	public static String IS_IGNORE_PAGINATION_KEY = "IS_IGNORE_PAGINATION";
 	
-	@Autowired
-	private GenericDAO genericDAO;
-	
-	public void setGenericDAO(GenericDAO genericDAO) {
-		this.genericDAO = genericDAO;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 */
 	@Override
 	public ByteArrayOutputStream exportReport(String reportName, String type,
 			Class entityClass, List<IColumnTag> columnPropertyList,

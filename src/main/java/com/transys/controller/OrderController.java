@@ -23,6 +23,7 @@ import javax.validation.ValidationException;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 
 import org.springframework.stereotype.Controller;
@@ -32,6 +33,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 
 import org.springframework.web.bind.WebDataBinder;
+
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -76,9 +78,13 @@ import com.transys.model.Role;
 import com.transys.model.SearchCriteria;
 import com.transys.model.User;
 
+import com.transys.model.map.Geocode;
+
 import com.transys.model.vo.CustomerVO;
 import com.transys.model.vo.DeliveryAddressVO;
 import com.transys.model.vo.OrderReportVO;
+
+import com.transys.service.map.MapService;
 
 @Controller
 @RequestMapping("/order")
@@ -89,6 +95,9 @@ public class OrderController extends CRUDController<Order> {
 	
 	private static final String ORDER_DOC_UPLOAD_DIR = "order";
 	private static final String ORDER_DOC_FILE_SUFFIX = "order_doc";
+	
+	@Autowired
+	private MapService mapService;
 	
 	public OrderController() {
 		setUrlContext("order");
@@ -591,6 +600,8 @@ public class OrderController extends CRUDController<Order> {
 			entity.setOrderStatus(orderStatus);
 			
 			updateDumpsterStatus(entity.getDumpster().getId(), DumpsterStatus.DUMPSTER_STATUS_DROPPED_OFF, modifiedBy);
+		
+			saveGeocode(entity.getFullDeliveryAddress(), request);
 		} else {
 			auditMsg = "Order Drop Off details updated";
 			
@@ -608,6 +619,10 @@ public class OrderController extends CRUDController<Order> {
 		entity.getOrderNotes().add(auditOrderNotes);
 		
 		return dropOffSaveSuccess(request, entity, model);
+	}
+	
+	private Geocode saveGeocode(String address, HttpServletRequest request) {
+		return mapService.saveGeocode(address, request);
 	}
 	
 	@RequestMapping(method = RequestMethod.POST, value = "/revertDropOffToOpen.do")

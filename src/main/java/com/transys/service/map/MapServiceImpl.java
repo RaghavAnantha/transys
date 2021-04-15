@@ -2,10 +2,11 @@ package com.transys.service.map;
 
 import java.io.IOException;
 
-import org.apache.commons.lang3.StringUtils;
+import java.util.List;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.lang3.StringUtils;
 
 import com.google.maps.GeoApiContext;
 import com.google.maps.GeocodingApi;
@@ -16,9 +17,11 @@ import com.google.maps.model.GeocodingResult;
 
 import com.google.maps.model.LatLng;
 
-public class MapServiceImpl implements MapService {
-	protected static Logger log = LogManager.getLogger("com.transys.service.map");
-	
+import com.transys.model.map.Geocode;
+
+import com.transys.service.BaseService;
+
+public class MapServiceImpl extends BaseService implements MapService {
 	private GeoApiContext geoApiContext;
 	
 	public MapServiceImpl() {
@@ -26,7 +29,30 @@ public class MapServiceImpl implements MapService {
 	}
 	
 	@Override
-	public String getGeocode(String address) {
+	public Geocode retrieveGeocode(String address, HttpServletRequest request) {
+		return saveGeocode(address, request);
+	}
+	
+	@Override
+	public Geocode saveGeocode(String address, HttpServletRequest request) {
+		String query = "select obj from Geocode obj where address='" + address + "'";
+		List<Geocode> geocodeList = genericDAO.executeSimpleQuery(query);
+		if (geocodeList != null && !geocodeList.isEmpty()) {
+			return geocodeList.get(0);
+		}
+		
+		String latLng = findLatLng(address);
+		
+		Geocode geocode = new Geocode();
+		geocode.setAddress(address);
+		geocode.setLatLng(latLng);
+		setModifier(request, geocode);
+		genericDAO.save(geocode);
+		
+		return geocode;
+	}
+	
+	private String findLatLng(String address) {
 		GeocodingResult[] results;
 		String latLngStr = StringUtils.EMPTY;
 		try {

@@ -926,7 +926,6 @@ public class InvoiceController extends BaseController {
 	public String deleteInvoice(ModelMap model, HttpServletRequest request, HttpServletResponse response,
 			@RequestParam("id") Long invoiceId) {
 		User createdByUser = getUser(request);
-		Long createdBy = createdByUser.getId();
 		
 		String query = "select obj.orderId from OrderInvoiceDetails obj where obj.invoiceHeader=" + invoiceId;
 		List<OrderInvoiceDetails> orderInvoiceDetailsList = genericDAO.executeSimpleQuery(query);
@@ -934,14 +933,12 @@ public class InvoiceController extends BaseController {
 		String[] orderIdsArr = CoreUtil.toStringArrFromLong(orderIdList);
 		
 		String deleteQuery = "delete OrderInvoiceDetails oid where oid.invoiceHeader = " + invoiceId;
-		int noRowsDel = genericDAO.executeUpdate(deleteQuery);
+		genericDAO.executeUpdate(deleteQuery);
 		
 		genericDAO.deleteById(OrderInvoiceHeader.class, invoiceId);
 		
-		updateOrder(orderIdsArr, null, null, "N", createdBy);
-		  
 		String successMsg = InvoiceVO.INV_DEL_SUCCESS_MSG + "  Invoice #: " + invoiceId;
-		ModelUtil.createAuditOrderNotes(genericDAO, orderIdsArr, successMsg, createdByUser);
+		updateOrder(orderIdsArr, null, null, "N", createdByUser, successMsg);
 		
 		setSuccessMsg(request, successMsg);
 		return "redirect:/" + getUrlContext() + "/manageInvoiceSearch.do";
@@ -1060,7 +1057,7 @@ public class InvoiceController extends BaseController {
 			order.setModifiedBy(invoicePayment.getCreatedBy());
 			genericDAO.saveOrUpdate(order);
 			
-			String auditMsg = String.format("Order payment updated.  Invoice#: {0}.  Invoice payment#: {1}",
+			String auditMsg = String.format("Order payment updated.  Invoice#: %s.  Invoice payment#: %s",
 					invoicePayment.getInvoice().getId(), invoicePayment.getId());
 			ModelUtil.createAuditOrderNotes(genericDAO, order, auditMsg, createdByUser);
 		}
@@ -1173,17 +1170,18 @@ public class InvoiceController extends BaseController {
 			genericDAO.save(anOrderInvoiceDetails);
 		}
 		
-		updateOrder(orderIdsArr, orderInvoiceHeader.getId(), orderInvoiceHeader.getInvoiceDate(), "Y", createdBy);
-		
-		String successMsg = InvoiceVO.INV_SAVE_SUCCESS_MSG + "  Invoice #: " + orderInvoiceHeader.getId();
-		ModelUtil.createAuditOrderNotes(genericDAO, orderIdsArr, successMsg, createdByUser);
+		Long invoiceId = orderInvoiceHeader.getId();
+		String successMsg = InvoiceVO.INV_SAVE_SUCCESS_MSG + "  Invoice #: " + invoiceId;
+		updateOrder(orderIdsArr, invoiceId, orderInvoiceHeader.getInvoiceDate(), "Y", createdByUser, successMsg);
 		
 		setSuccessMsg(request, successMsg);
 		return "redirect:/" + getUrlContext() + "/manageInvoiceMain.do";
 	}
 	
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-	private int updateOrder(String[] orderIdsArr, Long invoiceId, Date invoiceDate, String invoiced, Long createdBy) {
+	private int updateOrder(String[] orderIdsArr, Long invoiceId, Date invoiceDate, String invoiced, 
+			User createdByUser, String msg) {
+		Long createdBy = createdByUser.getId();
 		Date currentTime = Calendar.getInstance().getTime();
 		String orderIds = CoreUtil.toString(orderIdsArr);
 		
@@ -1197,7 +1195,11 @@ public class InvoiceController extends BaseController {
 			+ " o.modifiedBy = " + createdBy + ","
 			+ " o.modifiedAt = '" + FormatUtil.dbDateTimeFormat.format(currentTime) + "'"
 			+ " where o.id in (" + orderIds + ")";
-		return genericDAO.executeUpdate(orderUpdateQuery);
+		int noOrdersUpdated =  genericDAO.executeUpdate(orderUpdateQuery);
+		
+		ModelUtil.createAuditOrderNotes(genericDAO, orderIdsArr, msg, createdByUser);
+		
+		return noOrdersUpdated;
 	}
 	
 	@RequestMapping(method = {RequestMethod.POST}, value = "/previewInvoice.do")
