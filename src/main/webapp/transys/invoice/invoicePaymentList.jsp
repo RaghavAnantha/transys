@@ -31,12 +31,9 @@ function validateInvoicePaymentSearchMissingData() {
 	
 	var invoicePaymentSearchForm = getInvoicePaymentSearchForm();;
 	
-	if (invoicePaymentSearchForm.find('#invoicePaymentInvoiceNo').val() != "") {
+	if (invoicePaymentSearchForm.find('#invoicePaymentInvoiceNo').val() != ""
+			|| invoicePaymentSearchForm.find('#invoicePaymentCustomerId').val() != "") {
 		return missingData;
-	}
-	
-	if (invoicePaymentSearchForm.find('#invoicePaymentCustomerId').val() == "") {
-		missingData += "Customer, ";
 	}
 	
 	var paymentDateFrom = invoicePaymentSearchForm.find("input[name='invoicePaymentDateFrom']").val();
@@ -48,7 +45,7 @@ function validateInvoicePaymentSearchMissingData() {
 	if ((paymentDateFrom == "" || paymentDateTo == "")
 			&& (orderDateFrom == "" || orderDateTo == "")
 			&& (invoiceDateFrom == "" || invoiceDateTo == "")) {
-		missingData += "Invoice #/ Payment, Invoice or Order Dates, ";
+		missingData += "Invoice #/ Customer/ Payment, Invoice or Order Dates, ";
 	}
 	
 	if (missingData != "") {
@@ -207,8 +204,8 @@ function loadInvoicePayment(data) {
 		<transys:textcolumn headerText="CC Ref. #" dataField="ccReferenceNum" />
 		<transys:textcolumn headerText="CC Name" dataField="ccName" />
 		<transys:textcolumn headerText="CC #" dataField="ccNumber" />
-		<transys:textcolumn headerText="Notes" dataField="notes" />
 		<transys:textcolumn headerText="CC Exp. Dt" width="70px" dataField="ccExpDate" dataFormat="MM/dd/yyyy"/>
+		<transys:textcolumn headerText="Notes" dataField="notes" />
 		<transys:imagecolumn width="32px" headerText="PDF" linkUrl="${ctx}/invoice/downloadInvoicePayment.do?id={id}&type=pdf" imageSrc="${pdfImage}" HAlign="center" title="PDF"/>
 		<transys:imagecolumn width="32px" headerText="CSV" linkUrl="${ctx}/invoice/downloadInvoicePayment.do?id={id}&type=csv" imageSrc="${csvImage}" HAlign="center" title="CSV"/>
 	</transys:datatable>
