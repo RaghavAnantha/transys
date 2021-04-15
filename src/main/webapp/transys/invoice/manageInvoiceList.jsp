@@ -31,15 +31,13 @@ function validateManageInvoiceSearchMissingData() {
 	
 	var manageInvoiceSearchForm = getManageInvoiceSearchForm();
 	
-	var deliveryAddress = manageInvoiceSearchForm.find('#manageInvoiceDeliveryAddress').val()
+	var customer = manageInvoiceSearchForm.find('#manageInvoiceCustomerId').val(); 
+	var deliveryAddress = manageInvoiceSearchForm.find('#manageInvoiceDeliveryAddress').val();
 	if (manageInvoiceSearchForm.find('#manageInvoiceInvoiceNo').val() != ""
 			|| manageInvoiceSearchForm.find('#manageInvoiceOrderId').val() != ""
+			|| customer != ""
 			|| deliveryAddress != "") {
 		return missingData;
-	}
-	
-	if (manageInvoiceSearchForm.find('#manageInvoiceCustomerId').val() == "") {
-		missingData += "Customer, ";
 	}
 	
 	var orderDateFrom = manageInvoiceSearchForm.find("input[name='manageInvoiceOrderDateFrom']").val();
@@ -48,8 +46,9 @@ function validateManageInvoiceSearchMissingData() {
 	var invoiceDateTo = manageInvoiceSearchForm.find("input[name='manageInvoiceInvoiceDateTo']").val();
 	if ((orderDateFrom == "" || orderDateTo == "")
 			&& (invoiceDateFrom == "" || invoiceDateTo == "")
+			&& (customer == "")
 			&& (deliveryAddress == "")) {
-		missingData += "Invoice #/ Order #/ Delivery Address/ Invoice or Order Dates, ";
+		missingData += "Invoice #/ Order #/ Customer/ Delivery Address/ Invoice or Order Dates, ";
 	}
 	
 	if (missingData != "") {
