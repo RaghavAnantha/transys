@@ -10,5 +10,5 @@ CREATE TABLE `transys`.`geocode` (
   PRIMARY KEY (`id`)
  ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
 
- ALTER TABLE `transys`.`geocode` 
+ALTER TABLE `transys`.`geocode` 
 ADD UNIQUE INDEX `geocode_address_UNIQ` (`address` ASC)  COMMENT '';

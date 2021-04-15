@@ -30,11 +30,14 @@ public class MapServiceImpl extends BaseService implements MapService {
 	
 	@Override
 	public Geocode retrieveGeocode(String address, HttpServletRequest request) {
+		log.info("Now retrieving Geocode");
 		return saveGeocode(address, request);
 	}
 	
 	@Override
 	public Geocode saveGeocode(String address, HttpServletRequest request) {
+		log.info("Now saving Geocode");
+		
 		String query = "select obj from Geocode obj where address='" + address + "'";
 		List<Geocode> geocodeList = genericDAO.executeSimpleQuery(query);
 		if (geocodeList != null && !geocodeList.isEmpty()) {

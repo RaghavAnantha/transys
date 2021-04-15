@@ -200,13 +200,14 @@ function loadInvoicePayment(data) {
 		<transys:textcolumn headerText="Inv. Dt" width="70px" dataField="invoice.invoiceDate" dataFormat="MM/dd/yyyy"/>
 		<transys:textcolumn headerText="Customer" dataField="invoice.companyName" />
 		<transys:textcolumn headerText="Pay. #" width="60px" dataField="id" />
-		<transys:textcolumn headerText="Pay. Method" width="100px" dataField="paymentMethod.method" />
+		<transys:textcolumn headerText="Pay. Method" width="110px" dataField="paymentMethod.method" />
 		<transys:textcolumn headerText="Pay. Dt" width="70px" dataField="paymentDate" dataFormat="MM/dd/yyyy"/>
 		<transys:textcolumn headerText="Amt. Paid" width="68px" dataField="amountPaid" type="java.math.BigDecimal" dataFormat="#####0.00"/>
 		<transys:textcolumn headerText="Check #" dataField="checkNum" />
 		<transys:textcolumn headerText="CC Ref. #" dataField="ccReferenceNum" />
 		<transys:textcolumn headerText="CC Name" dataField="ccName" />
 		<transys:textcolumn headerText="CC #" dataField="ccNumber" />
+		<transys:textcolumn headerText="Notes" dataField="notes" />
 		<transys:textcolumn headerText="CC Exp. Dt" width="70px" dataField="ccExpDate" dataFormat="MM/dd/yyyy"/>
 		<transys:imagecolumn width="32px" headerText="PDF" linkUrl="${ctx}/invoice/downloadInvoicePayment.do?id={id}&type=pdf" imageSrc="${pdfImage}" HAlign="center" title="PDF"/>
 		<transys:imagecolumn width="32px" headerText="CSV" linkUrl="${ctx}/invoice/downloadInvoicePayment.do?id={id}&type=csv" imageSrc="${csvImage}" HAlign="center" title="CSV"/>
