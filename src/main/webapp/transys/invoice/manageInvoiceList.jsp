@@ -232,7 +232,7 @@ function processMakeInvoicePayment(invoiceId) {
 		<tr>
 			<td>
 				<a href="createInvoiceMain.do">
-					<img src="${addImage}" title="Create Invoice" class="toolbarButton" border="0">
+					<img src="${addNewImage}" title="Create Invoice" class="toolbarButton" border="0">
 				</a>
 			</td>
 			<td width="90">

@@ -169,7 +169,7 @@ function loadInvoicePayment(data) {
 		<tr>
 			<td>
 				<a href="javascript:;" onclick="processInvoicePaymentCreate();">
-					<img src="${addImage}" title="Make Invoice Payment" class="toolbarButton" border="0">
+					<img src="${addNewImage}" title="Make Invoice Payment" class="toolbarButton" border="0">
 				</a>
 			</td>
 			<td width="90">
