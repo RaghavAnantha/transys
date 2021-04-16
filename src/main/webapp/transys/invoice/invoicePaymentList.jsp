@@ -166,7 +166,6 @@ function loadInvoicePayment(data) {
 </form:form>
 <table width="100%" class="tab-color">
 	<tbody>
-		<tr><td/></tr>
 		<tr>
 			<td>
 				<a href="javascript:;" onclick="processInvoicePaymentCreate();">

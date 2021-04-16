@@ -229,7 +229,6 @@ function processMakeInvoicePayment(invoiceId) {
 </form:form>
 <table width="100%" class="tab-color">
 	<tbody>
-		<tr><td/></tr>
 		<tr>
 			<td>
 				<a href="createInvoiceMain.do">
