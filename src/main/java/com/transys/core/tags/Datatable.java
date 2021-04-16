@@ -62,6 +62,9 @@ public final class Datatable extends BodyTagSupport {
 	private boolean exportCsv;
 	private boolean exportPrint;
 	private boolean displayPrint;
+	private boolean drawToolbar = true;
+	private boolean drawHeaderRow = true;
+	private boolean drawPaging = true;
 	
 	private String insertableParams = StringUtils.EMPTY;
 	private String editableParams = StringUtils.EMPTY;
@@ -357,6 +360,30 @@ public final class Datatable extends BodyTagSupport {
 	 */
 	public void setDisplayPrint(boolean displayPrint) {
 		this.displayPrint = displayPrint;
+	}
+
+	public boolean isDrawToolbar() {
+		return drawToolbar;
+	}
+
+	public void setDrawToolbar(boolean drawToolbar) {
+		this.drawToolbar = drawToolbar;
+	}
+
+	public boolean isDrawHeaderRow() {
+		return drawHeaderRow;
+	}
+
+	public void setDrawHeaderRow(boolean drawHeaderRow) {
+		this.drawHeaderRow = drawHeaderRow;
+	}
+
+	public boolean isDrawPaging() {
+		return drawPaging;
+	}
+
+	public void setDrawPaging(boolean drawPaging) {
+		this.drawPaging = drawPaging;
 	}
 
 	/*------------------------------------------------------------------------------
@@ -774,15 +801,20 @@ public final class Datatable extends BodyTagSupport {
 		//AuthenticationService authenticationService = (AuthenticationService)SpringAppContext.getBean("authenticationService");
 		
 		try {
-			drawToolbar();
-			drawTableStart();
-			drawHeaderRow();
-			
-			if (baseObjects ==null || baseObjects.size() == 0) {
-				drawEmptyRow();
+			if (isDrawToolbar()) {
+				drawToolbar();
 			}
-			else {
-				objOut = this.pageContext.getOut();
+			
+			drawTableStart();
+			
+			if (isDrawHeaderRow()) {
+				drawHeaderRow();
+			}
+			
+			objOut = this.pageContext.getOut();
+			if (baseObjects == null || baseObjects.size() == 0) {
+				drawEmptyRow();
+			} else {
 				if (editable) {
 					String url = "/"+urlContext+"/edit.do";
 					//if (authenticationService.hasUserPermission(user, url)) {
@@ -960,7 +992,7 @@ public final class Datatable extends BodyTagSupport {
 					objCol = null;
 					objOut.println("</tr>");
 				}
-				if (this.searchCriteria != null) {
+				if (isDrawPaging() && this.searchCriteria != null) {
 					objOut.println("<tr>");
 					objOut.println("<td colspan=" + this.columns.size() + ">");
 					objOut.println("<span class=\"paging\">");
@@ -973,14 +1005,13 @@ public final class Datatable extends BodyTagSupport {
 				String paddingTr = "<tr>" + paddingTd + "</tr>";
 				objOut.println(paddingTr);
 				objOut.println(paddingTr);
-				
-				objOut.println("</table>");
 			}
+			
+			drawTableEnd(objOut);
 		} catch (IOException IOEx) {
 			IOEx.printStackTrace();
 			log.warn("Unable to write grid contents :"+IOEx);
-			throw new JspException("Error: Unable to write grid contents!",
-					IOEx);
+			throw new JspException("Error: Unable to write grid contents!", IOEx);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			log.warn("Unknown error occured!"+ex);
@@ -992,8 +1023,16 @@ public final class Datatable extends BodyTagSupport {
 				objOut = null;
 			if (iterCol != null)
 				iterCol = null;
-			if (columns!=null)
+			if (columns != null)
 				columns.clear();
+		}
+	}
+	
+	private void drawTableEnd(JspWriter objOut) throws JspException {
+		try {
+			objOut.println("</table>");
+		} catch (IOException IOEx) {
+			throw new JspException("Error: Exception while writing to client!", IOEx);
 		}
 	}
 
@@ -1016,13 +1055,12 @@ public final class Datatable extends BodyTagSupport {
 					objOut.println(">&nbsp;</td>");
 				objOut.println("</tr>");
 			}
-			objOut.println("</table>");
 		} catch (IOException IOEx) {
-			throw new JspException("Error: Exception while writing to client!",
-					IOEx);
+			throw new JspException("Error: Exception while writing to client!", IOEx);
 		} finally {
-			if (objOut != null)
+			if (objOut != null) {
 				objOut = null;
+			}
 		}
 	}
 
@@ -1031,10 +1069,11 @@ public final class Datatable extends BodyTagSupport {
 
 		objBuf = new StringBuffer();
 		objBuf.append("<table style=\"cursor:pointer\"");
-		if (this.cssClass != null)
+		if (this.cssClass != null) {
 			objBuf.append(" class=\"" + this.cssClass + "\"");
-		else
+		} else {
 			objBuf.append(" class=\"datagrid\"");
+		}
 		objBuf.append(" width=\"" + this.width + "%\"");
 		objBuf.append(" cellspacing=" + this.cellSpacing);
 		objBuf.append(" cellpadding=" + this.cellPadding);
@@ -1050,8 +1089,7 @@ public final class Datatable extends BodyTagSupport {
 		try {
 			this.pageContext.getOut().println(objBuf.toString());
 		} catch (IOException IOEx) {
-			throw new JspException("Error: Error while writing to client!",
-					IOEx);
+			throw new JspException("Error: Error while writing to client!", IOEx);
 		}
 		objBuf = null;
 	}
@@ -1070,7 +1108,7 @@ public final class Datatable extends BodyTagSupport {
 			objOut = this.pageContext.getOut();
 			objOut.println("<tr>");
 			if (multipleDelete || multipleSelect) {
-				objOut.println("<th width=\"30\"><input type=\"checkbox\" id=\"checkId\" onclick=\"javascript:checkUncheck(this,'id');\" /></th>");
+				objOut.println("<th width=\"30\"><input type=\"checkbox\" id=\"checkId\" onclick=\"javascript:checkUncheck(this, 'id');\" /></th>");
 				additionalColumn++;
 			}
 			
@@ -1080,7 +1118,7 @@ public final class Datatable extends BodyTagSupport {
 				objCol = (IColumnTag) iterCol.next();
 				objCol.renderHeader();
 				
-				//populating columnPropertyList with IColumnTag to be exported to jasper report
+				// Populating columnPropertyList with IColumnTag to be exported to jasper report
 				if ((objCol instanceof ImageColumn) || (objCol instanceof AnchorColumn)) {
 					if (StringUtils.isEmpty(objCol.getDataField())) {
 						continue;
@@ -1222,7 +1260,6 @@ public final class Datatable extends BodyTagSupport {
 			if (objOut != null)
 				objOut = null;
 		}
-
 	}
 	
 	private void drawTablePaging() throws JspException {

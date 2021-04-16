@@ -80,6 +80,8 @@ public class BaseController {
 	
 	protected static final String MANAGE_DOCS_CTX = "manageDocs";
 	
+	protected static final String searchCriteriaKey = "searchCriteria";
+	
 	@Autowired
 	protected DynamicReportService dynamicReportService;
 	//@Autowired
@@ -259,7 +261,7 @@ public class BaseController {
 	}
 	
 	protected SearchCriteria getSearchCriteria(HttpServletRequest request) {
-		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
+		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute(searchCriteriaKey);
 		return criteria;
 	}
 
@@ -449,5 +451,12 @@ public class BaseController {
 				+ "\n" + "Bedford Park, IL 60638";
 		params.put("rdsBillingAddress", rdsBillingAddress);
 		params.put("rdsContact", "773-722-4444");
+	}
+	
+	protected void resetSearchCriteria(HttpServletRequest request) {
+		SearchCriteria searchCriteria = getSearchCriteria(request);
+		if (searchCriteria != null && searchCriteria.getSearchMap() != null) {
+			searchCriteria.getSearchMap().clear();
+		}
 	}
 }

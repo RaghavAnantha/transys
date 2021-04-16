@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -15,8 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import com.transys.controller.report.ReportController;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.transys.core.util.DateUtil;
 import com.transys.core.util.FormatUtil;
@@ -40,7 +40,7 @@ import com.transys.service.verizon.VerizonRevealService;
 
 @Controller
 @RequestMapping("/orderScheduler")
-public class OrderScheduleController extends ReportController {
+public class OrderScheduleController extends BaseController {
 	protected static int MAX_DISPLAY_ORDERS = 40;
 	protected static int MAX_DISPLAY_VEHICLES = 30;
 	
@@ -52,41 +52,46 @@ public class OrderScheduleController extends ReportController {
 	
 	public OrderScheduleController(){	
 		setUrlContext("orderScheduler");
-		setReportName(StringUtils.EMPTY);
 		setMessageCtx("orderSchedulerSearch");
 	}
 	
-	@Override
+	@RequestMapping(method = RequestMethod.GET, value = "/main.do")
+	public String displayMain(ModelMap model, HttpServletRequest request) {
+		resetSearchCriteria(request);
+		
+		return performSearch(model, request);
+	}
+	
 	protected void setupList(ModelMap model, HttpServletRequest request) {
-		super.setupList(model, request);
+		populateSearchCriteria(request, request.getParameterMap());
+		addCtx(model);
 		
 		List<DeliveryAddressVO> deliveryAddressVOList = ModelUtil.retrieveOrderDeliveryAddresses(genericDAO);
 		model.addAttribute("deliveryAddresses", deliveryAddressVOList);
 	}
 	
-	@Override
-	protected void processDisplayMain(ModelMap model, HttpServletRequest request, SearchCriteria searchCriteria) {
-		performSearch(model, request, null);
+	@RequestMapping(method = {RequestMethod.GET, RequestMethod.POST}, value = "/search.do")
+	public String search(ModelMap model, HttpServletRequest request, HttpServletResponse response) {
+		return performSearch(model, request);
 	}
 	
-	@Override
-	protected List<?> performSearch(ModelMap model, HttpServletRequest request, SearchCriteria criteria, Map<String, Object> params) {
-		performSearch(model, request, criteria);
-		return null;
-	}
-	
-	private void performSearch(ModelMap model, HttpServletRequest request, SearchCriteria criteria) {
-		List<DeliveryAddressVO> deliveryOrderAddressList = retrieveDeliveryOrderAddress(criteria, request);
+	private String performSearch(ModelMap model, HttpServletRequest request) {
+		setupList(model, request);
+		SearchCriteria searchCriteria = getSearchCriteria(request);
+		
+		List<DeliveryAddressVO> deliveryOrderAddressList = retrieveDeliveryOrderAddress(searchCriteria, request);
 		String deliveryOrderAddressListJson = JsonUtil.toJson(deliveryOrderAddressList);
 		model.addAttribute("deliveryOrderAddressList", deliveryOrderAddressListJson);
 		
-		List<DeliveryAddressVO> pickupOrderAddressList = retrievePickupOrderAddress(criteria, request);
+		List<DeliveryAddressVO> pickupOrderAddressList = retrievePickupOrderAddress(searchCriteria, request);
 		String pickupOrderAddressListJson = JsonUtil.toJson(pickupOrderAddressList);
 		model.addAttribute("pickupOrderAddressList", pickupOrderAddressListJson);
 		
 		List<VehicleLocationVO> vehicleLocationList = retrieveVehicleLocations();
 		String vehicleLocationListJson = JsonUtil.toJson(vehicleLocationList);
 		model.addAttribute("vehicleLocationList", vehicleLocationListJson);
+		
+		return urlContext + "/list";
 	}
 	
 	private List<DeliveryAddressVO> retrieveDeliveryOrderAddress(SearchCriteria criteria, HttpServletRequest request) {
@@ -214,49 +219,4 @@ public class OrderScheduleController extends ReportController {
 		vehicleLocationVO.setSpeed(multipleVehicleLocationVO.getSpeed());
 		vehicleLocationVO.setUpdateUTC(multipleVehicleLocationVO.getUpdateUTC());
 	}
-	
-	/*
-	private List<String> retrieveDeliveryOrderAddressGeocode() {
-		Date today = new Date();
-		String todayStr = DateUtil.formatToDbDate(today);
-		String deliveryAddressQuery = "select obj.deliveryAddress from Order obj where obj.deleteFlag='1'"
-				+ " and obj.deliveryDate = '" + todayStr + "'";
-		List<DeliveryAddress> deliveryAddressList = genericDAO.executeSimpleQuery(deliveryAddressQuery);
-		
-		List<String> deliveryAddressGeocodeList = new ArrayList<String>();
-		String latLng = StringUtils.EMPTY;
-		for (DeliveryAddress aDeliveryAddress : deliveryAddressList) {
-			latLng =  mapService.getGeocode(aDeliveryAddress.getFullDeliveryAddress());
-			deliveryAddressGeocodeList.add(latLng);
-		}
-		return deliveryAddressGeocodeList;
-	}
-	
-	private List<String> retrievePickupOrderAddressGeocode() {
-		String deliveryAddressQuery = "select obj.deliveryAddress from Order obj where obj.deleteFlag='1'"
-				+ " and obj.orderStatus.status = 'Pick Up'";
-		List<DeliveryAddress> pickupAddressList = genericDAO.executeSimpleQuery(deliveryAddressQuery);
-		
-		List<String> pickupAddressGeocodeList = new ArrayList<String>();
-		String latLng = StringUtils.EMPTY;
-		for (DeliveryAddress aPickupAddress : pickupAddressList.subList(0, 10)) {
-			latLng =  mapService.getGeocode(aPickupAddress.getFullDeliveryAddress());
-			pickupAddressGeocodeList.add(latLng);
-		}
-		return pickupAddressGeocodeList;
-	}
-	
-	private List<String> retrieveVehicleLocationsGeocode() { 
-		List<MultipleVehicleLocationVO> vehicleLocationList = verizonRevealService.getVehicleLocation(Arrays.asList(new String[]{"2", "6", "11", "20", "21", "22", "23", "33", "34", "124"}));
-		
-		List<String> vehicleLocationGeocodeList = new ArrayList<String>();
-		String latLng = StringUtils.EMPTY;
-		for (MultipleVehicleLocationVO aMultipleVehicleLocationVO : vehicleLocationList) {
-			latLng = aMultipleVehicleLocationVO.getGeocode();
-			if (StringUtils.isNotEmpty(latLng)) {
-				vehicleLocationGeocodeList.add(latLng);
-			}
-		}
-		return vehicleLocationGeocodeList;
-	}*/
 }

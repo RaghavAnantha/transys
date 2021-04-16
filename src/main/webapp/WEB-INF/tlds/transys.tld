@@ -75,6 +75,21 @@
 			<type>com.transys.model.SearchCriteria</type>
 		</attribute>
 		<attribute>
+            <name>drawToolbar</name>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.Boolean</type>
+        </attribute>
+        <attribute>
+            <name>drawHeaderRow</name>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.Boolean</type>
+        </attribute>
+        <attribute>
+            <name>drawPaging</name>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.Boolean</type>
+        </attribute>
+		<attribute>
             <name>insertable</name>
             <rtexprvalue>true</rtexprvalue>
             <type>java.lang.Boolean</type>
