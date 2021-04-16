@@ -52,6 +52,9 @@ public class MapServiceImpl extends BaseService implements MapService {
 		}
 		
 		String latLng = findLatLng(address);
+		if (StringUtils.isEmpty(latLng)) {
+			return null;
+		}
 		
 		Geocode geocode = new Geocode();
 		geocode.setAddress(address);

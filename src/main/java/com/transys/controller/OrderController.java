@@ -619,9 +619,15 @@ public class OrderController extends CRUDController<Order> {
 		return dropOffSaveSuccess(request, entity, model);
 	}
 	
-	private Geocode saveGeocode(String address, HttpServletRequest request) {
-		if (StringUtils.isEmpty(address)) {
+	private Geocode saveGeocode(Order entity, HttpServletRequest request) {
+		if (entity.getDeliveryAddress() == null || entity.getDeliveryAddress().getId() == null) {
 			return null;
+		}
+		
+		String address = entity.getFullDeliveryAddress();
+		if (StringUtils.isEmpty(address)) {
+			DeliveryAddress delAddress = genericDAO.getById(DeliveryAddress.class, entity.getDeliveryAddress().getId());
+			address = delAddress.getFullDeliveryAddress();
 		}
 		
 		return mapService.saveGeocode(address, request);
@@ -1709,7 +1715,7 @@ public class OrderController extends CRUDController<Order> {
 		
 		updateIfPermitsChanged(originallyAssignedPermits, permitList, modifiedBy);
 		
-		saveGeocode(entity.getFullDeliveryAddress(), request);
+		saveGeocode(entity, request);
 		
 		cleanUp(request);
 		
