@@ -600,8 +600,6 @@ public class OrderController extends CRUDController<Order> {
 			entity.setOrderStatus(orderStatus);
 			
 			updateDumpsterStatus(entity.getDumpster().getId(), DumpsterStatus.DUMPSTER_STATUS_DROPPED_OFF, modifiedBy);
-		
-			saveGeocode(entity.getFullDeliveryAddress(), request);
 		} else {
 			auditMsg = "Order Drop Off details updated";
 			
@@ -622,6 +620,10 @@ public class OrderController extends CRUDController<Order> {
 	}
 	
 	private Geocode saveGeocode(String address, HttpServletRequest request) {
+		if (StringUtils.isEmpty(address)) {
+			return null;
+		}
+		
 		return mapService.saveGeocode(address, request);
 	}
 	
@@ -1706,6 +1708,8 @@ public class OrderController extends CRUDController<Order> {
 		}
 		
 		updateIfPermitsChanged(originallyAssignedPermits, permitList, modifiedBy);
+		
+		saveGeocode(entity.getFullDeliveryAddress(), request);
 		
 		cleanUp(request);
 		

@@ -30,13 +30,22 @@ public class MapServiceImpl extends BaseService implements MapService {
 	
 	@Override
 	public Geocode retrieveGeocode(String address, HttpServletRequest request) {
+		if (StringUtils.isEmpty(address)) {
+			return null;
+		}
+		
 		log.info("Now retrieving Geocode");
 		return saveGeocode(address, request);
 	}
 	
 	@Override
 	public Geocode saveGeocode(String address, HttpServletRequest request) {
-		String query = "select obj from Geocode obj where address='" + address + "'";
+		if (StringUtils.isEmpty(address)) {
+			return null;
+		}
+		
+		String query = "select obj from Geocode obj where obj.deleteFlag='1'"
+				+ " and obj.address='" + address + "'";
 		List<Geocode> geocodeList = genericDAO.executeSimpleQuery(query);
 		if (geocodeList != null && !geocodeList.isEmpty()) {
 			return geocodeList.get(0);
@@ -55,6 +64,10 @@ public class MapServiceImpl extends BaseService implements MapService {
 	}
 	
 	private String findLatLng(String address) {
+		if (StringUtils.isEmpty(address)) {
+			return StringUtils.EMPTY;
+		}
+		
 		GeocodingResult[] results;
 		String latLngStr = StringUtils.EMPTY;
 		try {

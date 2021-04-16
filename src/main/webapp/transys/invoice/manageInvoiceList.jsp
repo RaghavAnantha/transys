@@ -255,7 +255,7 @@ function processMakeInvoicePayment(invoiceId) {
 		editable="false" cancellable="false" insertable="false" baseObjects="${list}"
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
 		pagingLink="manageInvoiceSearch.do" multipleSelect="false" searcheable="false"
-		exportPdf="false" exportXls="false" dataQualifier="manageInvoice">
+		exportPdf="false" exportXls="false" drawToolbar="false" dataQualifier="manageInvoice">
 		<transys:textcolumn headerText="Inv.#" dataField="id" width="55px"/>
 		<transys:textcolumn headerText="Inv. Date" width="70px" dataField="invoiceDate" dataFormat="MM/dd/yyyy"/>
 		<transys:textcolumn headerText="Customer" dataField="companyName" />

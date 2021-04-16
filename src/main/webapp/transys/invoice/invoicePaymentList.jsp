@@ -192,7 +192,7 @@ function loadInvoicePayment(data) {
 		editable="false" cancellable="false" insertable="false" baseObjects="${list}"
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
 		pagingLink="invoicePaymentSearch.do" multipleSelect="false" searcheable="false"
-		exportPdf="false" exportXls="false" dataQualifier="invoicePayment">
+		exportPdf="false" exportXls="false" drawToolbar="false" dataQualifier="invoicePayment">
 		<transys:textcolumn headerText="Inv. #" dataField="invoice.id" width="55px"/>
 		<transys:textcolumn headerText="Inv. Dt" width="70px" dataField="invoice.invoiceDate" dataFormat="MM/dd/yyyy"/>
 		<transys:textcolumn headerText="Customer" dataField="invoice.companyName" />
