@@ -93,7 +93,7 @@ function loadInvoicePayment(data) {
 	</jsp:include>
 	<table id="form-table" class="table">
 		<tr>
-			<td class="form-left">Customer<span class="errorMessage">*</span></td>
+			<td class="form-left">Customer<span class="errorMessage"></span></td>
 			<td class="wide">
 				<select class="flat form-control input-sm" id="invoicePaymentCustomerId" name="invoicePaymentCustomerId" style="width:175px !important">
 					<option value="">-----Please Select-----</option>
@@ -106,7 +106,7 @@ function loadInvoicePayment(data) {
 					</c:forEach>
 				</select>
 			</td>
-			<td class="form-left">Invoice #<span class="errorMessage">*</span></td>
+			<td class="form-left">Invoice #<span class="errorMessage"></span></td>
 			<td class="wide">
 				<!-- 
 				<select class="flat form-control input-sm" id="invoicePaymentInvoiceNo" name="invoicePaymentInvoiceNo" style="width:175px !important">
@@ -126,31 +126,31 @@ function loadInvoicePayment(data) {
 			<td colspan=10></td>
 		</tr>
 		<tr>
-			<td class="form-left">Payment Date From<span class="errorMessage">*</span></td>
+			<td class="form-left">Payment Date From<span class="errorMessage"></span></td>
 			<td>
 				<input class="flat" id="datepicker7" name="invoicePaymentDateFrom" value="${sessionScope.searchCriteria.searchMap['invoicePaymentDateFrom']}" style="width: 175px" />
 			</td>
-			<td class="form-left">Payment Date To<span class="errorMessage">*</span></td>
+			<td class="form-left">Payment Date To<span class="errorMessage"></span></td>
 			<td>
 				<input class="flat" id="datepicker8" name="invoicePaymentDateTo" value="${sessionScope.searchCriteria.searchMap['invoicePaymentDateTo']}" style="width: 175px" />
 			</td>
 		</tr>
 		<tr>
-			<td class="form-left">Invoice Date From<span class="errorMessage">*</span></td>
+			<td class="form-left">Invoice Date From<span class="errorMessage"></span></td>
 			<td>
 				<input class="flat" id="datepicker9" name="invoicePaymentInvoiceDateFrom" value="${sessionScope.searchCriteria.searchMap['invoicePaymentInvoiceDateFrom']}" style="width: 175px" />
 			</td>
-			<td class="form-left">Invoice Date To<span class="errorMessage">*</span></td>
+			<td class="form-left">Invoice Date To<span class="errorMessage"></span></td>
 			<td>
 				<input class="flat" id="datepicker10" name="invoicePaymentInvoiceDateTo" value="${sessionScope.searchCriteria.searchMap['invoicePaymentInvoiceDateTo']}" style="width: 175px" />
 			</td>
 		</tr>
 		<tr>
-			<td class="form-left">Order Date From<span class="errorMessage">*</span></td>
+			<td class="form-left">Order Date From<span class="errorMessage"></span></td>
 			<td>
 				<input class="flat" id="datepicker11" name="invoicePaymentOrderDateFrom" value="${sessionScope.searchCriteria.searchMap['invoicePaymentOrderDateFrom']}" style="width: 175px" />
 			</td>
-			<td class="form-left">Order Date To<span class="errorMessage">*</span></td>
+			<td class="form-left">Order Date To<span class="errorMessage"></span></td>
 			<td>
 				<input class="flat" id="datepicker12" name="invoicePaymentOrderDateTo" value="${sessionScope.searchCriteria.searchMap['invoicePaymentOrderDateTo']}" style="width: 175px" />
 			</td>

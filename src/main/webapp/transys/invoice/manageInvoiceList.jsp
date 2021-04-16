@@ -133,7 +133,7 @@ function processMakeInvoicePayment(invoiceId) {
 	</jsp:include>
 	<table id="form-table" class="table">
 		<tr>
-			<td class="form-left">Customer<span class="errorMessage">*</span></td>
+			<td class="form-left">Customer<span class="errorMessage"></span></td>
 			<td class="wide">
 				<select class="flat form-control input-sm" id="manageInvoiceCustomerId" name="manageInvoiceCustomerId" style="width:175px !important"
 					onChange="return handleManageInvoiceCustomerChange();">
@@ -199,21 +199,21 @@ function processMakeInvoicePayment(invoiceId) {
 			</td>
 		</tr>
 		<tr>
-			<td class="form-left">Invoice Date From<span class="errorMessage">*</span></td>
+			<td class="form-left">Invoice Date From<span class="errorMessage"></span></td>
 			<td>
 				<input class="flat" id="datepicker5" name="manageInvoiceInvoiceDateFrom" value="${sessionScope.searchCriteria.searchMap['manageInvoiceInvoiceDateFrom']}" style="width: 175px" />
 			</td>
-			<td class="form-left">Invoice Date To<span class="errorMessage">*</span></td>
+			<td class="form-left">Invoice Date To<span class="errorMessage"></span></td>
 			<td>
 				<input class="flat" id="datepicker6" name="manageInvoiceInvoiceDateTo" value="${sessionScope.searchCriteria.searchMap['manageInvoiceInvoiceDateTo']}" style="width: 175px" />
 			</td>
 		</tr>
 		<tr>
-			<td class="form-left">Order Date From<span class="errorMessage">*</span></td>
+			<td class="form-left">Order Date From<span class="errorMessage"></span></td>
 			<td>
 				<input class="flat" id="datepicker3" name="manageInvoiceOrderDateFrom" value="${sessionScope.searchCriteria.searchMap['manageInvoiceOrderDateFrom']}" style="width: 175px" />
 			</td>
-			<td class="form-left">Order Date To<span class="errorMessage">*</span></td>
+			<td class="form-left">Order Date To<span class="errorMessage"></span></td>
 			<td>
 				<input class="flat" id="datepicker4" name="manageInvoiceOrderDateTo" value="${sessionScope.searchCriteria.searchMap['manageInvoiceOrderDateTo']}" style="width: 175px" />
 			</td>
@@ -259,7 +259,7 @@ function processMakeInvoicePayment(invoiceId) {
 		<transys:textcolumn headerText="Inv.#" dataField="id" width="55px"/>
 		<transys:textcolumn headerText="Inv. Date" width="70px" dataField="invoiceDate" dataFormat="MM/dd/yyyy"/>
 		<transys:textcolumn headerText="Customer" dataField="companyName" />
-		<transys:textcolumn headerText="Contact" dataField="contactName" width="100px"/>
+		<transys:textcolumn headerText="Contact" dataField="contactName" width="150px"/>
 		<transys:textcolumn headerText="Phone" dataField="formattedPhone1" width="100px"/>
 		<transys:textcolumn headerText="Ord. Dt. Fr." width="73px" dataField="orderDateFrom" dataFormat="MM/dd/yyyy"/>
 		<transys:textcolumn headerText="Ord. Dt. To" width="73px" dataField="orderDateTo" dataFormat="MM/dd/yyyy"/>
