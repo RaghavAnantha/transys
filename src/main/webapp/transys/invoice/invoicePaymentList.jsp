@@ -29,7 +29,7 @@ function validateInvoicePaymentSearchForm() {
 function validateInvoicePaymentSearchMissingData() {
 	var missingData = "";
 	
-	var invoicePaymentSearchForm = getInvoicePaymentSearchForm();;
+	var invoicePaymentSearchForm = getInvoicePaymentSearchForm();
 	
 	if (invoicePaymentSearchForm.find('#invoicePaymentInvoiceNo').val() != ""
 			|| invoicePaymentSearchForm.find('#invoicePaymentCustomerId').val() != "") {
@@ -81,6 +81,16 @@ function processInvoicePaymentCreate() {
 
 function loadInvoicePayment(data) {
 	$("#invoicePayment").html(data);
+}
+
+function getDGRowDetailsDataColSpan() {
+	return "15";
+}
+
+function addDGRowDetailsData(id, newTdId) {
+	$.get("invoicePaymentOrderDetails.do?paymentId=" + id, function(data) {
+		$("#" + newTdId).html(data);
+    });
 }
 </script>
 
@@ -187,7 +197,7 @@ function loadInvoicePayment(data) {
 	</tbody>
 </table>
 <form:form name="invoicePaymentServiceForm" id="invoicePaymentServiceForm" class="tab-color">
-	<transys:datatable urlContext="invoice" deletable="false"
+	<transys:datatable urlContext="invoice" expandable="true" deletable="false"
 		editable="false" cancellable="false" insertable="false" baseObjects="${list}"
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
 		pagingLink="invoicePaymentSearch.do" multipleSelect="false" searcheable="false"

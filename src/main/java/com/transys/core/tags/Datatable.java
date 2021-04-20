@@ -55,6 +55,7 @@ public final class Datatable extends BodyTagSupport {
 	private boolean itemPrintable;
 	private boolean multipleDelete;
 	private boolean multipleSelect;
+	private boolean expandable = false;
 	private boolean manageDocs;
 	private boolean exportPdf;
 	private boolean exportXls;
@@ -65,6 +66,8 @@ public final class Datatable extends BodyTagSupport {
 	private boolean drawToolbar = true;
 	private boolean drawHeaderRow = true;
 	private boolean drawPaging = true;
+	private boolean nested = false;
+	private boolean padBottom = true;
 	
 	private String insertableParams = StringUtils.EMPTY;
 	private String editableParams = StringUtils.EMPTY;
@@ -117,6 +120,30 @@ public final class Datatable extends BodyTagSupport {
 
 	public void setUrlContext(String urlContext) {
 		this.urlContext = urlContext;
+	}
+
+	public boolean isNested() {
+		return nested;
+	}
+
+	public void setNested(boolean nested) {
+		this.nested = nested;
+	}
+
+	public boolean isExpandable() {
+		return expandable;
+	}
+
+	public void setExpandable(boolean expandable) {
+		this.expandable = expandable;
+	}
+
+	public boolean isPadBottom() {
+		return padBottom;
+	}
+
+	public void setPadBottom(boolean padBottom) {
+		this.padBottom = padBottom;
 	}
 
 	/**
@@ -789,6 +816,7 @@ public final class Datatable extends BodyTagSupport {
 		JspWriter objOut = null;
 		Iterator iterCol = null;
 		
+		ImageColumn expandableColumn = null;
 		ImageColumn editColumn = null;
 		ImageColumn cancelColumn = null;
 		ImageColumn deleteColumn = null;
@@ -815,6 +843,24 @@ public final class Datatable extends BodyTagSupport {
 			if (baseObjects == null || baseObjects.size() == 0) {
 				drawEmptyRow();
 			} else {
+				if (expandable) {
+					//String url = "/"+urlContext+"/showDetails.do";
+					//if (authenticationService.hasUserPermission(user, url)) {
+						expandableColumn = new ImageColumn();
+						expandableColumn.setParent(this);
+						expandableColumn.setId("show_details_{id}");
+						expandableColumn.setImageSrc("fas fa-plus");
+						expandableColumn.setImageBorder(0);
+						expandableColumn.setWidth("30");
+						expandableColumn.setPageContext(this.pageContext);
+						expandableColumn.cssClass = "centerImage";
+						expandableColumn.setAlterText("Show Details");
+						expandableColumn.setTitle("Show Details");
+						expandableColumn.setLinkUrl("javascript:processDGRowShowDetails('{id}');");
+						expandableColumn.setFontAwesomeDGColIconClass("fontAwesomeDGColIconSmall");
+						this.columns.add(0, expandableColumn);
+					//}
+				}
 				if (editable) {
 					String url = "/"+urlContext+"/edit.do";
 					//if (authenticationService.hasUserPermission(user, url)) {
@@ -1001,10 +1047,12 @@ public final class Datatable extends BodyTagSupport {
 					objOut.println("</td>");
 					objOut.println("</tr>");
 				}
-				String paddingTd = "<td colspan=" + this.columns.size() + " class=\"tab-color\"/>";
-				String paddingTr = "<tr>" + paddingTd + "</tr>";
-				objOut.println(paddingTr);
-				objOut.println(paddingTr);
+				if (isPadBottom()) {
+					String paddingTd = "<td colspan=" + this.columns.size() + " class=\"tab-color\"/>";
+					String paddingTr = "<tr>" + paddingTd + "</tr>";
+					objOut.println(paddingTr);
+					objOut.println(paddingTr);
+				}
 			}
 			
 			drawTableEnd(objOut);
@@ -1065,6 +1113,11 @@ public final class Datatable extends BodyTagSupport {
 	}
 
 	private void drawTableStart() throws JspException {
+		String dataGridClass = "datagrid";
+		if (isNested()) {
+			dataGridClass = "datagridNested";
+		}
+		
 		StringBuffer objBuf = null;
 
 		objBuf = new StringBuffer();
@@ -1072,7 +1125,7 @@ public final class Datatable extends BodyTagSupport {
 		if (this.cssClass != null) {
 			objBuf.append(" class=\"" + this.cssClass + "\"");
 		} else {
-			objBuf.append(" class=\"datagrid\"");
+			objBuf.append(" class=\"" + dataGridClass + "\"");
 		}
 		objBuf.append(" width=\"" + this.width + "%\"");
 		objBuf.append(" cellspacing=" + this.cellSpacing);
@@ -1107,6 +1160,13 @@ public final class Datatable extends BodyTagSupport {
 		try {
 			objOut = this.pageContext.getOut();
 			objOut.println("<tr>");
+			if (expandable) {
+				//String url = "/"+urlContext+"/showDetails.do";
+				//if (authenticationService.hasUserPermission(user, url)) {
+					objOut.println("<th width=\"30\">"+"DET"+"</th>");
+					additionalColumn++;
+				//}
+			}
 			if (multipleDelete || multipleSelect) {
 				objOut.println("<th width=\"30\"><input type=\"checkbox\" id=\"checkId\" onclick=\"javascript:checkUncheck(this, 'id');\" /></th>");
 				additionalColumn++;

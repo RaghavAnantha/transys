@@ -1,6 +1,5 @@
 package com.transys.model;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -14,6 +13,8 @@ import javax.persistence.Transient;
 import org.apache.commons.lang3.StringUtils;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+
+import com.transys.core.util.FormatUtil;
 
 @MappedSuperclass
 @SuppressWarnings("serial")
@@ -121,12 +122,12 @@ public abstract class AbstractBaseModel implements BaseModel {
 	
 	@Transient
 	public String getFormattedCreatedAt() {
-		SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
-		if (this.createdAt != null) {
-			return dateFormat.format(this.createdAt);
-		} else {
-			return StringUtils.EMPTY;
-		}
+		return FormatUtil.formatDate(getCreatedAt());
+	}
+	
+	@Transient
+	public String getFormattedModifiedAt() {
+		return FormatUtil.formatDate(getModifiedAt());
 	}
 	
 	public String getHasDocs() {

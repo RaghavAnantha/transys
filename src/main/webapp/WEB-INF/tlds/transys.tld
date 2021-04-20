@@ -171,6 +171,12 @@
 			<type>java.lang.Boolean</type>
 		</attribute>
 		<attribute>
+			<name>expandable</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>java.lang.Boolean</type>
+		</attribute>
+		<attribute>
 			<name>exportPdf</name>
 			<rtexprvalue>true</rtexprvalue>
 			<type>java.lang.Boolean</type>
@@ -230,6 +236,18 @@
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 			<elexprvalue>true</elexprvalue>
+			<type>java.lang.Boolean</type>
+		</attribute>
+		<attribute>
+			<name>nested</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>java.lang.Boolean</type>
+		</attribute>
+		<attribute>
+			<name>padBottom</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
 			<type>java.lang.Boolean</type>
 		</attribute>
 	</tag>
@@ -732,6 +750,11 @@
 			<name>fontAwesomeImg</name>
 			<rtexprvalue>true</rtexprvalue>
 			<type>java.lang.Boolean</type>
+		</attribute>
+		<attribute>
+			<name>id</name>
+			<rtexprvalue>true</rtexprvalue>
+			<type>java.lang.String</type>
 		</attribute>
 	</tag>
 	<tag>

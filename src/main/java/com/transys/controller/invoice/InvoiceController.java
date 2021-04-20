@@ -234,6 +234,16 @@ public class InvoiceController extends BaseController {
 		return processInvoicePaymentSearch(model, request);
 	}
 	
+	@RequestMapping(method = {RequestMethod.GET, RequestMethod.POST }, value = "/invoicePaymentOrderDetails.do")
+	public String invoicePaymentOrderDetails(ModelMap model, HttpServletRequest request,
+			@RequestParam("paymentId") Long paymentId) {
+		String query = "select obj from OrderPayment obj where 1=1"
+				+ " and invoicePaymentId=" + paymentId;
+		List<OrderPayment> orderPaymentList = genericDAO.executeSimpleQuery(query);
+		model.addAttribute("list", orderPaymentList);
+		return getUrlContext() + "/invoiceOrderPaymentList";
+	}
+	
 	private String processInvoicePaymentSearch(ModelMap model, HttpServletRequest request) {
 		setupInvoicePaymentList(model, request);
 		

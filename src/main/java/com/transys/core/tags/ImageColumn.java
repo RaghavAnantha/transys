@@ -23,7 +23,8 @@ public final class ImageColumn extends AbstractColumnTag {
     private String title;
     
     private Boolean fontAwesomeImg;
-
+    private String fontAwesomeDGColIconClass = "fontAwesomeDGColIcon";
+    
     public ImageColumn() {
 	super();
 	this.imageWidth = -1;
@@ -56,7 +57,15 @@ public final class ImageColumn extends AbstractColumnTag {
 	return this.target;
     }
 
-    public int getImageWidth() {
+    public String getFontAwesomeDGColIconClass() {
+		return fontAwesomeDGColIconClass;
+	}
+
+	public void setFontAwesomeDGColIconClass(String fontAwesomeDGColIconClass) {
+		this.fontAwesomeDGColIconClass = fontAwesomeDGColIconClass;
+	}
+
+	public int getImageWidth() {
 	return this.imageWidth;
     }
 
@@ -174,6 +183,7 @@ public final class ImageColumn extends AbstractColumnTag {
 	objRet.setTitle(this.title);
 	objRet.setAlterText(this.alterText);
 	objRet.setFontAwesomeImg(this.getFontAwesomeImg());
+	objRet.setFontAwesomeDGColIconClass(this.getFontAwesomeDGColIconClass());
 	return objRet;
     }
 
@@ -188,13 +198,18 @@ public final class ImageColumn extends AbstractColumnTag {
 	
 	if (BooleanUtils.isTrue(getFontAwesomeImg())) {
 		//objBuf.append("<i style=\"font-size:14px;\"");
-		objBuf.append("<i class=\"fontAwesomeDGColIcon ");
+		objBuf.append("<i class=\"" + getFontAwesomeDGColIconClass() + " ");
 	} else {
 		objBuf.append("<img src=\"");
 	}
 	
 	objBuf.append(this.imageSrc);
 	objBuf.append("\"");
+	
+	if (StringUtils.isNotEmpty(getId())) {
+		String resolvedId = resolveFields(getId());
+		objBuf.append(" id=\"" + resolvedId + "\" ");
+	}
 	
 	if (this.imageWidth != -1)
 	    objBuf.append(" width=" + this.imageWidth);

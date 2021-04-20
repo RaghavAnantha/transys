@@ -406,3 +406,29 @@ function verifyAndRemoveJasperPrint(ctx) {
 	}
 }
 
+function processDGRowShowDetails(id) {
+	var detailsImageId = "show_details_" + id;
+	var detailsImageElem = $("#" + detailsImageId);
+	
+	var currentRow = detailsImageElem.closest('tr');
+	var newTrId = detailsImageId + "_tr";
+	var newTdId = detailsImageId + "_td";
+	
+	var imgClass = detailsImageElem.attr('class');
+	if (imgClass.indexOf("plus") != -1) { 
+		imgClass = imgClass.replace("plus", "minus");
+		detailsImageElem.attr("class", imgClass);
+		
+		var newRowStr = "<tr id=\"" + newTrId + "\"><td></td><td colspan=\"" + getDGRowDetailsDataColSpan() + "\" id=\"" + newTdId + "\"></td></tr>";
+		$(newRowStr).insertAfter(currentRow);
+		
+		addDGRowDetailsData(id, newTdId);
+	} else { 
+		imgClass = imgClass.replace("minus", "plus");
+		detailsImageElem.attr("class", imgClass);
+		
+		$("#" + newTrId).remove();
+	}
+}
+
+
