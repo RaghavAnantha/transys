@@ -84,11 +84,11 @@ function loadInvoicePayment(data) {
 }
 
 function getDGRowDetailsDataColSpan() {
-	return "15";
+	return "16";
 }
 
 function addDGRowDetailsData(id, newTdId) {
-	$.get("invoicePaymentOrderDetails.do?paymentId=" + id, function(data) {
+	$.get("invoiceOrderPaymentDetails.do?invoicePaymentId=" + id, function(data) {
 		$("#" + newTdId).html(data);
     });
 }
@@ -197,7 +197,7 @@ function addDGRowDetailsData(id, newTdId) {
 	</tbody>
 </table>
 <form:form name="invoicePaymentServiceForm" id="invoicePaymentServiceForm" class="tab-color">
-	<transys:datatable urlContext="invoice" expandable="true" deletable="false"
+	<transys:datatable urlContext="invoice" expandable="true" expandableQualifier="invoicePayment" deletable="false"
 		editable="false" cancellable="false" insertable="false" baseObjects="${list}"
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
 		pagingLink="invoicePaymentSearch.do" multipleSelect="false" searcheable="false"
@@ -215,8 +215,9 @@ function addDGRowDetailsData(id, newTdId) {
 		<transys:textcolumn headerText="CC #" dataField="ccNumber" />
 		<transys:textcolumn headerText="CC Exp. Dt" width="70px" dataField="ccExpDate" dataFormat="MM/dd/yyyy"/>
 		<transys:textcolumn headerText="Notes" dataField="notes" />
-		<transys:imagecolumn width="32px" headerText="PDF" linkUrl="${ctx}/invoice/downloadInvoicePayment.do?id={id}&type=pdf" imageSrc="${pdfImage}" HAlign="center" title="PDF"/>
-		<transys:imagecolumn width="32px" headerText="CSV" linkUrl="${ctx}/invoice/downloadInvoicePayment.do?id={id}&type=csv" imageSrc="${csvImage}" HAlign="center" title="CSV"/>
+		<transys:anchorcolumn width="72px" headerText="Pay. Stmt." linkUrl="/invoice/downloadInvoicePaymentAll.do?invoicePaymentId={id}&type=pdf" linkText="Pay. Stmt."/>
+		<transys:imagecolumn width="32px" headerText="PDF" linkUrl="${ctx}/invoice/downloadInvoicePayment.do?invoicePaymentId={id}&type=pdf" imageSrc="${pdfImage}" HAlign="center" title="PDF"/>
+		<transys:imagecolumn width="32px" headerText="CSV" linkUrl="${ctx}/invoice/downloadInvoicePayment.do?invoicePaymentId={id}&type=csv" imageSrc="${csvImage}" HAlign="center" title="CSV"/>
 	</transys:datatable>
 	<%session.setAttribute("invoicePaymentColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
 </form:form>

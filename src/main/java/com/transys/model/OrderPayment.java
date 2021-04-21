@@ -138,6 +138,11 @@ public class OrderPayment extends AbstractBaseModel {
 		public void setInvoicePaymentId(Long invoicePaymentId) {
 			this.invoicePaymentId = invoicePaymentId;
 		}
+		
+		@Transient
+		public String getFormattedAmountPaid() {
+			return FormatUtil.formatFee(this.amountPaid);
+		}
 
 		@Transient
 		public String getFormattedPaymentDate() {

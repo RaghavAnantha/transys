@@ -76,6 +76,7 @@ public final class Datatable extends BodyTagSupport {
 	private String cancelableParams = StringUtils.EMPTY;
 	private String itemPrintableParams = StringUtils.EMPTY;
 	private String manageDocsParams = StringUtils.EMPTY;
+	private String expandableQualifier = StringUtils.EMPTY;
 	
 	private String cssClass = null;
 	private String bgColor = null;
@@ -136,6 +137,14 @@ public final class Datatable extends BodyTagSupport {
 
 	public void setExpandable(boolean expandable) {
 		this.expandable = expandable;
+	}
+
+	public String getExpandableQualifier() {
+		return expandableQualifier;
+	}
+
+	public void setExpandableQualifier(String expandableQualifier) {
+		this.expandableQualifier = expandableQualifier;
 	}
 
 	public boolean isPadBottom() {
@@ -848,7 +857,14 @@ public final class Datatable extends BodyTagSupport {
 					//if (authenticationService.hasUserPermission(user, url)) {
 						expandableColumn = new ImageColumn();
 						expandableColumn.setParent(this);
-						expandableColumn.setId("show_details_{id}");
+						
+						String expandableId = "show_";
+						if (StringUtils.isNotEmpty(getExpandableQualifier())) {
+							expandableId += (getExpandableQualifier() + "_");
+						}
+						expandableId += "details_{id}";
+						expandableColumn.setId(expandableId);
+						
 						expandableColumn.setImageSrc("fas fa-plus");
 						expandableColumn.setImageBorder(0);
 						expandableColumn.setWidth("30");
@@ -856,7 +872,10 @@ public final class Datatable extends BodyTagSupport {
 						expandableColumn.cssClass = "centerImage";
 						expandableColumn.setAlterText("Show Details");
 						expandableColumn.setTitle("Show Details");
-						expandableColumn.setLinkUrl("javascript:processDGRowShowDetails('{id}');");
+						
+						String linkUrl = "javascript:processDGRowShowDetails('{id}', '" + expandableId + "');";
+						expandableColumn.setLinkUrl(linkUrl);
+						
 						expandableColumn.setFontAwesomeDGColIconClass("fontAwesomeDGColIconSmall");
 						this.columns.add(0, expandableColumn);
 					//}

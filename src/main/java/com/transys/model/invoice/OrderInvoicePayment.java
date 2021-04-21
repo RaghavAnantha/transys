@@ -3,6 +3,7 @@ package com.transys.model.invoice;
 import java.math.BigDecimal;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,6 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 import com.transys.core.util.FormatUtil;
 
 import com.transys.model.AbstractBaseModel;
+import com.transys.model.OrderPayment;
 import com.transys.model.PaymentMethodType;
 
 @Entity
@@ -55,6 +57,9 @@ public class OrderInvoicePayment extends AbstractBaseModel {
 	
 	@Column(name="notes")
 	private String notes;
+	
+	@Transient
+	private List<OrderPayment> orderPaymentList;
 
 	public OrderInvoiceHeader getInvoice() {
 		return invoice;
@@ -164,5 +169,20 @@ public class OrderInvoicePayment extends AbstractBaseModel {
 	public String getInvoiceBalanceDueStr() {
 		BigDecimal invoiceBalanceDue = getInvoiceBalanceDue();
 		return (invoiceBalanceDue == null ? StringUtils.EMPTY : String.valueOf(invoiceBalanceDue));
+	}
+
+	@Transient
+	public List<OrderPayment> getOrderPaymentList() {
+		return orderPaymentList;
+	}
+
+	@Transient
+	public void setOrderPaymentList(List<OrderPayment> orderPaymentList) {
+		this.orderPaymentList = orderPaymentList;
+	}
+	
+	@Transient
+	public String getFormattedAmountPaid() {
+		return FormatUtil.formatFee(amountPaid);
 	}
 }

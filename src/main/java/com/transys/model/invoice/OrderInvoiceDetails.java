@@ -854,10 +854,15 @@ public class OrderInvoiceDetails extends AbstractBaseModel {
 	public void setPaymentCheckNum3(String paymentCheckNum3) {
 		this.paymentCheckNum3 = paymentCheckNum3;
 	}
-
+	
 	@Transient
 	public String getFormattedDeliveryDate() {
 		return FormatUtil.formatDate(getDeliveryDate());
+	}
+
+	@Transient
+	public String getFormattedOrderDate() {
+		return FormatUtil.formatDate(getOrderDate());
 	}
 	
 	@Transient
@@ -873,5 +878,17 @@ public class OrderInvoiceDetails extends AbstractBaseModel {
 	@Transient
 	public String getDeliveryAddressFullLine() {
 		return FormatUtil.formatAddress(getDeliveryAddressLine1(), getDeliveryAddressLine2());
+	}
+	
+	@Transient
+	public String getFullDeliveryAddress() {
+		return getFullDeliveryAddress(", "); 
+	}
+	
+	@Transient
+	public String getFullDeliveryAddress(String lineSeparator) {
+		return FormatUtil.formatAddress(getDeliveryAddressLine1(), getDeliveryAddressLine2(), 
+				getDeliveryAddressCity(), getDeliveryAddressState(), getDeliveryAddressZip(),
+				lineSeparator);
 	}
 }

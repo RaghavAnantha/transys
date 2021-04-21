@@ -406,13 +406,12 @@ function verifyAndRemoveJasperPrint(ctx) {
 	}
 }
 
-function processDGRowShowDetails(id) {
-	var detailsImageId = "show_details_" + id;
-	var detailsImageElem = $("#" + detailsImageId);
+function processDGRowShowDetails(id, expandableId) {
+	var detailsImageElem = $("#" + expandableId);
 	
 	var currentRow = detailsImageElem.closest('tr');
-	var newTrId = detailsImageId + "_tr";
-	var newTdId = detailsImageId + "_td";
+	var newTrId = expandableId + "_tr";
+	var newTdId = expandableId + "_td";
 	
 	var imgClass = detailsImageElem.attr('class');
 	if (imgClass.indexOf("plus") != -1) { 

@@ -62,6 +62,7 @@ import com.transys.model.User;
 import com.transys.model.invoice.OrderInvoiceDetails;
 import com.transys.model.invoice.OrderInvoiceHeader;
 import com.transys.model.invoice.OrderInvoicePayment;
+
 import com.transys.model.vo.CustomerVO;
 import com.transys.model.vo.DeliveryAddressVO;
 import com.transys.model.vo.invoice.InvoiceVO;
@@ -82,6 +83,8 @@ public class InvoiceController extends BaseController {
 	private static final String manageInvoicePaymentMsgCtx = "manageInvoicePayment";
 	
 	private static String ORDER_INVOICE_REPORT = "orderInvoice";
+	private static String ORDER_INVOICE_PAYMENT_MASTER_REPORT = "orderInvoicePaymentMaster";
+	private static String ORDER_INVOICE_PAYMENT_SUB_REPORT = "orderInvoicePaymentSub";
 	
 	public InvoiceController() {
 		setUrlContext("invoice");
@@ -234,14 +237,28 @@ public class InvoiceController extends BaseController {
 		return processInvoicePaymentSearch(model, request);
 	}
 	
-	@RequestMapping(method = {RequestMethod.GET, RequestMethod.POST }, value = "/invoicePaymentOrderDetails.do")
-	public String invoicePaymentOrderDetails(ModelMap model, HttpServletRequest request,
-			@RequestParam("paymentId") Long paymentId) {
-		String query = "select obj from OrderPayment obj where 1=1"
-				+ " and invoicePaymentId=" + paymentId;
-		List<OrderPayment> orderPaymentList = genericDAO.executeSimpleQuery(query);
+	@RequestMapping(method = {RequestMethod.GET, RequestMethod.POST }, value = "/invoiceOrderPaymentDetails.do")
+	public String invoiceOrderPaymentDetails(ModelMap model, HttpServletRequest request,
+			@RequestParam("invoicePaymentId") Long invoicePaymentId) {
+		List<OrderPayment> orderPaymentList = retrieveInvoiceOrderPaymentDetails(invoicePaymentId);
 		model.addAttribute("list", orderPaymentList);
 		return getUrlContext() + "/invoiceOrderPaymentList";
+	}
+	
+	@RequestMapping(method = {RequestMethod.GET, RequestMethod.POST }, value = "/invoiceOrderDetails.do")
+	public String invoiceOrderDetails(ModelMap model, HttpServletRequest request,
+			@RequestParam("invoiceId") Long invoiceId) {
+		List<OrderInvoiceDetails> orderInvoiceDetailsList = retrieveOrderInvoiceDetails(invoiceId);
+		model.addAttribute("list", orderInvoiceDetailsList);
+		return getUrlContext() + "/invoiceOrderList";
+	}
+	
+	private List<OrderPayment> retrieveInvoiceOrderPaymentDetails(Long invoicePaymentId) {
+		String query = "select obj from OrderPayment obj where obj.deleteFlag=1"
+				+ " and invoicePaymentId=" + invoicePaymentId
+				+ "order by obj.order.id asc, obj.id asc";
+		List<OrderPayment> orderPaymentList = genericDAO.executeSimpleQuery(query);
+		return orderPaymentList;
 	}
 	
 	private String processInvoicePaymentSearch(ModelMap model, HttpServletRequest request) {
@@ -757,9 +774,18 @@ public class InvoiceController extends BaseController {
 		}
 	}
 	
+	private void map(OrderInvoicePayment orderInvoicePayment, Map<String, Object> params) {
+		OrderInvoiceHeader orderInvoiceHeader = orderInvoicePayment.getInvoice();
+		map(orderInvoiceHeader, params);
+	}
+	
 	private void map(OrderInvoiceHeader orderInvoiceHeader, Map<String, Object> params) {
 		params.put("invoiceNo", orderInvoiceHeader.getId().toString());
-		params.put("invoiceDate", orderInvoiceHeader.getInvoiceDate());
+		params.put("invoiceDate", orderInvoiceHeader.getFormattedInvoiceDate());
+		params.put("invoicedAmount", orderInvoiceHeader.getTotalBalanceAmountDue());
+		params.put("invoicePaymentDone", orderInvoiceHeader.getTotalInvoicePaymentDone());
+		params.put("invoiceBalanceDue", orderInvoiceHeader.getTotalInvoiceBalanceDue());
+		
 		params.put("customer", orderInvoiceHeader.getCompanyName());
 		params.put("billingAddress", orderInvoiceHeader.getBillingAddress("\n"));
 		params.put("contact", orderInvoiceHeader.getContactDetails());
@@ -1416,6 +1442,82 @@ public class InvoiceController extends BaseController {
 		}
 	}
 	
+	@RequestMapping(method = { RequestMethod.GET }, value = "/downloadInvoicePaymentAll.do")
+	public String downloadInvoicePaymentAll(ModelMap model, HttpServletRequest request,
+			HttpServletResponse response,
+			@RequestParam(required = false, value = "invoiceId") Long invoiceId,
+			@RequestParam(required = false, value = "invoicePaymentId") Long invoicePaymentId,
+			@RequestParam(required = true, value = "type") String type) {
+		if (invoicePaymentId != null) {
+			OrderInvoicePayment invoicePayment = genericDAO.getById(OrderInvoicePayment.class, invoicePaymentId);
+			invoiceId = invoicePayment.getInvoice().getId();
+		}
+		
+		type = setReportRequestHeaders(response, type, ORDER_INVOICE_PAYMENT_MASTER_REPORT);
+		
+		ByteArrayOutputStream out = null;
+		try {
+			Map<String, Object> datas = generateInvoicePaymentAllData(request, invoiceId);
+			List<OrderInvoicePayment> invoicePaymentList = (List<OrderInvoicePayment>) datas.get("data");
+			Map<String, Object> params = (Map<String, Object>) datas.get("params");
+			
+			out = dynamicReportService.generateStaticMasterSubReport(ORDER_INVOICE_PAYMENT_MASTER_REPORT, ORDER_INVOICE_PAYMENT_SUB_REPORT,
+					invoicePaymentList, params, type, request);
+			out.writeTo(response.getOutputStream());
+			
+			return null;
+		} catch (Throwable t) {
+			t.printStackTrace();
+			log.warn("Unable to generate static report: " + t);
+			
+			setErrorMsg(request, response, "Exception occured while generating invoice payment report: " + t);
+			return "redirect:/" + getUrlContext() + "/manageInvoiceMain.do";
+		} finally {
+			if (out != null) {
+				try {
+					out.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+	
+	@RequestMapping(method = { RequestMethod.GET }, value = "/downloadInvoicePayment.do")
+	public String downloadInvoicePayment(ModelMap model, HttpServletRequest request,
+			HttpServletResponse response,
+			@RequestParam(required = true, value = "invoicePaymentId") Long invoicePaymentId,
+			@RequestParam(required = true, value = "type") String type) {
+		type = setReportRequestHeaders(response, type, ORDER_INVOICE_PAYMENT_MASTER_REPORT);
+		
+		ByteArrayOutputStream out = null;
+		try {
+			Map<String, Object> datas = generateInvoicePaymentData(request, invoicePaymentId);
+			List<OrderInvoicePayment> invoicePaymentList = (List<OrderInvoicePayment>) datas.get("data");
+			Map<String, Object> params = (Map<String, Object>) datas.get("params");
+			
+			out = dynamicReportService.generateStaticMasterSubReport(ORDER_INVOICE_PAYMENT_MASTER_REPORT, ORDER_INVOICE_PAYMENT_SUB_REPORT,
+					invoicePaymentList, params, type, request);
+			out.writeTo(response.getOutputStream());
+			
+			return null;
+		} catch (Throwable t) {
+			t.printStackTrace();
+			log.warn("Unable to generate static report: " + t);
+			
+			setErrorMsg(request, response, "Exception occured while generating invoice payment report: " + t);
+			return "redirect:/" + getUrlContext() + "/manageInvoiceMain.do";
+		} finally {
+			if (out != null) {
+				try {
+					out.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+	
 	private OrderInvoiceHeader retrieveOrderInvoiceHeader(Long invoiceId) {
 		OrderInvoiceHeader orderInvoiceHeader = genericDAO.getById(OrderInvoiceHeader.class, invoiceId);
 		return orderInvoiceHeader;
@@ -1451,14 +1553,57 @@ public class InvoiceController extends BaseController {
 		return datas;
 	}
 	
-	private void addData(List<InvoiceVO> invoiceVOList, Map<String, Object> params, Map<String,Object> datas) {
-		datas.put("data", invoiceVOList);
+	private void addData(Object obj, Map<String, Object> params, Map<String,Object> datas) {
+		datas.put("data", obj);
 		datas.put("params", params);
 	}
 	
 	private void addLogoFilePath(HttpServletRequest request, Map<String, Object> params) {
 		String logoFilePath = ServletUtil.getLogoFilePath(request);
 		params.put("LOGO_FILE_PATH", logoFilePath);
+	}
+	
+	private Map<String, Object> generateInvoicePaymentData(HttpServletRequest request, Long invoicePaymentId) {
+		OrderInvoicePayment invoicePayment = genericDAO.getById(OrderInvoicePayment.class, invoicePaymentId);
+		List<OrderPayment> orderPaymentList = retrieveInvoiceOrderPaymentDetails(invoicePaymentId);
+		invoicePayment.setOrderPaymentList(orderPaymentList);
+		
+		List<OrderInvoicePayment> invoicePaymentList = new ArrayList<OrderInvoicePayment>();
+		invoicePaymentList.add(invoicePayment);
+		
+		Map<String, Object> params = new HashMap<String, Object>();
+		map(invoicePayment, params);
+		addRDSBillingInfo(params);
+		addLogoFilePath(request, params);
+		
+		Map<String,Object> datas = new HashMap<String,Object>();
+		addData(invoicePaymentList, params, datas);
+		
+		return datas;
+	}
+	
+	private Map<String, Object> generateInvoicePaymentAllData(HttpServletRequest request, Long invoiceId) {
+		OrderInvoiceHeader invoiceHeader = genericDAO.getById(OrderInvoiceHeader.class, invoiceId);
+		
+		String query = "select obj from OrderInvoicePayment obj where obj.deleteFlag=1";
+		query += (" and obj.invoice.id=" + invoiceId);
+		query += " order by id desc";
+		List<OrderInvoicePayment> invoicePaymentList = genericDAO.executeSimpleQuery(query);
+		
+		for (OrderInvoicePayment orderInvoicePayment : invoicePaymentList) {
+			List<OrderPayment> orderPaymentList = retrieveInvoiceOrderPaymentDetails(orderInvoicePayment.getId());
+			orderInvoicePayment.setOrderPaymentList(orderPaymentList);
+		}
+		
+		Map<String, Object> params = new HashMap<String, Object>();
+		map(invoiceHeader, params);
+		addRDSBillingInfo(params);
+		addLogoFilePath(request, params);
+		
+		Map<String,Object> datas = new HashMap<String,Object>();
+		addData(invoicePaymentList, params, datas);
+		
+		return datas;
 	}
 	
 	private Map<String, Object> generateInvoiceData(HttpServletRequest request, Long invoiceId) {

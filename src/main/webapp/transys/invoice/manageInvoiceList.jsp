@@ -122,6 +122,16 @@ function processMakeInvoicePayment(invoiceId) {
 	var $tabToBeShown = findTabToBeShown('invoicePaymentMain.do');
     loadTab($tabToBeShown, "createInvoicePayment.do?invoiceId="+invoiceId);
 }
+
+function getDGRowDetailsDataColSpan() {
+	return "16";
+}
+
+function addDGRowDetailsData(id, newTdId) {
+	$.get("invoiceOrderDetails.do?invoiceId=" + id, function(data) {
+		$("#" + newTdId).html(data);
+    });
+}
 </script>
 
 <br />
@@ -250,7 +260,7 @@ function processMakeInvoicePayment(invoiceId) {
 	</tbody>
 </table>
 <form:form name="manageInvoiceServiceForm" id="manageInvoiceServiceForm" class="tab-color">
-	<transys:datatable urlContext="invoice" deletable="false"
+	<transys:datatable urlContext="invoice" expandable="true" expandableQualifier="invoice" deletable="false"
 		editable="false" cancellable="false" insertable="false" baseObjects="${list}"
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
 		pagingLink="manageInvoiceSearch.do" multipleSelect="false" searcheable="false"
@@ -267,6 +277,7 @@ function processMakeInvoicePayment(invoiceId) {
 		<transys:textcolumn headerText="Pay. made"  width="70px" dataField="totalInvoicePaymentDone" type="java.math.BigDecimal" dataFormat="#####0.00"/>
 		<transys:textcolumn headerText="Bal. Due"  width="70px" dataField="totalInvoiceBalanceDue" type="java.math.BigDecimal" dataFormat="#####0.00"/>
 		<transys:textcolumn headerText="Notes" dataField="notes" />
+		<transys:anchorcolumn width="72px" headerText="Pay. Stmt." linkUrl="/invoice/downloadInvoicePaymentAll.do?invoiceId={id}&type=pdf" linkText="Pay. Stmt."/>
 		<transys:imagecolumn headerText="Pay" width="32px" linkUrl="javascript:processMakeInvoicePayment('{id}');" imageSrc="fas fa-dollar-sign" HAlign="center" title="Make Payment"/>
 		<transys:imagecolumn headerText="PDF" width="32px" linkUrl="${ctx}/invoice/downloadInvoice.do?id={id}&type=pdf" imageSrc="${pdfImage}" HAlign="center" title="PDF"/>
 		<transys:imagecolumn headerText="CSV" width="32px" linkUrl="${ctx}/invoice/downloadInvoice.do?id={id}&type=csv" imageSrc="${csvImage}" HAlign="center" title="CSV"/>

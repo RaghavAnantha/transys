@@ -323,4 +323,9 @@ public class OrderInvoiceHeader extends AbstractBaseModel {
 	public String toString() {
 		return getCompanyName();
 	}
+	
+	@Transient
+	public String getFormattedInvoiceDate() {
+		return FormatUtil.formatDate(this.invoiceDate);
+	}
 }

@@ -237,6 +237,15 @@ public class FormatUtil {
 		return (formattedFee + formatFee(fee));
 	}
 	
+	public static String formatFeeWithSep(BigDecimal fee, boolean addSep) {
+		String formattedFee = StringUtils.EMPTY;
+		if (fee == null) {
+			return formattedFee;
+		}
+		
+		return currencyFormatWithSep.format(fee);
+	}
+	
 	public static String formatFee(BigDecimal fee, boolean preffixCurrency, boolean addSep) {
 		String formattedFee = StringUtils.EMPTY;
 		if (fee == null) {
