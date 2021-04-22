@@ -13,13 +13,13 @@
 		<transys:textcolumn headerText="Ord. Dt" width="70px" dataField="formattedOrderDate"/>
 		<transys:textcolumn headerText="Del. Dt" width="70px" dataField="formattedDeliveryDate"/>
 		<transys:textcolumn headerText="Pick. Dt" width="70px" dataField="formattedPickupDate"/>
-		<transys:textcolumn headerText="Dmp." dataField="dumpsterPrice" width="34px" type="java.math.BigDecimal"/>
-		<transys:textcolumn headerText="Ton." dataField="tonnageFees" width="30px" type="java.math.BigDecimal"/>
-		<transys:textcolumn headerText="Permit" dataField="totalPermitFees"  width="35px" type="java.math.BigDecimal"/>
-		<transys:textcolumn headerText="City" dataField="cityFee" width="32px" type="java.math.BigDecimal"/>
-		<transys:textcolumn headerText="Over." dataField="overweightFee" width="34px" type="java.math.BigDecimal"/>
-		<transys:textcolumn headerText="Add." dataField="totalAdditionalFees" width="34px" type="java.math.BigDecimal"/>
-		<transys:textcolumn headerText="Disc." width="72px" dataField="discountAmount" type="java.math.BigDecimal"/>
+		<transys:textcolumn headerText="Dmp." dataField="dumpsterPrice" width="38px" type="java.math.BigDecimal"/>
+		<transys:textcolumn headerText="Ton." dataField="tonnageFees" width="38px" type="java.math.BigDecimal"/>
+		<transys:textcolumn headerText="Permit" dataField="totalPermitFees"  width="38px" type="java.math.BigDecimal"/>
+		<transys:textcolumn headerText="City" dataField="cityFee" width="38px" type="java.math.BigDecimal"/>
+		<transys:textcolumn headerText="Over." dataField="overweightFee" width="38px" type="java.math.BigDecimal"/>
+		<transys:textcolumn headerText="Add." dataField="totalAdditionalFees" width="38px" type="java.math.BigDecimal"/>
+		<transys:textcolumn headerText="Disc." width="38px" dataField="discountAmount" type="java.math.BigDecimal"/>
 		<transys:textcolumn headerText="Tot Amt" dataField="totalFees" width="72px" type="java.math.BigDecimal" />
 		<transys:textcolumn headerText="Amt Paid" dataField="totalAmountPaid" width="72px" type="java.math.BigDecimal" />
 		<transys:textcolumn headerText="Bal Due" dataField="balanceAmountDue" width="72px" type="java.math.BigDecimal" />

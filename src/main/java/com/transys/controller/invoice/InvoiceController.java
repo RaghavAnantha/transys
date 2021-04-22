@@ -782,9 +782,10 @@ public class InvoiceController extends BaseController {
 	private void map(OrderInvoiceHeader orderInvoiceHeader, Map<String, Object> params) {
 		params.put("invoiceNo", orderInvoiceHeader.getId().toString());
 		params.put("invoiceDate", orderInvoiceHeader.getFormattedInvoiceDate());
-		params.put("invoicedAmount", orderInvoiceHeader.getTotalBalanceAmountDue());
-		params.put("invoicePaymentDone", orderInvoiceHeader.getTotalInvoicePaymentDone());
-		params.put("invoiceBalanceDue", orderInvoiceHeader.getTotalInvoiceBalanceDue());
+		
+		params.put("invoicedAmount", FormatUtil.formatFee(orderInvoiceHeader.getTotalBalanceAmountDue(), true, true));
+		params.put("invoicePaymentDone", FormatUtil.formatFee(orderInvoiceHeader.getTotalInvoicePaymentDone(), true, true));
+		params.put("invoiceBalanceDue", FormatUtil.formatFee(orderInvoiceHeader.getTotalInvoiceBalanceDue(), true, true));
 		
 		params.put("customer", orderInvoiceHeader.getCompanyName());
 		params.put("billingAddress", orderInvoiceHeader.getBillingAddress("\n"));
@@ -1392,6 +1393,45 @@ public class InvoiceController extends BaseController {
 			log.warn("Unable to generate report: " + t);
 			
 			setErrorMsg(request, response, "Exception occured while generating manage invoice report: " + t);
+			return "redirect:/" + getUrlContext() + "/manageInvoiceMain.do";
+		} finally {
+			if (out != null) {
+				try {
+					out.close();
+					out = null;
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+	
+	@RequestMapping(method = { RequestMethod.GET }, value = "/invoicePaymentExport.do")
+	public String invoicePaymentExport(ModelMap model, HttpServletRequest request, HttpServletResponse response,
+			@RequestParam("type") String type,
+			@RequestParam("dataQualifier") String dataQualifier,
+			Object objectDAO, Class clazz) {
+		String reportName = "invoicePaymentReport";
+		type = setReportRequestHeaders(response, type, reportName);
+		
+		SearchCriteria searchCriteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
+		//Map<String, Object> params = new HashMap<String, Object>();
+		
+		List columnPropertyList = (List) request.getSession().getAttribute(dataQualifier + "ColumnPropertyList");
+		ByteArrayOutputStream out = null;
+		try {
+			List<OrderInvoicePayment> orderInvoicePaymentList = performInvoicePaymentSearch(searchCriteria);
+			
+			out = dynamicReportService.exportReport(reportName, type, OrderInvoicePayment.class, orderInvoicePaymentList,
+						columnPropertyList, request);
+			out.writeTo(response.getOutputStream());
+			
+			return null;
+		} catch (Throwable t) {
+			t.printStackTrace();
+			log.warn("Unable to generate report: " + t);
+			
+			setErrorMsg(request, response, "Exception occured while generating invoice payment report: " + t);
 			return "redirect:/" + getUrlContext() + "/manageInvoiceMain.do";
 		} finally {
 			if (out != null) {

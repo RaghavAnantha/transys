@@ -277,10 +277,10 @@ function addDGRowDetailsData(id, newTdId) {
 		<transys:textcolumn headerText="Pay. made"  width="70px" dataField="totalInvoicePaymentDone" type="java.math.BigDecimal" dataFormat="#####0.00"/>
 		<transys:textcolumn headerText="Bal. Due"  width="70px" dataField="totalInvoiceBalanceDue" type="java.math.BigDecimal" dataFormat="#####0.00"/>
 		<transys:textcolumn headerText="Notes" dataField="notes" />
-		<transys:anchorcolumn width="72px" headerText="Pay. Stmt." linkUrl="/invoice/downloadInvoicePaymentAll.do?invoiceId={id}&type=pdf" linkText="Pay. Stmt."/>
 		<transys:imagecolumn headerText="Pay" width="32px" linkUrl="javascript:processMakeInvoicePayment('{id}');" imageSrc="fas fa-dollar-sign" HAlign="center" title="Make Payment"/>
-		<transys:imagecolumn headerText="PDF" width="32px" linkUrl="${ctx}/invoice/downloadInvoice.do?id={id}&type=pdf" imageSrc="${pdfImage}" HAlign="center" title="PDF"/>
-		<transys:imagecolumn headerText="CSV" width="32px" linkUrl="${ctx}/invoice/downloadInvoice.do?id={id}&type=csv" imageSrc="${csvImage}" HAlign="center" title="CSV"/>
+		<transys:imagecolumn headerText="Inv." width="32px" linkUrl="${ctx}/invoice/downloadInvoice.do?id={id}&type=pdf" imageSrc="${pdfImage}" HAlign="center" title="PDF"/>
+		<transys:imagecolumn headerText="Inv." width="32px" linkUrl="${ctx}/invoice/downloadInvoice.do?id={id}&type=csv" imageSrc="${csvImage}" HAlign="center" title="CSV"/>
+		<transys:imagecolumn width="76px" headerText="Paymnt. Stmt." linkUrl="${ctx}/invoice/downloadInvoicePaymentAll.do?invoicePaymentId={id}&type=pdf" imageSrc="fas fa-receipt" HAlign="center" title="All Paymnt. Stmt."/>
 	</transys:datatable>
 	<%session.setAttribute("manageInvoiceColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
 </form:form>

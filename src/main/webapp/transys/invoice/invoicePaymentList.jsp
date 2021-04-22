@@ -215,7 +215,7 @@ function addDGRowDetailsData(id, newTdId) {
 		<transys:textcolumn headerText="CC #" dataField="ccNumber" />
 		<transys:textcolumn headerText="CC Exp. Dt" width="70px" dataField="ccExpDate" dataFormat="MM/dd/yyyy"/>
 		<transys:textcolumn headerText="Notes" dataField="notes" />
-		<transys:anchorcolumn width="72px" headerText="Pay. Stmt." linkUrl="/invoice/downloadInvoicePaymentAll.do?invoicePaymentId={id}&type=pdf" linkText="Pay. Stmt."/>
+		<transys:imagecolumn width="76px" headerText="All Paymnt. Stmt." linkUrl="${ctx}/invoice/downloadInvoicePaymentAll.do?invoicePaymentId={id}&type=pdf" imageSrc="fas fa-receipt" HAlign="center" title="All Paymnt. Stmt."/>
 		<transys:imagecolumn width="32px" headerText="PDF" linkUrl="${ctx}/invoice/downloadInvoicePayment.do?invoicePaymentId={id}&type=pdf" imageSrc="${pdfImage}" HAlign="center" title="PDF"/>
 		<transys:imagecolumn width="32px" headerText="CSV" linkUrl="${ctx}/invoice/downloadInvoicePayment.do?invoicePaymentId={id}&type=csv" imageSrc="${csvImage}" HAlign="center" title="CSV"/>
 	</transys:datatable>
