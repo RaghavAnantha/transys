@@ -1054,7 +1054,8 @@ public class DynamicReportServiceImpl extends BaseService implements DynamicRepo
 				bigDecimalStyle.setPattern("#####0.00");
 				bigDecimalStyle.setBorder(Border.THIN());
 				defaultStyle = bigDecimalStyle;
-			} else if ("java.sql.Timestamp".equalsIgnoreCase(type)){
+			} else if ("java.sql.Timestamp".equalsIgnoreCase(type) 
+					|| "java.util.Date".equalsIgnoreCase(type)){
 				fieldType = Timestamp.class;
 				Style timeStyle = new Style("Timestamp");
 				timeStyle.setHorizontalAlign(HorizontalAlign.LEFT);
