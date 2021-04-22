@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
-<!-- 2021-04-22T15:21:14 -->
+<!-- 2021-04-22T17:06:25 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="orderInvoicePaymentSub" pageWidth="800" pageHeight="842" columnWidth="800" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="27b0d00f-2ed5-470f-9062-b72911004ad8">
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
 	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
@@ -14,7 +13,7 @@
 	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
 	<field name="formattedAmountPaid" class="java.lang.String"/>
 	<field name="order.id" class="java.lang.Long"/>
-	<field name="paymentDate" class="java.util.Date"/>
+	<field name="formattedPaymentDate" class="java.lang.String"/>
 	<field name="paymentMethod.method" class="java.lang.String"/>
 	<field name="checkNum" class="java.lang.String"/>
 	<field name="ccReferenceNum" class="java.lang.String"/>
@@ -23,9 +22,7 @@
 	<field name="order.formattedDeliveryDate" class="java.lang.String"/>
 	<field name="order.formattedPickupDate" class="java.lang.String"/>
 	<field name="id" class="java.lang.Long"/>
-	<field name="order.deliveryCity" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
+	<field name="order.deliveryCity" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -227,7 +224,7 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="10"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{paymentDate} == null ? "" : (new java.text.SimpleDateFormat("MM/dd/yyyy").format($F{paymentDate}))]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{formattedPaymentDate}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="731" y="0" width="60" height="18" uuid="8810bf30-bd7b-48b4-8fc8-db63b3425c6e">
