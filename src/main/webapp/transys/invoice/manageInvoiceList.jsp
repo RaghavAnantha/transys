@@ -127,7 +127,7 @@ function getDGRowDetailsDataColSpan() {
 	return "16";
 }
 
-function addDGRowDetailsData(id, newTdId) {
+function addDGRowDetailsData_invoice(id, newTdId) {
 	$.get("invoiceOrderDetails.do?invoiceId=" + id, function(data) {
 		$("#" + newTdId).html(data);
     });

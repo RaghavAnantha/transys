@@ -873,7 +873,8 @@ public final class Datatable extends BodyTagSupport {
 						expandableColumn.setAlterText("Show Details");
 						expandableColumn.setTitle("Show Details");
 						
-						String linkUrl = "javascript:processDGRowShowDetails('{id}', '" + expandableId + "');";
+						String linkUrl = "javascript:processDGRowShowDetails('{id}', '" 
+								+ expandableId + "', '" + getExpandableQualifier() + "');";
 						expandableColumn.setLinkUrl(linkUrl);
 						
 						expandableColumn.setFontAwesomeDGColIconClass("fontAwesomeDGColIconSmall");

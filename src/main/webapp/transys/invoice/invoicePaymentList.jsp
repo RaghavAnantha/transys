@@ -1,6 +1,9 @@
 <%@include file="/common/taglibs.jsp"%>
 
 <script type="text/javascript">
+function getInvoicePaymentElemId() {
+	return "invoicePayment";
+}
 function getInvoicePaymentSearchForm() {
 	var form = $('#invoicePaymentSearchForm');
 	return form;
@@ -60,6 +63,8 @@ function confirmDeleteInvoicePayment(invoicePaymentId) {
 }
 
 function processDeleteInvoicePayment(invoicePaymentId) {
+	showLoadingMsg();
+	
 	$.get("deleteInvoicePayment.do?id=" + invoicePaymentId, function(data) {
 		loadInvoicePayment(data);
     });
@@ -68,29 +73,37 @@ function processDeleteInvoicePayment(invoicePaymentId) {
 }
 
 function processEditInvoicePayment(invoicePaymentId) {
+	showLoadingMsg();
+	
 	$.get("editInvoicePayment.do?id=" + invoicePaymentId, function(data) {
 		loadInvoicePayment(data);
     });
 }
 
 function processInvoicePaymentCreate() {
+	showLoadingMsg();
+	
 	$.get("createInvoicePayment.do", function(data) {
 		loadInvoicePayment(data);
     });
 }
 
 function loadInvoicePayment(data) {
-	$("#invoicePayment").html(data);
+	$("#" + getInvoicePaymentElemId()).html(data);
 }
 
 function getDGRowDetailsDataColSpan() {
 	return "16";
 }
 
-function addDGRowDetailsData(id, newTdId) {
+function addDGRowDetailsData_invoicePayment(id, newTdId) {
 	$.get("invoiceOrderPaymentDetails.do?invoicePaymentId=" + id, function(data) {
 		$("#" + newTdId).html(data);
     });
+}
+
+function showLoadingMsg() {
+	loadInvoicePayment("${loadingMsg}");
 }
 </script>
 
@@ -224,9 +237,10 @@ function addDGRowDetailsData(id, newTdId) {
 
 <script type="text/javascript">
 $("#invoicePaymentSearchForm").submit(function (ev) {
-	var $this = $(this);
+	showLoadingMsg();
 	
-    $.ajax({
+	var $this = $(this);
+	 $.ajax({
         type: $this.attr('method'),
         url: $this.attr('action'),
         data: $this.serialize(),

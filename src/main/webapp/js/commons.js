@@ -406,7 +406,7 @@ function verifyAndRemoveJasperPrint(ctx) {
 	}
 }
 
-function processDGRowShowDetails(id, expandableId) {
+function processDGRowShowDetails(id, expandableId, expandableQualifier) {
 	var detailsImageElem = $("#" + expandableId);
 	
 	var currentRow = detailsImageElem.closest('tr');
@@ -421,13 +421,27 @@ function processDGRowShowDetails(id, expandableId) {
 		var newRowStr = "<tr id=\"" + newTrId + "\"><td></td><td colspan=\"" + getDGRowDetailsDataColSpan() + "\" id=\"" + newTdId + "\"></td></tr>";
 		$(newRowStr).insertAfter(currentRow);
 		
-		addDGRowDetailsData(id, newTdId);
+		var fnToCall = "addDGRowDetailsData_" + expandableQualifier;
+		executeFunctionByName(fnToCall, window, id, newTdId);
 	} else { 
 		imgClass = imgClass.replace("minus", "plus");
 		detailsImageElem.attr("class", imgClass);
 		
 		$("#" + newTrId).remove();
 	}
+}
+
+function executeFunctionByName(functionName, context /*, args */) {
+	//window["functionName"](arguments);
+	//window["My"]["Namespace"]["functionName"](arguments);
+	
+	var args = Array.prototype.slice.call(arguments, 2);
+	var namespaces = functionName.split(".");
+	var func = namespaces.pop();
+	for(var i = 0; i < namespaces.length; i++) {
+		context = context[namespaces[i]];
+	}
+	return context[func].apply(context, args);
 }
 
 
