@@ -229,8 +229,8 @@ function showLoadingMsg() {
 		<transys:textcolumn headerText="CC Exp. Dt" width="70px" dataField="ccExpDate" dataFormat="MM/dd/yyyy"/>
 		<transys:textcolumn headerText="Notes" dataField="notes" />
 		<transys:imagecolumn width="90px" headerText="Paymnt. Stmt." linkUrl="${ctx}/invoice/downloadInvoicePaymentAll.do?invoicePaymentId={id}&type=pdf" imageSrc="fas fa-receipt" HAlign="center" title="All Paymnts. Stmt."/>
-		<transys:imagecolumn width="32px" headerText="PDF" linkUrl="${ctx}/invoice/downloadInvoicePayment.do?invoicePaymentId={id}&type=pdf" imageSrc="${pdfImage}" HAlign="center" title="PDF"/>
-		<transys:imagecolumn width="32px" headerText="CSV" linkUrl="${ctx}/invoice/downloadInvoicePayment.do?invoicePaymentId={id}&type=csv" imageSrc="${csvImage}" HAlign="center" title="CSV"/>
+		<transys:imagecolumn width="32px" headerText="PDF" linkUrl="${ctx}/invoice/downloadInvoicePayment.do?invoicePaymentId={id}&type=pdf" imageSrc="${pdfImage}" HAlign="center" title="This Paymnt. Stmt. - PDF"/>
+		<transys:imagecolumn width="32px" headerText="CSV" linkUrl="${ctx}/invoice/downloadInvoicePayment.do?invoicePaymentId={id}&type=csv" imageSrc="${csvImage}" HAlign="center" title="This Paymnt. Stmt. - CSV"/>
 	</transys:datatable>
 	<%session.setAttribute("invoicePaymentColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
 </form:form>
