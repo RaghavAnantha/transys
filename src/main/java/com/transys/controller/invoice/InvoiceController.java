@@ -1588,14 +1588,9 @@ public class InvoiceController extends BaseController {
 		addLogoFilePath(request, params);
 		
 		Map<String,Object> datas = new HashMap<String,Object>();
-		addData(invoiceVOList, params, datas);
+		addData(datas, invoiceVOList, params);
 		     
 		return datas;
-	}
-	
-	private void addData(Object obj, Map<String, Object> params, Map<String,Object> datas) {
-		datas.put("data", obj);
-		datas.put("params", params);
 	}
 	
 	private void addLogoFilePath(HttpServletRequest request, Map<String, Object> params) {
@@ -1617,7 +1612,7 @@ public class InvoiceController extends BaseController {
 		addLogoFilePath(request, params);
 		
 		Map<String,Object> datas = new HashMap<String,Object>();
-		addData(invoicePaymentList, params, datas);
+		addData(datas, invoicePaymentList, params);
 		
 		return datas;
 	}
@@ -1641,7 +1636,7 @@ public class InvoiceController extends BaseController {
 		addLogoFilePath(request, params);
 		
 		Map<String,Object> datas = new HashMap<String,Object>();
-		addData(invoicePaymentList, params, datas);
+		addData(datas, invoicePaymentList, params);
 		
 		return datas;
 	}
@@ -1661,14 +1656,14 @@ public class InvoiceController extends BaseController {
 		addLogoFilePath(request, params);
 		
 		Map<String,Object> datas = new HashMap<String,Object>();
-		addData(invoiceVOList, params, datas);
+		addData(datas, invoiceVOList, params);
 		     
 		return datas;
 	}
 	
 	private void map(InvoiceVO invoiceVO, List<InvoiceVO> invoiceVOList, List<InvoiceVO> invoicePaymentVOList, Map<String, Object> params) {
 		params.put("invoiceNo", "TBD - Preview");
-		params.put("invoiceDate", invoiceVO.getInvoiceDate());
+		params.put("invoiceDate", invoiceVO.getFormattedInvoiceDate());
 		
 		Customer customer = retrieveCustomer(invoiceVO.getCustomerId(), invoiceVO.getOrderId());
 		params.put("customer", customer.getCompanyName());

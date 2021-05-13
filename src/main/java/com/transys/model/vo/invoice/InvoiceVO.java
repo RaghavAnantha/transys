@@ -1,9 +1,12 @@
 package com.transys.model.vo.invoice;
 
 import java.math.BigDecimal;
+
 import java.util.Date;
 
 import org.apache.commons.lang3.StringUtils;
+
+import com.transys.core.util.FormatUtil;
 
 import com.transys.model.vo.BaseVO;
 
@@ -354,6 +357,9 @@ public class InvoiceVO extends BaseVO {
 	}
 	public void setInvoiceDate(Date invoiceDate) {
 		this.invoiceDate = invoiceDate;
+	}
+	public String getFormattedInvoiceDate() {
+		return FormatUtil.formatDate(this.invoiceDate);
 	}
 	public BigDecimal getTonnageFees() {
 		return tonnageFees;

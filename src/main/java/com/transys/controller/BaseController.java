@@ -453,6 +453,11 @@ public class BaseController {
 		params.put("rdsContact", "773-722-4444");
 	}
 	
+	protected void addData(Map<String,Object> datas, Object dataObj, Map<String, Object> params) {
+		datas.put("data", dataObj);
+		datas.put("params", params);
+	}
+	
 	protected void resetSearchCriteria(HttpServletRequest request) {
 		SearchCriteria searchCriteria = getSearchCriteria(request);
 		if (searchCriteria != null && searchCriteria.getSearchMap() != null) {
