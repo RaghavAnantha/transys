@@ -4,7 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import java.math.BigDecimal;
-
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
-
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 
 import org.springframework.transaction.annotation.Propagation;
@@ -97,6 +97,10 @@ public class InvoiceController extends BaseController {
 		
 		binder.registerCustomEditor(PaymentMethodType.class, new AbstractModelEditor(PaymentMethodType.class));
 		binder.registerCustomEditor(OrderInvoiceHeader.class, new AbstractModelEditor(OrderInvoiceHeader.class));
+		
+		SimpleDateFormat ccExpDateFormat = new SimpleDateFormat("MM/yyyy");
+		ccExpDateFormat.setLenient(false);
+		binder.registerCustomEditor(Date.class, "ccExpDate", new CustomDateEditor(ccExpDateFormat, true));
 	}
 	
 	@RequestMapping(method = { RequestMethod.GET }, value = "/createInvoiceMain.do")

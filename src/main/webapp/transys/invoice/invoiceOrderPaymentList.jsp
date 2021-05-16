@@ -22,6 +22,6 @@
 		<transys:textcolumn headerText="CC Ref. #" dataField="ccReferenceNum" />
 		<transys:textcolumn headerText="CC Name" dataField="ccName" />
 		<transys:textcolumn headerText="CC #" dataField="ccNumber" />
-		<transys:textcolumn headerText="CC Exp. Dt" width="70px" dataField="ccExpDate" dataFormat="MM/dd/yyyy"/>
+		<transys:textcolumn headerText="CC Exp. Dt" width="70px" dataField="ccExpDate" dataFormat="MM/yyyy"/>
 	</transys:datatable>
 </form:form>

@@ -444,4 +444,42 @@ function executeFunctionByName(functionName, context /*, args */) {
 	return context[func].apply(context, args);
 }
 
+function setExpiryDatepicker($expiryDateElem) {
+	$expiryDateElem.datepicker( {
+		changeMonth: true,
+        changeYear: true,
+        showButtonPanel: true,
+        dateFormat: 'mm/yy',
+		onClose: function(dateText, inst) { 
+	    	onExpiryDatepickerClose($expiryDateElem);
+	    },
+	    beforeShow : function(input, inst) {
+	    	beforeExpiryDatepickerShow($expiryDateElem);
+	    }
+	});
+}
+
+function onExpiryDatepickerClose($expiryDateElem) { 
+	var iMonth = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
+	var iYear = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
+    $expiryDateElem.datepicker('setDate', new Date(iYear, iMonth, 1));
+    
+    $('#ui-datepicker-div').removeClass('hide-calendar');
+}
+
+function beforeExpiryDatepickerShow($expiryDateElem) {
+	$('#ui-datepicker-div').addClass('hide-calendar');
+	
+	var selDate = $expiryDateElem.val();
+	if (selDate.length > 0) {
+		iYear = selDate.substring(selDate.length - 4, selDate.length);
+		//iMonth = jQuery.inArray(selDate.substring(0, selDate.length - 5), $(this).datepicker('option', 'monthNames'));
+		iMonth = selDate.substring(0, 2);
+		iMonth = iMonth-1;
+		$expiryDateElem.datepicker('option', 'defaultDate', new Date(iYear, iMonth, 1));
+		$expiryDateElem.datepicker('setDate', new Date(iYear, iMonth, 1));
+    }
+}
+
+
 

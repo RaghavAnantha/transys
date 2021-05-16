@@ -413,29 +413,8 @@ function handleCreateInvoicePaymentInvoiceNoChange() {
 
 <script type="text/javascript">
 $(function() {
-	getInvoicePaymentForm().find("[name='ccExpDate']").datepicker( {
-        changeMonth: true,
-        changeYear: true,
-        showButtonPanel: true,
-        dateFormat: 'mm/yy',
-        onClose: function(dateText, inst) { 
-        	var iMonth = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
-            var iYear = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
-            $(this).datepicker('setDate', new Date(iYear, iMonth, 1));
-            
-            $('#ui-datepicker-div').removeClass('hide-calendar');
-        },
-        beforeShow : function(input, inst) {
-        	$('#ui-datepicker-div').addClass('hide-calendar');
-        	
-        	if ((selDate = $(this).val()).length > 0) {
-               iYear = selDate.substring(selDate.length - 4, selDate.length);
-               iMonth = jQuery.inArray(selDate.substring(0, selDate.length - 5), $(this).datepicker('option', 'monthNames'));
-               $(this).datepicker('option', 'defaultDate', new Date(iYear, iMonth, 1));
-               $(this).datepicker('setDate', new Date(iYear, iMonth, 1));
-            }
-        }
-    });
+	var $ccExpDateElem = getInvoicePaymentForm().find("#ccExpDate");
+	setExpiryDatepicker($ccExpDateElem);
 });
 
 $("#invoicePaymentForm").submit(function (ev) {

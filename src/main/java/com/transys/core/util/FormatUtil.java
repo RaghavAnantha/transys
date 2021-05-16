@@ -20,6 +20,7 @@ public class FormatUtil {
 	public static SimpleDateFormat dbDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 	public static SimpleDateFormat dbDateTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	public static SimpleDateFormat dbDateTimeFormat2 = new SimpleDateFormat("yyyy-MM-dd 00:00:00.0");
+	public static SimpleDateFormat expiryDateFormat = new SimpleDateFormat("MM/yyyy");
 	
 	public static DecimalFormat decimalFormat = new DecimalFormat("#####0.00");
 	public static DecimalFormat currencyFormat = new DecimalFormat("########0.00");
@@ -45,6 +46,10 @@ public class FormatUtil {
 	
 	public static String formatDate(Date date) {
 		return formatDate(date, inputDateFormat);
+	}
+	
+	public static String formatExpiryDate(Date date) {
+		return formatDate(date, expiryDateFormat);
 	}
 	
 	public static String formatAuditDate(Date date) {

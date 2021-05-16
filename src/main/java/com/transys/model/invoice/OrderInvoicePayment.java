@@ -156,7 +156,7 @@ public class OrderInvoicePayment extends AbstractBaseModel {
 	
 	@Transient
 	public String getFormattedCCExpDate() {
-		return FormatUtil.formatDate(this.ccExpDate);
+		return FormatUtil.formatExpiryDate(this.ccExpDate);
 	}
 	
 	@Transient
