@@ -78,6 +78,16 @@ function processRevertToOpen() {
 				<form:errors path="dumpster" cssClass="errorMessage" />
 			</td>
 		</tr>
+		<tr>
+			<td class="form-left">Vehicle #<span class="errorMessage">*</span></td>
+			<td>
+				<form:select id="vehicleNumSelect" cssClass="flat form-control input-sm" path="vehicleId" style="width:172px !important">
+					<form:option value="">-----Please Select-----</form:option>
+					<form:options items="${orderVehicles}" itemValue="id" itemLabel="number" />
+				</form:select> 
+				<form:errors path="vehicleId" cssClass="errorMessage" />
+			</td>
+		</tr>
 		<tr><td colspan="2"></td></tr>
 		<tr>
 			<td>&nbsp;</td>

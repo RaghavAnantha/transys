@@ -77,7 +77,7 @@ import com.transys.model.PermitType;
 import com.transys.model.Role;
 import com.transys.model.SearchCriteria;
 import com.transys.model.User;
-
+import com.transys.model.Vehicle;
 import com.transys.model.map.Geocode;
 
 import com.transys.model.vo.CustomerVO;
@@ -200,6 +200,9 @@ public class OrderController extends CRUDController<Order> {
 			permitClassList = retrievePermitClass(dumpsterSizeId);
 		}
 		model.addAttribute("permitClasses", permitClassList);
+		
+		String query = "select obj from Vehicle obj order by obj.number asc";
+		model.addAttribute("orderVehicles", genericDAO.executeSimpleQuery(query));
    }
 	
 	private void addMissingDrivers(ModelMap model, Order entity) {

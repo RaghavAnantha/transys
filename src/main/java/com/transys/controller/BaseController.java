@@ -431,15 +431,18 @@ public class BaseController {
 	}
 	
 	protected void setModifier(HttpServletRequest request, AbstractBaseModel entity) {
+		long userId = getUserId(request);
+		Date currentTime = Calendar.getInstance().getTime();
+		
 		if (entity.getId() == null) {
-			entity.setCreatedAt(Calendar.getInstance().getTime());
+			entity.setCreatedAt(currentTime);
 			if (entity.getCreatedBy() == null) {
-				entity.setCreatedBy(getUserId(request));
+				entity.setCreatedBy(userId);
 			}
 		} else {
-			entity.setModifiedAt(Calendar.getInstance().getTime());
+			entity.setModifiedAt(currentTime);
 			if (entity.getModifiedBy() == null) {
-				entity.setModifiedBy(getUserId(request));
+				entity.setModifiedBy(userId);
 			}
 		}
 	}

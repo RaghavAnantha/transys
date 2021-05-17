@@ -118,7 +118,10 @@ public class Order extends AbstractBaseModel {
 	private BigDecimal balanceAmountDue;
 	
 	@Column(name="hasDocs")
-	private String hasDocs = "N";;
+	private String hasDocs = "N";
+	
+	@Column(name="vehicleId")
+	private Long vehicleId;
 	
 	@Transient
 	String[] fileList;
@@ -551,6 +554,14 @@ public class Order extends AbstractBaseModel {
 	@Transient
 	public void setFileList(String[] fileList) {
 		this.fileList = fileList;
+	}
+
+	public Long getVehicleId() {
+		return vehicleId;
+	}
+
+	public void setVehicleId(Long vehicleId) {
+		this.vehicleId = vehicleId;
 	}
 	
 	/*public String getMaterialType() {

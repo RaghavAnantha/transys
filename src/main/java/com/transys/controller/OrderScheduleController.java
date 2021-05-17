@@ -27,7 +27,7 @@ import com.transys.model.DeliveryAddress;
 import com.transys.model.Order;
 import com.transys.model.OrderStatus;
 import com.transys.model.SearchCriteria;
-
+import com.transys.model.Vehicle;
 import com.transys.model.map.Geocode;
 
 import com.transys.model.vo.DeliveryAddressVO;
@@ -87,7 +87,7 @@ public class OrderScheduleController extends BaseController {
 		String pickupOrderAddressListJson = JsonUtil.toJson(pickupOrderAddressList);
 		model.addAttribute("pickupOrderAddressList", pickupOrderAddressListJson);
 		
-		List<VehicleLocationVO> vehicleLocationList = retrieveVehicleLocations();
+		List<VehicleLocationVO> vehicleLocationList = retrieveVehicleLocations(request);
 		String vehicleLocationListJson = JsonUtil.toJson(vehicleLocationList);
 		model.addAttribute("vehicleLocationList", vehicleLocationListJson);
 		
@@ -162,12 +162,50 @@ public class OrderScheduleController extends BaseController {
 		return deliveryAddressVOList;
 	}
 	
-	private List<VehicleLocationVO> retrieveVehicleLocations() {
+	private void map(Vehicle vehicle, VehicleVO vehicleVO) {
+		vehicle.setNumber(vehicleVO.getVehicleNumber());
+		vehicle.setName(vehicleVO.getName());
+		vehicle.setVin(vehicleVO.getVIN());
+		vehicle.setRegistrationNumber(vehicleVO.getRegistrationNumber());
+		vehicle.setYear(vehicleVO.getYear());
+		vehicle.setMake(vehicleVO.getMake());
+		vehicle.setModel(vehicleVO.getModel());
+		vehicle.setSize(vehicleVO.getVehicleSize());
+	}
+	
+	private void updateVehicle(List<VehicleVO> vehicleVOList, HttpServletRequest request) {
+		if (vehicleVOList == null || vehicleVOList.isEmpty()) {
+			return;
+		}
+		
+		List<String> vehicleNumberList = new ArrayList<String>();
+		List<Vehicle> vehicleList = genericDAO.findAll(Vehicle.class);
+		for (Vehicle aVehicle : vehicleList) {
+			if (StringUtils.isNotEmpty(aVehicle.getNumber())) {
+				vehicleNumberList.add(aVehicle.getNumber());
+			}
+		}
+		
+		for (VehicleVO aVehicleVO : vehicleVOList) {
+			if (vehicleNumberList.contains(aVehicleVO.getVehicleNumber())) {
+				continue;
+			}
+			
+			Vehicle vehicle = new Vehicle();
+			map(vehicle, aVehicleVO);
+			setModifier(request, vehicle);
+			genericDAO.save(vehicle);
+		}
+	}
+	
+	private List<VehicleLocationVO> retrieveVehicleLocations(HttpServletRequest request) {
 		List<VehicleLocationVO> vehicleLocationList = new ArrayList<VehicleLocationVO>();
 		List<VehicleVO> vehicleVOList = verizonRevealService.getAllVehicles();
 		if (vehicleVOList == null || vehicleVOList.isEmpty()) {
 			return vehicleLocationList;
 		}
+		
+		updateVehicle(vehicleVOList, request);
 		
 		List<String> vehicleNumberList = new ArrayList<String>();
 		int maxRows = (vehicleVOList.size() <= MAX_DISPLAY_VEHICLES ? vehicleVOList.size() : MAX_DISPLAY_VEHICLES);
