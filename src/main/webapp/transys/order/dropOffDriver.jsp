@@ -27,23 +27,37 @@ function validateDropOffDriverMissingData() {
 		missingData += "Dumpster #, "
 	}
 	
+	if ($('#vehicleNumSelect').val() == "") {
+		missingData += "Vehicle #, "
+	}
+	
 	if (missingData != "") {
 		missingData = missingData.substring(0, missingData.length - 2);
 	}
 	return missingData;
 }
 
-function processDropOffDriverForm() {
+function processDropOffDriverForm(changeToDroppedOff) {
 	if (validateDropOffDriverForm()) {
-		var dropOffDriverForm = $("#dropOffDriverAddEditForm");
+		var dropOffDriverForm = getDropOffDriverForm();
+		
+		var action = dropOffDriverForm.attr('action');
+		action += "?changeToDroppedOff="+changeToDroppedOff;
+		dropOffDriverForm.attr('action', action);
+		
 		dropOffDriverForm.submit();
 	}
 }
 
 function processRevertToOpen() {
-	var dropOffDriverForm = $("#dropOffDriverAddEditForm");
+	var dropOffDriverForm = getDropOffDriverForm();
 	dropOffDriverForm.attr('action', 'revertDropOffToOpen.do');
 	dropOffDriverForm.submit();
+}
+
+function getDropOffDriverForm() {
+	var dropOffDriverForm = $("#dropOffDriverAddEditForm");
+	return dropOffDriverForm;
 }
 </script>
 
@@ -96,12 +110,17 @@ function processRevertToOpen() {
 				<!--modelObject.orderStatus.status != 'Open'-->
 				<c:if test="${modelObject.id == null}">
 					<c:set var="saveDisabled" value="disabled" />
-				</c:if>'
+				</c:if>
+				<c:set var="changeToDroppedOff" value="" />
+				<c:if test="${(modelObject.id == null) || (modelObject.orderStatus.status != 'Open')}">
+					<c:set var="changeToDroppedOff" value="disabled" />
+				</c:if>
 				<c:set var="revertToOpenDisabled" value="" />
 				<c:if test="${(modelObject.id == null) || (modelObject.orderStatus.status != 'Dropped Off')}">
 					<c:set var="revertToOpenDisabled" value="disabled" />
 				</c:if>
-				<input type="button" id="dropOffDriverCreate" ${saveDisabled} onclick="processDropOffDriverForm();" value="Save" class="flat btn btn-primary btn-sm btn-sm-ext" />
+				<input type="button" id="dropOffDriverCreate" ${saveDisabled} onclick="processDropOffDriverForm('false');" value="Save" class="flat btn btn-primary btn-sm btn-sm-ext" />
+				<input type="button" id="dropOffDriverDropedOff" ${changeToDroppedOff} onclick="processDropOffDriverForm('true');" value="Change To Dropped Off" class="flat btn btn-primary btn-sm btn-sm-ext" />
 				<input type="button" id="dropOffDriverRevert" ${revertToOpenDisabled} onclick="processRevertToOpen();" value="Revert To Open" class="flat btn btn-primary btn-sm btn-sm-ext" />
 				<input type="button" id="dropOffDriverBackBtn" value="Back" class="flat btn btn-primary btn-sm btn-sm-ext" onClick="location.href='list.do'" />
 			</td>

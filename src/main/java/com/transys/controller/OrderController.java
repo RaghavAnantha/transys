@@ -579,6 +579,7 @@ public class OrderController extends CRUDController<Order> {
 	@RequestMapping(method = RequestMethod.POST, value = "/saveDropOffDriver.do")
 	public String saveDropOffDriver(HttpServletRequest request,
 			@RequestParam(value = "currentlyAssignedDumpsterId") Long currentlyAssignedDumpsterId,
+			@RequestParam(value = "changeToDroppedOff") String changeToDroppedOff,
 			@ModelAttribute(MODEL_OBJECT_KEY) Order entity,
 			BindingResult bindingResult, ModelMap model) {
 		try {
@@ -597,12 +598,21 @@ public class OrderController extends CRUDController<Order> {
 		Long modifiedBy = entity.getModifiedBy();
 		String auditMsg = StringUtils.EMPTY;
 		if (OrderStatus.ORDER_STATUS_OPEN.equals(entity.getOrderStatus().getStatus())) {
-			auditMsg = "Order status changed to " + OrderStatus.ORDER_STATUS_DROPPED_OFF;
+			if (BooleanUtils.toBoolean(changeToDroppedOff)) {
+				auditMsg = "Order status changed to " + OrderStatus.ORDER_STATUS_DROPPED_OFF;
+				
+				OrderStatus orderStatus = retrieveOrderStatus(OrderStatus.ORDER_STATUS_DROPPED_OFF);
+				entity.setOrderStatus(orderStatus);
+			} else {
+				auditMsg = "Order Drop Off details updated and ready to be dropped off";
+			}
 			
-			OrderStatus orderStatus = retrieveOrderStatus(OrderStatus.ORDER_STATUS_DROPPED_OFF);
-			entity.setOrderStatus(orderStatus);
-			
-			updateDumpsterStatus(entity.getDumpster().getId(), DumpsterStatus.DUMPSTER_STATUS_DROPPED_OFF, modifiedBy);
+			if (currentlyAssignedDumpsterId == null || currentlyAssignedDumpsterId == -1) {
+				updateDumpsterStatus(entity.getDumpster().getId(), DumpsterStatus.DUMPSTER_STATUS_DROPPED_OFF, modifiedBy);
+			} else if (!currentlyAssignedDumpsterId.equals(entity.getDumpster().getId())) {
+				updateDumpsterStatus(currentlyAssignedDumpsterId, DumpsterStatus.DUMPSTER_STATUS_AVAILABLE, modifiedBy);
+				updateDumpsterStatus(entity.getDumpster().getId(), DumpsterStatus.DUMPSTER_STATUS_DROPPED_OFF, modifiedBy);
+			}
 		} else {
 			auditMsg = "Order Drop Off details updated";
 			
@@ -657,6 +667,7 @@ public class OrderController extends CRUDController<Order> {
 		
 		entity.setDropOffDriver(null);
 		entity.setDumpster(null);
+		entity.setVehicleId(null);
 		
 		OrderStatus orderStatus = retrieveOrderStatus(OrderStatus.ORDER_STATUS_OPEN);
 		entity.setOrderStatus(orderStatus);
