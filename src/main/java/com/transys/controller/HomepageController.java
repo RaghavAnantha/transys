@@ -1,6 +1,6 @@
 package com.transys.controller;
 
-import java.util.List;
+//import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -8,16 +8,15 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 //import com.transys.model.BusinessObject;
-import com.transys.model.User;
+//import com.transys.model.User;
 //import com.transys.model.menu.MenuTree;
 //import com.transys.model.menu.Node;
 
 @Controller
 @SuppressWarnings("unchecked")
 public class HomepageController extends GenericController {
-
 	@RequestMapping("/home.do")
-	public String displayMainpage(HttpServletRequest request) {
+	public String displayMainPage(HttpServletRequest request) {
 		/*User user = getUserInfo(request);
 		MenuTree menuTree = (MenuTree)request.getSession().getAttribute("menuTree");
 		List<Node<BusinessObject>> objects = menuTree.toList();

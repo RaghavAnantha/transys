@@ -8,8 +8,7 @@ import com.transys.model.User;
 
 @Controller
 public abstract class GenericController {
-
     protected User getUserInfo(HttpServletRequest request) {
-	return (User) request.getSession().getAttribute("userInfo");
+   	 return (User) request.getSession().getAttribute("userInfo");
     }
 }

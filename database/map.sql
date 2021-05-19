@@ -46,3 +46,29 @@ ADD CONSTRAINT `orderVehicleRef`
   REFERENCES `transys`.`vehicle` (`id`)
   ON DELETE NO ACTION
   ON UPDATE NO ACTION;
+ ---------
+ 
+ALTER TABLE `transys`.`transysOrder` 
+DROP FOREIGN KEY `orderVehicleRef`;
+ALTER TABLE `transys`.`transysOrder` 
+CHANGE COLUMN `vehicleId` `dropOffVehicleId` BIGINT(20) NULL DEFAULT NULL COMMENT '' ;
+ALTER TABLE `transys`.`transysOrder` 
+ADD CONSTRAINT `orderVehicleRef`
+  FOREIGN KEY (`dropOffVehicleId`)
+  REFERENCES `transys`.`vehicle` (`id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;
+  
+ALTER TABLE `transys`.`transysOrder` 
+DROP FOREIGN KEY `orderVehicleRef`;
+ALTER TABLE `transys`.`transysOrder` 
+DROP INDEX `orderVehicleRef_idx` ,
+ADD INDEX `orderDropOffVehicleRef_idx` (`dropOffVehicleId` ASC)  COMMENT '';
+ALTER TABLE `transys`.`transysOrder` 
+ADD CONSTRAINT `orderDropOffVehicleRef`
+  FOREIGN KEY (`dropOffVehicleId`)
+  REFERENCES `transys`.`vehicle` (`id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;  
+  
+  

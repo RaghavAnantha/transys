@@ -607,11 +607,9 @@ public class OrderController extends CRUDController<Order> {
 				auditMsg = "Order Drop Off details updated and ready to be dropped off";
 			}
 			
-			if (currentlyAssignedDumpsterId == null || currentlyAssignedDumpsterId == -1) {
-				updateDumpsterStatus(entity.getDumpster().getId(), DumpsterStatus.DUMPSTER_STATUS_DROPPED_OFF, modifiedBy);
-			} else if (!currentlyAssignedDumpsterId.equals(entity.getDumpster().getId())) {
+			updateDumpsterStatus(entity.getDumpster().getId(), DumpsterStatus.DUMPSTER_STATUS_DROPPED_OFF, modifiedBy);
+			if (!currentlyAssignedDumpsterId.equals(entity.getDumpster().getId())) {
 				updateDumpsterStatus(currentlyAssignedDumpsterId, DumpsterStatus.DUMPSTER_STATUS_AVAILABLE, modifiedBy);
-				updateDumpsterStatus(entity.getDumpster().getId(), DumpsterStatus.DUMPSTER_STATUS_DROPPED_OFF, modifiedBy);
 			}
 		} else {
 			auditMsg = "Order Drop Off details updated";
@@ -667,7 +665,7 @@ public class OrderController extends CRUDController<Order> {
 		
 		entity.setDropOffDriver(null);
 		entity.setDumpster(null);
-		entity.setVehicleId(null);
+		entity.setDropOffVehicleId(null);
 		
 		OrderStatus orderStatus = retrieveOrderStatus(OrderStatus.ORDER_STATUS_OPEN);
 		entity.setOrderStatus(orderStatus);
@@ -1623,10 +1621,19 @@ public class OrderController extends CRUDController<Order> {
 			return String.format("Order # %d cannot be Cancelled as it is not in 'Open' status", entity.getId());
 		}
 		
+		Long associatedDumpsterId = null;
+		if (entity.getDumpster() != null && entity.getDumpster().getId() != null) {
+			associatedDumpsterId = entity.getDumpster().getId();
+		}
+		
 		beforeSave(request, entity, model);
 		
 		OrderStatus orderStatus = retrieveOrderStatus(OrderStatus.ORDER_STATUS_CANCELED);
 		entity.setOrderStatus(orderStatus);
+		
+		entity.setDropOffDriver(null);
+		entity.setDumpster(null);
+		entity.setDropOffVehicleId(null);
 		
 		genericDAO.saveOrUpdate(entity);
 		
@@ -1635,8 +1642,8 @@ public class OrderController extends CRUDController<Order> {
 		entity.getOrderNotes().add(auditOrderNotes);
 		
 		Long modifiedBy = entity.getModifiedBy();
-		if (entity.getDumpster() != null && entity.getDumpster().getId() != null) {
-			updateDumpsterStatus(entity.getDumpster().getId(), DumpsterStatus.DUMPSTER_STATUS_AVAILABLE, modifiedBy);
+		if (associatedDumpsterId != null) {
+			updateDumpsterStatus(associatedDumpsterId, DumpsterStatus.DUMPSTER_STATUS_AVAILABLE, modifiedBy);
 		}
 		if (entity.getPermits() != null && !entity.getPermits().isEmpty()) {
 			updatePermitStatus(entity.getPermits(), PermitStatus.PERMIT_STATUS_AVAILABLE, modifiedBy);

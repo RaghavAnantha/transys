@@ -120,8 +120,8 @@ public class Order extends AbstractBaseModel {
 	@Column(name="hasDocs")
 	private String hasDocs = "N";
 	
-	@Column(name="vehicleId")
-	private Long vehicleId;
+	@Column(name="dropOffVehicleId")
+	private Long dropOffVehicleId;
 	
 	@Transient
 	String[] fileList;
@@ -555,14 +555,6 @@ public class Order extends AbstractBaseModel {
 	public void setFileList(String[] fileList) {
 		this.fileList = fileList;
 	}
-
-	public Long getVehicleId() {
-		return vehicleId;
-	}
-
-	public void setVehicleId(Long vehicleId) {
-		this.vehicleId = vehicleId;
-	}
 	
 	/*public String getMaterialType() {
 		return materialType;
@@ -571,6 +563,14 @@ public class Order extends AbstractBaseModel {
 	public void setMaterialType(String materialType) {
 		this.materialType = materialType;
 	}*/
+
+	public Long getDropOffVehicleId() {
+		return dropOffVehicleId;
+	}
+
+	public void setDropOffVehicleId(Long dropOffVehicleId) {
+		this.dropOffVehicleId = dropOffVehicleId;
+	}
 
 	/*public OrderNotes getNotes() {
 		return notes;
