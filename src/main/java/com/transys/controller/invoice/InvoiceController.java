@@ -374,7 +374,7 @@ public class InvoiceController extends BaseController {
 		StringBuffer whereClause = new StringBuffer(" and obj.deleteFlag=1");
 		
 		whereClause.append(" and obj.balanceAmountDue > " + 0.0);
-		whereClause.append(" and obj.invoiced='N'");
+		//whereClause.append(" and obj.invoiced='N'");
 		
 		OrderStatus orderStatus = ModelUtil.retrieveOrderStatus(genericDAO, OrderStatus.ORDER_STATUS_CANCELED);
 		whereClause.append(" and obj.orderStatus.id !=" + orderStatus.getId().longValue());
