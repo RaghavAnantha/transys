@@ -215,10 +215,10 @@ function showLoadingMsg() {
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
 		pagingLink="invoicePaymentSearch.do" multipleSelect="false" searcheable="false"
 		exportPdf="false" exportXls="false" drawToolbar="false" dataQualifier="invoicePayment">
+		<transys:textcolumn headerText="Pay. #" width="60px" dataField="id" />
 		<transys:textcolumn headerText="Inv. #" dataField="invoice.id" width="55px" type="java.lang.Long"/>
 		<transys:textcolumn headerText="Inv. Dt" width="70px" dataField="invoice.invoiceDate" type="java.util.Date" dataFormat="MM/dd/yyyy"/>
 		<transys:textcolumn headerText="Customer" dataField="invoice.companyName" />
-		<transys:textcolumn headerText="Pay. #" width="60px" dataField="id" />
 		<transys:textcolumn headerText="Pay. Method" width="110px" dataField="paymentMethod.method" />
 		<transys:textcolumn headerText="Pay. Dt" width="70px" dataField="paymentDate" dataFormat="MM/dd/yyyy"/>
 		<transys:textcolumn headerText="Amt. Paid" width="68px" dataField="amountPaid" type="java.math.BigDecimal" dataFormat="#####0.00"/>

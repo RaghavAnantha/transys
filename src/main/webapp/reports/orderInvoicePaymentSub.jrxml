@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
-<!-- 2021-05-16T00:27:21 -->
+<!-- 2021-05-20T19:23:20 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="orderInvoicePaymentSub" pageWidth="650" pageHeight="842" columnWidth="650" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="27b0d00f-2ed5-470f-9062-b72911004ad8">
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<field name="formattedAmountPaid" class="java.lang.String"/>
@@ -19,9 +19,9 @@
 		<band splitType="Stretch"/>
 	</background>
 	<columnHeader>
-		<band height="20">
+		<band height="18">
 			<staticText>
-				<reportElement mode="Opaque" x="1" y="2" width="45" height="18" forecolor="#000000" backcolor="#D9EDF7" uuid="43fb48f0-2195-4367-b115-0fcb15d816ac">
+				<reportElement mode="Opaque" x="1" y="0" width="45" height="18" forecolor="#000000" backcolor="#D9EDF7" uuid="43fb48f0-2195-4367-b115-0fcb15d816ac">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
@@ -38,7 +38,7 @@
 				<text><![CDATA[Order #]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="579" y="2" width="60" height="18" forecolor="#000000" backcolor="#D9EDF7" uuid="46dc4da9-c1a4-4752-ad0d-a528cfd2f24d">
+				<reportElement mode="Opaque" x="579" y="0" width="60" height="18" forecolor="#000000" backcolor="#D9EDF7" uuid="46dc4da9-c1a4-4752-ad0d-a528cfd2f24d">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
@@ -54,7 +54,7 @@
 				<text><![CDATA[Amount]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="345" y="2" width="80" height="18" forecolor="#000000" backcolor="#D9EDF7" uuid="2a2bf551-10b8-4921-957d-e9e6a70e689c">
+				<reportElement mode="Opaque" x="345" y="0" width="80" height="18" forecolor="#000000" backcolor="#D9EDF7" uuid="2a2bf551-10b8-4921-957d-e9e6a70e689c">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
@@ -70,7 +70,7 @@
 				<text><![CDATA[Del. Dt.]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="46" y="2" width="134" height="18" forecolor="#000000" backcolor="#D9EDF7" uuid="52c7ac32-79fb-46b6-87f9-92c2b9720592">
+				<reportElement mode="Opaque" x="46" y="0" width="134" height="18" forecolor="#000000" backcolor="#D9EDF7" uuid="52c7ac32-79fb-46b6-87f9-92c2b9720592">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
@@ -86,7 +86,7 @@
 				<text><![CDATA[Del. Adds.]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="265" y="2" width="80" height="18" forecolor="#000000" backcolor="#D9EDF7" uuid="c26f3d57-3d1f-4e37-843f-76a8745520d2">
+				<reportElement mode="Opaque" x="265" y="0" width="80" height="18" forecolor="#000000" backcolor="#D9EDF7" uuid="c26f3d57-3d1f-4e37-843f-76a8745520d2">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
@@ -102,7 +102,7 @@
 				<text><![CDATA[Ord. Dt.]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="425" y="2" width="80" height="18" forecolor="#000000" backcolor="#D9EDF7" uuid="68277d6d-53ec-42fc-9a6d-8ccc37842bf3">
+				<reportElement mode="Opaque" x="425" y="0" width="80" height="18" forecolor="#000000" backcolor="#D9EDF7" uuid="68277d6d-53ec-42fc-9a6d-8ccc37842bf3">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
@@ -118,7 +118,7 @@
 				<text><![CDATA[Pickup Dt.]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="505" y="2" width="74" height="18" forecolor="#000000" backcolor="#D9EDF7" uuid="81bd5661-2c0d-49ac-82fd-6cf283dbc5a6">
+				<reportElement mode="Opaque" x="505" y="0" width="74" height="18" forecolor="#000000" backcolor="#D9EDF7" uuid="81bd5661-2c0d-49ac-82fd-6cf283dbc5a6">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
@@ -134,7 +134,7 @@
 				<text><![CDATA[Ord. Pay. #]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="180" y="2" width="85" height="18" forecolor="#000000" backcolor="#D9EDF7" uuid="2a8bb2c9-cc09-4425-b310-f0c1a5b1e3d4">
+				<reportElement mode="Opaque" x="180" y="0" width="85" height="18" forecolor="#000000" backcolor="#D9EDF7" uuid="2a8bb2c9-cc09-4425-b310-f0c1a5b1e3d4">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>

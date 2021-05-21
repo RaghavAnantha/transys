@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
-<!-- 2021-05-20T18:17:46 -->
+<!-- 2021-05-20T19:25:46 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="orderInvoicePayment" pageWidth="900" pageHeight="595" orientation="Landscape" columnWidth="860" leftMargin="20" rightMargin="20" topMargin="10" bottomMargin="10" isSummaryWithPageHeaderAndFooter="true" uuid="53a6c0df-7db3-4567-a441-f90a0edf36dc">
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
@@ -100,7 +100,7 @@
 				<textFieldExpression><![CDATA[$P{rdsName}]]></textFieldExpression>
 			</textField>
 			<image hAlign="Center" vAlign="Middle">
-				<reportElement x="360" y="9" width="194" height="101" uuid="178ad788-2530-4c51-b1f3-659d25b97f35"/>
+				<reportElement x="348" y="9" width="164" height="101" uuid="178ad788-2530-4c51-b1f3-659d25b97f35"/>
 				<graphicElement fill="Solid"/>
 				<imageExpression><![CDATA[$P{LOGO_FILE_PATH}]]></imageExpression>
 			</image>
@@ -402,7 +402,7 @@
 		<band height="28" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 			<textField>
-				<reportElement x="381" y="5" width="76" height="18" uuid="c16a809c-7c8e-4c1d-bd91-0363b6fb295e">
+				<reportElement x="376" y="5" width="76" height="18" uuid="c16a809c-7c8e-4c1d-bd91-0363b6fb295e">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
@@ -411,7 +411,7 @@
 				<textFieldExpression><![CDATA["Page " + $V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 			<textField evaluationTime="Report" isBlankWhenNull="true">
-				<reportElement x="457" y="5" width="40" height="18" uuid="0f44923f-90b5-4a74-845d-9f965d3d61b4">
+				<reportElement x="452" y="5" width="58" height="18" uuid="0f44923f-90b5-4a74-845d-9f965d3d61b4">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
 				<textElement textAlignment="Left" verticalAlignment="Middle">

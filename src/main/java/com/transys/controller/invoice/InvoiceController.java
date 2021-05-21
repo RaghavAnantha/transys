@@ -288,7 +288,9 @@ public class InvoiceController extends BaseController {
 			List<DeliveryAddressVO> deliveryAddressVOList = 
 					ModelUtil.retrieveOrderDeliveryAddresses(genericDAO, customerId);
 			model.addAttribute("deliveryAddresses", deliveryAddressVOList);
-			model.addAttribute("orderIds", retrieveOrderIds(orderInvoiced, customerId));
+			if (StringUtils.equals("N", orderInvoiced)) {
+				model.addAttribute("orderIds", retrieveOrderIds(orderInvoiced, customerId));
+			}
 		}
 	}
 	
@@ -332,13 +334,16 @@ public class InvoiceController extends BaseController {
 	}
 	
 	private List<Long> retrieveOrderIds(String invoiced, String customerId) {
-		String query = "select obj.id from Order obj where obj.deleteFlag=1 "
-				+ " and obj.invoiced='" + invoiced + "'";
+		String query = "select obj.id from Order obj where obj.deleteFlag=1 ";
+				
 		if (StringUtils.equals(invoiced, "N")) {
 			OrderStatus orderStatus = ModelUtil.retrieveOrderStatus(genericDAO, OrderStatus.ORDER_STATUS_CANCELED);
 			query	+= " and obj.orderStatus.id !=" + orderStatus.getId().longValue();
 			query	+= " and obj.balanceAmountDue > 0.0";
+		} else {
+			query	+= " and obj.invoiced='" + invoiced + "'";
 		}
+		
 		if (StringUtils.isNotEmpty(customerId)) {
 			query	+= " and obj.customer.id = " + customerId;
 		}
