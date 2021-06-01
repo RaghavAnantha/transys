@@ -481,5 +481,17 @@ function beforeExpiryDatepickerShow($expiryDateElem) {
     }
 }
 
+function setDatepickerAutoComplete(setting) {
+	$(".hasDatepicker").attr('autocomplete', setting);
+}
+
+function setDatepickerAutoCompleteOff() {
+	setDatepickerAutoComplete('off');
+}
+
+function setDatepickerAutoCompleteOn() {
+	setDatepickerAutoComplete('on');
+}
+
 
 

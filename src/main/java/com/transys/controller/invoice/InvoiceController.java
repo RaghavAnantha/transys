@@ -592,6 +592,8 @@ public class InvoiceController extends BaseController {
 		anInvoiceVO.setOrderDate(orderInvoiceDetails.getOrderDate());
 		anInvoiceVO.setStatus(orderInvoiceDetails.getOrderStatus());
 		
+		anInvoiceVO.setDumpsterSize(orderInvoiceDetails.getDumpsterSize());
+		
 		anInvoiceVO.setDeliveryContactName(orderInvoiceDetails.getDeliveryContactName());
 		anInvoiceVO.setDeliveryContactPhone1(orderInvoiceDetails.getDeliveryContactPhone1());
 		anInvoiceVO.setDeliveryAddressFullLine(orderInvoiceDetails.getDeliveryAddressFullLine());
