@@ -373,6 +373,10 @@ public class InvoiceController extends BaseController {
 		String orderId = input.getOrderId();
 		String orderDateFrom = input.getOrderDateFrom();
 		String orderDateTo = input.getOrderDateTo();
+		String deliveryDateFrom = input.getDeliveryDateFrom();
+		String deliveryDateTo = input.getDeliveryDateTo();
+		String pickupDateFrom = input.getPickupDateFrom();
+		String pickupDateTo = input.getPickupDateTo();
 		
 		StringBuffer query = new StringBuffer("select obj from Order obj where 1=1");
 		StringBuffer countQuery = new StringBuffer("select count(obj) from Order obj where 1=1");
@@ -398,6 +402,18 @@ public class InvoiceController extends BaseController {
 		}
       if (StringUtils.isNotEmpty(orderDateTo)){
 	     	whereClause.append(" and obj.createdAt <='"+FormatUtil.formatInputDateToDbDate(orderDateTo)+"'");
+	   }
+      if (StringUtils.isNotEmpty(deliveryDateFrom)){
+        	whereClause.append(" and obj.deliveryDate >='"+FormatUtil.formatInputDateToDbDate(deliveryDateFrom)+"'");
+		}
+      if (StringUtils.isNotEmpty(deliveryDateTo)){
+	     	whereClause.append(" and obj.deliveryDate <='"+FormatUtil.formatInputDateToDbDate(deliveryDateTo)+"'");
+	   }
+      if (StringUtils.isNotEmpty(pickupDateFrom)){
+        	whereClause.append(" and obj.pickupDate >='"+FormatUtil.formatInputDateToDbDate(pickupDateFrom)+"'");
+		}
+      if (StringUtils.isNotEmpty(pickupDateTo)){
+	     	whereClause.append(" and obj.pickupDate <='"+FormatUtil.formatInputDateToDbDate(pickupDateTo)+"'");
 	   }
       
       query.append(whereClause);

@@ -444,6 +444,14 @@ function executeFunctionByName(functionName, context /*, args */) {
 	return context[func].apply(context, args);
 }
 
+function setDatepicker($dateElem) {
+	$dateElem.datepicker({
+		dateFormat: 'mm/dd/yy',
+		changeMonth: true,
+		changeYear: true
+	});
+}
+
 function setExpiryDatepicker($expiryDateElem) {
 	$expiryDateElem.datepicker( {
 		changeMonth: true,

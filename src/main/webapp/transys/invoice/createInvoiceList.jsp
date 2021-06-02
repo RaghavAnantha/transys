@@ -46,8 +46,14 @@ function validateCreateInvoiceSearchMissingData() {
 	
 	var orderDateFrom = createInvoiceSearchForm.find("input[name='orderDateFrom']").val();
 	var orderDateTo = createInvoiceSearchForm.find("input[name='orderDateTo']").val();
-	if ((orderDateFrom == "" || orderDateTo == "")) {
-		missingData += "Order #/ Order Dates, ";
+	var deliveryDateFrom = createInvoiceSearchForm.find("input[name='deliveryDateFrom']").val();
+	var deliveryDateTo = createInvoiceSearchForm.find("input[name='deliveryDateTo']").val();
+	var pickupDateFrom = createInvoiceSearchForm.find("input[name='pickupDateFrom']").val();
+	var pickupDateTo = createInvoiceSearchForm.find("input[name='pickupDateTo']").val();
+	if (orderDateFrom == "" && orderDateTo == ""
+			&& deliveryDateFrom == "" && deliveryDateTo == ""
+			&& pickupDateFrom == "" && pickupDateTo == "") {
+		missingData += "Order #/ Dates, ";
 	}
 	
 	if (missingData != "") {
@@ -234,6 +240,30 @@ function populateCreateInvoiceOrderIds(orderIdList) {
 			<td colspan=10></td>
 		</tr>
 		<tr>
+			<td class="form-left">Delivery Date From<span class="errorMessage">*</span></td>
+			<td>
+				<form:input path="deliveryDateFrom" cssClass="flat" style="width:172px !important" id="datepicker2" maxlength="10"/>
+				<br/><form:errors path="deliveryDateFrom" cssClass="errorMessage" />
+			</td>
+			<td class="form-left">Delivery Date To<span class="errorMessage">*</span></td>
+			<td>
+				<form:input path="deliveryDateTo" cssClass="flat" style="width:172px !important" id="datepicker3" maxlength="10"/>
+				<br/><form:errors path="deliveryDateTo" cssClass="errorMessage" />
+			</td>
+		</tr>
+		<tr>
+			<td class="form-left">Pickup Date From<span class="errorMessage">*</span></td>
+			<td>
+				<form:input path="pickupDateFrom" cssClass="flat" style="width:172px !important" id="datepicker4" maxlength="10"/>
+				<br/><form:errors path="pickupDateFrom" cssClass="errorMessage" />
+			</td>
+			<td class="form-left">Pickup Date To<span class="errorMessage">*</span></td>
+			<td>
+				<form:input path="pickupDateTo" cssClass="flat" style="width:172px !important" id="datepicker5" maxlength="10"/>
+				<br/><form:errors path="pickupDateTo" cssClass="errorMessage" />
+			</td>
+		</tr>
+		<tr>
 			<td></td>
 			<td>
 				<input type="button" id="createInvoiceSearchSubmitBtn" onclick="processCreateInvoiceSearch();" value="Search" class="flat btn btn-primary btn-sm btn-sm-ext" />
@@ -274,7 +304,7 @@ function populateCreateInvoiceOrderIds(orderIdList) {
 	<!-- To make datepicker work in modal dialog -->
 	<input type=hidden id="createInvoiceParamsDialogInvoiceDate" name="createInvoiceParamsDialogInvoiceDate" value=""/>
 	
-	<transys:datatable urlContext="invoice" deletable="false"
+	<transys:datatable urlContext="invoice" drawToolbar="false" deletable="false"
 		editable="false" cancellable="false" insertable="false" baseObjects="${list}"
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
 		pagingLink="createInvoiceSearch.do" multipleSelect="true" searcheable="false"
@@ -323,13 +353,8 @@ function populateCreateInvoiceOrderIds(orderIdList) {
 				<td>
 					<input type="text" id="createInvoiceParamsDialogInvoiceDate" class="flat" size="15" style="width:175px"/> 
 					<script type="text/javascript">
-						$(function() {
-							$("#createInvoiceParamsDialogInvoiceDate").datepicker({
-								dateFormat: 'mm/dd/yy',
-								changeMonth: true,
-								changeYear: true
-							});
-						});
+						var $dateElem = $("#createInvoiceParamsDialogInvoiceDate");
+						setDatePicker($dateElem);
 					</script>
 				</td>
 			</tr>
