@@ -10,6 +10,7 @@
 		<transys:textcolumn headerText="Ord. #" width="70px" dataField="orderId" />
 		<transys:textcolumn headerText="Del. Adds." dataField="deliveryAddressFullLine" />
 		<transys:textcolumn headerText="City" dataField="deliveryAddressCity" />
+		<transys:textcolumn headerText="Size" dataField="dumpsterSize" />
 		<transys:textcolumn headerText="Ord. Dt" width="82px" dataField="formattedOrderDate"/>
 		<transys:textcolumn headerText="Del. Dt" width="82px" dataField="formattedDeliveryDate"/>
 		<transys:textcolumn headerText="Pick. Dt" width="82px" dataField="formattedPickupDate"/>

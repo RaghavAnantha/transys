@@ -1,16 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
-<!-- 2021-05-21T15:52:17 -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="orderInvoicePayment" pageWidth="900" pageHeight="595" orientation="Landscape" columnWidth="860" leftMargin="20" rightMargin="20" topMargin="10" bottomMargin="10" isSummaryWithPageHeaderAndFooter="true" uuid="53a6c0df-7db3-4567-a441-f90a0edf36dc">
+<!-- 2021-06-02T15:48:17 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="orderInvoicePayment" pageWidth="860" pageHeight="595" orientation="Landscape" columnWidth="820" leftMargin="20" rightMargin="20" topMargin="10" bottomMargin="10" isSummaryWithPageHeaderAndFooter="true" uuid="53a6c0df-7db3-4567-a441-f90a0edf36dc">
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
 	<parameter name="invoiceNo" class="java.lang.String"/>
 	<parameter name="invoiceDate" class="java.lang.String"/>
 	<parameter name="customer" class="java.lang.String"/>
@@ -100,12 +93,12 @@
 				<textFieldExpression><![CDATA[$P{rdsName}]]></textFieldExpression>
 			</textField>
 			<image hAlign="Center" vAlign="Middle">
-				<reportElement x="348" y="9" width="164" height="101" uuid="178ad788-2530-4c51-b1f3-659d25b97f35"/>
+				<reportElement x="328" y="9" width="164" height="101" uuid="178ad788-2530-4c51-b1f3-659d25b97f35"/>
 				<graphicElement fill="Solid"/>
 				<imageExpression><![CDATA[$P{LOGO_FILE_PATH}]]></imageExpression>
 			</image>
 			<textField pattern="" isBlankWhenNull="true">
-				<reportElement x="690" y="55" width="153" height="18" uuid="2821c3a9-0a9f-4956-b2dd-b96a90e6e5ae"/>
+				<reportElement x="657" y="55" width="153" height="18" uuid="2821c3a9-0a9f-4956-b2dd-b96a90e6e5ae"/>
 				<box>
 					<pen lineWidth="0.0"/>
 				</box>
@@ -115,7 +108,7 @@
 				<textFieldExpression><![CDATA[$P{invoiceNo}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement mode="Opaque" x="593" y="55" width="96" height="18" backcolor="#FFFFFF" uuid="07f66c55-5d5e-43d2-ac51-f37bf6dfb7dc"/>
+				<reportElement mode="Opaque" x="560" y="55" width="96" height="18" backcolor="#FFFFFF" uuid="07f66c55-5d5e-43d2-ac51-f37bf6dfb7dc"/>
 				<box>
 					<pen lineWidth="0.0" lineColor="#333333"/>
 				</box>
@@ -125,7 +118,7 @@
 				<text><![CDATA[Invoice Number:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="593" y="37" width="96" height="18" backcolor="#FFFFFF" uuid="378d4d16-ad45-41e8-b799-39e525913f5b"/>
+				<reportElement mode="Opaque" x="560" y="37" width="96" height="18" backcolor="#FFFFFF" uuid="378d4d16-ad45-41e8-b799-39e525913f5b"/>
 				<box>
 					<pen lineWidth="0.0" lineColor="#333333"/>
 				</box>
@@ -135,7 +128,7 @@
 				<text><![CDATA[Invoice Date:]]></text>
 			</staticText>
 			<textField pattern="" isBlankWhenNull="true">
-				<reportElement x="690" y="37" width="153" height="18" uuid="dad1b91c-7123-4087-b0b7-45d2b9099c01"/>
+				<reportElement x="657" y="37" width="153" height="18" uuid="dad1b91c-7123-4087-b0b7-45d2b9099c01"/>
 				<box>
 					<pen lineWidth="0.0"/>
 				</box>
@@ -145,14 +138,14 @@
 				<textFieldExpression><![CDATA[$P{invoiceDate}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="658" y="9" width="131" height="18" uuid="88dfc37e-5280-4b58-a19a-058e1d75c7a5"/>
+				<reportElement x="625" y="9" width="131" height="18" uuid="88dfc37e-5280-4b58-a19a-058e1d75c7a5"/>
 				<textElement textAlignment="Center" verticalAlignment="Bottom">
 					<font size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[INVOICE PAYMENT]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="593" y="73" width="96" height="18" backcolor="#FFFFFF" uuid="0885966b-6ed3-42d3-a8b6-f1ad9488157a"/>
+				<reportElement mode="Opaque" x="560" y="73" width="96" height="18" backcolor="#FFFFFF" uuid="0885966b-6ed3-42d3-a8b6-f1ad9488157a"/>
 				<box>
 					<pen lineWidth="0.0" lineColor="#333333"/>
 				</box>
@@ -162,7 +155,7 @@
 				<text><![CDATA[Invoiced Amt:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="593" y="91" width="96" height="18" backcolor="#FFFFFF" uuid="bacd2e82-c353-4df9-ac05-c3f9c6ad43d9"/>
+				<reportElement mode="Opaque" x="560" y="91" width="96" height="18" backcolor="#FFFFFF" uuid="bacd2e82-c353-4df9-ac05-c3f9c6ad43d9"/>
 				<box>
 					<pen lineWidth="0.0" lineColor="#333333"/>
 				</box>
@@ -172,7 +165,7 @@
 				<text><![CDATA[Total Paid:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="593" y="109" width="96" height="18" backcolor="#FFFFFF" uuid="bc377a57-4c29-4f96-90d4-d1dac635fe2e"/>
+				<reportElement mode="Opaque" x="560" y="109" width="96" height="18" backcolor="#FFFFFF" uuid="bc377a57-4c29-4f96-90d4-d1dac635fe2e"/>
 				<box>
 					<pen lineWidth="0.0" lineColor="#333333"/>
 				</box>
@@ -182,7 +175,7 @@
 				<text><![CDATA[Balance Due:]]></text>
 			</staticText>
 			<textField pattern="" isBlankWhenNull="true">
-				<reportElement x="690" y="73" width="153" height="18" uuid="4bea3161-eaf8-46f9-8054-cb577dfacb83"/>
+				<reportElement x="657" y="73" width="153" height="18" uuid="4bea3161-eaf8-46f9-8054-cb577dfacb83"/>
 				<box>
 					<pen lineWidth="0.0"/>
 				</box>
@@ -192,7 +185,7 @@
 				<textFieldExpression><![CDATA[$P{invoicedAmount}]]></textFieldExpression>
 			</textField>
 			<textField pattern="" isBlankWhenNull="true">
-				<reportElement x="690" y="91" width="153" height="18" uuid="c22d8259-a1b3-4a62-8332-be18f0876c3e"/>
+				<reportElement x="657" y="91" width="153" height="18" uuid="c22d8259-a1b3-4a62-8332-be18f0876c3e"/>
 				<box>
 					<pen lineWidth="0.0"/>
 				</box>
@@ -202,7 +195,7 @@
 				<textFieldExpression><![CDATA[$P{invoicePaymentDone}]]></textFieldExpression>
 			</textField>
 			<textField pattern="" isBlankWhenNull="true">
-				<reportElement x="690" y="109" width="153" height="18" uuid="e7a84fa4-1923-440a-982e-1706ac6ae81c"/>
+				<reportElement x="657" y="109" width="153" height="18" uuid="e7a84fa4-1923-440a-982e-1706ac6ae81c"/>
 				<box>
 					<pen lineWidth="0.0"/>
 				</box>
