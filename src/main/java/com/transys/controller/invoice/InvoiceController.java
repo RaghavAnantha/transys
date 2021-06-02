@@ -676,6 +676,8 @@ public class InvoiceController extends BaseController {
 		anInvoiceVO.setDeliveryAddressFullLine(anOrder.getDeliveryAddress().getFullLine());
 		anInvoiceVO.setDeliveryCity(anOrder.getDeliveryAddress().getCity());
 		
+		anInvoiceVO.setDumpsterSize(anOrder.getDumpsterSize().getSize());
+		
 		anInvoiceVO.setDeliveryDate(anOrder.getFormattedDeliveryDate());
 		anInvoiceVO.setPickupDate(anOrder.getFormattedPickupDate());
 		
