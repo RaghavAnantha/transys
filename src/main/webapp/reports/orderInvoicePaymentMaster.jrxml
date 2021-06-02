@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
-<!-- 2021-06-02T17:22:19 -->
+<!-- 2021-06-02T17:56:01 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="orderInvoicePayment" pageWidth="860" pageHeight="595" orientation="Landscape" columnWidth="820" leftMargin="20" rightMargin="20" topMargin="10" bottomMargin="10" isSummaryWithPageHeaderAndFooter="true" uuid="53a6c0df-7db3-4567-a441-f90a0edf36dc">
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
@@ -397,7 +397,7 @@
 		<band height="28" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 			<textField>
-				<reportElement x="349" y="5" width="76" height="18" uuid="c16a809c-7c8e-4c1d-bd91-0363b6fb295e">
+				<reportElement x="343" y="5" width="76" height="18" uuid="c16a809c-7c8e-4c1d-bd91-0363b6fb295e">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
@@ -406,7 +406,7 @@
 				<textFieldExpression><![CDATA["Page " + $V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 			<textField evaluationTime="Report" isBlankWhenNull="true">
-				<reportElement x="425" y="5" width="58" height="18" uuid="0f44923f-90b5-4a74-845d-9f965d3d61b4">
+				<reportElement x="419" y="5" width="58" height="18" uuid="0f44923f-90b5-4a74-845d-9f965d3d61b4">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
