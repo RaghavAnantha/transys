@@ -185,4 +185,9 @@ public class OrderInvoicePayment extends AbstractBaseModel {
 	public String getFormattedAmountPaid() {
 		return FormatUtil.formatFee(amountPaid);
 	}
+	
+	@Transient
+	public String getFormattedAmountPaidWithCurrency() {
+		return FormatUtil.formatFee(amountPaid, true);
+	}
 }
