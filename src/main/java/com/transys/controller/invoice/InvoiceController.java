@@ -555,12 +555,12 @@ public class InvoiceController extends BaseController {
 		if (StringUtils.isEmpty(input.getCustomerId())) {
 			bindingResult.rejectValue("customerId", "NotNull.java.lang.String", null, null);
 		}
-		if (StringUtils.isEmpty(input.getOrderDateFrom())) {
+		/*if (StringUtils.isEmpty(input.getOrderDateFrom())) {
 			bindingResult.rejectValue("orderDateFrom", "NotNull.java.lang.String", null, null);
 		}
 		if (StringUtils.isEmpty(input.getOrderDateTo())) {
 			bindingResult.rejectValue("orderDateTo", "NotNull.java.lang.String", null, null);
-		}
+		}*/
 	}
 	
 	private List<Order> performPreviewInvoiceSearch(InvoiceVO input) {

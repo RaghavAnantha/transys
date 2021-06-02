@@ -227,12 +227,12 @@ function populateCreateInvoiceOrderIds(orderIdList) {
 			</td>
 		</tr>
 		<tr>
-			<td class="form-left">Order Date From<span class="errorMessage">*</span></td>
+			<td class="form-left">Order Date From<span class="errorMessage"></span></td>
 			<td>
 				<form:input path="orderDateFrom" cssClass="flat" style="width:172px !important" id="datepicker" maxlength="10"/>
 				<br/><form:errors path="orderDateFrom" cssClass="errorMessage" />
 			</td>
-			<td class="form-left">Order Date To<span class="errorMessage">*</span></td>
+			<td class="form-left">Order Date To<span class="errorMessage"></span></td>
 			<td>
 				<form:input path="orderDateTo" cssClass="flat" style="width:172px !important" id="datepicker1" maxlength="10"/>
 				<br/><form:errors path="orderDateTo" cssClass="errorMessage" />
@@ -240,24 +240,24 @@ function populateCreateInvoiceOrderIds(orderIdList) {
 			<td colspan=10></td>
 		</tr>
 		<tr>
-			<td class="form-left">Delivery Date From<span class="errorMessage">*</span></td>
+			<td class="form-left">Delivery Date From<span class="errorMessage"></span></td>
 			<td>
 				<form:input path="deliveryDateFrom" cssClass="flat" style="width:172px !important" id="datepicker2" maxlength="10"/>
 				<br/><form:errors path="deliveryDateFrom" cssClass="errorMessage" />
 			</td>
-			<td class="form-left">Delivery Date To<span class="errorMessage">*</span></td>
+			<td class="form-left">Delivery Date To<span class="errorMessage"></span></td>
 			<td>
 				<form:input path="deliveryDateTo" cssClass="flat" style="width:172px !important" id="datepicker3" maxlength="10"/>
 				<br/><form:errors path="deliveryDateTo" cssClass="errorMessage" />
 			</td>
 		</tr>
 		<tr>
-			<td class="form-left">Pickup Date From<span class="errorMessage">*</span></td>
+			<td class="form-left">Pickup Date From<span class="errorMessage"></span></td>
 			<td>
 				<form:input path="pickupDateFrom" cssClass="flat" style="width:172px !important" id="datepicker4" maxlength="10"/>
 				<br/><form:errors path="pickupDateFrom" cssClass="errorMessage" />
 			</td>
-			<td class="form-left">Pickup Date To<span class="errorMessage">*</span></td>
+			<td class="form-left">Pickup Date To<span class="errorMessage"></span></td>
 			<td>
 				<form:input path="pickupDateTo" cssClass="flat" style="width:172px !important" id="datepicker5" maxlength="10"/>
 				<br/><form:errors path="pickupDateTo" cssClass="errorMessage" />
@@ -354,7 +354,7 @@ function populateCreateInvoiceOrderIds(orderIdList) {
 					<input type="text" id="createInvoiceParamsDialogInvoiceDate" class="flat" size="15" style="width:175px"/> 
 					<script type="text/javascript">
 						var $dateElem = $("#createInvoiceParamsDialogInvoiceDate");
-						setDatePicker($dateElem);
+						setDatepicker($dateElem);
 					</script>
 				</td>
 			</tr>
