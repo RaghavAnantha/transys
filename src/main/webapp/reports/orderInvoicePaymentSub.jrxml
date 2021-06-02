@@ -1,12 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
-<!-- 2021-06-02T17:20:43 -->
+<!-- 2021-06-02T17:46:26 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="orderInvoicePaymentSub" pageWidth="690" pageHeight="842" columnWidth="690" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="27b0d00f-2ed5-470f-9062-b72911004ad8">
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
-	<field name="formattedAmountPaidWithCurrency" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
 	<field name="order.id" class="java.lang.Long"/>
 	<field name="formattedPaymentDate" class="java.lang.String"/>
 	<field name="paymentMethod.method" class="java.lang.String"/>
@@ -19,6 +15,7 @@
 	<field name="id" class="java.lang.Long"/>
 	<field name="order.deliveryCity" class="java.lang.String"/>
 	<field name="order.dumpsterSizeStr" class="java.lang.String"/>
+	<field name="formattedAmountPaidWithCurrency" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
