@@ -1,19 +1,26 @@
 <%@ include file="/common/taglibs.jsp"%>
 <c:set var="reportSearchForm" value="${param.reportSearchForm}" />
 <c:set var="reportDataElem" value="${param.reportDataElem}" />
+
+<c:set var="reportExportAction" value="${urlCtx}/export.do" />
+<c:if test="${param.reportExportAction != null && param.reportExportAction != ''}">
+	<c:set var="reportExportAction" value="${param.reportExportAction}" />	
+</c:if>
+<c:set var="reportExportAction" value="${reportExportAction}?type=" />
+
 <table width="100%" class="reportToolBar">
 	<tr>
 		<td align="${left}" width="100%" align="right">
-			<a href="${urlCtx}/export.do?type=pdf" onclick="return validateExport();">
+			<a href="${reportExportAction}pdf" onclick="return validateExport();">
 				<img src="${pdfImage}" border="0" class="toolbarButton" title="PDF"/>
 			</a>
-			<a href="${urlCtx}/export.do?type=xlsx">
+			<a href="${reportExportAction}xlsx">
 				<img src="${excelImage}" border="0" class="toolbarButton" onclick="return validateExport();" title="XLSX"/>
 			</a>
-			<a href="${urlCtx}/export.do?type=csv">
+			<a href="${reportExportAction}csv">
 				<img src="${csvImage}" border="0" class="toolbarButton" onclick="return validateExport();" title="CSV"/>
 			</a>
-			<a href="${urlCtx}/export.do?type=print" target="_blank" onclick="return validateExport();">
+			<a href="${reportExportAction}print" target="_blank" onclick="return validateExport();">
 				<img src="${printImage}" border="0" class="toolbarButton" title="Print"/>
 			</a>
 		</td>

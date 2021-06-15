@@ -38,6 +38,7 @@ import com.transys.core.dao.GenericDAO;
 import com.transys.core.util.FormatUtil;
 import com.transys.core.util.MimeUtil;
 import com.transys.core.util.ReportUtil;
+import com.transys.core.util.ServletUtil;
 
 import com.transys.model.AbstractBaseModel;
 import com.transys.model.BaseModel;
@@ -123,6 +124,10 @@ public class BaseController {
 
 	public void setUrlContext(String urlContext) {
 		this.urlContext = urlContext;
+	}
+	
+	public String getReportsUrlContext() {
+		return "reports";
 	}
 	
 	// Set up any custom editors, adds a custom one for java.sql.date by default
@@ -466,5 +471,10 @@ public class BaseController {
 		if (searchCriteria != null && searchCriteria.getSearchMap() != null) {
 			searchCriteria.getSearchMap().clear();
 		}
+	}
+
+	protected void addLogoFilePath(HttpServletRequest request, Map<String, Object> params) {
+		String logoFilePath = ServletUtil.getLogoFilePath(request);
+		params.put("LOGO_FILE_PATH", logoFilePath);
 	}
 }

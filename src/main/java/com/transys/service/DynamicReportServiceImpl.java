@@ -1235,7 +1235,7 @@ public class DynamicReportServiceImpl extends BaseService implements DynamicRepo
 		SimpleHtmlReportConfiguration reportConfig = new SimpleHtmlReportConfiguration();
 		//reportConfig.setIgnorePageMargins(true);
 		reportConfig.setRemoveEmptySpaceBetweenRows(true);
-		//reportConfig.setBorderCollapse("separate"); // collapse 
+		//reportConfig.setBorderCollapse("separate"); // collapse separate
 		reportConfig.setZoomRatio(new Float(0.97)); // 0.97
 		htmlExporter.setConfiguration(reportConfig);
 	}

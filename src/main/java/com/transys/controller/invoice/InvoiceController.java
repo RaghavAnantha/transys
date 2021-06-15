@@ -4,7 +4,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import java.math.BigDecimal;
+
 import java.text.SimpleDateFormat;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -17,7 +19,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
+
 import org.springframework.beans.propertyeditors.CustomDateEditor;
+
 import org.springframework.stereotype.Controller;
 
 import org.springframework.transaction.annotation.Propagation;
@@ -42,12 +46,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import com.transys.controller.BaseController;
+
 import com.transys.controller.editor.AbstractModelEditor;
 
 import com.transys.core.util.CoreUtil;
 import com.transys.core.util.FormatUtil;
 import com.transys.core.util.ModelUtil;
-import com.transys.core.util.ServletUtil;
+import com.transys.core.util.ReportUtil;
 
 import com.transys.model.Customer;
 import com.transys.model.DeliveryAddress;
@@ -65,6 +70,7 @@ import com.transys.model.invoice.OrderInvoicePayment;
 
 import com.transys.model.vo.CustomerVO;
 import com.transys.model.vo.DeliveryAddressVO;
+import com.transys.model.vo.invoice.InvoiceReportVO;
 import com.transys.model.vo.invoice.InvoiceVO;
 
 @Controller
@@ -73,6 +79,7 @@ import com.transys.model.vo.invoice.InvoiceVO;
 public class InvoiceController extends BaseController {
 	private static final String INVOICE_TAB = "manageInvoice";
 	private static final String INVOICE_PAYMENT_TAB = "invoicePayment";
+	private static final String INVOICE_REPORTS_TAB = "invoiceReports";
 	
 	private static final String INVOICE_PAYMENT_MODEL_OBJECT_KEY = "invoicePaymentModelObject";
 	
@@ -81,6 +88,7 @@ public class InvoiceController extends BaseController {
 	private static final String previewInvoiceMsgCtx = "invoicePreview";
 	private static final String createInvoicePaymentMsgCtx = "createInvoicePayment";
 	private static final String manageInvoicePaymentMsgCtx = "manageInvoicePayment";
+	private static final String invoiceListReportMsgCtx = "invoiceListReport";
 	
 	private static String ORDER_INVOICE_REPORT = "orderInvoice";
 	private static String ORDER_INVOICE_PAYMENT_MASTER_REPORT = "orderInvoicePaymentMaster";
@@ -88,6 +96,11 @@ public class InvoiceController extends BaseController {
 	
 	public InvoiceController() {
 		setUrlContext("invoice");
+	}
+	
+	@Override
+	public String getReportsUrlContext() {
+		return super.getReportsUrlContext() + "/invoice";
 	}
 	
 	@Override
@@ -116,6 +129,13 @@ public class InvoiceController extends BaseController {
 	public String manageInvoiceMain(ModelMap model, HttpServletRequest request) {
 		clearSearchCriteria(request);
 		return processManageInvoiceSearch(model, request);
+	}
+	
+	@RequestMapping(method = { RequestMethod.GET }, value = "/reports/invoiceReportsMain.do")
+	public String invoiceReportsMain(ModelMap model, HttpServletRequest request) {
+		//clearSearchCriteria(request);
+		setupInvoiceListReport(model, request);
+		return getReportsUrlContext() + "/invoiceListReport/list";
 	}
 	
 	@RequestMapping(method = { RequestMethod.GET }, value = "/invoicePaymentMain.do")
@@ -226,6 +246,93 @@ public class InvoiceController extends BaseController {
 		return processManageInvoiceSearch(model, request);
 	}
 	
+	@RequestMapping(method = {RequestMethod.GET, RequestMethod.POST }, value = "/reports/invoiceListReportSearch.do")
+	public String invoiceListReportSearch(ModelMap model, HttpServletRequest request, HttpServletResponse response) {
+		populateSearchCriteria(request, request.getParameterMap());
+		
+		ByteArrayOutputStream out = null;
+		try {
+			Map<String, Object> datas = generateInvoiceListReportData(model, request);
+			
+			Map<String, Object> params = (Map<String, Object>) datas.get(ReportUtil.paramsKey);
+			List<InvoiceReportVO> data = (List<InvoiceReportVO>) datas.get(ReportUtil.dataKey);
+			
+			String reportName = "orderInvoiceReportMaster";
+			String subReportName = "orderInvoiceOrderSub";
+			
+			String type = "html";
+			setReportRequestHeaders(response, type, reportName);
+			
+			if (data.isEmpty()) {
+				return "report.empty";
+			}
+			
+			out = dynamicReportService.generateStaticMasterSubReport(reportName, subReportName, data, params, 
+						type, request);
+			out.writeTo(response.getOutputStream());
+			
+			return null;
+		} catch (Throwable t) {
+			t.printStackTrace();
+			log.warn("Exception occured while generating Invoice List report: " + t);
+			
+			setErrorMsg(request, response, "Exception occured while generating Invoice List report: " + t);
+			return "report.error";
+		} finally {
+			if (out != null) {
+				try {
+					out.close();
+					out = null;
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+	
+	private Map<String, Object> generateInvoiceListReportData(ModelMap model, HttpServletRequest request) {
+		List<InvoiceReportVO> invoiceReportVOList = new ArrayList<InvoiceReportVO>();
+		Map<String, Object> params = new HashMap<String, Object>();
+		Map<String, Object> datas = new HashMap<String, Object>();
+		addData(datas, invoiceReportVOList, params);
+		
+		SearchCriteria criteria = (SearchCriteria) request.getSession().getAttribute("searchCriteria");
+		List<OrderInvoiceHeader> orderInvoiceHeaderList = performInvoiceListReportSearch(criteria);
+		if (orderInvoiceHeaderList == null || orderInvoiceHeaderList.isEmpty()) {
+			return datas;
+		}
+		
+		mapForInvoiceReport(orderInvoiceHeaderList.get(0), criteria, params);
+		
+		for (OrderInvoiceHeader anInvoiceHeader : orderInvoiceHeaderList) {
+			InvoiceReportVO anInvoiceReportVO = new InvoiceReportVO();
+			map(anInvoiceHeader, anInvoiceReportVO);
+			
+			List<OrderInvoiceDetails> orderInvoiceDetailsList = anInvoiceHeader.getOrderInvoiceDetails();
+			List<InvoiceVO> invoiceVOList = new ArrayList<InvoiceVO>();
+			List<InvoiceVO> invoiceVOPaymentList = new ArrayList<InvoiceVO>();
+			mapToInvoiceVOList(orderInvoiceDetailsList, invoiceVOList, invoiceVOPaymentList);
+			
+			anInvoiceReportVO.setInvoiceVOList(invoiceVOList);
+			
+			String query = "select obj from OrderInvoicePayment obj where obj.deleteFlag=1";
+			query += (" and obj.invoice.id=" + anInvoiceHeader.getId());
+			query += " order by id desc";
+			List<OrderInvoicePayment> invoicePaymentList = genericDAO.executeSimpleQuery(query);
+			for (OrderInvoicePayment orderInvoicePayment : invoicePaymentList) {
+				List<OrderPayment> orderPaymentList = retrieveInvoiceOrderPaymentDetails(orderInvoicePayment.getId());
+				orderInvoicePayment.setOrderPaymentList(orderPaymentList);
+			}
+			anInvoiceReportVO.setInvoicePaymentList(invoicePaymentList);
+			invoiceReportVOList.add(anInvoiceReportVO);
+		}
+		
+		addRDSBillingInfo(params);
+		addLogoFilePath(request, params);
+		     
+		return datas;
+	}
+	
 	private String processManageInvoiceSearch(ModelMap model, HttpServletRequest request) {
 		setupManageInvoiceList(model, request);
 		
@@ -234,6 +341,36 @@ public class InvoiceController extends BaseController {
 		model.addAttribute("list", orderInvoiceHeaderList);
 		
 		return getUrlContext() + "/invoice";
+	}
+	
+	private List<OrderInvoiceHeader> performInvoiceListReportSearch(SearchCriteria criteria) {
+		Map<String, Object> criteriaMap = criteria.getSearchMap();
+		String invoiceId = (String)criteriaMap.get("invoiceListReportInvoiceNo");
+		String customerId = (String)criteriaMap.get("invoiceListReportCustomer");
+		String invoiceDateFrom = (String)criteriaMap.get("invoiceListReportInvoiceDateFrom");
+		String invoiceDateTo = (String)criteriaMap.get("invoiceListReportInvoiceDateTo");
+		
+		StringBuffer query = new StringBuffer("select obj from OrderInvoiceHeader obj where 1=1");
+		StringBuffer whereClause = new StringBuffer(" and obj.deleteFlag=1");
+		
+		if (StringUtils.isNotEmpty(invoiceId)) {
+			whereClause.append(" and obj.id=" + invoiceId);
+		}
+		if (StringUtils.isNotEmpty(customerId)) {
+			whereClause.append(" and obj.customerId=" + customerId);
+		}
+      if (StringUtils.isNotEmpty(invoiceDateFrom)){
+        	whereClause.append(" and obj.invoiceDate >='"+FormatUtil.formatInputDateToDbDate(invoiceDateFrom)+"'");
+		}
+      if (StringUtils.isNotEmpty(invoiceDateTo)){
+	     	whereClause.append(" and obj.invoiceDate <='"+FormatUtil.formatInputDateToDbDate(invoiceDateTo)+"'");
+	   }
+      
+      query.append(whereClause);
+      query.append(" order by obj.id desc");
+     
+		List<OrderInvoiceHeader> orderInvoiceHeaderList = genericDAO.executeSimpleQuery(query.toString());
+		return orderInvoiceHeaderList;
 	}
 	
 	@RequestMapping(method = {RequestMethod.GET, RequestMethod.POST }, value = "/invoicePaymentSearch.do")
@@ -329,8 +466,18 @@ public class InvoiceController extends BaseController {
 		/*String query = "select obj.id from OrderInvoiceHeader obj where obj.deleteFlag=1 order by obj.id asc";
 		model.addAttribute("invoiceNos", genericDAO.executeSimpleQuery(query));*/
 		
-		addTabAttributes(model, INVOICE_PAYMENT_TAB, MODE_MANAGE, StringUtils.EMPTY);
+		addTabAttributes(model, INVOICE_PAYMENT_TAB, StringUtils.EMPTY, StringUtils.EMPTY);
 		addMsgCtx(model, manageInvoicePaymentMsgCtx);
+	}
+	
+	private void setupInvoiceListReport(ModelMap model, HttpServletRequest request) {
+		populateSearchCriteria(request, request.getParameterMap());
+		
+		List<CustomerVO> customerVOList = ModelUtil.retrieveOrderCustomers(genericDAO);
+		model.addAttribute("customers", customerVOList);
+		
+		addTabAttributes(model, INVOICE_REPORTS_TAB, StringUtils.EMPTY, StringUtils.EMPTY);
+		addMsgCtx(model, invoiceListReportMsgCtx);
 	}
 	
 	private List<Long> retrieveOrderIds(String invoiced, String customerId) {
@@ -601,6 +748,14 @@ public class InvoiceController extends BaseController {
 		}
 	}
 	
+	private void map(OrderInvoiceHeader orderInvoiceHeader, InvoiceReportVO anInvoiceReportVO) {
+		anInvoiceReportVO.setInvoiceNo(orderInvoiceHeader.getId());
+		anInvoiceReportVO.setInvoiceDate(orderInvoiceHeader.getInvoiceDate());
+		anInvoiceReportVO.setTotalBalanceAmountDue(orderInvoiceHeader.getTotalBalanceAmountDue());
+		anInvoiceReportVO.setTotalInvoicePaymentDone(orderInvoiceHeader.getTotalInvoicePaymentDone());
+		anInvoiceReportVO.setTotalInvoiceBalanceDue(orderInvoiceHeader.getTotalInvoiceBalanceDue());
+	}
+	
 	private void map(OrderInvoiceDetails orderInvoiceDetails, InvoiceVO anInvoiceVO,
 				List<InvoiceVO> invoicePaymentVOList) {
 		anInvoiceVO.setId(orderInvoiceDetails.getId());
@@ -808,6 +963,16 @@ public class InvoiceController extends BaseController {
 		map(orderInvoiceHeader, params);
 	}
 	
+	private void mapForInvoiceReport(OrderInvoiceHeader orderInvoiceHeader, SearchCriteria criteria, Map<String, Object> params) {
+		Map<String, Object> criteriaMap = criteria.getSearchMap();
+		String invoiceDateFrom = (String)criteriaMap.get("invoiceListReportInvoiceDateFrom");
+		String invoiceDateTo = (String)criteriaMap.get("invoiceListReportInvoiceDateTo");
+		String dateRange = FormatUtil.formatDateRange(invoiceDateFrom, invoiceDateTo);
+		params.put("dateRange", dateRange);
+		
+		addCustomerData(orderInvoiceHeader, params);
+	}
+	
 	private void map(OrderInvoiceHeader orderInvoiceHeader, Map<String, Object> params) {
 		params.put("invoiceNo", orderInvoiceHeader.getId().toString());
 		params.put("invoiceDate", orderInvoiceHeader.getFormattedInvoiceDate());
@@ -816,12 +981,16 @@ public class InvoiceController extends BaseController {
 		params.put("invoicePaymentDone", FormatUtil.formatFee(orderInvoiceHeader.getTotalInvoicePaymentDone(), true, true));
 		params.put("invoiceBalanceDue", FormatUtil.formatFee(orderInvoiceHeader.getTotalInvoiceBalanceDue(), true, true));
 		
+		addCustomerData(orderInvoiceHeader, params);
+		
+		/*String orderDateRange = FormatUtil.formatDateRange(orderInvoiceHeader.getOrderDateFrom(), orderInvoiceHeader.getOrderDateTo());
+		params.put("orderDateRange", orderDateRange);*/
+	}
+	
+	private void addCustomerData(OrderInvoiceHeader orderInvoiceHeader, Map<String, Object> params) {
 		params.put("customer", orderInvoiceHeader.getCompanyName());
 		params.put("billingAddress", orderInvoiceHeader.getBillingAddress("\n"));
 		params.put("contact", orderInvoiceHeader.getContactDetails());
-		
-		String orderDateRange = FormatUtil.formatDateRange(orderInvoiceHeader.getOrderDateFrom(), orderInvoiceHeader.getOrderDateTo());
-		params.put("orderDateRange", orderDateRange);
 	}
 	
 	private void map(Order anOrder, OrderInvoiceHeader orderInvoiceHeader) {
@@ -1275,7 +1444,7 @@ public class InvoiceController extends BaseController {
 					@RequestParam("invoiceNotes") String invoiceNotes) {
 		setupPreviewInvoice(request, model);
 		
-		InvoiceVO input = (InvoiceVO) request.getSession().getAttribute("input");
+		InvoiceVO input = (InvoiceVO) request.getSession().getAttribute(ReportUtil.inputKey);
 		input.setIds(ids);
 		input.setInvoiceDate(invoiceDate);
 		input.setNotes(invoiceNotes);
@@ -1287,8 +1456,8 @@ public class InvoiceController extends BaseController {
 	private String processPreviewInvoiceCommon(HttpServletRequest request, HttpServletResponse response,
 			InvoiceVO input) {
 		Map<String, Object> datas = generateInvoiceData(request, input);
-		List<InvoiceVO> invoiceVOList = (List<InvoiceVO>) datas.get("data");
-		Map<String, Object> params = (Map<String, Object>) datas.get("params");
+		List<InvoiceVO> invoiceVOList = (List<InvoiceVO>) datas.get(ReportUtil.dataKey);
+		Map<String, Object> params = (Map<String, Object>) datas.get(ReportUtil.paramsKey);
 		
 		addWaterMarkRendererReportParam(params, true, "Preview");
 		
@@ -1324,8 +1493,8 @@ public class InvoiceController extends BaseController {
 			InvoiceVO input = (InvoiceVO)request.getSession().getAttribute("input");
 			Map<String, Object> datas = generateInvoiceData(request, input);
 			
-			List<InvoiceVO> invoiceVOList = (List<InvoiceVO>) datas.get("data");
-			Map<String, Object> params = (Map<String, Object>) datas.get("params");
+			List<InvoiceVO> invoiceVOList = (List<InvoiceVO>) datas.get(ReportUtil.dataKey);
+			Map<String, Object> params = (Map<String, Object>) datas.get(ReportUtil.paramsKey);
 			addWaterMarkRendererReportParam(params, true, "Preview");
 			
 			out = dynamicReportService.generateStaticReport(ORDER_INVOICE_REPORT,
@@ -1337,7 +1506,7 @@ public class InvoiceController extends BaseController {
 			return null;
 		} catch (Throwable t) {
 			t.printStackTrace();
-			log.warn("Unable to generate static report: " + t);
+			log.warn("Exception occured while exporting invoice preview: " + t);
 			
 			setErrorMsg(request, response, "Exception occured while exporting invoice preview: " + t);
 			return "redirect:/" + getUrlContext() + "/previewInvoice.do";
@@ -1378,7 +1547,7 @@ public class InvoiceController extends BaseController {
 			return null;
 		} catch (Throwable t) {
 			t.printStackTrace();
-			log.warn("Unable to generate report: " + t);
+			log.warn("Exception occured while generating create invoice report: " + t);
 			
 			setErrorMsg(request, response, "Exception occured while generating create invoice report: " + t);
 			return "redirect:/" + getUrlContext() + "/createInvoiceMain.do";
@@ -1419,7 +1588,7 @@ public class InvoiceController extends BaseController {
 			return null;
 		} catch (Throwable t) {
 			t.printStackTrace();
-			log.warn("Unable to generate report: " + t);
+			log.warn("Exception occured while generating manage invoice report: " + t);
 			
 			setErrorMsg(request, response, "Exception occured while generating manage invoice report: " + t);
 			return "redirect:/" + getUrlContext() + "/manageInvoiceMain.do";
@@ -1474,6 +1643,47 @@ public class InvoiceController extends BaseController {
 		}
 	}
 	
+	@RequestMapping(method = RequestMethod.GET, value = "/reports/invoiceListReportExport.do")
+	public String invoiceListReportExport(ModelMap model, HttpServletRequest request, HttpServletResponse response,
+			@RequestParam("type") String type) {
+		ByteArrayOutputStream out = null;
+		try {
+			Map<String, Object> reportData = generateInvoiceListReportData(model, request);
+			Map<String, Object> params = (Map<String, Object>) reportData.get(ReportUtil.paramsKey);
+			List<InvoiceReportVO> data = (List<InvoiceReportVO>) reportData.get(ReportUtil.dataKey);
+			
+			if (data.isEmpty()) {
+				return null;
+			}
+			
+			String reportName = "orderInvoiceReportMaster";
+			String subReportName = "orderInvoiceOrderSub";
+			
+			type = setReportRequestHeaders(response, type, reportName);
+			
+			out = dynamicReportService.generateStaticMasterSubReport(reportName, subReportName, data, params, 
+					type, request);
+			out.writeTo(response.getOutputStream());
+			
+			return null;
+		} catch (Throwable t) {
+			t.printStackTrace();
+			log.warn("Unable to generate Invoice List report: " + t);
+			
+			setErrorMsg(request, response, "Exception occured while generating Invoice List report: " + t);
+			return "redirect:/" + getUrlContext() + "/manageInvoiceMain.do";
+		} finally {
+			if (out != null) {
+				try {
+					out.close();
+					out = null;
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+	
 	@RequestMapping(method = { RequestMethod.GET }, value = "/downloadInvoice.do")
 	public String downloadInvoice(ModelMap model, HttpServletRequest request,
 			HttpServletResponse response,
@@ -1484,11 +1694,10 @@ public class InvoiceController extends BaseController {
 		ByteArrayOutputStream out = null;
 		try {
 			Map<String, Object> datas = generateInvoiceData(request, invoiceId);
-			List<InvoiceVO> invoiceVOList = (List<InvoiceVO>) datas.get("data");
-			Map<String, Object> params = (Map<String, Object>) datas.get("params");
+			List<InvoiceVO> invoiceVOList = (List<InvoiceVO>) datas.get(ReportUtil.dataKey);
+			Map<String, Object> params = (Map<String, Object>) datas.get(ReportUtil.paramsKey);
 			
-			out = dynamicReportService.generateStaticReport(ORDER_INVOICE_REPORT,
-						invoiceVOList, params, type, request);
+			out = dynamicReportService.generateStaticReport(ORDER_INVOICE_REPORT, invoiceVOList, params, type, request);
 			/*out = dynamicReportService.generateStaticMasterSubReport(ORDER_INVOICE_MASTER_REPORT, ORDER_INVOICE_SUB_REPORT,
 					invoiceVOList, params, type, request);*/
 			out.writeTo(response.getOutputStream());
@@ -1496,7 +1705,7 @@ public class InvoiceController extends BaseController {
 			return null;
 		} catch (Throwable t) {
 			t.printStackTrace();
-			log.warn("Unable to generate static report: " + t);
+			log.warn("Exception occured while generating invoice: " + t);
 			
 			setErrorMsg(request, response, "Exception occured while generating invoice: " + t);
 			return "redirect:/" + getUrlContext() + "/manageInvoiceMain.do";
@@ -1527,8 +1736,8 @@ public class InvoiceController extends BaseController {
 		ByteArrayOutputStream out = null;
 		try {
 			Map<String, Object> datas = generateInvoicePaymentAllData(request, invoiceId);
-			List<OrderInvoicePayment> invoicePaymentList = (List<OrderInvoicePayment>) datas.get("data");
-			Map<String, Object> params = (Map<String, Object>) datas.get("params");
+			List<OrderInvoicePayment> invoicePaymentList = (List<OrderInvoicePayment>) datas.get(ReportUtil.dataKey);
+			Map<String, Object> params = (Map<String, Object>) datas.get(ReportUtil.paramsKey);
 			
 			out = dynamicReportService.generateStaticMasterSubReport(ORDER_INVOICE_PAYMENT_MASTER_REPORT, ORDER_INVOICE_PAYMENT_SUB_REPORT,
 					invoicePaymentList, params, type, request);
@@ -1537,7 +1746,7 @@ public class InvoiceController extends BaseController {
 			return null;
 		} catch (Throwable t) {
 			t.printStackTrace();
-			log.warn("Unable to generate static report: " + t);
+			log.warn("Exception occured while generating invoice payment report: " + t);
 			
 			setErrorMsg(request, response, "Exception occured while generating invoice payment report: " + t);
 			return "redirect:/" + getUrlContext() + "/manageInvoiceMain.do";
@@ -1562,8 +1771,8 @@ public class InvoiceController extends BaseController {
 		ByteArrayOutputStream out = null;
 		try {
 			Map<String, Object> datas = generateInvoicePaymentData(request, invoicePaymentId);
-			List<OrderInvoicePayment> invoicePaymentList = (List<OrderInvoicePayment>) datas.get("data");
-			Map<String, Object> params = (Map<String, Object>) datas.get("params");
+			List<OrderInvoicePayment> invoicePaymentList = (List<OrderInvoicePayment>) datas.get(ReportUtil.dataKey);
+			Map<String, Object> params = (Map<String, Object>) datas.get(ReportUtil.paramsKey);
 			
 			out = dynamicReportService.generateStaticMasterSubReport(ORDER_INVOICE_PAYMENT_MASTER_REPORT, ORDER_INVOICE_PAYMENT_SUB_REPORT,
 					invoicePaymentList, params, type, request);
@@ -1616,15 +1825,10 @@ public class InvoiceController extends BaseController {
 		addRDSBillingInfo(params);
 		addLogoFilePath(request, params);
 		
-		Map<String,Object> datas = new HashMap<String,Object>();
+		Map<String, Object> datas = new HashMap<String, Object>();
 		addData(datas, invoiceVOList, params);
 		     
 		return datas;
-	}
-	
-	private void addLogoFilePath(HttpServletRequest request, Map<String, Object> params) {
-		String logoFilePath = ServletUtil.getLogoFilePath(request);
-		params.put("LOGO_FILE_PATH", logoFilePath);
 	}
 	
 	private Map<String, Object> generateInvoicePaymentData(HttpServletRequest request, Long invoicePaymentId) {
@@ -1640,7 +1844,7 @@ public class InvoiceController extends BaseController {
 		addRDSBillingInfo(params);
 		addLogoFilePath(request, params);
 		
-		Map<String,Object> datas = new HashMap<String,Object>();
+		Map<String, Object> datas = new HashMap<String, Object>();
 		addData(datas, invoicePaymentList, params);
 		
 		return datas;
@@ -1664,7 +1868,7 @@ public class InvoiceController extends BaseController {
 		addRDSBillingInfo(params);
 		addLogoFilePath(request, params);
 		
-		Map<String,Object> datas = new HashMap<String,Object>();
+		Map<String, Object> datas = new HashMap<String, Object>();
 		addData(datas, invoicePaymentList, params);
 		
 		return datas;
@@ -1675,16 +1879,17 @@ public class InvoiceController extends BaseController {
 		Map<String, Object> params = new HashMap<String, Object>();
 		map(orderInvoiceHeader, params);
 		
-		List<OrderInvoiceDetails> orderInvoiceDetailsList = retrieveOrderInvoiceDetails(invoiceId);
+		//List<OrderInvoiceDetails> orderInvoiceDetailsList = retrieveOrderInvoiceDetails(invoiceId);
+		List<OrderInvoiceDetails> orderInvoiceDetailsList = orderInvoiceHeader.getOrderInvoiceDetails();
 		List<InvoiceVO> invoiceVOList = new ArrayList<InvoiceVO>();
 		List<InvoiceVO> invoiceVOPaymentList = new ArrayList<InvoiceVO>();
 		mapToInvoiceVOList(orderInvoiceDetailsList, invoiceVOList, invoiceVOPaymentList);
-		params.put("orderPaymentList", invoiceVOPaymentList);
+		//params.put("orderPaymentList", invoiceVOPaymentList);
 		
 		addRDSBillingInfo(params);
 		addLogoFilePath(request, params);
 		
-		Map<String,Object> datas = new HashMap<String,Object>();
+		Map<String, Object> datas = new HashMap<String, Object>();
 		addData(datas, invoiceVOList, params);
 		     
 		return datas;

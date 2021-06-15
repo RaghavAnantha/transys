@@ -9,6 +9,7 @@
 	<ul class="nav nav-tabs" id="invoiceMainTabs">
 		<li><a href="#manageInvoice" id="manageInvoiceTab" data-toggle="tab" >Invoice</a></li>
 		<li><a href="invoicePaymentMain.do" id="invoicePaymentTab" data-toggle="tabajax" data-target="#invoicePayment">Invoice Payment</a></li>
+		<li><a href="reports/invoiceReportsMain.do" id="invoiceReportsTab" data-toggle="tabajax" data-target="#invoiceReports">Invoice Reports</a></li>
 	</ul>
 	<div class="tab-content" style="background-color: white;">
 		<div id="manageInvoice" class="tab-pane">
@@ -20,7 +21,8 @@
 				<%@include file="createInvoiceList.jsp"%>
 			</c:if>
 		</div>
-		<div id="invoicePayment" class="tab-pane">${loadingMsg}</div>	
+		<div id="invoicePayment" class="tab-pane">${loadingMsg}</div>
+		<div id="invoiceReports" class="tab-pane">${loadingMsg}</div>	
 	</div>
 	
 <script type="text/javascript">
@@ -28,6 +30,10 @@
 	showTab('${activeSubTab}');
 	
 	$('#invoicePaymentTab').click(function(e) {
+		loadTab($(this), null);
+		return false;
+	});
+	$('#invoiceReportsTab').click(function(e) {
 		loadTab($(this), null);
 		return false;
 	});

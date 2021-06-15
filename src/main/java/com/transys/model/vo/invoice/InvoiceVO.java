@@ -94,6 +94,9 @@ public class InvoiceVO extends BaseVO {
 	public Date getOrderDate() {
 		return orderDate;
 	}
+	public String getFormattedOrderDate() {
+		return FormatUtil.formatDate(this.orderDate);
+	}
 	public void setOrderDate(Date orderDate) {
 		this.orderDate = orderDate;
 	}
@@ -400,5 +403,35 @@ public class InvoiceVO extends BaseVO {
 	}
 	public void setPickupDateTo(String pickupDateTo) {
 		this.pickupDateTo = pickupDateTo;
+	}
+	public String getFormattedDumpsterPrice() {
+		return FormatUtil.formatFee(dumpsterPrice, true);
+	}
+	public String getFormattedCityFee() {
+		return FormatUtil.formatFee(cityFee, true);
+	}
+	public String getFormattedPermitFees() {
+		return FormatUtil.formatFee(permitFees, true);
+	}
+	public String getFormattedTonnageFees() {
+		return FormatUtil.formatFee(tonnageFees, true);
+	}
+	public String getFormattedOverweightFees() {
+		return FormatUtil.formatFee(overweightFee, true);
+	}
+	public String getFormattedAdditionalFees() {
+		return FormatUtil.formatFee(additionalFees, true);
+	}
+	public String getFormattedTotalFees() {
+		return FormatUtil.formatFee(additionalFees, true);
+	}
+	public String getFormattedTotalAmountPaid() {
+		return FormatUtil.formatFee(totalAmountPaid, true);
+	}
+	public String getFormattedDiscount() {
+		return FormatUtil.formatFee(discount, true);
+	}
+	public String getFormattedBalanceAmountDue() {
+		return FormatUtil.formatFee(balanceAmountDue, true);
 	}
 }
