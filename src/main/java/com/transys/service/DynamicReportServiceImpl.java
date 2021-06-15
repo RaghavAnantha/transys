@@ -1248,7 +1248,7 @@ public class DynamicReportServiceImpl extends BaseService implements DynamicRepo
 		
 		htmlExporter.exportReport();
 		
-		ReportUtil.removeJasperPrint(request, getClass().getName());
+		//ReportUtil.removeJasperPrint(request, getClass().getName());
 		return out;
 	}
 
@@ -1257,12 +1257,13 @@ public class DynamicReportServiceImpl extends BaseService implements DynamicRepo
 		HtmlExporter htmlExporter = new HtmlExporter();
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		
-		String footer = "<script language=\"javascript\"> try { document.execCommand('print', false, null); } catch(e) { window.print(); }</script></body></html>";
+		//String footer = "<script language=\"javascript\"> try { document.execCommand('print', false, null); } catch(e) { window.print(); }</script></body></html>";
+		String footer = StringUtils.EMPTY;
 		configureForHtml(htmlExporter, out, jp, request, footer);
 				
 		htmlExporter.exportReport();
 		
-		ReportUtil.removeJasperPrint(request, getClass().getName());
+		//ReportUtil.removeJasperPrint(request, getClass().getName());
 		return out;
 	}
 

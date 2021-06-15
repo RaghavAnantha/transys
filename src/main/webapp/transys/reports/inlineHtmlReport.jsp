@@ -32,7 +32,6 @@
 	headerFooterBuffer.append("<tr><td/></tr></table>");
 	
 	SimpleHtmlExporterConfiguration htmlExporterConfig = new SimpleHtmlExporterConfiguration();
-	htmlExporterConfig.setBetweenPagesHtml(StringUtils.EMPTY);
 	//exporter.setParameter(JRHtmlExporterParameter.IS_USING_IMAGES_TO_ALIGN, false);*/
 	
 	//String header = "<html><head><style> @page {size: landscape; margin-left: 0.00in;margin-right: 0.00in;margin-top: 0.00in;margin-bottom: 0.00in;}</style></head><body>";

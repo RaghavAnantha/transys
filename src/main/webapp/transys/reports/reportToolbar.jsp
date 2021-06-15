@@ -62,6 +62,7 @@ $("#${reportSearchForm}").submit(function (ev) {
        			showAlertDialog("Error", errorMsg);
         	} else {
         		reportDataElem.html(responseData);
+        		verifyAndRemoveJasperPrint('${ctx}');
         	}
         }
     });
