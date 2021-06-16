@@ -123,6 +123,9 @@ public class Order extends AbstractBaseModel {
 	@Column(name="dropOffVehicleId")
 	private Long dropOffVehicleId;
 	
+	@Column(name="pickupVehicleId")
+	private Long pickupVehicleId;
+	
 	@Transient
 	String[] fileList;
 
@@ -570,6 +573,14 @@ public class Order extends AbstractBaseModel {
 
 	public void setDropOffVehicleId(Long dropOffVehicleId) {
 		this.dropOffVehicleId = dropOffVehicleId;
+	}
+
+	public Long getPickupVehicleId() {
+		return pickupVehicleId;
+	}
+
+	public void setPickupVehicleId(Long pickupVehicleId) {
+		this.pickupVehicleId = pickupVehicleId;
 	}
 
 	/*public OrderNotes getNotes() {

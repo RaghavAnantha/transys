@@ -604,7 +604,7 @@ public class OrderController extends CRUDController<Order> {
 				OrderStatus orderStatus = retrieveOrderStatus(OrderStatus.ORDER_STATUS_DROPPED_OFF);
 				entity.setOrderStatus(orderStatus);
 			} else {
-				auditMsg = "Order Drop Off details updated and ready to be dropped off";
+				auditMsg = "Order Drop Off details updated and assigned to be dropped off";
 			}
 			
 			updateDumpsterStatus(entity.getDumpster().getId(), DumpsterStatus.DUMPSTER_STATUS_DROPPED_OFF, modifiedBy);
@@ -794,6 +794,7 @@ public class OrderController extends CRUDController<Order> {
 	
 	@RequestMapping(method = RequestMethod.POST, value = "/savePickupDriver.do")
 	public String savePickupDriver(HttpServletRequest request,
+			@RequestParam(value = "closeOrder") String closeOrder,
 			@ModelAttribute(MODEL_OBJECT_KEY) Order entity,
 			BindingResult bindingResult, ModelMap model) {
 		try {
@@ -811,25 +812,33 @@ public class OrderController extends CRUDController<Order> {
 		
 		populateOrderFees(entity);
 		
-		OrderStatus orderStatus = retrieveOrderStatus(OrderStatus.ORDER_STATUS_CLOSED);
-		entity.setOrderStatus(orderStatus);
+		Long modifiedBy = entity.getModifiedBy();
+		String auditMsg = StringUtils.EMPTY;
+		if (BooleanUtils.toBoolean(closeOrder)) {
+			auditMsg = "Order status changed to " + OrderStatus.ORDER_STATUS_CLOSED;
+			
+			OrderStatus orderStatus = retrieveOrderStatus(OrderStatus.ORDER_STATUS_CLOSED);
+			entity.setOrderStatus(orderStatus);
+		} else {
+			auditMsg = "Order Pickup up details updated and assigned to be picked up";
+		}
 		
 		genericDAO.saveOrUpdate(entity);
 		
-		OrderNotes auditOrderNotes = createAuditOrderNotes(entity, "Order status changed to " + OrderStatus.ORDER_STATUS_CLOSED,
-				entity.getModifiedBy());  
+		OrderNotes auditOrderNotes = createAuditOrderNotes(entity, auditMsg, modifiedBy);  
 		entity.getOrderNotes().add(auditOrderNotes);
 		
-		Long modifiedBy = entity.getModifiedBy();
-		updateDumpsterStatus(entity.getDumpster().getId(), DumpsterStatus.DUMPSTER_STATUS_AVAILABLE, modifiedBy);
-		
-		String exchangeQuery = "select obj from Order obj where obj.deleteFlag='1'"
-				+ " and obj.pickupOrderId=" + entity.getId()
-				+ " and obj.orderStatus.status != '" + OrderStatus.ORDER_STATUS_CLOSED + "'";
-		List<Order> exchangeOrderList = genericDAO.executeSimpleQuery(exchangeQuery);
-		if (exchangeOrderList.isEmpty()) {
-			updatePermitStatus(entity.getPermits(), PermitStatus.PERMIT_STATUS_AVAILABLE, modifiedBy);
-		}
+		if (BooleanUtils.toBoolean(closeOrder)) {
+			updateDumpsterStatus(entity.getDumpster().getId(), DumpsterStatus.DUMPSTER_STATUS_AVAILABLE, modifiedBy);
+			
+			String exchangeQuery = "select obj from Order obj where obj.deleteFlag='1'"
+					+ " and obj.pickupOrderId=" + entity.getId()
+					+ " and obj.orderStatus.status != '" + OrderStatus.ORDER_STATUS_CLOSED + "'";
+			List<Order> exchangeOrderList = genericDAO.executeSimpleQuery(exchangeQuery);
+			if (exchangeOrderList.isEmpty()) {
+				updatePermitStatus(entity.getPermits(), PermitStatus.PERMIT_STATUS_AVAILABLE, modifiedBy);
+			}
+		} 
 		
 		return pickupSaveSuccess(request, entity, model);
 	}

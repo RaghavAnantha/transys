@@ -20,14 +20,14 @@ function validateDropOffDriverMissingData() {
 	var missingData = "";
 	
 	if ($('#dropOffDriverSelect').val() == "") {
-		missingData += "Drop-off Driver, "
+		missingData += "Drop off Driver, "
 	}
 	
 	if ($('#dumpsterNumSelect').val() == "") {
 		missingData += "Dumpster #, "
 	}
 	
-	if ($('#vehicleNumSelect').val() == "") {
+	if ($('#dropVehicleNumSelect').val() == "") {
 		missingData += "Vehicle #, "
 	}
 	
@@ -95,7 +95,7 @@ function getDropOffDriverForm() {
 		<tr>
 			<td class="form-left">Vehicle #<span class="errorMessage">*</span></td>
 			<td>
-				<form:select id="vehicleNumSelect" cssClass="flat form-control input-sm" path="dropOffVehicleId" style="width:172px !important">
+				<form:select id="dropVehicleNumSelect" cssClass="flat form-control input-sm" path="dropOffVehicleId" style="width:172px !important">
 					<form:option value="">-----Please Select-----</form:option>
 					<form:options items="${orderVehicles}" itemValue="id" itemLabel="number" />
 				</form:select> 

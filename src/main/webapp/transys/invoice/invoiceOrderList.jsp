@@ -6,8 +6,8 @@
 		searchCriteria="<%=null%>" cellPadding="2"
 		pagingLink="manageInvoiceSearch.do" multipleSelect="false" searcheable="false"
 		exportPdf="false" exportXls="false" drawToolbar="false" drawPaging="false" dataQualifier="invoiceOrder">
-		<transys:textcolumn headerText="Inv. #" dataField="invoiceHeader.id" width="55px"/>
 		<transys:textcolumn headerText="Ord. #" width="70px" dataField="orderId" />
+		<transys:textcolumn headerText="Inv. #" dataField="invoiceHeader.id" width="55px"/>
 		<transys:textcolumn headerText="Del. Adds." dataField="deliveryAddressFullLine" />
 		<transys:textcolumn headerText="City" dataField="deliveryAddressCity" />
 		<transys:textcolumn headerText="Size" dataField="dumpsterSize" />

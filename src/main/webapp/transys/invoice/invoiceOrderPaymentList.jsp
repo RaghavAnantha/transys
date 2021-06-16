@@ -6,10 +6,10 @@
 		searchCriteria="<%=null%>" cellPadding="2"
 		pagingLink="invoicePaymentSearch.do" multipleSelect="false" searcheable="false"
 		exportPdf="false" exportXls="false" drawToolbar="false" drawPaging="false" dataQualifier="invoiceOrderPayment">
+		<transys:textcolumn headerText="Ord. #" width="70px" dataField="order.id" />
 		<transys:textcolumn headerText="Ord. Pay. #" width="70px" dataField="id" />
 		<transys:textcolumn headerText="Inv. Pay. #" width="70px" dataField="invoicePaymentId" />
 		<transys:textcolumn headerText="Inv. #" dataField="invoiceId" width="55px"/>
-		<transys:textcolumn headerText="Ord. #" width="70px" dataField="order.id" />
 		<transys:textcolumn headerText="Del. Adds." dataField="order.deliveryAddressFullLine" />
 		<transys:textcolumn headerText="City" dataField="order.deliveryCity" />
 		<transys:textcolumn headerText="Size" dataField="order.dumpsterSize" />

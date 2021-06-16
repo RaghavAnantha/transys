@@ -58,6 +58,10 @@ function validatePickupDriverMissingData() {
 		missingData += "Pickup Driver, "
 	}
 	
+	if ($('#pickupVehicleNumSelect').val() == "") {
+		missingData += "Vehicle #, "
+	}
+	
 	/*if ($('#grossWeight').val() == "") {
 		missingData += "Gross Weight, "
 	}
@@ -153,10 +157,13 @@ function processOrderReadyForPickup() {
        			var successMsgDiv = $('#processOrderSuccessMessage');
 	       		successMsgDiv.html(responseData);
 	       		
+	       		var pickupDriverSaveBtn = $('#pickupDriverSaveBtn');
 	       		var pickupDriverCloseBtn = $('#pickupDriverCloseBtn');
 	       		if (readyForPickup == 'Yes') {
+	       			pickupDriverSaveBtn.removeAttr('disabled');
 	       			pickupDriverCloseBtn.removeAttr('disabled');
 	       		} else {
+	       			pickupDriverSaveBtn.attr('disabled', 'disabled');
 	       			pickupDriverCloseBtn.attr('disabled', 'disabled');
 	       		}
        		}
@@ -180,6 +187,9 @@ function processOrderReopen() {
        			var successMsgDiv = $('#processOrderSuccessMessage');
 	       		successMsgDiv.html(responseData);
 	       		
+	       		var pickupDriverSaveBtn = $('#pickupDriverSaveBtn');
+	       		pickupDriverSaveBtn.removeAttr('disabled');
+	       		
 	       		var pickupDriverCloseBtn = $('#pickupDriverCloseBtn');
 	       		pickupDriverCloseBtn.removeAttr('disabled');
 	       		
@@ -202,11 +212,16 @@ function clearProcessOrderMsgs() {
 	successMsgDiv.html("");
 }
 
-function processPickupDriverForm() {
+function processPickupDriverForm(closeOrder) {
 	clearProcessOrderMsgs();
 	
 	if (validatePickupDriverForm()) {
 		var pickupDriverForm = $("#pickupDriverAddEditForm");
+		
+		var action = pickupDriverForm.attr('action');
+		action += "?closeOrder="+closeOrder;
+		pickupDriverForm.attr('action', action);
+		
 		pickupDriverForm.submit();
 	}
 }
@@ -278,6 +293,16 @@ function processPickupDriverForm() {
 				<form:errors path="pickupDriver" cssClass="errorMessage" />
 			</td>
 		</tr>
+		<tr>
+			<td class="form-left">Vehicle #<span class="errorMessage">*</span></td>
+			<td>
+				<form:select id="pickupVehicleNumSelect" cssClass="flat form-control input-sm" path="pickupVehicleId" style="width:172px !important">
+					<form:option value="">-----Please Select-----</form:option>
+					<form:options items="${orderVehicles}" itemValue="id" itemLabel="number" />
+				</form:select> 
+				<form:errors path="pickupVehicleId" cssClass="errorMessage" />
+			</td>
+		</tr>
 		<tr><td colspan="2"></td></tr>
 		<tr>
 			<td colspan=10 class="section-header" style="line-height: 1;font-size: 13px;font-weight: bold;color: white;">Scale/Weights Information</td>
@@ -320,6 +345,11 @@ function processPickupDriverForm() {
 		<tr>
 			<td>&nbsp;</td>
 			<td colspan="2">
+				<c:set var="saveDisabled" value="" />
+				<!--modelObject.orderStatus.status != 'Open'-->
+				<c:if test="${modelObject.id == null || modelObject.orderStatus.status != 'Pick Up'}">
+					<c:set var="saveDisabled" value="disabled" />
+				</c:if>
 				<c:set var="closeDisabled" value="" />
 				<c:if test="${modelObject.id == null || modelObject.orderStatus.status != 'Pick Up'}">
 					<c:set var="closeDisabled" value="disabled" />
@@ -328,7 +358,8 @@ function processPickupDriverForm() {
 				<c:if test="${modelObject.id == null || modelObject.orderStatus.status != 'Closed'}">
 					<c:set var="reopenDisabled" value="disabled" />
 				</c:if>
-				<input type="button" id="pickupDriverCloseBtn" ${closeDisabled} onclick="processPickupDriverForm();" value="Close Order" class="flat btn btn-primary btn-sm btn-sm-ext" />
+				<input type="button" id="pickupDriverSaveBtn" ${saveDisabled} onclick="processPickupDriverForm('false');" value="Save" class="flat btn btn-primary btn-sm btn-sm-ext" />
+				<input type="button" id="pickupDriverCloseBtn" ${closeDisabled} onclick="processPickupDriverForm('true');" value="Close Order" class="flat btn btn-primary btn-sm btn-sm-ext" />
 				<input type="button" id="pickupDriverReopenBtn" ${reopenDisabled} onclick="processOrderReopen();" value="Re-Open Order" class="flat btn btn-primary btn-sm btn-sm-ext" />
 				<input type="button" id="pickupDriverBackBtn" value="Back" class="flat btn btn-primary btn-sm btn-sm-ext" onClick="location.href='list.do'" />
 			</td>

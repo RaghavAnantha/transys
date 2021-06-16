@@ -446,9 +446,9 @@ public class BaseController {
 			}
 		} else {
 			entity.setModifiedAt(currentTime);
-			if (entity.getModifiedBy() == null) {
+			//if (entity.getModifiedBy() == null) {
 				entity.setModifiedBy(userId);
-			}
+			//}
 		}
 	}
 	

@@ -71,4 +71,18 @@ ADD CONSTRAINT `orderDropOffVehicleRef`
   ON DELETE NO ACTION
   ON UPDATE NO ACTION;  
   
+----  
+ALTER TABLE `transys`.`transysOrder` 
+ADD COLUMN `pickupVehicleId` BIGINT(20) NULL DEFAULT NULL COMMENT '' AFTER `dropOffVehicleId`;
+
+ALTER TABLE `transys`.`transysOrder` 
+ADD INDEX `orderPickupVehicleRef_idx` (`pickupVehicleId` ASC)  COMMENT '';
+
+ALTER TABLE `transys`.`transysOrder` 
+ADD CONSTRAINT `orderPickupVehicleRef`
+  FOREIGN KEY (`pickupVehicleId`)
+  REFERENCES `transys`.`vehicle` (`id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;
+  
   
