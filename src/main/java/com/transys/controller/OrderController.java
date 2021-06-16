@@ -376,8 +376,7 @@ public class OrderController extends CRUDController<Order> {
 		OrderStatus pickUpOrderStatus = retrieveOrderStatus(pickUpOrderStatusStr);
 		order.setOrderStatus(pickUpOrderStatus);
 		
-		order.setModifiedAt(Calendar.getInstance().getTime());
-		order.setModifiedBy(getUserId(request));
+		setModifier(request, order);
 		
 		genericDAO.saveOrUpdate(order);
 		
