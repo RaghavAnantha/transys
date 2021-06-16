@@ -173,49 +173,63 @@ public class OrderScheduleController extends BaseController {
 		vehicle.setSize(vehicleVO.getVehicleSize());
 	}
 	
-	private void updateVehicle(List<VehicleVO> vehicleVOList, HttpServletRequest request) {
-		if (vehicleVOList == null || vehicleVOList.isEmpty()) {
+	private void updateVehicle(HttpServletRequest request) {
+		List<VehicleVO> verizonVehicleVOList = verizonRevealService.getAllVehicles();
+		if (verizonVehicleVOList == null || verizonVehicleVOList.isEmpty()) {
 			return;
 		}
 		
-		List<String> vehicleNumberList = new ArrayList<String>();
-		List<Vehicle> vehicleList = genericDAO.findAll(Vehicle.class);
-		for (Vehicle aVehicle : vehicleList) {
-			if (StringUtils.isNotEmpty(aVehicle.getNumber())) {
-				vehicleNumberList.add(aVehicle.getNumber());
+		List<String> existingVehicleNumberList = new ArrayList<String>();
+		List<Vehicle> existingVehicleList = genericDAO.findAll(Vehicle.class);
+		for (Vehicle anExistingVehicle : existingVehicleList) {
+			if (StringUtils.isNotEmpty(anExistingVehicle.getNumber())) {
+				existingVehicleNumberList.add(anExistingVehicle.getNumber());
 			}
 		}
 		
-		for (VehicleVO aVehicleVO : vehicleVOList) {
-			if (vehicleNumberList.contains(aVehicleVO.getVehicleNumber())) {
+		for (VehicleVO aVerizonVehicleVO : verizonVehicleVOList) {
+			String verizonVehicleNo = aVerizonVehicleVO.getVehicleNumber();
+			if (StringUtils.isEmpty(verizonVehicleNo)) {
+				continue;
+			}
+			if (existingVehicleNumberList.contains(verizonVehicleNo)) {
 				continue;
 			}
 			
 			Vehicle vehicle = new Vehicle();
-			map(vehicle, aVehicleVO);
+			map(vehicle, aVerizonVehicleVO);
 			setModifier(request, vehicle);
 			genericDAO.save(vehicle);
 		}
 	}
 	
+	private List<String> retrieveVehicleNumbers() {
+		List<String> vehicleNumberList = new ArrayList<String>();
+		List<Vehicle> vehicleList = genericDAO.findAll(Vehicle.class);
+		if (vehicleList == null || vehicleList.isEmpty()) {
+			return vehicleNumberList;
+		}
+		
+		for (Vehicle aVehicle : vehicleList) {
+			if (StringUtils.isNotEmpty(aVehicle.getNumber())) {
+				vehicleNumberList.add(aVehicle.getNumber());
+			}
+		}
+		return vehicleNumberList;
+	}
+	
 	private List<VehicleLocationVO> retrieveVehicleLocations(HttpServletRequest request) {
+		///updateVehicle(request);
+		
 		List<VehicleLocationVO> vehicleLocationList = new ArrayList<VehicleLocationVO>();
-		List<VehicleVO> vehicleVOList = verizonRevealService.getAllVehicles();
-		if (vehicleVOList == null || vehicleVOList.isEmpty()) {
+		List<String> vehicleNumberList = retrieveVehicleNumbers();
+		if (vehicleNumberList == null || vehicleNumberList.isEmpty()) {
 			return vehicleLocationList;
 		}
 		
-		updateVehicle(vehicleVOList, request);
-		
-		List<String> vehicleNumberList = new ArrayList<String>();
-		int maxRows = (vehicleVOList.size() <= MAX_DISPLAY_VEHICLES ? vehicleVOList.size() : MAX_DISPLAY_VEHICLES);
-		for (VehicleVO aVehicleVO : vehicleVOList.subList(0, maxRows)) {
-			if (StringUtils.isNotEmpty(aVehicleVO.getVehicleNumber())) {
-				vehicleNumberList.add(aVehicleVO.getVehicleNumber());
-			}
-		}
-		
-		List<MultipleVehicleLocationVO> multipleVehicleLocationList = verizonRevealService.getVehicleLocation(vehicleNumberList);
+		int maxRows = (vehicleNumberList.size() <= MAX_DISPLAY_VEHICLES ? vehicleNumberList.size() : MAX_DISPLAY_VEHICLES);
+		List<MultipleVehicleLocationVO> multipleVehicleLocationList = verizonRevealService.getVehicleLocation(
+				vehicleNumberList.subList(0, maxRows));
 		if (multipleVehicleLocationList == null || multipleVehicleLocationList.isEmpty()) {
 			return vehicleLocationList;
 		}

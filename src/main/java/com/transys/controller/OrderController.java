@@ -1642,6 +1642,8 @@ public class OrderController extends CRUDController<Order> {
 		entity.setDropOffDriver(null);
 		entity.setDumpster(null);
 		entity.setDropOffVehicleId(null);
+		entity.setPickupDriver(null);
+		entity.setPickupVehicleId(null);
 		
 		genericDAO.saveOrUpdate(entity);
 		
