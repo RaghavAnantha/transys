@@ -452,6 +452,10 @@ public class BaseController {
 		}
 	}
 	
+	protected User getUser(Long id) {
+		return genericDAO.getById(User.class, id);
+	}
+	
 	protected void addRDSBillingInfo(Map<String, Object> params) {
 		params.put("rdsName", "Ravenswood Disposal Services, Inc");
 		

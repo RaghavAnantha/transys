@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
-<!-- 2021-06-13T00:12:53 -->
+<!-- 2021-06-19T00:59:07 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="orderInvoiceOrderSub" pageWidth="975" pageHeight="842" columnWidth="975" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="27b0d00f-2ed5-470f-9062-b72911004ad8">
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<field name="formattedDumpsterPrice" class="java.lang.String"/>
@@ -9,7 +9,7 @@
 	<field name="formattedOverweightFees" class="java.lang.String"/>
 	<field name="formattedTotalFees" class="java.lang.String"/>
 	<field name="formattedTotalAmountPaid" class="java.lang.String"/>
-	<field name="formattedBalanceAmountDue" class="java.lang.String"/>
+	<field name="formattedInvoicedAmount" class="java.lang.String"/>
 	<field name="formattedTonnageFees" class="java.lang.String"/>
 	<field name="formattedDiscount" class="java.lang.String"/>
 	<field name="orderId" class="java.lang.String"/>
@@ -237,7 +237,7 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="10" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Balance]]></text>
+				<text><![CDATA[Inv. Amt.]]></text>
 			</staticText>
 		</band>
 	</columnHeader>
@@ -452,7 +452,7 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="10"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{formattedBalanceAmountDue}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{formattedInvoicedAmount}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

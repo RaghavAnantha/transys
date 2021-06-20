@@ -202,6 +202,9 @@ public class OrderInvoiceDetails extends AbstractBaseModel {
 	@Column(name = "balanceAmountDue")
 	private BigDecimal balanceAmountDue;
 	
+	@Column(name = "invoicedAmount")
+	private BigDecimal invoicedAmount;
+	
 	@Column(name = "paymentMethod1")
 	private String paymentMethod1;
 	
@@ -855,6 +858,14 @@ public class OrderInvoiceDetails extends AbstractBaseModel {
 		this.paymentCheckNum3 = paymentCheckNum3;
 	}
 	
+	public BigDecimal getInvoicedAmount() {
+		return invoicedAmount;
+	}
+
+	public void setInvoicedAmount(BigDecimal invoicedAmount) {
+		this.invoicedAmount = invoicedAmount;
+	}
+
 	@Transient
 	public String getFormattedDeliveryDate() {
 		return FormatUtil.formatDate(getDeliveryDate());

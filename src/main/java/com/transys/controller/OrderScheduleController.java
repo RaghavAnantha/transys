@@ -173,7 +173,7 @@ public class OrderScheduleController extends BaseController {
 		vehicle.setSize(vehicleVO.getVehicleSize());
 	}
 	
-	private void updateVehicle(HttpServletRequest request) {
+	private void syncVehicleWithVerizon(HttpServletRequest request) {
 		List<VehicleVO> verizonVehicleVOList = verizonRevealService.getAllVehicles();
 		if (verizonVehicleVOList == null || verizonVehicleVOList.isEmpty()) {
 			return;
@@ -219,7 +219,7 @@ public class OrderScheduleController extends BaseController {
 	}
 	
 	private List<VehicleLocationVO> retrieveVehicleLocations(HttpServletRequest request) {
-		///updateVehicle(request);
+		///syncVehicleWithVerizon(request);
 		
 		List<VehicleLocationVO> vehicleLocationList = new ArrayList<VehicleLocationVO>();
 		List<String> vehicleNumberList = retrieveVehicleNumbers();

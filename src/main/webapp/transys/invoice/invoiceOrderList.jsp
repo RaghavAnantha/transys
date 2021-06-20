@@ -24,5 +24,6 @@
 		<transys:textcolumn headerText="Tot Amt" dataField="totalFees" width="72px" type="java.math.BigDecimal" />
 		<transys:textcolumn headerText="Amt Paid" dataField="totalAmountPaid" width="72px" type="java.math.BigDecimal" />
 		<transys:textcolumn headerText="Bal Due" dataField="balanceAmountDue" width="72px" type="java.math.BigDecimal" />
+		<transys:textcolumn headerText="Inv Amt" dataField="invoicedAmount" width="72px" type="java.math.BigDecimal" />
 	</transys:datatable>
 </form:form>

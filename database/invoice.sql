@@ -199,3 +199,23 @@ where id in (1,2);
 select * from transys.transysOrder
 where invoiced = 'Y' or invoiced is null
 order by id desc;
+
+
+-----
+ALTER TABLE `transys`.`orderInvoiceDetails` 
+ADD COLUMN `invoicedAmount` DECIMAL(6,2) NULL COMMENT '' AFTER `paymentCheckNum3`;
+
+update transys.orderInvoiceDetails
+set invoicedAmount = balanceAmountDue;
+
+ALTER TABLE `transys`.`orderInvoiceDetails` 
+CHANGE COLUMN `invoicedAmount` `invoicedAmount` DECIMAL(6,2) NOT NULL DEFAULT '0.00' COMMENT '' ;
+
+ALTER TABLE `transys`.`orderinvoiceheader` 
+ADD COLUMN `totalInvoicedAmount` DECIMAL(9,2) NOT NULL DEFAULT '0.00' COMMENT '' AFTER `totalInvoiceBalanceAvailable`;
+
+update transys.orderInvoiceHeader
+set totalInvoicedAmount = totalBalanceAmountDue;
+
+ALTER TABLE `transys`.`orderPayment` 
+ADD COLUMN `invoiceDate` DATETIME NULL DEFAULT NULL COMMENT '' AFTER `invoicePaymentId`;

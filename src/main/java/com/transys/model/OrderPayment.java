@@ -48,6 +48,9 @@ public class OrderPayment extends AbstractBaseModel {
 	@Column(name="invoiceId")
 	private Long invoiceId;
 	
+	@Column(name="invoiceDate")
+	private Date invoiceDate;
+	
 	@Column(name="invoicePaymentId")
 	private Long invoicePaymentId;
 
@@ -133,6 +136,14 @@ public class OrderPayment extends AbstractBaseModel {
 
 	public Long getInvoicePaymentId() {
 		return invoicePaymentId;
+	}
+
+	public Date getInvoiceDate() {
+		return invoiceDate;
+	}
+
+	public void setInvoiceDate(Date invoiceDate) {
+		this.invoiceDate = invoiceDate;
 	}
 
 	public void setInvoicePaymentId(Long invoicePaymentId) {

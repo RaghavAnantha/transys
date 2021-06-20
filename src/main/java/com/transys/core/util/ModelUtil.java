@@ -369,7 +369,7 @@ public class ModelUtil {
 		anOrderReportVO.setBalanceAmountDue(anOrder.getBalanceAmountDue());
 	}
 	
-	public static List<String> extractIds(List<? extends AbstractBaseModel> entityList) {
+	public static List<String> extractIdsAsStr(List<? extends AbstractBaseModel> entityList) {
 		if (entityList == null || entityList.isEmpty()) {
 			return Collections.EMPTY_LIST;
 		}
@@ -377,6 +377,18 @@ public class ModelUtil {
 		List<String> entityIds = new ArrayList<String>();
 		for (AbstractBaseModel anEntity : entityList) {
 			entityIds.add(String.valueOf(anEntity.getId().longValue()));
+		}
+		return entityIds;
+	}
+	
+	public static List<Long> extractIds(List<? extends AbstractBaseModel> entityList) {
+		if (entityList == null || entityList.isEmpty()) {
+			return Collections.EMPTY_LIST;
+		}
+		
+		List<Long> entityIds = new ArrayList<Long>();
+		for (AbstractBaseModel anEntity : entityList) {
+			entityIds.add(anEntity.getId());
 		}
 		return entityIds;
 	}

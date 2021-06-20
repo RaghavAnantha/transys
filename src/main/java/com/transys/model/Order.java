@@ -128,6 +128,9 @@ public class Order extends AbstractBaseModel {
 	
 	@Transient
 	String[] fileList;
+	
+	@Transient
+	private BigDecimal amountToBeInvoiced;
 
 	@Override
 	public String getHasDocs() {
@@ -581,6 +584,16 @@ public class Order extends AbstractBaseModel {
 
 	public void setPickupVehicleId(Long pickupVehicleId) {
 		this.pickupVehicleId = pickupVehicleId;
+	}
+
+	@Transient
+	public BigDecimal getAmountToBeInvoiced() {
+		return amountToBeInvoiced;
+	}
+
+	@Transient
+	public void setAmountToBeInvoiced(BigDecimal amountToBeInvoiced) {
+		this.amountToBeInvoiced = amountToBeInvoiced;
 	}
 
 	/*public OrderNotes getNotes() {

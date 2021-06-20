@@ -151,6 +151,11 @@ public class InvoiceController extends BaseController {
 		OrderInvoiceHeader invoiceHeader = null;
 		if (invoiceId != null) {
 			invoiceHeader = genericDAO.getById(OrderInvoiceHeader.class, invoiceId);
+			if (invoiceHeader.getTotalInvoiceBalanceDue().doubleValue() == 0.0) {
+				setErrorMsg(request, "Invoice is already paid in full");
+				return "redirect:/" + getUrlContext() + "/invoicePaymentSearch.do";
+			}
+			
 			invoicePayment.setInvoice(invoiceHeader);
 		}
 		
@@ -206,7 +211,7 @@ public class InvoiceController extends BaseController {
 		SearchCriteria criteria = (SearchCriteria)request.getSession().getAttribute("searchCriteria");
 		processSaveInvoiceReferrer(request, model, criteria, input);
 		
-		validateSearch(input, bindingResult);
+		validateCreateInvoiceSearch(input, bindingResult);
 		if(bindingResult.hasErrors()) {
         	return returnUrl;
       }
@@ -397,7 +402,7 @@ public class InvoiceController extends BaseController {
 	private List<OrderPayment> retrieveInvoiceOrderPaymentDetails(Long invoicePaymentId) {
 		String query = "select obj from OrderPayment obj where obj.deleteFlag=1"
 				+ " and invoicePaymentId=" + invoicePaymentId
-				+ "order by obj.order.id asc, obj.id asc";
+				+ " order by obj.order.id asc, obj.id asc";
 		List<OrderPayment> orderPaymentList = genericDAO.executeSimpleQuery(query);
 		return orderPaymentList;
 	}
@@ -426,7 +431,7 @@ public class InvoiceController extends BaseController {
 					ModelUtil.retrieveOrderDeliveryAddresses(genericDAO, customerId);
 			model.addAttribute("deliveryAddresses", deliveryAddressVOList);
 			if (StringUtils.equals("N", orderInvoiced)) {
-				model.addAttribute("orderIds", retrieveOrderIds(orderInvoiced, customerId));
+				model.addAttribute("orderIds", retrieveInvoiceableOrderIds(customerId));
 			}
 		}
 	}
@@ -480,25 +485,40 @@ public class InvoiceController extends BaseController {
 		addMsgCtx(model, invoiceListReportMsgCtx);
 	}
 	
-	private List<Long> retrieveOrderIds(String invoiced, String customerId) {
-		String query = "select obj.id from Order obj where obj.deleteFlag=1 ";
-				
-		if (StringUtils.equals(invoiced, "N")) {
-			OrderStatus orderStatus = ModelUtil.retrieveOrderStatus(genericDAO, OrderStatus.ORDER_STATUS_CANCELED);
-			query	+= " and obj.orderStatus.id !=" + orderStatus.getId().longValue();
-			query	+= " and obj.balanceAmountDue > 0.0";
-		} else {
-			query	+= " and obj.invoiced='" + invoiced + "'";
-		}
+	private List<Long> retrieveInvoiceableOrderIds(String customerId) {
+		String query = "select obj from Order obj where obj.deleteFlag=1 ";
+		query	+= constructInvoicableOrderCriteria();
 		
 		if (StringUtils.isNotEmpty(customerId)) {
 			query	+= " and obj.customer.id = " + customerId;
 		}
 		query	+= " order by obj.id asc";
-		
 		List<Order> orderList = genericDAO.executeSimpleQuery(query);
-		List<Long> orderIdList = ModelUtil.extractObjIds(orderList);
-		return orderIdList;
+		
+		List<Order> invoicableOrderList = filterInvoicableOrders(orderList);
+		if (invoicableOrderList.isEmpty()) {
+			return Collections.EMPTY_LIST;
+		}
+		
+		List<Long> invoicableOrderIdList = ModelUtil.extractIds(invoicableOrderList);
+		return invoicableOrderIdList;
+	}
+	
+	private BigDecimal deduceAmountToBeInvoiced(Order anOrder, Map<Long, BigDecimal> orderInvoicedAmountMap,
+			Map<Long, BigDecimal> nonInvoicedOrderPaymentAmountMap) {
+		BigDecimal amountToBeInvoiced;
+		BigDecimal amountAlreadyInvoiced = orderInvoicedAmountMap.get(anOrder.getId());
+		BigDecimal nonInvoicedOrderPaymentAmount = nonInvoicedOrderPaymentAmountMap.get(anOrder.getId());
+		if (amountAlreadyInvoiced == null || amountAlreadyInvoiced.doubleValue() == 0.0) {
+			amountToBeInvoiced = anOrder.getBalanceAmountDue();
+		} else {
+			amountToBeInvoiced = anOrder.getOrderFees().getTotalFees().subtract(amountAlreadyInvoiced);
+			if (nonInvoicedOrderPaymentAmount != null) {
+				amountToBeInvoiced = amountToBeInvoiced.subtract(nonInvoicedOrderPaymentAmount);
+			}
+		}
+		
+		return amountToBeInvoiced;
 	}
 	
 	private List<Long> retrievePayableInvoiceNos(String customerId) {
@@ -512,6 +532,47 @@ public class InvoiceController extends BaseController {
 		List<OrderInvoiceHeader> invoiceList = genericDAO.executeSimpleQuery(query);
 		List<Long> invoiceNoList = ModelUtil.extractObjIds(invoiceList);
 		return invoiceNoList;
+	}
+	
+	private String constructInvoicableOrderCriteria() {
+		StringBuffer whereClause = new StringBuffer();
+		whereClause.append(" and obj.balanceAmountDue > " + 0.0);
+		//whereClause.append(" and obj.invoiced='N'");
+		
+		OrderStatus orderStatus = ModelUtil.retrieveOrderStatus(genericDAO, OrderStatus.ORDER_STATUS_CANCELED);
+		whereClause.append(" and obj.orderStatus.id !=" + orderStatus.getId().longValue());
+		
+		return whereClause.toString();
+	}
+	
+	private List<Order> filterInvoicableOrders(List<Order> orderList) {
+		if (orderList.isEmpty()) {
+			return Collections.EMPTY_LIST;
+		}
+		
+		List<Long> orderIdList = ModelUtil.extractIds(orderList);
+		Map<Long, BigDecimal> orderInvoicedAmountMap = retrieveOrderInvoicedAmountMap(orderIdList);
+		Map<Long, BigDecimal> nonInvoicedOrderPaymentAmountMap = retrieveNonInvoicedOrderPaymentAmountMap(orderIdList);
+		OrderStatus cancelOrderStatus = ModelUtil.retrieveOrderStatus(genericDAO, OrderStatus.ORDER_STATUS_CANCELED);
+		List<Order> invoicableOrders = new ArrayList<Order>();
+		for (Order anOrder : orderList) {
+			if (anOrder.getBalanceAmountDue().doubleValue() == 0.0) {
+				continue;
+			}
+			
+			if (anOrder.getOrderStatus().getId().longValue() == cancelOrderStatus.getId().longValue()) {
+				continue;
+			}
+			
+			BigDecimal amountToBeInvoiced = deduceAmountToBeInvoiced(anOrder, orderInvoicedAmountMap, nonInvoicedOrderPaymentAmountMap);
+			if (amountToBeInvoiced.doubleValue() == 0.0) {
+				continue;
+			}
+			
+			anOrder.setAmountToBeInvoiced(amountToBeInvoiced);
+			invoicableOrders.add(anOrder);
+		}
+		return invoicableOrders;
 	}
 	
 	private List<Order> performCreateInvoiceSearch(SearchCriteria criteria, InvoiceVO input) {
@@ -529,11 +590,7 @@ public class InvoiceController extends BaseController {
 		StringBuffer countQuery = new StringBuffer("select count(obj) from Order obj where 1=1");
 		StringBuffer whereClause = new StringBuffer(" and obj.deleteFlag=1");
 		
-		whereClause.append(" and obj.balanceAmountDue > " + 0.0);
-		//whereClause.append(" and obj.invoiced='N'");
-		
-		OrderStatus orderStatus = ModelUtil.retrieveOrderStatus(genericDAO, OrderStatus.ORDER_STATUS_CANCELED);
-		whereClause.append(" and obj.orderStatus.id !=" + orderStatus.getId().longValue());
+		whereClause.append(constructInvoicableOrderCriteria());
 		
 		if (StringUtils.isNotEmpty(customerId)) {
 			whereClause.append(" and obj.customer.id=" + customerId);
@@ -577,7 +634,8 @@ public class InvoiceController extends BaseController {
 						.setFirstResult(criteria.getPage() * criteria.getPageSize())
 						.getResultList();
 		
-		return orderList;
+		List<Order> invoicableOrderList = filterInvoicableOrders(orderList);
+		return invoicableOrderList;
 	}
 	
 	private List<OrderInvoiceHeader> performManageInvoiceSearch(SearchCriteria criteria) {
@@ -694,8 +752,20 @@ public class InvoiceController extends BaseController {
 		return orderInvoicePaymentList;
 	}
 	
-	private void validateSearch(InvoiceVO input, BindingResult bindingResult) {
-		if (StringUtils.isNotEmpty(input.getOrderId())) {
+	private boolean isInvoicableOrder(Long orderId) {
+		Order anOrder = genericDAO.getById(Order.class, orderId);
+		List<Order> orderList = new ArrayList<Order>();
+		orderList.add(anOrder);
+		List<Order> invoiceableOrderList = filterInvoicableOrders(orderList);
+		return !invoiceableOrderList.isEmpty();
+	}
+	
+	private void validateCreateInvoiceSearch(InvoiceVO input, BindingResult bindingResult) {
+		String orderId = input.getOrderId();
+		if (StringUtils.isNotEmpty(orderId)) {
+			if (!isInvoicableOrder(Long.valueOf(orderId))) {
+				bindingResult.rejectValue("orderId", null, null, "Order# " + orderId + " already paid in full");
+			}
 			return;
 		}
 		
@@ -716,8 +786,9 @@ public class InvoiceController extends BaseController {
 			return null;
 		}
 		
-		List<Order> orderList = retrieveOrder(orderIdsArr) ;
-		return orderList;
+		List<Order> orderList = retrieveOrder(orderIdsArr);
+		List<Order> invoiceableOrderList = filterInvoicableOrders(orderList);
+		return invoiceableOrderList;
 	}
 	
 	private List<Order> retrieveOrder(String[] orderIdsArr) {
@@ -735,8 +806,7 @@ public class InvoiceController extends BaseController {
       return orderList;
 	}
 	
-	private void map(List<Order> orderList, List<InvoiceVO> invoiceVOList,
-			List<InvoiceVO> invoicePaymentVOList) {
+	private void map(List<Order> orderList, List<InvoiceVO> invoiceVOList, List<InvoiceVO> invoicePaymentVOList) {
 		if (orderList == null || orderList.isEmpty()) {
 			return;
 		}
@@ -752,6 +822,7 @@ public class InvoiceController extends BaseController {
 		anInvoiceReportVO.setInvoiceNo(orderInvoiceHeader.getId());
 		anInvoiceReportVO.setInvoiceDate(orderInvoiceHeader.getInvoiceDate());
 		anInvoiceReportVO.setTotalBalanceAmountDue(orderInvoiceHeader.getTotalBalanceAmountDue());
+		anInvoiceReportVO.setTotalInvoicedAmount(orderInvoiceHeader.getTotalInvoicedAmount());
 		anInvoiceReportVO.setTotalInvoicePaymentDone(orderInvoiceHeader.getTotalInvoicePaymentDone());
 		anInvoiceReportVO.setTotalInvoiceBalanceDue(orderInvoiceHeader.getTotalInvoiceBalanceDue());
 	}
@@ -786,6 +857,7 @@ public class InvoiceController extends BaseController {
 		anInvoiceVO.setTotalAmountPaid(orderInvoiceDetails.getTotalAmountPaid());
 		anInvoiceVO.setDiscount(orderInvoiceDetails.getDiscountAmount());
 		anInvoiceVO.setBalanceAmountDue(orderInvoiceDetails.getBalanceAmountDue());
+		anInvoiceVO.setInvoicedAmount(orderInvoiceDetails.getInvoicedAmount());
 		
 		InvoiceVO anInvoicePaymentVO = null;
 		if (StringUtils.isNotEmpty(orderInvoiceDetails.getPaymentMethod1())) {
@@ -820,8 +892,7 @@ public class InvoiceController extends BaseController {
 		}
 	}
 	
-	private void map(Order anOrder, InvoiceVO anInvoiceVO,
-			List<InvoiceVO> invoicePaymentVOList) {
+	private void map(Order anOrder, InvoiceVO anInvoiceVO, List<InvoiceVO> invoicePaymentVOList) {
 		anInvoiceVO.setOrderId(anOrder.getId().toString());
 		anInvoiceVO.setOrderDate(anOrder.getCreatedAt());
 		anInvoiceVO.setStatus(anOrder.getOrderStatus().getStatus());
@@ -850,6 +921,7 @@ public class InvoiceController extends BaseController {
 		
 		anInvoiceVO.setTotalAmountPaid(anOrder.getTotalAmountPaid());
 		anInvoiceVO.setBalanceAmountDue(anOrder.getBalanceAmountDue());
+		anInvoiceVO.setInvoicedAmount(anOrder.getAmountToBeInvoiced());
 		
 		List<OrderPayment> orderPaymentList = anOrder.getOrderPayment();
 		if (orderPaymentList == null || orderPaymentList.isEmpty()) {
@@ -893,8 +965,8 @@ public class InvoiceController extends BaseController {
 		}
 	}
 	
-	private void map(List<Order> orderList, OrderInvoiceHeader orderInvoiceHeader, List<OrderInvoiceDetails> orderInvoiceDetailsList) {
-		if (orderList == null || orderList.isEmpty()) {
+	private void map(List<Order> invoicableOrderList, OrderInvoiceHeader orderInvoiceHeader, List<OrderInvoiceDetails> orderInvoiceDetailsList) {
+		if (invoicableOrderList == null || invoicableOrderList.isEmpty()) {
 			return;
 		}
 		
@@ -902,14 +974,17 @@ public class InvoiceController extends BaseController {
 		BigDecimal totalDiscount = new BigDecimal(0.00);
 		BigDecimal totalAmountPaid = new BigDecimal(0.00);
 		BigDecimal totalBalanceAmountDue = new BigDecimal(0.00);
+		BigDecimal totalInvoicedAmount = new BigDecimal(0.00);
 		List<Date> orderDateList = new ArrayList<Date>();
-		for (Order anOrder : orderList) {
-			orderDateList.add(anOrder.getCreatedAt());
+		for (Order anInvoicableOrder : invoicableOrderList) {
+			orderDateList.add(anInvoicableOrder.getCreatedAt());
 			
 			OrderInvoiceDetails anOrderInvoiceDetails = new OrderInvoiceDetails();
 			anOrderInvoiceDetails.setInvoiceHeader(orderInvoiceHeader);
 			
-			map(anOrder, anOrderInvoiceDetails);
+			map(anInvoicableOrder, anOrderInvoiceDetails);
+			anOrderInvoiceDetails.setInvoicedAmount(anInvoicableOrder.getAmountToBeInvoiced());
+			
 			orderInvoiceDetailsList.add(anOrderInvoiceDetails);
 			
 			if (anOrderInvoiceDetails.getTotalFees() != null) {
@@ -924,6 +999,9 @@ public class InvoiceController extends BaseController {
 			if (anOrderInvoiceDetails.getBalanceAmountDue() != null) {
 				totalBalanceAmountDue = totalBalanceAmountDue.add(anOrderInvoiceDetails.getBalanceAmountDue());
 			}
+			if (anOrderInvoiceDetails.getInvoicedAmount() != null) {
+				totalInvoicedAmount = totalInvoicedAmount.add(anOrderInvoiceDetails.getInvoicedAmount());
+			}
 		}
 		
 		Collections.sort(orderDateList);
@@ -935,7 +1013,8 @@ public class InvoiceController extends BaseController {
 		orderInvoiceHeader.setTotalAmountPaid(totalAmountPaid);
 		orderInvoiceHeader.setTotalBalanceAmountDue(totalBalanceAmountDue);
 		
-		orderInvoiceHeader.setTotalInvoiceBalanceDue(totalBalanceAmountDue);
+		orderInvoiceHeader.setTotalInvoicedAmount(totalInvoicedAmount);
+		orderInvoiceHeader.setTotalInvoiceBalanceDue(totalInvoicedAmount);
 		orderInvoiceHeader.setTotalInvoicePaymentDone(new BigDecimal(0.00));
 		orderInvoiceHeader.setTotalInvoiceBalanceAvailable(new BigDecimal(0.00));
 	}
@@ -974,10 +1053,9 @@ public class InvoiceController extends BaseController {
 	}
 	
 	private void map(OrderInvoiceHeader orderInvoiceHeader, Map<String, Object> params) {
-		params.put("invoiceNo", orderInvoiceHeader.getId().toString());
-		params.put("invoiceDate", orderInvoiceHeader.getFormattedInvoiceDate());
+		addInvoiceDetails(params, orderInvoiceHeader.getId().toString(), orderInvoiceHeader.getFormattedInvoiceDate());
 		
-		params.put("invoicedAmount", FormatUtil.formatFee(orderInvoiceHeader.getTotalBalanceAmountDue(), true, true));
+		params.put("invoicedAmount", FormatUtil.formatFee(orderInvoiceHeader.getTotalInvoicedAmount(), true, true));
 		params.put("invoicePaymentDone", FormatUtil.formatFee(orderInvoiceHeader.getTotalInvoicePaymentDone(), true, true));
 		params.put("invoiceBalanceDue", FormatUtil.formatFee(orderInvoiceHeader.getTotalInvoiceBalanceDue(), true, true));
 		
@@ -988,9 +1066,8 @@ public class InvoiceController extends BaseController {
 	}
 	
 	private void addCustomerData(OrderInvoiceHeader orderInvoiceHeader, Map<String, Object> params) {
-		params.put("customer", orderInvoiceHeader.getCompanyName());
-		params.put("billingAddress", orderInvoiceHeader.getBillingAddress("\n"));
-		params.put("contact", orderInvoiceHeader.getContactDetails());
+		addCustomerData(params, orderInvoiceHeader.getCompanyName(), orderInvoiceHeader.getBillingAddress("\n"),
+				orderInvoiceHeader.getContactDetails());
 	}
 	
 	private void map(Order anOrder, OrderInvoiceHeader orderInvoiceHeader) {
@@ -1199,7 +1276,7 @@ public class InvoiceController extends BaseController {
 	@RequestMapping(method = RequestMethod.GET, value = "/invoicableOrderIdsSearch.do")
 	public @ResponseBody String invoicableOrderIdsSearch(ModelMap model, HttpServletRequest request,
 					@RequestParam("id") Long customerId) {
-		List<Long> orderIdList = retrieveOrderIds("N", String.valueOf(customerId));
+		List<Long> orderIdList = retrieveInvoiceableOrderIds(String.valueOf(customerId));
 		
 		ObjectMapper objectMapper = new ObjectMapper();
 		String json = StringUtils.EMPTY;
@@ -1241,15 +1318,40 @@ public class InvoiceController extends BaseController {
 		return String.valueOf(invoiceHeader.getTotalInvoiceBalanceDue());
 	}
 	
+	private boolean validateInvoicePayment(OrderInvoicePayment invoicePayment, StringBuffer errorMsgBuff) {
+		if (invoicePayment.getAmountPaid().doubleValue() <= 0.0) {
+			errorMsgBuff.append("Invoice payment amount not valid, ");
+		}
+		if (invoicePayment.getInvoiceBalanceDue().doubleValue() == 0.0
+				|| invoicePayment.getAmountPaid().compareTo(invoicePayment.getInvoiceBalanceDue()) == 1) {
+			errorMsgBuff.append("Invoice payment amount is greater than balance due, ");
+		}
+		
+		int len = errorMsgBuff.length();
+		if (len > 0) {
+			errorMsgBuff.delete(errorMsgBuff.length()-2, errorMsgBuff.length());
+			return false;
+		} else {
+			return true;
+		}
+	}
+	
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
 	@RequestMapping(method = { RequestMethod.POST }, value = "/saveInvoicePayment.do")
 	public String saveInvoicePayment(HttpServletRequest request,
 			@ModelAttribute(INVOICE_PAYMENT_MODEL_OBJECT_KEY) OrderInvoicePayment invoicePayment,
 			BindingResult bindingResult, ModelMap model) {
+		StringBuffer errorMsgBuff = new StringBuffer();
+		boolean valid = validateInvoicePayment(invoicePayment, errorMsgBuff);
+		if (!valid) {
+			setErrorMsg(request, errorMsgBuff.toString());
+			return "redirect:/" + getUrlContext() + "/invoicePaymentSearch.do";
+		}
+		
 		setModifier(request, invoicePayment);
 		
 		Long invoiceId = invoicePayment.getInvoice().getId();
-		List<Order> orderList = retrieveOrders(invoiceId);
+		List<Order> orderList = retrieveInvoicedOrders(invoiceId);
 		List<OrderPayment> newOrderPaymentList = new ArrayList<OrderPayment>();
 		BigDecimal amountAvailable = updateOrderPayment(orderList, invoicePayment, newOrderPaymentList);
 		invoicePayment.setAmountAvailable(amountAvailable);
@@ -1283,17 +1385,21 @@ public class InvoiceController extends BaseController {
 	
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
 	private String saveOrderPayment(List<OrderPayment> orderPaymentList, OrderInvoicePayment invoicePayment) {
-		User createdByUser = genericDAO.getById(User.class, invoicePayment.getCreatedBy());
+		if (orderPaymentList.isEmpty()) {
+			return "Successfull - nothing to process";
+		}
+		
+		User createdByUser = getUser(invoicePayment.getCreatedBy());
 		for (OrderPayment anOrderPayment : orderPaymentList) {
 			anOrderPayment.setInvoicePaymentId(invoicePayment.getId());
 			
 			Order order = anOrderPayment.getOrder();
 			order.setModifiedAt(invoicePayment.getCreatedAt());
-			order.setModifiedBy(invoicePayment.getCreatedBy());
+			order.setModifiedBy(createdByUser.getId());
 			genericDAO.saveOrUpdate(order);
 			
-			String auditMsg = String.format("Order payment updated.  Invoice#: %s.  Invoice payment#: %s",
-					invoicePayment.getInvoice().getId(), invoicePayment.getId());
+			String auditMsg = String.format("Order payment updated.  Invoice#: %s.  Invoice payment#: %s.  Amt paid: %d",
+					invoicePayment.getInvoice().getId(), invoicePayment.getId(), anOrderPayment.getAmountPaid());
 			ModelUtil.createAuditOrderNotes(genericDAO, order, auditMsg, createdByUser);
 		}
 		return "Successfully saved order payment and order";
@@ -1301,6 +1407,15 @@ public class InvoiceController extends BaseController {
 	
 	private BigDecimal updateOrderPayment(List<Order> orderList, OrderInvoicePayment invoicePayment,
 			List<OrderPayment> newOrderPaymentList) {
+		if (invoicePayment.getAmountPaid().doubleValue() == 0.0) {
+			return invoicePayment.getAmountPaid();
+		}
+		
+		Long invoiceId = invoicePayment.getInvoice().getId();
+		Map<Long, OrderInvoiceDetails> invoiceDetailsMap = retrieveInvoiceDetailsMap(invoiceId);
+		Map<Long, BigDecimal> existingInvoiceOrderPaymentMap = retrieveInvoicedOrderPaymentAmountMap(invoiceId);
+		
+		OrderStatus cancelOrderStatus = ModelUtil.retrieveOrderStatus(genericDAO, OrderStatus.ORDER_STATUS_CANCELED);
 		BigDecimal amountAvailable = invoicePayment.getAmountPaid();
 		for (Order anOrder : orderList) {
 			BigDecimal balanceAmountDue = anOrder.getBalanceAmountDue();
@@ -1308,25 +1423,37 @@ public class InvoiceController extends BaseController {
 				continue;
 			}
 			
-			OrderPayment orderPayment = new OrderPayment();
-			orderPayment.setOrder(anOrder);
-			map(invoicePayment, orderPayment);
+			if (anOrder.getOrderStatus().getId().longValue() == cancelOrderStatus.getId().longValue()) {
+				continue;
+			}
 			
-			BigDecimal payableAmount = balanceAmountDue;
-			if (balanceAmountDue.doubleValue() >= amountAvailable.doubleValue()) {
+			Long orderId = anOrder.getId();
+			OrderInvoiceDetails anOrderInvoiceDetails = invoiceDetailsMap.get(orderId);
+			BigDecimal orderInvoicedAmount = anOrderInvoiceDetails.getInvoicedAmount();
+			BigDecimal totalInvoiceOrderPaymentMade = existingInvoiceOrderPaymentMap.get(orderId);
+			BigDecimal payableAmount = orderInvoicedAmount.subtract(totalInvoiceOrderPaymentMade);
+			if (payableAmount.doubleValue() == 0.0) {
+				continue;
+			}
+			
+			if (payableAmount.doubleValue() >= amountAvailable.doubleValue()) {
 				payableAmount = amountAvailable;
 				amountAvailable = new BigDecimal(0.00);
 			} else {
-				amountAvailable = amountAvailable.subtract(balanceAmountDue);
+				amountAvailable = amountAvailable.subtract(payableAmount);
 			}
-			orderPayment.setAmountPaid(payableAmount);
+			
+			OrderPayment newOrderPayment = new OrderPayment();
+			newOrderPayment.setOrder(anOrder);
+			map(invoicePayment, newOrderPayment);
+			newOrderPayment.setAmountPaid(payableAmount);
 			
 			List<OrderPayment> orderPaymentList = anOrder.getOrderPayment();
-			orderPaymentList.add(orderPayment);
-			newOrderPaymentList.add(orderPayment);
+			orderPaymentList.add(newOrderPayment);
+			newOrderPaymentList.add(newOrderPayment);
 			
-			anOrder.setTotalAmountPaid(anOrder.getTotalAmountPaid().add(orderPayment.getAmountPaid()));
-			anOrder.setBalanceAmountDue(anOrder.getBalanceAmountDue().subtract(orderPayment.getAmountPaid()));
+			anOrder.setTotalAmountPaid(anOrder.getTotalAmountPaid().add(payableAmount));
+			anOrder.setBalanceAmountDue(anOrder.getBalanceAmountDue().subtract(payableAmount));
 			
 			if (amountAvailable.doubleValue() == 0.0) {
 				break;
@@ -1344,11 +1471,12 @@ public class InvoiceController extends BaseController {
 		orderPayment.setCcNumber(invoicePayment.getCcNumber());
 		orderPayment.setCcExpDate(invoicePayment.getCcExpDate());
 		orderPayment.setInvoiceId(invoicePayment.getInvoice().getId());
+		orderPayment.setInvoiceDate(invoicePayment.getInvoice().getInvoiceDate());
 		orderPayment.setCreatedAt(invoicePayment.getCreatedAt());
 		orderPayment.setCreatedBy(invoicePayment.getCreatedBy());
 	}
 	
-	private List<Order> retrieveOrders(Long invoiceId) {
+	private List<Order> retrieveInvoicedOrders(Long invoiceId) {
 		List<Long> orderIdList = retrieveInvoiceOrderIds(invoiceId);
 		List<Order> orderList = retrieveOrders(orderIdList);
 		return orderList;
@@ -1380,22 +1508,27 @@ public class InvoiceController extends BaseController {
 			return "redirect:/" + getUrlContext() + "/createInvoiceMain.do";
 		}
 		
+		List<Order> orderList = retrieveOrder(orderIdsArr);
+		List<Order> invoicableOrderList = filterInvoicableOrders(orderList);
+		if (invoicableOrderList.isEmpty()) {
+			setErrorMsg(request, response, "Order(s) selected are not invoicable");
+			return "redirect:/" + getUrlContext() + "/createInvoiceMain.do";
+		}
+		
 		User createdByUser = getUser(request);
 		Long createdBy = createdByUser.getId();
-		
-		List<Order> orderList = retrieveOrder(orderIdsArr);
 		
 		OrderInvoiceHeader orderInvoiceHeader = new OrderInvoiceHeader();
 		orderInvoiceHeader.setCreatedAt(Calendar.getInstance().getTime());
 		orderInvoiceHeader.setCreatedBy(createdBy);
 		
-		orderInvoiceHeader.setOrderCount(orderList.size());
+		orderInvoiceHeader.setOrderCount(invoicableOrderList.size());
 		
 		map(input, orderInvoiceHeader);
-		map(orderList.get(0), orderInvoiceHeader);
+		map(invoicableOrderList.get(0), orderInvoiceHeader);
 		
 		List<OrderInvoiceDetails> orderInvoiceDetailsList = new ArrayList<OrderInvoiceDetails>();
-		map(orderList, orderInvoiceHeader, orderInvoiceDetailsList);
+		map(invoicableOrderList, orderInvoiceHeader, orderInvoiceDetailsList);
 		
 		genericDAO.save(orderInvoiceHeader);
 		
@@ -1450,10 +1583,10 @@ public class InvoiceController extends BaseController {
 		input.setNotes(invoiceNotes);
 		//input.setHistoryCount(-1);
 		
-		return processPreviewInvoiceCommon(request, response, input);
+		return processPreviewInvoice(request, response, input);
 	}
 	
-	private String processPreviewInvoiceCommon(HttpServletRequest request, HttpServletResponse response,
+	private String processPreviewInvoice(HttpServletRequest request, HttpServletResponse response,
 			InvoiceVO input) {
 		Map<String, Object> datas = generateInvoiceData(request, input);
 		List<InvoiceVO> invoiceVOList = (List<InvoiceVO>) datas.get(ReportUtil.dataKey);
@@ -1801,6 +1934,19 @@ public class InvoiceController extends BaseController {
 		return orderInvoiceHeader;
 	}
 	
+	private Map<Long, OrderInvoiceDetails> retrieveInvoiceDetailsMap(Long invoiceId) {
+		Map<Long, OrderInvoiceDetails> invoiceDetailsMap = new HashMap<Long, OrderInvoiceDetails>();
+		List<OrderInvoiceDetails> invoiceDetailsList = retrieveOrderInvoiceDetails(invoiceId);
+		if (invoiceDetailsList == null || invoiceDetailsList.isEmpty()) {
+			return invoiceDetailsMap;
+		}
+		
+		for (OrderInvoiceDetails anInvoiceDetails : invoiceDetailsList) {
+			invoiceDetailsMap.put(anInvoiceDetails.getOrderId(), anInvoiceDetails);
+		}
+		return invoiceDetailsMap;
+	}
+	
 	private List<OrderInvoiceDetails> retrieveOrderInvoiceDetails(Long invoiceId) {
 		String query = "select obj from OrderInvoiceDetails obj where obj.invoiceHeader.id=" + invoiceId
 					+ " order by obj.orderId asc";
@@ -1808,26 +1954,106 @@ public class InvoiceController extends BaseController {
 		return orderInvoiceDetailsList;
 	}
 	
+	private Map<Long, BigDecimal> retrieveOrderInvoicedAmountMap(List<Long> orderIdList) {
+		Map<Long, BigDecimal> orderInvoicedAmountMap = new HashMap<Long, BigDecimal>();
+		if (orderIdList.isEmpty()) {
+			return orderInvoicedAmountMap;
+		}
+		
+		String orderIds = CoreUtil.toStringFromLong(orderIdList);
+		String query = "select obj.orderId, sum(invoicedAmount) from OrderInvoiceDetails obj where obj.deleteFlag=1"
+				+ " and orderId in(" + orderIds + ")"
+				+ " group by obj.orderId"
+				+ " order by obj.orderId asc";
+		List<?> resultObjectList = genericDAO.executeSimpleQuery(query);
+		if (resultObjectList == null || resultObjectList.isEmpty()) {
+			return orderInvoicedAmountMap;
+		}
+		
+		Long orderId;
+		BigDecimal totalInvoicedAmount;
+		for (Object[] resultObj : (List<Object[]>)resultObjectList) {
+			orderId = ((Long)resultObj[0]);
+			totalInvoicedAmount = ((BigDecimal)resultObj[1]);
+			orderInvoicedAmountMap.put(orderId, totalInvoicedAmount);
+		}   
+		
+		return orderInvoicedAmountMap;
+	}
+	
+	private Map<Long, BigDecimal> retrieveNonInvoicedOrderPaymentAmountMap(List<Long> orderIdList) {
+		Map<Long, BigDecimal> nonInvoicedOrderPaymentAmountMap = new HashMap<Long, BigDecimal>();
+		if (orderIdList.isEmpty()) {
+			return nonInvoicedOrderPaymentAmountMap;
+		}
+		
+		String orderIds = CoreUtil.toStringFromLong(orderIdList);
+		String query = "select obj.order.id, sum(amountPaid) from OrderPayment obj where obj.deleteFlag=1"
+				+ " and obj.order.id in(" + orderIds + ")"
+				+ " and invoiceId is null"
+				+ " group by obj.order.id"
+				+ " order by obj.order.id asc";
+		List<?> resultObjectList = genericDAO.executeSimpleQuery(query);
+		if (resultObjectList == null || resultObjectList.isEmpty()) {
+			return nonInvoicedOrderPaymentAmountMap;
+		}
+		
+		Long orderId;
+		BigDecimal totalAmountPaid;
+		for (Object[] resultObj : (List<Object[]>)resultObjectList) {
+			orderId = ((Long)resultObj[0]);
+			totalAmountPaid = ((BigDecimal)resultObj[1]);
+			nonInvoicedOrderPaymentAmountMap.put(orderId, totalAmountPaid);
+		}   
+		
+		return nonInvoicedOrderPaymentAmountMap;
+	}
+	
+	private Map<Long, BigDecimal> retrieveInvoicedOrderPaymentAmountMap(Long invoiceId) {
+		Map<Long, BigDecimal> invoiceOrderPaymentAmountMap = new HashMap<Long, BigDecimal>();
+		String query = "select obj.order.id, sum(amountPaid) from OrderPayment obj where obj.deleteFlag=1"
+				+ " and invoiceId=" + invoiceId
+				+ " group by obj.order.id"
+				+ " order by obj.order.id asc";
+		List<?> resultObjectList = genericDAO.executeSimpleQuery(query);
+		if (resultObjectList == null || resultObjectList.isEmpty()) {
+			return invoiceOrderPaymentAmountMap;
+		}
+		
+		Long orderId;
+		BigDecimal totalAmountPaid;
+		for (Object[] resultObj : (List<Object[]>)resultObjectList) {
+			orderId = ((Long)resultObj[0]);
+			totalAmountPaid = ((BigDecimal)resultObj[0]);
+			invoiceOrderPaymentAmountMap.put(orderId, totalAmountPaid);
+		}   
+		
+		return invoiceOrderPaymentAmountMap;
+	}
+	
 	private void setupPreviewInvoice(HttpServletRequest request, ModelMap model) {
 		addMsgCtx(model, previewInvoiceMsgCtx);
 	}
 	
 	private Map<String, Object> generateInvoiceData(HttpServletRequest request, InvoiceVO input) {
-		List<Order> orderList = performPreviewInvoiceSearch(input);
-		
 		List<InvoiceVO> invoiceVOList = new ArrayList<InvoiceVO>();
-		List<InvoiceVO> invoicePaymentVOList = new ArrayList<InvoiceVO>();
-		map(orderList, invoiceVOList, invoicePaymentVOList);
-		
 		Map<String, Object> params = new HashMap<String, Object>();
+		Map<String, Object> datas = new HashMap<String, Object>();
+		addData(datas, invoiceVOList, params);
+		
+		List<Order> invoiceableOrderList = performPreviewInvoiceSearch(input);
+		if (invoiceableOrderList == null || invoiceableOrderList.isEmpty()) {
+			return datas;
+		}
+		
+		List<InvoiceVO> invoicePaymentVOList = new ArrayList<InvoiceVO>();
+		map(invoiceableOrderList, invoiceVOList, invoicePaymentVOList);
+		
 		map(input, invoiceVOList, invoicePaymentVOList, params);
 		
 		addRDSBillingInfo(params);
 		addLogoFilePath(request, params);
 		
-		Map<String, Object> datas = new HashMap<String, Object>();
-		addData(datas, invoiceVOList, params);
-		     
 		return datas;
 	}
 	
@@ -1895,25 +2121,40 @@ public class InvoiceController extends BaseController {
 		return datas;
 	}
 	
-	private void map(InvoiceVO invoiceVO, List<InvoiceVO> invoiceVOList, List<InvoiceVO> invoicePaymentVOList, Map<String, Object> params) {
-		params.put("invoiceNo", "TBD - Preview");
-		params.put("invoiceDate", invoiceVO.getFormattedInvoiceDate());
+	private void map(InvoiceVO invoiceVO, List<InvoiceVO> invoiceVOList, List<InvoiceVO> invoicePaymentVOList,
+			Map<String, Object> params) {
+		addInvoiceDetails(params, "TBD - Preview", invoiceVO.getFormattedInvoiceDate());
 		
 		Customer customer = retrieveCustomer(invoiceVO.getCustomerId(), invoiceVO.getOrderId());
-		params.put("customer", customer.getCompanyName());
-		params.put("billingAddress", customer.getBillingAddress("\n"));
-		params.put("contact", customer.getContactDetails());
+		addCustomerData(customer, params);
 		
-		List<Date> orderDateList = new ArrayList<Date>();
+		/*List<Date> orderDateList = new ArrayList<Date>();
 		for (InvoiceVO anInvoiceVO : invoiceVOList) {
 			orderDateList.add(anInvoiceVO.getOrderDate());
 		}
 		Collections.sort(orderDateList);
 		
 		String orderDateRange = FormatUtil.formatDateRange(orderDateList.get(0), orderDateList.get(orderDateList.size()-1));
-		params.put("orderDateRange", orderDateRange);
+		params.put("orderDateRange", orderDateRange);*/
 		
-		params.put("orderPaymentList", invoicePaymentVOList);
+		//params.put("orderPaymentList", invoicePaymentVOList);
+	}
+	
+	private void addInvoiceDetails(Map<String, Object> params, String invoiceNo, String invoiceDate) {
+		params.put("invoiceNo", invoiceNo);
+		params.put("invoiceDate", invoiceDate);
+	}
+	
+	private void addCustomerData(Map<String, Object> params, String companyName, String billingAddress, 
+			String contactDetails) {
+		params.put("customer", companyName);
+		params.put("billingAddress", billingAddress);
+		params.put("contact", contactDetails);
+	}
+	
+	private void addCustomerData(Customer customer, Map<String, Object> params) {
+		addCustomerData(params, customer.getCompanyName(), customer.getBillingAddress("\n"),
+				customer.getContactDetails());
 	}
 	
 	private Customer retrieveCustomer(String customerId, String orderId) {

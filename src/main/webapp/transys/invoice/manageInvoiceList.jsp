@@ -273,7 +273,7 @@ function addDGRowDetailsData_invoice(id, newTdId) {
 		<transys:textcolumn headerText="Ord. Dt. Fr." width="73px" dataField="orderDateFrom" dataFormat="MM/dd/yyyy"/>
 		<transys:textcolumn headerText="Ord. Dt. To" width="73px" dataField="orderDateTo" dataFormat="MM/dd/yyyy"/>
 		<transys:textcolumn headerText="Ord. Cnt"  width="64px" dataField="orderCount" />
-		<transys:textcolumn headerText="Inv. Amt"  width="70px" dataField="totalBalanceAmountDue" type="java.math.BigDecimal" dataFormat="#####0.00"/>
+		<transys:textcolumn headerText="Inv. Amt"  width="70px" dataField="totalInvoicedAmount" type="java.math.BigDecimal" dataFormat="#####0.00"/>
 		<transys:textcolumn headerText="Pay. made"  width="70px" dataField="totalInvoicePaymentDone" type="java.math.BigDecimal" dataFormat="#####0.00"/>
 		<transys:textcolumn headerText="Bal. Due"  width="70px" dataField="totalInvoiceBalanceDue" type="java.math.BigDecimal" dataFormat="#####0.00"/>
 		<transys:textcolumn headerText="Notes" dataField="notes" />

@@ -26,6 +26,7 @@ public class InvoiceReportVO extends BaseVO {
 	private BigDecimal totalAmountPaid;
 	private BigDecimal totalDiscount;
 	private BigDecimal totalBalanceAmountDue;
+	private BigDecimal totalInvoicedAmount;
 	
 	private BigDecimal totalInvoicePaymentDone;
 	private BigDecimal totalInvoiceBalanceDue;
@@ -81,6 +82,12 @@ public class InvoiceReportVO extends BaseVO {
 	}
 	public void setTotalFees(BigDecimal totalFees) {
 		this.totalFees = totalFees;
+	}
+	public BigDecimal getTotalInvoicedAmount() {
+		return totalInvoicedAmount;
+	}
+	public void setTotalInvoicedAmount(BigDecimal totalInvoicedAmount) {
+		this.totalInvoicedAmount = totalInvoicedAmount;
 	}
 	public BigDecimal getTotalAmountPaid() {
 		return totalAmountPaid;

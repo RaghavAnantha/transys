@@ -217,7 +217,7 @@ public class OrderController extends CRUDController<Order> {
 		}
 		
 		List<User> modelDriverList = (List<User>) model.get("drivers");
-		List<String> driverIds = ModelUtil.extractIds(modelDriverList);
+		List<String> driverIds = ModelUtil.extractIdsAsStr(modelDriverList);
 		
 		if (dropOffDriver != null
 				&& !driverIds.contains(String.valueOf(dropOffDriver.getId()))) {

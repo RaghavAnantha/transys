@@ -331,6 +331,7 @@ function populateCreateInvoiceOrderIds(orderIdList) {
 		<transys:textcolumn headerText="Tot. Amt" dataField="orderFees.totalFees" type="java.math.BigDecimal" />
 		<transys:textcolumn headerText="Amt Paid" dataField="totalAmountPaid" type="java.math.BigDecimal" />
 		<transys:textcolumn headerText="Bal Due" dataField="balanceAmountDue" type="java.math.BigDecimal" />
+		<transys:textcolumn headerText="Inv Amt" dataField="invoicedAmount" type="java.math.BigDecimal" />
 		<transys:textcolumn headerText="Status" dataField="orderStatus.status" />
 		<transys:textcolumn headerText="Inv." dataField="invoiced"/>
 	</transys:datatable>

@@ -90,6 +90,9 @@ public class OrderInvoiceHeader extends AbstractBaseModel {
    @Column(name = "totalInvoiceBalanceAvailable")
  	private BigDecimal totalInvoiceBalanceAvailable;
    
+   @Column(name = "totalInvoicedAmount")
+ 	private BigDecimal totalInvoicedAmount;
+   
    @OneToMany(mappedBy="invoiceHeader", cascade = CascadeType.ALL)
 	private List<OrderInvoiceDetails> orderInvoiceDetails;
 	
@@ -283,6 +286,14 @@ public class OrderInvoiceHeader extends AbstractBaseModel {
 
 	public void setTotalInvoiceBalanceAvailable(BigDecimal totalInvoiceBalanceAvailable) {
 		this.totalInvoiceBalanceAvailable = totalInvoiceBalanceAvailable;
+	}
+
+	public BigDecimal getTotalInvoicedAmount() {
+		return totalInvoicedAmount;
+	}
+
+	public void setTotalInvoicedAmount(BigDecimal totalInvoicedAmount) {
+		this.totalInvoicedAmount = totalInvoicedAmount;
 	}
 
 	public String getNotes() {

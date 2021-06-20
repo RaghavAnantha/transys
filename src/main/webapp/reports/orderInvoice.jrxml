@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
-<!-- 2021-06-14T17:47:01 -->
+<!-- 2021-06-19T00:40:26 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="orderInvoice" pageWidth="940" pageHeight="800" orientation="Landscape" columnWidth="900" leftMargin="20" rightMargin="20" topMargin="10" bottomMargin="10" isSummaryWithPageHeaderAndFooter="true" uuid="53a6c0df-7db3-4567-a441-f90a0edf36dc">
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
@@ -43,7 +43,7 @@
 	<field name="overweightFee" class="java.math.BigDecimal"/>
 	<field name="totalFees" class="java.math.BigDecimal"/>
 	<field name="totalAmountPaid" class="java.math.BigDecimal"/>
-	<field name="balanceAmountDue" class="java.math.BigDecimal"/>
+	<field name="invoicedAmount" class="java.math.BigDecimal"/>
 	<field name="orderDate" class="java.util.Date"/>
 	<field name="tonnageFees" class="java.math.BigDecimal"/>
 	<field name="discount" class="java.math.BigDecimal"/>
@@ -74,8 +74,8 @@
 	<variable name="totalTotalAmountPaid" class="java.math.BigDecimal" calculation="Sum">
 		<variableExpression><![CDATA[$F{totalAmountPaid}]]></variableExpression>
 	</variable>
-	<variable name="totalBalanceAmountDue" class="java.math.BigDecimal" calculation="Sum">
-		<variableExpression><![CDATA[$F{balanceAmountDue}]]></variableExpression>
+	<variable name="totalInvoicedAmount" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{invoicedAmount}]]></variableExpression>
 	</variable>
 	<variable name="totalTonnageFees" class="java.math.BigDecimal" calculation="Sum">
 		<variableExpression><![CDATA[$F{tonnageFees}]]></variableExpression>
@@ -220,7 +220,7 @@
 				<textElement textAlignment="Center" verticalAlignment="Bottom">
 					<font size="10" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Total Amount Due]]></text>
+				<text><![CDATA[Total Invoiced Amount]]></text>
 			</staticText>
 			<textField evaluationTime="Report" pattern="" isBlankWhenNull="true">
 				<reportElement x="765" y="95" width="125" height="18" uuid="87b5b4ac-8e27-4f16-813e-d991098298b0"/>
@@ -230,7 +230,7 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="10"/>
 				</textElement>
-				<textFieldExpression><![CDATA["$" + (new java.text.DecimalFormat("#,##0.00").format($V{totalBalanceAmountDue}.doubleValue()))]]></textFieldExpression>
+				<textFieldExpression><![CDATA["$" + (new java.text.DecimalFormat("#,##0.00").format($V{totalInvoicedAmount}.doubleValue()))]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="73" y="9" width="249" height="18" uuid="cc81ab11-bea3-4c1b-8f60-bc81527a4d11">
@@ -400,7 +400,7 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="10" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Balance]]></text>
+				<text><![CDATA[Inv. Amt.]]></text>
 			</staticText>
 			<staticText>
 				<reportElement mode="Opaque" x="70" y="31" width="70" height="18" forecolor="#000000" backcolor="#99CCFF" uuid="e8af2ff6-1adf-47d6-9e8d-01b48a1db382"/>
@@ -603,7 +603,7 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="10"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{FormatUtil}.formatFee($F{balanceAmountDue}, true)]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{FormatUtil}.formatFee($F{invoicedAmount}, true)]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="70" y="-1" width="70" height="18" uuid="47fb498d-eeff-4651-b60d-95c33483fa49"/>
@@ -782,7 +782,7 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["$" + (new java.text.DecimalFormat("#,##0.00").format($V{totalBalanceAmountDue}.doubleValue()))]]></textFieldExpression>
+				<textFieldExpression><![CDATA["$" + (new java.text.DecimalFormat("#,##0.00").format($V{totalInvoicedAmount}.doubleValue()))]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="714" y="-1" width="60" height="18" uuid="10b67e11-bad4-41d8-a3ef-e1cf4663dd67">

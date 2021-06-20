@@ -52,6 +52,7 @@ public class InvoiceVO extends BaseVO {
 	private BigDecimal totalAmountPaid;
 	private BigDecimal discount;
 	private BigDecimal balanceAmountDue;
+	private BigDecimal invoicedAmount;
 	
 	private String paymentMethod;
 	private String referenceNum;
@@ -195,6 +196,12 @@ public class InvoiceVO extends BaseVO {
 	}
 	public void setTotalFees(BigDecimal totalFees) {
 		this.totalFees = totalFees;
+	}
+	public BigDecimal getInvoicedAmount() {
+		return invoicedAmount;
+	}
+	public void setInvoicedAmount(BigDecimal invoicedAmount) {
+		this.invoicedAmount = invoicedAmount;
 	}
 	public BigDecimal getTotalAmountPaid() {
 		return totalAmountPaid;
@@ -424,6 +431,9 @@ public class InvoiceVO extends BaseVO {
 	}
 	public String getFormattedTotalFees() {
 		return FormatUtil.formatFee(additionalFees, true);
+	}
+	public String getFormattedInvoicedAmount() {
+		return FormatUtil.formatFee(invoicedAmount, true);
 	}
 	public String getFormattedTotalAmountPaid() {
 		return FormatUtil.formatFee(totalAmountPaid, true);

@@ -215,8 +215,8 @@ function showLoadingMsg() {
 		searchCriteria="${sessionScope['searchCriteria']}" cellPadding="2"
 		pagingLink="invoicePaymentSearch.do" multipleSelect="false" searcheable="false"
 		exportPdf="false" exportXls="false" drawToolbar="false" dataQualifier="invoicePayment">
-		<transys:textcolumn headerText="Pay. #" width="60px" dataField="id" />
-		<transys:textcolumn headerText="Inv. #" dataField="invoice.id" width="55px" type="java.lang.Long"/>
+		<transys:textcolumn headerText="Pay. #" width="45px" dataField="id" />
+		<transys:textcolumn headerText="Inv. #" dataField="invoice.id" width="45px" type="java.lang.Long"/>
 		<transys:textcolumn headerText="Pay. Dt" width="70px" dataField="paymentDate" dataFormat="MM/dd/yyyy"/>
 		<transys:textcolumn headerText="Inv. Dt" width="70px" dataField="invoice.invoiceDate" type="java.util.Date" dataFormat="MM/dd/yyyy"/>
 		<transys:textcolumn headerText="Customer" dataField="invoice.companyName" />
@@ -227,7 +227,7 @@ function showLoadingMsg() {
 		<transys:textcolumn headerText="CC Name" dataField="ccName" />
 		<transys:textcolumn headerText="CC #" dataField="ccNumber" />
 		<transys:textcolumn headerText="CC Exp. Dt" width="70px" dataField="ccExpDate" dataFormat="MM/yyyy"/>
-		<transys:textcolumn headerText="Notes" dataField="notes" />
+		<transys:textcolumn headerText="Notes" width="200px" dataField="notes" />
 		<transys:imagecolumn width="90px" headerText="Paymnt. Stmt." linkUrl="${ctx}/invoice/downloadInvoicePaymentAll.do?invoicePaymentId={id}&type=pdf" imageSrc="fas fa-receipt" HAlign="center" title="All Paymnts. Stmt."/>
 		<transys:imagecolumn width="32px" headerText="PDF" linkUrl="${ctx}/invoice/downloadInvoicePayment.do?invoicePaymentId={id}&type=pdf" imageSrc="${pdfImage}" HAlign="center" title="This Paymnt. Stmt. - PDF"/>
 		<transys:imagecolumn width="32px" headerText="CSV" linkUrl="${ctx}/invoice/downloadInvoicePayment.do?invoicePaymentId={id}&type=csv" imageSrc="${csvImage}" HAlign="center" title="This Paymnt. Stmt. - CSV"/>
