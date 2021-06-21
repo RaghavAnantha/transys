@@ -211,7 +211,7 @@ set invoicedAmount = balanceAmountDue;
 ALTER TABLE `transys`.`orderInvoiceDetails` 
 CHANGE COLUMN `invoicedAmount` `invoicedAmount` DECIMAL(6,2) NOT NULL DEFAULT '0.00' COMMENT '' ;
 
-ALTER TABLE `transys`.`orderinvoiceheader` 
+ALTER TABLE `transys`.`orderInvoiceHeader` 
 ADD COLUMN `totalInvoicedAmount` DECIMAL(9,2) NOT NULL DEFAULT '0.00' COMMENT '' AFTER `totalInvoiceBalanceAvailable`;
 
 update transys.orderInvoiceHeader
