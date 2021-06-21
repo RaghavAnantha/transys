@@ -31,6 +31,12 @@ import com.transys.model.vo.OrderReportVO;
 import com.transys.model.vo.PermitAddressVO;
 
 public class ModelUtil {
+	public static void createAuditOrderNotes(GenericDAO genericDAO, List<Order> orderList, String orderAuditMsg,
+			User createdByUser) {
+		String[] idStrArr = extractIdsAsStrArr(orderList);
+		createAuditOrderNotes(genericDAO, idStrArr, orderAuditMsg, createdByUser);
+	}
+	
 	public static OrderNotes createAuditOrderNotes(GenericDAO genericDAO, Order order, String orderAuditMsg,
 					User createdByUser) {
 		OrderNotes auditOrderNotes = createAuditOrderNotes(genericDAO, order.getId(), orderAuditMsg, createdByUser);
@@ -367,6 +373,11 @@ public class ModelUtil {
 		
 		anOrderReportVO.setTotalAmountPaid(anOrder.getTotalAmountPaid());
 		anOrderReportVO.setBalanceAmountDue(anOrder.getBalanceAmountDue());
+	}
+	
+	public static String[] extractIdsAsStrArr(List<? extends AbstractBaseModel> entityList) {
+		List<String> idList = extractIdsAsStr(entityList);
+		return idList.toArray(new String[0]);
 	}
 	
 	public static List<String> extractIdsAsStr(List<? extends AbstractBaseModel> entityList) {

@@ -764,7 +764,7 @@ public class InvoiceController extends BaseController {
 		String orderId = input.getOrderId();
 		if (StringUtils.isNotEmpty(orderId)) {
 			if (!isInvoicableOrder(Long.valueOf(orderId))) {
-				bindingResult.rejectValue("orderId", null, null, "Order# " + orderId + " already paid in full");
+				bindingResult.rejectValue("orderId", null, null, "Order# " + orderId + " already invoiced for all charges");
 			}
 			return;
 		}
@@ -983,8 +983,6 @@ public class InvoiceController extends BaseController {
 			anOrderInvoiceDetails.setInvoiceHeader(orderInvoiceHeader);
 			
 			map(anInvoicableOrder, anOrderInvoiceDetails);
-			anOrderInvoiceDetails.setInvoicedAmount(anInvoicableOrder.getAmountToBeInvoiced());
-			
 			orderInvoiceDetailsList.add(anOrderInvoiceDetails);
 			
 			if (anOrderInvoiceDetails.getTotalFees() != null) {
@@ -1197,6 +1195,7 @@ public class InvoiceController extends BaseController {
 		orderInvoiceDetails.setDiscountAmount(anOrderFees.getDiscountAmount());
 		orderInvoiceDetails.setTotalAmountPaid(anOrder.getTotalAmountPaid());
 		orderInvoiceDetails.setBalanceAmountDue(anOrder.getBalanceAmountDue());
+		orderInvoiceDetails.setInvoicedAmount(anOrder.getAmountToBeInvoiced());
 		
 		List<OrderPayment> orderPaymentList = anOrder.getOrderPayment();
 	   if (orderPaymentList != null && !orderPaymentList.isEmpty()) {
@@ -1322,8 +1321,10 @@ public class InvoiceController extends BaseController {
 		if (invoicePayment.getAmountPaid().doubleValue() <= 0.0) {
 			errorMsgBuff.append("Invoice payment amount not valid, ");
 		}
-		if (invoicePayment.getInvoiceBalanceDue().doubleValue() == 0.0
-				|| invoicePayment.getAmountPaid().compareTo(invoicePayment.getInvoiceBalanceDue()) == 1) {
+		
+		OrderInvoiceHeader invoice = invoicePayment.getInvoice();
+		if (invoice.getTotalInvoiceBalanceDue().doubleValue() == 0.0
+				|| invoicePayment.getAmountPaid().compareTo(invoice.getTotalInvoiceBalanceDue()) == 1) {
 			errorMsgBuff.append("Invoice payment amount is greater than balance due, ");
 		}
 		
@@ -1341,11 +1342,14 @@ public class InvoiceController extends BaseController {
 	public String saveInvoicePayment(HttpServletRequest request,
 			@ModelAttribute(INVOICE_PAYMENT_MODEL_OBJECT_KEY) OrderInvoicePayment invoicePayment,
 			BindingResult bindingResult, ModelMap model) {
+		OrderInvoiceHeader invoice  = genericDAO.getById(OrderInvoiceHeader.class, invoicePayment.getInvoice().getId());
+		invoicePayment.setInvoice(invoice);
+		
 		StringBuffer errorMsgBuff = new StringBuffer();
 		boolean valid = validateInvoicePayment(invoicePayment, errorMsgBuff);
 		if (!valid) {
 			setErrorMsg(request, errorMsgBuff.toString());
-			return "redirect:/" + getUrlContext() + "/invoicePaymentSearch.do";
+			return "redirect:/" + getUrlContext() + "/createInvoicePayment.do?invoiceId="+invoicePayment.getInvoice().getId();
 		}
 		
 		setModifier(request, invoicePayment);
@@ -1398,8 +1402,8 @@ public class InvoiceController extends BaseController {
 			order.setModifiedBy(createdByUser.getId());
 			genericDAO.saveOrUpdate(order);
 			
-			String auditMsg = String.format("Order payment updated.  Invoice#: %s.  Invoice payment#: %s.  Amt paid: %d",
-					invoicePayment.getInvoice().getId(), invoicePayment.getId(), anOrderPayment.getAmountPaid());
+			String auditMsg = String.format("Order payment updated.  Invoice#: %s.  Invoice payment#: %s.  Amount paid: %.02f",
+					invoicePayment.getInvoice().getId(), invoicePayment.getId(), anOrderPayment.getAmountPaid().doubleValue());
 			ModelUtil.createAuditOrderNotes(genericDAO, order, auditMsg, createdByUser);
 		}
 		return "Successfully saved order payment and order";
@@ -1430,8 +1434,11 @@ public class InvoiceController extends BaseController {
 			Long orderId = anOrder.getId();
 			OrderInvoiceDetails anOrderInvoiceDetails = invoiceDetailsMap.get(orderId);
 			BigDecimal orderInvoicedAmount = anOrderInvoiceDetails.getInvoicedAmount();
+			BigDecimal payableAmount = orderInvoicedAmount;
 			BigDecimal totalInvoiceOrderPaymentMade = existingInvoiceOrderPaymentMap.get(orderId);
-			BigDecimal payableAmount = orderInvoicedAmount.subtract(totalInvoiceOrderPaymentMade);
+			if (totalInvoiceOrderPaymentMade != null) {
+				payableAmount = orderInvoicedAmount.subtract(totalInvoiceOrderPaymentMade);
+			}
 			if (payableAmount.doubleValue() == 0.0) {
 				continue;
 			}
@@ -1540,10 +1547,40 @@ public class InvoiceController extends BaseController {
 		
 		Long invoiceId = orderInvoiceHeader.getId();
 		String successMsg = InvoiceVO.INV_SAVE_SUCCESS_MSG + "  Invoice #: " + invoiceId;
-		updateOrder(orderIdsArr, invoiceId, orderInvoiceHeader.getInvoiceDate(), "Y", createdByUser, successMsg);
+		updateOrderList(invoicableOrderList, invoiceId, orderInvoiceHeader.getInvoiceDate(), createdByUser, successMsg);
 		
 		setSuccessMsg(request, successMsg);
 		return "redirect:/" + getUrlContext() + "/manageInvoiceMain.do";
+	}
+	
+	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+	private void updateOrderList(List<Order> invoicableOrderList, Long invoiceId, Date invoiceDate, 
+			User createdByUser, String msg) {
+		for (Order anInvoicableOrder : invoicableOrderList) {
+			String invoiceIdsToBeUpdated = invoiceId.toString();
+			if (StringUtils.isNotEmpty(anInvoicableOrder.getInvoiceIds())) {
+				invoiceIdsToBeUpdated = anInvoicableOrder.getInvoiceIds() + "," + invoiceIdsToBeUpdated;
+			}
+			String invoiceDatesToBeUpdated = FormatUtil.dbDateFormat.format(invoiceDate);
+			if (StringUtils.isNotEmpty(anInvoicableOrder.getInvoiceDates())) {
+				invoiceDatesToBeUpdated = anInvoicableOrder.getInvoiceDates() + "," + invoiceDatesToBeUpdated;
+			}
+			BigDecimal invoicedAmount = anInvoicableOrder.getAmountToBeInvoiced();
+			if (anInvoicableOrder.getInvoicedAmount() != null) {
+				invoicedAmount = anInvoicableOrder.getInvoicedAmount().add(invoicedAmount);
+			}
+			
+			anInvoicableOrder.setInvoiced("Y");
+			anInvoicableOrder.setInvoiceIds(invoiceIdsToBeUpdated);
+			anInvoicableOrder.setInvoiceDates(invoiceDatesToBeUpdated);
+			anInvoicableOrder.setInvoicedAmount(invoicedAmount);
+			
+			anInvoicableOrder.setModifiedAt(Calendar.getInstance().getTime());
+			anInvoicableOrder.setModifiedBy(createdByUser.getId());
+			genericDAO.save(anInvoicableOrder);
+		}
+		
+		ModelUtil.createAuditOrderNotes(genericDAO, invoicableOrderList, msg, createdByUser);
 	}
 	
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
@@ -1553,13 +1590,25 @@ public class InvoiceController extends BaseController {
 		Date currentTime = Calendar.getInstance().getTime();
 		String orderIds = CoreUtil.toString(orderIdsArr);
 		
-		String invoiceIdStr = (invoiceId == null) ? "null" : "'"+invoiceId.toString()+"'";
-		String invoiceDateStr = (invoiceDate == null) ? "null" : 
-			"'" + FormatUtil.dbDateTimeFormat.format(invoiceDate) + "'";
+		String invoiceIdsToBeUpdated = StringUtils.EMPTY;
+		if (invoiceId == null) {
+			invoiceIdsToBeUpdated = "null";
+		} else {
+			invoiceIdsToBeUpdated = "concat(IFNULL(invoiceIds, ''), " + invoiceId.toString() + ",)";
+		}
+		
+		String invoiceDatesToBeUpdated = StringUtils.EMPTY;
+		if (invoiceDate == null) {
+			invoiceDatesToBeUpdated = "null";
+		} else {
+			invoiceDatesToBeUpdated = "concat(IFNULL(invoiceDate, ''), " 
+						+ FormatUtil.dbDateTimeFormat.format(invoiceDate) + ",)";
+		}
 		
 		String orderUpdateQuery = "update Order o set o.invoiced = '" + invoiced + "',"
-			+ " o.invoiceIds = " + invoiceIdStr + ","
-			+ " o.invoiceDates = " + invoiceDateStr + ","
+			+ " o.invoiceIds = " + invoiceIdsToBeUpdated + ","
+			+ " o.invoiceDates = " + invoiceDatesToBeUpdated + ","
+			// invoicedAmount
 			+ " o.modifiedBy = " + createdBy + ","
 			+ " o.modifiedAt = '" + FormatUtil.dbDateTimeFormat.format(currentTime) + "'"
 			+ " where o.id in (" + orderIds + ")";
@@ -2024,7 +2073,7 @@ public class InvoiceController extends BaseController {
 		BigDecimal totalAmountPaid;
 		for (Object[] resultObj : (List<Object[]>)resultObjectList) {
 			orderId = ((Long)resultObj[0]);
-			totalAmountPaid = ((BigDecimal)resultObj[0]);
+			totalAmountPaid = ((BigDecimal)resultObj[1]);
 			invoiceOrderPaymentAmountMap.put(orderId, totalAmountPaid);
 		}   
 		

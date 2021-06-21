@@ -278,8 +278,7 @@ function processCreateInvoice(orderId) {
 		<transys:textcolumn headerText="Amt Paid" dataField="totalAmountPaid" type="java.math.BigDecimal" />
 		<transys:textcolumn headerText="Bal Due" dataField="balanceAmountDue" type="java.math.BigDecimal" />
 		<transys:textcolumn headerText="Status" dataField="orderStatus.status"/>
-		<transys:textcolumn headerText="Doc" dataField="hasDocs"/>
-		<transys:textcolumn headerText="Inv" dataField="invoiced"/>
+		<transys:textcolumn headerText="Inv Amt" dataField="invoicedAmount" type="java.math.BigDecimal" />
 		<transys:imagecolumn headerText="INV" linkUrl="javascript:processCreateInvoice('{id}');" imageSrc="fas fa-file-invoice-dollar" HAlign="center" title="Create Invoice"/>
 		<transys:imagecolumn headerText="EXC" linkUrl="javascript:processExchange('{id}');" imageSrc="${imageCtx}/exchange.png" HAlign="center" title="Exchange"/>
 	</transys:datatable>

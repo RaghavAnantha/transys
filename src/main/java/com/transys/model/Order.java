@@ -117,6 +117,9 @@ public class Order extends AbstractBaseModel {
 	@Column(name="balanceAmountDue")
 	private BigDecimal balanceAmountDue;
 	
+	@Column(name="invoicedAmount")
+	private BigDecimal invoicedAmount;
+	
 	@Column(name="hasDocs")
 	private String hasDocs = "N";
 	
@@ -156,6 +159,14 @@ public class Order extends AbstractBaseModel {
 
 	public void setBalanceAmountDue(BigDecimal balanceAmountDue) {
 		this.balanceAmountDue = balanceAmountDue;
+	}
+
+	public BigDecimal getInvoicedAmount() {
+		return invoicedAmount;
+	}
+
+	public void setInvoicedAmount(BigDecimal invoicedAmount) {
+		this.invoicedAmount = invoicedAmount;
 	}
 
 	@OneToOne(mappedBy="order", cascade = CascadeType.ALL)

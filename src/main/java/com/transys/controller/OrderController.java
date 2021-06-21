@@ -1629,6 +1629,10 @@ public class OrderController extends CRUDController<Order> {
 			return String.format("Order # %d cannot be Cancelled as it is not in 'Open' status", entity.getId());
 		}
 		
+		if (StringUtils.equals("Y", entity.getInvoiced())) {
+			return String.format("Order # %d cannot be Cancelled as it is invoiced", entity.getId());
+		}
+		
 		Long associatedDumpsterId = null;
 		if (entity.getDumpster() != null && entity.getDumpster().getId() != null) {
 			associatedDumpsterId = entity.getDumpster().getId();
@@ -1732,6 +1736,7 @@ public class OrderController extends CRUDController<Order> {
 			entity.setOrderStatus(orderStatus);
 			
 			entity.setInvoiced("N");
+			entity.setInvoicedAmount(new BigDecimal(0.0));
 		} else {
 			orderAuditMsg = "Order details updated";
 		}

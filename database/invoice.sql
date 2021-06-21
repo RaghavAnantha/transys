@@ -219,3 +219,8 @@ set totalInvoicedAmount = totalBalanceAmountDue;
 
 ALTER TABLE `transys`.`orderPayment` 
 ADD COLUMN `invoiceDate` DATETIME NULL DEFAULT NULL COMMENT '' AFTER `invoicePaymentId`;
+
+---------
+ALTER TABLE `transys`.`transysOrder` 
+ADD COLUMN `invoicedAmount` DECIMAL(6,2) NULL DEFAULT '0.00' COMMENT '' AFTER `pickupVehicleId`;
+
