@@ -224,3 +224,9 @@ ADD COLUMN `invoiceDate` DATETIME NULL DEFAULT NULL COMMENT '' AFTER `invoicePay
 ALTER TABLE `transys`.`transysOrder` 
 ADD COLUMN `invoicedAmount` DECIMAL(6,2) NULL DEFAULT '0.00' COMMENT '' AFTER `pickupVehicleId`;
 
+select sum(invoicedAmount), orderId
+from transys.orderInvoiceDetails
+group by orderId
+order by orderId asc
+
+update transys.transysOrder set invoicedAmount=	380	where id=	37944;
