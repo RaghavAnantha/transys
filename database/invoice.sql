@@ -230,3 +230,9 @@ group by orderId
 order by orderId asc
 
 update transys.transysOrder set invoicedAmount=	380	where id=	37944;
+-----
+
+
+ALTER TABLE `transys`.`orderInvoiceDetails` 
+ADD COLUMN `invoicePaymentDone` DECIMAL(6,2) NOT NULL DEFAULT '0.00' COMMENT '' AFTER `invoicedAmount`,
+ADD COLUMN `invoiceBalanceDue` DECIMAL(6,2) NOT NULL DEFAULT '0.00' COMMENT '' AFTER `invoicePaymentDone`;

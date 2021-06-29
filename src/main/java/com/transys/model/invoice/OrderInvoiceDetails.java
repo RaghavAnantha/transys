@@ -205,6 +205,12 @@ public class OrderInvoiceDetails extends AbstractBaseModel {
 	@Column(name = "invoicedAmount")
 	private BigDecimal invoicedAmount;
 	
+	@Column(name = "invoicePaymentDone")
+	private BigDecimal invoicePaymentDone;
+	
+	@Column(name = "invoiceBalanceDue")
+	private BigDecimal invoiceBalanceDue;
+	
 	@Column(name = "paymentMethod1")
 	private String paymentMethod1;
 	
@@ -864,6 +870,22 @@ public class OrderInvoiceDetails extends AbstractBaseModel {
 
 	public void setInvoicedAmount(BigDecimal invoicedAmount) {
 		this.invoicedAmount = invoicedAmount;
+	}
+
+	public BigDecimal getInvoicePaymentDone() {
+		return invoicePaymentDone;
+	}
+
+	public void setInvoicePaymentDone(BigDecimal invoicePaymentDone) {
+		this.invoicePaymentDone = invoicePaymentDone;
+	}
+
+	public BigDecimal getInvoiceBalanceDue() {
+		return invoiceBalanceDue;
+	}
+
+	public void setInvoiceBalanceDue(BigDecimal invoiceBalanceDue) {
+		this.invoiceBalanceDue = invoiceBalanceDue;
 	}
 
 	@Transient

@@ -1196,6 +1196,8 @@ public class InvoiceController extends BaseController {
 		orderInvoiceDetails.setTotalAmountPaid(anOrder.getTotalAmountPaid());
 		orderInvoiceDetails.setBalanceAmountDue(anOrder.getBalanceAmountDue());
 		orderInvoiceDetails.setInvoicedAmount(anOrder.getAmountToBeInvoiced());
+		orderInvoiceDetails.setInvoicePaymentDone(new BigDecimal(0.0));
+		orderInvoiceDetails.setInvoiceBalanceDue(orderInvoiceDetails.getInvoicedAmount());
 		
 		List<OrderPayment> orderPaymentList = anOrder.getOrderPayment();
 	   if (orderPaymentList != null && !orderPaymentList.isEmpty()) {
@@ -1357,7 +1359,9 @@ public class InvoiceController extends BaseController {
 		Long invoiceId = invoicePayment.getInvoice().getId();
 		List<Order> orderList = retrieveInvoicedOrders(invoiceId);
 		List<OrderPayment> newOrderPaymentList = new ArrayList<OrderPayment>();
-		BigDecimal amountAvailable = updateOrderPayment(orderList, invoicePayment, newOrderPaymentList);
+		List<OrderInvoiceDetails> orderInvoiceDetailsList = new ArrayList<OrderInvoiceDetails>();
+		BigDecimal amountAvailable = updateOrderPayment(orderList, invoicePayment, newOrderPaymentList,
+				orderInvoiceDetailsList);
 		invoicePayment.setAmountAvailable(amountAvailable);
 		
 		genericDAO.saveOrUpdate(invoicePayment);
@@ -1366,6 +1370,8 @@ public class InvoiceController extends BaseController {
 		saveInvoiceHeader(invoiceHeader, invoicePayment);
 		
 		saveOrderPayment(newOrderPaymentList, invoicePayment);
+		
+		saveOrderInvoiceDetails(orderInvoiceDetailsList, invoicePayment);
 		
 		setSuccessMsg(request, "Invoice payment saved successfully");
 		return "redirect:/" + getUrlContext() + "/invoicePaymentSearch.do";
@@ -1385,6 +1391,20 @@ public class InvoiceController extends BaseController {
 		genericDAO.saveOrUpdate(invoiceHeader);
 		
 		return "Successfully saved invoice header";
+	}
+	
+	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+	private String saveOrderInvoiceDetails(List<OrderInvoiceDetails> orderInvoiceDetailsList, OrderInvoicePayment invoicePayment) {
+		if (orderInvoiceDetailsList.isEmpty()) {
+			return "Successfull - nothing to process";
+		}
+		
+		for (OrderInvoiceDetails anOrderInvoiceDetails : orderInvoiceDetailsList) {
+			anOrderInvoiceDetails.setModifiedAt(invoicePayment.getCreatedAt());
+			anOrderInvoiceDetails.setModifiedBy(invoicePayment.getCreatedBy());
+			genericDAO.saveOrUpdate(anOrderInvoiceDetails);
+		}
+		return "Successfully saved order invoice details";
 	}
 	
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
@@ -1410,7 +1430,7 @@ public class InvoiceController extends BaseController {
 	}
 	
 	private BigDecimal updateOrderPayment(List<Order> orderList, OrderInvoicePayment invoicePayment,
-			List<OrderPayment> newOrderPaymentList) {
+			List<OrderPayment> newOrderPaymentList, List<OrderInvoiceDetails> orderInvoiceDetailsList) {
 		if (invoicePayment.getAmountPaid().doubleValue() == 0.0) {
 			return invoicePayment.getAmountPaid();
 		}
@@ -1461,6 +1481,15 @@ public class InvoiceController extends BaseController {
 			
 			anOrder.setTotalAmountPaid(anOrder.getTotalAmountPaid().add(payableAmount));
 			anOrder.setBalanceAmountDue(anOrder.getBalanceAmountDue().subtract(payableAmount));
+			
+			if (anOrderInvoiceDetails.getInvoicePaymentDone() == null) {
+				anOrderInvoiceDetails.setInvoicePaymentDone(payableAmount);
+			} else {
+				anOrderInvoiceDetails.setInvoicePaymentDone(anOrderInvoiceDetails.getInvoicePaymentDone().add(payableAmount));
+			}
+			anOrderInvoiceDetails.setInvoiceBalanceDue(
+					anOrderInvoiceDetails.getInvoicedAmount().subtract(anOrderInvoiceDetails.getInvoicePaymentDone()));
+			orderInvoiceDetailsList.add(anOrderInvoiceDetails);
 			
 			if (amountAvailable.doubleValue() == 0.0) {
 				break;

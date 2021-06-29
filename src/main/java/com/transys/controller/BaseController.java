@@ -1,9 +1,11 @@
 package com.transys.controller;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -345,6 +347,17 @@ public class BaseController {
 			searchMap.put("number", Permit.EMPTY_PERMIT_NUMBER);
 			System.out.println("Resetting Permit Number");
 		}
+	}
+	
+	protected String processError(Throwable t, String event, HttpServletRequest request) {
+		t.printStackTrace();
+		log.warn("Exception while " + event + ":" + t);
+		
+		List<String> errors = new ArrayList<String>();
+		errors.add(t.getMessage());
+		request.getSession().setAttribute("error", errors);
+		
+		return "error";
 	}
 
 	protected void setErrorMsg(HttpServletRequest request, HttpServletResponse response, String msg) {
