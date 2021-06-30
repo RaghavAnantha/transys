@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
-<!-- 2021-06-30T16:57:28 -->
+<!-- 2021-06-30T17:03:42 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="orderPrint" pageWidth="595" pageHeight="809" columnWidth="575" leftMargin="10" rightMargin="10" topMargin="5" bottomMargin="5" uuid="f412ce57-68ae-45e8-90e9-b1c053e29ef7">
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
@@ -553,7 +553,7 @@
 				<textFieldExpression><![CDATA["$"+$F{dumpsterPrice}]]></textFieldExpression>
 			</textField>
 			<rectangle>
-				<reportElement x="6" y="186" width="284" height="354" uuid="eccdc412-3766-4699-973e-64ee2bda7869"/>
+				<reportElement x="6" y="186" width="284" height="348" uuid="eccdc412-3766-4699-973e-64ee2bda7869"/>
 				<graphicElement>
 					<pen lineWidth="0.5" lineColor="#0D6BFE"/>
 				</graphicElement>
@@ -583,7 +583,7 @@
 On the 4th day box will automatically be moved unless office is notified and an additional $20.00 a day rental is paid]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="16" y="284" width="263" height="250" forecolor="#000000" uuid="1f7a310e-0aa2-469f-866e-3ed42250aeda"/>
+				<reportElement x="16" y="284" width="263" height="236" forecolor="#000000" uuid="1f7a310e-0aa2-469f-866e-3ed42250aeda"/>
 				<textElement textAlignment="Left" verticalAlignment="Top">
 					<font size="9" isBold="true"/>
 				</textElement>
@@ -668,13 +668,13 @@ On the 4th day box will automatically be moved unless office is notified and an 
 				<text><![CDATA[CITY]]></text>
 			</staticText>
 			<rectangle>
-				<reportElement x="300" y="432" width="270" height="108" uuid="eced59da-565f-4094-a8e9-145caa0bc241"/>
+				<reportElement x="300" y="432" width="270" height="102" uuid="eced59da-565f-4094-a8e9-145caa0bc241"/>
 				<graphicElement>
 					<pen lineWidth="0.5" lineColor="#0D6BFE"/>
 				</graphicElement>
 			</rectangle>
 			<staticText>
-				<reportElement x="340" y="516" width="190" height="19" forecolor="#000000" uuid="81d4522f-a27a-4897-bf0d-846efc3c1fb4"/>
+				<reportElement x="340" y="510" width="190" height="19" forecolor="#000000" uuid="81d4522f-a27a-4897-bf0d-846efc3c1fb4"/>
 				<textElement textAlignment="Center">
 					<font isBold="true"/>
 				</textElement>
