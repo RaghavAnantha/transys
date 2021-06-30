@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
-<!-- 2021-06-30T15:40:43 -->
+<!-- 2021-06-30T15:47:36 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="orderPrint" pageWidth="595" pageHeight="809" columnWidth="575" leftMargin="10" rightMargin="10" topMargin="5" bottomMargin="5" uuid="f412ce57-68ae-45e8-90e9-b1c053e29ef7">
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
@@ -583,7 +583,7 @@
 On the 4th day box will automatically be moved unless office is notified and an additional $20.00 a day rental is paid]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="16" y="284" width="263" height="166" forecolor="#000000" uuid="1f7a310e-0aa2-469f-866e-3ed42250aeda"/>
+				<reportElement x="16" y="284" width="263" height="176" forecolor="#000000" uuid="1f7a310e-0aa2-469f-866e-3ed42250aeda"/>
 				<textElement textAlignment="Left">
 					<font isBold="true"/>
 				</textElement>
@@ -819,13 +819,13 @@ On the 4th day box will automatically be moved unless office is notified and an 
 				<text><![CDATA[Order #]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="16" y="452" width="263" height="82" forecolor="#000000" uuid="49fe46c5-09f6-45dc-9b65-93bf0e805d84"/>
+				<reportElement mode="Opaque" x="16" y="471" width="263" height="64" forecolor="#000000" uuid="49fe46c5-09f6-45dc-9b65-93bf0e805d84"/>
 				<textElement textAlignment="Left">
 					<font isBold="true"/>
 				</textElement>
 				<text><![CDATA[** Not Responsible For Customer Pavement Or
     Accompanying Sub Surface **
-** Additional fees will be added in the event of     overweights **]]></text>
+** Additional fees will be added in the event of              overweights **]]></text>
 			</staticText>
 		</band>
 	</detail>
