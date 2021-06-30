@@ -236,3 +236,19 @@ update transys.transysOrder set invoicedAmount=	380	where id=	37944;
 ALTER TABLE `transys`.`orderInvoiceDetails` 
 ADD COLUMN `invoicePaymentDone` DECIMAL(6,2) NOT NULL DEFAULT '0.00' COMMENT '' AFTER `invoicedAmount`,
 ADD COLUMN `invoiceBalanceDue` DECIMAL(6,2) NOT NULL DEFAULT '0.00' COMMENT '' AFTER `invoicePaymentDone`;
+
+
+update transys.orderInvoiceDetails
+set invoiceBalanceDue = invoicedAmount
+where invoiceId in (11, 10);
+
+update transys.orderInvoiceDetails
+set invoiceBalanceDue = 140.00,
+invoicePaymentDone = 140.00
+where invoiceId in (35);
+
+
+update transys.orderInvoiceDetails
+set 
+invoicePaymentDone = invoicedAmount
+where invoiceId in (32);

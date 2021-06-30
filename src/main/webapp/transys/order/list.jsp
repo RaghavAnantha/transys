@@ -150,7 +150,6 @@ function processCreateInvoice(orderId) {
 					</c:forEach>
 				</select>
 			</td>
-			<!-- 
 			<td class="form-left"><transys:label code="Delivery Street" /></td>
 			<td>
 				<select class="flat form-control input-sm" id="deliveryAddress.line2" name="deliveryAddress.line2" style="width: 175px !important">
@@ -164,7 +163,6 @@ function processCreateInvoice(orderId) {
 					</c:forEach>
 				</select>
 			</td>
-			 -->
 		</tr>
 		<tr>
 			<td class="form-left"><transys:label code="Dumpster Size" /></td>

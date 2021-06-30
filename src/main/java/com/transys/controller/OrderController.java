@@ -1571,6 +1571,7 @@ public class OrderController extends CRUDController<Order> {
 		
 		List<DeliveryAddressVO> deliveryAddressVOList = ModelUtil.retrieveOrderDeliveryAddresses(genericDAO);
 		model.addAttribute("deliveryAddresses", deliveryAddressVOList);
+		model.addAttribute("deliveryAddressStreets", ModelUtil.retrieveOrderDeliveryStreets(genericDAO));
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/customerDeliveryAddress.do")

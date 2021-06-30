@@ -157,14 +157,30 @@ public class ModelUtil {
 	public static List<DeliveryAddressVO> retrieveOrderDeliveryAddresses(GenericDAO genericDAO, String customerId) {
 		String deliveryAddressQuery = "select distinct obj.deliveryAddress.id, obj.deliveryAddress.line1, obj.deliveryAddress.line2"
 				+ " from Order obj where obj.deleteFlag='1'";
-		if (!StringUtils.isEmpty(customerId)) {
+		if (StringUtils.isNotEmpty(customerId)) {
 			deliveryAddressQuery += (" and obj.customer.id=" + customerId);
 		}
-		deliveryAddressQuery	+= " order by obj.deliveryAddress.line1 asc";
+		deliveryAddressQuery	+= " order by obj.deliveryAddress.line1 asc, obj.deliveryAddress.line2 asc";
 		
 		List<?> objectList = genericDAO.executeSimpleQuery(deliveryAddressQuery);
 		List<DeliveryAddressVO> deliveryAddressVOList = mapToDeliveryAddressVO(objectList);
 		return deliveryAddressVOList;
+	}
+	
+	public static List<?> retrieveOrderDeliveryStreets(GenericDAO genericDAO, String customerId) {
+		String deliveryAddressQuery = "select distinct obj.deliveryAddress.line2"
+				+ " from Order obj where obj.deleteFlag='1'";
+		if (StringUtils.isNotEmpty(customerId)) {
+			deliveryAddressQuery += (" and obj.customer.id=" + customerId);
+		}
+		deliveryAddressQuery	+= " order by obj.deliveryAddress.line2 asc";
+		
+		List<?> objectList = genericDAO.executeSimpleQuery(deliveryAddressQuery);
+		return objectList;
+	}
+	
+	public static List<?> retrieveOrderDeliveryStreets(GenericDAO genericDAO) {
+		return retrieveOrderDeliveryStreets(genericDAO, null);
 	}
 	
 	public static List<DeliveryAddressVO> retrieveOrderDeliveryAddresses(GenericDAO genericDAO) {
