@@ -542,7 +542,7 @@ public class OrderController extends CRUDController<Order> {
 	
 
 	private void updateEnteredBy(OrderNotes entity) {
-		Long userId = entity.getCreatedBy() != null ? entity.getCreatedBy() : entity.getModifiedBy();
+		Long userId = entity.getModifiedBy() != null ? entity.getModifiedBy() : entity.getCreatedBy();
 		User user = genericDAO.getById(User.class, userId);
 		entity.setEnteredBy(user.getEmployee().getFullName());
 	}
@@ -1875,8 +1875,7 @@ public class OrderController extends CRUDController<Order> {
 	
 	private OrderNotes createAuditOrderNotes(Order order, String orderAuditMsg, Long createdBy) {
 		OrderNotes auditOrderNotes = new OrderNotes();
-		auditOrderNotes.setNotesType(OrderNotes.NOTES_TYPE_AUDIT);
-		auditOrderNotes.setNotes(OrderNotes.AUDIT_MSG_PREFIX + orderAuditMsg + OrderNotes.AUDIT_MSG_SUFFIX);
+		auditOrderNotes.setAuditNotes(orderAuditMsg);
 		
 		Order emptyOrder = new Order();
 		emptyOrder.setId(order.getId());

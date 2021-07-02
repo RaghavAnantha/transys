@@ -55,8 +55,7 @@ public class ModelUtil {
 	public static OrderNotes createAuditOrderNotes(GenericDAO genericDAO, Long orderId, String orderAuditMsg,
 			User createdByUser) {
 		OrderNotes auditOrderNotes = new OrderNotes();
-		auditOrderNotes.setNotesType(OrderNotes.NOTES_TYPE_AUDIT);
-		auditOrderNotes.setNotes(OrderNotes.AUDIT_MSG_PREFIX + orderAuditMsg + OrderNotes.AUDIT_MSG_SUFFIX);
+		auditOrderNotes.setAuditNotes(orderAuditMsg);
 		
 		Order emptyOrder = new Order();
 		emptyOrder.setId(orderId);

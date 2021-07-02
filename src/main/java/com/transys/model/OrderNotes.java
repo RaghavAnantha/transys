@@ -65,4 +65,15 @@ public class OrderNotes extends AbstractBaseModel {
 	public void setNotesType(String notesType) {
 		this.notesType = notesType;
 	}
+	
+	@Transient
+	public void setAuditNotes(String auditMsg) {
+		setAuditNotesType();
+		setNotes(AUDIT_MSG_PREFIX + auditMsg + AUDIT_MSG_SUFFIX);
+	}
+	
+	@Transient
+	public void setAuditNotesType() {
+		setNotesType(NOTES_TYPE_AUDIT);
+	}
 }

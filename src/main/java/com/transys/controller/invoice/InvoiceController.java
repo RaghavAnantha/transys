@@ -48,7 +48,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.transys.controller.BaseController;
 
 import com.transys.controller.editor.AbstractModelEditor;
-
+import com.transys.core.dao.GenericDAO;
 import com.transys.core.util.CoreUtil;
 import com.transys.core.util.FormatUtil;
 import com.transys.core.util.ModelUtil;
@@ -1585,12 +1585,14 @@ public class InvoiceController extends BaseController {
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
 	private void updateOrderList(List<Order> invoicableOrderList, Long invoiceId, Date invoiceDate, 
 			User createdByUser, String msg) {
+		String invoiceDateStr = FormatUtil.dbDateFormat.format(invoiceDate);
+		String auditMsg = (msg + ". Date: " + invoiceDateStr + ".  Amount: ");
 		for (Order anInvoicableOrder : invoicableOrderList) {
 			String invoiceIdsToBeUpdated = invoiceId.toString();
 			if (StringUtils.isNotEmpty(anInvoicableOrder.getInvoiceIds())) {
 				invoiceIdsToBeUpdated = anInvoicableOrder.getInvoiceIds() + "," + invoiceIdsToBeUpdated;
 			}
-			String invoiceDatesToBeUpdated = FormatUtil.dbDateFormat.format(invoiceDate);
+			String invoiceDatesToBeUpdated = invoiceDateStr;
 			if (StringUtils.isNotEmpty(anInvoicableOrder.getInvoiceDates())) {
 				invoiceDatesToBeUpdated = anInvoicableOrder.getInvoiceDates() + "," + invoiceDatesToBeUpdated;
 			}
@@ -1607,9 +1609,10 @@ public class InvoiceController extends BaseController {
 			anInvoicableOrder.setModifiedAt(Calendar.getInstance().getTime());
 			anInvoicableOrder.setModifiedBy(createdByUser.getId());
 			genericDAO.save(anInvoicableOrder);
+			
+			String orderAuditMsg = (auditMsg + anInvoicableOrder.getAmountToBeInvoiced());
+			ModelUtil.createAuditOrderNotes(genericDAO, anInvoicableOrder, orderAuditMsg, createdByUser);
 		}
-		
-		ModelUtil.createAuditOrderNotes(genericDAO, invoicableOrderList, msg, createdByUser);
 	}
 	
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
