@@ -81,10 +81,7 @@ function extractNotesText(orderNotesId) {
     //  + orderNotesId + "']/following-sibling::td[contains(text(), 'AUDIT')]";
 	var xpath = ".//form[@id='orderNotesDatatableForm']/table[@id='orderNotesDatatable']/tbody/tr/td[text()='"
       + orderNotesId + "']/following-sibling::td[3]";
-	log(document.evaluate(xpath, document, null, XPathResult.ANY_TYPE, null));
 	var notesTd = document.evaluate(xpath, document, null, XPathResult.ANY_TYPE, null).iterateNext();
-	log(notesTd);
-	log(notesTd.textContent);
 	var notesText = $.trim(notesTd.textContent);
 	return notesText;
 }
