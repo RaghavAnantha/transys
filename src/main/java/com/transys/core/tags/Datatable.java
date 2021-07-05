@@ -77,6 +77,7 @@ public final class Datatable extends BodyTagSupport {
 	private String itemPrintableParams = StringUtils.EMPTY;
 	private String manageDocsParams = StringUtils.EMPTY;
 	private String expandableQualifier = StringUtils.EMPTY;
+	private String editableFunction = StringUtils.EMPTY;
 	
 	private String cssClass = null;
 	private String bgColor = null;
@@ -326,6 +327,14 @@ public final class Datatable extends BodyTagSupport {
 		this.editableInScreen = editableInScreen;
 	}
 	
+	public String getEditableFunction() {
+		return editableFunction;
+	}
+
+	public void setEditableFunction(String editableFunction) {
+		this.editableFunction = editableFunction;
+	}
+
 	public boolean isExportPrint() {
 		return exportPrint;
 	}
@@ -892,6 +901,7 @@ public final class Datatable extends BodyTagSupport {
 						editColumn.cssClass = "centerImage";
 						editColumn.setAlterText("Edit");
 						editColumn.setTitle("Edit");
+						editColumn.setParent(this);
 						this.columns.add(editColumn);
 					//}
 				}
@@ -998,7 +1008,16 @@ public final class Datatable extends BodyTagSupport {
 					
 					if (editColumn != null) {
 						//editColumn.setLinkUrl(pageContext.getAttribute("ctx")+"/"+urlContext+"/edit.do?id="+PropertyUtils.getProperty(currItem, "id") + "\" data-backdrop=\"static\" data-remote=\"false\" data-toggle=\"modal\" data-target=\"#editModal");
-						if (editableInScreen) {
+						
+						if (StringUtils.isNotEmpty(editableFunction)) {
+							String editableFunctionToBeUsed = ("javascript:" + editableFunction 
+									+ "('"+idStr+"'");
+							if (StringUtils.isNotEmpty(editableParams)) {
+								editableFunctionToBeUsed += (",'" + editableParams + "'");
+							}
+							editableFunctionToBeUsed += (")");
+							editColumn.setLinkUrl(editableFunctionToBeUsed);
+						} else if (editableInScreen) {
 							editColumn.setLinkUrl("#");
 						} else {
 							editColumn.setLinkUrl(baseEditUrl.replace(idValueHolder, idStr));

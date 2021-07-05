@@ -115,6 +115,12 @@
 			<type>java.lang.Boolean</type>
 		</attribute>
 		<attribute>
+			<name>editableFunction</name>
+			<rtexprvalue>true</rtexprvalue>
+			<required>false</required>
+			<type>java.lang.String</type>
+		</attribute>
+		<attribute>
 			<name>cancellable</name>
 			<rtexprvalue>true</rtexprvalue>
 			<required>false</required>

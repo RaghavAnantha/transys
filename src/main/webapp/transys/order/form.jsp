@@ -1137,7 +1137,8 @@ $(function() {
 	<input type="hidden" name="isExchange" id="isExchange" value="false" />
 	<input type="hidden" name="existingDroppedOffOrderId" id="existingDroppedOffOrderId" value="" />
 	<jsp:include page="/common/messages.jsp">
-		<jsp:param name="msgCtx" value="manageOrder" />
+		<jsp:param name="msgCtx" value="orderDetails" />
+		<jsp:param name="errorCtx" value="orderDetails" />
 	</jsp:include>
 	<table id="form-table" class="table">
 		<tr><td></td></tr>

@@ -12,7 +12,6 @@ import java.lang.reflect.ParameterizedType;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import javax.servlet.ServletContext;
@@ -76,7 +75,7 @@ public abstract class CRUDController<T extends BaseModel> extends BaseController
 		}
 	}
 
-	// assume the primary key property is going to be the Entity Class plus Seq
+	// Assume the primary key property is going to be the Entity Class plus Seq
 	protected String getPkParam() {
 		return "id";
 	}
@@ -305,11 +304,11 @@ public abstract class CRUDController<T extends BaseModel> extends BaseController
 			Long createdBy = getUser(request).getId();
 			saveDoc(request, entity, file, createdBy, errorList);
 			if (errorList.isEmpty()) {
-				addMsg(model, MANAGE_DOCS_CTX, "Successfully uploaded the doc");
+				addMsg(model, MANAGE_DOCS_TAB, "Successfully uploaded the doc");
 			} 
-		} catch (Exception ex) {
-			log.warn("Unable to upload doc:===>>>>>>>>>" + ex);
-			addError(model, MANAGE_DOCS_CTX, "An error occurred while uploading doc!!");
+		} catch (Throwable t) {
+			log.warn("Unable to upload doc:===>>>>>>>>>" + t);
+			addError(model, MANAGE_DOCS_TAB, "An error occurred while uploading doc!!");
 		}
 		
 		return docActionComplete(request, entity, model);
@@ -333,9 +332,9 @@ public abstract class CRUDController<T extends BaseModel> extends BaseController
 				genericDAO.saveOrUpdate(entity);
 			}
 			
-			addMsg(model, MANAGE_DOCS_CTX, "Successfully deleted the doc");
+			addMsg(model, MANAGE_DOCS_TAB, "Successfully deleted the doc");
 		} else {
-			addError(model, MANAGE_DOCS_CTX, "An error occurred while deleting the doc!!");
+			addError(model, MANAGE_DOCS_TAB, "An error occurred while deleting the doc!!");
 		}
 		
 		return docActionComplete(request, entity, model);

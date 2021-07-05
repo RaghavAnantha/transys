@@ -77,7 +77,6 @@ import com.transys.model.PermitType;
 import com.transys.model.Role;
 import com.transys.model.SearchCriteria;
 import com.transys.model.User;
-import com.transys.model.Vehicle;
 import com.transys.model.map.Geocode;
 
 import com.transys.model.vo.CustomerVO;
@@ -92,6 +91,9 @@ public class OrderController extends CRUDController<Order> {
 	private static final String ORDERS_TAB = "manageOrders";
 	
 	private static final String ORDER_DETAILS_TAB = "orderDetails";
+	private static final String ORDER_DROPOFF_DRIVER_TAB = "dropOffDriver";
+	private static final String ORDER_PICKUP_DRIVER_TAB = "pickupDriver";
+	private static final String ORDER_NOTES_TAB = "orderNotes";
 	
 	private static final String ORDER_DOC_UPLOAD_DIR = "order";
 	private static final String ORDER_DOC_FILE_SUFFIX = "order_doc";
@@ -238,8 +240,7 @@ public class OrderController extends CRUDController<Order> {
 		
 		String notes = orderNotesEntity.getNotes();
 		if (StringUtils.contains(notes, OrderNotes.NOTES_TYPE_AUDIT)) {
-			addError(model, "manageOrderNotes", "Audit notes cannot be deleted");
-			return orderNotesSaveSuccess(request, orderNotesEntity, model);
+			return orderNotesSaveError(request, orderNotesEntity, model, "Audit notes cannot be deleted");
 		}
 		
 		Long orderId = orderNotesEntity.getOrder().getId();
@@ -266,9 +267,7 @@ public class OrderController extends CRUDController<Order> {
 		
 		cleanUp(request);
 		
-		addMsg(model, "manageOrderNotes", "Order Notes deleted successfully");
-		
-		return orderNotesSaveSuccess(request, orderNotesEntity, model);
+		return orderNotesSaveSuccess(request, orderNotesEntity, model, "Order Notes deleted successfully");
 	}
 	
 	private void setupCreateForCustomer(ModelMap model, HttpServletRequest request) {
@@ -519,11 +518,12 @@ public class OrderController extends CRUDController<Order> {
 			getValidator().validate(entity, bindingResult);
 		} catch (ValidationException e) {
 			log.warn("Error in validation :" + e);
+			return orderNotesSaveError(request, entity, model, "Validation error");
 		}
 		
 		// Return to form if we had errors
 		if (bindingResult.hasErrors()) {
-			return actionCompleteCommon(request, entity.getOrder().getId(), model, "orderNotes");
+			return orderNotesSaveError(request, entity, model, "Validation error");
 		}
 		
 		setModifier(request, entity);
@@ -533,13 +533,18 @@ public class OrderController extends CRUDController<Order> {
 		
 		genericDAO.saveOrUpdate(entity);
 		
-		return orderNotesSaveSuccess(request, entity, model);
+		return orderNotesSaveSuccess(request, entity, model, "Order Notes updated successfully");
 	}
 	
-	private String orderNotesSaveSuccess(HttpServletRequest request, OrderNotes entity, ModelMap model) {
-		return actionCompleteCommon(request, entity.getOrder().getId(), model, "orderNotes");
+	private String orderNotesSaveSuccess(HttpServletRequest request, OrderNotes entity, ModelMap model, String msg) {
+		addMsg(model, ORDER_NOTES_TAB, msg);
+		return actionCompleteCommon(request, entity.getOrder().getId(), model, ORDER_NOTES_TAB);
 	}
 	
+	private String orderNotesSaveError(HttpServletRequest request, OrderNotes entity, ModelMap model, String msg) {
+		addError(model, ORDER_NOTES_TAB, msg);
+		return actionCompleteCommon(request, entity.getOrder().getId(), model, ORDER_NOTES_TAB);
+	}
 
 	private void updateEnteredBy(OrderNotes entity) {
 		Long userId = entity.getModifiedBy() != null ? entity.getModifiedBy() : entity.getCreatedBy();
@@ -585,11 +590,12 @@ public class OrderController extends CRUDController<Order> {
 			getValidator().validate(entity, bindingResult);
 		} catch (ValidationException e) {
 			log.warn("Error in validation :" + e);
+			return dropOffSaveError(request, entity, model, "Validation error");
 		}
 		
 		// Return to form if we had errors
 		if (bindingResult.hasErrors()) {
-			return actionCompleteCommon(request, entity.getId(), model, "dropOffDriver");
+			return dropOffSaveError(request, entity, model, "Validation error");
 		}
 		
 		beforeSave(request, entity, model);
@@ -626,7 +632,7 @@ public class OrderController extends CRUDController<Order> {
 		OrderNotes auditOrderNotes = createAuditOrderNotes(entity, auditMsg, modifiedBy);
 		entity.getOrderNotes().add(auditOrderNotes);
 		
-		return dropOffSaveSuccess(request, entity, model);
+		return dropOffSaveSuccess(request, entity, model, "Drop off data saved successfully");
 	}
 	
 	private Geocode saveGeocode(Order entity, HttpServletRequest request) {
@@ -651,11 +657,12 @@ public class OrderController extends CRUDController<Order> {
 			getValidator().validate(entity, bindingResult);
 		} catch (ValidationException e) {
 			log.warn("Error in validation :" + e);
+			return dropOffSaveError(request, entity, model, "Validation error");
 		}
 		
 		// Return to form if we had errors
 		if (bindingResult.hasErrors()) {
-			actionCompleteCommon(request, entity.getId(), model, "dropOffDriver");
+			return dropOffSaveError(request, entity, model, "Validation error");
 		}
 		
 		beforeSave(request, entity, model);
@@ -678,7 +685,7 @@ public class OrderController extends CRUDController<Order> {
 		
 		updateDumpsterStatus(associatedDumpsterId, DumpsterStatus.DUMPSTER_STATUS_AVAILABLE, modifiedBy);
 		
-		return dropOffSaveSuccess(request, entity, model);
+		return dropOffSaveSuccess(request, entity, model, "Drop off data saved successfully");
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/revertCancelToOpen.do")
@@ -689,11 +696,12 @@ public class OrderController extends CRUDController<Order> {
 			getValidator().validate(entity, bindingResult);
 		} catch (ValidationException e) {
 			log.warn("Error in validation :" + e);
+			return saveError(request, entity, model, "Validation error");
 		}
 		
 		// Return to form if we had errors
 		if (bindingResult.hasErrors()) {
-			actionCompleteCommon(request, entity.getId(), model, "orderDetails");
+			return saveError(request, entity, model, "Validation error");
 		}
 		
 		beforeSave(request, entity, model);
@@ -713,12 +721,17 @@ public class OrderController extends CRUDController<Order> {
 			updatePermitStatus(entity.getPermits(), PermitStatus.PERMIT_STATUS_ASSIGNED, modifiedBy);
 		}
 		
-		return saveSuccess(model, request, entity);
+		return saveSuccess(request, entity, model, "Order saved successfully");
 	}
 	
-	private String dropOffSaveSuccess(HttpServletRequest request, Order entity, ModelMap model) {
-		addMsg(model, "manageDropOffDriver", "Drop off data saved successfully");
-		return actionCompleteCommon(request, entity.getId(), model, "dropOffDriver");
+	private String dropOffSaveSuccess(HttpServletRequest request, Order entity, ModelMap model, String msg) {
+		addMsg(model, ORDER_DROPOFF_DRIVER_TAB, msg);
+		return actionCompleteCommon(request, entity.getId(), model, ORDER_DROPOFF_DRIVER_TAB);
+	}
+	
+	private String dropOffSaveError(HttpServletRequest request, Order entity, ModelMap model, String msg) {
+		addError(model, ORDER_NOTES_TAB, msg);
+		return actionCompleteCommon(request, entity.getId(), model, ORDER_DROPOFF_DRIVER_TAB);
 	}
 	
 	private PermitStatus retrievePermitStatus(String status) {
@@ -800,11 +813,12 @@ public class OrderController extends CRUDController<Order> {
 			getValidator().validate(entity, bindingResult);
 		} catch (ValidationException e) {
 			log.warn("Error in validation :" + e);
+			return pickupSaveError(request, entity, model, "Validation error");
 		}
 		
 		// Return to form if we had errors
 		if (bindingResult.hasErrors()) {
-			actionCompleteCommon(request, entity.getId(), model, "pickupDriver");
+			return pickupSaveError(request, entity, model, "Validation error");
 		}
 		
 		beforeSave(request, entity, model);
@@ -839,7 +853,7 @@ public class OrderController extends CRUDController<Order> {
 			}
 		} 
 		
-		return pickupSaveSuccess(request, entity, model);
+		return pickupSaveSuccess(request, entity, model, "Pickup data saved successfully");
 	}
 	
 	private void populateOrderFees(Order entity) {
@@ -881,9 +895,14 @@ public class OrderController extends CRUDController<Order> {
 		entity.setBalanceAmountDue(orderFees.getTotalFees().subtract(entity.getTotalAmountPaid()));
 	}
 	
-	private String pickupSaveSuccess(HttpServletRequest request, Order entity, ModelMap model) {
-		addMsg(model, "managePickupDriver", "Pickup data saved successfully");
-		return actionCompleteCommon(request, entity.getId(), model, "pickupDriver");
+	private String pickupSaveSuccess(HttpServletRequest request, Order entity, ModelMap model, String msg) {
+		addMsg(model, ORDER_PICKUP_DRIVER_TAB, msg);
+		return actionCompleteCommon(request, entity.getId(), model, ORDER_PICKUP_DRIVER_TAB);
+	}
+	
+	private String pickupSaveError(HttpServletRequest request, Order entity, ModelMap model, String msg) {
+		addError(model, ORDER_PICKUP_DRIVER_TAB, msg);
+		return actionCompleteCommon(request, entity.getId(), model, ORDER_PICKUP_DRIVER_TAB);
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/processOrderReadyForPickup.do")
@@ -1674,11 +1693,12 @@ public class OrderController extends CRUDController<Order> {
 			getValidator().validate(entity, bindingResult);
 		} catch (ValidationException e) {
 			log.warn("Error in validation :" + e);
+			return saveError(request, entity, model, "Validation error");
 		}
 		
 		// Return to form if we had errors
 		if (bindingResult.hasErrors()) {
-			return actionCompleteCommon(request, entity.getId(), model, "orderDetails");
+			return saveError(request, entity, model, "Validation error");
 		}
 		
 		String isExchange = request.getParameter("isExchange");
@@ -1756,7 +1776,7 @@ public class OrderController extends CRUDController<Order> {
 		
 		cleanUp(request);
 		
-		return saveSuccess(model, request, entity);
+		return saveSuccess(request, entity, model, "Order saved successfully");
 	}
 	
 	private void setupOrderPayment(Order order, Long modifiedBy) {
@@ -1896,9 +1916,14 @@ public class OrderController extends CRUDController<Order> {
 		createAuditOrderNotes(entity, auditMsg, createdBy);
 	}
 	
-	public String saveSuccess(ModelMap model, HttpServletRequest request, Order entity) {
-		addMsg(model, "manageOrder", "Order saved successfully");
-		return actionCompleteCommon(request, entity.getId(), model, "orderDetails");
+	private String saveSuccess(HttpServletRequest request, Order entity, ModelMap model, String msg) {
+		addMsg(model, ORDER_DETAILS_TAB, msg);
+		return actionCompleteCommon(request, entity.getId(), model, ORDER_DETAILS_TAB);
+	}
+	
+	private String saveError(HttpServletRequest request, Order entity, ModelMap model, String msg) {
+		addError(model, ORDER_DETAILS_TAB, msg);
+		return actionCompleteCommon(request, entity.getId(), model, ORDER_DETAILS_TAB);
 	}
 	
 	private String actionCompleteCommon(HttpServletRequest request, Long orderId, ModelMap model, String activeSubTab) {
@@ -1942,7 +1967,7 @@ public class OrderController extends CRUDController<Order> {
 	
 	@Override
 	protected String docActionComplete(HttpServletRequest request, Order entity, ModelMap model) {
-		return actionCompleteCommon(request, entity.getId(), model, "manageDocs");
+		return actionCompleteCommon(request, entity.getId(), model, MANAGE_DOCS_TAB);
 	}
 	
 	protected void addTabAttributes(ModelMap model, String mode, String activeSubTab) {

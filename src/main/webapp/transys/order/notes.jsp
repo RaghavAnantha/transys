@@ -54,26 +54,92 @@ function validateOrderNotesDataFormat() {
 
 function processOrderNotesForm() {
 	if (validateOrderNotesForm()) {
-		var orderNotesForm = $("#orderNotesForm");
+		var orderNotesForm = getOrderNotesForm();
 		orderNotesForm.submit();
 	}
 }
 
+function extractNotesText(orderNotesId) {
+	/*
+	$("#orderNotesDatatableForm").find("tr a").click(function() {
+	    var tableData = $(this).parent().parent().children("td").map(function() {
+	        return $(this).text();
+	    }).get();
+	    
+	    var notesText = $.trim(tableData[3]);
+	    if (notesText.indexOf("AUDIT") != -1) {
+	    	showAlertDialog("Data Validation", "Audit notes cannot be edited");
+	    	return;
+	    }
+	    
+	    $("#orderNotesForm").find('#id').val($.trim(tableData[0]));
+	    $("#orderNotesForm").find('#orderNotesTabNotes').val(notesText);
+	});
+	*/
+	
+	//var xpath = ".//form[@id='orderNotesDatatableForm']/table[@class='datagrid']/tbody/tr/td[text()='"
+    //  + orderNotesId + "']/following-sibling::td[contains(text(), 'AUDIT')]";
+	var xpath = ".//form[@id='orderNotesDatatableForm']/table[@id='orderNotesDatatable']/tbody/tr/td[text()='"
+      + orderNotesId + "']/following-sibling::td[3]";
+	log(document.evaluate(xpath, document, null, XPathResult.ANY_TYPE, null));
+	var notesTd = document.evaluate(xpath, document, null, XPathResult.ANY_TYPE, null).iterateNext();
+	log(notesTd);
+	log(notesTd.textContent);
+	var notesText = $.trim(notesTd.textContent);
+	return notesText;
+}
+
+function isAuditNotesText(notesText) {
+	if (notesText.indexOf("AUDIT") != -1) {
+    	return true;
+    } else {
+    	return false;
+    }
+}
+
+function isAuditNotes(orderNotesId) {
+	var notesText = extractNotesText(orderNotesId);
+    return isAuditNotesText(notesText);
+}
+
+function processOrderNotesEdit(orderNotesId, createdBy) {
+	var notesText = extractNotesText(orderNotesId);
+    if (isAuditNotesText(notesText)) {
+    	showAlertDialog("Data Validation", "Audit notes cannot be edited");
+    	return false;
+    }
+    
+    var orderNotesForm = getOrderNotesForm();
+    orderNotesForm.find('#id').val(orderNotesId);
+    orderNotesForm.find('#orderNotesTabNotes').val(notesText);
+    orderNotesForm.find('#createdBy').val(createdBy);
+}
+
 function processOrderNotesDelete(orderNotesId) {
+	if (isAuditNotes(orderNotesId)) {
+		showAlertDialog("Data Validation", "Audit notes cannot be deleted");
+    	return false;
+	}
 	if (!confirm("Do you want to Delete Order Notes # " + orderNotesId + "?")) {
-		return;
+		return false;
 	}
 	
 	document.location = "${ctx}/order/deleteOrderNotes.do?orderNotesId=" + orderNotesId;
+}
+
+function getOrderNotesForm() {
+	var orderNotesForm = $("#orderNotesForm");
+	return orderNotesForm;
 }
 </script>
 
 <form:form action="saveOrderNotes.do" name="orderNotesForm" id="orderNotesForm" commandName="notesModelObject" method="post">
 	<form:hidden path="id" id="id" />
+	<form:hidden path="createdBy" id="createdBy" />
 	<form:hidden path="order.id" id="order.id" />
 	<jsp:include page="/common/messages.jsp">
-		<jsp:param name="msgCtx" value="manageOrderNotes" />
-		<jsp:param name="errorCtx" value="manageOrderNotes" />
+		<jsp:param name="msgCtx" value="orderNotes" />
+		<jsp:param name="errorCtx" value="orderNotes" />
 	</jsp:include>
 	<table id="form-table" class="table">
 		<tr>
@@ -102,9 +168,10 @@ function processOrderNotesDelete(orderNotesId) {
 	</table>
 </form:form>
 
-<form:form name="orderNotesDatatable" id="orderNotesDatatable" class="tab-color">
-	<transys:datatable urlContext="order" baseObjects="${notesList}"
-		searchCriteria="<%=null%>" cellPadding="2" searcheable="false" editable="true" editableInScreen="true"
+<form:form name="orderNotesDatatableForm" id="orderNotesDatatableForm" class="tab-color">
+	<transys:datatable urlContext="order" baseObjects="${notesList}" id="orderNotesDatatable"
+		searchCriteria="<%=null%>" cellPadding="2" searcheable="false" 
+		editable="true" editableFunction="processOrderNotesEdit" editableParams="{createdBy}"
 		dataQualifier="manageOrderNotes">
 		<transys:textcolumn headerText="Id" dataField="id" />
 		<transys:textcolumn headerText="Entered By" dataField="enteredBy" width="150px" />
@@ -114,20 +181,3 @@ function processOrderNotesDelete(orderNotesId) {
 	</transys:datatable>
 	<%session.setAttribute("manageOrderNotesColumnPropertyList", pageContext.getAttribute("columnPropertyList"));%>
 </form:form>
-
-<script type="text/javascript">
-$("#orderNotesDatatable").find("tr a").click(function() {
-    var tableData = $(this).parent().parent().children("td").map(function() {
-        return $(this).text();
-    }).get();
-    
-    var notesText = $.trim(tableData[3]);
-    if (notesText.indexOf("AUDIT") != -1) {
-    	showAlertDialog("Data Validation", "Audit notes cannot be edited");
-    	return;
-    }
-    
-    $("#orderNotesForm").find('#id').val($.trim(tableData[0]));
-    $("#orderNotesForm").find('#orderNotesTabNotes').val(notesText);
-});
-</script>

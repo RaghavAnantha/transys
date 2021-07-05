@@ -65,7 +65,8 @@ function getDropOffDriverForm() {
 	<form:hidden path="id" id="id" />
 	<input type="hidden" name="currentlyAssignedDumpsterId" id="currentlyAssignedDumpsterId" value="${currentlyAssignedDumpsterId}" />
 	<jsp:include page="/common/messages.jsp">
-		<jsp:param name="msgCtx" value="manageDropOffDriver" />
+		<jsp:param name="msgCtx" value="dropOffDriver" />
+		<jsp:param name="errorCtx" value="dropOffDriver" />
 	</jsp:include>
 	<table id="form-table" class="table">
 		<tr>

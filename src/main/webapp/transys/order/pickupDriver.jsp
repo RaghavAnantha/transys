@@ -230,7 +230,8 @@ function processPickupDriverForm(closeOrder) {
 <form:form action="savePickupDriver.do" name="pickupDriverAddEditForm" commandName="modelObject" method="post" id="pickupDriverAddEditForm">
 	<form:hidden path="id" id="id" />
 	<jsp:include page="/common/messages.jsp">
-		<jsp:param name="msgCtx" value="managePickupDriver" />
+		<jsp:param name="msgCtx" value="pickupDriver" />
+		<jsp:param name="errorCtx" value="pickupDriver" />
 	</jsp:include>
 	<table id="form-table" class="table">
 		<tr>

@@ -1413,6 +1413,7 @@ public class InvoiceController extends BaseController {
 			return "Successfull - nothing to process";
 		}
 		
+		String paymentDateStr = FormatUtil.formatInputDate(invoicePayment.getPaymentDate());
 		User createdByUser = getUser(invoicePayment.getCreatedBy());
 		for (OrderPayment anOrderPayment : orderPaymentList) {
 			anOrderPayment.setInvoicePaymentId(invoicePayment.getId());
@@ -1422,8 +1423,10 @@ public class InvoiceController extends BaseController {
 			order.setModifiedBy(createdByUser.getId());
 			genericDAO.saveOrUpdate(order);
 			
-			String auditMsg = String.format("Order payment updated.  Invoice#: %s.  Invoice payment#: %s.  Amount paid: %.02f",
-					invoicePayment.getInvoice().getId(), invoicePayment.getId(), anOrderPayment.getAmountPaid().doubleValue());
+			String auditMsg = String.format("Order payment updated.  Invoice#: %s.  Invoice payment#: %s."
+					+ "  Date: %s.  Amount paid: %.02f",
+					invoicePayment.getInvoice().getId(), invoicePayment.getId(),
+					paymentDateStr, anOrderPayment.getAmountPaid().doubleValue());
 			ModelUtil.createAuditOrderNotes(genericDAO, order, auditMsg, createdByUser);
 		}
 		return "Successfully saved order payment and order";
@@ -1585,7 +1588,7 @@ public class InvoiceController extends BaseController {
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
 	private void updateOrderList(List<Order> invoicableOrderList, Long invoiceId, Date invoiceDate, 
 			User createdByUser, String msg) {
-		String invoiceDateStr = FormatUtil.dbDateFormat.format(invoiceDate);
+		String invoiceDateStr = FormatUtil.formatInputDate(invoiceDate);
 		String auditMsg = (msg + ". Date: " + invoiceDateStr + ".  Amount: ");
 		for (Order anInvoicableOrder : invoicableOrderList) {
 			String invoiceIdsToBeUpdated = invoiceId.toString();

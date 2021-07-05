@@ -90,6 +90,10 @@ public class FormatUtil {
 		return formatDate(date, dbDateFormat);
 	}
 	
+	public static String formatInputDate(Date date) {
+		return formatDate(date, inputDateFormat);
+	}
+	
 	public static String formatDateRange(String dateFrom, String dateTo) {
 		String dateRange = StringUtils.isEmpty(dateFrom) ? StringUtils.EMPTY : dateFrom;
 		dateRange += " - ";

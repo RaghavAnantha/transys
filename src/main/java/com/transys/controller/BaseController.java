@@ -81,8 +81,6 @@ public class BaseController {
 	
 	protected static final String DOCS_UPLOAD_DIR = "/transys/storage";
 	
-	protected static final String MANAGE_DOCS_CTX = "manageDocs";
-	
 	protected static final String searchCriteriaKey = "searchCriteria";
 	
 	@Autowired
