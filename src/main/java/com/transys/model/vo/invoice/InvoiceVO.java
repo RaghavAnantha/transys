@@ -429,8 +429,15 @@ public class InvoiceVO extends BaseVO {
 	public String getFormattedAdditionalFees() {
 		return FormatUtil.formatFee(additionalFees, true);
 	}
+	public String getFormattedCityPlusAdditionalFees() {
+		BigDecimal cityPlusAdditionalFees = additionalFees == null ? new BigDecimal(0.0) : additionalFees;
+		if (cityFee != null) {
+			cityPlusAdditionalFees = cityPlusAdditionalFees.add(cityFee);
+		}
+		return FormatUtil.formatFee(cityPlusAdditionalFees, true);
+	}
 	public String getFormattedTotalFees() {
-		return FormatUtil.formatFee(additionalFees, true);
+		return FormatUtil.formatFee(totalFees, true);
 	}
 	public String getFormattedInvoicedAmount() {
 		return FormatUtil.formatFee(invoicedAmount, true);

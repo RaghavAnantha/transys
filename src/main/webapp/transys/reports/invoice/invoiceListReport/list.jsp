@@ -70,11 +70,11 @@ function validateInvoiceListReportSearchMissingData() {
 		<tr>
 			<td class="form-left">Invoice Date From<span class="errorMessage"></span></td>
 			<td>
-				<input class="flat" id="datepicker10" name="invoiceListReportInvoiceDateFrom" value="${sessionScope.searchCriteria.searchMap['invoiceListReportInvoiceDateFrom']}" style="width: 175px" />
+				<input class="flat" id="datepicker13" name="invoiceListReportInvoiceDateFrom" value="${sessionScope.searchCriteria.searchMap['invoiceListReportInvoiceDateFrom']}" style="width: 175px" />
 			</td>
 			<td class="form-left">Invoice Date To<span class="errorMessage"></span></td>
 			<td>
-				<input class="flat" id="datepicker11" name="invoiceListReportInvoiceDateTo" value="${sessionScope.searchCriteria.searchMap['invoiceListReportInvoiceDateTo']}" style="width: 175px" />
+				<input class="flat" id="datepicker14" name="invoiceListReportInvoiceDateTo" value="${sessionScope.searchCriteria.searchMap['invoiceListReportInvoiceDateTo']}" style="width: 175px" />
 			</td>
 		</tr>
 		<tr>

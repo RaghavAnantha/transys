@@ -146,7 +146,7 @@ function processOrderReadyForPickup() {
 	}
 	
 	$.ajax({
-  		url: "processOrderReadyForPickup.do?" + "orderId=" + orderId 
+  		url: "${orderCtx}/processOrderReadyForPickup.do?" + "orderId=" + orderId 
   								  		 	  + "&readyForPickup=" + readyForPickup,
        	type: "GET",
        	success: function(responseData, textStatus, jqXHR) {
@@ -177,7 +177,7 @@ function processOrderReopen() {
 	var orderId = $('#id').val();
 	
 	$.ajax({
-  		url: "processOrderReopen.do?" + "orderId=" + orderId,
+  		url: "${orderCtx}/processOrderReopen.do?" + "orderId=" + orderId,
        	type: "GET",
        	success: function(responseData, textStatus, jqXHR) {
        		if (responseData.indexOf("successfully") == -1) {
@@ -227,7 +227,7 @@ function processPickupDriverForm(closeOrder) {
 }
 </script>
 
-<form:form action="savePickupDriver.do" name="pickupDriverAddEditForm" commandName="modelObject" method="post" id="pickupDriverAddEditForm">
+<form:form action="${orderCtx}/savePickupDriver.do" name="pickupDriverAddEditForm" commandName="modelObject" method="post" id="pickupDriverAddEditForm">
 	<form:hidden path="id" id="id" />
 	<jsp:include page="/common/messages.jsp">
 		<jsp:param name="msgCtx" value="pickupDriver" />

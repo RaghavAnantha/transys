@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
-<!-- 2021-06-19T00:59:07 -->
+<!-- 2021-07-07T22:31:52 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="orderInvoiceOrderSub" pageWidth="975" pageHeight="842" columnWidth="975" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="27b0d00f-2ed5-470f-9062-b72911004ad8">
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<field name="formattedDumpsterPrice" class="java.lang.String"/>
@@ -23,6 +23,7 @@
 	<field name="formattedAdditionalFees" class="java.lang.String"/>
 	<field name="formattedOrderDate" class="java.lang.String"/>
 	<field name="dumpsterSize" class="java.lang.String"/>
+	<field name="formattedCityPlusAdditionalFees" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -382,7 +383,7 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="10"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{formattedAdditionalFees}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{formattedCityPlusAdditionalFees}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="668" y="0" width="60" height="18" uuid="ca04a359-7a30-4fa4-aaa5-9b0c98332025"/>

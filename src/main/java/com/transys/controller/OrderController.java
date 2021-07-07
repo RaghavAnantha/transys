@@ -223,13 +223,17 @@ public class OrderController extends CRUDController<Order> {
 		
 		if (dropOffDriver != null
 				&& !driverIds.contains(String.valueOf(dropOffDriver.getId()))) {
-			modelDriverList.add(0, dropOffDriver);
+			// Bcos employee is not populated
+			User dropOffDriverToBeUsed = genericDAO.getById(User.class, dropOffDriver.getId());
+			modelDriverList.add(0, dropOffDriverToBeUsed);
 		}
 		
 		if (pickupDriver != null 
 				&& !driverIds.contains(String.valueOf(pickupDriver.getId()))
 				&& pickupDriver.getId().longValue() != dropOffDriver.getId().longValue()) {
-			modelDriverList.add(0, pickupDriver);
+			// Bcos employee is not populated
+			User pickupDriverToBeUsed = genericDAO.getById(User.class, pickupDriver.getId());
+			modelDriverList.add(0, pickupDriverToBeUsed);
 		} 
 	}
 	
@@ -613,7 +617,8 @@ public class OrderController extends CRUDController<Order> {
 			}
 			
 			updateDumpsterStatus(entity.getDumpster().getId(), DumpsterStatus.DUMPSTER_STATUS_DROPPED_OFF, modifiedBy);
-			if (!currentlyAssignedDumpsterId.equals(entity.getDumpster().getId())) {
+			if (currentlyAssignedDumpsterId != -1l
+					&& !currentlyAssignedDumpsterId.equals(entity.getDumpster().getId())) {
 				updateDumpsterStatus(currentlyAssignedDumpsterId, DumpsterStatus.DUMPSTER_STATUS_AVAILABLE, modifiedBy);
 			}
 		} else {

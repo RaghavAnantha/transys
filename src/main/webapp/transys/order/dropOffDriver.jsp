@@ -51,7 +51,7 @@ function processDropOffDriverForm(changeToDroppedOff) {
 
 function processRevertToOpen() {
 	var dropOffDriverForm = getDropOffDriverForm();
-	dropOffDriverForm.attr('action', 'revertDropOffToOpen.do');
+	dropOffDriverForm.attr('action', '${orderCtx}/revertDropOffToOpen.do');
 	dropOffDriverForm.submit();
 }
 
@@ -61,7 +61,7 @@ function getDropOffDriverForm() {
 }
 </script>
 
-<form:form action="saveDropOffDriver.do" name="dropOffDriverAddEditForm" commandName="modelObject" method="post" id="dropOffDriverAddEditForm">
+<form:form action="${orderCtx}/saveDropOffDriver.do" name="dropOffDriverAddEditForm" commandName="modelObject" method="post" id="dropOffDriverAddEditForm">
 	<form:hidden path="id" id="id" />
 	<input type="hidden" name="currentlyAssignedDumpsterId" id="currentlyAssignedDumpsterId" value="${currentlyAssignedDumpsterId}" />
 	<jsp:include page="/common/messages.jsp">

@@ -21,7 +21,7 @@ function processUploadDoc(fileElem) {
 	
 	var file = fileElem.files.item(0).name;
 	var id = document.getElementById("id").value;
-	var ctxAdj = getCtxAdjustment();
+	var ctxAdj = getManageDocsCtxAdjustment();
 	$.ajax({
   		url: ctxAdj + "ajax.do?action=doesDocExist" + "&id=" + id + "&file=" + file,
        	type: "GET",
@@ -96,7 +96,7 @@ function getForm() {
 	return document.forms["manageDocsForm"];
 }
 
-function getCtxAdjustment() {
+function getManageDocsCtxAdjustment() {
 	var manageDocsCtx = "managedocs";
 	var ctxAdj = "";
 	if (document.location.href.indexOf(manageDocsCtx) != -1) {
@@ -106,7 +106,7 @@ function getCtxAdjustment() {
 }
 
 function processCancel() {
-	document.location.href = getCtxAdjustment() + "list.do";
+	document.location.href = getManageDocsCtxAdjustment() + "list.do";
 }
 </script>
 

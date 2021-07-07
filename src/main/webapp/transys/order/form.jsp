@@ -1130,7 +1130,7 @@ $(function() {
 }
 </style>
 
-<form:form action="save.do" name="orderAddEditForm" commandName="modelObject" method="post" id="orderAddEditForm">
+<form:form action="${orderCtx}/save.do" name="orderAddEditForm" commandName="modelObject" method="post" id="orderAddEditForm">
 	<form:hidden path="id" id="id" />
 	<form:hidden path="pickupOrderId" id="pickupOrderId" />
 	

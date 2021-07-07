@@ -15,6 +15,8 @@
 <c:set var="resourceCtx" value="${pageContext.request.contextPath}"/>
 <c:set var="urlCtx" value="${ctx}/${urlContext}"/>
 
+<c:set var="orderCtx" value="${ctx}/order"/>
+
 <c:set var="jsCtx" value="${ctx}/js"/>
 <c:set var="reportsMenuCtx" value="${ctx}/reports"/>
 <c:set var="masterDataMenuCtx" value="${ctx}/masterData"/>
